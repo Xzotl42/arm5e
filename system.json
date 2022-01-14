@@ -42,6 +42,62 @@
             "entity": "Item"
         },
         {
+            "name": "sorts",
+            "label": "Sorts",
+            "system": "arm5e",
+            "module": "arm5e",
+            "path": "packs/sorts.db",
+            "entity": "Item"
+        },
+        {
+            "name": "armes",
+            "label": "Armes",
+            "system": "arm5e",
+            "module": "arm5e",
+            "path": "packs/armes.db",
+            "entity": "Item"
+        },
+        {
+            "name": "armures",
+            "label": "Armures",
+            "system": "arm5e",
+            "module": "arm5e",
+            "path": "packs/armures.db",
+            "entity": "Item"
+        },
+        {
+            "name": "competences",
+            "label": "Compétences",
+            "system": "arm5e",
+            "module": "arm5e",
+            "path": "packs/competences.db",
+            "entity": "Item"
+        },
+        {
+            "name": "qualite-des-animaux",
+            "label": "Qualités des Animaux",
+            "system": "arm5e",
+            "module": "arm5e",
+            "path": "packs/qualite-des-animaux.db",
+            "entity": "Item"
+        },
+        {
+            "name": "vertues",
+            "label": "Vertues",
+            "system": "arm5e",
+            "module": "arm5e",
+            "path": "packs/vertues.db",
+            "entity": "Item"
+        },
+        {
+            "name": "vices",
+            "label": "Vices",
+            "system": "arm5e",
+            "module": "arm5e",
+            "path": "packs/vices.db",
+            "entity": "Item"
+        },
+        {
             "name": "items",
             "label": "Equipment",
             "system": "arm5e",
