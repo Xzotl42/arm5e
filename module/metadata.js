@@ -700,6 +700,16 @@ ARM5E.magic.durations = {
         "dtype": "String",
         "impact": 1
     },
+    "perf": {
+        "label": "arm5e.spell.durations.perf",
+        "dtype": "String",
+        "impact": 1
+    },
+    "dream": {
+        "label": "arm5e.spell.durations.dream",
+        "dtype": "String",
+        "impact": 1
+    },
     "sun": {
         "label": "arm5e.spell.durations.sun",
         "dtype": "String",
@@ -715,6 +725,11 @@ ARM5E.magic.durations = {
         "dtype": "String",
         "impact": 3
     },
+    "arcr": {
+        "label": "arm5e.spell.durations.arcr",
+        "dtype": "String",
+        "impact": 3
+    },
     "fire": {
         "label": "arm5e.spell.durations.fire",
         "dtype": "String",
@@ -722,6 +737,11 @@ ARM5E.magic.durations = {
     },
     "bargain": {
         "label": "arm5e.spell.durations.bargain",
+        "dtype": "String",
+        "impact": 3
+    },
+    "rune": {
+        "label": "arm5e.spell.durations.rune",
         "dtype": "String",
         "impact": 3
     },
@@ -739,6 +759,11 @@ ARM5E.magic.durations = {
         "label": "arm5e.spell.durations.year+1",
         "dtype": "String",
         "impact": 4
+    },
+    "19year": {
+        "label": "arm5e.spell.durations.19year",
+        "dtype": "String",
+        "impact": 5
     },
     "other": {
         "label": "arm5e.sheet.other",
@@ -773,8 +798,18 @@ ARM5E.magic.ranges = {
         "dtype": "String",
         "impact": 2
     },
+    "line": {
+        "label": "arm5e.spell.ranges.line",
+        "dtype": "String",
+        "impact": 2
+    },
     "sight": {
         "label": "arm5e.spell.ranges.sight",
+        "dtype": "String",
+        "impact": 3
+    },
+    "veil": {
+        "label": "arm5e.spell.ranges.veil",
         "dtype": "String",
         "impact": 3
     },
@@ -782,6 +817,16 @@ ARM5E.magic.ranges = {
         "label": "arm5e.spell.ranges.arc",
         "dtype": "String",
         "impact": 4
+    },
+     "ground": {
+        "label": "arm5e.spell.ranges.ground",
+        "dtype": "String",
+        "impact": 4
+    },
+     "unlimited": {
+        "label": "arm5e.spell.ranges.unlimited",
+        "dtype": "String",
+        "impact": 6
     },
     "other": {
         "label": "arm5e.sheet.other",
@@ -850,6 +895,11 @@ ARM5E.magic.targets = {
         "label": "arm5e.spell.targets.sight",
         "dtype": "String",
         "impact": 4
+    },
+    "bloodline": {
+        "label": "arm5e.spell.targets.bloodline",
+        "dtype": "String",
+        "impact": 3
     },
     "other": {
         "label": "arm5e.sheet.other",
@@ -1125,6 +1175,9 @@ ARM5E.generic.sourcesTypes = {
     },
     "Dies": {
         "label": "arm5e.sheet.source.Dies"
+    },
+    "TtA":{
+        "label": "arm5e.sheet.source.TtA"
     },
     "Hook": {
         "label": "arm5e.sheet.source.Hooks"
