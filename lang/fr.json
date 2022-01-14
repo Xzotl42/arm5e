@@ -10,6 +10,7 @@
     "arm5e.sheet.confidence": "Confiance",
     "arm5e.sheet.characteristic": "Caractéristiques",
     "arm5e.sheet.description": "Description",
+    "arm5e.sheet.advanced": "Avancé",
     "arm5e.sheet.abilities": "Compétences",
     "arm5e.sheet.virtuesFlaws": "Vertues & Vices",
     "arm5e.sheet.arts": "Arts",
@@ -69,6 +70,8 @@
     "arm5e.sheet.combatInstructions2": "Si votre spécialité est avec le bouclier, marquez le sur le bouclier et non pas l'arme. Si vous n'avez pas le bouclier d'équippé, le bonus de spécialté ne s'applique pas.",
     "arm5e.sheet.combatInstructions3": "Créez un objet \"mounted\" avec la capacitée \"mount\", et marquez sur ses attributs que il s'agit d'un cheval. Lorsque vous l'équippez, le calcul sera appliqué.",
 
+    "arm5e.dialog.chooseCovenant": "Choisir une alliance",
+
     "arm5e.sheet.quantity": "Quantitée",
     "arm5e.sheet.number": "Nombre",
     "arm5e.sheet.weight": "Poids",
@@ -91,6 +94,7 @@
     "arm5e.sheet.bonus": "Bonus",
     "arm5e.sheet.castingTotal": "Total de lancer",
     "arm5e.sheet.mastery": "Maîtrise",
+    "arm5e.sheet.masteryAbilities": "Compétences de Maîtrise",
     "arm5e.sheet.source.label": "Source",
     "arm5e.sheet.bookType": "Type de livre",
     "arm5e.sheet.quality": "Qualitée",
@@ -185,8 +189,8 @@
     "arm5e.sheet.impact": "Impact",
 
     "arm5e.sheet.hermetic": "Hermétique",
-    "arm5e.sheet.socialStatus": "Status Social",
-    "arm5e.sheet.supernatural": "Supernaturel",
+    "arm5e.sheet.socialStatus": "Statut Social",
+    "arm5e.sheet.supernatural": "Surnaturel",
     "arm5e.sheet.personalityFlaw": "Personnalité",
     "arm5e.sheet.general": "Général",
     "arm5e.sheet.story": "Histoire",
@@ -201,7 +205,7 @@
 
     "arm5e.sheet.fastCastingSpeed": "Vitesse d'incantation Rapide",
     "arm5e.sheet.determiningEffect": "Reconnaître un effet magique",
-    "arm5e.sheet.targeting": "Cibler",
+    "arm5e.sheet.targeting": "Ciblé",
     "arm5e.skill.concentration": "Concentration",
     "arm5e.sheet.magicResistance": "Résistance Magique",
     "arm5e.sheet.multipleCasting": "Lancement Multiple",
@@ -234,8 +238,12 @@
     "arm5e.sheet.distinctive": "Distinctions",
     "arm5e.sheet.rooms": "Pièces",
     "arm5e.sheet.possessions": "Possessions",
+    "arm5e.sheet.properties": "Propriétés et terres",
     "arm5e.sheet.economics": "Economie",
 
+
+
+    "arm5e.sheet.covenant": "Alliance",
     "arm5e.sheet.saga": "Saga",
     "arm5e.sheet.narrator": "Conteur",
     "arm5e.sheet.sagaType": "Type de Saga",
@@ -259,7 +267,7 @@
     "arm5e.sheet.initials": "Départ",
     "arm5e.sheet.actuals": "Actuel",
     "arm5e.sheet.loyalty": "Loyautée",
-    "arm5e.sheet.giftType": "Type de don",
+    "arm5e.sheet.giftType": "Type de Don",
     "arm5e.sheet.job": "Responsibilitées",
     "arm5e.sheet.habitants": "Habitants",
     "arm5e.sheet.npcgrogs": "Autres Personnes",
@@ -335,6 +343,13 @@
     "arm5e.sheet.realm.infernal": "Infernal",
 
     "arm5e.sheet.authorship.author": "Auteur",
+    "arm5e.sheet.authorship.label": "Paternité",
+    "arm5e.sheet.authorship.language": "Langue",
+
+    "arm5e.sheet.gift.blatant": "Don Tapageur",
+    "arm5e.sheet.gift.normal": "Don Normal",
+    "arm5e.sheet.gift.gentle": "Don de Velour",
+
     "arm5e.spell.applyFocus": "Application du Focus Magique",
 
     "arm5e.spell.duration.short": "D",
@@ -345,9 +360,13 @@
     "arm5e.spell.ranges.touch": "Toucher",
     "arm5e.spell.ranges.eye": "Regard",
     "arm5e.spell.ranges.voice": "Voix",
-    "arm5e.spell.ranges.road": "Route",
+    "arm5e.spell.ranges.road": "Route (Féerique)",
     "arm5e.spell.ranges.sight": "Vue",
     "arm5e.spell.ranges.arc": "Lien Mystique",
+    "arm5e.spell.ranges.ground": "Sol (C&C p99)",
+    "arm5e.spell.ranges.line": "Ligne (Arithmétique)",
+    "arm5e.spell.ranges.veil": "Voile de la Mort (Canaanite)",
+    "arm5e.spell.ranges.unlimited": "Sans Limite (Defixio)",
 
     "arm5e.spell.durations.moment": "Instantané",
     "arm5e.spell.durations.conc": "Concentration",
@@ -355,11 +374,16 @@
     "arm5e.spell.durations.sun": "Aube/Crépuscule",
     "arm5e.spell.durations.ring": "Anneau",
     "arm5e.spell.durations.moon": "Lune",
-    "arm5e.spell.durations.fire": "Feu (Féerique)",
+    "arm5e.spell.durations.fire": "Feu (Féerique et C&C p99)",
     "arm5e.spell.durations.bargain": "Marchandage (Féerique)",
     "arm5e.spell.durations.year": "Année",
     "arm5e.spell.durations.condition": "Jusqu'à (Féerique)",
     "arm5e.spell.durations.year+1": "Année +1 jour (Féerique)",
+    "arm5e.spell.durations.perf": "Représentation (Représentation)",
+    "arm5e.spell.durations.dream": "Rêve (Rêve)",
+    "arm5e.spell.durations.arcr": "Anneau Arcanique (Arithémtique)",
+    "arm5e.spell.durations.19year": "19 Ans (Hyperborean)",
+    "arm5e.spell.durations.rune": "Rune (Runique)",
 
     "arm5e.spell.targets.ind": "Individu",
     "arm5e.spell.targets.circle": "Cercle",
@@ -372,7 +396,8 @@
     "arm5e.spell.targets.touch": "Toucher (In)",
     "arm5e.spell.targets.smell": "Odorat (In)",
     "arm5e.spell.targets.hearing": "Ouïe (In)",
-    "arm5e.spell.targets.sight": "Vue (In)",
+    "arm5e.spell.targets.sight": "Vision (In)",
+    "arm5e.spell.targets.bloodline": "Lignée (Féerique)",
     "arm5e.config.special": "Spécial",
     "arm5e.spell.targets.targetSize": "Taille de la Cible",
     "arm5e.spell.targets.complexity": "Complexité",
@@ -395,8 +420,14 @@
     "arm5e.sheet.magical-effects": "Effets Magiques",
     "arm5e.sheet.enchantments": "Enchantements",
     "arm5e.sheet.filters": "Filtres",
+    "arm5e.sheet.count": "Compte",
 
+    "arm5e.lab.usage.label": "Utilisation",
+    "arm5e.lab.usage.light": "Légère (1 saison ou moins)",
+    "arm5e.lab.usage.standard": "Normale (2 saisons)",
+    "arm5e.lab.usage.heavy": "Lourde (3+ saisons)",
 
+    "arm5e.lab.upkeep": "Entretien",
     "arm5e.lab.enchantment.label": "Enchantement",
     "arm5e.lab.enchantment.effectFrequency": "Fréquence de l'Effet",
     "arm5e.lab.enchantment.uses-per-day": "utilisation(s) par jour",
@@ -440,10 +471,28 @@
 
 
 
+    "arm5e.sheet.action.rest": "Repos",
+
+
     "arm5e.dialog.design-effect-question": "Voulez-vous concevoir un effet magique basé sur cet effet de base ?",
     "arm5e.dialog.design-spell-question": "Voulez-vous concevoir un sort basé sur cet effet ?",
     "arm5e.dialog.design-enchantment-question": "Voulez-vous concevoir un enchantement basé sur cet effet ?",
     "arm5e.dialog.delete-question": "Êtes-vous sûr de vouloir supprimer cet objet ?",
+    "arm5e.dialog.title.rolldie": "Jet de Dé",
+    "arm5e.dialog.button.save": "Sauver",
+    "arm5e.dialog.button.yes": "Oui",
+    "arm5e.dialog.button.no": "Non",
+    "arm5e.dialog.button.cancel": "Annuler",
+    "arm5e.dialog.button.stressdie": "Dé de Tension",
+    "arm5e.dialog.button.simpledie": "Dé Simple",
+
+    "arm5e.notification.unconscious": "Ce personnage est inconscient, aucune action possible...",
+    "arm5e.notification.dead": "Ce personnage est mort...",
+
+    "arm5e.packs.abilities.name": "Compétences",
+
+
+
 
     "arm5e.sheet.source.ArM5": "Livre de Base",
     "arm5e.sheet.source.RoP:D": "Realms of Power: The Divine",
@@ -479,5 +528,8 @@
     "arm5e.sheet.source.TME": "Transforming Mythic Europe",
     "arm5e.sheet.source.CI": "The Contested Isle",
     "arm5e.sheet.source.SemE": "Semita Errabunda",
+    "arm5e.sheet.source.Dies": "Dies Irae",
+    "arm5e.sheet.source.Hooks": "Hooks",
+    "arm5e.sheet.source.TtA": "Through the Aegis",
     "arm5e.sheet.source.custom": "Maison"
 }
