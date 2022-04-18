@@ -1,6 +1,12 @@
 ## Release Notes
 
-### 1.4.
+## 1.4.1
+
+### Bug fixes
+
+- Fixed formula computation resulting 0 when a die explode
+
+### 1.4.0
 
 ### The Diedne war
 

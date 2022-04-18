@@ -37,6 +37,8 @@ async function stressDie(html, actor, modes = 0, callBack) {
   mult = 1;
   actor = getFormData(html, actor);
   actor = getRollFormula(actor);
+  let formula = actor.data.data.roll.rollFormula;
+  let rollLabel = actor.data.data.roll.rollLabel;
 
   let name = '<h2 class="ars-chat-title">' + actor.data.data.roll.label + "</h2>";
   let dieRoll = await explodingRoll(actor, modes);
@@ -48,7 +50,7 @@ async function stressDie(html, actor, modes = 0, callBack) {
     if (mult > 1) {
       flavorTxt = name + "<h3>" + game.i18n.localize("arm5e.messages.die.exploding") + "</h3><br/>";
     }
-    lastRoll = multiplyRoll(mult, dieRoll, actor.data.data.roll.rollFormula, actor.data.data.roll.divide);
+    lastRoll = multiplyRoll(mult, dieRoll, formula, actor.data.data.roll.divide);
   } else {
     if (dieRoll == 1) {
       flavorTxt = name + "<h2>" + game.i18n.localize("arm5e.messages.die.botch") + "</h2><br/>";
@@ -65,7 +67,7 @@ async function stressDie(html, actor, modes = 0, callBack) {
   }
 
   const message = await lastRoll.toMessage({
-    flavor: flavorTxt + actor.data.data.roll.rollLabel,
+    flavor: flavorTxt + rollLabel,
     speaker: ChatMessage.getSpeaker({
       actor: actor
     }),
