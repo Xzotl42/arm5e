@@ -15,19 +15,19 @@ jobs:
         id: get_version
         uses: battila7/get-version-action@v2
 
-      # Substitute the Manifest and Download URLs in the system.json
-      - name: Substitute Manifest and Download Links For Versioned Ones
-        id: sub_manifest_link_version
-        uses: microsoft/variable-substitution@v1
-        with:
-          files: "system.json"
-        env:
-          name: "arm5e"
-          title: "Ars Magica 5th Edition"
-          description: "Ars Magica 5e for Foundry VTT"
-          version: ${{steps.get_version.outputs.version-without-v}}
-          url: https://github.com/${{github.repository}}
-          download: https://github.com/${{github.repository}}/releases/download/${{github.event.release.tag_name}}/arm5e.zip
+      # # Substitute the Manifest and Download URLs in the system.json
+      # - name: Substitute Manifest and Download Links For Versioned Ones
+      #   id: sub_manifest_link_version
+      #   uses: microsoft/variable-substitution@v1
+      #   with:
+      #     files: "system.json"
+      #   env:
+      #     name: "arm5e"
+      #     title: "Ars Magica 5th Edition"
+      #     description: "Ars Magica 5e for Foundry VTT"
+      #     version: ${{steps.get_version.outputs.version-without-v}}
+      #     url: https://github.com/${{github.repository}}
+      #     download: https://github.com/${{github.repository}}/releases/download/${{github.event.release.tag_name}}/arm5e.zip
 
       # Create a zip file with all files required by the module to add to the release
       - run: zip -r ./arm5e.zip system.json LICENSE css/ assets/ templates/ lang/ module/ packs/ template.json
