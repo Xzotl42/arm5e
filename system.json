@@ -125,6 +125,6 @@
   "gridUnits": "ft",
   "url": "https://github.com/xzotl42/arm5e",
   "manifest": "https://raw.githubusercontent.com/Xzotl42/arm5e/V9-maintenance/system.json",
-  "download": "https://raw.githubusercontent.com/xzotl42/arm5e/v1.4.8/system.json",
+  "download": "https://github.com/Xzotl42/arm5e/releases/download/v1.4.8/arm5e.zip",
   "license": "LICENSE.txt"
 }
