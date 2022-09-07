@@ -1,5 +1,12 @@
 # Release Notes
 
+## 1.4.8
+
+### Bug fixes
+
+- Changed github workflow and manifest to point to V9-maintenance branch
+- Ability description is again editable
+
 ## 1.4.7
 
 ### Features

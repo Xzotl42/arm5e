@@ -1,8 +1,8 @@
 {
   "name": "arm5e",
-  "title": "Ars Magica 5th Edition, Development version",
-  "description": "Ars Magica 5e for Foundry VTT, BETA",
-  "version": "1.4.7",
+  "title": "Ars Magica 5th Edition",
+  "description": "Ars Magica 5e for Foundry VTT",
+  "version": "1.4.8",
   "minimumCoreVersion": "9",
   "compatibleCoreVersion": "9",
   "authors": [
@@ -124,7 +124,7 @@
   "gridDistance": 5,
   "gridUnits": "ft",
   "url": "https://github.com/xzotl42/arm5e",
-  "manifest": "https://raw.githubusercontent.com/xzotl42/arm5e/master/system.json",
+  "manifest": "https://raw.githubusercontent.com/Xzotl42/arm5e/V9-maintenance/system.json",
   "download": "https://github.com/xzotl42/arm5e/archive/master.zip",
   "license": "LICENSE.txt"
 }
