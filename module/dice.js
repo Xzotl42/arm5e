@@ -614,10 +614,15 @@ async function explodingRoll(actorData, modes = 0) {
 
 function multiplyRoll(mult, roll, rollFormula, divide) {
   if (!roll._evaluated) return;
-  let output_roll = new Roll(`${mult} * (${roll._formula}) + ${rollFormula}`);
+  let rollInit = `${roll._formula} + ${rollFormula}`;
+  if (Number.parseInt(mult) > 1) {
+    rollInit = `${mult} * ${rollInit}`;
+  }
+  if (Number.parseInt(divide) > 1) {
+    rollInit = `( ${rollInit} ) / ${divide}`;
+  }
+  let output_roll = new Roll(rollInit);
   output_roll.data = {};
-  // output_roll._total = [ mult, `*`, ...roll.result];
-  output_roll.terms = [mult, `*`, ...roll.terms];
   //console.log(roll._total);
   //if(parseInt(divide) > 1){
   //    output_roll.terms.push("/"+ divide);

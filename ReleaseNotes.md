@@ -1,5 +1,11 @@
 # Release Notes
 
+## 2.0.2.9
+
+### Bug fixes
+
+- Fix stress die rolls for Foundry 10.287
+
 ## 2.0.2.8
 
 ### Features
