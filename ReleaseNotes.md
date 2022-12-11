@@ -1,5 +1,11 @@
 # Release Notes
 
+## 2.0.3.14, Jerbiton's last rest
+
+### Bug fixes
+
+- Fixed major migration bug, duplicating tokens.
+
 ## 2.0.3.13, Jerbiton the Founder
 
 ### Features & changes
