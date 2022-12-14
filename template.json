@@ -1123,7 +1123,7 @@
         "targetSize": 0,
         "complexity": 0,
         "enhancingRequisite": 0,
-        "baseLevel": 0,
+        "baseLevel": 1,
         "baseEffectDescription": "",
         "general": false,
         "levelOffset": 0

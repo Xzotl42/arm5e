@@ -295,7 +295,7 @@ export class VirtueFlawSchema extends foundry.abstract.DataModel {
     // if (data.description == null) {
     //   data.description = "";
     // }
-    if (data.type.value) {
+    if (data.type?.value) {
       data.type = data.type.value;
     }
   }
@@ -476,7 +476,7 @@ export class VisSchema extends foundry.abstract.DataModel {
     // if (data.art == "") {
     //   data.art = "cr";
     // } else
-    if (data.art.value) {
+    if (data.art?.value) {
       data.art = data.art.value;
     }
   }

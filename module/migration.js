@@ -127,11 +127,11 @@ export async function migration(originalVersion) {
   }
 
   // [DEV] Uncomment below to migrate system compendiums
-  for (let p of game.packs) {
-    if (p.metadata.packageName !== "arm5e") continue;
-    if (!["Actor", "Item", "Scene"].includes(p.documentName)) continue;
-    await migrateCompendium(p);
-  }
+  // for (let p of game.packs) {
+  //   if (p.metadata.packageName !== "arm5e") continue;
+  //   if (!["Actor", "Item", "Scene"].includes(p.documentName)) continue;
+  //   await migrateCompendium(p);
+  // }
 
   // Migrate World Compendium Packs
   for (let p of game.packs) {
