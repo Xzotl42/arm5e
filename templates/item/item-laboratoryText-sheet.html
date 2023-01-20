@@ -40,6 +40,9 @@
             <label class="header-label">{{localize "arm5e.sheet.ritual"}}</label>
             <input type="checkbox" name="system.ritual" {{checked system.ritual}} />
           </div>
+          <a class="plan-reading" title='{{localize "arm5e.hints.read" item=(localize "arm5e.sheet.book")}}'
+            style="padding-left: 5px; padding-top: 5px;" data-index="{{topicIdx}}"><i
+              class="icon-Icon_Readspell"></i></a>
         {{/if}}
         <div class="resource">
           <label class="header-label">{{localize "arm5e.sheet.level"}}</label>
@@ -56,11 +59,13 @@
       <div class="navItem-left-ball"><img src="/systems/arm5e/assets/bRight.png" /></div>
       {{localize "arm5e.sheet.description"}}
     </a>
-    <a class="item posRelative" data-tab="attributes">
-      <div class="navItem-right-ball"><img src="/systems/arm5e/assets/bLeft.png" /></div>
-      <div class="navItem-left-ball"><img src="/systems/arm5e/assets/bRight.png" /></div>
-      {{localize "arm5e.sheet.attributes"}}
-    </a>
+    {{#unless (eq system.type "raw")}}
+      <a class="item posRelative" data-tab="attributes">
+        <div class="navItem-right-ball"><img src="/systems/arm5e/assets/bLeft.png" /></div>
+        <div class="navItem-left-ball"><img src="/systems/arm5e/assets/bRight.png" /></div>
+        {{localize "arm5e.sheet.attributes"}}
+      </a>
+    {{/unless}}
     {{#if (eq system.type "enchantment")}}
       <a class="item posRelative" data-tab="enchantment">
         <div class="navItem-right-ball"><img src="/systems/arm5e/assets/bLeft.png" /></div>

@@ -77,9 +77,8 @@
             <label class="header-label">{{localize "arm5e.sheet.bookTopic"}}</label>
             <select class="book-topic" name="reading.book.topics.{{topicIndex}}.category" data-index="{{topicIndex}}"
               data-dtype="String" {{ui.disabledBook}}>
-              {{log "reading.book.currentTopic: " reading.book.currentTopic}}
               {{#select reading.book.currentTopic.category}}
-                {{#each bookTopics as |book key|}} -->
+                {{#each bookTopics as |book key|}}
                   <option value="{{key}}">{{localize book}}</option>
                 {{/each}}
               {{/select}}

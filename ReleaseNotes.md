@@ -1,6 +1,6 @@
 # Release Notes
 
-## 2.0.4.2, Kentigern
+## 2.0.4.4, Kentigern
 
 ### Features & changes
 
@@ -21,6 +21,8 @@
 - Limited Item sheet
 - Realm alignment for supernatural abilities (no effect yet)
 - More translated hints (WIP)
+- New icons by Sylph
+- Lab texts in books
 
 ### Bug fixes
 
@@ -30,6 +32,12 @@
 - Fix major bug, in scene migration, duplicating tokens
 - Fix overflow of abilities if there are too many in a category
 - rearranged some assets to be more consistent with naming
+- Item code cleanup
+- Fixed Item filtering being incremental instead of resetting at each of the filters change
+- Aging roll of 10 now results in a zero on the dice.
+- Lab owned Items are again migrated properly
+- Starting date of a world is now the canonical year of 1220
+- Fixed a bunch of bugs in the diary entries.
 
 ### Documentation
 
@@ -45,7 +53,12 @@
   - Virtues & Flaws
   - Mundane items
   - Vis
+  - Base effects
+  - Spontaneous effets
   - Spells
+  - Laboratory Texts
+  - Magical effects
+  - Diary entry
 
 ## 2.0.3.13, Jerbiton the Founder
 

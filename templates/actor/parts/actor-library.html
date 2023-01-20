@@ -126,7 +126,7 @@
   {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
   {{> "systems/arm5e/templates/actor/parts/hermeticFilter.html" list="laboratoryTexts" visibility=ui.labtTextFilterVisibility }}
   {{#each
-  system.laboratoryTexts as |item id|}}
+  system.filteredLaboratoryTexts as |item id|}}
     <li class="item item-value flexrow flex-center" data-name="{{item.name}}" data-index="{{item.index}}"
       data-item-id="{{item.id}}">
       <div class="flexrow flex-center">

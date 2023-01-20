@@ -44,7 +44,7 @@
   "ITEM.TypeBook": "Livre",
   "ITEM.TypeEnchantment": "Enchantement",
   "ITEM.TypeMundanebook": "Livre ordinaire (déprécié)",
-  
+
   "arm5e.sheet.player": "Joueur",
   "arm5e.sheet.npc": "PNJ",
   "arm5e.sheet.laboratory": "Laboratoire",
@@ -1001,9 +1001,9 @@
   "arm5e.activity.title.apprenticeship": "Apprentissage hérmétique",
   "arm5e.activity.title.laterLife": "Années après l'enfance",
   "arm5e.activity.title.laterLifeMagi": "Années après l'apprentissage",
-  "arm5e.activity.title.childhodd": "Enfance",
-  "arm5e.activity.drop.teacher": "Déposez ici un personnage pour faire office de professeur/entraineur.",	
-  
+  "arm5e.activity.title.childhood": "Enfance",
+  "arm5e.activity.drop.teacher": "Déposez ici un personnage pour faire office de professeur/entraineur.",
+
   "arm5e.activity.descItem": "{item} : {xp} xp(s) augmentation",
   "arm5e.activity.options.language": "Pratiquer la langue",
   "arm5e.activity.options.area": "Explorer la zone",
@@ -1045,7 +1045,7 @@
   "arm5e.hints.edit": "Modifier {item}",
   "arm5e.hints.delete": "Supprimer {item}",
   "arm5e.hints.design": "Conception {item}",
-  
+
   "arm5e.sheet.label.details": "Détails",
 
   "arm5e.config.sourcebookFilter": "Filtre livre source",

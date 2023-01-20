@@ -8,13 +8,13 @@
       <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="name" /></h1>
       <div class="grid grid-col">
         <div class="resource">
-          <label>{{localize "arm5e.sheet.year"}}<input type="number" name="system.year" value="{{system.year}}"
-              data-dtype="Number" /></label>
+          <label>{{localize "arm5e.sheet.year"}}<input type="number" name="system.dates.0.year"
+              value="{{system.dates.0.year}}" data-dtype="Number" /></label>
         </div>
         <div class="resource">
-          <label>{{localize "arm5e.sheet.season"}}</label><select name="system.season" data-type="String"
+          <label>{{localize "arm5e.sheet.season"}}</label><select name="system.dates.0.season" data-type="String"
             style="width: 100%">
-            {{#select system.season}} {{#each config.seasons as |season key|}}
+            {{#select system.dates.0.season}} {{#each config.seasons as |season key|}}
                 <option value="{{key}}">{{localize season.label}}</option>
               {{/each}} {{/select}}
           </select>

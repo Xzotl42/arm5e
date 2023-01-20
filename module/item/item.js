@@ -57,137 +57,85 @@ export class ArM5eItem extends Item {
       if (this._isNotMigrated()) {
         return;
       }
-      // if base level is 0, the "magicRulesEnforcement" has just been enabled, try to compute the base level
-      let recomputeSpellLevel = true;
-      if (system.baseLevel == 0 && system.general === false) {
-        let newBaseLevel = this.system.level;
-        let shouldBeRitual = false;
-        if (system.range.value) {
-          newBaseLevel = this._addSpellMagnitude(
-            newBaseLevel,
-            -CONFIG.ARM5E.magic.ranges[system.range.value].impact
-          );
-        }
-        if (system.duration.value) {
-          newBaseLevel = this._addSpellMagnitude(
-            newBaseLevel,
-            -CONFIG.ARM5E.magic.durations[system.duration.value].impact
-          );
-        }
-        if (system.target.value) {
-          newBaseLevel = this._addSpellMagnitude(
-            newBaseLevel,
-            -CONFIG.ARM5E.magic.targets[system.target.value].impact
-          );
-        }
-        if (system.complexity) {
-          newBaseLevel = this._addSpellMagnitude(newBaseLevel, -system.complexity);
-        }
-        if (system.enhancingRequisite) {
-          newBaseLevel = this._addSpellMagnitude(newBaseLevel, -system.enhancingRequisite);
-        }
-        if (system.targetSize) {
-          newBaseLevel = this._addSpellMagnitude(newBaseLevel, -system.targetSize);
-        }
-        if (newBaseLevel < 1) {
-          // ui.notifications.warn(`Spell named \"${this.name}\" is not strictly following magic theory, its level will be recomputed using a base effect of level 1`, {
-          //     permanent: true
-          // });
-          newBaseLevel = 1;
-          this.system.baseLevel = 1;
-        } else {
-          this.system.baseLevel = newBaseLevel;
 
-          recomputeSpellLevel = false;
-        }
-        if (this._id != undefined) {
-          this.update(
-            {
-              "system.baseLevel": newBaseLevel
-            },
-            {}
-          );
-        }
+      let effectLevel = this.system.baseLevel;
+
+      if (system.range.value) {
+        effectLevel = this._addSpellMagnitude(
+          effectLevel,
+          CONFIG.ARM5E.magic.ranges[system.range.value].impact
+        );
       }
-      if (recomputeSpellLevel) {
-        let effectLevel = this.system.baseLevel;
+      if (system.duration.value) {
+        effectLevel = this._addSpellMagnitude(
+          effectLevel,
+          CONFIG.ARM5E.magic.durations[system.duration.value].impact
+        );
+      }
+      if (system.target.value) {
+        effectLevel = this._addSpellMagnitude(
+          effectLevel,
+          CONFIG.ARM5E.magic.targets[system.target.value].impact
+        );
+      }
+      if (system.complexity) {
+        effectLevel = this._addSpellMagnitude(effectLevel, system.complexity);
+      }
+      if (system.targetSize) {
+        effectLevel = this._addSpellMagnitude(effectLevel, system.targetSize);
+      }
+      if (system.enhancingRequisite) {
+        effectLevel = this._addSpellMagnitude(effectLevel, system.enhancingRequisite);
+      }
 
-        if (system.range.value) {
-          effectLevel = this._addSpellMagnitude(
-            effectLevel,
-            CONFIG.ARM5E.magic.ranges[system.range.value].impact
-          );
+      if (
+        this.type == "enchantment" ||
+        (this.type == "laboratoryText" && this.system.type == "enchantment")
+      ) {
+        effectLevel += parseInt(system.effectfrequency);
+        if (system.penetration % 2 == 1) {
+          this.system.penetration += 1;
         }
-        if (system.duration.value) {
-          effectLevel = this._addSpellMagnitude(
-            effectLevel,
-            CONFIG.ARM5E.magic.durations[system.duration.value].impact
-          );
-        }
-        if (system.target.value) {
-          effectLevel = this._addSpellMagnitude(
-            effectLevel,
-            CONFIG.ARM5E.magic.targets[system.target.value].impact
-          );
-        }
-        if (system.complexity) {
-          effectLevel = this._addSpellMagnitude(effectLevel, system.complexity);
-        }
-        if (system.targetSize) {
-          effectLevel = this._addSpellMagnitude(effectLevel, system.targetSize);
-        }
-        if (system.enhancingRequisite) {
-          effectLevel = this._addSpellMagnitude(effectLevel, system.enhancingRequisite);
+        effectLevel += this.system.penetration / 2;
+
+        if (system.maintainConc) {
+          effectLevel += 5;
         }
 
+        if (system.environmentalTrigger) {
+          effectLevel += 3;
+        }
+
+        if (system.restrictedUse) {
+          effectLevel += 3;
+        }
+
+        if (system.linkedTrigger) {
+          effectLevel += 3;
+        }
+      } else {
+        let shouldBeRitual = system.ritual;
+        // Duration above moon are rituals and rituals are minimum level 20
         if (
-          this.type == "enchantment" ||
-          (this.type == "laboratoryText" && this.system.type == "enchantment")
+          CONFIG.ARM5E.magic.durations[system.duration.value].impact > 3 ||
+          system.target.value == "bound" ||
+          effectLevel > 50
         ) {
-          effectLevel += parseInt(system.effectfrequency);
-          if (system.penetration % 2 == 1) {
-            this.system.penetration += 1;
-          }
-          effectLevel += this.system.penetration / 2;
-
-          if (system.maintainConc) {
-            effectLevel += 5;
-          }
-
-          if (system.environmentalTrigger) {
-            effectLevel += 3;
-          }
-
-          if (system.restrictedUse) {
-            effectLevel += 3;
-          }
-
-          if (system.linkedTrigger) {
-            effectLevel += 3;
-          }
-        } else {
-          let shouldBeRitual = system.ritual;
-          // Duration above moon are rituals and rituals are minimum level 20
-          if (
-            CONFIG.ARM5E.magic.durations[system.duration.value].impact > 3 ||
-            system.target.value == "bound" ||
-            effectLevel > 50
-          ) {
-            shouldBeRitual = true;
-          }
-
-          if (shouldBeRitual && effectLevel < 20) {
-            effectLevel = 20;
-          }
-          this.system.ritual = shouldBeRitual;
+          shouldBeRitual = true;
         }
-        if (this.system.general) {
-          effectLevel += this.system.levelOffset ?? 0;
+
+        if (shouldBeRitual && effectLevel < 20) {
+          effectLevel = 20;
         }
-        this.system.level = effectLevel;
+        this.system.ritual = shouldBeRitual;
       }
+      if (this.system.general) {
+        effectLevel += this.system.levelOffset ?? 0;
+      }
+      this.system.level = effectLevel;
       system.castingTotal = 0;
     }
+
     if (this.type == "labCovenant") {
       let pts = getLabUpkeepCost(system.upkeep);
       this.system.points = pts * CONFIG.ARM5E.lab.usage[system.usage].coeff;
@@ -216,51 +164,52 @@ export class ArM5eItem extends Item {
       if (this.actor !== null && this.actor._isCharacter()) {
         const activityConfig = CONFIG.ARM5E.activities.generic[systemData.activity];
 
-        if (systemData.applied) {
+        if (systemData.done > 0) {
           // keep the existing quality at the time of applying
           // log(false, `Use source quality (${systemData.sourceQuality}) as base for ${this.name}`);
-          systemData.baseQuality = systemData.sourceQuality;
+          this.system.baseQuality = systemData.sourceQuality;
         } else {
           // only recompute source quality if the entry is not applied yet
           switch (systemData.activity) {
             case "training": {
               if (systemData.teacher.id === null) {
-                systemData.baseQuality = Number(systemData.teacher.score) + 3;
+                this.system.baseQuality = Number(systemData.teacher.score) + 3;
               } else {
-                systemData.baseQuality = 0;
+                this.system.baseQuality = 0;
                 if (
                   Object.values(systemData.progress.abilities).length +
                     Object.values(systemData.progress.spells).length ===
                   1
                 ) {
                   if (Object.values(systemData.progress.abilities).length > 0) {
-                    systemData.baseQuality =
+                    this.system.baseQuality =
                       Number(systemData.progress.abilities[0].teacherScore) + 3;
                   } else {
-                    systemData.baseQuality = Number(systemData.progress.spells[0].teacherScore) + 3;
+                    this.system.baseQuality =
+                      Number(systemData.progress.spells[0].teacherScore) + 3;
                   }
                 }
               }
               break;
             }
             case "teaching": {
-              systemData.baseQuality = systemData.teacher.teaching + systemData.teacher.com + 3;
+              this.system.baseQuality = systemData.teacher.teaching + systemData.teacher.com + 3;
               if (systemData.teacher.applySpec) {
-                systemData.baseQuality++;
+                this.system.baseQuality++;
               }
               break;
             }
             case "practice":
             case "exposure": {
-              systemData.baseQuality = activityConfig.source.default;
+              this.system.baseQuality = activityConfig.source.default;
               break;
             }
             case "adventuring": {
-              systemData.baseQuality = systemData.sourceQuality;
+              this.system.baseQuality = systemData.sourceQuality;
               break;
             }
             case "reading": {
-              systemData.baseQuality = systemData.sourceQuality;
+              this.system.baseQuality = systemData.sourceQuality;
               break;
             }
             case "hermeticApp":
@@ -268,7 +217,7 @@ export class ArM5eItem extends Item {
             case "laterLife":
             case "laterLifeMagi":
               {
-                systemData.baseQuality = activityConfig.source.default; //systemData.sourceQuality;
+                this.system.baseQuality = activityConfig.source.default; //systemData.sourceQuality;
               }
               break;
             default:
@@ -292,7 +241,12 @@ export class ArM5eItem extends Item {
   }
 
   _isMagicalEffect() {
-    return this.type == "magicalEffect" || this.type == "enchantment" || this.type == "spell";
+    return (
+      this.type == "magicalEffect" ||
+      this.type == "enchantment" ||
+      this.type == "spell" ||
+      (this.type === "laboratoryText" && this.system.type === "spell")
+    );
   }
 
   // to tell whether a spell needs to be migrated
@@ -326,13 +280,12 @@ export class ArM5eItem extends Item {
   _getEffectAttributesLabel() {
     if (!this._isMagicalEffect()) return "";
     let label =
-      "( " +
-      this._getTechLabel() +
+      ArM5eItem.getTechLabel(this.system) +
       " " +
-      this._getFormLabel() +
+      ArM5eItem.getFormLabel(this.system) +
       " " +
       this.system.level +
-      " ) - " +
+      " - " +
       game.i18n.localize("arm5e.spell.range.short") +
       ": " +
       game.i18n.localize(CONFIG.ARM5E.magic.ranges[this.system.range.value].label) +
@@ -347,9 +300,9 @@ export class ArM5eItem extends Item {
     return label;
   }
 
-  _getTechLabel() {
-    let label = CONFIG.ARM5E.magic.arts[this.system.technique.value].short;
-    let techReq = Object.entries(this.system["technique-req"]).filter(r => r[1] === true);
+  static getTechLabel(systemData) {
+    let label = CONFIG.ARM5E.magic.arts[systemData.technique.value].short;
+    let techReq = Object.entries(systemData["technique-req"]).filter(r => r[1] === true);
     if (techReq.length > 0) {
       label += " (";
       techReq.forEach(key => {
@@ -362,9 +315,9 @@ export class ArM5eItem extends Item {
     return label;
   }
 
-  _getFormLabel() {
-    let label = CONFIG.ARM5E.magic.arts[this.system.form.value].short;
-    let formReq = Object.entries(this.system["form-req"]).filter(r => r[1] === true);
+  static getFormLabel(systemData) {
+    let label = CONFIG.ARM5E.magic.arts[systemData.form.value].short;
+    let formReq = Object.entries(systemData["form-req"]).filter(r => r[1] === true);
     if (formReq.length > 0) {
       label += " (";
       formReq.forEach(key => {

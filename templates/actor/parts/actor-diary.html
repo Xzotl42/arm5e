@@ -21,17 +21,15 @@
     </div>
   </li>
   {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
-  {{#each system.diaryEntries as |item id|}}
+  {{#each activities as |item id|}}
     <li class="item item-value flexrow flex-center" data-name="{{item.name}}" data-attribute="{{id}}"
       data-item-id="{{item._id}}">
       <div class="flexrow flex-center">
-        <span class="flexrow item-title">{{item.system.year}} (
-          {{#with (lookup @root.config.seasons item.system.season)~}}{{localize label~}} ) {{/with}}
-          {{item.system.date}}</span>
+        <span class="flexrow item-title">{{item.year}} (
+          {{#with (lookup @root.config.seasons item.season)~}}{{localize label~}} ) {{/with}}
+        </span>
         <span></span>
-        <span class="flexrow bold width3" {{{ui.diary}}}>{{item.name}} ({{localize (lookup (lookup
-          @root.config.activities.generic
-          item.system.activity) "label")}})</span>
+        <span class="flexrow bold width3" {{{item.ui.diary}}}>{{item.name}} ({{item.type}})</span>
       </div>
       <div class="item-controls">
         <a class="item-control item-edit" title="Edit diary"><i class="icon-Icon_Edit"></i></a>

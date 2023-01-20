@@ -1033,11 +1033,8 @@ input[type="time"] {
 }
 
 .arm5e .diary-tabs {
-  -webkit-box-flex: 0;
-  -ms-flex: 0;
-  flex: 0;
   font-family: "bookAntiqua";
-  font-size: 9pt;
+  font-size: 10pt;
   text-align: center;
   /* background-image: url("../assets/player/bar.png"); */
   background-repeat: repeat-x;
@@ -1056,6 +1053,10 @@ input[type="time"] {
 .arm5eRoll .ability-key,
 .arm5e .ability-key {
   max-width: 250px;
+}
+
+.arm5e .ability-key-slim {
+  max-width: 200px;
 }
 
 .arm5e .ability-category {

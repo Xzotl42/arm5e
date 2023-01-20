@@ -150,6 +150,7 @@
         "items": [],
         "spells": [],
         "magicalEffects": [],
+        "laboratoryTexts": [],
         "decrepitude": {
           "points": 0,
           "effects": "Decrepitude effects"
@@ -1283,12 +1284,10 @@
     },
     "diaryEntry": {
       "templates": ["base"],
-      "year": "",
-      "season": "",
-      "date": "",
+      "dates": [{ "year": 1220, "season": "spring" }],
       "sourceQuality": 0,
       "activity": "none",
-      "progress": { "abilities": [], "spells": [], "arts": [] },
+      "progress": { "abilities": [], "spells": [], "arts": [], "newSpells": [] },
       "teacher": {
         "id": null,
         "name": "",
@@ -1299,7 +1298,8 @@
         "score": 0
       },
       "optionKey": "standard",
-      "applied": false
+      "duration": 1,
+      "done": 0
     },
     "power": {
       "templates": ["base"],

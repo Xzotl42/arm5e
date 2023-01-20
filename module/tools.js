@@ -238,6 +238,8 @@ export function compareSpells(e1, e2) {
 }
 
 export function hermeticFilter(filters, inputArray) {
+  // for books with empty labtext topics
+  inputArray = inputArray.filter(e => e.system !== null);
   if (filters.formFilter != "") {
     inputArray = inputArray.filter(e => e.system.form.value === filters.formFilter);
   }
@@ -262,6 +264,13 @@ export function hermeticFilter(filters, inputArray) {
 }
 
 export function compareLabTexts(e1, e2) {
+  // for book topics without lab texts yet
+  if (e1.system == null) {
+    return 1;
+  }
+  if (e2.system == null) {
+    return -1;
+  }
   if (e1.system.type < e2.system.type) {
     return -1;
   } else if (e1.system.type > e2.system.type) {

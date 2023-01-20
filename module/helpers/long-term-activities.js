@@ -64,7 +64,7 @@ export async function agingCrisis(actor, roll, message) {
   let docs = await rtCompendium.getDocuments();
 
   const crisisTable = docs.filter(rt => rt.name === "Aging crisis table")[0];
-  let res = crisisTable.getResultsForRoll(roll.total)[0].data.text;
+  let res = crisisTable.getResultsForRoll(roll.total)[0].text;
 
   const title =
     '<h2 class="ars-chat-title">' + game.i18n.localize("arm5e.aging.crisis.summary") + "</h2>";
@@ -122,11 +122,11 @@ async function createAgingDiaryEntry(actor, input) {
     img: "/systems/arm5e/assets/icons/Icon_Aging_and_Decrepitude.png",
     type: "diaryEntry",
     system: {
-      year: input.year,
-      season: "winter",
+      dates: [{ year: input.year, season: "winter" }],
       activity: "aging",
       description: "<p>" + desc + "</p>",
-      applied: true
+      duration: 1,
+      done: 1
     },
     flags: { arm5e: { effect: input } }
   };
@@ -199,7 +199,7 @@ function checkMaxXpPerItem(context, array, max) {
 }
 
 export function validAdventuring(context, actor, item) {
-  context.system.totalXp = { abilities: 0, arts: 0, spells: 0 };
+  context.system.totalXp = { abilities: 0, arts: 0, masteries: 0, spellLevels: 0 };
 
   let abilitiesArr = Object.values(item.system.progress.abilities);
   checkForDuplicates("abilities", context, abilitiesArr);
@@ -209,12 +209,12 @@ export function validAdventuring(context, actor, item) {
 
   let spellsArr = Object.values(item.system.progress.spells);
   checkForDuplicates("spells", context, spellsArr);
-  context.system.totalXp.spells = checkMaxXpPerItem(context, spellsArr, 5);
+  context.system.totalXp.masteries = checkMaxXpPerItem(context, spellsArr, 5);
 
   if (
     context.system.totalXp.abilities +
       context.system.totalXp.arts +
-      context.system.totalXp.spells !=
+      context.system.totalXp.masteries !=
     context.system.sourceQuality
   ) {
     context.system.applyPossible = "disabled";
@@ -222,14 +222,14 @@ export function validAdventuring(context, actor, item) {
       context.system.errorParam =
         context.system.totalXp.abilities +
         context.system.totalXp.arts +
-        context.system.totalXp.spells;
+        context.system.totalXp.masteries;
       context.system.applyError = "arm5e.activity.msg.wrongTotalXp";
     }
   }
 }
 
 export function validChildhood(context, actor, item) {
-  context.system.totalXp = { abilities: 0, arts: 0, spells: 0 };
+  context.system.totalXp = { abilities: 0, arts: 0, masteries: 0 };
 
   let abilitiesArr = Object.values(item.system.progress.abilities);
   checkForDuplicates("abilities", context, abilitiesArr);
@@ -241,7 +241,7 @@ export function validChildhood(context, actor, item) {
   });
 
   if (filteredArray.length != 1) {
-    context.system.applyPossible = "disabled";
+    context.system.applyPossible = "";
     if (context.system.applyError === "")
       context.system.applyError = "arm5e.activity.msg.missingMotherTongue";
   }
@@ -249,7 +249,7 @@ export function validChildhood(context, actor, item) {
   if (
     context.system.totalXp.abilities +
       context.system.totalXp.arts +
-      context.system.totalXp.spells !=
+      context.system.totalXp.masteries !=
     context.system.sourceQuality
   ) {
     context.system.applyPossible = "disabled";
@@ -257,14 +257,14 @@ export function validChildhood(context, actor, item) {
       context.system.errorParam =
         context.system.totalXp.abilities +
         context.system.totalXp.arts +
-        context.system.totalXp.spells;
+        context.system.totalXp.masteries;
       context.system.applyError = "arm5e.activity.msg.wrongTotalXp";
     }
   }
 }
 
 export function validTotalXp(context, actor, item) {
-  context.system.totalXp = { abilities: 0, arts: 0, spells: 0 };
+  context.system.totalXp = { abilities: 0, arts: 0, masteries: 0, spellLevels: 0 };
 
   let abilitiesArr = Object.values(item.system.progress.abilities);
   checkForDuplicates("abilities", context, abilitiesArr);
@@ -274,12 +274,17 @@ export function validTotalXp(context, actor, item) {
 
   let spellsArr = Object.values(item.system.progress.spells);
   checkForDuplicates("spells", context, spellsArr);
-  context.system.totalXp.spells = checkMaxXpPerItem(context, spellsArr, 1000);
+  context.system.totalXp.masteries = checkMaxXpPerItem(context, spellsArr, 1000);
+
+  let newSpellsArr = Object.values(item.system.progress.newSpells);
+  context.system.totalXp.spellLevels = newSpellsArr.reduce((sum, e) => {
+    return sum + e.level;
+  }, 0);
 
   if (
     context.system.totalXp.abilities +
       context.system.totalXp.arts +
-      context.system.totalXp.spells !=
+      context.system.totalXp.masteries !=
     context.system.sourceQuality
   ) {
     context.system.applyPossible = "disabled";
@@ -287,14 +292,14 @@ export function validTotalXp(context, actor, item) {
       context.system.errorParam =
         context.system.totalXp.abilities +
         context.system.totalXp.arts +
-        context.system.totalXp.spells;
+        context.system.totalXp.masteries;
       context.system.applyError = "arm5e.activity.msg.wrongTotalXp";
     }
   }
 }
 
 export function validExposure(context, actor, item) {
-  context.system.totalXp = { abilities: 0, arts: 0, spells: 0 };
+  context.system.totalXp = { abilities: 0, arts: 0, masteries: 0 };
 
   let abilitiesArr = Object.values(item.system.progress.abilities);
   checkForDuplicates("abilities", context, abilitiesArr);
@@ -308,7 +313,7 @@ export function validExposure(context, actor, item) {
 
   let spellsArr = Object.values(item.system.progress.spells);
   checkForDuplicates("spells", context, spellsArr);
-  context.system.totalXp.spells = checkMaxXpPerItem(
+  context.system.totalXp.masteries = checkMaxXpPerItem(
     context,
     spellsArr,
     context.system.sourceQuality
@@ -317,7 +322,7 @@ export function validExposure(context, actor, item) {
   if (
     context.system.totalXp.abilities +
       context.system.totalXp.arts +
-      context.system.totalXp.spells !=
+      context.system.totalXp.masteries !=
     context.system.sourceQuality
   ) {
     context.system.applyPossible = "disabled";
@@ -325,7 +330,7 @@ export function validExposure(context, actor, item) {
       context.system.errorParam =
         context.system.totalXp.abilities +
         context.system.totalXp.arts +
-        context.system.totalXp.spells;
+        context.system.totalXp.masteries;
       context.system.applyError = "arm5e.activity.msg.wrongTotalXp";
     }
   }
@@ -333,7 +338,7 @@ export function validExposure(context, actor, item) {
 
 export function validPractice(context, actor, item) {
   const activityConfig = CONFIG.ARM5E.activities.generic[context.system.activity];
-  context.system.totalXp = { abilities: 0, arts: 0, spells: 0 };
+  context.system.totalXp = { abilities: 0, arts: 0, masteries: 0 };
 
   let abilitiesArr = Object.values(item.system.progress.abilities);
   checkForDuplicates("abilities", context, abilitiesArr);
@@ -345,7 +350,7 @@ export function validPractice(context, actor, item) {
 
   let spellsArr = Object.values(item.system.progress.spells);
   checkForDuplicates("spells", context, spellsArr);
-  context.system.totalXp.spells = checkMaxXpPerItem(
+  context.system.totalXp.masteries = checkMaxXpPerItem(
     context,
     spellsArr,
     context.system.sourceQuality
@@ -387,7 +392,8 @@ export function validPractice(context, actor, item) {
     }
   }
   if (optionError === true) {
-    context.system.applyPossible = "disabled";
+    context.system.applyPossible = "";
+    // context.system.applyPossible = "disabled";
     context.system.errorParam = game.i18n.localize(
       activityConfig.bonusOptions[item.system.optionKey].label
     );
@@ -397,7 +403,7 @@ export function validPractice(context, actor, item) {
   if (
     context.system.totalXp.abilities +
       context.system.totalXp.arts +
-      context.system.totalXp.spells !=
+      context.system.totalXp.masteries !=
     context.system.sourceQuality
   ) {
     context.system.applyPossible = "disabled";
@@ -405,7 +411,7 @@ export function validPractice(context, actor, item) {
       context.system.errorParam =
         context.system.totalXp.abilities +
         context.system.totalXp.arts +
-        context.system.totalXp.spells;
+        context.system.totalXp.masteries;
       context.system.applyError = "arm5e.activity.msg.wrongTotalXp";
     }
   }
@@ -413,11 +419,11 @@ export function validPractice(context, actor, item) {
 
 export function validTraining(context, actor, item) {
   const activityConfig = CONFIG.ARM5E.activities.generic[context.system.activity];
-  context.system.totalXp = { abilities: 0, arts: 0, spells: 0 };
+  context.system.totalXp = { abilities: 0, arts: 0, masteries: 0, spellLevels: 0 };
   let abilitiesArr = Object.values(item.system.progress.abilities);
   let spellsArr = Object.values(item.system.progress.spells);
   if (abilitiesArr.length + spellsArr.length > 1) {
-    context.system.applyPossible = "disabled";
+    context.system.applyPossible = "";
     context.system.applyError = "arm5e.activity.msg.tooManyItems";
     context.system.errorParam = 1;
     return;
@@ -461,13 +467,13 @@ export function validTraining(context, actor, item) {
   } else if (spellsArr.length > 0) {
     const teacherScore = Number(item.system.progress.spells[0].teacherScore);
     context.system.baseQuality = teacherScore + 3;
-    const ability = Object.values(actor.system.spells).find(e => {
+    const spell = Object.values(actor.system.spells).find(e => {
       return e._id === item.system.progress.spells[0].id;
     });
-    let newXp = context.system.sourceQuality + ability.system.xp;
+    let newXp = context.system.sourceQuality + spell.system.xp;
     let teacherXp = ArM5ePCActor.getAbilityXp(teacherScore);
     if (newXp > teacherXp) {
-      let newSource = teacherXp - ability.system.xp;
+      let newSource = teacherXp - spell.system.xp;
       context.system.theoriticalSource = context.system.sourceQuality;
       context.system.sourceQuality = newSource > 0 ? newSource : 0;
       context.system.errorParam = context.system.sourceQuality;
@@ -475,13 +481,13 @@ export function validTraining(context, actor, item) {
       context.system.cappedGain = true;
     }
     context.system.progress.spells[0].xp = Number(context.system.sourceQuality);
-    context.system.totalXp.spells += Number(context.system.sourceQuality);
+    context.system.totalXp.masteries += Number(context.system.sourceQuality);
   }
 }
 
 export function validTeaching(context, actor, item) {
   const activityConfig = CONFIG.ARM5E.activities.generic[context.system.activity];
-  context.system.totalXp = { abilities: 0, arts: 0, spells: 0 };
+  context.system.totalXp = { abilities: 0, arts: 0, masteries: 0 };
   let abilitiesArr = Object.values(item.system.progress.abilities);
   let artsArr = Object.values(item.system.progress.arts);
   let spellsArr = Object.values(item.system.progress.spells);
@@ -542,7 +548,7 @@ export function validTeaching(context, actor, item) {
       context.system.cappedGain = true;
     }
     context.system.progress.spells[0].xp = Number(context.system.sourceQuality);
-    context.system.totalXp.spells += Number(context.system.sourceQuality);
+    context.system.totalXp.masteries += Number(context.system.sourceQuality);
   } else if (artsArr.length > 0) {
     const progressArt = item.system.progress.arts[0];
     const teacherScore = Number(progressArt.teacherScore);
@@ -567,18 +573,18 @@ export function validTeaching(context, actor, item) {
 }
 
 export function validReading(context, actor, item) {
-  context.system.totalXp = { abilities: 0, arts: 0, spells: 0 };
+  context.system.totalXp = { abilities: 0, arts: 0, masteries: 0, spellLevels: 0 };
   let abilitiesArr = Object.values(item.system.progress.abilities);
   context.system.totalXp.abilities = checkMaxXpPerItem(context, abilitiesArr, 1000);
 
   context.system.totalXp.arts += checkArtProgressItems(context, item, 1000);
 
   let spellsArr = Object.values(item.system.progress.spells);
-  context.system.totalXp.spells = checkMaxXpPerItem(context, spellsArr, 1000);
+  context.system.totalXp.masteries = checkMaxXpPerItem(context, spellsArr, 1000);
 }
 
 export function computeTotals(context) {
-  context.system.totalXp = { abilities: 0, arts: 0, spells: 0 };
+  context.system.totalXp = { abilities: 0, arts: 0, masteries: 0 };
 }
 
 // get a new title for a diary entry if it is still the default : "New DiaryEntry"
@@ -613,8 +619,8 @@ export function getNewTitleForActivity(actor, item) {
   switch (item.system.activity) {
     case "adventuring":
       return game.i18n.format("arm5e.activity.title.adventuring", {
-        season: game.i18n.localize(CONFIG.ARM5E.seasons[systemData.season].label),
-        year: systemData.year
+        season: game.i18n.localize(CONFIG.ARM5E.seasons[systemData.dates[0].season].label),
+        year: systemData.dates[0].year
       });
     case "practice":
       return game.i18n.format("arm5e.activity.title.practice", { skills: skills });

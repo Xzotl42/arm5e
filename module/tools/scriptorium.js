@@ -1,4 +1,6 @@
 import { ArM5ePCActor } from "../actor/actor.js";
+import { getTopicDescription } from "../item/item-book-sheet.js";
+import { ArM5eItem } from "../item/item.js";
 import { debug, log } from "../tools.js";
 
 export class ScriptoriumObject {
@@ -213,7 +215,6 @@ export class Scriptorium extends FormApplication {
             context.reading.reader.spell = context.reading.reader.spells[0].id;
           }
         }
-
         break;
       }
       default:
@@ -258,24 +259,25 @@ export class Scriptorium extends FormApplication {
         type: "diaryEntry",
         system: {
           cappedGain: false,
-          season: objectData.season,
-          year: objectData.year,
+          dates: [{ season: objectData.season, year: Number(objectData.year) }],
           sourceQuality: topic.quality,
           activity: "reading",
           progress: {
             abilities: [],
             arts: [],
-            spells: []
+            spells: [],
+            newSpells: []
           },
           optionKey: "standard",
-          applied: false,
+          done: 0,
+          duration: 1,
           description: game.i18n.format("arm5e.scriptorium.msg.diaryDesc", {
             name: reader.name,
             title: book.title,
             author: book.author,
             type: topic.type,
             language: book.language,
-            topic: this._getTopicDescription(topic)
+            topic: getTopicDescription(topic)
           })
         }
       }
@@ -328,32 +330,6 @@ export class Scriptorium extends FormApplication {
     }
     let entry = await reader.createEmbeddedDocuments("Item", entryData, {});
     entry[0].sheet.render(true);
-  }
-
-  _getTopicDescription(topic) {
-    let desc;
-    switch (topic.category) {
-      case "ability":
-        const ab = CONFIG.ARM5E.ALL_ABILITIES[topic.key];
-        if (ab) {
-          desc = `"${game.i18n.format(ab.mnemonic, { option: topic.option })}"`;
-        } else {
-          desc = `"${game.i18nlocalize("arm5e.generic.unknown")} ${game.i18nlocalize(
-            "arm5e.sheet.bookTopic"
-          )}"`;
-        }
-        break;
-      case "art":
-        desc = game.i18n.format("arm5e.scriptorium.msg.diaryTopic.art", {
-          art: CONFIG.ARM5E.magic.arts[topic.art].label
-        });
-        break;
-      case "mastery":
-        desc = game.i18n.format("arm5e.scriptorium.msg.diaryTopic.spell", {
-          spell: topic.spellName
-        });
-    }
-    return desc;
   }
 
   async _resetReader(event) {

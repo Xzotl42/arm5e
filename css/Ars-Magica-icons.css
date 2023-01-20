@@ -117,3 +117,6 @@
 .icon-Icon_Crafting:before {
   content: "\005a";
 }
+.icon-Icon_Readspell:before {
+	content:'\0061';
+}

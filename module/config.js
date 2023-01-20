@@ -2070,7 +2070,8 @@ ARM5E.activities.generic = {
       progress: true,
       abilities: true,
       arts: true,
-      spells: true
+      masteries: true,
+      spells: false
     },
     source: { default: 5, readonly: false },
     maxXp: 5,
@@ -2085,7 +2086,8 @@ ARM5E.activities.generic = {
       progress: true,
       abilities: true,
       arts: true,
-      spells: true
+      masteries: true,
+      spells: false
     },
     source: { default: 2, readonly: false },
     maxXp: 2,
@@ -2100,7 +2102,8 @@ ARM5E.activities.generic = {
       progress: true,
       abilities: true,
       arts: false,
-      spells: true
+      masteries: true,
+      spells: false
     },
     source: { default: 4, readonly: true },
     maxXp: 0,
@@ -2121,7 +2124,8 @@ ARM5E.activities.generic = {
       progress: true,
       abilities: true,
       arts: false,
-      spells: true
+      masteries: true,
+      spells: false
     },
     source: { default: null, readonly: true },
     maxXp: 0,
@@ -2136,6 +2140,7 @@ ARM5E.activities.generic = {
       progress: true,
       abilities: true,
       arts: true,
+      masteries: true,
       spells: true
     },
     source: { default: null, readonly: true },
@@ -2156,6 +2161,7 @@ ARM5E.activities.generic = {
       progress: true,
       abilities: true,
       arts: true,
+      masteries: true,
       spells: true
     },
     source: { default: 240, readonly: false },
@@ -2171,6 +2177,7 @@ ARM5E.activities.generic = {
       progress: true,
       abilities: true,
       arts: false,
+      masteries: false,
       spells: false
     },
     source: { default: 120, readonly: false },
@@ -2186,6 +2193,7 @@ ARM5E.activities.generic = {
       progress: true,
       abilities: true,
       arts: false,
+      masteries: false,
       spells: false
     },
     source: { default: 15, readonly: false },
@@ -2201,7 +2209,8 @@ ARM5E.activities.generic = {
       progress: true,
       abilities: true,
       arts: true,
-      spells: true
+      masteries: true,
+      spells: false
     },
     source: { default: 30, readonly: false },
     maxXp: 1000,
@@ -2216,6 +2225,24 @@ ARM5E.activities.generic = {
       progress: true,
       abilities: true,
       arts: true,
+      masteries: true,
+      spells: false,
+      choosable: "disabled"
+    },
+    source: { default: 0, readonly: true },
+    maxXp: 0,
+    bonusOptions: null,
+    validation: validReading,
+    secondaryFilter: null
+  },
+  learnSpell: {
+    label: "arm5e.activity.spellLearning",
+    display: {
+      tab: true,
+      progress: true,
+      abilities: false,
+      arts: true,
+      masteries: true,
       spells: true,
       choosable: "disabled"
     },
@@ -2232,6 +2259,7 @@ ARM5E.activities.generic = {
       progress: false,
       abilities: true,
       arts: false,
+      masteries: false,
       spells: false,
       choosable: "disabled"
     },
@@ -2249,7 +2277,7 @@ ARM5E.books.categories = {
   art: "arm5e.sheet.art",
   ability: "arm5e.sheet.ability",
   mastery: "arm5e.activity.options.mastery",
-  labText: "Lab text" // TODO mnemonic
+  labText: "ITEM.TypeLaboratorytext"
 };
 
 ARM5E.activities.lab = {

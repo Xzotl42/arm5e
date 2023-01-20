@@ -4,15 +4,21 @@
   <header class="sheet-header">
     <img class="item-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" />
     <div class="header-fields flexcol">
-      <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name" />{{#if devMode}}
-          <div class="flex0 padding10" style="width:24px"><a class="migrate" title="Migrate Item"><i
-                class="fas fa-arrow-up"></i></a></div>
-        {{/if}}</h1>
+      <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name" />
+        <div class="flex0 padding10" style="width:24px">
+          {{#if devMode}}
+            <a class="migrate" title="Migrate Item"><i class="fas fa-arrow-up"></i></a>
+          {{/if}}
+          <a class="item-control table-contents"
+            title='{{localize "arm5e.hints.create"  item=(localize "arm5e.book.tableContents")}}'><i
+              class="icon-Icon_Edit"></i></a>
+        </div>
+      </h1>
+
       {{> "systems/arm5e/templates/item/parts/authorship.html" }}
       <label style="margin-left: 5px;">{{localize "arm5e.sheet.bookTopics"}}: {{topicNum}}</label>
     </div>
   </header>
-  {{log "Form data" : this}}
   {{!-- Sheet Tab Navigation --}}
   <nav class="arm5eTabs sheet-tabs tabs tab-header" data-group="primary">
     <a class="item posRelative" data-tab="description">
@@ -66,8 +72,9 @@
               style="padding-left: 5px; padding-bottom: 5px;"><i class="
             icon-Icon_Delete_Hand_Gesture"></i></a>
           {{/unless}}
-          <a class="plan-reading" title="Read book" style="padding-left: 5px; padding-top: 5px;"
-            data-index="{{topicIdx}}"><i class="icon-Icon_Read"></i></a>
+          <a class="plan-reading" title='{{localize "arm5e.hints.read" item=(localize "arm5e.sheet.book")}}'
+            style="padding-left: 5px; padding-top: 5px;" data-index="{{topicIdx}}"><i
+              class="icon-Icon_Readspell"></i></a>
         </div>
       </div>
       <br />
@@ -182,10 +189,24 @@
         </div>
       {{/if}}
       {{#if (eq currentTopic.category "labText")}}
-        <div class="resource" style="width: 220px; padding-top: 5px;">
-          <label for="system.topics.{{topicIdx}}.spellName" class="header-label">LabTexts (WIP)</label>
+        {{#if (eq currentTopic.labtextTitle "")}}
+          <div class="resource drop-box drop-labtext flexcol" data-drop="labtext" data-index="{{topicIdx}}"
+            style="height: 120px; padding-top: 5px;">
+            <label for="system.topics.{{topicIdx}}.spellName"
+              class="flex03">{{localize "arm5e.book.dropLabtext"}}</label>
+          </div>
+        {{else}}
+          <div class="resource flexrow">
+            <label for="system.topics.{{topicIdx}}.labtextTitle"
+              class="header-label">{{currentTopic.labtext.summary}}</label>
+            <a class="item-control show-details flex0" title='{{localize "arm5e.generic.details"}}'
+              data-index="{{topicIdx}}" style="padding-left: 5px; padding-bottom: 5px;"><i
+                class="icon-Icon_Read"></i></a>
+          </div>
+          {{editor currentTopic.labtext.description target="currentTopic.labtext.description" button=false owner=owner editable=false}}
+        {{/if}}
 
-        </div>
+
       {{/if}}
     </div>
 

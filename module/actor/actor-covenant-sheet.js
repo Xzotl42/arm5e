@@ -114,33 +114,6 @@ export class ArM5eCovenantActorSheet extends ArM5eActorSheet {
       }
     }
 
-    // hermetic filters
-    // 1. Filter
-    //
-    let labtTextFilters = context.userData.filters.hermetic.laboratoryTexts;
-    // if (!labtTextFilters) {
-    //   labtTextFilters = { formFilter: "", levelFilter: "", levelOperator: 0, techniqueFilter: "" };
-    // }
-    context.ui = {};
-    context.system.laboratoryTexts = hermeticFilter(
-      labtTextFilters,
-      context.system.laboratoryTexts
-    );
-    if (labtTextFilters.expanded) {
-      context.ui.labtTextFilterVisibility = "";
-    } else {
-      context.ui.labtTextFilterVisibility = "hidden";
-    }
-    if (
-      labtTextFilters.formFilter != "" ||
-      labtTextFilters.techniqueFilter != "" ||
-      (labtTextFilters.levelFilter != 0 && labtTextFilters.levelFilter != null)
-    ) {
-      context.ui.labTextFilter = 'style="text-shadow: 0 0 5px maroon"';
-    }
-    // 2. Sort
-    context.system.laboratoryTexts = context.system.laboratoryTexts.sort(compareLabTexts);
-
     return context;
   }
 

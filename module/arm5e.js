@@ -12,11 +12,12 @@ import { ArM5eCrucibleSheet } from "./actor/actor-crucible-sheet.js";
 import { ArM5eItem } from "./item/item.js";
 import { ArM5eItemSheet, ArM5eItemSheetNoDesc } from "./item/item-sheet.js";
 import { ArM5eItemMagicSheet } from "./item/item-magic-sheet.js";
+import { ArM5eBookSheet } from "./item/item-book-sheet.js";
 import { ArM5eItemDiarySheet } from "./item/item-diary-sheet.js";
 import ArM5eActiveEffect from "./helpers/active-effects.js";
 
 import { ArM5eScene } from "./ui/ars-scene.js";
-import { prepareDatasetByTypeOfItem } from "./helpers/items.js";
+import { prepareDatasetByTypeOfItem } from "./helpers/items-helpers.js";
 import { ArM5ePreloadHandlebarsTemplates } from "./templates.js";
 import { ArM5eActiveEffectConfig } from "./helpers/active-effect-config.sheet.js";
 import * as Arm5eChatMessage from "./helpers/chat.js";
@@ -28,19 +29,22 @@ import { ArsLayer, addArsButtons, onDropOnCanvas } from "./ui/ars-layer.js";
 
 import { migration } from "./migration.js";
 import { log, generateActiveEffectFromAbilities, getDocumentFromCompendium } from "./tools.js";
-import {
-  AbilitySchema,
-  BookSchema,
-  ItemSchema,
-  VirtueFlawSchema,
-  VisSchema
-} from "./schemas/ItemSchemas.js";
+
 import { registerSettings } from "./settings.js";
 import { registerTestSuites } from "./tests/tests.js";
 import { StressDie } from "./helpers/stressdie.js";
 import { UserguideTour } from "./tours/userguide-tour.js";
-import { ArM5eBookSheet } from "./item/item-book-sheet.js";
-import { BaseEffectSchema, MagicalEffectSchema, SpellSchema } from "./schemas/MagicSchemas.js";
+
+import {
+  BaseEffectSchema,
+  MagicalEffectSchema,
+  SpellSchema,
+  LabTextSchema
+} from "./schemas/magicSchemas.js";
+import { AbilitySchema } from "./schemas/abilitySchema.js";
+import { BookSchema } from "./schemas/bookSchema.js";
+import { DiaryEntrySchema } from "./schemas/diarySchema.js";
+import { ItemSchema, VirtueFlawSchema, VisSchema } from "./schemas/minorItemsSchemas.js";
 
 Hooks.once("init", async function() {
   game.arm5e = {
@@ -354,8 +358,10 @@ function setSystemDatamodels() {
   CONFIG.Item.systemDataModels["item"] = ItemSchema;
   CONFIG.Item.systemDataModels["vis"] = VisSchema;
   CONFIG.Item.systemDataModels["baseEffect"] = BaseEffectSchema;
-  CONFIG.Item.systemDataModels["magicalEffet"] = MagicalEffectSchema;
+  CONFIG.Item.systemDataModels["magicalEffect"] = MagicalEffectSchema;
   CONFIG.Item.systemDataModels["spell"] = SpellSchema;
+  CONFIG.Item.systemDataModels["laboratoryText"] = LabTextSchema;
+  CONFIG.Item.systemDataModels["diaryEntry"] = DiaryEntrySchema;
 }
 
 function registerSheets() {

@@ -534,6 +534,8 @@
   "arm5e.sheet.visSources": "Vis Sources",
   "arm5e.sheet.visStock": "Vis Stock",
 
+  "arm5e.book.dropLabtext": "Drop a laboratory text here",
+
   "arm5e.sheet.governForm": "Type of Governance",
   "arm5e.sheet.loyaltyPoints.base": "Base Loyalty Points",
   "arm5e.sheet.loyaltyPoints.actuals": "Current Loyalty Points",
@@ -811,6 +813,7 @@
   "arm5e.notification.noMightPoints": "Not enough points remaining in might pool.",
   "arm5e.notification.setDate": "The current date has been set to {season} {year}",
   "arm5e.notification.synchActors": "All actors have been synchronized to {season} {year}",
+  "arm5e.notification.missingSpell": "Spell \"{spellName}\" doesn't exist anymore or has moved. Aborting.",
 
   "arm5e.canvas.buttons.setAura": "Configure Aura",
   "arm5e.canvas.buttons.clearAura": "Clear Aura",
@@ -986,6 +989,7 @@
   "arm5e.activity.teaching": "Teaching",
   "arm5e.activity.writing": "Writing",
   "arm5e.activity.reading": "Reading",
+  "arm5e.activity.spellLearning": "Spell learning",
   "arm5e.activity.apprenticeship": "Apprenticeship",
   "arm5e.activity.childhood": "Early childhood",
   "arm5e.activity.laterLife": "Later life",
@@ -1016,9 +1020,11 @@
   "arm5e.activity.title.apprenticeship": "Hermetic apprenticeship",
   "arm5e.activity.title.laterLife": "Years after childhood",
   "arm5e.activity.title.laterLifeMagi": "Years after apprenticeship",
-  "arm5e.activity.title.childhodd": "Childhood",
+  "arm5e.activity.title.childhood": "Childhood",
+  "arm5e.activity.title.spellLearning": "Learn spell",
   "arm5e.activity.drop.teacher": "Drop an actor here to act as a teacher/trainer.",
 
+  "arm5e.activity.newSpell": "New spell learned",
   "arm5e.activity.descItem": "{item} : {xp} xp(s) increase",
   "arm5e.activity.options.language": "Practice language",
   "arm5e.activity.options.area": "Explore area",
@@ -1056,10 +1062,20 @@
   "arm5e.scriptorium.msg.notMagus": "The reader is not a magus.",
   "arm5e.scriptorium.reading.activity": "Reading {title}",
 
+  "arm5e.book.tableContents": "Table of contents",
+  "arm5e.book.summaLong": "Summa of level {level} and quality {quality} about",
+  "arm5e.book.tractLong": "Tractatus of quality {quality} about",
+  "arm5e.book.summaShort": "Summa L{level} Q{quality} ",
+  "arm5e.book.tractShort": "Tractatus Q{quality}",
+  "arm5e.book.labText.intro": "Laboratory text about",
+  "arm5e.book.labText.spell": "the spell \"{spell}\"",
+  "arm5e.book.labText.enchantment": "the enchantment \"{enchantment}\"",
+
   "arm5e.hints.create": "Create {item}",
   "arm5e.hints.edit": "Edit {item}",
   "arm5e.hints.delete": "Delete {item}",
   "arm5e.hints.design": "Design {item}",
+  "arm5e.hints.read": "Read {item}",
 
   "arm5e.sheet.label.details": "Details",
 
@@ -1081,5 +1097,6 @@
   "arm5e.generic.multipliers": "Multipliers",
   "arm5e.generic.other": "Other",
   "arm5e.generic.unknown": "Unknown",
-  "arm5e.generic.current": "Current"
+  "arm5e.generic.current": "Current",
+  "arm5e.generic.nothing": "Nothing"
 }

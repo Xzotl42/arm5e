@@ -2,32 +2,42 @@
   style='background-image: url("/systems/arm5e/assets/{{ui.flavor}}/bar.png")'>
   {{#if ui.showTeacher}}
     <a class="posRelative diary-tabs" data-tab="teacher" data-group="diary-secondary">
-      <div class="navItem-right-ball"><img src="/systems/arm5e/assets/bLeft.png" /></div>
-      <div class="navItem-left-ball"><img src="/systems/arm5e/assets/bRight.png" /></div>
+      <div class="navItem-right-ball"><img src="/systems/arm5e/assets/bLeft.png" style="padding-top: 0px" /></div>
+      <div class="navItem-left-ball"><img src="/systems/arm5e/assets/bRight.png" style="padding-top: 0px" /></div>
       {{localize "arm5e.activity.teacher.label"}} ({{system.teacher.name}})
     </a>
   {{/if}}
   {{#if ui.showAbilities}}
     <a class="posRelative diary-tabs" data-tab="abilities" data-group="diary-secondary">
-      <div class="navItem-right-ball"><img src="/systems/arm5e/assets/bLeft.png" /></div>
-      <div class="navItem-left-ball"><img src="/systems/arm5e/assets/bRight.png" /></div>
+      <div class="navItem-right-ball"><img src="/systems/arm5e/assets/bLeft.png" style="padding-top: 0px" /></div>
+      <div class="navItem-left-ball"><img src="/systems/arm5e/assets/bRight.png" style="padding-top: 0px" /></div>
       {{localize "arm5e.sheet.abilities"}} ({{system.totalXp.abilities}})
     </a>
   {{/if}}
-
   {{#if ui.showMagicProgress}}
     {{#if ui.showArts}}
       <a class="posRelative diary-tabs" data-tab="arts" data-group="diary-secondary">
-        <div class="navItem-right-ball"><img src="/systems/arm5e/assets/bLeft.png" /></div>
-        <div class="navItem-left-ball"><img src="/systems/arm5e/assets/bRight.png" /></div>
+        <div class="navItem-right-ball" style="padding-top: 0px"><img src="/systems/arm5e/assets/bLeft.png"
+            style="padding-top: 0px" /></div>
+        <div class="navItem-left-ball" style="padding-top: 0px"><img src="/systems/arm5e/assets/bRight.png"
+            style="padding-top: 0px" /></div>
         {{localize "arm5e.sheet.arts"}} ({{system.totalXp.arts}})
       </a>
     {{/if}}
-    {{#if ui.showSpells}}
+    {{#if ui.showMasteries}}
+      <a class="posRelative diary-tabs" data-tab="masteries" data-group="diary-secondary">
+        <div class="navItem-right-ball" style="padding-top: 0px"><img src="/systems/arm5e/assets/bLeft.png"
+            style="padding-top: 0px" /></div>
+        <div class="navItem-left-ball" style="padding-top: 0px"><img src="/systems/arm5e/assets/bRight.png"
+            style="padding-top: 0px" /></div>
+        {{localize "arm5e.activity.progress.masteries"}} ({{system.totalXp.masteries}})
+      </a>
+    {{/if}}
+    {{#if ui.showNewSpells}}
       <a class="posRelative diary-tabs" data-tab="spells" data-group="diary-secondary">
-        <div class="navItem-right-ball"><img src="/systems/arm5e/assets/bLeft.png" /></div>
-        <div class="navItem-left-ball"><img src="/systems/arm5e/assets/bRight.png" /></div>
-        {{localize "arm5e.activity.progress.masteries"}} ({{system.totalXp.spells}})
+        <div class="navItem-right-ball"><img src="/systems/arm5e/assets/bLeft.png" style="padding-top: 0px" /></div>
+        <div class="navItem-left-ball"><img src="/systems/arm5e/assets/bRight.png" style="padding-top: 0px" /></div>
+        {{localize "arm5e.activity.spellLearning"}} ({{system.totalXp.spellLevels}})
       </a>
     {{/if}}
   {{/if}}
@@ -116,9 +126,9 @@
                 <input type="number" name="system.progress.abilities.{{idx}}.teacherScore"
                   value="{{ability.teacherScore}}" data-dtype="Number" data-index="{{idx}}" data-type="abilities"
                   readonly class="flex0" style="width:50px" min="0" step="1" />
-                <input type="number" name="system.progress.abilities.{{idx}}.xp" value="{{ability.xp}}"
+                <input type="number" name="system.progress.abilities.{{idx}}.xp" value="{{ability.xp}}" hidden
                   data-dtype="Number" data-index="{{idx}}" data-type="abilities" class="progress-xp flex0"
-                  style="width:50px; display:none" min="0" step="1" />
+                  style="width:50px;" min="0" step="1" />
               {{/unless}}
             </div>
             <div class="progress-controls">
@@ -186,7 +196,7 @@
     </div>
   </div>
 
-  <div class="tab" data-tab="spells" data-group="diary-secondary">
+  <div class="tab" data-tab="masteries" data-group="diary-secondary">
     <header class="effect-change effects-header flexrow" style="padding-left: 15px">
       <div class="form">{{ localize "arm5e.sheet.form" }}</div>
       <div class="key" style="min-width: 200px;">{{ localize "arm5e.sheet.spell" }}</div>
@@ -196,11 +206,11 @@
         <div class="xpamount">{{ localize "arm5e.sheet.experience"}}</div>
       {{/if}}
       <div class="progress-controls">
-        {{#if (eq system.defaultSpell "")}}
+        {{#if (eq system.defaultSpellMastery "")}}
           {{localize "arm5e.activity.msg.noSpell"}}
         {{else}}
           <a class="progress-control" data-action="add" data-type="spells" data-applied="{{system.applied}}"
-            data-teacherscore="{{system.teacherScore}}" data-default="{{system.defaultSpell}}"><i
+            data-teacherscore="{{system.teacherScore}}" data-default="{{system.defaultSpellMastery}}"><i
               class="fas fa-plus"></i></a>
         {{/if}}
       </div>
@@ -235,8 +245,8 @@
                   data-dtype="Number" data-index="{{idx}}" data-type="spells" readonly class="flex0" style="width:50px"
                   min="0" step="1" />
                 <input type="number" name="system.progress.spells.{{idx}}.xp" value="{{spell.xp}}" data-dtype="Number"
-                  data-index="{{idx}}" data-type="spells" class="progress-xp flex0" style="width:50px; display:none"
-                  min="0" step="1" />
+                  hidden data-index="{{idx}}" data-type="spells" class="progress-xp flex0"
+                  style="width:50px; display:none" min="0" step="1" />
               {{/unless}}
             </div>
             <div class="progress-controls">
@@ -248,5 +258,30 @@
       </ol>
     </div>
   </div>
-
+  <div class="tab" data-tab="spells" data-group="diary-secondary">
+    <header class="effect-change effects-header flexrow" style="padding-left: 15px">
+      <div class="key" style="min-width: 200px;">{{ localize "arm5e.sheet.spell" }}</div>
+    </header>
+    <div class="resource progress-newspell drop-newspell flexrow" data-drop="newspell" data-index="{{topicIdx}}"
+      style="height:170px">
+      <div class="flex3">
+        <ol class="progresses-list">
+          {{#each system.progress.newSpells as |spell idx|}}
+            <li class="item diary-progress flexrow">
+              <div class="resource flexrow">
+                <label for="system.progress.newSpells.{{idx}}.name" class="header-label"
+                  style="font-size: 9pt">{{spell.label}}</label>
+                <div class="flex01 flexrow">
+                  <a class="item-control show-details flex0" title='{{localize "arm5e.generic.details"}}'
+                    data-index="{{idx}}"><i class="icon-Icon_Read"></i></a>
+                  <a class="progress-control flex0" data-idx="{{idx}}" data-type="newSpells" data-action="delete"
+                    data-applied="{{../system.applied}}"><i class="icon-Icon_Delete_Hand_Gesture"></i></a>
+                </div>
+              </div>
+            </li>
+          {{/each}}
+        </ol>
+      </div>
+    </div>
+  </div>
 </section>

@@ -109,7 +109,7 @@ export function registerSettings() {
     scope: "world",
     config: false,
     type: Object,
-    default: { year: 1225, season: "spring" }
+    default: { year: 1220, season: "spring" }
   });
 
   game.settings.registerMenu(ARM5E.SYSTEM_ID, "sourcebookFilter", {

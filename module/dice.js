@@ -525,9 +525,6 @@ function newLineSub(msg) {
 async function CheckBotch(botchDice) {
   let resultMessage = "";
 
-  if (!botchDice) {
-    return ui.notifications.info(game.i18n.localize("arm5e.notification.roll.botchNum"));
-  }
   let rollCommand = botchDice;
   rollCommand = String(rollCommand).concat("d10cf=10");
   const botchRoll = new Roll(rollCommand);
@@ -606,12 +603,19 @@ async function explodingRoll(actorData, modes = 0, botchNum = 0) {
       dieRoll = await explodingRoll(actorData);
     }
   } else {
-    if (modes != 4 && mult === 1 && diceResult === 10) {
+    if (mult === 1 && diceResult === 10) {
       mult *= 0;
       if (game.modules.get("dice-so-nice")?.active) {
         game.dice3d.showForRoll(dieRoll); //, user, synchronize, whisper, blind, chatMessageID, speaker)
       }
+      if (modes == 4) {
+        let output_roll = new Roll(actorData.rollData.formula.toString());
+        output_roll.data = {};
+        return await output_roll.evaluate({ async: true });
+      }
+
       const html = await renderTemplate("systems/arm5e/templates/roll/roll-botch.html");
+
       if (botchNum === 0) {
         // interactive mode show dialog
         await new Promise(resolve => {

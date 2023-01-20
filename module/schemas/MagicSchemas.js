@@ -4,25 +4,18 @@ import {
   authorship,
   baseDescription,
   boolOption,
-  characteristicField,
   EnchantmentAttributes,
-  hermeticForm,
-  hermeticTechnique,
   itemBase,
   ModifierField,
-  possibleDurations,
-  possibleRanges,
-  possibleTargets,
-  SeasonField,
   SpellAttributes,
   TechniquesForms,
   XpField
 } from "./commonSchemas.js";
 const fields = foundry.data.fields;
 
-const baseLevel = () =>
+export const baseLevel = () =>
   new fields.NumberField({
-    required: true,
+    required: false,
     nullable: false,
     integer: true,
     positive: true,
@@ -65,6 +58,10 @@ const migrateMagicalItem = itemData => {
       // console.log(`Guessing target: ${itemData.system.target}`);
       updateData["system.target.value"] = _guessTarget(itemData.name, itemData.system.target);
     }
+
+    if (itemData.system.levelOffset === null) {
+      updateData["system.levelOffset"] = 0;
+    }
   }
 
   if (itemData.system.technique.value === "") {
@@ -106,6 +103,25 @@ const migrateMagicalItem = itemData => {
     updateData["system.-=form-requisite"] = null;
   }
 
+  for (let [req, val] of Object.entries(itemData.system["form-req"])) {
+    if (typeof val != "boolean") {
+      if (val === "true") {
+        updateData[`system.form-req.${req}`] = true;
+      } else if (val === "false") {
+        updateData[`system.form-req.${req}`] = false;
+      }
+    }
+  }
+  for (let [req, val] of Object.entries(itemData.system["technique-req"])) {
+    if (typeof val != "boolean") {
+      if (val === "true") {
+        updateData[`system.technique-req.${req}`] = true;
+      } else if (val === "false") {
+        updateData[`system.technique-req.${req}`] = false;
+      }
+    }
+  }
+
   // temporary : removal of authorship in spell, it will only be present in lab texts
   if (itemData.type == "spell") {
     if (itemData.system.author) {
@@ -135,6 +151,9 @@ const migrateMagicalItem = itemData => {
       // updateData["system.-=mastery"] = null;
       updateData["system.-=exp"] = null;
     }
+  }
+  if (itemData.system.description == null) {
+    updateData["system.description"] = "";
   }
   return updateData;
 };
@@ -279,25 +298,6 @@ export class SpellSchema extends foundry.abstract.DataModel {
       updateData["system.complexity"] = 0;
     }
 
-    for (let [req, val] of Object.entries(itemData.system["form-req"])) {
-      if (typeof val != "boolean") {
-        if (val === "true") {
-          updateData[`system.form-req.${req}`] = true;
-        } else if (val === "false") {
-          updateData[`system.form-req.${req}`] = false;
-        }
-      }
-    }
-    for (let [req, val] of Object.entries(itemData.system["technique-req"])) {
-      if (typeof val != "boolean") {
-        if (val === "true") {
-          updateData[`system.technique-req.${req}`] = true;
-        } else if (val === "false") {
-          updateData[`system.technique-req.${req}`] = false;
-        }
-      }
-    }
-
     return updateData;
   }
 }
@@ -331,7 +331,7 @@ export class LabTextSchema extends foundry.abstract.DataModel {
     return {
       ...itemBase(),
       ...authorship(),
-      type: fields.StringField({
+      type: new fields.StringField({
         required: true,
         blank: false,
         initial: "spell",
@@ -341,14 +341,29 @@ export class LabTextSchema extends foundry.abstract.DataModel {
       ...SpellAttributes(),
       ...EnchantmentAttributes(),
       baseLevel: baseLevel(),
+      level: baseLevel(),
       baseEffectDescription: baseDescription(),
-      applyFocus: boolOption(false, true),
       ritual: boolOption(),
-      bonus: ModifierField(),
-      bonusDesc: baseDescription(),
-      xp: XpField(),
-      masteryAbilities: baseDescription()
+      img: new fields.StringField({
+        required: false,
+        blank: true,
+        initial: ""
+      })
     };
+  }
+
+  static migrate(itemData) {
+    // console.log(`Migrate book: ${JSON.stringify(itemData)}`);
+    const updateData = migrateMagicalItem(itemData);
+
+    if (itemData.system.year == null) {
+      updateData["system.year"] = 1220;
+    }
+    if (itemData.system.complexity == null) {
+      updateData["system.complexity"] = 0;
+    }
+
+    return updateData;
   }
 }
 

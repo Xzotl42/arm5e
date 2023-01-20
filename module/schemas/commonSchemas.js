@@ -1,6 +1,24 @@
 import { ARM5E } from "../config.js";
 
 const fields = foundry.data.fields;
+
+export class NullableEmbeddedDataField extends fields.EmbeddedDataField {
+  /**
+   * @param {typeof DataModel} model          The class of DataModel which should be embedded in this field
+   * @param {DataFieldOptions} options        Options which configure the behavior of the field
+   */
+  constructor(model, options) {
+    super(model, options);
+  }
+
+  toObject(value) {
+    if (value != null) {
+      return super.toObject(value);
+    }
+    return null;
+  }
+}
+
 export const itemBase = () => {
   return {
     description: new fields.StringField({ required: false, blank: true, initial: "" }),
@@ -20,7 +38,7 @@ export const possibleRanges = Object.keys(ARM5E.magic.ranges).filter(r => !r.dis
 export const possibleTargets = Object.keys(ARM5E.magic.targets).filter(r => !r.disabled);
 export const possibleDurations = Object.keys(ARM5E.magic.durations).filter(r => !r.disabled);
 export const boolOption = (val = false, nullable = false) =>
-  new fields.BooleanField({ required: true, initial: val, nullable: nullable });
+  new fields.BooleanField({ required: false, initial: val, nullable: nullable });
 export const baseDescription = () =>
   new fields.StringField({ required: false, blank: true, initial: "" });
 export const TechniquesForms = () => {
@@ -160,7 +178,7 @@ export const ModifierField = () =>
 
 export const SeasonField = () =>
   new fields.StringField({
-    required: false,
+    required: true,
     blank: false,
     initial: "spring",
     choices: Object.keys(ARM5E.seasons)
@@ -226,6 +244,6 @@ export const authorship = () => {
       step: 1
     }),
     season: SeasonField(),
-    language: new fields.StringField({ required: false, blank: false, initial: "Latin" })
+    language: new fields.StringField({ required: false, blank: true, initial: "Latin" })
   };
 };

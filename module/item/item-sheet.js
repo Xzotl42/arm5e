@@ -1,6 +1,5 @@
 import { log } from "../tools.js";
 import ArM5eActiveEffect from "../helpers/active-effects.js";
-import { Scriptorium } from "../tools/scriptorium.js";
 /**
  * Extend the basic ItemSheet with some very simple modifications
  * @extends {ItemSheet}
@@ -47,7 +46,7 @@ export class ArM5eItemSheet extends ItemSheet {
     if (this.item.testUserPermission(game.user, CONST.DOCUMENT_PERMISSION_LEVELS.OBSERVER)) {
       return `${path}/item-${this.item.type}-sheet.html`;
     }
-    return `systems/arm5e/templates/item/item-limited-sheet.html`;
+    return `${path}/item-limited-sheet.html`;
   }
 
   /* -------------------------------------------- */

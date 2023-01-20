@@ -11,7 +11,8 @@ import {
   calculateWound,
   getDataset,
   hermeticFilter,
-  putInFoldableLinkWithAnimation
+  putInFoldableLinkWithAnimation,
+  compareLabTexts
 } from "../tools.js";
 import ArM5eActiveEffect from "../helpers/active-effects.js";
 import { VOICE_AND_GESTURES_VALUES } from "../constants/voiceAndGestures.js";
@@ -144,29 +145,27 @@ export class ArM5eActorSheet extends ActorSheet {
 
     // Allow effect creation
     actorData.system.effectCreation = game.user.isGM;
-
+    let usercache = JSON.parse(sessionStorage.getItem(`usercache-${game.user.id}`));
+    if (usercache[this.actor.id]) {
+      context.userData = usercache[this.actor.id];
+    } else {
+      usercache[this.actor.id] = {
+        filters: {
+          hermetic: {
+            spells: HERMETIC_FILTER,
+            magicalEffects: HERMETIC_FILTER,
+            laboratoryTexts: HERMETIC_FILTER
+          },
+          abilities: {
+            category: ""
+          }
+        }
+      };
+      context.userData = usercache[this.actor.id];
+      sessionStorage.setItem(`usercache-${game.user.id}`, JSON.stringify(usercache));
+    }
 
     if (actorData.type === "player" || actorData.type === "npc" || actorData.type === "beast") {
-      let usercache = JSON.parse(sessionStorage.getItem(`usercache-${game.user.id}`));
-      if (usercache[this.actor.id]) {
-        context.userData = usercache[this.actor.id];
-      } else {
-        usercache[this.actor.id] = {
-          filters: {
-            hermetic: {
-              spells: HERMETIC_FILTER,
-              magicalEffects: HERMETIC_FILTER,
-              laboratoryTexts: HERMETIC_FILTER
-            },
-            abilities: {
-              category: ""
-            }
-          }
-        };
-        context.userData = usercache[this.actor.id];
-        sessionStorage.setItem(`usercache-${game.user.id}`, JSON.stringify(usercache));
-      }
-
       context.system.world = {};
 
       // check whether the character is linked to an existing covenant
@@ -278,7 +277,7 @@ export class ArM5eActorSheet extends ActorSheet {
         // Spells
         let spellsFilters = context.userData.filters.hermetic.spells;
         context.ui = {};
-        context.system.spells = hermeticFilter(spellsFilters, context.system.spells);
+        context.system.filteredSpells = hermeticFilter(spellsFilters, context.system.spells);
         if (spellsFilters.expanded) {
           context.ui.spellsFilterVisibility = "";
         } else {
@@ -294,7 +293,7 @@ export class ArM5eActorSheet extends ActorSheet {
 
         // magical effects
         let magicEffectFilters = context.userData.filters.hermetic.magicalEffects;
-        context.system.magicalEffects = hermeticFilter(
+        context.system.filteredMagicalEffects = hermeticFilter(
           magicEffectFilters,
           context.system.magicalEffects
         );
@@ -474,12 +473,23 @@ export class ArM5eActorSheet extends ActorSheet {
       //     return a[1].label.localeCompare(b[1].label);
       //   });
       // }
-
+      context.activities = [];
       for (let [key, entry] of Object.entries(context.system.diaryEntries)) {
-        if (entry.system.applied || entry.system.activity == "none") {
-          entry.ui = { diary: 'style="font-style: normal;"' };
-        } else {
-          entry.ui = { diary: 'style="font-style: italic;"' };
+        for (let date of entry.system.dates) {
+          let activity = {};
+          if (entry.system.duration == entry.system.done || entry.system.activity == "none") {
+            activity.ui = { diary: 'style="font-style: normal;"' };
+          } else {
+            activity.ui = { diary: 'style="font-style: italic;"' };
+          }
+          activity.name = entry.name;
+          activity.type = game.i18n.localize(
+            CONFIG.ARM5E.activities.generic[entry.system.activity].label
+          );
+          activity.year = date.year;
+          activity.season = date.season;
+          activity._id = entry._id;
+          context.activities.push(activity);
         }
       }
 
@@ -491,6 +501,42 @@ export class ArM5eActorSheet extends ActorSheet {
         };
         // log(false, `${key} has ${charac.aging} points`);
       }
+    }
+
+    if (
+      actorData.type == "player" ||
+      actorData.type == "npc" ||
+      actorData.type == "laboratory" ||
+      actorData.type == "covenant"
+    ) {
+      // hermetic filters
+      // 1. Filter
+      //
+      let labtTextFilters = context.userData.filters.hermetic.laboratoryTexts;
+      // if (!labtTextFilters) {
+      //   labtTextFilters = { formFilter: "", levelFilter: "", levelOperator: 0, techniqueFilter: "" };
+      // }
+      context.ui = {};
+      context.system.filteredLaboratoryTexts = hermeticFilter(
+        labtTextFilters,
+        context.system.laboratoryTexts
+      );
+      if (labtTextFilters.expanded) {
+        context.ui.labtTextFilterVisibility = "";
+      } else {
+        context.ui.labtTextFilterVisibility = "hidden";
+      }
+      if (
+        labtTextFilters.formFilter != "" ||
+        labtTextFilters.techniqueFilter != "" ||
+        (labtTextFilters.levelFilter != 0 && labtTextFilters.levelFilter != null)
+      ) {
+        context.ui.labTextFilter = 'style="text-shadow: 0 0 5px maroon"';
+      }
+      // 2. Sort
+      context.system.filteredLaboratoryTexts = context.system.filteredLaboratoryTexts.sort(
+        compareLabTexts
+      );
     }
     context.isGM = game.user.isGM;
 
@@ -543,13 +589,13 @@ export class ArM5eActorSheet extends ActorSheet {
 
     if (actorData.actor.type == "player" || actorData.actor.type == "npc") {
       for (let spell of actorData.system.spells) {
-        spell.TechReq = spellTechniqueLabel(spell);
-        spell.FormReq = spellFormLabel(spell);
+        spell.TechReq = spellTechniqueLabel(spell.system);
+        spell.FormReq = spellFormLabel(spell.system);
       }
 
       for (let effect of actorData.system.magicalEffects) {
-        effect.TechReq = spellTechniqueLabel(effect);
-        effect.FormReq = spellFormLabel(effect);
+        effect.TechReq = spellTechniqueLabel(effect.system);
+        effect.FormReq = spellFormLabel(effect.system);
       }
     }
   }
@@ -855,9 +901,10 @@ export class ArM5eActorSheet extends ActorSheet {
     // Remove the type from the dataset since it's in the itemData.type prop.
     delete itemData[0].system["type"];
 
-    // Finally, create the item!
-    // console.log("Add item");
-    // console.log(itemData);
+    // default fields for some Item types
+    if (CONFIG.Item.systemDataModels[type]?.getDefault) {
+      CONFIG.Item.systemDataModels[type].getDefault(itemData[0]);
+    }
 
     return await this.actor.createEmbeddedDocuments("Item", itemData, {});
   }
