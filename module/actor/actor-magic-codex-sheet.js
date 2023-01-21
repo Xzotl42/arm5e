@@ -332,7 +332,7 @@ export class ArM5eMagicCodexSheet extends ArM5eActorSheet {
     if (type == "laboratoryText") {
       log(false, "Valid drop");
       // create a spell or enchantment data:
-      data.data = labTextToEffect(foundry.utils.deepClone(item));
+      return await super._onDropItemCreate(labTextToEffect(foundry.utils.deepClone(item)));
     }
     // }
     const res = await super._onDropItem(event, data);

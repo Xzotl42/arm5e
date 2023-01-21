@@ -128,33 +128,21 @@ export class ArM5eNPCActorSheet extends ArM5eActorSheet {
   }
 
   async _onDropItem(event, data) {
-    let itemData = {};
     let type;
-    if (data.pack) {
-      const item = await Item.implementation.fromDropData(data);
-      itemData = item.toObject();
-      type = itemData.type;
-    } else if (data.actorId === undefined) {
-      const item = await Item.implementation.fromDropData(data);
-      itemData = item.toObject();
-      type = itemData.type;
-    } else {
-      type = data.data.type;
-      itemData = data.data;
-    }
+    const item = await fromUuid(data.uuid);
     // transform input into labText
-    if (type == "laboratoryText") {
-      if (itemData.system.type == "spell") {
+    if (item.type == "laboratoryText") {
+      if (item.system.type == "spell") {
         log(false, "Valid drop");
         // create a spell or enchantment data:
-        data.data = labTextToEffect(foundry.utils.deepClone(itemData));
+        return await super._onDropItemCreate(labTextToEffect(foundry.utils.deepClone(item)));
       } else {
         log(false, "Invalid drop");
         return false;
       }
     } else if (type == "ability") {
-      if (this.actor.hasSkill(itemData.system.key)) {
-        ui.notifications.warn(`This character already have the ability: ${itemData.name}`);
+      if (this.actor.hasSkill(item.system.key)) {
+        ui.notifications.warn(`This character already have the ability: ${item.name}`);
       }
     }
     // }

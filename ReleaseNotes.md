@@ -38,6 +38,7 @@
 - Lab owned Items are again migrated properly
 - Starting date of a world is now the canonical year of 1220
 - Fixed a bunch of bugs in the diary entries.
+- Fixed drag and drop of Items on NPC and Codex sheet
 
 ### Documentation
 

@@ -70,6 +70,16 @@ export class BookSchema extends foundry.abstract.DataModel {
     };
   }
 
+  static getDefault(itemData) {
+    let currentDate = game.settings.get("arm5e", "currentDate");
+    if (itemData.system) {
+      itemData.system.season = currentDate.season;
+      itemData.system.year = Number(currentDate.year);
+    } else {
+      itemData.system = { season: currentDate.season, year: Number(currentDate.year) };
+    }
+  }
+
   static migrateData(data) {
     // console.log(`MigrateData book: ${JSON.stringify(data)}`);
     if (data.topic) {
@@ -156,7 +166,7 @@ export class BookSchema extends foundry.abstract.DataModel {
       } else {
         topic.type = itemData.system.type;
       }
-
+      const topics = [];
       topics.push(topic);
       if (!Object.keys(CONFIG.ARM5E.seasons).includes(itemData.system.season)) {
         if (Object.keys(CONFIG.ARM5E.seasons).includes(itemData.system.season.toLowerCase())) {

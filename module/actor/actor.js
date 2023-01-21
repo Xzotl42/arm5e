@@ -714,7 +714,7 @@ export class ArM5ePCActor extends Actor {
     //warping & decrepitude
     if ((this.type == "npc" && this.system.charType.value != "entity") || this.type == "player") {
       if (system.warping == undefined) {
-        system.warping = {};
+        system.warping = { points: 0 };
       }
       system.warping.finalScore = ArM5ePCActor.getAbilityScoreFromXp(system.warping.points);
       system.warping.experienceNextLevel =
@@ -725,7 +725,7 @@ export class ArM5ePCActor extends Actor {
         system.warping.points;
 
       if (system.decrepitude == undefined) {
-        system.decrepitude = {};
+        system.decrepitude = { points: 0 };
       }
       system.decrepitude.finalScore = ArM5ePCActor.getAbilityScoreFromXp(system.decrepitude.points);
       system.decrepitude.experienceNextLevel =

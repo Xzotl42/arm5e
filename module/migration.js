@@ -919,7 +919,7 @@ function _isMagicalItem(itemData) {
     case "baseEffect":
       return true;
     case "laboratoryText": {
-      return itemData.type === "spell";
+      return itemData.system.type === "spell";
     }
     default:
       return false;

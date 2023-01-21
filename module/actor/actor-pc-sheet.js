@@ -142,7 +142,7 @@ export class ArM5ePCActorSheet extends ArM5eActorSheet {
         log(false, "Valid drop");
         // create a spell or enchantment data:
         // TODOV10 check that
-        data.data = labTextToEffect(foundry.utils.deepClone(item));
+        return await super._onDropItemCreate(labTextToEffect(foundry.utils.deepClone(item)));
       } else {
         log(false, "Invalid drop");
         return false;

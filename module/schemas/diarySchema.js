@@ -1,6 +1,12 @@
 import { ARM5E } from "../config.js";
 import { log } from "../tools.js";
-import { characteristicField, hermeticForm, SeasonField, XpField } from "./commonSchemas.js";
+import {
+  characteristicField,
+  convertToNumber,
+  hermeticForm,
+  SeasonField,
+  XpField
+} from "./commonSchemas.js";
 import { SpellSchema, baseLevel } from "./magicSchemas.js";
 const fields = foundry.data.fields;
 
@@ -166,7 +172,11 @@ export class DiaryEntrySchema extends foundry.abstract.DataModel {
 
   static getDefault(itemData) {
     let currentDate = game.settings.get("arm5e", "currentDate");
-    itemData.system.dates = [{ year: currentDate.year, season: currentDate.season }];
+    if (itemData.system) {
+      itemData.system.dates = [{ year: currentDate.year, season: currentDate.season }];
+    } else {
+      itemData.system = { dates: [{ year: currentDate.year, season: currentDate.season }] };
+    }
   }
 
   static migrate(itemData) {
@@ -224,12 +234,15 @@ export class DiaryEntrySchema extends foundry.abstract.DataModel {
       } else {
         theSeason = itemData.system.season;
       }
-      updateData["system.duration"] = 1;
-      if (itemData.system.applied) {
-        updateData["system.done"] = 1;
-      } else {
-        updateData["system.done"] = 0;
+      if (itemData.system.duration === undefined) {
+        updateData["system.duration"] = 1;
+        if (itemData.system.applied) {
+          updateData["system.done"] = 1;
+        } else {
+          updateData["system.done"] = 0;
+        }
       }
+
       updateData["system.-=applied"] = null;
       updateData["system.-=year"] = null;
       updateData["system.-=season"] = null;
@@ -253,6 +266,8 @@ export class DiaryEntrySchema extends foundry.abstract.DataModel {
         if (!a.category) {
           a.category = "general";
         }
+
+        a.teacherScore = convertToNumber(a.teacherScore);
       }
       updateData["system.progress.abilities"] = prog.abilities;
 

@@ -72,9 +72,11 @@
               style="padding-left: 5px; padding-bottom: 5px;"><i class="
             icon-Icon_Delete_Hand_Gesture"></i></a>
           {{/unless}}
-          <a class="plan-reading" title='{{localize "arm5e.hints.read" item=(localize "arm5e.sheet.book")}}'
-            style="padding-left: 5px; padding-top: 5px;" data-index="{{topicIdx}}"><i
-              class="icon-Icon_Readspell"></i></a>
+          {{#unless (eq currentTopic.category "labText")}}
+            <a class="plan-reading" title='{{localize "arm5e.hints.read" item=(localize "arm5e.sheet.book")}}'
+              style="padding-left: 5px; padding-top: 5px;" data-index="{{topicIdx}}"><i
+                class="icon-Icon_Readspell"></i></a>
+          {{/unless}}
         </div>
       </div>
       <br />

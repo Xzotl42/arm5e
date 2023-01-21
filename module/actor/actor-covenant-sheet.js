@@ -192,26 +192,13 @@ export class ArM5eCovenantActorSheet extends ArM5eActorSheet {
    * @override
    */
   async _onDropItem(event, data) {
-    let itemData = {};
-    let type;
-    if (data.pack) {
-      // coming from a pack
-      const item = await Item.implementation.fromDropData(data);
-      itemData = item.toObject();
-      type = itemData.type;
-    } else if (data.actorId === undefined) {
-      const item = await Item.implementation.fromDropData(data);
-      itemData = item.toObject();
-      type = itemData.type;
-    } else {
-      type = data.data.type;
-      itemData = data.data;
-    }
+    const item = await fromUuid(data.uuid);
+    const type = item.type;
     // transform input into labText
     if (type == "spell" || type == "magicalEffect" || type == "enchantment") {
       log(false, "Valid drop");
       // create a labText data:
-      data.data = effectToLabText(foundry.utils.deepClone(itemData));
+      return await super._onDropItemCreate(effectToLabText(foundry.utils.deepClone(itemData)));
     }
     // }
     const res = await super._onDropItem(event, data);

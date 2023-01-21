@@ -281,18 +281,15 @@ export function validTotalXp(context, actor, item) {
     return sum + e.level;
   }, 0);
 
-  if (
+  const totalXp =
     context.system.totalXp.abilities +
-      context.system.totalXp.arts +
-      context.system.totalXp.masteries !=
-    context.system.sourceQuality
-  ) {
+    context.system.totalXp.arts +
+    context.system.totalXp.masteries +
+    context.system.totalXp.spellLevels;
+  if (totalXp != context.system.sourceQuality) {
     context.system.applyPossible = "disabled";
     if (context.system.applyError === "") {
-      context.system.errorParam =
-        context.system.totalXp.abilities +
-        context.system.totalXp.arts +
-        context.system.totalXp.masteries;
+      context.system.errorParam = totalXp;
       context.system.applyError = "arm5e.activity.msg.wrongTotalXp";
     }
   }

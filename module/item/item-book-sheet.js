@@ -396,25 +396,23 @@ export class ArM5eBookSheet extends ArM5eItemSheet {
   async _updateObject(event, formData) {
     if (!this.object.id) return;
     const expanded = expandObject(formData);
-
-    const newTopics = this.object.system.topics;
+    const source = this.object.toObject();
     const index = Number(Object.keys(expanded.system.topics)[0]);
+    if (expanded?.system?.topics) {
+      expanded.system.topics = mergeObject(source.system.topics, expanded.system.topics);
+    }
 
     // manage readonly fields
     if (expanded.system.topics[index].category == "mastery") {
       expanded.system.topics[index].type = "Tractatus";
     } else if (expanded.system.topics[index].category == "labText") {
-      expanded.system.topics[index].labtextTitle = newTopics[index].labtextTitle;
-      expanded.system.topics[index].labtext = newTopics[index].labtext;
+      expanded.system.topics[index].labtextTitle = source.system.topics[index].labtextTitle;
+      expanded.system.topics[index].labtext = source.system.topics[index].labtext;
     }
 
-    newTopics[index] = expanded.system.topics[index];
-
-    const newFormData = { ...formData, ...flattenObject({ system: { topics: newTopics } }) };
-    return this.object.update(newFormData);
+    return this.object.update(expanded);
   }
 }
-
 export function getTopicDescription(topic) {
   let desc;
   switch (topic.category) {

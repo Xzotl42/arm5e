@@ -19,6 +19,21 @@ export class NullableEmbeddedDataField extends fields.EmbeddedDataField {
   }
 }
 
+// convert a field value into a number
+export const convertToNumber = function(value, fallback = 0) {
+  if (value === undefined || value === "" || value === null) {
+    return fallback;
+  } else if (typeof value === "string") {
+    if (isNaN(value)) {
+      return fallback;
+    } else {
+      return Number(value);
+    }
+  } else {
+    return value;
+  }
+};
+
 export const itemBase = () => {
   return {
     description: new fields.StringField({ required: false, blank: true, initial: "" }),
@@ -178,7 +193,7 @@ export const ModifierField = () =>
 
 export const SeasonField = () =>
   new fields.StringField({
-    required: true,
+    required: false,
     blank: false,
     initial: "spring",
     choices: Object.keys(ARM5E.seasons)
@@ -240,7 +255,7 @@ export const authorship = () => {
       nullable: false,
       integer: true,
       // positive: true, // for testing
-      initial: 1200,
+      initial: 1220,
       step: 1
     }),
     season: SeasonField(),

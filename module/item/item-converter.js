@@ -53,8 +53,6 @@ export function labTextToEffect(labTextData) {
   log(false, "labTextToEffect");
   log(false, labTextData.name);
   if (labTextData.system.type === "spell") {
-    labTextData.img = CONFIG.ARM5E_DEFAULT_ICONS["spell"];
-    labTextData.type = "spell";
     delete labTextData.system.type;
     delete labTextData.system.effectfrequency;
     delete labTextData.system.penetration;
@@ -66,6 +64,12 @@ export function labTextToEffect(labTextData) {
     delete labTextData.system.year;
     delete labTextData.system.season;
     delete labTextData.system.language;
+    return {
+      name: labTextData.name,
+      type: "spell",
+      img: CONFIG.ARM5E_DEFAULT_ICONS["spell"],
+      system: labTextData.system
+    };
   } else if (labTextData.system.type === "enchantment") {
     labTextData.img = CONFIG.ARM5E_DEFAULT_ICONS["enchantment"];
     labTextData.type = "enchantment";

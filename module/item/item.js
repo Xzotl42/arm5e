@@ -494,15 +494,19 @@ export class ArM5eItem extends Item {
     await super._preCreate(data, options, userId);
     // weird it did work in 284
     // if (data.img === undefined) {
+    let toUpdate = false;
+    if (CONFIG.Item.systemDataModels[data.type]?.getDefault) {
+      CONFIG.Item.systemDataModels[data.type].getDefault(data);
+      toUpdate = true;
+    }
+
     if (data.img === undefined || data.img === "icons/svg/item-bag.svg") {
       if (data.type in CONFIG.ARM5E_DEFAULT_ICONS) {
-        const img = CONFIG.ARM5E_DEFAULT_ICONS[data.type];
-        if (img)
-          await this.updateSource({
-            img
-          });
+        data.img = CONFIG.ARM5E_DEFAULT_ICONS[data.type];
+        toUpdate = true;
       }
     }
+    if (toUpdate) await this.updateSource(data);
   }
 
   isAnEffect() {

@@ -617,6 +617,11 @@ export class ArM5eActorSheet extends ActorSheet {
       document.getElementById(category).classList.toggle("hide");
     });
 
+    // html.find(".spell-list").click(async ev => {
+    //   const category = $(ev.currentTarget).data("topic");
+    //   document.getElementById(category).classList.toggle("hide");
+    // });
+
     // filters
     html.find(".toggleHidden").click(async ev => {
       const list = $(ev.target).data("list");
