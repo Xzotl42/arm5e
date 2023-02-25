@@ -414,8 +414,9 @@ export const migrateActorData = async function(actorDoc) {
       }
 
       if (actor.system.warping.score != undefined) {
-        let exp = (actor.system.warping.score * (actor.system.warping.score + 1) * 5) / 2;
-        if (actor.system.warping.points >= 5 * (actor.system.warping.score + 1)) {
+        let exp =
+          (Number(actor.system.warping.score) * (Number(actor.system.warping.score) + 1) * 5) / 2;
+        if (actor.system.warping.points >= 5 * (Number(actor.system.warping.score) + 1)) {
           // if the experience is bigger than the needed for next level, ignore it
           updateData["system.warping.points"] = exp;
         } else {
@@ -440,7 +441,7 @@ export const migrateActorData = async function(actorDoc) {
     }
 
     // if (actor.system.realmAlignment && typeof actor.system.realmAlignment === "string") {
-    if (actor.system.realmAlignment && isNaN(actor.system.realmAlignment)) {
+    if (actor.system.realmAlignment && Number.isNaN(actor.system.realmAlignment)) {
       updateData["system.realmAlignment"] =
         CONFIG.ARM5E.realmsExt[actor.system.realmAlignment].value;
     }

@@ -306,6 +306,8 @@ h4.window-title {
   text-align: center;
 }
 
+.rollable-aging:hover,
+.rollable-aging:focus,
 .rollable:hover,
 .rollable:focus {
   color: #000;
@@ -537,8 +539,27 @@ h4.window-title {
   border: 0px;
 }
 
+.arm5e .calendar-sheet .sheet-body,
 .astrolab-sheet .sheet-body {
   padding: 40px;
+  padding-top: 20px;
+  padding-bottom: 0px;
+  height: 62%;
+}
+
+.calendar-sheet .calendar-years {
+  height: 300px;
+  overflow-y: scroll;
+}
+.calendar-season {
+  border: 1px solid #bbb;
+  margin: 2px;
+}
+
+.calendar-year {
+  /* background-color: rgb(236 222 187 / 60%); */
+  margin-top: 5px;
+  height: 100px;
 }
 
 .arm5eEffect .sheet-body {
@@ -595,6 +616,7 @@ h4.window-title {
   position: relative;
 }
 
+.arm5e .calendar.calendar-sheet,
 .arm5e .astrolab.astrolab-sheet {
   background-image: url("../assets/astrolab/Astrolab_Background.png");
   background-repeat: repeat-y;
@@ -633,7 +655,7 @@ h4.window-title {
   text-align: center;
   font-family: "blackmoor";
   font-size: 32pt;
-  height: 45px;
+  height: 35px;
   border: none;
   color: #2d3b51;
 }
@@ -764,6 +786,8 @@ input[type="time"] {
   user-select: text;
 }
 
+.arm5e .calendar input[type="number"],
+.arm5e .calendar input[type="text"],
 .arm5e .astrolab input[type="text"],
 .arm5e .astrolab input[type="number"] {
   font-family: "bookAntiqua";

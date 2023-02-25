@@ -173,7 +173,9 @@ export class DiaryEntrySchema extends foundry.abstract.DataModel {
   static getDefault(itemData) {
     let currentDate = game.settings.get("arm5e", "currentDate");
     if (itemData.system) {
-      itemData.system.dates = [{ year: currentDate.year, season: currentDate.season }];
+      if (itemData.system.dates == undefined) {
+        itemData.system.dates = [{ year: currentDate.year, season: currentDate.season }];
+      }
     } else {
       itemData.system = { dates: [{ year: currentDate.year, season: currentDate.season }] };
     }
@@ -185,7 +187,7 @@ export class DiaryEntrySchema extends foundry.abstract.DataModel {
     if (itemData.system.description === null || itemData.system.description === undefined) {
       updateData["system.description"] = "";
     }
-    if (itemData.system.sourceQuality == undefined || isNaN(itemData.system.sourceQuality)) {
+    if (itemData.system.sourceQuality == undefined || Number.isNaN(itemData.system.sourceQuality)) {
       updateData["system.sourceQuality"] = 0;
     }
     if (itemData.system.activity === "") {
@@ -213,7 +215,7 @@ export class DiaryEntrySchema extends foundry.abstract.DataModel {
       if (itemData.system.year === "" || itemData.system.year === null) {
         theYear = Number(currentDate.year);
       } else if (typeof itemData.system.year === "string") {
-        if (isNaN(itemData.system.year)) {
+        if (Number.isNaN(itemData.system.year)) {
           theYear = Number(currentDate.year);
         } else {
           theYear = Number(itemData.system.year);

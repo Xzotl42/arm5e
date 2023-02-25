@@ -978,6 +978,7 @@
   "arm5e.aging.result6": "- Gained {num} point(s) of decrepitude.<br/>",
   "arm5e.aging.rollback.title": "Revert effect of aging roll",
   "arm5e.aging.rollback.confirm": "This action will revert the effect of aging and delete the diary entry. Are you sure?",
+  "arm5e.aging.manualEdit": "{name} lost one point in {char} due to aging.",
 
   "arm5e.activity.activity": "Activity",
   "arm5e.activity.label": "Seasonal activities",

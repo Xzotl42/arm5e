@@ -213,7 +213,7 @@ export class BookSchema extends foundry.abstract.DataModel {
     if (itemData.system.year == null || itemData.system.year == undefined) {
       updateData["system.year"] = 1220;
     } else if (typeof itemData.system.year === "string") {
-      if (isNaN(itemData.system.year)) {
+      if (Number.isNaN(itemData.system.year)) {
         updateData["system.year"] = 1220;
       } else {
         updateData["system.year"] = Number(itemData.system.year);

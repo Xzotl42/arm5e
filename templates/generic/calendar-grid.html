@@ -1,0 +1,25 @@
+<div class="flex-center">
+  <input type="number" name="year" value="{{curYear}}" data-dtype="Number" class="calendar change-year " style="
+    font-size: 18pt; text-align: center; width : 100px" />
+</div>
+<div class="flexrow" style="margin:10px">
+  {{#each config.seasons as |season key|}}
+    <div class=" flex-center">
+      <label for="season" class="smallTitle" style="font-size:14pt">{{localize season.label}}</label>
+    </div>
+  {{/each}}
+</div>
+<div class="calendar-years flexcol">
+  {{#each years as |year|}}
+    <div class="backSection calendar-year flex-center flex-between">
+      <label for="year" class="smallTitle" style="font-size:16pt">{{year}}</label>
+      <div class="flexrow">
+        {{#each ../config.seasons as |season key|}}
+          <div class="calendar-season flex-center">
+            <input type="checkbox" name="" checked="false">
+          </div>
+        {{/each}}
+      </div>
+    </div>
+  {{/each}}
+</div>

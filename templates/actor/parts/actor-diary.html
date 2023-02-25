@@ -21,21 +21,24 @@
     </div>
   </li>
   {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
-  {{#each activities as |item id|}}
-    <li class="item item-value flexrow flex-center" data-name="{{item.name}}" data-attribute="{{id}}"
-      data-item-id="{{item._id}}">
-      <div class="flexrow flex-center">
-        <span class="flexrow item-title">{{item.year}} (
-          {{#with (lookup @root.config.seasons item.season)~}}{{localize label~}} ) {{/with}}
-        </span>
-        <span></span>
-        <span class="flexrow bold width3" {{{item.ui.diary}}}>{{item.name}} ({{item.type}})</span>
-      </div>
-      <div class="item-controls">
-        <a class="item-control item-edit" title="Edit diary"><i class="icon-Icon_Edit"></i></a>
-        <a class="item-control item-delete-confirm" title="Delete diary"><i
-            class="icon-Icon_Delete_Hand_Gesture"></i></a>
-      </div>
-    </li>
+  {{#each activities as |activity year|}}
+    {{#each activity.seasons as |entries season|}}
+      {{#each entries}}
+        <li class="item item-value flexrow flex-center" data-name="{{name}}" data-attribute="{{id}}"
+          data-item-id="{{_id}}">
+          <div class="flexrow flex-center">
+            <span class="flexrow item-title">{{../../year}} ({{#with (lookup @root.config.seasons
+              season)~}}{{localize label~}} {{/with}}) {{date}}</span>
+            <div class="clickable item-edit" {{{ui.diary}}}>{{name}}
+              ({{type}})</div>
+            <div class="flex0 item-controls">
+              <a class="item-control item-delete-confirm" title="Delete diary"><i
+                  class="icon-SmallIcon_Delete_Hand_Gesture" style="font-size:small"></i></a>
+            </div>
+          </div>
+
+        </li>
+      {{/each}}
+    {{/each}}
   {{/each}}
 </ol>

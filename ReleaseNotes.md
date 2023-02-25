@@ -1,6 +1,6 @@
 # Release Notes
 
-## 2.0.4.4, Kentigern
+## 2.0.4.5, Kentigern
 
 ### Features & changes
 
@@ -23,6 +23,8 @@
 - More translated hints (WIP)
 - New icons by Sylph
 - Lab texts in books
+- Edit aging points of characteristics (SHIFT + Click)
+- Size rolls
 
 ### Bug fixes
 
@@ -39,6 +41,7 @@
 - Starting date of a world is now the canonical year of 1220
 - Fixed a bunch of bugs in the diary entries.
 - Fixed drag and drop of Items on NPC and Codex sheet
+- Fixed computation of the warping score and xp
 
 ### Documentation
 

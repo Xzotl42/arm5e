@@ -50,8 +50,8 @@
       </label>
       <div class="flexrow marginbot6 margintop6">
         <label for="system.warping.finalScore" class="bold">{{localize "arm5e.sheet.score"}}</label>
-        <span class="marginbot6" style="margin-right: 24px"><input type="number" name="system.warping.score"
-            value="{{system.warping.finalScore}}" data-dtype="String" /></span>
+        <span class="marginbot6" style="margin-right: 24px"><input type="number" name="system.warping.finalScore"
+            value="{{system.warping.finalScore}}" data-dtype="Number" /></span>
         <label for="system.warping.points" class="bold flex06">{{localize "arm5e.sheet.points"}}</label>
         <span class="marginbot6">
           <input type="number" name="system.warping.points" value="{{system.warping.points}}" data-dtype="Number"
@@ -111,9 +111,15 @@
       <div class="flex-group-left padding12 backSection">
         {{#each system.vitals as |vitals key|}}
           <div class="flexrow marginbot6">
-            {{#with (lookup @root.config.character.vitals key)}}
-              <label for="system.vitals.{{key}}.label" class="bold">{{localize label}}</label>
-            {{/with}}
+
+            {{#if (eq key "siz")}}
+              <span class="flex01 rollable" style="margin-right: 12px" data-roll="option"
+                data-name="{{localize vitals.label}}" data-option1="{{ vitals.value }}"
+                data-txtoption1="{{ vitals.label }}">
+                <img src="/systems/arm5e/assets/dice.png" style="border: 0px; height: 18px" />
+              </span>
+            {{/if}}
+            <label for="system.vitals.{{key}}.label" class="bold">{{vitals.label}}</label>
             <span>
               <input type="text" name="system.vitals.{{key}}.value"
                 value="{{numberFormat vitals.value decimals=0 sign=true}}" data-dtype="Number" readonly />

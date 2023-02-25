@@ -25,10 +25,11 @@
       <div class="resources flexrow flex-between">
         <div class="flexrow">
           <span class="covenantname flexrow" style="padding-top: 4px">
-            <h2 class="covenantname" style="max-width: 200px;">
-              <input name="system.covenant.value" type="text" value="{{system.covenant.value}}" data-type="String" />
+            <h2 class="covenantname" style="max-width: 365px;">
+              <input name="system.covenant.value" type="text" value="{{system.covenant.value}}" data-type="String"
+                title="{{system.covenant.value}}" />
             </h2>
-            <div style="padding: 10px; max-width:15px;">
+            <div style="padding-top: 10px; padding-left: 3px; max-width:15px;">
               {{#if (eq system.covenant.linked true)}}
                 <a class="flexrow0 actor-link" title="Linked to covenant" data-actorid="{{system.covenant.actorId}}"><i
                     class="fas fa-link fa-sm"></i></a>
@@ -38,7 +39,7 @@
             </div>
           </span>
         </div>
-        <span class="covenantname" style="padding-top: 4px">
+        <span class="covenantname flex0" style="padding-top: 4px">
           <label for="system.charType.value" class="smallTitle"
             style="padding-left: 24px">{{localize "arm5e.sheet.charType"}}</label>
           <select class="width2" name="system.charType.value" data-type="String">

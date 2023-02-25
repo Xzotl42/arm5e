@@ -16,7 +16,7 @@ export class ArsLayer extends InteractionLayer {
     const aura = game.scenes.viewed.getFlag("world", "aura_" + game.scenes.viewed._id);
     const type = game.scenes.viewed.getFlag("world", "aura_type_" + game.scenes.viewed._id);
     let currentAura = game.i18n.localize("arm5e.generic.none");
-    if (aura !== undefined && !isNaN(aura) && type !== undefined && !isNaN(type)) {
+    if (aura !== undefined && !Number.isNaN(aura) && type !== undefined && !Number.isNaN(type)) {
       currentAura = `${game.i18n.localize("arm5e.generic.current")} : +${Number(
         aura
       )} ${game.i18n.localize(CONFIG.ARM5E.realms[CONFIG.ARM5E.lookupRealm[type]].label)}`;
@@ -173,7 +173,7 @@ export function onDropOnCanvas(canvas, data) {
   const type = game.scenes.viewed.getFlag("world", "aura_type_" + game.scenes.viewed._id);
   const actor = game.actors.get(data.id);
   if (actor) {
-    if (aura !== undefined && !isNaN(aura) && type !== undefined && !isNaN(type)) {
+    if (aura !== undefined && !Number.isNaN(aura) && type !== undefined && !Number.isNaN(type)) {
       addActiveEffectAuraToActor(actor, Number(aura), Number(type));
     } else {
       // no aura

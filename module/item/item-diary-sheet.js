@@ -2,6 +2,7 @@ import { debug, log } from "../tools.js";
 import { ArM5eItemSheet } from "./item-sheet.js";
 import { getNewTitleForActivity } from "../helpers/long-term-activities.js";
 import { ArM5eItem } from "./item.js";
+import { Calendar } from "../tools/calendar.js";
 
 /**
  * Extend the basic ItemSheet with some very simple modifications
@@ -548,7 +549,7 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
     html.find(".break-link").click(this._resetTeacher.bind(this));
     html.find(".score-teacher").change(this._resetTeacher.bind(this));
     html.find(".show-details").click(async event => this._showSpell(this.item, event));
-    // html.find(".progress-bonus").change(this._setBonusOption.bind(this));
+    html.find(".select-dates").click(this.displayCalendar.bind(this));
   }
 
   async _resetTeacher(event) {
@@ -1157,6 +1158,11 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
       { temporary: true }
     );
     tmp.sheet.render(true);
+  }
+
+  async displayCalendar() {
+    const calendar = new Calendar({});
+    const res = await calendar.render(true);
   }
 
   async _updateObject(event, formData) {

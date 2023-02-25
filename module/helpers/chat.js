@@ -87,7 +87,7 @@ export function addChatListeners(message, html, data) {
       data.message.flags.arm5e.secondaryScore + Number(message.rolls[0].total)
     );
     rollResult.text(
-      isNaN(rollResult.text())
+      Number.isNaN(rollResult.text())
         ? rollResult.text()
         : Math.round(Number(rollResult.text())) + ` ( ${(newValue < 0 ? "" : "+") + newValue} ) `
     );

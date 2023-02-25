@@ -166,6 +166,10 @@ export class ArM5eActorSheet extends ActorSheet {
     }
 
     if (actorData.type === "player" || actorData.type === "npc" || actorData.type === "beast") {
+      for (let [key, v] of Object.entries(context.system.vitals)) {
+        v.label = game.i18n.localize(CONFIG.ARM5E.character.vitals[key].label);
+      }
+
       context.system.world = {};
 
       // check whether the character is linked to an existing covenant
@@ -474,6 +478,7 @@ export class ArM5eActorSheet extends ActorSheet {
       //   });
       // }
       context.activities = [];
+      const activitiesMap = new Map();
       for (let [key, entry] of Object.entries(context.system.diaryEntries)) {
         for (let date of entry.system.dates) {
           let activity = {};
@@ -486,12 +491,26 @@ export class ArM5eActorSheet extends ActorSheet {
           activity.type = game.i18n.localize(
             CONFIG.ARM5E.activities.generic[entry.system.activity].label
           );
-          activity.year = date.year;
-          activity.season = date.season;
+          activity.date = entry.system.date;
+
           activity._id = entry._id;
-          context.activities.push(activity);
+          if (!activitiesMap.has(date.year)) {
+            activitiesMap.set(date.year, { winter: [], autumn: [], summer: [], spring: [] });
+          }
+          activitiesMap.get(date.year)[date.season].push(activity);
         }
       }
+      context.activities = Array.from(
+        new Map(
+          [...activitiesMap.entries()].sort(function(a, b) {
+            return b[0] - a[0];
+          })
+        ),
+        ([key, value]) => ({
+          year: key,
+          seasons: value
+        })
+      );
 
       for (let [key, charac] of Object.entries(context.system.characteristics)) {
         let shadowWidth = 2 * charac.aging;
@@ -809,7 +828,12 @@ export class ArM5eActorSheet extends ActorSheet {
 
     // Rollable abilities.
     html.find(".rollable").click(this._onRoll.bind(this));
-    // html.find(".agingPoints").click(this._onRoll.bind(this));
+
+    html.find(".rollable-aging").click(async event => {
+      if (event.shiftKey) {
+        this._editAging(event);
+      } else this._onRoll(event);
+    });
 
     html.find(".pick-covenant").click(this._onPickCovenant.bind(this));
     html.find(".soak-damage").click(this._onSoakDamage.bind(this));
@@ -835,6 +859,70 @@ export class ArM5eActorSheet extends ActorSheet {
 
     // migrate actor
     html.find(".migrate").click(event => this.actor.migrate());
+  }
+
+  async _editAging(event) {
+    log(false, "Edit aging");
+    const dataset = getDataset(event);
+    const score = this.actor.system.characteristics[dataset.characteristic].value;
+    let dialogData = {
+      label: game.i18n.localize(
+        CONFIG.ARM5E.character.characteristics[dataset.characteristic].label
+      ),
+      value: score,
+      aging: this.actor.system.characteristics[dataset.characteristic].aging,
+      fieldName: "arm5e.sheet.agingPts"
+    };
+
+    const html = await renderTemplate(
+      "systems/arm5e/templates/generic/agingPointsEdit.html",
+      dialogData
+    );
+
+    new Dialog(
+      {
+        title: game.i18n.format("arm5e.hints.edit", {
+          item: game.i18n.localize("arm5e.sheet.agingPts")
+        }),
+        content: html,
+        buttons: {
+          yes: {
+            icon: "<i class='fas fa-check'></i>",
+            label: game.i18n.localize("arm5e.sheet.action.apply")
+          }
+        },
+        default: "yes",
+        close: async html => {
+          let input = html.find('input[name="inputField"]');
+          let newVal = 0;
+          if (Number.isNumeric(input.val())) {
+            newVal = Number(input.val());
+          }
+          const updateData = [];
+          if (newVal > Math.abs(score)) {
+            newVal = 0;
+            updateData[`system.characteristics.${dataset.characteristic}.value`] =
+              this.actor.system.characteristics[dataset.characteristic].value - 1;
+            ui.notifications.info(
+              game.i18n.format("arm5e.aging.manualEdit", {
+                name: this.actor.name,
+                char: dialogData.label
+              }),
+              {
+                permanent: false
+              }
+            );
+          }
+          updateData[`system.characteristics.${dataset.characteristic}.aging`] = newVal;
+          await this.actor.update(updateData, {});
+        }
+      },
+      {
+        jQuery: true,
+        height: "110px",
+        classes: ["arm5e-dialog", "dialog"]
+      }
+    ).render(true);
   }
 
   async _increaseArt(type, art) {

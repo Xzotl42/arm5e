@@ -73,9 +73,16 @@
 .icon-Icon_Delete_Hand_Gesture:before {
   content: "\004f";
 }
+
+.icon-SmallIcon_Delete_Hand_Gesture:before {
+  content: "\004f";
+  font-size: 12pt;
+}
+
 .icon-Icon_Delete_Perdo:before {
   content: "\0050";
 }
+
 .icon-Icon_Delete_Perdo2:before {
   content: "\0051";
 }
@@ -118,5 +125,5 @@
   content: "\005a";
 }
 .icon-Icon_Readspell:before {
-	content:'\0061';
+  content: "\0061";
 }

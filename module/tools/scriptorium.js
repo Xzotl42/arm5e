@@ -501,13 +501,13 @@ export class Scriptorium extends FormApplication {
       context.error = true;
     }
     if (currentTopic.type === "Summa") {
-      if (isNaN(currentTopic.level) || currentTopic.level < 1) {
+      if (Number.isNaN(currentTopic.level) || currentTopic.level < 1) {
         context.ui.warning = "arm5e.scriptorium.msg.invalidLevel";
         context.ui.warningParam = "";
         context.error = true;
       }
     }
-    if (isNaN(currentTopic.quality) || currentTopic.quality < 1) {
+    if (Number.isNaN(currentTopic.quality) || currentTopic.quality < 1) {
       context.ui.warning = "arm5e.scriptorium.msg.invalidQuality";
       context.ui.warningParam = "";
       context.error = true;

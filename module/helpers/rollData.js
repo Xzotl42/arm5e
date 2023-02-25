@@ -171,6 +171,10 @@ export class ArM5eRollData {
           Math.round(parseInt(actorSystemData.age.value) / 10),
           2
         );
+        break;
+      //case "option":
+      default:
+        break;
     }
 
     if (dataset.bonusActiveEffects) {

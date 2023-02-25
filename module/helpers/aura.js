@@ -126,7 +126,7 @@ function setAuraValueForToken(value, type) {
 async function resetTokenAuraToSceneAura() {
   const aura = game.scenes.viewed.getFlag("world", "aura_" + game.scenes.viewed._id);
   const type = game.scenes.viewed.getFlag("world", "aura_type_" + game.scenes.viewed._id);
-  if (aura !== undefined && !isNaN(aura) && type !== undefined && !isNaN(type)) {
+  if (aura !== undefined && !Number.isNaN(aura) && type !== undefined && !Number.isNaN(type)) {
     addActiveEffectAuraToActor(this, Number(aura), Number(type));
   }
 }

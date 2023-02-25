@@ -20,7 +20,7 @@ export const ArM5ePreloadHandlebarsTemplates = async function() {
     "systems/arm5e/templates/actor/parts/actor-castingTotals.html",
     "systems/arm5e/templates/actor/parts/actor-voice-and-gestures.html",
     "systems/arm5e/templates/actor/parts/actor-diary.html",
-    "systems/arm5e/templates/generic/active-effects.html",
+
     "systems/arm5e/templates/actor/parts/actor-setAbilities.html",
     "systems/arm5e/templates/actor/parts/actor-magic-attributes.html",
 
@@ -58,9 +58,12 @@ export const ArM5ePreloadHandlebarsTemplates = async function() {
     "systems/arm5e/templates/roll/parts/roll-footer.html",
     "systems/arm5e/templates/roll/parts/penetration-options.html",
     // generic partials
+    "systems/arm5e/templates/generic/active-effects.html",
+    "systems/arm5e/templates/generic/calendar-grid.html",
     "systems/arm5e/templates/generic/simpleListPicker.html",
     "systems/arm5e/templates/generic/textInput.html",
     "systems/arm5e/templates/generic/auraInput.html",
+    "systems/arm5e/templates/generic/agingPointsEdit.html",
     "systems/arm5e/templates/generic/largeDialog-footer.html",
     "systems/arm5e/templates/generic/largeDialog-header.html",
     "systems/arm5e/templates/generic/source.html",

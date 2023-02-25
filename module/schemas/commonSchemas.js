@@ -24,7 +24,7 @@ export const convertToNumber = function(value, fallback = 0) {
   if (value === undefined || value === "" || value === null) {
     return fallback;
   } else if (typeof value === "string") {
-    if (isNaN(value)) {
+    if (Number.isNaN(value)) {
       return fallback;
     } else {
       return Number(value);
