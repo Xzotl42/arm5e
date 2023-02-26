@@ -217,7 +217,6 @@ export class ArM5ePCActor extends Actor {
   _prepareCharacterData() {
     const system = this.system;
     log(false, `Preparing Actor ${this.name} data`);
-    let overload = [0, 1, 3, 6, 10, 15, 21, 28, 36, 45, 55, 9999];
     // Initialize containers.
     let weapons = [];
     let armor = [];
@@ -253,7 +252,7 @@ export class ArM5ePCActor extends Actor {
 
     let combat = {
       weight: 0,
-      overload: -1,
+      overload: 0,
       init: 0,
       atk: 0,
       dfn: 0,
@@ -682,21 +681,13 @@ export class ArM5ePCActor extends Actor {
     }
 
     // combat
-    for (var a = 0; a < overload.length; a++) {
-      if (combat.overload == -1) {
-        if (overload[a] > combat.weight) {
-          combat.overload = parseInt(a) - 1;
-        }
-      }
-    }
+
+    combat.overload = ArM5ePCActor.getArtScore(combat.weight);
 
     if (combat.prot) {
       soak += combat.prot;
     }
 
-    if (combat.overload < 0) {
-      combat.overload = 0;
-    }
     if (system.characteristics) {
       if (system.characteristics.str.value > 0) {
         combat.overload = parseInt(combat.overload) - parseInt(system.characteristics.str.value);
@@ -705,7 +696,6 @@ export class ArM5ePCActor extends Actor {
         combat.overload = 0;
       }
     }
-    combat.overload = parseInt(combat.overload) * -1;
 
     if (this._isGrog()) {
       system.con.score = 0;
@@ -795,6 +785,8 @@ export class ArM5ePCActor extends Actor {
     if (system.reputations) {
       system.reputations = reputations;
     }
+
+    system.magicItems = magicItems;
 
     log(false, "pc end of prepare actor data");
     log(false, system);

@@ -1289,7 +1289,7 @@ input[type="time"] {
 .posRelative {
   position: relative;
 }
-
+input[type="text"].combat-total,
 input[type="number"].art-score {
   font-size: 13pt;
   text-align: center;

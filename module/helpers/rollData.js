@@ -23,12 +23,21 @@ export class ArM5eRollData {
     if (dataset.physicalcondition) {
       this.physicalCondition = dataset.physicalcondition;
     }
-
+    this.prepareRollFields(dataset);
     switch (this.type) {
+      case "init":
+        this.setGenericField(
+          game.i18n.localize("arm5e.sheet.encumbrance"),
+          actorSystemData.combat.overload,
+          3,
+          "-"
+        );
+        break;
       case "combat":
         this.img = actorSystemData.combat.img;
         this.itemId = actorSystemData.combat.itemId;
         this.name = actorSystemData.combat.name;
+
         break;
       case "char":
         this.characteristic = dataset.characteristic;
@@ -180,7 +189,7 @@ export class ArM5eRollData {
     if (dataset.bonusActiveEffects) {
       this.activeEffects = this.getSpellcastingModifiers(actor, dataset.bonusActiveEffects);
     }
-    this.prepareRollFields(dataset);
+
     this.cleanBooleans();
   }
 
@@ -211,7 +220,10 @@ export class ArM5eRollData {
   }
 
   getGenericFieldValue(idx) {
-    return Number(this.generic.option[idx - 1]);
+    if (this.generic.operatorOpt[idx - 1] === "+") return Number(this.generic.option[idx - 1]);
+    else {
+      return -Number(this.generic.option[idx - 1]);
+    }
   }
 
   prepareRollFields(dataset) {

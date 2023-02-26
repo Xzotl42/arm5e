@@ -371,60 +371,37 @@ function getRollFormula(actor) {
       game.i18n.localize(rollData.environment.season) +
       " " +
       rollData.environment.year;
-
-    if (rollData.hasGenericField(1)) {
-      total += rollData.getGenericFieldValue(1);
-      msg = newLineAdd(msg);
-      msg += rollData.getGenericFieldLabel(1) + " (" + rollData.getGenericFieldValue(1) + ")";
-    }
-    if (rollData.hasGenericField(2)) {
-      total -= rollData.getGenericFieldValue(2);
-      msg = newLineSub(msg);
+  }
+  if (rollData.hasGenericField(1)) {
+    total += rollData.getGenericFieldValue(1);
+    msg = newLineAdd(msg);
+    msg += rollData.getGenericFieldLabel(1) + " (" + rollData.getGenericFieldValue(1) + ")";
+  }
+  if (rollData.hasGenericField(2)) {
+    msg = newLineAdd(msg);
+    // combat exertion special case
+    if (rollData.type == "combat" && rollData.combat.exertion) {
+      total += rollData.getGenericFieldValue(2) * 2;
+      msg += rollData.getGenericFieldLabel(2) + " ( 2 x " + rollData.getGenericFieldValue(2) + ")";
+    } else {
+      total += rollData.getGenericFieldValue(2);
       msg += rollData.getGenericFieldLabel(2) + " (" + rollData.getGenericFieldValue(2) + ")";
     }
-    if (rollData.hasGenericField(3)) {
-      total -= rollData.getGenericFieldValue(3);
-      msg = newLineSub(msg);
-      msg += rollData.getGenericFieldLabel(3) + " (" + rollData.getGenericFieldValue(3) + ")";
-    }
-
-    if (rollData.hasGenericField(4)) {
-      total -= rollData.getGenericFieldValue(4);
-      msg = newLineSub(msg);
-      msg += rollData.getGenericFieldLabel(4) + " (" + rollData.getGenericFieldValue(4) + ")";
-    }
-  } else {
-    if (rollData.hasGenericField(1)) {
-      total += rollData.getGenericFieldValue(1);
-      msg = newLineAdd(msg);
-      msg += rollData.getGenericFieldLabel(1) + " (" + rollData.getGenericFieldValue(1) + ")";
-    }
-    if (rollData.hasGenericField(2)) {
-      msg = newLineAdd(msg);
-      if (rollData.type == "combat" && rollData.combat.exertion) {
-        total += rollData.getGenericFieldValue(2) * 2;
-        msg +=
-          rollData.getGenericFieldLabel(2) + " ( 2 x " + rollData.getGenericFieldValue(2) + ")";
-      } else {
-        total += rollData.getGenericFieldValue(2);
-        msg += rollData.getGenericFieldLabel(2) + " (" + rollData.getGenericFieldValue(2) + ")";
-      }
-    }
-    if (rollData.hasGenericField(3)) {
-      total += rollData.getGenericFieldValue(3);
-      msg = newLineAdd(msg);
-      msg += rollData.getGenericFieldLabel(3) + " (" + rollData.getGenericFieldValue(3) + ")";
-    }
-    if (rollData.hasGenericField(4)) {
-      total += rollData.getGenericFieldValue(4);
-      msg = newLineAdd(msg);
-      msg += rollData.getGenericFieldLabel(4) + " (" + rollData.getGenericFieldValue(4) + ")";
-    }
-    if (rollData.hasGenericField(5)) {
-      total += rollData.getGenericFieldValue(5);
-      msg = newLineAdd(msg);
-      msg += rollData.getGenericFieldValue(5) + " (" + rollData.getGenericFieldValue(5) + ")";
-    }
+  }
+  if (rollData.hasGenericField(3)) {
+    total += rollData.getGenericFieldValue(3);
+    msg = newLineAdd(msg);
+    msg += rollData.getGenericFieldLabel(3) + " (" + rollData.getGenericFieldValue(3) + ")";
+  }
+  if (rollData.hasGenericField(4)) {
+    total += rollData.getGenericFieldValue(4);
+    msg = newLineAdd(msg);
+    msg += rollData.getGenericFieldLabel(4) + " (" + rollData.getGenericFieldValue(4) + ")";
+  }
+  if (rollData.hasGenericField(5)) {
+    total += rollData.getGenericFieldValue(5);
+    msg = newLineAdd(msg);
+    msg += rollData.getGenericFieldValue(5) + " (" + rollData.getGenericFieldValue(5) + ")";
   }
   if (rollData.bonuses) {
     total += rollData.bonuses;

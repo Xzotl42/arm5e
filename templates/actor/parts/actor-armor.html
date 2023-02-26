@@ -1,0 +1,35 @@
+<ol class="items-list backSection margintop18">
+    <li class="item flexrow item-header">
+        <div class="item-image"></div>
+        <div class="item-name">{{localize "arm5e.sheet.armor"}}</div>
+        <div class="item-controls">
+            <a class="item-control item-create"
+                title='{{localize "arm5e.hints.create" item=(localize "ITEM.TypeArmor")}}' data-type="armor"><i
+                    class="fas fa-plus"></i></a>
+        </div>
+    </li>
+    {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+    {{#each system.armor as |item id|}}
+        <li class="item item-value flexrow" data-name="{{item.name}}" data-item-id="{{item._id}}">
+            <div class="item-image"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24" /></div>
+            <div class="flexrow flex-center">
+                <span class="flexrow item-title">{{item.name}}</span>
+                <label><span class="bold">{{localize "arm5e.sheet.protection"}}:</span> {{item.system.prot}} (+{{
+                    ../system.characteristics.sta.value }})</label>
+                <label><span class="bold">{{localize "arm5e.sheet.weight"}}:</span> {{item.system.weight}}</label>
+                <span class="bold">
+                    <label>{{localize "arm5e.sheet.equiped"}}:</label>
+                    <input type="checkbox" class="quick-edit" name="equiped" {{checked system.equiped}}
+                        data-dtype="Boolean" /></span>
+            </div>
+            <div class="item-controls">
+                <a class="item-control item-edit"
+                    title='{{localize "arm5e.hints.edit" item=(localize "ITEM.TypeArmor")}}'><i
+                        class="icon-Icon_Edit"></i></a>
+                <a class="item-control item-delete"
+                    title='{{localize "arm5e.hints.delete" item=(localize "ITEM.TypeArmor")}}'><i
+                        class="icon-Icon_Delete_Hand_Gesture"></i></a>
+            </div>
+        </li>
+    {{/each}}
+</ol>

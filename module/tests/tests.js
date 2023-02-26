@@ -148,7 +148,7 @@ function registerRollTesting(quench) {
             log(false, roll);
             let tot =
               actor.system.characteristics.qik.value +
-              actor.system.combat.init +
+              actor.system.combat.init -
               actor.system.combat.overload;
             assert.ok(roll.modifier() == tot);
           } catch (err) {
@@ -158,7 +158,7 @@ function registerRollTesting(quench) {
         });
 
         it("Combat roll", async function() {
-          let type = "init";
+          let type = "combat";
           try {
             let dataset = {
               roll: type,
@@ -186,7 +186,7 @@ function registerRollTesting(quench) {
           }
         });
         it("Combat roll", async function() {
-          let type = "init";
+          let type = "combat";
           try {
             let dataset = {
               roll: type,

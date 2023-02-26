@@ -1,6 +1,6 @@
 # Release Notes
 
-## 2.0.4.5, Kentigern
+## 2.0.4.6, Kentigern
 
 ### Features & changes
 
@@ -25,6 +25,8 @@
 - Lab texts in books
 - Edit aging points of characteristics (SHIFT + Click)
 - Size rolls
+- Rework of Combat panel (+ added armor list below)
+- Legacy magic items are listed in the inventory of characters
 
 ### Bug fixes
 
@@ -42,6 +44,8 @@
 - Fixed a bunch of bugs in the diary entries.
 - Fixed drag and drop of Items on NPC and Codex sheet
 - Fixed computation of the warping score and xp
+- Simplified encumbrance computation
+- Better management of roll generic fields
 
 ### Documentation
 

@@ -62,7 +62,7 @@ export const armorItem = {
     label: "Cost"
   },
   quantity: 1,
-  weight: 3,
+  weight: 6,
   prot: 2,
   full: false,
   equiped: true
