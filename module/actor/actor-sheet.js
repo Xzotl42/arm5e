@@ -146,6 +146,7 @@ export class ArM5eActorSheet extends ActorSheet {
     // Allow effect creation
     actorData.system.effectCreation = game.user.isGM;
     let usercache = JSON.parse(sessionStorage.getItem(`usercache-${game.user.id}`));
+    if (usercache === null) usercache = {};
     if (usercache[this.actor.id]) {
       context.userData = usercache[this.actor.id];
     } else {

@@ -141,7 +141,7 @@ export async function migration(originalVersion) {
   }
 
   // Set the migration as complete
-  game.settings.set("arm5e", "systemMigrationVersion", game.system.version);
+  await game.settings.set("arm5e", "systemMigrationVersion", game.system.version);
   ui.notifications.info(
     `Ars Magica 5e System Migration to version ${game.system.version} completed!`,
     {
@@ -183,8 +183,7 @@ export const migrateCompendium = async function(pack) {
           updateData = await migrateItemData(doc);
           break;
         case "Scene":
-          // TODO enable after fix
-          // updateData = await migrateSceneData(doc);
+          updateData = await migrateSceneData(doc);
           break;
       }
 
@@ -214,21 +213,9 @@ export const migrateCompendium = async function(pack) {
  * @returns {object}                The updateData to apply
  */
 export const migrateSceneData = async function(scene, migrationData) {
-  if (scene?.flags?.world) {
-    let updateData = {};
-    const aura = scene.flags.world[`aura_${scene._id}`];
-    const type = scene.flags.world[`aura_type_${scene._id}`];
-    if (aura && !type) {
-      log(false, "Missing aura type");
-      // TODOV10 check where flags are for scenes
-      updateData[`flags.world.aura_type_${scene._id}`] = 1;
-    }
-    return updateData;
-  }
-
   const tokens = await Promise.all(
     scene.tokens.map(async token => {
-      const t = token.toObject();
+      const t = token instanceof foundry.abstract.DataModel ? token.toObject() : token;
       const update = {};
 
       if (!t.actorId || t.actorLink) {
@@ -237,14 +224,14 @@ export const migrateSceneData = async function(scene, migrationData) {
         t.actorId = null;
         t.actorData = {};
       } else if (!t.actorLink) {
-        const actor = duplicate(t.actorData);
-        actor.type = token.actor?.type;
+        const actorData = duplicate(t.actorData);
+        actorData.type = token.actor?.type;
 
-        if (actor.system) {
-          actor.system.charType = { value: token.actor?.system?.charType?.value };
+        if (actorData.system) {
+          actorData.system.charType = { value: token.actor?.system?.charType?.value };
         }
 
-        const update = await migrateActorData(actor);
+        const update = await migrateActorData(actorData);
         ["items", "effects"].forEach(embeddedName => {
           if (!update[embeddedName]?.length) return;
           const updates = new Map(update[embeddedName].map(u => [u._id, u]));
@@ -260,6 +247,16 @@ export const migrateSceneData = async function(scene, migrationData) {
       return t;
     })
   );
+  // let updateData = {};
+  // if (scene?.flags?.world) {
+  //   const aura = scene.flags.world[`aura_${scene._id}`];
+  //   const type = scene.flags.world[`aura_type_${scene._id}`];
+  //   if (aura && !type) {
+  //     log(false, "Missing aura type");
+  //     // TODOV10 check where flags are for scenes
+  //     updateData[`flags.world.aura_type_${scene._id}`] = 1;
+  //   }
+  // }
   return { tokens };
 };
 
@@ -359,30 +356,29 @@ export const migrateActorData = async function(actorDoc) {
       updateData["system.-=season"] = null;
     }
 
-    if (actor.system?.roll != undefined) {
-      updateData["system.-=roll"] = null;
-    }
+    // if (actor.system?.roll != undefined) {
+    //   updateData["system.-=roll"] = null;
+    // }
     if (actor.system.decrepitude == undefined) {
-      actor.system.decrepitude = {};
+      updateData["system.decrepitude"] = {};
     }
 
     if (actor.system.warping == undefined) {
-      actor.system.warping = {};
+      updateData["system.warping"] = {};
     }
 
     if (actor.system.realmAlignment == undefined) {
-      actor.system.realmAlignment = 0;
+      updateData["system.realmAlignment"] = 0;
     }
     // remove garbage stuff if it exists
-
-    updateData["system.-=str"] = null;
-    updateData["system.-=sta"] = null;
-    updateData["system.-=int"] = null;
-    updateData["system.-=per"] = null;
-    updateData["system.-=dex"] = null;
-    updateData["system.-=qik"] = null;
-    updateData["system.-=cha"] = null;
-    updateData["system.-=com"] = null;
+    if (actor.system.str) updateData["system.-=str"] = null;
+    if (actor.system.sta) updateData["system.-=sta"] = null;
+    if (actor.system.int) updateData["system.-=int"] = null;
+    if (actor.system.per) updateData["system.-=per"] = null;
+    if (actor.system.dex) updateData["system.-=dex"] = null;
+    if (actor.system.qik) updateData["system.-=qik"] = null;
+    if (actor.system.cha) updateData["system.-=cha"] = null;
+    if (actor.system.com) updateData["system.-=com"] = null;
 
     if (actor.system.pendingXP != undefined && actor.system.pendingXP > 0) {
       ChatMessage.create({
@@ -421,7 +417,7 @@ export const migrateActorData = async function(actorDoc) {
           updateData["system.warping.points"] = exp;
         } else {
           // compute normally
-          updateData["system.warping.points"] = exp + actor.system.warping.points;
+          updateData["system.warping.points"] = exp + Number(actor.system.warping.points);
         }
         updateData["system.warping.-=score"] = null;
       }
@@ -447,7 +443,9 @@ export const migrateActorData = async function(actorDoc) {
     }
 
     if (actor.system.charType.value == "magus" || actor.system.charType.value == "magusNPC") {
-      updateData["system.realmAlignment"] = CONFIG.ARM5E.realmsExt.magic.value;
+      if (actor.system.realmAlignment === undefined)
+        updateData["system.realmAlignment"] = CONFIG.ARM5E.realmsExt.magic.value;
+
       if (actor.system?.sanctum?.value === undefined) {
         let sanctum = {
           value: actor.system.sanctum
@@ -461,32 +459,36 @@ export const migrateActorData = async function(actorDoc) {
       //   updateData["system.laboratory.longevityRitual.twilightScars"] = "";
       // }
 
-      if (actor.system?.familiar?.characteristicsFam != undefined) {
-        updateData["system.familiar.characteristicsFam.int"] = {
-          value: actor.system.familiar.characteristicsFam.int.value
-        };
-        updateData["system.familiar.characteristicsFam.per"] = {
-          value: actor.system.familiar.characteristicsFam.per.value
-        };
-        updateData["system.familiar.characteristicsFam.str"] = {
-          value: actor.system.familiar.characteristicsFam.str.value
-        };
-        updateData["system.familiar.characteristicsFam.sta"] = {
-          value: actor.system.familiar.characteristicsFam.sta.value
-        };
-        updateData["system.familiar.characteristicsFam.pre"] = {
-          value: actor.system.familiar.characteristicsFam.pre.value
-        };
-        updateData["system.familiar.characteristicsFam.com"] = {
-          value: actor.system.familiar.characteristicsFam.com.value
-        };
-        updateData["system.familiar.characteristicsFam.dex"] = {
-          value: actor.system.familiar.characteristicsFam.dex.value
-        };
-        updateData["system.familiar.characteristicsFam.qik"] = {
-          value: actor.system.familiar.characteristicsFam.qik.value
-        };
-      }
+      // TO CHECK: still useful?
+      // let charFam = actor.system?.familiar?.characteristicsFam
+      // if (charFam != undefined) {
+      //   if (charFam.int.value)
+      //   updateData["system.familiar.characteristicsFam.int"] = {
+      //     value: actor.system.familiar.characteristicsFam.int.value
+      //   };
+      //   if (charFam.int.value)
+      //   updateData["system.familiar.characteristicsFam.per"] = {
+      //     value: actor.system.familiar.characteristicsFam.per.value
+      //   };
+      //   updateData["system.familiar.characteristicsFam.str"] = {
+      //     value: actor.system.familiar.characteristicsFam.str.value
+      //   };
+      //   updateData["system.familiar.characteristicsFam.sta"] = {
+      //     value: actor.system.familiar.characteristicsFam.sta.value
+      //   };
+      //   updateData["system.familiar.characteristicsFam.pre"] = {
+      //     value: actor.system.familiar.characteristicsFam.pre.value
+      //   };
+      //   updateData["system.familiar.characteristicsFam.com"] = {
+      //     value: actor.system.familiar.characteristicsFam.com.value
+      //   };
+      //   updateData["system.familiar.characteristicsFam.dex"] = {
+      //     value: actor.system.familiar.characteristicsFam.dex.value
+      //   };
+      //   updateData["system.familiar.characteristicsFam.qik"] = {
+      //     value: actor.system.familiar.characteristicsFam.qik.value
+      //   };
+      // }
       //
       // migrate arts xp
       //
@@ -535,13 +537,18 @@ export const migrateActorData = async function(actorDoc) {
     }
   }
 
-  if (actor.type == "player" || actor.type == "npc" || actor.type == "beast") {
+  if (
+    actor.type == "player" ||
+    actor.type == "npc" ||
+    actor.type == "beast" ||
+    actor.type == "laboratory"
+  ) {
     if (actor.effects && actor.effects.length > 0) {
       log(false, `Migrating effects of ${actor.name}`);
-      const effects = actor.effects.reduce((arr, e) => {
+      const effects = actor.effects.reduce(async (arr, e) => {
         // Migrate effects
         const effectData = e instanceof CONFIG.ActiveEffect.documentClass ? e.toObject() : e;
-        let effectUpdate = migrateActiveEffectData(effectData);
+        let effectUpdate = await migrateActiveEffectData(effectData);
         if (!isEmpty(effectUpdate)) {
           // Update the effect
           effectUpdate._id = effectData._id;
@@ -554,6 +561,8 @@ export const migrateActorData = async function(actorDoc) {
         updateData.effects = effects;
       }
     }
+  }
+  if (actor.type == "player" || actor.type == "npc" || actor.type == "beast") {
     let currentFatigue = 0;
     if (actor.system.fatigue) {
       for (const [key, fat] of Object.entries(actor.system.fatigue)) {
@@ -890,10 +899,10 @@ export const migrateItemData = async function(item) {
 
   if (itemData.effects.length > 0) {
     log(false, `Migrating effects of ${itemData.name}`);
-    const effects = itemData.effects.reduce((arr, e) => {
+    const effects = itemData.effects.reduce(async (arr, e) => {
       // Migrate effects
       const effectData = e instanceof CONFIG.ActiveEffect.documentClass ? e.toObject() : e;
-      let effectUpdate = migrateActiveEffectData(effectData);
+      let effectUpdate = await migrateActiveEffectData(effectData);
       if (!isEmpty(effectUpdate)) {
         // Update the effect
         effectUpdate._id = effectData._id;

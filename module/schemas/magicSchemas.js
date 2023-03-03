@@ -13,6 +13,7 @@ import {
 } from "./commonSchemas.js";
 const fields = foundry.data.fields;
 
+// number field for spell level
 export const baseLevel = () =>
   new fields.NumberField({
     required: false,

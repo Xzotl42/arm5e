@@ -115,7 +115,7 @@ export class DiaryEntrySchema extends foundry.abstract.DataModel {
         ),
         arts: new fields.ArrayField(
           new fields.SchemaField({
-            key: new fields.StringField({ required: true, blank: false }),
+            key: new fields.StringField({ required: true, blank: false, initial: "cr" }),
             teacherScore: new fields.NumberField({
               required: false,
               nullable: false,
@@ -251,6 +251,7 @@ export class DiaryEntrySchema extends foundry.abstract.DataModel {
       updateData["system.dates"] = [{ year: theYear, season: theSeason }];
     } else {
       log(false, `DEBUG: Year and season undefined for ${itemData.name}`);
+      updateData["system.dates"] = [{ year: Number(currentDate.year), season: currentDate.season }];
     }
 
     // Fixing Array problems
@@ -258,27 +259,56 @@ export class DiaryEntrySchema extends foundry.abstract.DataModel {
       updateData["system.progress"] = { abilities: [], spells: [], arts: [], newSpells: [] };
     } else {
       const prog = duplicate(itemData.system.progress);
+      let updateNeeded = false;
       if (!(prog.abilities instanceof Array)) {
         prog.abilities = Object.values(prog.abilities);
+        updateNeeded = true;
       }
       for (let a of prog.abilities) {
         if (!a.id) {
           a.id = "dummyid";
+          updateNeeded = true;
         }
         if (!a.category) {
           a.category = "general";
+          updateNeeded = true;
         }
-
-        a.teacherScore = convertToNumber(a.teacherScore);
+        if (Number.isNaN(a.teacherScore) || a.teacherScore === "" || a.teacherScore === undefined) {
+          a.teacherScore = convertToNumber(a.teacherScore, 2);
+          updateNeeded = true;
+        }
       }
-      updateData["system.progress.abilities"] = prog.abilities;
-
+      if (updateNeeded === true) {
+        updateData["system.progress.abilities"] = prog.abilities;
+        updateNeeded = false;
+      }
       if (!(prog.arts instanceof Array)) {
-        updateData["system.progress.arts"] = Object.values(prog.arts);
+        prog.arts = Object.values(prog.arts);
+        updateNeeded = true;
+      }
+      for (let a of prog.arts) {
+        if (a.key === "") {
+          a.key = "cr";
+          updateNeeded = true;
+        }
+        if (Number.isNaN(a.teacherScore) || a.teacherScore === "" || a.teacherScore === undefined) {
+          a.teacherScore = convertToNumber(a.teacherScore, 5);
+          updateNeeded = true;
+        }
+      }
+      if (updateNeeded === true) {
+        updateData["system.progress.arts"] = prog.arts;
+        updateNeeded = false;
       }
 
       if (!(prog.spells instanceof Array)) {
-        updateData["system.progress.spells"] = Object.values(prog.spells);
+        prog.spells = Object.values(prog.spells);
+        updateNeeded = true;
+      }
+
+      if (updateNeeded === true) {
+        updateData["system.progress.spells"] = prog.spells;
+        updateNeeded = false;
       }
       // else {
       //   for (let spell of prog.spells) {
@@ -289,8 +319,15 @@ export class DiaryEntrySchema extends foundry.abstract.DataModel {
       // }
       if (prog.newSpells === undefined) {
         prog.newSpells = [];
+        updateNeeded = true;
       } else if (!(prog.newSpells instanceof Array)) {
-        updateData["system.progress.newSpells"] = Object.values(prog.newSpells);
+        prog.newSpells = Object.values(prog.newSpells);
+        updateNeeded = true;
+      }
+
+      if (updateNeeded === true) {
+        updateData["system.progress.newSpells"] = prog.newSpells;
+        updateNeeded = false;
       }
     }
 

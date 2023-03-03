@@ -164,7 +164,11 @@ export class BookSchema extends foundry.abstract.DataModel {
       } else if (itemData.system.type == "tract") {
         topic.type = "Tractatus";
       } else {
-        topic.type = itemData.system.type;
+        if (itemData.system.type === "") {
+          topic.type = "Summa";
+        } else {
+          topic.type = itemData.system.type;
+        }
       }
       const topics = [];
       topics.push(topic);
@@ -188,7 +192,7 @@ export class BookSchema extends foundry.abstract.DataModel {
       let topics = itemData.system.topics;
       let idx = 0;
       for (let t of itemData.system.topics) {
-        if (t.type === undefined) {
+        if (t.type === undefined || t.type === "") {
           if (t.category == "labText") {
             topics[idx].type = null;
           } else {

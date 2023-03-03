@@ -46,6 +46,8 @@
 - Fixed computation of the warping score and xp
 - Simplified encumbrance computation
 - Better management of roll generic fields
+- Fix bug preventing sheet display when no user-cache is available in the browser.
+- Migration polishing
 
 ### Documentation
 

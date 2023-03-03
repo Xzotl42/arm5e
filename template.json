@@ -623,8 +623,7 @@
         "arts",
         "familiar",
         "laboratoryPC",
-        "apprentice",
-        "roll"
+        "apprentice"
       ],
       "charType": {
         "value": "magus",
@@ -670,8 +669,7 @@
         "familiar",
         "laboratoryPC",
         "fatigue",
-        "arts",
-        "roll"
+        "arts"
       ],
       "charType": {
         "value": "mundane",

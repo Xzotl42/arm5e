@@ -40,8 +40,8 @@ export class AbilitySchema extends foundry.abstract.DataModel {
       updateData["system.-=experienceNextLevel"] = null;
     }
     // clean-up TODO: remove
-    updateData["system.-=puissant"] = null;
-    updateData["system.-=affinity"] = null;
+    if (itemData.system.puissant) updateData["system.-=puissant"] = null;
+    if (itemData.system.affinity) updateData["system.-=affinity"] = null;
 
     // no key assigned to the ability, try to find one
     if (CONFIG.ARM5E.ALL_ABILITIES[itemData.system.key] == undefined || itemData.system.key == "") {
@@ -52,28 +52,31 @@ export class AbilitySchema extends foundry.abstract.DataModel {
         name = name.substring(0, name.length - 1);
       }
 
-      // Special common cases
-      if (game.i18n.localize("arm5e.skill.commonCases.native").toLowerCase() == name) {
-        updateData["system.key"] = "livingLanguage";
-        updateData["system.option"] = "nativeTongue";
-        log(false, `Found key livingLanguage for ability  ${itemData.name}`);
-      } else if (game.i18n.localize("arm5e.skill.commonCases.areaLore").toLowerCase() == name) {
-        updateData["system.key"] = "areaLore";
-        log(false, `Found key areaLore for ability  ${itemData.name}`);
-      } else if (game.i18n.localize("arm5e.skill.commonCases.latin").toLowerCase() == name) {
-        updateData["system.key"] = "deadLanguage";
-        updateData["system.option"] = "Latin";
-        log(false, `Found key latin for ability  ${itemData.name}`);
-      } else if (game.i18n.localize("arm5e.skill.commonCases.hermesLore").toLowerCase() == name) {
-        updateData["system.key"] = "organizationLore";
-        updateData["system.option"] = "OrderOfHermes";
-        log(false, `Found key hermesLore for ability  ${itemData.name}`);
-      } else {
-        for (const [key, value] of Object.entries(CONFIG.ARM5E.ALL_ABILITIES)) {
-          if (game.i18n.localize(value.mnemonic).toLowerCase() == name) {
-            updateData["system.key"] = key;
-            log(false, `Found key ${key} for ability  ${itemData.name}`);
-            break;
+      // if there is not already a key, try to guess it
+      if (itemData.system.key === "" || itemData.system.key === undefined) {
+        // Special common cases
+        if (game.i18n.localize("arm5e.skill.commonCases.native").toLowerCase() == name) {
+          updateData["system.key"] = "livingLanguage";
+          updateData["system.option"] = "nativeTongue";
+          log(false, `Found key livingLanguage for ability  ${itemData.name}`);
+        } else if (game.i18n.localize("arm5e.skill.commonCases.areaLore").toLowerCase() == name) {
+          updateData["system.key"] = "areaLore";
+          log(false, `Found key areaLore for ability  ${itemData.name}`);
+        } else if (game.i18n.localize("arm5e.skill.commonCases.latin").toLowerCase() == name) {
+          updateData["system.key"] = "deadLanguage";
+          updateData["system.option"] = "Latin";
+          log(false, `Found key latin for ability  ${itemData.name}`);
+        } else if (game.i18n.localize("arm5e.skill.commonCases.hermesLore").toLowerCase() == name) {
+          updateData["system.key"] = "organizationLore";
+          updateData["system.option"] = "OrderOfHermes";
+          log(false, `Found key hermesLore for ability  ${itemData.name}`);
+        } else {
+          for (const [key, value] of Object.entries(CONFIG.ARM5E.ALL_ABILITIES)) {
+            if (game.i18n.localize(value.mnemonic).toLowerCase() == name) {
+              updateData["system.key"] = key;
+              log(false, `Found key ${key} for ability  ${itemData.name}`);
+              break;
+            }
           }
         }
       }
@@ -81,9 +84,11 @@ export class AbilitySchema extends foundry.abstract.DataModel {
         log(true, `Unable to find a key for ability  ${itemData.name}`);
       }
     }
-    if (itemData.system.option != undefined) {
+    if (itemData.system.option != undefined && itemData.system.option != "") {
       // keep only alphanum chars
-      updateData["system.option"] = itemData.system.option.replace(/[^a-zA-Z0-9]/gi, "");
+      let regex = /[^a-zA-Z0-9]/gi;
+      if (itemData.system.option.match(regex) != null)
+        updateData["system.option"] = itemData.system.option.replace(regex, "");
     }
 
     if (itemData.system.description == null) {
