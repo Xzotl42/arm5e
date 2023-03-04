@@ -1,6 +1,6 @@
-# Release Notes
 
 ## 2.0.4.7, Kentigern
+
 
 ### Features & changes
 
@@ -49,6 +49,7 @@
 - Fix bug preventing sheet display when no user-cache is available in the browser.
 - Migration polishing
 - Diary entries are again displayed in Covenants and lab actors
+
 
 ### Documentation
 

@@ -264,6 +264,7 @@ export class DiaryEntrySchema extends foundry.abstract.DataModel {
           applied: itemData.system.applied ?? false
         }
       ];
+
     }
     // if (itemData.system.applied !== undefined) {
     //   // if applied exists, the array should be of length 1
