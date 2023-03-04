@@ -259,7 +259,7 @@ export class Scriptorium extends FormApplication {
         type: "diaryEntry",
         system: {
           cappedGain: false,
-          dates: [{ season: objectData.season, year: Number(objectData.year) }],
+          dates: [{ season: objectData.season, year: Number(objectData.year), applied: false }],
           sourceQuality: topic.quality,
           activity: "reading",
           progress: {

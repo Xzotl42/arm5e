@@ -478,6 +478,35 @@ export class ArM5eActorSheet extends ActorSheet {
       //     return a[1].label.localeCompare(b[1].label);
       //   });
       // }
+
+      for (let [key, charac] of Object.entries(context.system.characteristics)) {
+        let shadowWidth = 2 * charac.aging;
+        charac.ui = {
+          style: 'style="box-shadow: 0 0 ' + shadowWidth + 'px black"',
+          title: `${charac.aging} ` + game.i18n.localize("arm5e.sheet.agingPts")
+        };
+        // log(false, `${key} has ${charac.aging} points`);
+      }
+
+      context.combat = {
+        init:
+          context.system.combat.init -
+          context.system.combat.overload +
+          context.system.characteristics.qik.value,
+        attack:
+          context.system.combat.atk +
+          context.system.combat.ability +
+          context.system.characteristics.dex.value,
+        defense:
+          context.system.combat.dfn +
+          context.system.combat.ability +
+          context.system.characteristics.qik.value,
+        damage: context.system.combat.dam + context.system.characteristics.str.value,
+        soak: context.system.combat.prot + context.system.characteristics.sta.value
+      };
+    }
+
+    if (context.system.diaryEntries) {
       context.activities = [];
       const activitiesMap = new Map();
       for (let [key, entry] of Object.entries(context.system.diaryEntries)) {
@@ -512,32 +541,6 @@ export class ArM5eActorSheet extends ActorSheet {
           seasons: value
         })
       );
-
-      for (let [key, charac] of Object.entries(context.system.characteristics)) {
-        let shadowWidth = 2 * charac.aging;
-        charac.ui = {
-          style: 'style="box-shadow: 0 0 ' + shadowWidth + 'px black"',
-          title: `${charac.aging} ` + game.i18n.localize("arm5e.sheet.agingPts")
-        };
-        // log(false, `${key} has ${charac.aging} points`);
-      }
-
-      context.combat = {
-        init:
-          context.system.combat.init -
-          context.system.combat.overload +
-          context.system.characteristics.qik.value,
-        attack:
-          context.system.combat.atk +
-          context.system.combat.ability +
-          context.system.characteristics.dex.value,
-        defense:
-          context.system.combat.dfn +
-          context.system.combat.ability +
-          context.system.characteristics.qik.value,
-        damage: context.system.combat.dam + context.system.characteristics.str.value,
-        soak: context.system.combat.prot + context.system.characteristics.sta.value
-      };
     }
 
     if (

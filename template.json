@@ -1282,7 +1282,7 @@
     },
     "diaryEntry": {
       "templates": ["base"],
-      "dates": [{ "year": 1220, "season": "spring" }],
+      "dates": [{ "year": 1220, "season": "spring", "applied": false }],
       "sourceQuality": 0,
       "activity": "none",
       "progress": { "abilities": [], "spells": [], "arts": [], "newSpells": [] },
@@ -1296,8 +1296,7 @@
         "score": 0
       },
       "optionKey": "standard",
-      "duration": 1,
-      "done": 0
+      "duration": 1
     },
     "power": {
       "templates": ["base"],

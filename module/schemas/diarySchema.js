@@ -26,7 +26,8 @@ export class DiaryEntrySchema extends foundry.abstract.DataModel {
             integer: true,
             initial: 1200,
             step: 1
-          })
+          }),
+          applied: new fields.BooleanField({ required: false, initial: false })
         }),
         { required: false, initial: [] }
       ),
@@ -42,12 +43,12 @@ export class DiaryEntrySchema extends foundry.abstract.DataModel {
         positive: true,
         initial: 1
       }),
-      done: new fields.NumberField({
-        required: false,
-        nullable: false,
-        integer: true,
-        initial: 0
-      }),
+      // done: new fields.NumberField({
+      //   required: false,
+      //   nullable: false,
+      //   integer: true,
+      //   initial: 0
+      // }),
       sourceQuality: new fields.NumberField({
         required: false,
         nullable: false,
@@ -174,10 +175,14 @@ export class DiaryEntrySchema extends foundry.abstract.DataModel {
     let currentDate = game.settings.get("arm5e", "currentDate");
     if (itemData.system) {
       if (itemData.system.dates == undefined) {
-        itemData.system.dates = [{ year: currentDate.year, season: currentDate.season }];
+        itemData.system.dates = [
+          { year: currentDate.year, season: currentDate.season, applied: false }
+        ];
       }
     } else {
-      itemData.system = { dates: [{ year: currentDate.year, season: currentDate.season }] };
+      itemData.system = {
+        dates: [{ year: currentDate.year, season: currentDate.season, applied: false }]
+      };
     }
   }
 
@@ -210,7 +215,7 @@ export class DiaryEntrySchema extends foundry.abstract.DataModel {
     }
 
     let currentDate = game.settings.get("arm5e", "currentDate");
-    if (itemData.system.year && itemData.system.season) {
+    if (itemData.system.year !== undefined && itemData.system.season !== undefined) {
       let theYear;
       if (itemData.system.year === "" || itemData.system.year === null) {
         theYear = Number(currentDate.year);
@@ -248,11 +253,30 @@ export class DiaryEntrySchema extends foundry.abstract.DataModel {
       updateData["system.-=applied"] = null;
       updateData["system.-=year"] = null;
       updateData["system.-=season"] = null;
-      updateData["system.dates"] = [{ year: theYear, season: theSeason }];
-    } else {
-      log(false, `DEBUG: Year and season undefined for ${itemData.name}`);
-      updateData["system.dates"] = [{ year: Number(currentDate.year), season: currentDate.season }];
+      updateData["system.dates"] = [
+        { year: theYear, season: theSeason, applied: itemData.system.applied }
+      ];
+    } else if (itemData.system.dates == []) {
+      updateData["system.dates"] = [
+        {
+          year: Number(currentDate.year),
+          season: currentDate.season,
+          applied: itemData.system.applied ?? false
+        }
+      ];
     }
+    // if (itemData.system.applied !== undefined) {
+    //   // if applied exists, the array should be of length 1
+    //   updateData["system.dates"] = [
+    //     {
+    //       year: itemData.system.dates[0].year,
+    //       season: itemData.system.dates[0].season,
+    //       applied: itemData.system.applied
+    //     }
+    //   ];
+
+    //   updateData["system.-=applied"] = null;
+    // }
 
     // Fixing Array problems
     if (itemData.system.progress == undefined || isEmpty(itemData.system.progress)) {

@@ -122,7 +122,7 @@ async function createAgingDiaryEntry(actor, input) {
     img: "/systems/arm5e/assets/icons/Icon_Aging_and_Decrepitude.png",
     type: "diaryEntry",
     system: {
-      dates: [{ year: input.year, season: "winter" }],
+      dates: [{ year: input.year, season: "winter", applied: true }],
       activity: "aging",
       description: "<p>" + desc + "</p>",
       duration: 1,

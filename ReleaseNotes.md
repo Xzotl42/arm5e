@@ -1,6 +1,6 @@
 # Release Notes
 
-## 2.0.4.6, Kentigern
+## 2.0.4.7, Kentigern
 
 ### Features & changes
 
@@ -48,6 +48,7 @@
 - Better management of roll generic fields
 - Fix bug preventing sheet display when no user-cache is available in the browser.
 - Migration polishing
+- Diary entries are again displayed in Covenants and lab actors
 
 ### Documentation
 

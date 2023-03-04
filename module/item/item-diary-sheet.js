@@ -81,11 +81,11 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
       return context;
     }
 
-    if (context.system.year == "") {
-      // supposedly the first time a diary entry is created
-      context.system.year = this.actor.system.datetime.year;
-      context.system.season = this.actor.system.datetime.season;
-    }
+    // if (context.system.year == "") {
+    //   // supposedly the first time a diary entry is created
+    //   context.system.year = this.actor.system.datetime.year;
+    //   context.system.season = this.actor.system.datetime.season;
+    // }
 
     const activityConfig = CONFIG.ARM5E.activities.generic[actType];
 

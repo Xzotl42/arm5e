@@ -164,7 +164,9 @@ export class ArM5eItem extends Item {
       if (this.actor !== null && this.actor._isCharacter()) {
         const activityConfig = CONFIG.ARM5E.activities.generic[systemData.activity];
 
-        if (systemData.done > 0) {
+        this.system.done = systemData.dates.filter(d => d.applied == true).length;
+
+        if (this.system.done > 0) {
           // keep the existing quality at the time of applying
           // log(false, `Use source quality (${systemData.sourceQuality}) as base for ${this.name}`);
           this.system.baseQuality = systemData.sourceQuality;
