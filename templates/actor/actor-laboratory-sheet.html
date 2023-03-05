@@ -151,6 +151,11 @@
 
   {{!-- Sheet Tab Navigation --}}
   <nav class="arm5eTabs arm5eTabsLAB sheet-tabs tabs" data-group="primary">
+    <a class="item posRelative" data-tab="planning">
+      <div class="navItem-right-ball"><img src="/systems/arm5e/assets/bLeft.png" /></div>
+      <div class="navItem-left-ball"><img src="/systems/arm5e/assets/bRight.png" /></div>
+      {{localize "arm5e.lab.planning.label"}}
+    </a>
     <a class="item posRelative" data-tab="virtues">
       <div class="navItem-right-ball"><img src="/systems/arm5e/assets/bLeft.png" /></div>
       <div class="navItem-left-ball"><img src="/systems/arm5e/assets/bRight.png" /></div>
@@ -182,6 +187,14 @@
 
   {{!-- Sheet Body --}}
   <section class="sheet-body">
+    {{!-- Planning Tab --}}
+    <div class="tab planning" data-group="primary" data-tab="planning">
+      {{#if (ne system.owner.linked true)}}
+        <label class="bold">{{localize "arm5e.lab.planning.msg.noOwner"}}</label>
+      {{else}}
+        Lab planning1
+      {{/if}}
+    </div>
     {{!-- Virtues & Flaws Tab --}}
     <div class="tab virtues" data-group="primary" data-tab="virtues">
       {{> "systems/arm5e/templates/actor/parts/actor-virtuesFlaws.html" }}

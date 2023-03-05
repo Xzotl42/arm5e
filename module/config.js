@@ -2281,13 +2281,21 @@ ARM5E.books.categories = {
 };
 
 ARM5E.activities.lab = {
-  art: "arm5e.lab.art",
-  magicTheory: "arm5e.lab.magicTheory",
-  inventSpell: "arm5e.lab.InventSpell",
-  openEnchantment: "arm5e.lab.openEnchantment",
-  longevityPotion: "arm5e.lab.longevityPotion",
-  minorEnchantment: "arm5e.lab.minorEnchantment",
-  majorEnchantment: "arm5e.lab.majorEnchantment"
+  art: { label: "arm5e.lab.art", enabled: true },
+  magicTheory: { label: "arm5e.lab.magicTheory", enabled: true },
+  learnSpell: { label: "arm5e.activity.spellLearning", enabled: true },
+  inventSpell: { label: "arm5e.lab.InventSpell", enabled: true },
+  openEnchantment: { label: "arm5e.lab.openEnchantment", enabled: false },
+  longevityPotion: { label: "arm5e.lab.longevityPotion", enabled: false },
+  minorEnchantment: { label: "arm5e.lab.minorEnchantment", enabled: false },
+  majorEnchantment: { label: "arm5e.lab.majorEnchantment", enabled: false }
+};
+
+ARM5E.activities.distractions = {
+  none: { label: "Full", coeff: 1 },
+  oneMonth: { label: "One month", coeff: 2 / 3 },
+  twoMonths: { label: "Two months", coeff: 1 / 3 },
+  threeMonths: { label: "Three months", coeff: 0 }
 };
 
 ARM5E.activities.books = {

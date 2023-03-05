@@ -709,6 +709,8 @@
   "arm5e.sheet.crucible.receptacle": "Receptacle",
   "arm5e.sheet.crucible.invest": "Invest power",
 
+  "arm5e.lab.planning.label": "Planning",
+  "arm5e.lab.planning.msg.noOwner": "This lab has no owner. Planning is not possible.",
   "arm5e.lab.usage.label": "Usage",
   "arm5e.lab.usage.light": "Light (1 season or less)",
   "arm5e.lab.usage.standard": "Standard (2 seasons)",
