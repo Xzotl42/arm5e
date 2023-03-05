@@ -359,13 +359,13 @@ export const migrateActorData = async function(actorDoc) {
     // if (actor.system?.roll != undefined) {
     //   updateData["system.-=roll"] = null;
     // }
-    if (actor.system.decrepitude == undefined) {
-      updateData["system.decrepitude"] = {};
-    }
+    // if (actor.system.decrepitude == undefined) {
+    //   updateData["system.decrepitude"] = {};
+    // }
 
-    if (actor.system.warping == undefined) {
-      updateData["system.warping"] = {};
-    }
+    // if (actor.system.warping == undefined) {
+    //   updateData["system.warping"] = {};
+    // }
 
     if (actor.system.realmAlignment == undefined) {
       updateData["system.realmAlignment"] = 0;
@@ -397,7 +397,7 @@ export const migrateActorData = async function(actorDoc) {
 
   if (actor.type == "player" || actor.type == "npc") {
     if (actor.system.charType.value !== "entity") {
-      if (actor.system.decrepitude.score != undefined) {
+      if (actor.system.decrepitude?.score != undefined) {
         let exp = (actor.system.decrepitude.score * (actor.system.decrepitude.score + 1) * 5) / 2;
         if (actor.system.decrepitude.points >= 5 * (actor.system.decrepitude.score + 1)) {
           // if the experience is bigger than the needed for next level, ignore it
