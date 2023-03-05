@@ -513,6 +513,7 @@ export class ArM5eActorSheet extends ActorSheet {
         };
         // log(false, `${key} has ${charac.aging} points`);
       }
+
     }
 
     if (context.system.diaryEntries) {
@@ -550,6 +551,7 @@ export class ArM5eActorSheet extends ActorSheet {
           seasons: value
         })
       );
+
     }
 
     if (

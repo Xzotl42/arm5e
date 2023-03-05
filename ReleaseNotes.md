@@ -48,6 +48,7 @@
 - Migration polishing
 - Diary entries are again displayed in Covenants and lab actors
 
+
 ### Documentation
 
 - Take note of the existence of a French version of the system compendia, including the user guide:
