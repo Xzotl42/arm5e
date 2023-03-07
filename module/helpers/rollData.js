@@ -98,7 +98,7 @@ export class ArM5eRollData {
           this.magic.focus = spell.system.applyFocus;
           this.magic.ritual = spell.system.ritual;
           this.magic.level = spell.system.level;
-          this.penetration.masteryScore = spell.system.mastery;
+          this.magic.masteryScore = spell.system.mastery;
           this.bonuses = this.magic.bonus;
         } else {
           if (dataset.technique) {
@@ -114,6 +114,7 @@ export class ArM5eRollData {
             this.magic.formLabel = ARM5E.magic.forms[dataset.form].label;
             this.magic.formScore = parseInt(actorSystemData.arts.forms[dataset.form].finalScore);
           }
+          this.magic.masteryScore = 0;
         }
 
         break;
@@ -198,7 +199,6 @@ export class ArM5eRollData {
     this.penetration.multiplier = 1;
     this.penetration.specApply = false;
     this.penetration.penetrationMastery = false;
-    this.penetration.masteryScore = 0;
     this.penetration.multiplierBonusArcanic = 0;
     this.penetration.multiplierBonusSympathic = 0;
     this.penetration.config = ARM5E.magic.penetration;
@@ -272,6 +272,7 @@ export class ArM5eRollData {
       formLabel: "",
       bonus: 0,
       bonusDesc: "",
+      masteryScore: 0,
       ritual: false,
       focus: false,
       mastery: 0,
@@ -295,7 +296,6 @@ export class ArM5eRollData {
       speciality: "",
       specApply: false,
       penetrationMastery: false,
-      masteryScore: 0,
       multiplierBonusArcanic: 0,
       multiplierBonusSympathic: 0,
       total: 0

@@ -145,4 +145,8 @@ export class MySchema extends foundry.abstract.DataModel {
   static defineSchema() {
     return { ...itemBase() };
   }
+
+  static migrate(data) {
+    return data;
+  }
 }

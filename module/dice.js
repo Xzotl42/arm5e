@@ -92,14 +92,18 @@ async function stressDie(actor, type = "DEFAULT", modes = 0, callBack = undefine
 
   let botchCheck = 0;
   if (mult > 1) {
-    flavorTxt = `<h3>${game.i18n.localize("arm5e.messages.die.exploding")}</h3><br/>`;
-  } else if (mult === 0) {
+    flavorTxt = `<h2 class="dice-msg">${game.i18n.localize(
+      "arm5e.messages.die.exploding"
+    )}</h3><br/>`;
+  } else if (mult === 0 && dieRoll.botched) {
     if (dieRoll._total == 1) {
       confAllowed = false;
-      flavorTxt = `<h2>${game.i18n.localize("arm5e.messages.die.botch")}</h2><br/>`;
+      flavorTxt = `<h2 class="dice-msg">${game.i18n.localize(
+        "arm5e.messages.die.botch"
+      )}</h2><br/>`;
     } else if (dieRoll._total > 1) {
       confAllowed = false;
-      flavorTxt = `<h2>${game.i18n.format("arm5e.messages.die.botches", {
+      flavorTxt = `<h2 class="dice-msg">${game.i18n.format("arm5e.messages.die.botches", {
         num: dieRoll._total
       })}</h2><br/>`; // TODO: mention what is botched
     }
@@ -118,7 +122,7 @@ async function stressDie(actor, type = "DEFAULT", modes = 0, callBack = undefine
 
   const message = await dieRoll.toMessage(
     {
-      flavor: chatTitle + details,
+      flavor: chatTitle + flavorTxt + details,
       speaker: ChatMessage.getSpeaker({
         actor: actor
       }),
@@ -260,45 +264,56 @@ function getRollFormula(actor) {
   if (rollData.type == "spell" || rollData.type == "magic" || rollData.type == "spont") {
     let valueTech = 0;
     let valueForm = 0;
-    valueTech = rollData.magic.techniqueScore;
-    valueForm = rollData.magic.formScore;
+    valueTech = parseInt(rollData.magic.techniqueScore);
+    valueForm = parseInt(rollData.magic.formScore);
     if (rollData.magic.focus === true) {
       if (valueTech < valueForm) {
-        total = parseInt(total) + 2 * valueTech + valueForm;
+        total += 2 * valueTech + valueForm;
         msg += rollData.magic.techniqueLabel;
         msg += " ( 2 x " + valueTech + ") + <br />";
         msg += rollData.magic.formLabel;
         msg += " (" + valueForm + ")";
       } else {
-        total = parseInt(total) + 2 * valueForm + valueTech;
+        total += 2 * valueForm + valueTech;
         msg += rollData.magic.techniqueLabel;
         msg += " (" + valueTech + ") + <br />";
         msg += rollData.magic.formLabel;
         msg += " ( 2 x " + valueForm + ")";
       }
     } else {
-      total = parseInt(total) + valueTech;
+      total += valueTech;
       msg += rollData.magic.techniqueLabel;
       msg += " (" + valueTech + ")";
 
-      total = parseInt(total) + valueForm;
+      total += valueForm;
       msg = newLineAdd(msg);
       msg += rollData.magic.formLabel;
       msg += " (" + valueForm + ")";
     }
+
+    // TODO NOW
+    if (rollData.magic.masteryScore > 0) {
+      total += rollData.magic.masteryScore;
+      msg = newLineAdd(msg);
+      msg += game.i18n.localize("arm5e.sheet.mastery") + ` (${rollData.magic.masteryScore})`;
+    }
+
     if (rollData.type == "magic" || rollData.type == "spont") {
       actor.loseFatigueLevel(1);
     }
   }
 
   if (rollData.type == "power") {
-    msg += `Might (${actorSystemData.might.value}) - 5 times cost (${rollData.power.cost})`;
+    msg += game.i18n.format("arm5e.sheet.powerCost", {
+      might: actorSystemData.might.value,
+      cost: rollData.power.cost
+    });
     total += actorSystemData.might.value - 5 * rollData.power.cost;
   }
 
   if (rollData.characteristic != "") {
     value = actorSystemData.characteristics[rollData.characteristic].value;
-    total = parseInt(total) + parseInt(value);
+    total += parseInt(value);
     msg = newLineAdd(msg);
     let name = game.i18n.localize(ARM5E.character.characteristics[rollData.characteristic].label);
     if (rollData.type == "char") {
@@ -311,13 +326,13 @@ function getRollFormula(actor) {
 
   if (rollData.ability.name != "") {
     value = rollData.ability.score;
-    total = parseInt(total) + parseInt(value);
+    total += parseInt(value);
     msg = newLineAdd(msg);
     msg += rollData.label;
     msg += " (" + value + ")";
 
     if (rollData.ability.specApply == true) {
-      total = parseInt(total) + 1;
+      total += 1;
       msg += " ( + 1 " + game.i18n.localize("arm5e.sheet.speciality") + " )";
     }
   }
@@ -450,9 +465,7 @@ function getRollFormula(actor) {
     if (rollData.penetration.specApply) {
       score += 1;
     }
-    if (rollData.penetration.penetrationMastery) {
-      score += rollData.penetration.masteryScore;
-    }
+
     if (score > 0) {
       msg += " + <br /><b>Penetration: </b> <br />";
       msg += "Score (" + score + ") * Multiplier (" + multiplier + ") = " + score * multiplier;
@@ -500,10 +513,7 @@ function newLineSub(msg) {
 }
 
 async function CheckBotch(botchDice) {
-  let resultMessage = "";
-
-  let rollCommand = botchDice;
-  rollCommand = String(rollCommand).concat("d10cf=10");
+  let rollCommand = String(botchDice).concat("d10cf=10");
   const botchRoll = new Roll(rollCommand);
   await botchRoll.roll({
     async: true
@@ -592,7 +602,7 @@ async function explodingRoll(actorData, modes = 0, botchNum = 0) {
       }
 
       const html = await renderTemplate("systems/arm5e/templates/roll/roll-botch.html");
-
+      let botchRoll;
       if (botchNum === 0) {
         // interactive mode show dialog
         await new Promise(resolve => {
@@ -606,7 +616,7 @@ async function explodingRoll(actorData, modes = 0, botchNum = 0) {
                   label: game.i18n.localize("arm5e.dialog.button.rollbotch"),
                   callback: async html => {
                     let botchDice = html.find("#botchDice").val();
-                    dieRoll = await CheckBotch(botchDice);
+                    botchRoll = await CheckBotch(botchDice);
                     resolve();
                   }
                 },
@@ -632,8 +642,15 @@ async function explodingRoll(actorData, modes = 0, botchNum = 0) {
           ).render(true);
         });
       } else {
-        dieRoll = await CheckBotch(botchNum);
+        botchRoll = await CheckBotch(botchNum);
+      }
+      if (botchRoll.terms[0].total > 0) {
+        dieRoll = botchRoll;
         dieRoll.botched = true;
+      } else {
+        // with no botches, the die result is 0 instead of 10.
+        dieRoll.dice[0].results[0].result = 0;
+        dieRoll._total -= 10;
       }
     }
   }

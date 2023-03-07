@@ -724,12 +724,14 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
     description += "</ol>";
     // }
     let newTitle = getNewTitleForActivity(this.actor, this.item);
-
+    // TODO for multi-seasons activities, use the current date flag.
+    let datesApplied = this.item.system.dates;
+    datesApplied[0].applied = true;
     await this.item.update(
       {
         name: newTitle,
         system: {
-          done: this.item.system.done + 1,
+          dates: datesApplied,
           description: description,
           sourceQuality: sourceQuality,
           progress: this.item.system.progress
@@ -876,8 +878,11 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
       }
     }
     let description = this.item.system.description + "<h4>Rollbacked<h4>";
+    // TODO for multi-seasons activities, use the current date flag.
+    let datesRollbacked = this.item.system.dates;
+    datesRollbacked[0].applied = false;
     await this.item.update({
-      system: { done: this.item.system.done - 1, description: description }
+      system: { dates: datesRollbacked, description: description }
     });
   }
 

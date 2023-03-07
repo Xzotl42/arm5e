@@ -108,6 +108,7 @@
   "arm5e.sheet.spells": "Sorts",
   "arm5e.sheet.spell": "Sort",
   "arm5e.sheet.spell-design": "Création de sorts",
+  "arm5e.sheet.magicalEffect": "Effet Magique Spontané",
   "arm5e.sheet.magicalEffects": "Effets Magiques Spontanés",
   "arm5e.sheet.spontaneousMagic": "Magie Spontannée",
   "arm5e.sheet.weapons": "Armes",
@@ -247,11 +248,14 @@
   "arm5e.sheet.spellOverMagicResistanceWithNoTotal": "Le Sort réussit sur $target$",
   "arm5e.sheet.magicResistanceOverSpellWithNoTotal": "Le Sort échoue sur $target$",
 
+  "arm5e.sheet.formRes": "Résistance de forme",
+  "arm5e.sheet.natRes": "Résistance naturelle",
   "arm5e.sheet.formScore": "Score de Forme ($form$)",
   "arm5e.sheet.parma": "Parma Magica",
   "arm5e.sheet.encumbrance": "Encombrement",
   "arm5e.sheet.might": "Puissance",
   "arm5e.sheet.powers": "Pouvoirs",
+  "arm5e.sheet.power": "Pouvoir",
   "arm5e.sheet.modifier": "Modificateur",
   "arm5e.sheet.divider": "Diviseur",
   "arm5e.sheet.advantage": "Avantage",
@@ -296,6 +300,9 @@
   "arm5e.sheet.tainted": "Impur",
   "arm5e.sheet.initiations": "Initiatique",
   "arm5e.sheet.qualities": "Qualités",
+  "arm5e.sheet.inferiorities": "Infériorités",
+  "arm5e.sheet.boons": "Avantages",
+  "arm5e.sheet.hooks": "Accroches",
   "arm5e.sheet.magicqualities": "Qualités Magiques",
   "arm5e.sheet.laboratoryStructure": "Laboratoire: Batîment",
   "arm5e.sheet.laboratoryOutfitting": "Laboratoire: Aménagement",
@@ -516,10 +523,18 @@
 
   "arm5e.sheet.magicBooks": "Livres Magiques",
   "arm5e.sheet.mundaneBooks": "Livres Vulgaires",
+  "arm5e.sheet.topics.arts": "Sujet du livre : Arts hermétiques",
+  "arm5e.sheet.topics.abilities": "Sujet du livre : Compétences",
+  "arm5e.sheet.topics.masteries": "Sujet du livre : Maitrises de sorts",
+  "arm5e.sheet.topics.labtexts": "Textes de laboratoire",
+  "arm5e.sheet.topics.current": "Sujet {current} sur {total}",
   "arm5e.sheet.ability": "Compétence",
   "arm5e.sheet.bookTopic": "Sujet",
+  "arm5e.sheet.bookTopics": "Sujets",
   "arm5e.sheet.visSources": "Sources de Vis",
   "arm5e.sheet.visStock": "Stock de Vis",
+  
+  "arm5e.book.dropLabtext": "Déposer un texte de laboratoire ici",
 
   "arm5e.sheet.governForm": "Type de Gouvernance",
   "arm5e.sheet.loyaltyPoints.base": "Points de Loyauté de base",
@@ -694,6 +709,8 @@
   "arm5e.sheet.crucible.receptacle": "Receptacle",
   "arm5e.sheet.crucible.invest": "Investir un pouvoir",
 
+  "arm5e.lab.planning.label": "Planification",
+  "arm5e.lab.planning.msg.noOwner": "Ce laboratoire n'a pas de propriétaire. La planification n'est pas possible.",
   "arm5e.lab.usage.label": "Utilisation",
   "arm5e.lab.usage.light": "Légère (1 saison ou moins)",
   "arm5e.lab.usage.standard": "Normale (2 saisons)",
@@ -781,6 +798,7 @@
   "arm5e.dialog.damageCalculator": "Calculateur de Dégâts",
   "arm5e.dialog.powerUse": "Pouvoir utilisé",
   "arm5e.dialog.hint.abilityOption": "Seulement des caractères alphanumérique.",
+  "arm5e.dialog.delete-topic": "Supprimer le sujet",
 
   "arm5e.notification.unconscious": "Ce personnage est inconscient, aucune action possible...",
   "arm5e.notification.pendingCrisis": "Ce personnage a une crise de vieillissement en cours, aucune action possible... Résolvez la crise en cliquant sur le crâne à côté du nom du personnage.",
@@ -797,6 +815,7 @@
   "arm5e.notification.noMightPoints": "Il n'y a plus assez de point dans la réserve.",
   "arm5e.notification.setDate": "La date actuelle a été fixée à {season} {year}",
   "arm5e.notification.synchActors": "Tous les acteurs ont été synchronisés avec {season} {year}",
+  "arm5e.notification.missingSpell": "Le sort \"{spellName}\" n'existe plus ou a été déplacé. Annuler.",
 
   "arm5e.canvas.buttons.setAura": "Configure l'Aura",
   "arm5e.canvas.buttons.clearAura": "Réinitialisé l'Aura",
@@ -885,6 +904,7 @@
   "arm5e.sheet.activeEffect.types.characteristics": "Caractéristiques",
   "arm5e.sheet.activeEffect.types.fatigue": "Fatigue",
   "arm5e.sheet.activeEffect.types.wounds": "Blessure",
+  "arm5e.sheet.activeEffect.types.formResistance": "Résistance naturelle",
   "arm5e.sheet.activeEffect.types.academicAbilitiesBonus": "Bonus aux Compétences Académiques",
   "arm5e.sheet.activeEffect.types.arcaneAbilitiesBonus": "Bonus aux Compétences Mystiques",
   "arm5e.sheet.activeEffect.types.generalAbilitiesBonus": "Bonus aux Compétences Générales",
@@ -960,6 +980,7 @@
   "arm5e.aging.result6": "- Gagner {num} point(s) de décrépitude.<br/>",
   "arm5e.aging.rollback.title": "Inverser l'effet du jet de vieillissant",
   "arm5e.aging.rollback.confirm": "Cette action annulera l'effet du vieillissement et supprimera l'entrée du journal. Êtes-vous sûr ?",
+  "arm5e.aging.manualEdit": "{name} perd un point en {char} à cause du vieillissement.",
 
   "arm5e.activity.activity": "Activité",
   "arm5e.activity.label": "Activités saisonnières",
@@ -971,6 +992,7 @@
   "arm5e.activity.teaching": "Enseignement",
   "arm5e.activity.writing": "Ecriture",
   "arm5e.activity.reading": "Lecture",
+  "arm5e.activity.spellLearning": "Apprentissage de sort",
   "arm5e.activity.apprenticeship": "Mage seulement : Apprentissage",
   "arm5e.activity.childhood": "Petite enfance",
   "arm5e.activity.laterLife": "Vie postérieure",
@@ -1002,8 +1024,10 @@
   "arm5e.activity.title.laterLife": "Années après l'enfance",
   "arm5e.activity.title.laterLifeMagi": "Années après l'apprentissage",
   "arm5e.activity.title.childhood": "Enfance",
+  "arm5e.activity.title.spellLearning": "Apprendre le sort",
   "arm5e.activity.drop.teacher": "Déposez ici un personnage pour faire office de professeur/entraineur.",
 
+  "arm5e.activity.newSpell": "Nouveau sort appris",
   "arm5e.activity.descItem": "{item} : {xp} xp(s) augmentation",
   "arm5e.activity.options.language": "Pratiquer la langue",
   "arm5e.activity.options.area": "Explorer la zone",
@@ -1041,10 +1065,20 @@
   "arm5e.scriptorium.msg.notMagus": "Le lecteur n'est pas un mage.",
   "arm5e.scriptorium.reading.activity": "Lecture {title}",
 
+  "arm5e.book.tableContents": "Table des matières",
+  "arm5e.book.summaLong": "Summa de niveau {level} et de qualité {quality} sur",
+  "arm5e.book.tractLong": "Tractatus de qualité {quality} sur",
+  "arm5e.book.summaShort": "Summa Niv {level} Qualité {quality} ",
+  "arm5e.book.tractShort": "Tractatus Qualité {quality}",
+  "arm5e.book.labText.intro": "Texte de laboratoire sur",
+  "arm5e.book.labText.spell": "Le sort \"{spell}\"",
+  "arm5e.book.labText.enchantment": "L'enchantement \"{enchantment}\"",
+
   "arm5e.hints.create": "Créer {item}",
   "arm5e.hints.edit": "Modifier {item}",
   "arm5e.hints.delete": "Supprimer {item}",
   "arm5e.hints.design": "Conception {item}",
+  "arm5e.hints.read": "Lecture {item}",
 
   "arm5e.sheet.label.details": "Détails",
 
@@ -1065,5 +1099,7 @@
   "arm5e.generic.base": "Base",
   "arm5e.generic.multipliers": "Multiplicateurs",
   "arm5e.generic.other": "Autre",
-  "arm5e.generic.unknown": "Inconnu"
+  "arm5e.generic.unknown": "Inconnu",
+  "arm5e.generic.current": "Actuel",
+  "arm5e.generic.nothing": "Rien"
 }

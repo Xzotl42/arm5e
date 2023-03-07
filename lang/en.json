@@ -247,6 +247,7 @@
 
   "arm5e.sheet.spellOverMagicResistanceWithNoTotal": "Spell successful on $target$",
   "arm5e.sheet.magicResistanceOverSpellWithNoTotal": "Spell failed to work on $target$",
+  "arm5e.sheet.powerCost": "Might {might} - 5 times cost ({cost})",
 
   "arm5e.sheet.formRes": "Form resistance",
   "arm5e.sheet.natRes": "Natural resistance",

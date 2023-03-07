@@ -347,6 +347,11 @@ h4.window-title {
   border: 2px solid #6f6c66;
   border-radius: 0px;
 }
+.system-arm5e .dice-msg {
+  font-family: bookAntika;
+  border-bottom: 0px;
+  text-align: center;
+}
 
 .system-arm5e .chat-button {
   width: 22px;

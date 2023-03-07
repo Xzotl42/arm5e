@@ -1,4 +1,4 @@
-## 2.0.4.9, Kentigern
+## 2.0.4.10, Kentigern
 
 ### Features & changes
 
@@ -47,6 +47,8 @@
 - Fix bug preventing sheet display when no user-cache is available in the browser.
 - Migration polishing
 - Diary entries are again displayed in Covenants and lab actors
+- Spell mastery is now added to the casting total instead of just the penetration total
+- Stress rolls are no longer reduced to 0 if there is no botch, only the die is.
 
 ### Documentation
 
