@@ -1,5 +1,6 @@
 ## 2.0.4.11, Kentigern
 
+
 ### Features & changes
 
 - New Natural resistance active effect
@@ -52,7 +53,9 @@
 - Diary entries are again displayed in Covenants and lab actors
 - Spell mastery is now added to the casting total instead of just the penetration total
 - Stress rolls are no longer reduced to 0 if there is no botch, only the die is.
+
 - Setting for default Documents icons is not longer broken
+
 
 ### Documentation
 

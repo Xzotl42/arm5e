@@ -1,4 +1,5 @@
 import { ARM5E } from "../config.js";
+
 import { SeasonField } from "./commonSchemas.js";
 
 const fields = foundry.data.fields;
@@ -27,3 +28,4 @@ export const actorBase = () => {
     })
   };
 };
+
