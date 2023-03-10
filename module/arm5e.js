@@ -45,6 +45,7 @@ import { AbilitySchema } from "./schemas/abilitySchema.js";
 import { BookSchema } from "./schemas/bookSchema.js";
 import { DiaryEntrySchema } from "./schemas/diarySchema.js";
 import { ItemSchema, VirtueFlawSchema, VisSchema } from "./schemas/minorItemsSchemas.js";
+import { LabSchema } from "./schemas/labSchema.js";
 
 Hooks.once("init", async function() {
   game.arm5e = {
@@ -362,6 +363,8 @@ function setSystemDatamodels() {
   CONFIG.Item.systemDataModels["spell"] = SpellSchema;
   CONFIG.Item.systemDataModels["laboratoryText"] = LabTextSchema;
   CONFIG.Item.systemDataModels["diaryEntry"] = DiaryEntrySchema;
+  //Actors
+  CONFIG.Actor.systemDataModels["laboratory"] = LabSchema;
 }
 
 function registerSheets() {

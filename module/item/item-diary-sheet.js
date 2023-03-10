@@ -708,6 +708,8 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
       description += `<li>${game.i18n.localize("arm5e.activity.newSpell")} : ${spell.name}</li>`;
 
       newSpells.push(spell);
+      // TODO check why level is there instead of system
+      sourceQuality += a.level;
     }
     const newlyCreated = await this.actor.createEmbeddedDocuments("Item", newSpells, {
       render: false
@@ -1160,7 +1162,7 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
         ownership: { default: CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER },
         system: spell.spellData
       },
-      { temporary: true }
+      { temporary: true, editable: false }
     );
     tmp.sheet.render(true);
   }

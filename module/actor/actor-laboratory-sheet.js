@@ -58,7 +58,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
         name,
         id
       }));
-    if (context.system.world.magi.length > 1) {
+    if (context.system.world.magi.length > 0) {
       let per = context.system.world.magi.filter(p => p.name == context.system.owner.value);
       if (per.length > 0) {
         context.system.owner.linked = true;
@@ -105,11 +105,11 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
       case "vis":
       case "item":
       case "book":
-      case "speciality":
-      case "distinctive":
-      case "sanctumRoom":
+      // case "speciality":
+      // case "distinctive":
+      // case "sanctumRoom":
       case "magicItem":
-      case "personality":
+      // case "personality":
       case "magicalEffect":
       case "laboratoryText":
         return true;

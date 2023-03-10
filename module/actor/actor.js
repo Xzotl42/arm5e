@@ -864,34 +864,35 @@ export class ArM5ePCActor extends Actor {
 
   _prepareLabData() {
     const system = this.system;
-    let virtues = [];
-    let flaws = [];
-    let specialities = [];
-    let distinctive = [];
-    let rooms = [];
-    let magicItems = [];
-    let personalities = [];
-    let vis = [];
-    let items = [];
     let artsTopics = [];
     let mundaneTopics = [];
     let masteryTopics = [];
     let laboratoryTexts = [];
-    let diaryEntries = [];
     let totalVirtues = 0;
     let totalFlaws = 0;
+    system.specialities_old = [];
+    system.personalities_old = [];
+    system.distinctive = [];
+    system.rooms_old = [];
+    system.rawVis = [];
+    system.items = [];
+    system.virtues = [];
+    system.flaws = [];
+    system.diaryEntries = [];
+    system.magicItems = [];
+    system.laboratoryTexts = [];
 
     for (let [key, item] of this.items.entries()) {
       if (item.type === "speciality") {
-        specialities.push(item);
+        system.specialities_old.push(item);
       } else if (item.type === "distinctive") {
-        distinctive.push(item);
+        system.distinctive.push(item);
       } else if (item.type === "sanctumRoom") {
-        rooms.push(item);
+        system.rooms_old.push(item);
       } else if (item.type === "magicItem") {
-        magicItems.push(item);
+        system.magicItems.push(item);
       } else if (item.type === "personality") {
-        personalities.push(item);
+        system.personalities_old.push(item);
       } else if (item.type === "book") {
         let idx = 0;
         for (let topic of item.system.topics) {
@@ -921,64 +922,29 @@ export class ArM5ePCActor extends Actor {
           }
         }
       } else if (item.type === "vis") {
-        vis.push(item);
+        system.rawVis.push(item);
       } else if (item.type === "item") {
-        items.push(item);
+        system.items.push(item);
       } else if (item.type === "virtue") {
-        virtues.push(item);
+        system.virtues.push(item);
         if (ARM5E.impacts[item.system.impact.value]) {
-          totalVirtues =
-            parseInt(totalVirtues) + parseInt(ARM5E.impacts[item.system.impact.value].cost);
+          totalVirtues = totalVirtues + parseInt(ARM5E.impacts[item.system.impact.value].cost);
         }
       } else if (item.type === "flaw") {
-        flaws.push(item);
+        system.flaws.push(item);
         if (ARM5E.impacts[item.system.impact.value]) {
           totalFlaws =
             parseInt(totalFlaws) + parseInt(ARM5E.impacts[item.system.impact.value].cost);
         }
       } else if (item.type === "diaryEntry") {
-        diaryEntries.push(item);
+        system.diaryEntries.push(item);
       }
     }
 
-    if (system.specialities) {
-      system.specialities = specialities;
-    }
-    if (system.distinctive) {
-      system.distinctive = distinctive;
-    }
-    if (system.rooms) {
-      system.rooms = rooms;
-    }
-
-    if (system.personalities) {
-      system.personalities = personalities;
-    }
-
-    if (system.items) {
-      system.items = items;
-    }
     system.artsTopics = artsTopics.sort(compareTopics);
     system.mundaneTopics = mundaneTopics.sort(compareTopics);
     system.masteryTopics = masteryTopics.sort(compareTopics);
     system.laboratoryTexts = laboratoryTexts.sort(compareTopics);
-    if (system.rawVis) {
-      system.rawVis = vis;
-    }
-
-    if (system.magicItems) {
-      system.magicItems = magicItems;
-    }
-
-    if (system.virtues) {
-      system.virtues = virtues;
-    }
-    if (system.flaws) {
-      system.flaws = flaws;
-    }
-    if (system.diaryEntries) {
-      system.diaryEntries = diaryEntries;
-    }
 
     system.size.total = system.size.value + system.size.bonus;
     system.generalQuality.total = system.generalQuality.value + system.generalQuality.bonus;

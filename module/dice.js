@@ -107,6 +107,7 @@ async function stressDie(actor, type = "DEFAULT", modes = 0, callBack = undefine
         num: dieRoll._total
       })}</h2><br/>`; // TODO: mention what is botched
     }
+    dieRoll._total = 0;
     botchCheck = 1;
   }
 

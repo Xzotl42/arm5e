@@ -696,16 +696,14 @@
     "laboratory": {
       "templates": ["base", "datetime"],
       "covenant": {
-        "dtype": "String",
         "value": "Covenant Name"
       },
+      "description": "",
       "owner": {
-        "dtype": "String",
         "value": ""
       },
       "location": "",
       "points": 0,
-      "sanctum": "",
       "size": {
         "description": "",
         "value": 0
@@ -738,14 +736,10 @@
         "description": "",
         "value": 0
       },
-      "specialities": [],
-      "distinctive": [],
-      "rooms": [],
       "magicItems": [],
       "items": [],
       "books": [],
-      "rawVis": [],
-      "personalities": []
+      "rawVis": []
     },
     "covenant": {
       "templates": ["base", "visRegistry", "datetime"],
@@ -1312,7 +1306,7 @@
     },
     "distinctive": {
       "templates": ["base"],
-      "foco": "",
+      "focus": "",
       "speciality": "",
       "bonus": 0
     },

@@ -27,7 +27,7 @@ export function registerSettings() {
     },
     default: "MONO",
     onChange: value => {
-      CONFIG.ARM5E_DEFAULT_ICONS = ARM5E_DEFAULT_ICONS[value];
+      CONFIG.ARM5E_DEFAULT_ICONS = ARM5E.ARM5E_DEFAULT_ICONS[value];
     }
   });
 

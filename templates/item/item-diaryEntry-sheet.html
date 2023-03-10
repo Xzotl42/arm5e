@@ -28,6 +28,8 @@
         <div class="resource">
           <label>{{localize "arm5e.sheet.date"}}<input type="text" name="system.date" value="{{system.date}}"
               data-dtype="String" /></label>
+          <input type="checkbox" name="system.dates.0.applied" hidden {{checked system.dates.0.applied}}
+            data-dtype="Boolean">
         </div>
         <div class="resource">
           <label class="header-label">{{localize "arm5e.activity.activity"}}</label>

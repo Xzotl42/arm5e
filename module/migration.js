@@ -274,7 +274,10 @@ export const migrateActorData = async function(actorDoc) {
     actor = actorDoc;
   }
   if (CONFIG.Actor.systemDataModels[actor.type]) {
-    return CONFIG.Actor.systemDataModels[actor.type].migrate(actor);
+    return CONFIG.Actor.systemDataModels[actor.type].migrate(
+      actor,
+      actorDoc.items ? actorDoc.items : []
+    );
   }
   const updateData = {};
   if (!actor?.flags?.arm5e) {

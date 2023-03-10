@@ -1,4 +1,4 @@
-## 2.0.4.10, Kentigern
+## 2.0.4.11, Kentigern
 
 ### Features & changes
 
@@ -25,6 +25,9 @@
 - Size rolls
 - Rework of Combat panel (+ added armor list below)
 - Legacy magic items are listed in the inventory of characters
+- Laboratory sheet reviewed and updated: (Personalities, Features, Rooms, Specialties are now text fields, the latter will be replaced by active effects)
+- [technical] Actors migrated to the new datamodel can now use their embedded items for migration.
+- Spell roll dialog improvements
 
 ### Bug fixes
 
@@ -49,6 +52,7 @@
 - Diary entries are again displayed in Covenants and lab actors
 - Spell mastery is now added to the casting total instead of just the penetration total
 - Stress rolls are no longer reduced to 0 if there is no botch, only the die is.
+- Setting for default Documents icons is not longer broken
 
 ### Documentation
 
@@ -70,6 +74,7 @@
   - Laboratory Texts
   - Magical effects
   - Diary entry
+  - Laboratory
 
 ## 2.0.3.13, Jerbiton the Founder
 

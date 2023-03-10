@@ -1,27 +1,60 @@
-<div class="flexrow backSection">
-  <ol class="items-list">
-    <li class="item flexrow item-header">
-      <div class="item-image"></div>
-      <div class="item-name">{{localize "arm5e.sheet.specialities"}}</div>
-      <div class="item-controls">
-        <a class="item-control item-create" title="Create speciality" data-type="speciality"><i
-            class="fas fa-plus"></i></a>
+<div class="flexcol">
+  <div class="flexrow   " style="min-height: 260px;">
+    <div class="flexcol backSection" style="margin-right: 10px; margin-bottom: 5px;">
+      <label class="smallTitle padding4 flex0" stype="height: 32px;">{{localize "arm5e.sheet.specialities"}}</label>
+      {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+      <div class="flexrow padding4" style="border: 0px; height: 150px">
+        {{editor system.specialties target="system.specialties" button=true owner=owner editable=editable}}
       </div>
-    </li>
-    {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
-    {{#each system.specialities as |item id|}}
-      <li class="item item-value flexrow" data-name="{{item.name}}" data-item-id="{{item._id}}" data-attribute="{{id}}">
-        <div class="flexrow flex-center">
-          <span class="flexrow item-title width4" name="item.name"> {{item.name}} </span>
-          <label><span class="bold">{{localize "arm5e.sheet.points"}}:</span> {{item.system.points}}</label>
-        </div>
+    </div>
+    <div class="flexcol backSection" style="margin-right: 10px; margin-bottom: 5px;">
+      <label class="smallTitle padding4 flex0" stype="height: 32px;">{{localize "arm5e.sheet.personality"}}</label>
+      {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+      <div class="flexrow padding4" style="border: 0px; height: 150px">
+        {{editor system.personalities target="system.personalities" button=true owner=owner editable=editable}}
+      </div>
+    </div>
+  </div>
+  <div class="flexrow" style="min-height: 260px;">
+    <div class="flexcol backSection" style="margin-right: 10px; margin-bottom: 5px;">
+      <label class="smallTitle padding4 flex0" stype="height: 32px;">{{localize "arm5e.sheet.features"}}</label>
+      {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+      {{editor system.features target="system.features" button=true owner=owner editable=editable}}
+    </div>
+    <div class="flexcol backSection" style="margin-right: 10px; margin-bottom: 5px;">
+
+      <label class="smallTitle padding4 flex0" stype="height: 32px;">{{localize "arm5e.sheet.rooms"}}</label>
+      {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+      {{editor system.rooms target="system.rooms" button=true owner=owner editable=editable}}
+    </div>
+  </div>
+
+  <div class="flexrow backSection">
+    <ol class="items-list">
+      <li class="item flexrow item-header">
+        <div class="item-image"></div>
+        <div class="item-name">{{localize "arm5e.sheet.specialities"}}</div>
         <div class="item-controls">
-          <a class="item-control item-edit" title="Edit speciality"><i class="icon-Icon_Edit"></i></a>
-          <a class="item-control item-delete" title="Delete v"><i class="icon-Icon_Delete_Hand_Gesture"></i></a>
+          <a class="item-control item-create" title="Create speciality" data-type="speciality"><i
+              class="fas fa-plus"></i></a>
         </div>
       </li>
-    {{/each}}
-  </ol>
+      {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+      {{#each system.specialities_old as |item id|}}
+        <li class="item item-value flexrow" data-name="{{item.name}}" data-item-id="{{item._id}}"
+          data-attribute="{{id}}">
+          <div class="flexrow flex-center">
+            <span class="flexrow item-title width4" name="item.name"> {{item.name}} </span>
+            <label><span class="bold">{{localize "arm5e.sheet.points"}}:</span> {{item.system.points}}</label>
+          </div>
+          <div class="item-controls">
+            <a class="item-control item-edit" title="Edit speciality"><i class="icon-Icon_Edit"></i></a>
+            <a class="item-control item-delete" title="Delete v"><i class="icon-Icon_Delete_Hand_Gesture"></i></a>
+          </div>
+        </li>
+      {{/each}}
+    </ol>
+  </div>
 </div>
 
 <div class="flexrow backSection margintop18">
@@ -35,7 +68,7 @@
       </div>
     </li>
     {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
-    {{#each system.personalities as |item id|}}
+    {{#each system.personalities_old as |item id|}}
       <li class="item item-value flexrow" data-name="{{item.name}}" data-item-id="{{item._id}}" data-attribute="{{id}}">
         <div class="flexrow flex-center">
           <span class="flexrow item-title width4" data-roll="1d10+{{item.system.score}}" name="item.name">
@@ -57,9 +90,9 @@
   <ol class="items-list">
     <li class="item flexrow item-header">
       <div class="item-image"></div>
-      <div class="item-name">{{localize "arm5e.sheet.distinctive"}}</div>
+      <div class="item-name">{{localize "arm5e.sheet.features"}}</div>
       <div class="item-controls">
-        <a class="item-control item-create" title="Create distinctive" data-type="distinctive"><i
+        <a class="item-control item-create" title="Create feature" data-type="distinctive"><i
             class="fas fa-plus"></i></a>
       </div>
     </li>
@@ -92,7 +125,7 @@
       </div>
     </li>
     {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
-    {{#each system.rooms as |item id|}}
+    {{#each system.rooms_old as |item id|}}
       <li class="item item-value flexrow" data-name="{{item.name}}" data-item-id="{{item._id}}" data-attribute="{{id}}">
         <div class="flexrow flex-center">
           <span class="flexrow item-title width4" data-roll="1d10+{{item.system.score}}" name="item.name">

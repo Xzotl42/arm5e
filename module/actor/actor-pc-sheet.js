@@ -109,12 +109,7 @@ export class ArM5ePCActorSheet extends ArM5eActorSheet {
       case "abilityFamiliar":
       case "diaryEntry":
       case "powerFamiliar":
-      case "speciality":
-      case "distinctive":
-      case "sanctumRoom":
       case "magicItem":
-      // case "personality":
-      // case "reputation":
       case "magicalEffect":
       case "laboratoryText":
         return true;

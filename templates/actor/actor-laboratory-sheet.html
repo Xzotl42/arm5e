@@ -197,6 +197,12 @@
     </div>
     {{!-- Virtues & Flaws Tab --}}
     <div class="tab virtues" data-group="primary" data-tab="virtues">
+      <div class="backSection margintop18" stype="height: 150px;">
+        <label class="smallTitle padding12" stype="height: 32px;">{{localize "arm5e.sheet.description"}}</label>
+        <div class="flexrow padding12" style="border: 0px; height: 150px">
+          {{editor system.description target="system.description" button=true owner=owner editable=editable}}
+        </div>
+      </div>
       {{> "systems/arm5e/templates/actor/parts/actor-virtuesFlaws.html" }}
     </div>
 
