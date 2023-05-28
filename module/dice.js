@@ -80,6 +80,19 @@ async function stressDie(actor, type = "DEFAULT", modes = 0, callBack = undefine
   mult = 1;
   actor = await getRollFormula(actor);
   const rollData = actor.rollData;
+  let rollOptions = { minimize: false, maximize: false, async: true };
+  switch (modes) {
+    case 1:
+      rollOptions.minimize = true;
+      ui.notifications.info(`${actor.name} used DEV mode to roll a 1`);
+      break;
+    case 2:
+      rollOptions.maximize = true;
+      ui.notifications.info(`${actor.name} used DEV mode to roll a 0`);
+      break;
+    case 4:
+      rollOptions.noBotch = true;
+  }
   let formula = rollData.formula;
   let flavorTxt = `<p>${game.i18n.localize("arm5e.dialog.button.stressdie")}:</p>`;
   let details = putInFoldableLinkWithAnimation(
@@ -87,7 +100,7 @@ async function stressDie(actor, type = "DEFAULT", modes = 0, callBack = undefine
     flavorTxt + rollData.details
   );
   let chatTitle = `<h2 class="ars-chat-title">${rollData.label} </h2>`;
-  let dieRoll = await explodingRoll(actor, modes, botchNum);
+  let dieRoll = await explodingRoll(actor, rollOptions, botchNum);
 
   let confAllowed = actor.system.con.score;
 
@@ -129,8 +142,6 @@ async function stressDie(actor, type = "DEFAULT", modes = 0, callBack = undefine
 
     botchCheck = 1;
   }
-
-  let rollOptions = {};
 
   //
   // let rollMode = CONST.DICE_ROLL_MODES.PUBLIC;
@@ -557,22 +568,44 @@ async function CheckBotch(botchDice) {
   // return botchRoll.terms[0].total;
 }
 
-async function explodingRoll(actorData, modes = 0, botchNum = 0) {
+async function explodingRoll(actorData, rollOptions = {}, botchNum = 0) {
   let dieRoll;
-  if (modes === 0 || modes === 4) {
-    dieRoll = await createRoll(actorData.rollData.formula, mult, actorData.rollData.magic.divide);
-  } else {
-    if (modes === 1) {
-      dieRoll = new Roll("1");
-      ui.notifications.info(`${actorData.name} used DEV mode to roll a 1`);
-    } else {
-      dieRoll = new Roll("0");
-      ui.notifications.info(`${actorData.name} used DEV mode to roll a 0`);
-    }
-    await dieRoll.roll({
-      async: true
-    });
-  }
+  // if (modes === 0 || modes === 4) {
+  dieRoll = await createRoll(
+    actorData.rollData.formula,
+    mult,
+    actorData.rollData.magic.divide,
+    rollOptions
+  );
+  //   await dieRoll.roll({
+  //     async: true
+  //   });
+  // } else {
+  //   if (modes === 1) {
+  //     dieRoll = await createRoll(
+  //       actorData.rollData.formula,
+  //       mult,
+  //       actorData.rollData.magic.divide,
+  //       { minimize: true }
+  //     );
+  //     await dieRoll.roll({
+  //       async: true,
+  //       minimize: true
+  //     });
+  //   } else {
+  //     dieRoll = await createRoll(
+  //       actorData.rollData.formula,
+  //       mult,
+  //       actorData.rollData.magic.divide,
+  //       { maximize: true }
+  //     );
+  //     await dieRoll.roll({
+  //       async: true,
+  //       maximize: true
+  //     });
+  //     ui.notifications.info(`${actorData.name} used DEV mode to roll a 0`);
+  //   }
+  // }
 
   //
   // explode mode
@@ -583,7 +616,7 @@ async function explodingRoll(actorData, modes = 0, botchNum = 0) {
       game.dice3d.showForRoll(dieRoll, game.user, true); //, whisper, blind, chatMessageID, speaker)
     }
     mult *= 2;
-
+    rollOptions = { async: true, noBotch: true };
     let funRolls = game.settings.get(ARM5E.SYSTEM_ID, "funRolls");
     let withDialog =
       funRolls == "EVERYONE" || (funRolls == "PLAYERS_ONLY" && actorData.hasPlayerOwner);
@@ -595,7 +628,7 @@ async function explodingRoll(actorData, modes = 0, botchNum = 0) {
         "systems/arm5e/templates/generic/explodingRoll.html",
         dialogData
       );
-      await new Promise(resolve => {
+      await new Promise((resolve) => {
         new Dialog(
           {
             title: game.i18n.localize("arm5e.dialog.roll.explodingroll"),
@@ -604,8 +637,8 @@ async function explodingRoll(actorData, modes = 0, botchNum = 0) {
               yes: {
                 icon: "<i class='fas fa-check'></i>",
                 label: game.i18n.localize("arm5e.dialog.button.roll"),
-                callback: async html => {
-                  dieRoll = await explodingRoll(actorData);
+                callback: async (html) => {
+                  dieRoll = await explodingRoll(actorData, rollOptions);
                   resolve();
                 }
               }
@@ -622,7 +655,7 @@ async function explodingRoll(actorData, modes = 0, botchNum = 0) {
         log(false, `Dramatic pause of ${game.settings.get(ARM5E.SYSTEM_ID, "dramaticPause")} ms`);
         await sleep(game.settings.get(ARM5E.SYSTEM_ID, "dramaticPause"));
       }
-      dieRoll = await explodingRoll(actorData);
+      dieRoll = await explodingRoll(actorData, rollOptions);
     }
   } else {
     if (mult === 1 && diceResult === 0) {
@@ -630,17 +663,17 @@ async function explodingRoll(actorData, modes = 0, botchNum = 0) {
       if (game.modules.get("dice-so-nice")?.active) {
         game.dice3d.showForRoll(dieRoll); //, user, synchronize, whisper, blind, chatMessageID, speaker)
       }
-      if (modes == 4) {
-        let output_roll = new Roll(actorData.rollData.formula.toString());
+      if (rollOptions.noBotch) {
+        let output_roll = new Roll(actorData.rollData.formula.toString(), {}, options);
         output_roll.data = {};
-        return await output_roll.evaluate({ async: true });
+        return await output_roll.evaluate(options);
       }
 
       const html = await renderTemplate("systems/arm5e/templates/roll/roll-botch.html");
       let botchRoll;
       if (botchNum === 0) {
         // interactive mode show dialog
-        await new Promise(resolve => {
+        await new Promise((resolve) => {
           new Dialog(
             {
               title: game.i18n.localize("arm5e.dialog.botch.title"),
@@ -649,7 +682,7 @@ async function explodingRoll(actorData, modes = 0, botchNum = 0) {
                 yes: {
                   icon: "<i class='fas fa-check'></i>",
                   label: game.i18n.localize("arm5e.dialog.button.rollbotch"),
-                  callback: async html => {
+                  callback: async (html) => {
                     botchNum = html.find("#botchDice").val();
                     botchRoll = await CheckBotch(botchNum);
                     resolve();
@@ -658,7 +691,7 @@ async function explodingRoll(actorData, modes = 0, botchNum = 0) {
                 no: {
                   icon: "<i class='fas fa-times'></i>",
                   label: `Cancel`,
-                  callback: html => {
+                  callback: (html) => {
                     ChatMessage.create({
                       content: game.i18n.localize("arm5e.dialog.button.rollnobotch"),
                       speaker: ChatMessage.getSpeaker({
@@ -689,20 +722,27 @@ async function explodingRoll(actorData, modes = 0, botchNum = 0) {
   return dieRoll;
 }
 
-async function createRoll(rollFormula, mult, divide) {
-  let rollInit = `1di10 + ${rollFormula}`;
+export async function createRoll(rollFormula, mult, divide, options = {}) {
+  let rollInit;
+  if (options.noBotch) {
+    rollInit = `1de10 + ${rollFormula}`;
+  } else {
+    rollInit = `1di10 + ${rollFormula}`;
+  }
   if (Number.parseInt(mult) > 1) {
     rollInit = `${mult} * ${rollInit}`;
   }
   if (Number.parseInt(divide) > 1) {
     rollInit = `( ${rollInit} ) / ${divide}`;
   }
-  let output_roll = new Roll(rollInit);
+  options.async = true;
+  let output_roll = new Roll(rollInit, {}, options);
   output_roll.offset = rollFormula;
   output_roll.multiplier = mult;
   output_roll.diviser = divide;
   output_roll.data = {};
-  await output_roll.evaluate({ async: true });
+  //output_roll.roll({ options });
+  await output_roll.evaluate(options);
 
   return output_roll;
 }

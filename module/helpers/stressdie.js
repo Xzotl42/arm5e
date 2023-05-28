@@ -89,9 +89,9 @@ export class StressDieInternal extends Die {
   /** @inheritdoc */
   static DENOMINATION = "i";
 
-  async evaluate() {
+  async evaluate({ minimize = false, maximize = false, async = true } = {}) {
     this.number = 1; // only ever one dice
-    super.evaluate();
+    super.evaluate({ minimize: minimize, maximize: maximize, async: async });
     if (this.results[0].result === 10) {
       this.results[0].result = 0;
       return this;
@@ -107,6 +107,36 @@ export class StressDieInternal extends Die {
       if (i === 0 && r.result === 10) {
         return 0;
       }
+      return r.result;
+      // if (r.result === 1) return t * 2;
+      // return t * r.result;
+    }, 0);
+  }
+}
+
+export class StressDieNoBotchInternal extends Die {
+  constructor(termData = {}) {
+    termData.faces = 10;
+    super(termData);
+    if (typeof this.faces !== "number") {
+      throw new Error("A StressDie term must have a numeric number of faces.");
+    }
+  }
+
+  /** @inheritdoc */
+  static DENOMINATION = "e";
+
+  async evaluate({ minimize = false, maximize = false, async = true } = {}) {
+    this.number = 1; // only ever one dice
+    super.evaluate({ minimize: minimize, maximize: maximize, async: async });
+    return this;
+  }
+
+  get total() {
+    if (!this._evaluated) return undefined;
+    if (this.modifiers.length > 0) return 1 - super.total;
+    return this.results.reduce((t, r, i, a) => {
+      if (!r.active) return t;
       return r.result;
       // if (r.result === 1) return t * 2;
       // return t * r.result;

@@ -1,3 +1,10 @@
+## 2.0.5.22, Lexora, the Lioness
+
+### Bug fixes
+
+- The roll of a 0 after rolling a 1 on stress die count as a 10 instead of 0
+- It is again possible to roll from the chat using /r
+
 ## 2.0.5.21, Lexora, the maga
 
 ### Features & changes

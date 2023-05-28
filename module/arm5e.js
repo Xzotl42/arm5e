@@ -33,7 +33,7 @@ import { log, generateActiveEffectFromAbilities, getDocumentFromCompendium } fro
 
 import { registerSettings } from "./settings.js";
 import { registerTestSuites } from "./tests/tests.js";
-import { StressDie, StressDieInternal } from "./helpers/stressdie.js";
+import { StressDie, StressDieInternal, StressDieNoBotchInternal } from "./helpers/stressdie.js";
 import { UserguideTour } from "./tours/userguide-tour.js";
 
 import {
@@ -97,8 +97,10 @@ Hooks.once("init", async function() {
   // Experimental
   CONFIG.Dice.types.push(StressDie);
   CONFIG.Dice.types.push(StressDieInternal);
+  CONFIG.Dice.types.push(StressDieNoBotchInternal);
   CONFIG.Dice.terms[StressDie.DENOMINATION] = StressDie;
   CONFIG.Dice.terms[StressDieInternal.DENOMINATION] = StressDieInternal;
+  CONFIG.Dice.terms[StressDieNoBotchInternal.DENOMINATION] = StressDieNoBotchInternal;
   // instrumenting roll for testing
   Roll.prototype.botches = 0;
   Roll.prototype.diviser = 1;
