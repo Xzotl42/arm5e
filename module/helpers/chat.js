@@ -38,10 +38,6 @@ export function addChatListeners(message, html, data) {
           tmp = rollFormula.text().replace(/1di /g, "1d10 ");
         } else if (tmp.match(/1di10 /g)) {
           tmp = rollFormula.text().replace(/1di10 /g, "1d10 ");
-        } else if (tmp.match(/1de10 /g)) {
-          tmp = rollFormula.text().replace(/1de10 /g, "1d10 ");
-        } else if (tmp.match(/1de /g)) {
-          tmp = rollFormula.text().replace(/1de /g, "1d10 ");
         }
 
         rollFormula.text(tmp);
@@ -114,7 +110,7 @@ export function addChatListeners(message, html, data) {
   const actorFace = $(
     `<div class="moreInfo item-image flex01"><img src="${actorImg}" title="${tokenName}" data-id="${actor.id}" width="30" height="30">`
   );
-  actorFace.on("click", (ev) => {
+  actorFace.on("click", ev => {
     const img = $(ev.currentTarget.children[0]);
     const actorId = img.data("id");
     if (game.actors.has(actorId)) {
@@ -180,7 +176,7 @@ export function addChatListeners(message, html, data) {
   rollResult.append(btnContainer);
 
   // Handle button clicks
-  useConfButton.on("click", (ev) => useConfidence(ev));
+  useConfButton.on("click", ev => useConfidence(ev));
 }
 
 async function useConfidence(ev) {

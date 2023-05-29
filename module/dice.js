@@ -628,7 +628,7 @@ async function explodingRoll(actorData, rollOptions = {}, botchNum = 0) {
         "systems/arm5e/templates/generic/explodingRoll.html",
         dialogData
       );
-      await new Promise((resolve) => {
+      await new Promise(resolve => {
         new Dialog(
           {
             title: game.i18n.localize("arm5e.dialog.roll.explodingroll"),
@@ -637,7 +637,7 @@ async function explodingRoll(actorData, rollOptions = {}, botchNum = 0) {
               yes: {
                 icon: "<i class='fas fa-check'></i>",
                 label: game.i18n.localize("arm5e.dialog.button.roll"),
-                callback: async (html) => {
+                callback: async html => {
                   dieRoll = await explodingRoll(actorData, rollOptions);
                   resolve();
                 }
@@ -673,7 +673,7 @@ async function explodingRoll(actorData, rollOptions = {}, botchNum = 0) {
       let botchRoll;
       if (botchNum === 0) {
         // interactive mode show dialog
-        await new Promise((resolve) => {
+        await new Promise(resolve => {
           new Dialog(
             {
               title: game.i18n.localize("arm5e.dialog.botch.title"),
@@ -682,7 +682,7 @@ async function explodingRoll(actorData, rollOptions = {}, botchNum = 0) {
                 yes: {
                   icon: "<i class='fas fa-check'></i>",
                   label: game.i18n.localize("arm5e.dialog.button.rollbotch"),
-                  callback: async (html) => {
+                  callback: async html => {
                     botchNum = html.find("#botchDice").val();
                     botchRoll = await CheckBotch(botchNum);
                     resolve();
@@ -691,7 +691,7 @@ async function explodingRoll(actorData, rollOptions = {}, botchNum = 0) {
                 no: {
                   icon: "<i class='fas fa-times'></i>",
                   label: `Cancel`,
-                  callback: (html) => {
+                  callback: html => {
                     ChatMessage.create({
                       content: game.i18n.localize("arm5e.dialog.button.rollnobotch"),
                       speaker: ChatMessage.getSpeaker({
@@ -725,7 +725,7 @@ async function explodingRoll(actorData, rollOptions = {}, botchNum = 0) {
 export async function createRoll(rollFormula, mult, divide, options = {}) {
   let rollInit;
   if (options.noBotch) {
-    rollInit = `1de10 + ${rollFormula}`;
+    rollInit = `1d10 + ${rollFormula}`;
   } else {
     rollInit = `1di10 + ${rollFormula}`;
   }
