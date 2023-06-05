@@ -1,3 +1,14 @@
+## 2.0.5.23, Lexora's roar
+
+### Changes
+
+- Added Portuguese (BR) translation (by Ramon Alves)
+
+### Bug fixes
+
+- Fixed personality rolls
+- Fix of power use
+
 ## 2.0.5.22, Lexora, the Lioness
 
 ### Bug fixes

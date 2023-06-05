@@ -403,16 +403,18 @@ export class ArM5eRollData {
       };
     });
 
-    res.push({
-      label: game.i18n.localize(ARM5E.magic.mod.voice[actor.system.stances.voiceStance].mnemonic),
-      value: actor.system.stances.voice[actor.system.stances.voiceStance]
-    });
-    res.push({
-      label: game.i18n.localize(
-        ARM5E.magic.mod.gestures[actor.system.stances.gesturesStance].mnemonic
-      ),
-      value: actor.system.stances.gestures[actor.system.stances.gesturesStance]
-    });
+    if (actor._isMagus()) {
+      res.push({
+        label: game.i18n.localize(ARM5E.magic.mod.voice[actor.system.stances.voiceStance].mnemonic),
+        value: actor.system.stances.voice[actor.system.stances.voiceStance]
+      });
+      res.push({
+        label: game.i18n.localize(
+          ARM5E.magic.mod.gestures[actor.system.stances.gesturesStance].mnemonic
+        ),
+        value: actor.system.stances.gestures[actor.system.stances.gesturesStance]
+      });
+    }
 
     return res;
   }

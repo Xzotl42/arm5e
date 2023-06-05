@@ -1,6 +1,6 @@
 import { ARM5E } from "../config.js";
 
-import { simpleDie, stressDie, noRoll, getFormData } from "../dice.js";
+import { simpleDie, stressDie, noRoll, getFormData, changeMight } from "../dice.js";
 import { checkTargetAndCalculateResistance, noFatigue } from "./magic.js";
 import { chatFailedCasting } from "./chat.js";
 import { ArM5ePCActor } from "../actor/actor.js";
@@ -145,7 +145,7 @@ const ROLL_PROPERTIES = DEFAULT_ROLL_PROPERTIES;
 //const ROLL_PROPERTIES = ALTERNATE_ROLL_PROPERTIES;
 
 function getRollTypeProperties(type) {
-  return ROLL_PROPERTIES[type.toUpperCase()] ?? ROLL_PROPERTIES.DEFAULT;
+  return ROLL_PROPERTIES[type.toUpperCase()] ?? ROLL_PROPERTIES.OPTION;
 }
 
 function prepareRollVariables(dataset, actor) {
@@ -197,14 +197,14 @@ function getDebugButtonsIfNeeded(actor, callback) {
   return {
     explode: {
       label: "DEV Roll 1",
-      callback: async (html) => {
+      callback: async html => {
         actor = getFormData(html, actor);
         await stressDie(actor, actor.rollData.type, 1, callback);
       }
     },
     zero: {
       label: "DEV Roll 0",
-      callback: async (html) => {
+      callback: async html => {
         actor = getFormData(html, actor);
         await stressDie(actor, actor.rollData.type, 2, callback);
       }
@@ -225,7 +225,7 @@ function getDialogData(dataset, html, actor) {
     altBtn = {
       icon: "<i class='fas fa-check'></i>",
       label: game.i18n.localize(btnLabel),
-      callback: async (html) => {
+      callback: async html => {
         actor = getFormData(html, actor);
         if (rollAlteration) {
           rollAlteration(actor);
@@ -243,7 +243,7 @@ function getDialogData(dataset, html, actor) {
     btns.yes = {
       icon: "<i class='fas fa-check'></i>",
       label: game.i18n.localize("arm5e.dialog.button.stressdie"),
-      callback: async (html) => {
+      callback: async html => {
         actor = getFormData(html, actor);
         await stressDie(actor, dataset.roll, mode, callback);
       }
@@ -255,7 +255,7 @@ function getDialogData(dataset, html, actor) {
       btns.no = {
         icon: "<i class='fas fa-check'></i>",
         label: game.i18n.localize("arm5e.dialog.button.simpledie"),
-        callback: async (html) => {
+        callback: async html => {
           actor = getFormData(html, actor);
           await simpleDie(actor, dataset.roll, callback);
         }
@@ -264,7 +264,7 @@ function getDialogData(dataset, html, actor) {
       btns.no = {
         icon: "<i class='fas fa-ban'></i>",
         label: game.i18n.localize("arm5e.dialog.button.cancel"),
-        callback: async (html) => await actor.rollData.reset()
+        callback: async html => await actor.rollData.reset()
       };
     }
   } else {
@@ -272,7 +272,7 @@ function getDialogData(dataset, html, actor) {
     btns.yes = {
       icon: "<i class='fas fa-check'></i>",
       label: game.i18n.localize("arm5e.dialog.button.simpledie"),
-      callback: async (html) => {
+      callback: async html => {
         actor = getFormData(html, actor);
         await simpleDie(actor, dataset.roll, callback);
       }
@@ -283,7 +283,7 @@ function getDialogData(dataset, html, actor) {
     btns.no = {
       icon: "<i class='fas fa-ban'></i>",
       label: game.i18n.localize("arm5e.dialog.button.cancel"),
-      callback: async (html) => await actor.rollData.reset()
+      callback: async html => await actor.rollData.reset()
     };
   }
   return {
@@ -319,7 +319,7 @@ async function usePower(dataset, actor) {
           label: game.i18n.localize("arm5e.dialog.powerUse"),
           callback: async html => {
             actor = getFormData(html, actor);
-            await noRoll(actor, changeMight);
+            await noRoll(actor, 1, changeMight);
           }
         },
         no: {

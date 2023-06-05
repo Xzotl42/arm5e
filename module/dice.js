@@ -5,7 +5,7 @@ import { ARM5E } from "./config.js";
 import { showRollResults } from "./helpers/chat.js";
 let mult = 1;
 
-async function simpleDie(actor, type = "DEFAULT", callBack) {
+async function simpleDie(actor, type = "OPTION", callBack) {
   mult = 1;
   // actor = getFormData(html, actor);
   actor = await getRollFormula(actor);
