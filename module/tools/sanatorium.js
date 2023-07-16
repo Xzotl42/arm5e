@@ -1,4 +1,4 @@
-import { debug, log } from "../tools.js";
+import { debug, getDataset, log } from "../tools.js";
 import { GroupSchedule } from "./group-schedule.js";
 
 export class Sanatorium extends FormApplication {
@@ -6,6 +6,14 @@ export class Sanatorium extends FormApplication {
     super(data, options);
     this.object.daysLeft = 92; // TODO configurable?
     this.object.seasons = CONFIG.ARM5E.seasons;
+    this.object.curYear = this.object.patient.system.datetime.year;
+    this.object.curSeason = this.object.patient.system.datetime.season;
+    this.object.modifiers = {
+      magicalHelp: 0,
+      mundaneHelp: 0,
+      activeEffect: 0,
+      labHealth: 0
+    };
   }
 
   static async createDialog(actor) {
@@ -21,7 +29,9 @@ export class Sanatorium extends FormApplication {
       title: "Sanatorium",
       template: "systems/arm5e/templates/generic/sanatorium.html",
       width: "600",
-      height: "600"
+      height: "600",
+      submitOnChange: true,
+      closeOnSubmit: false
     });
   }
 
@@ -32,18 +42,8 @@ export class Sanatorium extends FormApplication {
   }
   async getData(options = {}) {
     const context = await super.getData().object;
-    context.curYear = context.patient.system.datetime.year;
-    context.curSeason = context.patient.system.datetime.season;
-    context.daysLeft = 30;
     const patient = context.patient;
-    if (context.modifiers == undefined) {
-      context.modifiers = {
-        magicalHelp: 0,
-        mundaneHelp: 0,
-        activeEffect: patient.system.bonuses.traits.recovery,
-        labHealth: 0
-      };
-    }
+    context.modifiers.activeEffect = patient.system.bonuses.traits.recovery;
 
     if (patient.system.sanctum.linked) {
       const lab = game.actors.get(patient.system.sanctum.actorId);
@@ -61,101 +61,42 @@ export class Sanatorium extends FormApplication {
       }
     }
     log(false, `Sanatorium: ${JSON.stringify(context.wounds)}`);
-    log(false, `Sanatorium: ${context.wounds}`);
+    log(false, `Sanatorium: ${context.daysLeft}`);
     return context;
   }
 
   activateListeners(html) {
     super.activateListeners(html);
-    html.find(".set-date").click(this.setDate.bind(this));
-    html.find(".update-actors").click(this.updateActors.bind(this));
-    html.find(".rest-all").click(this.restEveryone.bind(this));
-    html.find(".change-season").change(this._changeSeason.bind(this));
-    html.find(".change-year").change(this._changeYear.bind(this));
-    html.find(".group-schedule").click(this.displaySchedule.bind(this));
     html.find(".resource-focus").focus((ev) => {
       ev.preventDefault();
       ev.currentTarget.select();
     });
-  }
-  async displaySchedule(event) {
-    event.preventDefault();
-    const schedule = new GroupSchedule();
-    const res = await schedule.render(true);
-  }
-  async _changeSeason(event) {
-    await this.submit({
-      preventClose: true,
-      updateData: { season: event.currentTarget.value }
-    });
+
+    html.find(".recovery-roll").click(this._recoveryRoll.bind(this));
   }
 
-  async _changeYear(event) {
-    await this.submit({
-      preventClose: true,
-      updateData: { year: event.currentTarget.value }
-    });
-  }
+  async _recoveryRoll(event) {
+    const patient = this.object.patient;
 
-  async setDate(event) {
-    event.preventDefault();
-    const dataset = event.currentTarget.dataset;
-    ui.notifications.info(
-      game.i18n.format("arm5e.notification.setDate", {
-        year: dataset.year,
-        season: game.i18n.localize(CONFIG.ARM5E.seasons[dataset.season].label)
-      })
-    );
-    await game.settings.set("arm5e", "currentDate", {
-      year: dataset.year,
-      season: dataset.season
-    });
-    Hooks.callAll("arm5e-date-change", { year: dataset.year, season: dataset.season });
-    this.render();
-  }
-
-  async updateActors(event) {
-    event.preventDefault();
-    const dataset = event.currentTarget.dataset;
-    const updateData = {
-      system: { datetime: { season: dataset.season, year: dataset.year } }
-    };
-    await game.actors.updateAll(updateData, (e) => {
-      return e.type === "player" || e.type === "npc" || e.type === "covenant";
-    });
-    ui.notifications.info(
-      game.i18n.format("arm5e.notification.synchActors", {
-        year: dataset.year,
-        season: game.i18n.localize(CONFIG.ARM5E.seasons[dataset.season].label)
-      })
-    );
-  }
-
-  async restEveryone(event) {
-    event.preventDefault();
-    const dataset = event.currentTarget.dataset;
-    const updateData = {
-      "system.fatigueCurrent": 0
-    };
-    await game.actors.updateAll(updateData, (e) => {
-      return e.type === "player" || e.type === "npc" || e.type === "beast";
-    });
-    // ui.notifications.info(
-    //   game.i18n.format("arm5e.notification.synchActors", {
-    //     year: dataset.year,
-    //     season: game.i18n.localize(CONFIG.ARM5E.seasons[dataset.season].label)
-    //   })
-    // );
+    for (let [type, attr] of Object.entries(patient.system.wounds)) {
+      let dataset = {
+        roll: "option",
+        name: "",
+        option1: aura,
+        txtoption1: 0,
+        physicalcondition: false
+      };
+      await stressDie(actor, dataset.roll, 0, setVisStudyResults);
+    }
+    log(false, data);
   }
 
   async _updateObject(event, formData) {
-    if (formData.season) {
-      this.object.season = formData.season;
+    for (let [key, value] of Object.entries(formData)) {
+      log(false, `Updated ${key} : ${value}`);
+      this.object[key] = value;
     }
-    if (formData.year) {
-      this.object.year = formData.year;
-    }
-
+    this.object = foundry.utils.expandObject(this.object);
     this.render();
 
     return;

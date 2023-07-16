@@ -49,7 +49,6 @@ function getDatasetForSpell(item, noCheck) {
     form: item.system.form.value,
     bonus: item.system.bonus,
     mastery: item.system.mastery,
-    bonusActiveEffects: item.actor.system.bonuses.arts.spellcasting,
     name: item.name,
     img: item.img
   };
@@ -63,7 +62,6 @@ function getDatasetForMagic(item) {
     technique: item.system.technique.value,
     form: item.system.form.value,
     bonus: item.system.bonus,
-    bonusActiveEffects: item.actor.system.bonuses.arts.spellcasting,
     name: item.name,
     img: item.img,
     divide: 2
@@ -77,7 +75,6 @@ function getDatasetForPower(item) {
     id: item._id,
     form: item.system.form,
     cost: item.system.cost,
-    bonusActiveEffects: item.actor.system.bonuses.arts.spellcasting,
     name: item.name,
     img: item.img
   };

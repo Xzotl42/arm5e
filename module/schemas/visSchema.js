@@ -1,5 +1,6 @@
 import { ARM5E } from "../config.js";
 import { stressDie } from "../dice.js";
+import { computeAuraModifier } from "../helpers/aura.js";
 import { setVisStudyResults } from "../helpers/long-term-activities.js";
 import { log } from "../tools.js";
 import {
@@ -84,7 +85,12 @@ export class VisSchema extends foundry.abstract.DataModel {
     }
     let aura = 0;
     if (actor.system.covenant.linked) {
-      aura = game.actors.get(actor.system.covenant.actorId).system.levelAura;
+      const covenant = game.actors.get(actor.system.covenant.actorId);
+      aura = computeAuraModifier(
+        actor.system.realmAlignment,
+        covenant.system.levelAura,
+        covenant.system.typeAura
+      );
     }
     let dialogData = {
       aura: aura,
@@ -96,8 +102,6 @@ export class VisSchema extends foundry.abstract.DataModel {
     let dataset = {
       roll: "option",
       name: "",
-      option1: aura,
-      txtoption1: 0,
       physicalcondition: false,
       moredata: { id: this.parent._id, art: this.art, amount: amount, diaryId: item._id }
     };

@@ -13,30 +13,30 @@
     {{>"systems/arm5e/templates/generic/simpleFieldBacksection.html" label="arm5e.sanatorium.recoveryBonus"
     name="recoveryBonus" attributes="readonly" value=modifiers.activeEffect type="number" dtype="Number" classes="wide"}}
     {{>"systems/arm5e/templates/generic/simpleFieldBacksection.html" label="arm5e.sanatorium.mundaneHelp" 
-        name="mundaneHelp" attributes="" value=modifiers.mundaneHelp type="number" dtype="Number" classes="wide resource-focus"}}
+        name="modifiers.mundaneHelp" attributes="" value=modifiers.mundaneHelp type="number" dtype="Number" classes="wide resource-focus change-mundane-help"}}
     {{>"systems/arm5e/templates/generic/simpleFieldBacksection.html" label="arm5e.sanatorium.magicalHelp" 
-        name="labHealth" attributes="" value=modifiers.magicalHelp type="number" dtype="Number" classes="wide resource-focus"}}
+        name="modifiers.magicalHelp" attributes="" value=modifiers.magicalHelp type="number" dtype="Number" classes="wide resource-focus change-magical-help"}}
     {{>"systems/arm5e/templates/generic/simpleFieldBacksection.html" label="arm5e.sanatorium.labHealth" 
-        name="labHealth" attributes="readonly" value=modifiers.labHealth type="number" dtype="Number" classes="wide"}}
+        name="modifiers.labHealth" attributes="readonly" value=modifiers.labHealth type="number" dtype="Number" classes="wide"}}
   </div>
   <div class="flex-center marginsides32 marginbot6 margintop6">
     {{> "systems/arm5e/templates/generic/metalic-bar.html" topoffset="-7px" }}
   </div>
-  <div class="sheet-body backSection marginsides32 " style="height:auto;">
+  <div class="sheet-body backSection marginsides32 " style="height:auto; min-height:219px;">
 
     <div class="flexcol" style="margin:10px">
       <div class="resource-content flexrow">
         <div class="resource-content flexrow flex-center flex-between margintop6">
-          <label for="season" class="smallTitle" style="font-size:16pt">{{localize "arm5e.sheet.season"}}</label>
-          <select name="season" {{dateChange}} data-type="String" class="change-season flex0 astrolab">
-            {{#select season}} {{#each seasons as |season key|}}
+          <label for="curSeason" class="smallTitle" style="font-size:16pt">{{localize "arm5e.sheet.season"}}</label>
+          <select name="curSeason" {{dateChange}} data-type="String" class="change-season flex0 sanatorium">
+            {{#select curSeason}} {{#each seasons as |season key|}}
                 <option value="{{key}}">{{localize season.label}}</option>
               {{/each}} {{/select}}
           </select>
         </div>
         <div class="resource-content flexrow flex-center flex-between margintop6">
-          <label for="year" class="smallTitle" style="font-size:16pt">{{localize "arm5e.sheet.year"}}</label>
-          <input type="number" name="year" {{dateChange}} value="{{year}}" data-dtype="Number"
+          <label for="curYear" class="smallTitle" style="font-size:16pt">{{localize "arm5e.sheet.year"}}</label>
+          <input type="number" name="curYear" {{dateChange}} value="{{curYear}}" data-dtype="Number"
             class="sanatorium change-year resource-focus" style="
         font-size: 18pt;" />
 
@@ -45,7 +45,6 @@
 
       <div class="flexcol" style="padding-top: 16px; padding-bottom: 12px;">
         {{#each wounds }}
-          {{log this}}
           <div class="flexrow">
             {{#each this}}
               <img class="clickable patient" src="{{this.icon}}" title="{{../type}}"
@@ -56,8 +55,15 @@
       </div>
     </div>
     <div class="flex-center marginsides10">
-      <input type="range" name="Days remaining" data-dtype="Number" value="{{daysLeft}}" min="0" max="92" step="1">
+      <label>{{daysLeft}} days left</label>
+      <input class="days-left" type="range" name="daysLeft" data-dtype="Number" value="{{daysLeft}}" min="0" max="92"
+        step="1">
     </div>
+  </div>
+  <div class="flexrow marginsides32">
+    <button class="sanatorium button recovery-roll" style="font-size:16pt">
+      Roll for recovery
+    </button>
   </div>
 
   <div class="sanatorium footer-background" style="width:600px; margin: 0px; height: 75px;">

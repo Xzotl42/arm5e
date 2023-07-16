@@ -107,9 +107,8 @@ async function clearAuraFromActor(actor) {
 }
 
 function computeAuraModifier(alignment, auraVal, auraRealm) {
-  const realm = CONFIG.ARM5E.lookupRealm[parseInt(auraRealm)];
   const char = CONFIG.ARM5E.lookupRealm[parseInt(alignment)];
-  const multiplier = CONFIG.ARM5E.realmsExt[realm].influence[parseInt(alignment)];
+  const multiplier = CONFIG.ARM5E.realmsExt[auraRealm].influence[parseInt(alignment)];
   log(
     false,
     "Computed aura :" +
@@ -117,7 +116,7 @@ function computeAuraModifier(alignment, auraVal, auraRealm) {
       ", Aura: " +
       auraVal +
       " of type " +
-      realm +
+      auraRealm +
       " = " +
       auraVal * multiplier
   );
@@ -152,7 +151,8 @@ function getAuraModifier(actor, alignment) {
   if (effects.length == 0) return null;
   const level = effects[0].changes[0].value;
   const realm = effects[0].changes[1].value;
-  return computeAuraModifier(alignment, level, realm);
+  const auraRealm = CONFIG.ARM5E.lookupRealm[parseInt(realm)];
+  return computeAuraModifier(alignment, level, auraRealm);
 }
 
 export {

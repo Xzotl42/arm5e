@@ -867,6 +867,7 @@
   "arm5e.dialog.confirmTransfer-info": "Use SHIFT+drag to copy items as usual.",
 
   "arm5e.notification.unconscious": "This character is unconscious, no action possible...",
+  "arm5e.notification.incapacited": "This character is gravely wounded, no action possible...",
   "arm5e.notification.pendingCrisis": "This character has a pending aging crisis, no action possible... Resolve the crisis by clicking the skull next to the character name",
   "arm5e.notification.dead": "This character is dead...",
   "arm5e.notification.codex.none": "You don't have a Actor of type 'magicCodex' in your world, some functionality will be disabled/not working, you can import the one in the Magi compendium",

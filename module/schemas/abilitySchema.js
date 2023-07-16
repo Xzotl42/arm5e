@@ -47,7 +47,7 @@ export class AbilitySchema extends foundry.abstract.DataModel {
     }
     let oldXp = this.xp;
     let newXp = Math.round(
-      (((this.derivedScore + 1) * (this.derivedScore + 2) * 5) / 2 - xpMod) * this.xpCoeff
+      (((this.derivedScore + 1) * (this.derivedScore + 2) * 5) / 2 - xpMod) / this.xpCoeff
     );
 
     await this.parent.update(
@@ -74,7 +74,7 @@ export class AbilitySchema extends foundry.abstract.DataModel {
     let newXp = 0;
     if (futureXp >= Math.round(xpMod * this.xpCoeff)) {
       newXp = Math.round(
-        (((this.derivedScore - 1) * this.derivedScore * 5) / 2 - xpMod) * this.xpCoeff
+        (((this.derivedScore - 1) * this.derivedScore * 5) / 2 - xpMod) / this.xpCoeff
       );
     }
     if (newXp != this.xp) {

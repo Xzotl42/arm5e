@@ -1539,6 +1539,13 @@ export class ArM5eActorSheet extends ActorSheet {
         return false;
       }
 
+      if (this.actor.system.wounds.incap.number.value > 1) {
+        ui.notifications.info(game.i18n.localize("arm5e.notification.incapacited"), {
+          permanent: true
+        });
+        return false;
+      }
+
       if (this.actor.system.fatigueCurrent == this.actor.system.fatigueMaxLevel) {
         ui.notifications.info(game.i18n.localize("arm5e.notification.unconscious"), {
           permanent: true

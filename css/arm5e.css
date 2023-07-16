@@ -315,7 +315,7 @@ h4.window-title {
   font-family: Blackmoor;
   font-size: 20px;
 }
-
+.arm5e .sanatorium.button,
 .arm5e .astrolab.button {
   font-family: "blackmoor";
   font-size: 13pt;
@@ -953,6 +953,8 @@ input[type="time"] {
   user-select: text;
 }
 
+.arm5e .sanatorium input[type="number"],
+.arm5e .sanatorium input[type="text"],
 .arm5e .calendar input[type="number"],
 .arm5e .calendar input[type="text"],
 .arm5e .astrolab input[type="text"],
@@ -987,6 +989,7 @@ input[type="time"] {
   font-family: "bookAntiqua";
   max-width: 220px;
 }
+.arm5e .sanatorium select,
 .arm5e .astrolab select {
   font-weight: bold;
   background: rgba(0, 0, 0, 0.15);
@@ -1168,6 +1171,7 @@ input[type="time"] {
   width: 100px;
   margin-right: 5px;
   margin-bottom: 5px;
+  object-fit: contain;
 }
 
 .arm5e .sheet-header .item-img {
@@ -1177,6 +1181,7 @@ input[type="time"] {
   height: 200px;
   margin-right: 16px;
   margin-bottom: 16px;
+  object-fit: contain;
 }
 
 .arm5e .sheet-header .header-fields {

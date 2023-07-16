@@ -74,7 +74,7 @@ export class ArM5eRollData {
         this.ability.option = ab.system.option;
         this.ability.speciality = ab.system.speciality;
         this.ability.score = ab.system.finalScore;
-        this.ability.alignment = ab.system.realm;
+        this.ability.realm = ab.system.realm;
         break;
 
       case "power":
@@ -221,8 +221,12 @@ export class ArM5eRollData {
     if (dataset.usefatigue != undefined) {
       this.useFatigue = dataset.usefatigue;
     }
-
-    this.activeEffects = this.getSpellcastingModifiers(actor, dataset.bonusActiveEffects ?? 0);
+    this.activeEffects = [];
+    if (["magic", "power", "spont", "spell"].includes(this.type)) {
+      this.getSpellcastingModifiers(actor);
+    }
+    this.bonusesExtended = this.bonuses;
+    this.getAuraModifier(actor);
 
     this.cleanBooleans();
   }
@@ -351,7 +355,7 @@ export class ArM5eRollData {
     };
 
     this.environment = { aura: 0, year: "", season: "", hasAuraBonus: false };
-    this.activeEffects = {};
+    this.activeEffects = [];
 
     this.bonuses = 0;
     this.bonusesExtended = 0;
@@ -375,9 +379,28 @@ export class ArM5eRollData {
     this.additionalData = {};
   }
 
-  getSpellcastingModifiers(actor, bonusActiveEffects) {
-    log(false, `Bonus active effects: ${bonusActiveEffects}`);
-    this.bonuses += Number(bonusActiveEffects);
+  getAuraModifier(actor) {
+    const superNatAbility = this.type == "ability" && this.ability.realm != "mundane";
+    const auraApply = superNatAbility || ["spell", "magic", "spont", "power"].includes(this.type);
+    if (auraApply) {
+      let alignment = actor.system.realmAlignment;
+      if (superNatAbility) {
+        alignment = CONFIG.ARM5E.realmsExt[this.ability.realm].value;
+      }
+      const auraMod = getAuraModifier(actor, alignment);
+      if (auraMod != null) {
+        this.environment.hasAuraBonus = true;
+        this.environment.aura = auraMod;
+        this.activeEffects.push({
+          label: game.i18n.localize("arm5e.sheet.magic.aura"),
+          value: auraMod
+        });
+        this.bonusesExtended += auraMod;
+      }
+    }
+  }
+
+  getSpellcastingModifiers(actor) {
     this.bonuses += actor.system.bonuses.arts.spellcasting;
     log(false, `Bonus spellcasting: ${actor.system.bonuses.arts.spellcasting}`);
     const activeEffects = actor.effects;
@@ -385,89 +408,40 @@ export class ArM5eRollData {
       activeEffects,
       "spellcasting"
     );
-    let res = activeEffectsByType.map((activeEffect) => {
-      const label = activeEffect.label;
-      let value = 0;
+    this.activeEffects.concat(
+      activeEffectsByType.map((activeEffect) => {
+        const label = activeEffect.label;
+        let value = 0;
 
-      activeEffect.changes
-        .filter((c, idx) => {
-          return (
-            c.mode == CONST.ACTIVE_EFFECT_MODES.ADD &&
-            activeEffect.getFlag("arm5e", "type")[idx] == "spellcasting"
-          );
-        })
-        .forEach((item) => {
-          value += Number(item.value);
-        });
-      return {
-        label,
-        value
-      };
-    });
+        activeEffect.changes
+          .filter((c, idx) => {
+            return (
+              c.mode == CONST.ACTIVE_EFFECT_MODES.ADD &&
+              activeEffect.getFlag("arm5e", "type")[idx] == "spellcasting"
+            );
+          })
+          .forEach((item) => {
+            value += Number(item.value);
+          });
+        return {
+          label,
+          value
+        };
+      })
+    );
 
+    // add label + value for stances
     if (actor._isMagus()) {
-      res.push({
+      this.activeEffects.push({
         label: game.i18n.localize(ARM5E.magic.mod.voice[actor.system.stances.voiceStance].mnemonic),
         value: actor.system.stances.voice[actor.system.stances.voiceStance]
       });
-      res.push({
+      this.activeEffects.push({
         label: game.i18n.localize(
           ARM5E.magic.mod.gestures[actor.system.stances.gesturesStance].mnemonic
         ),
         value: actor.system.stances.gestures[actor.system.stances.gesturesStance]
       });
     }
-    this.bonusesExtended = this.bonuses;
-    const superNatAbility = this.type == "ability" && this.ability.realm != "mundane";
-    const auraApply = superNatAbility || ["spell", "magic", "spont", "power"].includes(this.type);
-    if (auraApply) {
-      let alignment = actor.system.realmAlignment;
-      if (superNatAbility) {
-        alignment = CONFIG.ARM5E.realms[this.ability.alignment].value;
-      }
-      const auraMod = getAuraModifier(actor, alignment);
-      if (auraMod != null) {
-        this.environment.hasAuraBonus = true;
-        this.environment.aura = auraMod;
-        res.push({ label: game.i18n.localize("arm5e.sheet.magic.aura"), value: auraMod });
-        this.bonusesExtended += auraMod;
-      }
-    }
-
-    return res;
   }
-
-  // getModifiers(actor, bonusActiveEffects) {
-  //   this.bonuses += Number(actor.system.bonuses.arts[bonusActiveEffects]);
-  //   const activeEffects = actor.effects;
-  //   const activeEffectsByType = ArM5eActiveEffect.findAllActiveEffectsWithType(
-  //     activeEffects,
-  //     "spellcasting"
-  //   );
-  //   return activeEffectsByType.map((activeEffect) => {
-  //     const label = activeEffect.label;
-  //     let value = 0;
-  //     let optional = false;
-  //     if (activeEffect.getFlag("arm5e", "value")?.includes("AURA")) {
-  //       this.environment.hasAuraBonus = true;
-  //     }
-  //     activeEffect.changes
-  //       .filter((c, idx) => {
-  //         return (
-  //           (c.mode == CONST.ACTIVE_EFFECT_MODES.ADD &&
-  //             activeEffect.getFlag("arm5e", "type")[idx] == "spellcasting") ||
-  //           (c.mode == CONST.ACTIVE_EFFECT_MODES.OVERRIDE &&
-  //             activeEffect.getFlag("arm5e", "type")[idx] == "spellcasting")
-  //         );
-  //       })
-  //       .forEach((item) => {
-  //         value += Number(item.value);
-  //       });
-  //     return {
-  //       label,
-  //       value,
-  //       optional
-  //     };
-  //   });
-  // }
 }
