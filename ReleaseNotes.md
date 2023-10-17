@@ -1,3 +1,9 @@
+## 2.2.2.21, Nico BF1
+
+### Fixes
+
+- Fix Vis study activity
+
 ## 2.2.2.20, Nico
 
 ### Fixes

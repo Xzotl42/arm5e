@@ -831,7 +831,7 @@ export async function setVisStudyResults(actor, roll, message, rollData) {
     // "system.description": desc,
 
     await actor.updateEmbeddedDocuments("Item", [updateData], {});
-    await diaryitem.sheet._onProgressApply();
+    await diaryitem.sheet._onProgressApply({});
   }
 }
 
