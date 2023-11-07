@@ -53,7 +53,7 @@ export class Sanatorium extends FormApplication {
 
   onClose(app) {
     if (app.patient) {
-      delete patient.apps[app.appId];
+      delete app.patient.apps[app.appId];
     }
   }
   async getData(options = {}) {
@@ -567,13 +567,8 @@ export class Sanatorium extends FormApplication {
   }
 
   async _updateObject(event, formData) {
-    for (let [key, value] of Object.entries(formData)) {
-      log(false, `Updated ${key} : ${value}`);
-      this.object[key] = value;
-    }
-    this.object = foundry.utils.expandObject(this.object);
+    const expanded = expandObject(formData);
+    mergeObject(this.object, expanded, { recursive: true });
     this.render();
-
-    return;
   }
 }
