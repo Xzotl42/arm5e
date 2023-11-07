@@ -1,3 +1,9 @@
+## 2.2.2.22, Nico BF2
+
+### Fixes
+
+- Fix Recovery rolls on V10
+
 ## 2.2.2.21, Nico BF1
 
 ### Fixes
