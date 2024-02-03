@@ -515,8 +515,16 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
       distractions: "none",
       magicThSpecApply: false
     };
-    // Await this.submit({ preventClose: true, updateData: { "flags.arm5e.planning": this.actor.flags.arm5e.planning } });
-    await this.actor.update({ "flags.arm5e.planning": planning }, { recursive: true });
+    // await this.actor.setFlag(ARM5E.SYSTEM_ID, "planning", planning);
+    // let tmp = await this.submit({
+    //   preventClose: true,
+    //   updateData: { "flags.arm5e.planning": planning }
+    // });
+    let tmp = await this.actor.update(
+      { "flags.arm5e.planning": planning },
+      { diff: false, recursive: true, render: true }
+    );
+    this.render(true);
   }
 
   _refreshValues(event) {
@@ -728,8 +736,11 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
           }
         }
       }
+    } else {
+      const res = await super._onDrop(event);
+      await this._resetPlanning();
+      return res;
     }
-    return await super._onDrop(event);
   }
 
   /**

@@ -358,9 +358,9 @@ export class ArM5eActorSheet extends ActorSheet {
 
         if (context.system.sanctum.linked) {
           const lab = context.system.sanctum.document;
-          context.system.labtotal.quality = parseInt(lab.system.generalQuality.total);
+          context.system.labTotal.quality = parseInt(lab.system.generalQuality.total);
           // store the specialties if the character is linked to a lab
-          context.system.labtotals = { specialty: lab.system.specialty };
+          context.system.labTotal.specialty = lab.system.specialty;
           context.system.labTotal.aura = lab.system.aura.computeMaxAuraModifier(
             this.actor.system.realms
           );
@@ -440,7 +440,7 @@ export class ArM5eActorSheet extends ActorSheet {
         context.system.castingTotals = {};
         // labTotals
         context.system.labTotals = {};
-        context.system.labtotal = context.system.labtotal ?? {};
+        context.system.labTotal = context.system.labTotal ?? {};
         for (let [key, form] of Object.entries(context.system.arts.forms)) {
           if (form.deficient) {
             form.ui = {
@@ -474,7 +474,7 @@ export class ArM5eActorSheet extends ActorSheet {
           for (let [k2, technique] of Object.entries(context.system.arts.techniques)) {
             let techScoreLab = technique.finalScore;
             let formScoreLab = form.finalScore;
-            if (context.system.labtotal?.applyFocus) {
+            if (context.system.labTotal?.applyFocus) {
               if (techScoreLab > formScoreLab) {
                 formScoreLab *= 2;
               } else {
@@ -494,8 +494,8 @@ export class ArM5eActorSheet extends ActorSheet {
             if (context.system.sanctum.linked) {
               // set a ui effect if the value is modified
               let specialtyMod =
-                context.system.labtotals.specialty[key].bonus +
-                context.system.labtotals.specialty[k2].bonus;
+                context.system.labTotal.specialty[key].bonus +
+                context.system.labTotal.specialty[k2].bonus;
               if (specialtyMod > 0) {
                 context.system.labTotals[key][
                   k2
@@ -511,16 +511,16 @@ export class ArM5eActorSheet extends ActorSheet {
               }
 
               // add technique and form specialty bonuses
-              techScoreLab += context.system.labtotals.specialty[key].bonus;
-              formScoreLab += context.system.labtotals.specialty[k2].bonus;
+              techScoreLab += context.system.labTotal.specialty[key].bonus;
+              formScoreLab += context.system.labTotal.specialty[k2].bonus;
             }
             context.system.labTotals[key][k2].total = Math.round(
               (formScoreLab +
                 techScoreLab +
                 context.system.laboratory.basicLabTotal.value +
-                parseInt(context.system.labtotal.quality ?? 0) +
-                parseInt(context.system.labtotal.aura ?? 0) +
-                parseInt(context.system.labtotal.modifier ?? 0) +
+                parseInt(context.system.labTotal.quality ?? 0) +
+                parseInt(context.system.labTotal.aura ?? 0) +
+                parseInt(context.system.labTotal.modifier ?? 0) +
                 context.system.bonuses.arts.laboratory) /
                 deficiencyDivider
             );
