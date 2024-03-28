@@ -1,8 +1,8 @@
 import { getDataset, log } from "../tools.js";
 import { ArM5eItemSheet } from "./item-sheet.js";
-import { spellFormLabel, spellTechniqueLabel } from "../helpers/spells.js";
 import { getConfirmation } from "../constants/ui.js";
 import { ArM5eActorSheet } from "../actor/actor-sheet.js";
+import { spellFormLabel, spellTechniqueLabel } from "../helpers/magic.js";
 /**
  * Extend the basic ItemSheet with some very simple modifications
  * @extends {ItemSheet}

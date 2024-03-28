@@ -11,6 +11,7 @@ import {
   agingRoll,
   validAging,
   visStudy,
+  investigate,
   validWriting
 } from "./helpers/long-term-activities.js";
 
@@ -2517,6 +2518,28 @@ ARM5E.activities.generic = {
       duplicate: false,
       conflict: true
     }
+  },
+  investigateItem: {
+    label: "arm5e.activity.investigateItem",
+    display: {
+      tab: true,
+      progress: false,
+      abilities: false,
+      arts: false,
+      masteries: false,
+      spells: false,
+      attribute: "hidden"
+    },
+    source: { default: 0, readonly: true },
+    maxXp: 0,
+    bonusOptions: null,
+    validation: null,
+    secondaryFilter: null,
+    roll: { label: "arm5e.activity.roll.investigate", action: investigate },
+    scheduling: {
+      duplicate: false,
+      conflict: true
+    }
   }
 };
 
@@ -2609,6 +2632,15 @@ ARM5E.activities.lab = {
       aura: "",
       spellField: "",
       spellCombobox: ""
+    }
+  },
+  investigateItem: {
+    label: "arm5e.lab.activity.itemInvestigation",
+    enabled: "",
+    edition: {
+      aura: "",
+      spellField: "",
+      spellCombobox: "disabled"
     }
   }
 };
@@ -2972,7 +3004,7 @@ ARM5E.recovery = {
     }
   },
   daysInSeason: 92,
-  rollMode: 56
+  rollMode: 56 // no chat message, no confidence, non-interactive
 };
 
 ARM5E.ActorProfiles = {

@@ -1,9 +1,12 @@
 import { ArM5eItemSheet } from "./item-sheet.js";
 import { log } from "../tools.js";
 import { ARM5E } from "../config.js";
-import { ArM5eItem } from "./item.js";
 import { ARM5E_DEFAULT_ICONS } from "../constants/ui.js";
-import { GetFilteredMagicalAttributes, PickRequisites } from "../helpers/magic.js";
+import {
+  GetEffectAttributesLabel,
+  GetFilteredMagicalAttributes,
+  PickRequisites
+} from "../helpers/magic.js";
 /**
  * Extend the basic ArM5eItemSheet with some very simple modifications
  * @extends {ArM5eItemSheet}
@@ -35,7 +38,7 @@ export class ArM5eItemMagicSheet extends ArM5eItemSheet {
     // sheets are the item object, the data object, whether or not it's
     // editable, the items array, and the effects array.
     let context = await super.getData();
-    context.system.localizedDesc = ArM5eItem.GetEffectAttributesLabel(this.item);
+    context.system.localizedDesc = GetEffectAttributesLabel(this.item);
     context = await GetFilteredMagicalAttributes(context);
 
     if (context.flags && context.flags[CONFIG.ARM5E.SYSTEM_ID]?.readonly === "true") {

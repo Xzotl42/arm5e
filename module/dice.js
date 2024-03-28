@@ -90,7 +90,7 @@ async function simpleDie(actor, type = "OPTION", callBack) {
  * @param {any} type="OPTION"
  * @param {any} modes=0
  * @param {any} callBack=undefined
- * @param {any} botchNum=0
+ * @param {any} botchNum=-1
  * @returns {any}
  */
 async function stressDie(actor, type = "OPTION", modes = 0, callBack = undefined, botchNum = -1) {
@@ -127,7 +127,8 @@ async function stressDie(actor, type = "OPTION", modes = 0, callBack = undefined
   }
 
   let formula = rollData.formula;
-  let flavorTxt = `<p>${game.i18n.localize("arm5e.dialog.button.stressdie")}:</p>`;
+  let flavorTxt = rollData.flavor.length ? `<p>${rollData.flavor}</p>` : "";
+  flavorTxt += `<p>${game.i18n.localize("arm5e.dialog.button.stressdie")}:</p>`;
   let details = putInFoldableLinkWithAnimation(
     "arm5e.sheet.label.details",
     flavorTxt + rollData.details

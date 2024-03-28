@@ -1,6 +1,6 @@
 import { ArM5ePCActor } from "../actor/actor.js";
 import ArM5eActiveEffect from "../helpers/active-effects.js";
-import { computeLevel } from "../helpers/magic.js";
+import { computeLevel, spellFormLabel, spellTechniqueLabel } from "../helpers/magic.js";
 import { getTopicDescription } from "../item/item-book-sheet.js";
 import { effectToLabText } from "../item/item-converter.js";
 import { ArM5eItem } from "../item/item.js";
@@ -1088,7 +1088,7 @@ export class Scriptorium extends FormApplication {
     labtexts.push({
       name: text.name,
       uuid: text.uuid,
-      label: `${ArM5eItem.getTechLabel(text.system)}${ArM5eItem.getFormLabel(text.system)} `,
+      label: `${spellTechniqueLabel(text.system, true)}${spellFormLabel(text.system, true)} `,
       level: text.system.level,
       img: text.img
     });

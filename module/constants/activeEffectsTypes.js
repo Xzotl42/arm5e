@@ -589,6 +589,12 @@ export default {
         key: "system.bonuses.traits.recovery",
         mode: CONST.ACTIVE_EFFECT_MODES.ADD,
         default: 0
+      },
+      might: {
+        label: "arm5e.sheet.might",
+        key: "system.might.value",
+        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        default: 0
       }
     }
   },

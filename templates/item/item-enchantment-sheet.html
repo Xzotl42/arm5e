@@ -67,7 +67,7 @@
     </div> {{!-- Enchantment Tab --}}
     <div class="tab enchantment" data-group="primary" data-tab="enchantment">
       {{> "systems/arm5e/templates/item/parts/enchantment-attributes.html" container="enchantment" 
-       enchantData=this docId=@root.item._id }}
+       enchantData=this docId=@root.item._id expiryAllowed=true}}
     </div>
     {{!-- Description Tab --}}
     <div class="tab" data-group="primary" data-tab="description">

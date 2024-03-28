@@ -6,7 +6,7 @@ import { labTextToEffect } from "../item/item-converter.js";
 import { ArM5eItem } from "../item/item.js";
 import { HERMETIC_FILTER } from "../constants/userdata.js";
 import { getConfirmation } from "../constants/ui.js";
-import { GetFilteredAspects } from "../helpers/magic.js";
+import { GetEffectAttributesLabel, GetFilteredAspects } from "../helpers/magic.js";
 /**
  * Extend the basic ActorSheet with some very simple modifications
  * @extends {ActorSheet}
@@ -151,14 +151,14 @@ export class ArM5eMagicCodexSheet extends ArM5eActorSheet {
     //let actorData = sheetData.actor.data;
     // log(false, "_prepareCodexItems");
     for (const item of codexData.system.enchantments) {
-      item.system.localizedDesc = ArM5eItem.GetEffectAttributesLabel(item);
+      item.system.localizedDesc = GetEffectAttributesLabel(item);
     }
     for (const item of codexData.system.spells) {
-      item.system.localizedDesc = ArM5eItem.GetEffectAttributesLabel(item);
+      item.system.localizedDesc = GetEffectAttributesLabel(item);
     }
 
     for (const item of codexData.system.magicEffects) {
-      item.system.localizedDesc = ArM5eItem.GetEffectAttributesLabel(item);
+      item.system.localizedDesc = GetEffectAttributesLabel(item);
     }
   }
 

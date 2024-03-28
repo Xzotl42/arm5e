@@ -47,7 +47,7 @@
         <input type="text" {{noEdit}} name="{{prefix}}system.restrictedUse" value="{{enchantData.system.restrictedUse}}"
           data-dtype="String" />
       </div>
-      {{#if @root.planning.expiryAllowed}}
+      {{#if @root.expiryAllowed}}
         <div class="resource">
           <label class="header-label">{{localize "arm5e.lab.enchantment.item.expiry.label" }}</label>
           <select name="{{prefix}}system.expiry" {{noSelect}} data-dtype="String">

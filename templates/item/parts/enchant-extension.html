@@ -55,7 +55,7 @@
                 <div style="margin-top: 10px;">
                   {{> "systems/arm5e/templates/item/parts/enchantment-attributes.html" container="enchantments" index=idx docId=@root.item._id
             prefix=prefix enchantData=(lookup @root.system.enchantments.effects idx) 
-            visibility=(lookup @root.ui.sections.visibility.enchantments idx) charged=@root.system.enchantments.charged}}
+            visibility=(lookup @root.ui.sections.visibility.enchantments idx) expiryAllowed=@root.system.enchantments.expiryAllowed charged=@root.system.enchantments.charged}}
                 </div>
               {{/if}}
             </div>

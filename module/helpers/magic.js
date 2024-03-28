@@ -253,6 +253,88 @@ export function addSpellMagnitude(base, num) {
   }
 }
 
+export function spellTechniqueLabel(item, short = false) {
+  let label = CONFIG.ARM5E.magic.techniques[item.technique.value][short ? "short" : "label"];
+  let techReq = Object.entries(item["technique-req"]).filter((r) => r[1] === true);
+  if (techReq.length > 0) {
+    label += " (";
+    techReq.forEach((key) => {
+      label += CONFIG.ARM5E.magic.arts[key[0]].short + " ";
+    });
+    // remove last whitespace
+    label = label.substring(0, label.length - 1);
+    label += ")";
+  }
+
+  return label;
+}
+
+export function spellFormLabel(item, short = false) {
+  let label = CONFIG.ARM5E.magic.forms[item.form.value][short ? "short" : "label"];
+  let techReq = Object.entries(item["form-req"]).filter((r) => r[1] === true);
+  if (techReq.length > 0) {
+    label += " (";
+    techReq.forEach((key) => {
+      label += CONFIG.ARM5E.magic.arts[key[0]].short + " ";
+    });
+    // remove last whitespace
+    label = label.substring(0, label.length - 1);
+    label += ")";
+  }
+
+  return label;
+}
+
+// return a localize string of a magic effect attributes
+export function GetEffectAttributesLabel(item) {
+  if (!IsMagicalEffect(item)) return "";
+  let label =
+    spellTechniqueLabel(item.system, true) +
+    " " +
+    spellFormLabel(item.system, true) +
+    " " +
+    (item.system.level ? item.system.level : computeLevel(item.system, item.type)) +
+    " - " +
+    game.i18n.localize("arm5e.spell.range.short") +
+    ": " +
+    game.i18n.localize(CONFIG.ARM5E.magic.ranges[item.system.range.value].label) +
+    " " +
+    game.i18n.localize("arm5e.spell.duration.short") +
+    ": " +
+    game.i18n.localize(CONFIG.ARM5E.magic.durations[item.system.duration.value].label) +
+    " " +
+    game.i18n.localize("arm5e.spell.target.short") +
+    ": " +
+    game.i18n.localize(CONFIG.ARM5E.magic.targets[item.system.target.value].label);
+  if (item.type == "enchantment") {
+    label += `, ${game.i18n.localize("arm5e.lab.enchantment.effectFrequency")} : ${
+      CONFIG.ARM5E.lab.enchantment.effectUses[item.system.effectfrequency]
+    } ${game.i18n.localize("arm5e.lab.enchantment.uses-per-day")}`;
+    if (item.system.penetration) {
+      label += `, ${game.i18n.localize("arm5e.lab.enchantment.penetration")} : +${
+        item.system.penetration
+      }`;
+    }
+    if (item.system.maintainConc) {
+      label += `, ${game.i18n.localize("arm5e.lab.enchantment.maintainConc")}`;
+    }
+  }
+  return label;
+}
+
+export function IsMagicalEffect(item) {
+  return (
+    item.type == "magicalEffect" ||
+    item.type == "enchantment" ||
+    item.type == "spell" ||
+    (item.type === "laboratoryText" &&
+      (item.system.type === "spell" || item.system.type === "enchantment"))
+  );
+}
+export function canBeEnchanted(item) {
+  return ["item", "armor", "weapon", "book"].includes(item.type);
+}
+
 export function computeLevel(system, type) {
   if (!system) return;
   let effectLevel = system.baseLevel;

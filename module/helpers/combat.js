@@ -204,10 +204,35 @@ export async function combatDamage(selector, actor) {
   });
 }
 
+// WIP
+export async function nonCombatDamage(selector, actor) {
+  const title = '<h2 class="ars-chat-title">' + game.i18n.localize("arm5e.sheet.damage") + " </h2>";
+  let damage = parseInt(selector.find('input[name$="modifier"]').val());
+  const messageModifier = `${game.i18n.localize("arm5e.sheet.modifier")} (${damage})`;
+  let details = "";
+  const strenght = parseInt(selector.find('label[name$="strenght"]').attr("value") || 0);
+  const weapon = parseInt(selector.find('label[name$="weapon"]').attr("value") || 0);
+  const advantage = parseInt(selector.find('input[name$="advantage"]').val());
+  const messageStrenght = `${game.i18n.localize("arm5e.sheet.strength")} (${strenght})`;
+  const messageWeapon = `${game.i18n.localize("arm5e.sheet.damage")} (${weapon})`;
+  const messageAdvantage = `${game.i18n.localize("arm5e.sheet.advantage")} (${advantage})`;
+  damage += strenght + weapon + advantage;
+  details = ` ${messageStrenght}<br/> ${messageWeapon}<br/> ${messageAdvantage}<br/> ${messageModifier}<br/>`;
+
+  const messageDamage = `<h4 class="dice-total">${damage}</h4>`;
+  ChatMessage.create({
+    content: messageDamage,
+    flavor: title + putInFoldableLinkWithAnimation("arm5e.sheet.label.details", details),
+    speaker: ChatMessage.getSpeaker({
+      actor
+    })
+  });
+}
+
 export async function rolledDamage(soakData, actor) {
   const dataset = {
     roll: "option",
-    name: game.i18n.localize("arm5e.sheet.damageRoll"),
+    name: game.i18n.localize("arm5e.sheet.soakRoll"),
     physicalcondition: false,
     modifier: -soakData.modifier,
     option1: soakData.damage,
@@ -240,7 +265,7 @@ export async function rolledDamage(soakData, actor) {
   actor.rollData.init(dataset, actor);
   let roll = await stressDie(actor, "option", 16, null, 1);
   soakData.roll = roll.total - roll.offset;
-  soakData.damageToApply += soakData.roll;
+  soakData.damageToApply -= soakData.roll;
 }
 
 export function buildSoakDataset(selector) {
