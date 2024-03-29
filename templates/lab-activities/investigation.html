@@ -1,0 +1,61 @@
+<div class="drop-magic-item" data-drop="magic-item">
+  {{#unless planning.data.receptacle.uuid}}
+    <div class="padding4">{{localize "arm5e.lab.planning.msg.dropItemToInvestigate"}}</div>
+  {{else}}
+    <div class="flexrow">
+      <div class="item-image" style="max-width: 32px"><img src="{{planning.data.receptacle.img}}"
+          title="{{planning.data.receptacle.name}}" data-edit="{{planning.namePrefix}}receptacle.img"
+          style="height: 30px;width: 30px" /></div>
+      <input readonly title="{{planning.data.receptacle.name}}" type="text" value="{{planning.data.receptacle.name}}" />
+    </div>
+    <div class="padding4">{{localize "arm5e.lab.planning.knownEffects"}}</div>
+  {{/unless}}
+
+  <div class="flexcol">
+    {{#each planning.visibleEffects as |effect idx|}}
+      <div style="border-bottom: 1px; border-bottom-style: double; padding-bottom: 3px;">
+        <div class="resource flexrow">
+          <div class="item-image" data-index="{{idx}}" style="max-width: 32px"><img class="item-img"
+              src="{{effect.img}}" title="{{effect.name}}" style="height: 30px;width: 30px" /></div>
+          <div class="padding2">
+            <input type="text" readonly disabled value="{{effect.name}}" data-dtype="String" style="min-width: 175px;"
+              title="{{effect.name}}" />
+          </div>
+          <div class="padding2">
+            <label class="label-light">{{effect.details}}</label>
+          </div>
+          <div class="padding2 modifier">
+            <label>{{effect.system.level}}</label>
+          </div>
+          {{#if @root.system.enchantments.charged}}
+            <div class="flexrow flex-group-center">
+              <label class="label-light">{{localize "arm5e.lab.enchantment.item.charges"}}</label>
+              <div class="modifier">
+                <input type="number" readonly value="{{@root.system.enchantments.charges}}" data-dtype="Number" />
+              </div>/
+              <div class="modifier">
+                <input type="number" readonly value="{{@root.system.enchantments.originalCharges}}"
+                  data-dtype="Number" />
+              </div>
+            </div>
+          {{/if}}
+        </div>
+        <div class="resource flexrow">
+          <div class="flex02">
+            <label class="label-light">{{localize "arm5e.enchantment.receptacle.label"}} : </label>
+          </div>
+          <div>
+            <select class="receptacle-idx-change" data-dtype="Number" data-index="{{idx}}" style="max-width: 180px;"
+              disabled>
+              {{#select effect.receptacleId}}
+                {{#each @root.planning.data.receptacle.system.enchantments.capacities as |capa idx|}}
+                  <option value="{{capa.id}}">{{capa.desc}} ({{idx}})</option>
+                {{/each}} {{/select}}
+            </select>
+          </div>
+        </div>
+      </div>
+    {{/each}}
+
+  </div>
+</div>

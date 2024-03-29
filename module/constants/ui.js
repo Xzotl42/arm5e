@@ -126,7 +126,8 @@ export const ACTIVITIES_DEFAULT_ICONS = {
     lab: "systems/arm5e/assets/icons/activities/Lab.svg",
     aging: "systems/arm5e/assets/icons/activities/Aging.svg",
     visStudy: "systems/arm5e/assets/icons/activities/VisStudy.svg",
-    recovery: "systems/arm5e/assets/icons/recovery/healed.png"
+    recovery: "systems/arm5e/assets/icons/recovery/healed.png",
+    investigateItem: "icons/svg/eye.svg"
   },
   COLOR: {
     none: "icons/sundries/documents/document-sealed-signatures-red.webp",
@@ -150,7 +151,8 @@ export const ACTIVITIES_DEFAULT_ICONS = {
     recovery: "icons/magic/life/cross-explosion-burst-green.webp",
     longevityRitual: "icons/consumables/potions/bottle-pear-corked-pink.webp",
     minorEnchant: "icons/skills/trades/smithing-anvil-silver-red.webp",
-    minorEnchant: "icons/skills/trades/smithing-anvil-silver-red.webp"
+    minorEnchant: "icons/skills/trades/smithing-anvil-silver-red.webp",
+    investigateItem: "icons/tools/scribal/magnifying-glass.webp"
   }
 };
 

@@ -1,15 +1,14 @@
 import { ARM5E } from "../config.js";
 import ArM5eActiveEffect from "../helpers/active-effects.js";
 import {
+  GetEffectAttributesLabel,
   GetFilteredMagicalAttributes,
   PickRequisites,
   computeLevel,
   computeRawCastingTotal
 } from "../helpers/magic.js";
-import { spellFormLabel, spellTechniqueLabel } from "../helpers/spells.js";
 import { resetOwnerFields } from "../item/item-converter.js";
 import { ArM5eItemMagicSheet } from "../item/item-magic-sheet.js";
-import { ArM5eItem } from "../item/item.js";
 import { getDataset, log } from "../tools.js";
 import { ArM5eActorSheet } from "./actor-sheet.js";
 import { ArM5eItemDiarySheet } from "../item/item-diary-sheet.js";
@@ -21,6 +20,7 @@ import {
 } from "../constants/userdata.js";
 import { DiaryEntrySchema } from "../schemas/diarySchema.js";
 import { LabActivity, SpellActivity } from "../seasonal-activities/activity.js";
+import { investigate } from "../helpers/long-term-activities.js";
 /**
  * Extend the basic ArM5eActorSheet
  * @extends {ArM5eActorSheet}
@@ -60,6 +60,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
       dragDrop: [
         { dragSelector: null, dropSelector: ".drop-spell" },
         { dragSelector: null, dropSelector: ".drop-enchant" },
+        { dragSelector: null, dropSelector: ".drop-magic-item" },
         { dragSelector: null, dropSelector: ".mainLaboratory" }
       ]
     });
@@ -178,11 +179,14 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
         this.actor.apps[context.system.covenant.document.sheet.appId] =
           context.system.covenant.document.sheet;
         context.edition.aura = "readonly";
+        context.planning.modifiers.aura = context.system.auraBonus;
       } else {
         context.edition.aura = "";
         context.classes = { aura: "editable" };
-        if (context.planning.modifiers === undefined) context.planning.modifiers = { aura: 0 };
-        else if (context.planning.modifiers.aura === undefined) context.planning.modifiers.aura = 0;
+        if (context.planning.modifiers === undefined) {
+          context.planning.modifiers = { aura: context.system.auraBonus };
+        } else if (context.planning.modifiers.aura === undefined)
+          context.planning.modifiers.aura = context.system.auraBonus;
       }
     }
 
@@ -194,13 +198,13 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
     context.planning.modifiers.labQuality = this.actor.system.generalQuality.total;
 
     if (context.edition.aura === "readonly") {
-      context.planning.modifiers.aura = this.actor.system.aura.computeMaxAuraModifier(
+      context.planning.modifiers.aura += this.actor.system.aura.computeMaxAuraModifier(
         context.system.owner.document.system.realms
       );
     }
     if (context.system.auraBonus) {
       context.edition.aura = "readonly";
-      context.planning.modifiers.aura += context.system.auraBonus;
+      // context.planning.modifiers.aura += context.system.auraBonus;
       context.tooltip = {
         aura: game.i18n.format("arm5e.sheet.activeEffect.add", {
           score: (context.system.auraBonus < 0 ? "" : "+") + context.system.auraBonus,
@@ -226,7 +230,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
       case "inventSpell":
       case "learnSpell":
         context.planning.data.system.level = computeLevel(context.planning.data.system, "spell");
-        context.planning.label = ArM5eItem.GetEffectAttributesLabel(context.planning.data);
+        context.planning.label = GetEffectAttributesLabel(context.planning.data);
         break;
       case "chargedItem":
       case "minorEnchantment":
@@ -234,21 +238,25 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
           context.planning.data.enchantment.system,
           "enchantment"
         );
-        context.planning.label = ArM5eItem.GetEffectAttributesLabel(
-          context.planning.data.enchantment
-        );
+        context.planning.label = GetEffectAttributesLabel(context.planning.data.enchantment);
         context.enchantPrefix = "flags.arm5e.planning.data.enchantment.";
         context.receptaclePrefix = "flags.arm5e.planning.data.receptacle.";
-        if (context.planning.data.receptacle.system.enchantments.aspects.length > 0) {
+        if (context.planning.data.receptacle?.system.enchantments.aspects.length > 0) {
           // If settings were too restrictive, allow existing Items to keep their value.
           const aspect = context.planning.data.receptacle.system.enchantments.aspects[0].aspect;
           context.planning.data.ASPECTS[aspect] = CONFIG.ARM5E.ASPECTS[aspect];
         }
         break;
-
       case "visExtraction":
         context.planning.data.system.technique.value = "cr";
         context.planning.data.system.form.value = "vi";
+        break;
+      case "investigateItem":
+        context.planning.data.system.technique.value = "in";
+        context.planning.data.system.form.value = "vi";
+        if (context.planning.data.receptacle?.uuid) {
+          context.planning.data.receptacle = await fromUuid(context.planning.data.receptacle?.uuid);
+        }
         break;
       case "longevityRitual":
         context.planning.data.system.technique.value = "cr";
@@ -597,6 +605,15 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
       case "learnSpell":
         sourceQuality = computeLevel(planning.data.system, planning.type);
         break;
+      case "investigateItem":
+        externalIds.push({
+          actorId: null,
+          itemId: null,
+          uuid: planning.data.receptacle.uuid,
+          flags: 16,
+          data: { name: planning.data.receptacle.name, labTotal: planning.labTotal.score }
+        });
+        break;
       case "visExtraction":
       case "chargedItem":
         break;
@@ -755,6 +772,26 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
           case "item": {
           }
         }
+      } else if (event.currentTarget.dataset.drop === "magic-item") {
+        event.stopPropagation();
+        if (
+          Object.keys(ARM5E.lab.enchantment.enchantableTypes).includes(item.type) &&
+          item.system.state == "enchanted"
+        ) {
+          planning.data.receptacle = {
+            uuid: item.uuid
+            // name: item.name,
+            // img: item.img,
+            // type: item.type,
+            // system: item.system.toObject()
+          };
+          this.submit({
+            preventClose: true,
+            updateData: { "flags.arm5e.planning": planning }
+          });
+        } else {
+          return false;
+        }
       } else if (item.isOwned && item.system.hasQuantity) {
         if (!event.shiftKey) {
           if (this.isItemDropAllowed(item)) {
@@ -802,6 +839,8 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
       case "vis":
       case "item":
       case "book":
+      case "weapon":
+      case "armor":
       case "personalityTrait":
       case "magicalEffect":
       case "laboratoryText":

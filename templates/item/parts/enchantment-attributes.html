@@ -3,7 +3,6 @@
     <label class="section-handle header-label clickable " data-category="{{container}}"
       data-section="enchant-attributes" data-index="{{index}}">{{localize "arm5e.enchantment.attributes"}}</label>
   </div>
-  <!-- {{log "prefix: " prefix}} -->
   <div class="foldable-section backSection {{lookup visibility 'enchant-attributes'}}"
     id="{{container}}-enchant-attributes{{index}}-{{docId}}">
     <div class="flexrow ressource">
@@ -47,7 +46,7 @@
         <input type="text" {{noEdit}} name="{{prefix}}system.restrictedUse" value="{{enchantData.system.restrictedUse}}"
           data-dtype="String" />
       </div>
-      {{#if @root.planning.expiryAllowed}}
+      {{#if expiryAllowed}}
         <div class="resource">
           <label class="header-label">{{localize "arm5e.lab.enchantment.item.expiry.label" }}</label>
           <select name="{{prefix}}system.expiry" {{noSelect}} data-dtype="String">

@@ -9,9 +9,12 @@
 - New general generic ability : Lore
 - NPCs now also have their library tab
 - Books topic on an ability will now have a dedicated field for the ability's name.
-- New active effect: aura modifier for lab.
+- New active effects:
+  - Aura modifier for lab.
+  - Might score modifier
 - [meta] new method for datamodel schemas : sanitize
 - Improved management of hidden effects in magic items
+- Item investigation activity
 
 ### Bug fixes
 
@@ -21,6 +24,8 @@
 - Lab size attribute is now computed properly.
 - partial fix on pending xp
 - Edition of the generic lab modifier is again possible in the labTotals tab
+- Rolling for soak now helps against damage
+- Expiry is again visible in enchantment sheet.
 
 ## 2.2.4.11, Pralix, the Spider's bane
 

@@ -34,6 +34,22 @@
   src: url("../assets/fonts/BlackmoorLetPlain.ttf") format("truetype");
 }
 
+* {
+  scrollbar-color: initial;
+}
+
+::-webkit-scrollbar-thumb {
+  border-color: rgb(189, 162, 117);
+  background: rgb(189, 162, 117);
+}
+
+@-moz-document url-prefix() {
+  * {
+    scrollbar-color: rgb(189, 162, 117) transparent;
+    scrollbar-width: thin;
+  }
+}
+
 /* Intro chat fonts */
 
 p.nue {
@@ -868,6 +884,11 @@ h4.window-title {
   height: 45px;
 }
 
+.effect-list {
+  overflow: auto;
+  /* max-height: 180px; */
+  height: 100%;
+}
 .read-book {
   padding-right: 16px;
   padding-left: 16px;
@@ -875,6 +896,13 @@ h4.window-title {
   margin-left: 25px;
 }
 
+.arm5InvestigateRoll {
+  background-image: url("../assets/dialog/LargeDialog_Background.png");
+  background-repeat: repeat-y;
+  background-size: contain;
+  font-family: "bookAntiquaBold";
+  /* font-size: 12pt; */
+}
 .arm5ActiveEffect {
   background-image: url("../assets/dialog/LargeDialog_Background.png");
   background-repeat: repeat-y;
@@ -1527,17 +1555,15 @@ div[class*="foldable-section"] {
 
 .arm5e .sheet-body .editor,
 .arm5e .sheet-body .tab .editor {
-  height: auto;
+  height: 100%;
   min-height: 200px;
   overflow-y: auto;
 }
 
 .arm5e .sheet-body .editor.prosemirror,
 .arm5e .sheet-body .tab .editor.prosemirror {
-  height: auto;
-  height: -webkit-fill-available;
-  height: -moz-available;
-  min-height: 500px;
+  height: 100%;
+  min-height: 200px;
   overflow-y: auto;
 }
 
@@ -2001,7 +2027,7 @@ img.art-icon {
   box-shadow: 3px 3px 3px rgb(0 0 0 / 28%);
   margin-right: 10px;
   margin-bottom: 5px;
-  /* max-height: 54px; */
+  max-height: 100px;
 }
 
 .arm5e .padding48 {

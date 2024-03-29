@@ -112,7 +112,8 @@
       </div>
       <div class="item-controls">
         <a class="item-control toggleHidden " title="Filter" data-category="hermetic" data-list="spells"
-          data-hidden="spells" {{{ui.spellFilter}}}><i class="fas fa-sort"> </i> </a>
+          data-hidden="spells" {{{ui.spellFilter}}}><i class="fas fa-sort"> </i>{{localize "arm5e.sheet.action.Filter"}}
+        </a>
         <a class="item-control item-create"
           title='{{localize "arm5e.hints.create" item=(localize "arm5e.sheet.spell")}}' data-type="spell"><i
             class="fas fa-plus"></i>{{localize "arm5e.sheet.action.Create"}}</a>
@@ -160,7 +161,8 @@
       <div><span class="item-name">{{localize "arm5e.sheet.magicalEffects"}}</span></div>
       <div class="item-controls">
         <a class="item-control toggleHidden" title="Filter" data-category="hermetic" data-hidden="magicalEffects"
-          data-list="magicalEffects" {{{ui.magicEffectFilter}}}><i class="fas fa-sort"> </i> </a>
+          data-list="magicalEffects" {{{ui.magicEffectFilter}}}><i class="fas fa-sort"> </i>
+          {{localize "arm5e.sheet.action.Filter"}}</a>
         <a class="item-control item-create"
           title='{{localize "arm5e.hints.create" item=(localize "arm5e.sheet.magicalEffect")}}'
           data-type="magicalEffect"><i class="fas fa-plus"></i>{{localize "arm5e.sheet.action.Create"}}</a>

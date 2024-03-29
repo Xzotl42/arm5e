@@ -2,7 +2,14 @@
 
 import { ARM5E } from "../config.js";
 import ArM5eActiveEffect from "../helpers/active-effects.js";
-import { GetFilteredAspects, computeRawCastingTotal } from "../helpers/magic.js";
+import {
+  GetEffectAttributesLabel,
+  GetFilteredAspects,
+  computeLevel,
+  computeRawCastingTotal,
+  spellFormLabel,
+  spellTechniqueLabel
+} from "../helpers/magic.js";
 import { EnchantmentExtension } from "../schemas/enchantmentSchema.js";
 import { error, getDataset, log } from "../tools.js";
 
@@ -58,6 +65,8 @@ export class LabActivity extends Activity {
         return new VisExtractionActivity(lab.uuid, lab.system.owner.document.uuid);
       case "longevityRitual":
         return new LongevityRitualActivity(lab.uuid, lab.system.owner.document.uuid);
+      case "investigateItem":
+        return new InvestigationActivity(lab.uuid, lab.system.owner.document.uuid);
       default:
         log(false, "Unknown activity");
         return new SpellActivity(lab.uuid, lab.system.owner.document.uuid, "inventSpell");
@@ -85,7 +94,7 @@ export class LabActivity extends Activity {
   activateListeners(html) {}
 
   async getDefaultData() {
-    return await Item.create(
+    const item = await Item.create(
       {
         name: this.title,
         type: "spell"
@@ -93,6 +102,9 @@ export class LabActivity extends Activity {
       },
       { temporary: true, render: false }
     );
+
+    item.receptacle = null;
+    return item;
   }
 
   get title() {
@@ -812,4 +824,87 @@ export class ChargedItem extends MinorEnchantment {
   }
 
   activateListeners(html) {}
+}
+
+export class InvestigationActivity extends LabActivity {
+  constructor(labUuid, actorUuid) {
+    super(labUuid, actorUuid, "investigateItem");
+  }
+
+  getDiaryName(planning) {
+    return game.i18n.format("arm5e.lab.planning.investigation.diaryTitle", {
+      name: planning.data.receptacle.name
+    });
+  }
+
+  get activitySheet() {
+    return "systems/arm5e/templates/lab-activities/investigation.html";
+  }
+  get title() {
+    return game.i18n.localize("arm5e.lab.activity.itemInvestigation");
+  }
+
+  validation(input) {
+    if (input.data.receptacle?.uuid) {
+      return {
+        valid: true,
+        duration: 1,
+        message: "Ready for appraisal",
+        waste: 0
+      };
+    } else {
+      return {
+        valid: false,
+        duration: 1,
+        message: game.i18n.localize("arm5e.lab.planning.msg.dropItemToInvestigate"),
+        waste: 0
+      };
+    }
+  }
+
+  getDiaryDescription(planning) {
+    return `${planning.data.receptacle.name}<br/>
+    ${game.i18n.localize("arm5e.sheet.labTotal")}: <b>${planning.labTotal.score}</b> <br/> ${
+      planning.labTotal.label
+    }`;
+  }
+
+  prepareData(planning) {
+    if (planning.data.receptacle) {
+      const enchantExt = planning.data.receptacle.system.enchantments;
+      planning.visibleEffects = enchantExt.effects
+        ? enchantExt.effects
+            .filter((e) => !e.system.hidden)
+            .map((e) => {
+              return {
+                name: e.name,
+                img: e.img,
+                desc: e.system.description,
+                receptacleId: e.receptacleId,
+                details: GetEffectAttributesLabel(e)
+              };
+            })
+        : [];
+      if (enchantExt.state === "talisman") {
+        if (enchantExt.attunementVisible) {
+          planning.visibleEffects.push({
+            name: game.i18n.localize("arm5e.enchantment.attuned"),
+            img: CONFIG.ARM5E_DEFAULT_ICONS["enchantment"],
+            level: 20,
+            details: "Cr Vi 20"
+          });
+        }
+      }
+
+      planning.visibleEffects = planning.visibleEffects.sort((a, b) => a.level - b.level);
+    } else {
+      planning.visibleEffects = [];
+    }
+    return planning;
+  }
+  async getDefaultData() {
+    const result = {};
+    result.receptacle = null;
+    return result;
+  }
 }

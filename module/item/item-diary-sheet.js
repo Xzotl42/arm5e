@@ -11,6 +11,7 @@ import { UI, getConfirmation } from "../constants/ui.js";
 import { DiaryEntrySchema } from "../schemas/diarySchema.js";
 import { ArM5eActorSheet } from "../actor/actor-sheet.js";
 import { getAbilityFromCompendium } from "../tools/compendia.js";
+import { spellFormLabel, spellTechniqueLabel } from "../helpers/magic.js";
 
 /**
  * Extend the basic ItemSheet with some very simple modifications
@@ -1260,6 +1261,7 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
       // for (let toUpdate of this.item.system.achievements.filter((e) => e.updateExisting)) {
       // }
       case "recovery":
+      case "itemInvestigation":
         // delete the diary entry
         await this.actor.deleteEmbeddedDocuments("Item", [this.item.id], {});
         return;
@@ -1426,8 +1428,9 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
     system.xp = 0;
     system.masteries = "";
     newSpells.push({
-      label: `${spell.name} : ${ArM5eItem.getTechLabel(spell.system)} ${ArM5eItem.getFormLabel(
-        spell.system
+      label: `${spell.name} : ${spellTechniqueLabel(spell.system, true)} ${spellFormLabel(
+        spell.system,
+        true
       )} ${spell.system.level}`,
       name: spell.name,
       img: spell.img,

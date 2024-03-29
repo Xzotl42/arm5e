@@ -19,6 +19,10 @@ export class ArM5eRollData {
     if (dataset.name) {
       this.label = dataset.name;
     }
+
+    if (dataset.chatFlavor) {
+      this.flavor = dataset.chatFlavor;
+    }
     this.additionalData = dataset.moredata ?? {};
 
     if (dataset.img) {
@@ -419,6 +423,7 @@ export class ArM5eRollData {
     this.itemId = "";
     // roll window title
     this.name = "";
+    this.flavor = "";
     // arbitrary bonus
     this.modifier = 0;
     this.useFatigue = false;

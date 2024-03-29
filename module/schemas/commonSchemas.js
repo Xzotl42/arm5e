@@ -47,6 +47,7 @@ export class NullableSchemaField extends fields.SchemaField {
   }
 }
 
+// Use ForeignDocumentField once V10 is no longer supported
 export class NullableDocumentIdField extends fields.DocumentIdField {
   /** @inheritdoc */
   static get _defaults() {

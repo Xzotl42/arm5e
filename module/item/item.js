@@ -1,7 +1,7 @@
 import { getDataset, getLabUpkeepCost, log } from "../tools.js";
 import { ArM5ePCActor } from "../actor/actor.js";
 import { migrateItemData } from "../migration.js";
-import { computeLevel } from "../helpers/magic.js";
+import { IsMagicalEffect, computeLevel } from "../helpers/magic.js";
 import { resetOwnerFields } from "./item-converter.js";
 import { PersonalityTraitSchema } from "../schemas/minorItemsSchemas.js";
 import { ARM5E } from "../config.js";
@@ -11,18 +11,6 @@ import { ARM5E_DEFAULT_ICONS } from "../constants/ui.js";
  * @extends {Item}
  */
 export class ArM5eItem extends Item {
-  static IsMagicalEffect(item) {
-    return (
-      item.type == "magicalEffect" ||
-      item.type == "enchantment" ||
-      item.type == "spell" ||
-      (item.type === "laboratoryText" &&
-        (item.system.type === "spell" || item.system.type === "enchantment"))
-    );
-  }
-  static canBeEnchanted(item) {
-    return ["item"].includes(item.type);
-  }
   /**
    * Augment the basic Item data model with additional dynamic data.
    */
@@ -110,21 +98,6 @@ export class ArM5eItem extends Item {
     if (this.type == "inhabitant") {
       this.system.points = ARM5E.covenant.inhabitants[this.system.category].points;
     }
-
-    // if (ArM5eItem.canBeEnchanted(this)) {
-    //   if (this.system.enchantments === null) {
-    //     this.system.state = "inert";
-    //   } else {
-    //     this.system.state = "appraised";
-
-    //     if (this.system.enchantments.prepared) {
-    //       this.system.state = "prepared";
-    //     }
-    //     if (this.system.enchantments.effects.length) {
-    //       this.system.state = "enchanted";
-    //     }
-    //   }
-    // }
 
     // log(false,"prepare-item");
     // log(false,itemData);
@@ -218,63 +191,8 @@ export class ArM5eItem extends Item {
     return false;
   }
 
-  // return a localize string of a magic effect attributes
-  static GetEffectAttributesLabel(item) {
-    if (!ArM5eItem.IsMagicalEffect(item)) return "";
-    let label =
-      ArM5eItem.getTechLabel(item.system) +
-      " " +
-      ArM5eItem.getFormLabel(item.system) +
-      " " +
-      item.system.level +
-      " - " +
-      game.i18n.localize("arm5e.spell.range.short") +
-      ": " +
-      game.i18n.localize(CONFIG.ARM5E.magic.ranges[item.system.range.value].label) +
-      " " +
-      game.i18n.localize("arm5e.spell.duration.short") +
-      ": " +
-      game.i18n.localize(CONFIG.ARM5E.magic.durations[item.system.duration.value].label) +
-      " " +
-      game.i18n.localize("arm5e.spell.target.short") +
-      ": " +
-      game.i18n.localize(CONFIG.ARM5E.magic.targets[item.system.target.value].label);
-    return label;
-  }
-
-  static getTechLabel(systemData) {
-    let label = CONFIG.ARM5E.magic.arts[systemData.technique.value].short;
-    let techReq = Object.entries(systemData["technique-req"]).filter((r) => r[1] === true);
-    if (techReq.length > 0) {
-      label += " (";
-      techReq.forEach((key) => {
-        label += CONFIG.ARM5E.magic.arts[key[0]].short + " ";
-      });
-      // remove last whitespace
-      label = label.substring(0, label.length - 1);
-      label += ")";
-    }
-    return label;
-  }
-
-  static getFormLabel(systemData) {
-    let label = CONFIG.ARM5E.magic.arts[systemData.form.value].short;
-    let formReq = Object.entries(systemData["form-req"]).filter((r) => r[1] === true);
-    if (formReq.length > 0) {
-      label += " (";
-      formReq.forEach((key) => {
-        label += CONFIG.ARM5E.magic.arts[key[0]].short + " ";
-      });
-      // remove last whitespace
-      label = label.substring(0, label.length - 1);
-      label += ")";
-    }
-
-    return label;
-  }
-
   _getTechniqueData(actorSystemData) {
-    if (!ArM5eItem.IsMagicalEffect(this)) return ["", 0, false];
+    if (!IsMagicalEffect(this)) return ["", 0, false];
 
     let label = CONFIG.ARM5E.magic.techniques[this.system.technique.value].label;
     let tech = 1000;
@@ -304,7 +222,7 @@ export class ArM5eItem extends Item {
     return [label, tech, techDeficient];
   }
   _getFormData(actorSystemData) {
-    if (!ArM5eItem.IsMagicalEffect(this)) return ["", 0, false];
+    if (!IsMagicalEffect(this)) return ["", 0, false];
 
     let label = CONFIG.ARM5E.magic.forms[this.system.form.value].label;
     let form = 1000;

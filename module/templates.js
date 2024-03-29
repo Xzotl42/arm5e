@@ -114,6 +114,7 @@ export const ArM5ePreloadHandlebarsTemplates = async function () {
     "systems/arm5e/templates/lab-activities/minor-enchantment.html",
     "systems/arm5e/templates/lab-activities/charged-item.html",
     "systems/arm5e/templates/item/parts/vis-costs.html",
+    "systems/arm5e/templates/lab-activities/investigation.html",
     // Rolls partials
     "systems/arm5e/templates/roll/parts/roll-header.html",
     "systems/arm5e/templates/roll/parts/roll-footer.html",

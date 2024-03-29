@@ -1,10 +1,10 @@
 import { getDataset, log } from "../../tools.js";
 import { ARM5E } from "../../config.js";
-import { ArM5eItem } from "../item.js";
 import { getConfirmation } from "../../constants/ui.js";
 import { ArM5eActorSheet } from "../../actor/actor-sheet.js";
 import { EnchantmentExtension, EnchantmentSchema } from "../../schemas/enchantmentSchema.js";
 import {
+  GetEffectAttributesLabel,
   GetFilteredAspects,
   GetFilteredMagicalAttributes,
   PickRequisites,
@@ -132,6 +132,7 @@ export class ArM5eItemEnchantmentSheet {
       enchants.states["charged"].selection = "disabled";
       enchants.states["lesser"].selection = "disabled";
       enchants.states["prepared"].selection = "disabled";
+      enchants.expiryAllowed = false;
       // enchants.prepared = true;
     }
     let idx = 0;
@@ -140,7 +141,7 @@ export class ArM5eItemEnchantmentSheet {
     enchants.visibleCapacities = 0;
     for (let e of enchants.effects) {
       e.system.level = computeLevel(e.system, "enchantment");
-      e.details = ArM5eItem.GetEffectAttributesLabel(e);
+      e.details = GetEffectAttributesLabel(e);
       if (e.system.hidden && !context.isGM) {
         enchants.usedCapa = "??";
         enchants.hasHiddenEnchants = true;
@@ -194,8 +195,10 @@ export class ArM5eItemEnchantmentSheet {
       case "lesser":
         enchants.lesser = true;
         enchants.ui.prepared = "disabled";
+        enchants.expiryAllowed = false;
         break;
       case "major":
+        enchants.expiryAllowed = true;
         break;
       case "charged":
         enchants.prepared = false;
@@ -204,8 +207,10 @@ export class ArM5eItemEnchantmentSheet {
         enchants.ui.prepared = "disabled";
         enchants.talisman = false;
         enchants.ui.talisman = "disabled";
+        enchants.expiryAllowed = false;
         break;
       case "prepared":
+        enchants.expiryAllowed = true;
         enchants.charged = false;
         enchants.ui.charged = "disabled";
         enchants.minor = false;
@@ -218,6 +223,7 @@ export class ArM5eItemEnchantmentSheet {
           enchants.invalidItem = true;
           enchants.invalidMsg.push("arm5e.enchantment.msg.noAttunment");
         }
+        enchants.expiryAllowed = true;
         enchants.charged = false;
         enchants.talisman = true;
         enchants.ui.charged = "disabled";

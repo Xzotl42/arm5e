@@ -1,5 +1,4 @@
 import { ARM5E } from "../config.js";
-import { ACTIVITIES_DEFAULT_ICONS } from "../constants/ui.js";
 import { convertToNumber, log } from "../tools.js";
 import { nextDate } from "../tools/time.js";
 import { BookSchema } from "./bookSchema.js";
@@ -123,12 +122,19 @@ export class DiaryEntrySchema extends foundry.abstract.DataModel {
         new fields.SchemaField({
           actorId: new NullableDocumentIdField(),
           itemId: new NullableDocumentIdField(),
+          uuid: new fields.StringField({
+            required: false,
+            blank: false,
+            nullable: true,
+            initial: null
+          }),
           // Flags:
           // 0 : delete on rollback
           // 1 : change the quantity of an item
           // 2 : update a schedule
           // 4 : update id
           // 8 : just data
+          //16 : update document
           flags: new fields.NumberField({
             required: false,
             nullable: false,

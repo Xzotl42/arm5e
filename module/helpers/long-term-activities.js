@@ -1,5 +1,6 @@
 import { getDataset, log } from "../tools.js";
 import { ArM5ePCActor } from "../actor/actor.js";
+import { InvestigationRoll } from "../tools/investigationRoll.js";
 
 export async function setAgingEffects(actor, roll, message) {
   let rtCompendium = game.packs.get("arm5e.rolltables");
@@ -840,6 +841,23 @@ export async function setVisStudyResults(actor, roll, message, rollData) {
     await actor.updateEmbeddedDocuments("Item", [updateData], {});
     await diaryitem.sheet._onProgressApply({});
   }
+}
+
+export async function investigate(item) {
+  const idx = item.system.externalIds.findIndex((e) => e.flags == 16);
+  const magicItem = await fromUuid(item.system.externalIds[idx].uuid);
+  const itemName = item.system.externalIds[idx].data.name;
+  if (!magicItem) {
+    ui.notifications.info(game.i18n.format("arm5e.notification.itemMoved", { name: itemName }));
+    return;
+  }
+
+  let formData = magicItem.toObject();
+  formData.uuid = magicItem.uuid;
+  formData.labTotal = item.system.externalIds[idx].data.labTotal;
+  // // const html = await renderTemplate("systems/arm5e/templates/generic/astrolab.html", dialogData);
+  const investigateItem = new InvestigationRoll(item, formData, {}); // data, options
+  const res = await investigateItem.render(true);
 }
 
 // get a new title for a diary entry if it is still the default : "New DiaryEntry"

@@ -63,7 +63,7 @@
     {{#if (eq system.type "enchantment")}}
 
       {{> "systems/arm5e/templates/item/parts/enchantment-attributes.html" docId=@root.item._id container="book"
-    prefix="" enchantData=@root visibility=@root.ui.sections.visibility.book}}
+    prefix="" enchantData=@root visibility=@root.ui.sections.visibility.book expiryAllowed=true}}
     {{/if}}
 
 

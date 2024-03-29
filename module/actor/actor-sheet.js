@@ -35,7 +35,6 @@ import {
   usePower
 } from "../helpers/rollWindow.js";
 
-import { spellTechniqueLabel, spellFormLabel } from "../helpers/spells.js";
 import {
   buildSoakDataset,
   combatDamage,
@@ -44,7 +43,7 @@ import {
   quickVitals,
   rolledDamage
 } from "../helpers/combat.js";
-import { quickMagic } from "../helpers/magic.js";
+import { quickMagic, spellFormLabel, spellTechniqueLabel } from "../helpers/magic.js";
 import { UI, getConfirmation } from "../constants/ui.js";
 import { Schedule } from "../tools/schedule.js";
 import { createAgingDiaryEntry } from "../helpers/long-term-activities.js";
@@ -1510,6 +1509,14 @@ export class ArM5eActorSheet extends ActorSheet {
             label: game.i18n.localize("arm5e.generic.yes"),
             callback: (html) => combatDamage(html, actor)
           },
+          // roll: {
+          //   label: game.i18n.localize("arm5e.dialog.button.roll"),
+          //   callback: async (html) => {
+          //     const soakData = buildSoakDataset(html);
+          //     await rolledDamage(soakData, actor);
+          //     await setWounds(soakData, actor);
+          //   }
+          // },
           no: {
             icon: "<i class='fas fa-ban'></i>",
             label: game.i18n.localize("arm5e.dialog.button.cancel"),

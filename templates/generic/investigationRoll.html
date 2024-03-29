@@ -1,0 +1,131 @@
+<form class="{{cssClass}} arm5InvestigateRoll" autocomplete="off">
+  {{> "systems/arm5e/templates/generic/largeDialog-header.html" header="Inputs" }}
+  <!-- Effect Header -->
+  <header class="flexcol marginsides32">
+    <h1 class="charName">
+      <input type="text" readonly value="{{name}}" style="height: 30px;" />
+    </h1>
+    <div class="padding4">
+      <label>{{localize "arm5e.sheet.labTotal"}} - In Vi</label>
+      <input type="number" class="modifier" readonly value="{{labTotal}}" />
+      <label>{{localize "arm5e.dialog.botch.num"}} </label>
+      <input type="number" class="modifier resource-focus" name="botchDice" value="{{botchDice}}" />
+    </div>
+  </header>
+
+
+  <!-- Details Tab -->
+  {{!-- Sheet Body --}}
+  <section class="sheet-body flexcol marginsides32" style="height: auto; min-height: 495px;">
+    <div class="padding4">
+      <div class="padding4 effect-list">{{localize "arm5e.lab.planning.knownEffects"}}</div>
+      {{> "systems/arm5e/templates/generic/metalic-bar.html" topoffset="-7px" }}
+      <div class="effect-list">
+        {{#each visibleEffects as |effect idx|}}
+          <div style="border-bottom: 1px; border-bottom-style: double; padding-bottom: 3px;">
+            <div class="resource flexrow">
+              <div class="item-image" data-index="{{idx}}" style="max-width: 32px"><img class="item-img"
+                  src="{{effect.img}}" title="{{effect.name}}" style="height: 30px;width: 30px" /></div>
+              <div class="padding2">
+                <input type="text" readonly disabled value="{{effect.name}}" data-dtype="String"
+                  style="min-width: 175px;" title="{{effect.name}}" />
+              </div>
+              <div class="padding2">
+                <label class="label-light">{{effect.details}}</label>
+              </div>
+              <div class="padding2 modifier">
+                <label>{{effect.system.level}}</label>
+              </div>
+              {{#if @root.system.enchantments.charged}}
+                <div class="flexrow flex-group-center">
+                  <label class="label-light">{{localize "arm5e.lab.enchantment.item.charges"}}</label>
+                  <div class="modifier">
+                    <input type="number" readonly value="{{@root.system.enchantments.charges}}" data-dtype="Number" />
+                  </div>/
+                  <div class="modifier">
+                    <input type="number" readonly value="{{@root.system.enchantments.originalCharges}}"
+                      data-dtype="Number" />
+                  </div>
+                </div>
+              {{/if}}
+            </div>
+            {{#if effect.receptacleId}}
+              <div class="resource flexrow">
+                <div class="flex02">
+                  <label class="label-light">{{localize "arm5e.enchantment.receptacle.label"}} : </label>
+                </div>
+                <div>
+                  <select class="receptacle-idx-change" data-dtype="Number" data-index="{{idx}}"
+                    style="max-width: 180px;" disabled>
+                    {{#select effect.receptacleId}} {{#each @root.system.enchantments.capacities as |capa idx|}}
+                        <option value="{{capa.id}}">{{capa.desc}} ({{idx}})</option>
+                      {{/each}} {{/select}}
+                  </select>
+                </div>
+              </div>
+            {{/if}}
+          </div>
+        {{/each}}
+      </div>
+      <div class="padding4">{{localize "arm5e.lab.planning.discoveredEffects"}}</div>
+      {{> "systems/arm5e/templates/generic/metalic-bar.html" topoffset="-7px"}}
+      <div class="effect-list">
+        {{#each discoveredEffects as |effect idx|}}
+          <div style="border-bottom: 1px; border-bottom-style: double; padding-bottom: 3px;">
+            <div class="resource flexrow">
+              <div class="item-image" data-index="{{idx}}" style="max-width: 32px"><img class="item-img"
+                  src="{{effect.img}}" title="{{effect.name}}" style="height: 30px;width: 30px" /></div>
+              <div class="padding2">
+                <input type="text" readonly disabled value="{{effect.name}}" data-dtype="String"
+                  style="min-width: 175px;" title="{{effect.name}}" />
+              </div>
+              <div class="padding2">
+                <label class="label-light">{{effect.details}}</label>
+              </div>
+              <div class="padding2 modifier">
+                <label>{{effect.system.level}}</label>
+              </div>
+              {{#if @root.system.enchantments.charged}}
+                <div class="flexrow flex-group-center">
+                  <label class="label-light">{{localize "arm5e.lab.enchantment.item.charges"}}</label>
+                  <div class="modifier">
+                    <input type="number" readonly value="{{@root.system.enchantments.charges}}" data-dtype="Number" />
+                  </div>/
+                  <div class="modifier">
+                    <input type="number" readonly value="{{@root.system.enchantments.originalCharges}}"
+                      data-dtype="Number" />
+                  </div>
+                </div>
+              {{/if}}
+            </div>
+            {{#if effect.receptacleId}}
+              <div class="resource flexrow">
+                <div class="flex02">
+                  <label class="label-light">{{localize "arm5e.enchantment.receptacle.label"}} : </label>
+                </div>
+                <div>
+                  <select class="receptacle-idx-change" data-dtype="Number" data-index="{{idx}}"
+                    style="max-width: 180px;" disabled>
+                    {{#select effect.receptacleId}} {{#each @root.system.enchantments.capacities as |capa idx|}}
+                        <option value="{{capa.id}}">{{capa.desc}} ({{idx}})</option>
+                      {{/each}} {{/select}}
+                  </select>
+                </div>
+              </div>
+            {{/if}}
+          </div>
+        {{/each}}
+      </div>
+    </div>
+    <div class="padding4 flex0">
+      {{#if failedInvestigation}}
+        <button class="arm5e end-investigate">{{localize "arm5e.activity.roll.investigationEnd"}}</button>
+      {{else}}
+        <button class="arm5e investigate">{{localize "arm5e.activity.roll.investigate"}}</button>
+      {{/if}}
+    </div>
+  </section>
+
+  {{> "systems/arm5e/templates/generic/largeDialog-footer.html" footer="Inputs"}}
+  <!-- <button type="submit"><i class="fas fa-save"></i> {{localize submitText}}</button> -->
+</form>
