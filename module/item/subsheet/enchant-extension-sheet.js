@@ -223,6 +223,7 @@ export class ArM5eItemEnchantmentSheet {
           enchants.invalidItem = true;
           enchants.invalidMsg.push("arm5e.enchantment.msg.noAttunment");
         }
+        enchants.expiryAllowed = true;
         enchants.charged = false;
         enchants.talisman = true;
         enchants.ui.charged = "disabled";

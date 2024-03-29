@@ -2027,7 +2027,7 @@ img.art-icon {
   box-shadow: 3px 3px 3px rgb(0 0 0 / 28%);
   margin-right: 10px;
   margin-bottom: 5px;
-  /* max-height: 54px; */
+  max-height: 100px;
 }
 
 .arm5e .padding48 {

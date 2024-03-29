@@ -792,15 +792,15 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
         } else {
           return false;
         }
+      } else if (item.isOwned && item.system.hasQuantity) {
+        if (!event.shiftKey) {
+          if (this.isItemDropAllowed(item)) {
+            return this._handleTransfer(item);
+          }
+        }
       } else {
         const res = await super._onDrop(event);
         return res;
-      }
-    } else if (item.isOwned && item.system.hasQuantity) {
-      if (!event.shiftKey) {
-        if (this.isItemDropAllowed(item)) {
-          return this._handleTransfer(item);
-        }
       }
     } else {
       event.stopPropagation();

@@ -25,6 +25,7 @@
 - partial fix on pending xp
 - Edition of the generic lab modifier is again possible in the labTotals tab
 - Rolling for soak now helps against damage
+- Expiry is again visible in enchantment sheet.
 
 ## 2.2.4.11, Pralix, the Spider's bane
 
