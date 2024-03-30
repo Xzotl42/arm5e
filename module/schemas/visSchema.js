@@ -3,7 +3,14 @@ import { stressDie } from "../dice.js";
 import Aura from "../helpers/aura.js";
 import { setVisStudyResults } from "../helpers/long-term-activities.js";
 import { convertToNumber, log } from "../tools.js";
-import { boolOption, convertToInteger, CostField, itemBase, XpField } from "./commonSchemas.js";
+import {
+  boolOption,
+  convertToInteger,
+  CostField,
+  itemBase,
+  SeasonField,
+  XpField
+} from "./commonSchemas.js";
 const fields = foundry.data.fields;
 
 export class VisSchema extends foundry.abstract.DataModel {
@@ -173,4 +180,110 @@ export class VisSchema extends foundry.abstract.DataModel {
     let entry = await actor.createEmbeddedDocuments("Item", entryData, {});
     return entry[0];
   }
+}
+
+export class VisSourceSchema extends foundry.abstract.DataModel {
+  // TODO remove in V11
+  static _enableV10Validation = true;
+
+  static defineSchema() {
+    return {
+      ...itemBase(),
+      art: new fields.StringField({
+        required: false,
+        blank: false,
+        initial: "cr",
+        choices: Object.keys(ARM5E.magic.arts)
+      }),
+      visLabel: new fields.StringField({
+        required: false,
+        blank: true,
+        initial: ""
+      }),
+      form: new fields.StringField({
+        required: false,
+        blank: true,
+        initial: ""
+      }),
+      place: new fields.StringField({
+        required: false,
+        blank: true,
+        initial: ""
+      }),
+      season: SeasonField(),
+      pawns: new fields.NumberField({
+        required: false,
+        nullable: true,
+        min: 0,
+        initial: null,
+        step: 1
+      }),
+      yearHarvested: new fields.NumberField({
+        required: false,
+        nullable: true,
+        integer: true,
+        initial: null,
+        step: 1
+      })
+    };
+  }
+
+  async harvest() {
+    if (!this.parent.isOwned) {
+      return;
+    }
+
+    const covenantVis = this.parent.actor.system.vis;
+
+    const existingReserve = covenantVis.filter((e) => {
+      return e.system.art == this.art && e.name == this.visLabel;
+    });
+    if (existingReserve.length) {
+      // update existing Vis pile
+      const vis = structuredClone(existingReserve[0]);
+      const updateData = {
+        _id: existingReserve[0]._id,
+        "system.quantity": vis.system.quantity + this.pawns
+      };
+      await this.parent.actor.updateEmbeddedDocuments("Item", [updateData]);
+      this.parent.actor.sheet.render(false);
+      return;
+    } else {
+      let desc;
+      if (this.form == "") {
+        desc = game.i18n.format("arm5e.sheet.visDesc", {
+          covenant: this.parent.actor.name,
+          name: this.parent.name
+        });
+      } else {
+        desc = this.form;
+      }
+      let name;
+      if (this.visLabel == "") {
+        name = this.parent.name;
+      } else {
+        name = this.visLabel;
+      }
+
+      const vis = {
+        name: name,
+        type: "vis",
+        system: {
+          art: this.art,
+          quantity: this.pawns,
+          description: desc
+        }
+      };
+      return await this.parent.actor.createEmbeddedDocuments("Item", [vis]);
+    }
+
+    //TODO check the year harvested
+  }
+
+  // static migrateData(data) {
+
+  //   return data;
+  // }
+
+  // static migrate(itemData) {}
 }

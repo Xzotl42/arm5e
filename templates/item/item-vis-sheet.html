@@ -34,11 +34,12 @@
   <section class="sheet-body">
     {{!-- Attributes Tab --}}
     <label for="system.description" class="header-label">{{localize "arm5e.sheet.description"}}</label>
-    <div class="tab editor">
+    <div style="height: 249px">
       {{editor system.description target="system.description" button=true owner=owner engine="prosemirror" editable=editable}}
-      {{#if metagame.view }}
-        {{> "systems/arm5e/templates/generic/source.html" }}
-      {{/if}}
     </div>
+    {{#if metagame.view }}
+      {{> "systems/arm5e/templates/generic/source.html" }}
+    {{/if}}
+
   </section>
 </form>

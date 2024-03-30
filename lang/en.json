@@ -639,8 +639,10 @@
   "arm5e.sheet.bookTopic": "Topic",
   "arm5e.sheet.bookTopics": "Topics",
   "arm5e.sheet.visSources": "Vis Sources",
+  "arm5e.sheet.visLabel": "Vis label",
   "arm5e.sheet.visStock": "Vis Stock",
-
+  "arm5e.sheet.visDesc": "Vis extracted from \"{covenant}\" covenant's vis' source named \"{name}\".",
+  "arm5e.sheet.visHarvest": "Harvest vis",
   "arm5e.book.dropLabtext": "Drop a laboratory text here",
 
   "arm5e.sheet.governForm": "Type of Governance",

@@ -52,7 +52,7 @@ import {
 import { LabSchema } from "./schemas/labSchema.js";
 import { ArmorSchema, WeaponSchema } from "./schemas/weaponArmorSchema.js";
 import { CodexSchema } from "./schemas/actorCommonSchema.js";
-import { VisSchema } from "./schemas/visSchema.js";
+import { VisSchema, VisSourceSchema } from "./schemas/visSchema.js";
 import { clearUserCache } from "./constants/userdata.js";
 import {
   ACTIVITIES_DEFAULT_ICONS,
@@ -521,6 +521,7 @@ function setDatamodels() {
   CONFIG.ARM5E.ItemDataModels["flaw"] = VirtueFlawSchema;
   CONFIG.ARM5E.ItemDataModels["item"] = ItemSchema;
   CONFIG.ARM5E.ItemDataModels["vis"] = VisSchema;
+  CONFIG.ARM5E.ItemDataModels["visSourcesCovenant"] = VisSourceSchema;
   CONFIG.ARM5E.ItemDataModels["baseEffect"] = BaseEffectSchema;
   CONFIG.ARM5E.ItemDataModels["magicalEffect"] = MagicalEffectSchema;
   CONFIG.ARM5E.ItemDataModels["spell"] = SpellSchema;

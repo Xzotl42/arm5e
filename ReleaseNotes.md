@@ -1,4 +1,4 @@
-## 2.2.4.14, Pralix, founder of a new Order
+## 2.2.4.15, Pralix, founder of a new Order
 
 ### Dependencies updates
 
@@ -15,6 +15,7 @@
 - [meta] new method for datamodel schemas : sanitize
 - Improved management of hidden effects in magic items
 - Item investigation activity
+- New icon to harvest covenant vis sources
 
 ### Bug fixes
 
@@ -26,6 +27,12 @@
 - Edition of the generic lab modifier is again possible in the labTotals tab
 - Rolling for soak now helps against damage
 - Expiry is again visible in enchantment sheet.
+- Shape and material bonuses are properly reset now.
+
+### V10 datamodels migration (on going)
+
+- New data models activated
+  - Vis source
 
 ## 2.2.4.11, Pralix, the Spider's bane
 

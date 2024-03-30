@@ -1,4 +1,4 @@
-import { compareLabTexts, log, hermeticFilter, getUuidInfo } from "../tools.js";
+import { compareLabTexts, log, hermeticFilter, getUuidInfo, getDataset } from "../tools.js";
 import { ArM5eActorSheet } from "./actor-sheet.js";
 import { HERMETIC_FILTER, TIME_FILTER, TOPIC_FILTER } from "../constants/userdata.js";
 import { effectToLabText, resetOwnerFields } from "../item/item-converter.js";
@@ -237,6 +237,17 @@ export class ArM5eCovenantActorSheet extends ArM5eActorSheet {
         this.actor.deleteEmbeddedDocuments("Item", itemId, {});
         li.slideUp(200, () => this.render(false));
       }
+    });
+
+    // Everything below here is only needed if the sheet is editable
+    if (!this.options.editable) return;
+
+    html.find(".harvest").click(async (ev) => {
+      ev.preventDefault();
+      const li = $(ev.currentTarget).parents(".item");
+      let itemId = li.data("itemId");
+      const item = this.actor.items.get(itemId);
+      await item.system.harvest();
     });
   }
   /**
