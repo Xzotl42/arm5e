@@ -29,7 +29,6 @@
         </li>
     {{/each}}
 </ol>
-
 <ol class="items-list backSection margintop18">
     <li class="item flexrow item-header">
         <div class="item-image"></div>
@@ -90,6 +89,11 @@
                     {{#with (lookup @root.config.magic.arts item.system.art)~}}{{label~}}
                     {{/with}}</span>
                 <span class="flexrow bold">{{localize "arm5e.sheet.pawns"}}: {{item.system.pawns}} </span>
+                <span class="flexrow bold">{{localize "arm5e.sheet.season"}}:
+                    {{localize (lookup  (lookup @root.config.seasons item.system.season) "label")}} </span>
+                <a class="harvest clickable" title='{{localize "arm5e.sheet.visHarvest"}}'><img
+                        src="systems/arm5e/assets/icons/sickle.svg"
+                        style="border: 0px; height: 18px; min-height:30px; min-width: 30px;"></a>
             </div>
             <div class="item-controls">
                 <a class="item-control item-edit" title="Edit visSourcesCovenant"><i class="icon-Icon_Edit"></i></a>

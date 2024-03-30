@@ -2,7 +2,14 @@
   <header class="sheet-header">
     <img class="item-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" />
     <div class="header-fields">
-      <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name" /></h1>
+      <h1 class="charname">
+        <div class="flexrow"><input name="name" type="text" value="{{item.name}}" placeholder="Name" />
+          <div class="flex0 padding10 "><a class="harvest" ttitle='{{localize "arm5e.sheet.visHarvest"}}'><img
+                class="clickable" src="systems/arm5e/assets/icons/sickle.svg"
+                style="border: 0px; height: 18px; min-height:30px; min-width: 30px;"></a>
+          </div>
+        </div>
+      </h1>
       <div class="grid grid-2col">
         <div class="resource flexcol">
           <label for="system.art" class="header-label">{{localize "arm5e.sheet.art"}}</label>
@@ -12,24 +19,33 @@
               {{/each}} {{/select}}
           </select>
         </div>
+        <div class="resource flexcol">
+          <label for="system.season" class="header-label">{{localize "arm5e.sheet.season"}}</label>
+          <select name="system.season" data-type="String">
+            {{#select system.season}} {{#each config.seasons as |arts key|}}
+                <option value="{{key}}">{{localize arts.label}}</option>
+              {{/each}} {{/select}}
+          </select>
+        </div>
       </div>
-      <div class="resource">
-        <label class="header-label">{{localize "arm5e.sheet.pawns"}}</label>
-        <input type="number" name="system.pawns" value="{{system.pawns}}" data-dtype="Number" />
+      <div class="resource flexrow">
+        <div class="resource">
+          <label class="header-label">{{localize "arm5e.sheet.pawns"}}</label>
+          <input type="number" class="modifier resource-focus" name="system.pawns" value="{{system.pawns}}"
+            data-dtype="Number" />
+        </div>
+        <div class="resource">
+          <label class="header-label">{{localize "arm5e.sheet.visLabel"}}</label>
+          <input type="text" name="system.visLabel" value="{{system.visLabel}}" data-dtype="String" />
+        </div>
       </div>
+
       <div class="resource">
         <label class="header-label">{{localize "arm5e.sheet.location"}}</label>
         <input type="text" name="system.place" value="{{system.place}}" data-dtype="String" />
       </div>
 
-      <div class="resource flexcol">
-        <label for="system.season" class="header-label">{{localize "arm5e.sheet.season"}}</label>
-        <select name="system.season" data-type="String">
-          {{#select system.season}} {{#each config.seasons as |arts key|}}
-              <option value="{{key}}">{{localize arts.label}}</option>
-            {{/each}} {{/select}}
-        </select>
-      </div>
+
     </div>
   </header>
   {{> "systems/arm5e/templates/generic/metalic-bar.html" }}

@@ -542,7 +542,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
       type: activityType,
       data: newData,
       visibility: { desc: "hide", attr: "hide", options: "hide" },
-      modifiers: { generic: 0, aura: 0 },
+      modifiers: { generic: 0, aura: 0, aspects: 0 },
       distractions: "none",
       magicThSpecApply: false
     };

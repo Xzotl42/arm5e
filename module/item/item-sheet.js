@@ -367,6 +367,10 @@ export class ArM5eItemSheet extends ItemSheet {
     html.find(".increase-score").click(async () => await this.item.system._increaseScore());
     html.find(".decrease-score").click(async () => await this.item.system._decreaseScore());
 
+    html.find(".harvest").click(async () => {
+      await this.item.system.harvest();
+    });
+
     html
       .find(".default-characteristic")
       .change((event) => this._onSelectDefaultCharacteristic(this.item, event));
