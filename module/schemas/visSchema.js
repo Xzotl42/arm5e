@@ -47,13 +47,9 @@ export class VisSchema extends foundry.abstract.DataModel {
   }
 
   static migrateData(data) {
-    // if (data.art == "") {
-    //   data.art = "cr";
-    // } else
     if (data.art?.value) {
       data.art = data.art.value;
     }
-
     return data;
   }
 
