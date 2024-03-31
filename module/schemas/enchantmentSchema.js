@@ -170,6 +170,14 @@ export class EnchantmentExtension extends foundry.abstract.DataModel {
     return updateData;
   }
 
+  static migrateData(data) {
+    if (data.state == "charged") {
+      data.state = "enchanted";
+    }
+
+    return data;
+  }
+
   sanitize() {
     return EnchantmentExtension.sanitizeData(this.toObject());
   }

@@ -367,9 +367,8 @@ export class ArM5eActorSheet extends ActorSheet {
           context.system.labTotal.quality = parseInt(lab.system.generalQuality.total);
           // store the specialties if the character is linked to a lab
           context.system.labTotal.specialty = lab.system.specialty;
-          context.system.labTotal.aura = lab.system.aura.computeMaxAuraModifier(
-            this.actor.system.realms
-          );
+          context.system.labTotal.aura =
+            lab.system.aura.computeMaxAuraModifier(this.actor.system.realms) + lab.system.auraBonus;
         }
 
         // hermetic filters

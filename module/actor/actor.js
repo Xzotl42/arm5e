@@ -931,7 +931,7 @@ export class ArM5ePCActor extends Actor {
       } else if (item.type === "virtue") {
         system.virtues.push(item);
         if (ARM5E.impacts[item.system.impact.value]) {
-          totalVirtues = totalVirtues + parseInt(ARM5E.impacts[item.system.impact.value].cost);
+          totalVirtues += parseInt(ARM5E.impacts[item.system.impact.value].cost);
         }
       } else if (item.type === "flaw") {
         system.flaws.push(item);
@@ -956,7 +956,7 @@ export class ArM5ePCActor extends Actor {
 
     system.size.total = system.size.value + system.size.bonus;
     system.generalQuality.total = system.generalQuality.value + system.generalQuality.bonus;
-    system.safety.total = system.safety.value + system.safety.bonus;
+
     system.health.total = system.health.value + system.health.bonus;
     system.refinement.total = system.refinement.value + system.refinement.bonus;
     system.upkeep.total = system.upkeep.value + system.upkeep.bonus;
@@ -966,23 +966,21 @@ export class ArM5ePCActor extends Actor {
       system.aesthetics.max
     );
 
-    let freeVirtues = system.size.total + system.refinement.total;
-    let occupiedSize = Math.max(totalVirtues - totalFlaws, 0) - system.refinement.total;
-    let baseSafety = system.refinement.total - Math.max(occupiedSize, 0);
-
-    system.baseSafety = baseSafety;
-    system.occupiedSize = occupiedSize;
-    system.freeVirtues = freeVirtues;
+    system.freeVirtues = system.size.total + system.refinement.total;
+    system.occupiedSize = Math.max(totalVirtues - totalFlaws, 0) - system.refinement.total;
+    system.baseSafety = system.refinement.total - Math.max(system.occupiedSize, 0);
+    system.safety.bonus += system.safety.bonus;
+    system.safety.total = system.safety.value + system.safety.bonus;
 
     system.totalVirtues = totalVirtues;
     system.totalFlaws = totalFlaws;
 
-    var baseSafetyEffect = this.effects.find((e) => e.getFlag("arm5e", "baseSafetyEffect"));
-    if (baseSafetyEffect != null && baseSafetyEffect.changes[0].value != String(baseSafety)) {
-      let changes = duplicate(baseSafetyEffect.changes);
-      changes[0].value = String(baseSafety);
-      baseSafetyEffect.update({ changes });
-    }
+    // var baseSafetyEffect = this.effects.find((e) => e.getFlag("arm5e", "baseSafetyEffect"));
+    // if (baseSafetyEffect != null && baseSafetyEffect.changes[0].value != String(baseSafety)) {
+    //   let changes = duplicate(baseSafetyEffect.changes);
+    //   changes[0].value = String(baseSafety);
+    //   baseSafetyEffect.update({ changes });
+    // }
   }
 
   _prepareCovenantData() {
@@ -1562,44 +1560,44 @@ export class ArM5ePCActor extends Actor {
       }
     }
 
-    if (this.type == "laboratory") {
-      let effectsData = this.effects.contents;
-      var baseSafetyEffect = this.effects.find((e) => e.getFlag("arm5e", "baseSafetyEffect"));
-      if (!baseSafetyEffect) {
-        // TODO put that data structure elsewhere (during lab activities implementation)
-        const effect = {
-          origin: this.uuid,
-          tint: "#000000",
-          changes: [
-            {
-              label: "arm5e.sheet.safety",
-              key: "system.safety.bonus",
-              mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-              value: 0
-            }
-          ],
-          flags: {
-            arm5e: {
-              baseSafetyEffect: true,
-              noEdit: true,
-              type: ["laboratory"],
-              subtype: ["safety"],
-              option: [null]
-            }
-          }
-        };
-        if (CONFIG.ISV10) {
-          effect.label = game.i18n.localize("arm5e.sheet.baseSafety");
-          effect.icon = "icons/svg/aura.svg";
-        } else {
-          effect.name = game.i18n.localize("arm5e.sheet.baseSafety");
-          effect.img = "icons/svg/aura.svg";
-        }
-        effectsData.push(effect);
-        // const res = await this.effects.update(effectsData);
-        data.effects = effectsData;
-      }
-    }
+    // if (this.type == "laboratory") {
+    //   let effectsData = this.effects.contents;
+    //   var baseSafetyEffect = this.effects.find((e) => e.getFlag("arm5e", "baseSafetyEffect"));
+    //   if (!baseSafetyEffect) {
+    //     // TODO put that data structure elsewhere (during lab activities implementation)
+    //     const effect = {
+    //       origin: this.uuid,
+    //       tint: "#000000",
+    //       changes: [
+    //         {
+    //           label: "arm5e.sheet.safety",
+    //           key: "system.safety.bonus",
+    //           mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+    //           value: 0
+    //         }
+    //       ],
+    //       flags: {
+    //         arm5e: {
+    //           baseSafetyEffect: true,
+    //           noEdit: true,
+    //           type: ["laboratory"],
+    //           subtype: ["safety"],
+    //           option: [null]
+    //         }
+    //       }
+    //     };
+    //     if (CONFIG.ISV10) {
+    //       effect.label = game.i18n.localize("arm5e.sheet.baseSafety");
+    //       effect.icon = "icons/svg/aura.svg";
+    //     } else {
+    //       effect.name = game.i18n.localize("arm5e.sheet.baseSafety");
+    //       effect.img = "icons/svg/aura.svg";
+    //     }
+    //     effectsData.push(effect);
+    //     // const res = await this.effects.update(effectsData);
+    //     data.effects = effectsData;
+    //   }
+    // }
 
     if (toUpdate) {
       this.updateSource(data);

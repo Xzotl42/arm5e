@@ -610,7 +610,7 @@ export class MinorEnchantment extends LabActivity {
   prepareData(planning) {
     const receptacleEnchants = planning.data.receptacle.system.enchantments;
     if (receptacleEnchants.aspects.length == 0) {
-      error(false, `DEBUG prepareData: WARNING ASPECTS length = 0`);
+      log(false, `DEBUG prepareData: WARNING ASPECTS length = 0`);
       const first = Object.keys(planning.data.ASPECTS)[0];
       const firstEffect = Object.keys(planning.data.ASPECTS[first].effects)[0];
       receptacleEnchants.aspects = [

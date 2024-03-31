@@ -1,4 +1,4 @@
-## 2.2.4.15, Pralix, founder of a new Order
+## 2.2.4.16, Pralix, founder of a new Order
 
 ### Dependencies updates
 

@@ -730,6 +730,51 @@ export const spell1 = {
   masteryAbilities: ""
 };
 
+export const labData = {
+  size: {
+    description: "",
+    value: 1
+  },
+  generalQuality: {
+    description: "",
+    value: 1
+  },
+  safety: {
+    description: "",
+    value: 2
+  },
+  health: {
+    description: "",
+    value: 1
+  },
+  refinement: {
+    description: "",
+    value: 1
+  },
+  upkeep: {
+    description: "",
+    value: 0
+  },
+  warping: {
+    description: "",
+    value: 1
+  },
+  aesthetics: {
+    description: "",
+    value: 0
+  }
+};
+
+export async function getLab(name = "the lab") {
+  let lab = await Actor.create({
+    name: name,
+    type: "laboratory",
+    system: labData
+  });
+
+  return lab;
+}
+
 export async function getCompanion(name = "Bob") {
   let character = await Actor.create({
     name: name,
