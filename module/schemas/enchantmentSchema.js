@@ -153,7 +153,6 @@ export class EnchantmentExtension extends foundry.abstract.DataModel {
       updateData["system.state"] = "enchanted";
       updateData["system.enchantments.state"] = "charged";
     }
-
     for (let e of effects) {
       if (e.name === "") {
         e.name = game.i18n.localize("arm5e.sheet.effect");
@@ -170,13 +169,13 @@ export class EnchantmentExtension extends foundry.abstract.DataModel {
     return updateData;
   }
 
-  static migrateData(data) {
-    if (data.state == "charged") {
-      data.state = "enchanted";
-    }
+  // static migrateData(data) {
+  //   if (data.state == "charged") {
+  //     data.state = "enchanted";
+  //   }
 
-    return data;
-  }
+  //   return data;
+  // }
 
   sanitize() {
     return EnchantmentExtension.sanitizeData(this.toObject());
