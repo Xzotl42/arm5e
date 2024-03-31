@@ -1,3 +1,9 @@
+## 2.2.4.17, Pralix, founder of a new Order bis
+
+### Bug fixes
+
+- Fix missing migrate function for vis source
+
 ## 2.2.4.16, Pralix, founder of a new Order
 
 ### Dependencies updates

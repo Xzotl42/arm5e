@@ -276,10 +276,12 @@ export class VisSourceSchema extends foundry.abstract.DataModel {
     //TODO check the year harvested
   }
 
-  // static migrateData(data) {
+  static migrateData(data) {
+    return data;
+  }
 
-  //   return data;
-  // }
-
-  // static migrate(itemData) {}
+  static migrate(itemData) {
+    const updateData = {};
+    return updateData;
+  }
 }
