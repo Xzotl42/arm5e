@@ -3,6 +3,7 @@ import { ArM5eItemSheet } from "./item-sheet.js";
 import { getConfirmation } from "../constants/ui.js";
 import { ArM5eActorSheet } from "../actor/actor-sheet.js";
 import { spellFormLabel, spellTechniqueLabel } from "../helpers/magic.js";
+import { BookSchema } from "../schemas/bookSchema.js";
 /**
  * Extend the basic ItemSheet with some very simple modifications
  * @extends {ItemSheet}
@@ -320,64 +321,7 @@ export class ArM5eBookSheet extends ArM5eItemSheet {
   }
 
   get tableOfContentsSynthetic() {
-    let res = `<h3>${game.i18n.localize("arm5e.book.tableContents")}</h3><ol>`;
-    for (const topic of this.item.system.topics) {
-      let about;
-      switch (topic.category) {
-        case "mastery":
-          about = `"${topic.spellName}" (${CONFIG.ARM5E.magic.arts[topic.spellTech].short} ${
-            CONFIG.ARM5E.magic.arts[topic.spellForm].short
-          }) `;
-          break;
-        case "ability":
-          const ab = CONFIG.ARM5E.ALL_ABILITIES[topic.key];
-          if (ab) {
-            about = `"${game.i18n.format(ab.mnemonic, { option: topic.option })}"`;
-          } else {
-            about = `"${game.i18.localize("arm5e.generic.unknown")} ${game.i18nlocalize(
-              "arm5e.sheet.bookTopic"
-            )}"`;
-          }
-          break;
-        case "art":
-          about = CONFIG.ARM5E.magic.arts[topic.art].label;
-          break;
-        case "labText":
-          about = topic.labtextTitle;
-          break;
-      }
-
-      if (topic.category == "labText") {
-        let type = "other";
-        switch (topic.labtext.type) {
-          case "spell":
-            type = game.i18n.localize("ITEM.TypeSpell");
-
-            break;
-          case "enchantment":
-            type = game.i18n.localize("ITEM.TypeEnchantment");
-            break;
-        }
-        res += `<li>${game.i18n.localize("ITEM.TypeLaboratorytext")} (${type}) "${about}"`;
-      } else {
-        switch (topic.type) {
-          case "Summa":
-            res += `<li>${game.i18n.format("arm5e.book.summaShort", {
-              quality: topic.quality,
-              level: topic.level
-            })} ${about}`;
-            break;
-          case "Tractatus":
-            res += `<li>${game.i18n.format("arm5e.book.tractShort", {
-              quality: topic.quality
-            })} ${about}`;
-            break;
-        }
-      }
-      //
-    }
-    res += "</ol>";
-    return res;
+    return BookSchema.getTableOfContentsSynthetic(this.item.system);
   }
 
   _createTableOfContent(item, event) {

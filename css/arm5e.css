@@ -1651,10 +1651,12 @@ div[class*="foldable-section"] {
   background-position-y: bottom;
 }
 
+.greenBar,
 .arm5eTabsLAB {
   background-image: url("../assets/Lab/bar.webp");
   background-repeat: repeat-x;
   background-position-y: bottom;
+  min-height: 3px;
 }
 
 .arm5eTabsCOV {

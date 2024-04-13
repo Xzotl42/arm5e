@@ -139,6 +139,9 @@ export const ArM5ePreloadHandlebarsTemplates = async function () {
     "systems/arm5e/templates/generic/quick-magic.html",
     "systems/arm5e/templates/generic/quick-vitals.html",
     "systems/arm5e/templates/generic/vis-study.html",
-    "systems/arm5e/templates/generic/confirmation.html"
+    "systems/arm5e/templates/generic/confirmation.html",
+    "systems/arm5e/templates/generic/parts/scriptorium-reading.html",
+    "systems/arm5e/templates/generic/parts/scriptorium-writing.html",
+    "systems/arm5e/templates/generic/parts/scriptorium-copying.html"
   ]);
 };

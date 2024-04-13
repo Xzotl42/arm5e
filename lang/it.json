@@ -1159,7 +1159,7 @@
   "arm5e.scriptorium.index": "Indice",
   "arm5e.scriptorium.reader.title": "Lettore",
   "arm5e.scriptorium.reader.name": "Nome del lettore",
-  "arm5e.scriptorium.reader.languages": "Languague note",
+  "arm5e.scriptorium.languages": "Languague note",
   "arm5e.scriptorium.button": "Creare attività",
   "arm5e.scriptorium.msg.dropCharacter": "Trascina un personaggio qui.",
   "arm5e.scriptorium.msg.dropBook": "Trascina un libro qui per riempire gli spazi vuoti.",
