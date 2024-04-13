@@ -154,7 +154,11 @@ export function compareTopics(b1, b2) {
   } else if (b1.quality > b2.quality) {
     return -1;
   }
-  return b1.book.localeCompare(b2.book);
+  if (b1.book && b2.book) {
+    return b1.book.localeCompare(b2.book);
+  } else {
+    return 0;
+  }
 }
 export function compareBooks(b1, b2) {
   // Topic

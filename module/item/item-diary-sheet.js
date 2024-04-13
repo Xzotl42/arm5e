@@ -1007,6 +1007,7 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
       case "teaching":
       case "reading":
       case "writing":
+      case "copying":
       case "hermeticApp":
       case "childhood":
       case "laterLife":
@@ -1297,6 +1298,7 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
       case "training":
       case "teaching":
       case "reading":
+      case "copying":
       case "hermeticApp":
       case "childhood":
       case "laterLife":

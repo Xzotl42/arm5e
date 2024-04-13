@@ -1,0 +1,216 @@
+<div class="tab " data-group="primary" data-tab="writing">
+  <div style="min-height: 418px;">
+    <div class="flexcol marginsides32">
+      <div class="padding4 flexrow flex-group-left">
+        <label class="section-handle header-label clickable" data-section="writer"
+          data-category="scriptorium">{{localize "arm5e.scriptorium.writer.title"}}</label>
+      </div>
+      <div
+        class="scriptorium foldable-section backSection padding10 resource flexcol {{@root.ui.sections.visibility.scriptorium.writer}}"
+        id="scriptorium-writer">
+
+        {{#if (eq writing.writer.id null)}}
+          <div class="drop-box drop-writer" data-drop="writer">
+            <label>{{localize "arm5e.scriptorium.msg.dropCharacter"}}</label>
+          </div>
+        {{else}}
+          <div class="scriptorium item-header resource flexrow" style="width: 100%; max-height: 32px;">
+            <div class="item-image"></div>
+            <label>{{writing.writer.name}}</label>
+            <a class="unlink-writer" title="Break link to writer"><i class="fas fa-link"
+                style="font-size: 12pt;"></i></a>
+          </div>
+          {{> "systems/arm5e/templates/generic/metalic-bar.html" topoffset="-7px"}}
+        {{/if}}
+        {{#unless (eq writing.writer.id null)}}
+          <div class="scriptorium resource">
+            <label class="header-label">{{localize "arm5e.scriptorium.writer.name"}}</label>
+            <input type="text" name="writing.writer.name" value="{{writing.writer.name}}" data-dtype="String"
+              style="max-width: 220px;" readonly>
+          </div>
+          <div class="scriptorium resource">
+            <label for="writing.writer.language" class="header-label">{{localize "arm5e.scriptorium.languages"}}</label>
+            <select name="writing.writer.language" data-dtype="String" class="ability-key">
+              {{#select writing.writer.language}}
+                {{#each writing.writer.languages }}
+                  <option value="{{this.id}}">{{this.name}} ({{this.score}})</option>
+                {{/each}}
+              {{/select}}
+            </select>
+          </div>
+
+          <div class="scriptorium item-header resource">
+            <label class="header-label">{{localize "arm5e.sheet.bookTopic"}}</label>
+            <select class="book-topic-change writing" name="writing.book.system.topics.{{newTopicIndex}}.category"
+              data-activity="writing" data-index="{{newTopicIndex}}" data-dtype="String" {{ui.disabledBook}}>
+              {{#select writing.book.newTopic.category}}
+                {{#each bookTopics as |book key|}}
+                  <option value="{{key}}">{{localize book}}</option>
+                {{/each}}
+                <option value="labText">{{localize "ITEM.TypeLaboratorytext"}}</option>
+              {{/select}}
+            </select>
+            {{#unless (eq writing.book.newTopic.category "labText")}}
+              <label for="writing.book.system.topics.{{newTopicIndex}}.type"
+                class="header-label">{{localize "arm5e.sheet.bookType"}}</label>
+              <select name="writing.book.system.topics.{{newTopicIndex}}.type" data-type="String"
+                data-index="{{topicIndex}}" {{ui.disabledBook}} {{ui.writing.disableType}}>
+                {{#select writing.book.newTopic.type}} {{#each @root.bookTypes }}
+                    <option value="{{this}}">{{this}}</option>
+                  {{/each}}
+                {{/select}}
+              </select>
+              <div class="scriptorium item-header" style="padding-top: 5px;">
+                <label for="writing.writer.writingBonus"
+                  class="header-label">{{localize "arm5e.sheet.genericModifier" mod=(localize "arm5e.sheet.quality")}}:
+                  {{writing.writer.writingBonus}}</label>
+              </div>
+            {{/unless}}
+            <div class="scriptorium item-header" style="padding-top: 5px;">
+              <label for="writing.writer.writingScore" class="header-label">{{writing.writer.writingScoreLabel}}:
+                {{writing.writer.writingScore}}</label>
+            </div>
+
+          </div>
+          <div class="scriptorium resource"></div>
+        {{/unless}}
+      </div>
+      <div class="padding4 flexrow flex-group-left">
+        <label class="section-handle header-label clickable" data-section="book-write"
+          data-category="scriptorium">{{localize "arm5e.sheet.book"}}</label>
+      </div>
+      <div
+        class="scriptorium foldable-section backSection padding10 resource flexcol {{@root.ui.sections.visibility.scriptorium.book-write}}"
+        id="scriptorium-book-write">
+
+        <div class="scriptorium item-header resource">
+          <label class="header-label">{{localize "arm5e.activity.book.title"}}</label>
+          <input type="text" name="writing.book.name" value="{{writing.book.name}}" data-dtype="String"
+            {{ui.canEditTitle}}>
+          <label class="header-label">{{localize "arm5e.sheet.authorship.author"}}</label>
+          <input type="text" name="writing.book.system.topics.{{newTopicIndex}}.author" value="{{writing.writer.name}}"
+            data-dtype="String" readonly>
+
+        </div>
+        {{#unless (eq writing.writer.id null)}}
+          {{#if (eq writing.book.newTopic.category "ability")}}
+            <div class="scriptorium resource">
+              <label for="writing.writer.ability" class="header-label">{{localize "arm5e.sheet.abilities"}}</label>
+              <select name="writing.writer.ability" data-dtype="String" class="ability-key" {{ui.editItem}}>
+                {{#select writing.writer.ability}}
+                  {{#each writing.filteredAbilities }}
+                    <option value="{{this.id}}">{{this.name}} ({{this.system.finalScore}})</option>
+                  {{/each}}
+                {{/select}}
+              </select>
+            </div>
+
+            <div class="scriptorium resource"></div>
+          {{/if}}
+
+          {{#if (eq writing.book.newTopic.category "art")}}
+            <div class="scriptorium resource">
+              <label for="writing.writer.art" class="header-label">{{localize "arm5e.sheet.arts"}}</label>
+              <select name="writing.writer.art" data-dtype="String" class="ability-key" {{ui.editItem}}>
+                {{#select writing.writer.art}}
+                  {{#each writing.filteredArts }}
+                    <option value="{{this.id}}">{{this.label}} ({{this.finalScore}})</option>
+                  {{/each}}
+                {{/select}}
+              </select>
+            </div>
+
+          {{/if}}
+          {{#if (eq writing.book.newTopic.category "mastery")}}
+            <div class="scriptorium resource">
+              <label for="writing.book.system.spell" class="header-label">{{localize "arm5e.sheet.spells"}}</label>
+              <select name="writing.writer.spell" data-dtype="String" class="ability-key" {{ui.editItem}}>
+                {{#select writing.writer.spell}}
+                  {{#each writing.writer.filteredSpells }}
+                    <option value="{{this.id}}">{{this.name}} ({{this.mastery}})</option>
+                  {{/each}}
+                {{/select}}
+              </select>
+            </div>
+          {{/if}}
+          {{#unless (eq writing.book.newTopic.category "labText")}}
+            <div class="scriptorium item-header resource">
+              {{#if (eq writing.book.newTopic.type "Summa")}}
+                <label class="header-label">{{localize "arm5e.sheet.level"}}</label>
+                <input type="number" name="" value='{{writing.book.newTopic.level}}' data-dtype="Number"
+                  style="max-width: 50px;" readonly>
+                <input type="range" name="writing.book.system.topics.{{newTopicIndex}}.level"
+                  value='{{writing.book.newTopic.level}}' min="1" max="{{writing.book.newTopic.maxLevel}}"
+                  data-dtype="Number" style="max-width: 150px;align-items: end;">
+                <label class="header-label">{{writing.book.newTopic.maxLevel}}</label>
+              {{/if}}
+              <label class="header-label">{{localize "arm5e.sheet.quality"}}</label>
+              <input type="number" name="" value='{{writing.book.newTopic.quality}}' data-dtype="Number"
+                style="max-width: 50px;" readonly>
+              <input type="number" name="writing.book.system.topics.{{newTopicIndex}}.quality"
+                value='{{writing.book.newTopic.quality}}' data-dtype="Number" style="max-width: 50px;" hidden>
+            </div>
+          {{else}}
+            <div class="scriptorium item-header resource add-labtext" data-drop="add-labtext">
+              <fieldset style="min-height: 100px;">
+                <legend><label>{{localize "arm5e.sheet.labTexts"}}</label></legend>
+                {{#if labTexts.length}}
+                  <div class="scriptorium resource">
+                    <ul>
+                      {{#each labTexts}}
+                        <li data-index="{{@index}}" data-uuid="{{this.uuid}}"><label>"{{this.name}}" :
+                            {{this.label}}{{this.level}}</label><a class="remove-labText" data-index="{{@index}}"
+                            title="Delete lab text">
+                            <i class="icon-Icon_Delete_Hand_Gesture"></i></a>
+                        </li>
+                      {{/each}}
+                    </ul>
+                  </div>
+                {{else}}
+                  <label>{{localize "arm5e.scriptorium.msg.dropLabText"}}</label>
+                {{/if}}
+              </fieldset>
+            </div>
+          {{/unless}}
+
+          {{#unless (eq writing.book.newTopic.category "labText")}}
+            <div class="scriptorium item-header" style="padding-top: 5px;">
+              <label class="header-label">{{localize "arm5e.sheet.duration"}}:
+                {{writing.writer.duration}}</label>
+            </div>
+          {{else}}
+            <div class="scriptorium item-header" style="padding-top: 5px;">
+              <label class="header-label">{{localize "arm5e.generic.total"}}:
+                {{writing.labTextTotal}}</label>
+            </div>
+          {{/unless}}
+          {{#unless writing.book.id }}
+            <div class="drop-box append-book" data-drop="append-book">
+              <label>{{localize "arm5e.scriptorium.msg.appendTopic"}}</label>
+            </div>
+          {{else}}
+            <div class="padding12">
+              <label>{{localize "arm5e.scriptorium.msg.appendTopicTitle" title=writing.book.name}}</label><a
+                class="unlink-bookAppend" title="Break link to book"><i class="fas fa-link"
+                  style="font-size: 12pt;"></i></a>
+            </div>
+          {{/unless}}
+        {{/unless}}
+      </div>
+      <ul>
+        {{#each ui.writing.warning }}
+          <div class="scriptorium resource"><label class="header-label"
+              style="color:red; padding: 10px; text-align: center;">{{this}}</label>
+          </div>
+        {{/each}}
+      </ul>
+      <div class="scriptorium resource">
+        <button class="arm5e flex02 create-writing-activity" style="font-family: bookAntika"
+          data-index="{{newTopicIndex}}" data-ability-id="{{writing.writer.ability}}"
+          data-category="{{writing.book.newTopic.category}}" data-spell-id="{{writing.writer.spell}}"
+          {{ui.writing.createPossible}}>{{localize "arm5e.scriptorium.button"}}</button>
+      </div>
+    </div>
+
+  </div>
+</div>

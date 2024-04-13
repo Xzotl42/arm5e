@@ -47,7 +47,7 @@ export function registerLabActivityTesting(quench) {
           for (let form of Object.keys(ARM5E.magic.forms)) {
             it(`Lab total ${tech} ${form}`, async function () {
               try {
-                lab.sheet._resetPlanning("inventSpell");
+                await lab.sheet._resetPlanning("inventSpell");
                 const labData = lab.getFlag("arm5e", "planning");
                 labData.data.system.technique.value = tech;
                 labData.data.system.form.value = form;

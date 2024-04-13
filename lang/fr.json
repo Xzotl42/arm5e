@@ -1297,7 +1297,7 @@
   "arm5e.scriptorium.index": "Index",
   "arm5e.scriptorium.reader.title": "Lecteur",
   "arm5e.scriptorium.reader.name": "Nom du lecteur",
-  "arm5e.scriptorium.reader.languages": "Langues connues",
+  "arm5e.scriptorium.languages": "Langues connues",
   "arm5e.scriptorium.button": "Créer l'activité",
   "arm5e.scriptorium.msg.dropCharacter": "Faire glisser un personnage ici.",
   "arm5e.scriptorium.msg.dropBook": "Déposez un livre ici pour remplir les blancs.",

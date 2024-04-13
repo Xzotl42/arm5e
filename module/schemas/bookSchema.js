@@ -166,69 +166,70 @@ export class BookSchema extends foundry.abstract.DataModel {
     return res;
   }
 
-  // static migrateData(data) {
-  //   // console.log(`MigrateData book: ${JSON.stringify(data)}`);
+  getTableOfContents() {
+    return "TODO";
+  }
 
-  //   if (data.topics && data.topics instanceof Array) {
-  //     data.topic = null;
-  //     return data;
-  //   }
-  //   if (data.topic) {
-  //     console.log(`DEBUG MigrateData monotopic book: ${JSON.stringify(data)}`);
-  //     if (data.quality > 0) {
-  //       data.topic.quality = data.quality;
-  //       data.quality = 0;
-  //     }
-  //     if (data.level > 0) {
-  //       data.topic.level = data.level;
-  //       data.level = 0;
-  //     }
-  //     if (data.type?.value !== undefined) {
-  //       if (data.type.value == "summa") {
-  //         data.topic.type = "Summa";
-  //       } else if (data.type.value == "tract") {
-  //         data.topic.type = "Tractatus";
-  //       } else {
-  //         data.topic.type = data.type.value;
-  //       }
-  //     } else if (data.type !== undefined && data.type != "") {
-  //       data.topic.type = data.type;
-  //       data.type = "";
-  //     }
-  //     if (data.ability != undefined && data.ability != "") {
-  //       data.topic.category = "ability";
-  //       data.ability = "";
-  //     }
-  //     // data.topics = [];
-  //     // data.topics.push(data.topic);
-  //   } else if (data.topic === undefined) {
-  //     console.log(`DEBUG MigrateData monotopic book V9: ${JSON.stringify(data)}`);
-  //     // V9 books
-  //     data.topic = {
-  //       quality: data.quality,
-  //       level: data.level,
-  //       // type: data.type,
-  //       art: data.art?.value ?? "an",
-  //       category: "art"
-  //     };
-  //     if (data.ability != undefined && data.ability != "") {
-  //       data.topic.category = "ability";
-  //     }
-  //     if (data.type?.value !== undefined) {
-  //       if (data.type.value == "summa") {
-  //         data.topic.type = "Summa";
-  //       } else if (data.type.value == "tract") {
-  //         data.topic.type = "Tractatus";
-  //       } else {
-  //         data.topic.type = data.type.value;
-  //       }
-  //     } else {
-  //       data.topic.type = data.type;
-  //     }
-  //   }
-  //   // log(false, `TYPE: ${data.topics}`);
-  //   return data;
-  // }
+  static getTableOfContentsSynthetic(systemData) {
+    let res = `<h3>${game.i18n.localize("arm5e.book.tableContents")}</h3><ol>`;
+    for (const topic of systemData.topics) {
+      let about;
+      switch (topic.category) {
+        case "mastery":
+          about = `"${topic.spellName}" (${CONFIG.ARM5E.magic.arts[topic.spellTech].short} ${
+            CONFIG.ARM5E.magic.arts[topic.spellForm].short
+          }) `;
+          break;
+        case "ability":
+          const ab = CONFIG.ARM5E.ALL_ABILITIES[topic.key];
+          if (ab) {
+            about = `"${game.i18n.format(ab.mnemonic, { option: topic.option })}"`;
+          } else {
+            about = `"${game.i18.localize("arm5e.generic.unknown")} ${game.i18nlocalize(
+              "arm5e.sheet.bookTopic"
+            )}"`;
+          }
+          break;
+        case "art":
+          about = CONFIG.ARM5E.magic.arts[topic.art].label;
+          break;
+        case "labText":
+          about = topic.labtextTitle;
+          break;
+      }
+
+      if (topic.category == "labText") {
+        let type = "other";
+        switch (topic.labtext.type) {
+          case "spell":
+            type = game.i18n.localize("ITEM.TypeSpell");
+
+            break;
+          case "enchantment":
+            type = game.i18n.localize("ITEM.TypeEnchantment");
+            break;
+        }
+        res += `<li>${game.i18n.localize("ITEM.TypeLaboratorytext")} (${type}) "${about}"`;
+      } else {
+        switch (topic.type) {
+          case "Summa":
+            res += `<li>${game.i18n.format("arm5e.book.summaShort", {
+              quality: topic.quality,
+              level: topic.level
+            })} ${about}`;
+            break;
+          case "Tractatus":
+            res += `<li>${game.i18n.format("arm5e.book.tractShort", {
+              quality: topic.quality
+            })} ${about}`;
+            break;
+        }
+      }
+      //
+    }
+    res += "</ol>";
+    return res;
+  }
 
   async readBook(item, dataset) {
     const topic = this.topics[dataset.index];

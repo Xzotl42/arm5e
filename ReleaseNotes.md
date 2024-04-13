@@ -1,3 +1,21 @@
+## 2.2.4.18, Pralix, founder of a new House
+
+### Dependencies updates
+
+- arm5e-compendia module minimum version 0.3.1
+
+### Features & changes
+
+- New copying tab in the scriptorium.
+  - Summa copy
+  - Tracactus copy
+- Practice base XP is now editable.
+
+### Bug fixes
+
+- Supernatural abilities cannot be learned from scratch with a book.
+- Writing activities with long duration have their dates set properly.
+
 ## 2.2.4.17, Pralix, founder of a new Order bis
 
 ### Bug fixes

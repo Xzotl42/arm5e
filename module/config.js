@@ -2123,7 +2123,7 @@ ARM5E.activities.generic = {
       masteries: true,
       spells: false
     },
-    source: { default: 4, readonly: true },
+    source: { default: 4, readonly: false },
     maxXp: 0,
     bonusOptions: {
       standard: { label: "arm5e.generic.standard", modifier: 0 },
@@ -2295,6 +2295,27 @@ ARM5E.activities.generic = {
   },
   writing: {
     label: "arm5e.activity.writing",
+    display: {
+      tab: true,
+      progress: false,
+      abilities: false,
+      arts: false,
+      masteries: false,
+      spells: false,
+      attribute: "hidden"
+    },
+    source: { default: 0, readonly: true },
+    maxXp: 0,
+    bonusOptions: null,
+    // validation: validWriting,
+    secondaryFilter: null,
+    scheduling: {
+      duplicate: false,
+      conflict: true
+    }
+  },
+  copying: {
+    label: "arm5e.activity.copying",
     display: {
       tab: true,
       progress: false,
