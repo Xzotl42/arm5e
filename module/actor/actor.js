@@ -762,6 +762,8 @@ export class ArM5ePCActor extends Actor {
       system.vitals.soa.value = soak;
     }
 
+    system.vitals.enc.value = combat.overload;
+
     if (system.vis) {
       system.vis = vis;
     }

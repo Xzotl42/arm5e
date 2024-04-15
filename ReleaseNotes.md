@@ -1,8 +1,8 @@
-## 2.2.4.18, Pralix, founder of a new House
+## 2.2.4.19, Pralix, founder of a new House
 
 ### Dependencies updates
 
-- arm5e-compendia module minimum version 0.3.1
+- arm5e-compendia module minimum version 0.3.2
 
 ### Features & changes
 
@@ -10,11 +10,15 @@
   - Summa copy
   - Tracactus copy
 - Practice base XP is now editable.
+- Updated French version by @orneen
 
 ### Bug fixes
 
 - Supernatural abilities cannot be learned from scratch with a book.
 - Writing activities with long duration have their dates set properly.
+- Players are able to drag and drop actors they own and books they have access to in the Scriptorium.
+- Some cosmetics changes
+- Encumbrance is now properly displayed in the description tab.
 
 ## 2.2.4.17, Pralix, founder of a new Order bis
 

@@ -1378,6 +1378,7 @@
   "arm5e.scriptorium.msg.appendTopic": "Append a topic to an existing book.",
   "arm5e.scriptorium.msg.bookNotOwned": "You must own the book to write in it!",
   "arm5e.scriptorium.msg.bookNoAccess": "You don't have access to this book.",
+  "arm5e.scriptorium.msg.actorNotAuthorized": "You are not authorized to schedule activities with this actor.",
   "arm5e.scriptorium.msg.dropBookTopic": "Drop a book and pick a topic type.",
   "arm5e.scriptorium.msg.appendTopicTitle": "Append topic to the book: \"{title}\".",
   "arm5e.scriptorium.msg.noLanguage": "The reader doesn't know any language at a sufficient level",
@@ -1435,6 +1436,7 @@
   "arm5e.sanatorium.msg.clearHistory": "Clear medical history",
   "arm5e.sanatorium.button.recovery": "Roll for recovery",
   "arm5e.sanatorium.button.endSeason": "End the season",
+  "arm5e.sanatorium.button.endRecovery": "End the recovery",
 
   "arm5e.sheet.wound.inflicted": "Inflicted",
   "arm5e.sheet.wound.healed": "Healed",
