@@ -1,28 +1,31 @@
+<div class="backSection">
+  <div class="flexrow flex-group-center" style="border: 0px">
+    <label class="smallTitle">
+      {{localize "arm5e.sheet.laboratory"}}
+    </label>
+  </div>
+  <div class="resource flexrow">
+    <label class="resource flex0" for="system.sanctum.value">{{localize "arm5e.sheet.sanctum"}}</label>
+    <div class="resource">
+      <input type="text" class="sanctum-link flex01" value="{{system.sanctum.value }}" data-dtype="String"
+        style="max-width: 200px;" />
+      {{#if system.sanctum.linked}}
+        <a class="item-control actor-link flex0" title="Linked to sanctum" data-actorid="{{system.sanctum.actorId}}">
+          <i class="fas fa-link fa-sm"></i></a>
+      {{else}}
+        <a title="Not linked to sanctum" class="flex0"><i class="fas fa-unlink fa-sm"></i></a>
+      {{/if}}
+    </div>
+  </div>
+</div>
+
 {{> "systems/arm5e/templates/actor/parts/actor-magic-attributes.html" show="laboratory" }}
 <div class="backSection margintop18">
   <div class="characteristics grid grid-3col">
-    <div class="flexrow flex-group-center" style="border: 0px">
-      <label class="smallTitle">
-        <a class="link" href="systems/arm5e/pdf/laboratory.pdf" target="_blank">
-          {{localize "arm5e.sheet.laboratory"}}
-        </a>
-      </label>
-    </div>
+
   </div>
 
   <div class="characteristics flexrow">
-    <div class="flexcol flex03 flex-group-center" style="border: 0px">
-      <label for="system.sanctum.value">{{localize "arm5e.sheet.sanctum"}}</label>
-      <div>
-        <input type="text" class="sanctum-link" value="{{system.sanctum.value }}" data-dtype="String" />
-        {{#if system.sanctum.linked}}
-          <a class="item-control actor-link flex0" title="Linked to sanctum" data-actorid="{{system.sanctum.actorId}}">
-            <i class="fas fa-link fa-sm"></i></a>
-        {{else}}
-          <a title="Not linked to sanctum" class="flex0"><i class="fas fa-unlink fa-sm"></i></a>
-        {{/if}}
-      </div>
-    </div>
     <div class="flexcol">
       <div class="flex-group-left" style="border: 0px; height: 120px">
         <label>{{localize "arm5e.sheet.twilightScars"}}</label>

@@ -255,6 +255,22 @@ export class BookSchema extends foundry.abstract.DataModel {
       item.actor.apps[scriptorium.appId] = scriptorium;
     }
   }
+  async copyBook(item, dataset) {
+    const topic = this.topics[dataset.index];
+    if (topic.category == "labText") {
+      return;
+    }
+
+    let formData = new ScriptoriumObject();
+    if (item.isOwned && item.actor._isCharacter()) {
+      formData.copying.scribe.id = item.actor.id;
+      formData.copying.scribe.name = item.actor.name;
+    }
+    const scriptorium = new Scriptorium(formData, {}); // data, options
+
+    await scriptorium._addBookToCopy(item);
+    const res = await scriptorium.render(true);
+  }
 
   static migrate(itemData) {
     // console.log(`Migrate book: ${JSON.stringify(itemData)}`);

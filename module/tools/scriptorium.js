@@ -151,6 +151,10 @@ export class Scriptorium extends FormApplication {
     });
   }
 
+  _canDragDrop(selector) {
+    return true;
+  }
+
   onClose(app) {
     // if (app.object.reading.book.uuid != null) {
     //   fromUuidSync(app.object.reading.book.uuid).apps[app.appId] = undefined;
@@ -1345,6 +1349,10 @@ export class Scriptorium extends FormApplication {
 
   async _setReadingBook(book) {
     log(false, "set book info");
+    if (!book.testUserPermission(game.user, CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER)) {
+      ui.notifications.info(game.i18n.localize("arm5e.scriptorium.msg.bookNoAccess"));
+      return;
+    }
     let index = book.getFlag("arm5e", "currentBookTopic") ?? 0;
     book.system.topicIndex = index;
     // book.apps[this.appId] = this;
@@ -1460,6 +1468,10 @@ export class Scriptorium extends FormApplication {
   }
 
   async _setReader(reader) {
+    if (!reader.isOwner) {
+      ui.notifications.info(game.i18n.localize("arm5e.scriptorium.msg.actorNotAuthorized"));
+      return;
+    }
     log(false, "set reader info");
     let readerInfo = {
       id: reader._id,
@@ -1474,6 +1486,10 @@ export class Scriptorium extends FormApplication {
   }
 
   async _setWriter(writer) {
+    if (!writer.isOwner) {
+      ui.notifications.info(game.i18n.localize("arm5e.scriptorium.msg.actorNotAuthorized"));
+      return;
+    }
     log(false, "set writer info");
     let writerInfo = {
       id: writer._id,
@@ -1487,6 +1503,10 @@ export class Scriptorium extends FormApplication {
     });
   }
   async _setScribe(scribe) {
+    if (!scribe.isOwner) {
+      ui.notifications.info(game.i18n.localize("arm5e.scriptorium.msg.actorNotAuthorized"));
+      return;
+    }
     log(false, "set scribe info");
     let scribeInfo = {
       id: scribe._id,

@@ -107,6 +107,8 @@ export class ArM5eBookSheet extends ArM5eItemSheet {
   activateListeners(html) {
     super.activateListeners(html);
     html.find(".plan-reading").click((event) => this._readBook(this.item, event));
+    html.find(".plan-copy").click((event) => this._copyBook(this.item, event));
+
     html.find(".show-details").click(async (event) => this._showLabText(this.item, event));
     html.find(".next-topic").click(async (event) => this._changeCurrentTopic(this.item, event, 1));
     html
@@ -133,6 +135,13 @@ export class ArM5eBookSheet extends ArM5eItemSheet {
 
     const dataset = getDataset(event);
     await this.item.system.readBook(this.item, dataset);
+  }
+
+  async _copyBook(item, event) {
+    event.preventDefault();
+
+    const dataset = getDataset(event);
+    await this.item.system.copyBook(this.item, dataset);
   }
 
   async _changeCurrentTopic(item, event, offset) {
