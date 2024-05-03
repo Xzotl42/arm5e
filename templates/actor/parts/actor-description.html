@@ -11,9 +11,7 @@
           <div class="flexrow marginbot6">
             <label for="system.house.value" class="bold">{{localize "arm5e.sheet.house"}}</label>
             <span class="width2"><select name="system.house.value" data-dtype="String" style="width: 100%">
-                {{#select system.house.value}} {{#each config.character.houses as |house key|}}
-                    <option value="{{key}}">{{house.label}}</option>
-                  {{/each}} {{/select}}
+                {{selectOptions config.character.houses selected=system.house.value labelAttr="label" }}
               </select></span>
           </div>
           <div class="flexrow marginbot6">

@@ -263,6 +263,10 @@ span.player-name {
   border-radius: 4px;
 }
 
+.journal-entry-page li {
+  font-family: bookAntiqua;
+}
+
 .journal-entry-page h1 {
   font-family: bookAntiqua;
 }

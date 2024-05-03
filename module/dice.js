@@ -205,6 +205,10 @@ async function stressDie(actor, type = "OPTION", modes = 0, callBack = undefined
       },
       { rollMode: rollMode }
     );
+  } else {
+    if (game.modules.get("dice-so-nice")?.active) {
+      game.dice3d.showForRoll(dieRoll); //, user, synchronize, whisper, blind, chatMessageID, speaker)
+    }
   }
 
   if (callBack) {
@@ -509,12 +513,13 @@ function newLineSub(msg) {
   return msg;
 }
 
-async function CheckBotch(botchDice) {
+async function CheckBotch(botchDice, offset) {
   let rollCommand = String(botchDice).concat("d10cf=10");
   const botchRoll = new Roll(rollCommand);
   await botchRoll.roll({
     async: true
   });
+  botchRoll.offset = offset;
   botchRoll.botches = botchRoll.total;
   botchRoll.botchDice = botchDice;
   return botchRoll;
@@ -611,7 +616,7 @@ async function explodingRoll(actorData, rollOptions = {}, botchNum = -1) {
                   label: game.i18n.localize("arm5e.dialog.button.rollbotch"),
                   callback: async (html) => {
                     botchNum = html.find("#botchDice").val();
-                    botchRoll = await CheckBotch(botchNum);
+                    botchRoll = await CheckBotch(botchNum, dieRoll.offset);
                     resolve();
                   }
                 },
@@ -639,7 +644,7 @@ async function explodingRoll(actorData, rollOptions = {}, botchNum = -1) {
           ).render(true);
         });
       } else {
-        botchRoll = await CheckBotch(botchNum);
+        botchRoll = await CheckBotch(botchNum, dieRoll.offset);
       }
       if (botchRoll) {
         if (botchRoll.botches == 0) {

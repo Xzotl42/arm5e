@@ -6,6 +6,7 @@ import { EnchantmentExtension } from "../schemas/enchantmentSchema.js";
 import { ArM5eItemEnchantmentSheet } from "./subsheet/enchant-extension-sheet.js";
 import { ARM5E } from "../config.js";
 import { effectToLabText } from "./item-converter.js";
+import { Sanatorium } from "../tools/sanatorium.js";
 /**
  * Extend the basic ItemSheet with some very simple modifications
  * @extends {ItemSheet}
@@ -404,6 +405,11 @@ export class ArM5eItemSheet extends ItemSheet {
         this.actor.deleteEmbeddedDocuments("Item", itemId, {});
       }
     });
+
+    // html.find(".wound-recovery").click(async (event) => {
+    //   const dataset = getDataset(event);
+    //   await Sanatorium.createDialog(this.actor, this.item);
+    // });
 
     html.find(".resource-focus").focus((ev) => {
       ev.preventDefault();

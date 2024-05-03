@@ -16,12 +16,7 @@
               style="padding-left: 24px">{{localize "arm5e.sheet.technique"}}</label>
             <select name="techniqueFilter" class="technique-filter" data-type="String" data-list="filter"
               data-category="hermetic" style="flex: 0 0 100px">
-              {{#select ui.filters.hermetic.filter.techniqueFilter}}
-                <option value=""></option>
-                {{#each config.magic.techniques as |technique key|}}
-                  <option value="{{key}}">{{technique.label}}</option>
-                {{/each}}
-              {{/select}}
+              {{selectOptions config.magic.techniques selected=ui.filters.hermetic.filter.techniqueFilter labelAttr="label" blank="" }}
             </select>
           </span>
           <span class="codexname flexrow" style="padding-top: 4px">
@@ -29,12 +24,7 @@
               style="padding-left: 24px">{{localize "arm5e.sheet.form"}}</label>
             <select name="formFilter" data-type="String" class="form-filter" data-list="filter" data-category="hermetic"
               style="flex: 0 0">
-              {{#select ui.filters.hermetic.filter.formFilter}}
-                <option value=""></option>
-                {{#each config.magic.forms as |form key|}}
-                  <option value="{{key}}">{{form.label}}</option>
-                {{/each}}
-              {{/select}}
+              {{selectOptions config.magic.forms selected=ui.filters.hermetic.filter.formFilter labelAttr="label" blank="" }}
             </select>
           </span>
           <span class="codexname flexrow" style="padding-top: 4px">

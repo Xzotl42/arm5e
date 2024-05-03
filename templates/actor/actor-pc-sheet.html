@@ -44,9 +44,7 @@
             <label for="system.charType.value" class="smallTitle"
               style="padding-left: 24px">{{localize "arm5e.sheet.charType"}}</label>
             <select class="width2" name="system.charType.value" data-type="String">
-              {{#select system.charType.value}} {{#each config.character.charTypes as |type key|}}
-                  <option value="{{key}}">{{localize type.label}}</option>
-                {{/each}} {{/select}}
+              {{selectOptions config.character.charTypes selected=system.charType.value labelAttr="label" localize=true}}
             </select>
           </span>
         </div>

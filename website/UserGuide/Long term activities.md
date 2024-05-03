@@ -43,7 +43,7 @@ The advanced tab will look something like this:
     
 -   The experience gain from a trainer or teacher cannot go beyond the teacher skill. You will be warned and any excess will be discarded.
     
--   For spell learning, you can drop any spell or lab text from the sidebar. This feature is not available outside character creation and advanced creation rules (See [[Laboratory activities]] for learning spells during play)
+-   For spell learning, you can drop any spell or lab text from the sidebar. This feature is not available outside character creation and advanced creation rules (See [[Laboratories]] for learning spells during play)
     
 
 Find below the list of current activities and their specificities
@@ -137,7 +137,7 @@ You can roll for aging by clicking the hourglass icon in Description tab.
 
 ### Spell learning and spell invention
 
-Those activities are not available directly, you must schedule them from a laboratory. See [[Laboratory activities]]
+Those activities are not available directly, you must schedule them from a laboratory. See [[Laboratories]]
 
 -   Editable source quality: no
     
@@ -150,7 +150,7 @@ Those activities are not available directly, you must schedule them from a labor
 
 ### Enchanting
 
-As spell invention, this activity is not available directly and is created from a laboratory See [[Laboratory activities]] Applying will create the designed magic item and remove any vis cost.
+As spell invention, this activity is not available directly and is created from a laboratory See [[Laboratories]] Applying will create the designed magic item and remove any vis cost.
 
 -   Editable source quality: no
     

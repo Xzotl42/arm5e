@@ -103,7 +103,9 @@ export class ArM5eCovenantActorSheet extends ArM5eActorSheet {
       }
     }
 
-    context.scenes = game.scenes.contents;
+    context.scenes = game.scenes.contents.map((e) => {
+      return { name: e.name, id: e._id };
+    });
     return context;
   }
 

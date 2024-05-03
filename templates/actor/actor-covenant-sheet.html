@@ -64,9 +64,7 @@
             <label for="system.season" class="header-label"
               style="padding-top: 4px; padding-left: 24px">{{localize "arm5e.sheet.season"}}</label>
             <select name="system.season" data-type="String" style="flex: 0 0 100px">
-              {{#select system.season}} {{#each config.seasons as |season key|}}
-                  <option value="{{key}}">{{localize season.label}}</option>
-                {{/each}} {{/select}}
+              {{selectOptions config.seasons selected=system.season labelAttr="label" localize=true}}
             </select>
           </span>
         </div>
@@ -91,12 +89,7 @@
             <label for="system.scene.id" class="header-label" style="padding-top: 4px; padding-left: 24px">Scene</label>
             <select name="system.scene.id" data-type="String" style="flex: 0 0 60px" {{#unless
               (isGM)}}disabled{{/unless}}>
-              {{#select system.scene.id}}
-                <option value=""></option>
-                {{#each scenes}}
-                  <option value="{{this.id}}">{{this.name}}</option>
-                {{/each}}
-              {{/select}}
+              {{selectOptions scenes selected=system.scene.id labelAttr="name" nameAttr="id" blank=""}}
             </select>
           </span>
           <span class="covenantname flexrow" style="padding-top: 4px">

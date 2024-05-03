@@ -39,7 +39,7 @@ The **Effects tab** as its name implies is where active effects are configured
 
 **Effect value:** some effect types may not have a value or only have a set of choices.
 
--   Some effects may need additional information, click on the cogs to add it (eg: generic abilities).
+-   Some effects may need additional information, click on the cog to add it (eg: generic abilities).
     
 
 ## Effects types
@@ -143,7 +143,7 @@ Flat modifier to the following:
 -   Wounds penalties total
     
 -   Specific wound type penalty
-    
+
 
 ### Natural resistance
 
@@ -207,3 +207,11 @@ This effect create additional option to rolls of a particular kind. This can be 
 - Initiative rolls
 - Attack rolls
 - Defense rolls
+
+### Might score modifier
+
+Flat modifier to the might score
+
+### Laboratory's aura modifier
+
+Flat modifier to the aura bonus of a lab. 

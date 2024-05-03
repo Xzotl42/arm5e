@@ -8,7 +8,6 @@ import { ArM5eLaboratoryActorSheet } from "./actor/actor-laboratory-sheet.js";
 import { ArM5eCovenantActorSheet } from "./actor/actor-covenant-sheet.js";
 import { ArM5eMagicCodexSheet } from "./actor/actor-magic-codex-sheet.js";
 import { ArM5eActorsDirectory } from "./ui/ars-actors-directory.js";
-import { ArM5eCrucibleSheet } from "./actor/actor-crucible-sheet.js";
 import { ArM5eItem } from "./item/item.js";
 import { ArM5eItemSheet, ArM5eItemSheetNoDesc } from "./item/item-sheet.js";
 import { ArM5eItemMagicSheet } from "./item/item-magic-sheet.js";
@@ -586,12 +585,6 @@ function registerSheets() {
 
     // Handlebars.registerHelper("arraySize", function (data) {
     //   return data.length;
-    // });
-
-    // Actors.registerSheet("arm5eCrucible", ArM5eCrucibleSheet, {
-    //     types: ["crucible"],
-    //     makeDefault: true,
-    //     label: "arm5e.sheet.crucible"
     // });
 
     // let astrolabData = game.
