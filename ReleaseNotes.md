@@ -1,4 +1,4 @@
-## 2.2.4.19, Pralix, founder of a new House
+## 2.2.4.20, Pralix, founder of a new House
 
 ### Dependencies updates
 
@@ -19,6 +19,8 @@
 - Players are able to drag and drop actors they own and books they have access to in the Scriptorium.
 - Some cosmetics changes
 - Encumbrance is now properly displayed in the description tab.
+- Sourcebooks filter for "Ancient Magic" had a typo, it is now fixed.
+- Non-interactive rolls (eg: recovery) with [Dice so nice] are rolling dice again
 
 ## 2.2.4.17, Pralix, founder of a new Order bis
 
