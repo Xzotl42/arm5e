@@ -4,6 +4,7 @@ import { ArM5ePCActor } from "../actor/actor.js";
 import { log } from "../tools.js";
 import { getRollTypeProperties, ROLL_MODIFIERS, ROLL_PROPERTIES } from "./rollWindow.js";
 import Aura from "./aura.js";
+import { computeLevel, spellFormLabel, spellTechniqueLabel } from "./magic.js";
 
 export class ArM5eRollData {
   constructor(actor) {
@@ -82,6 +83,23 @@ export class ArM5eRollData {
         this.ability.score = ab.system.finalScore;
         this.ability.realm = ab.system.realm;
         this.ability.category = ab.system.category;
+        break;
+
+      case "item": // No roll here
+        if (dataset.id) {
+          const item = this._actor.items.get(dataset.id);
+          const effect = item.system.enchantments.effects[dataset.index];
+          this.label += ` : ${effect.name}`;
+          this.label += ` (${spellTechniqueLabel(effect.system, true)}`;
+          this.label += `${spellFormLabel(effect.system, true)}`;
+          this.label += ` ${computeLevel(effect.system, "enchantment")} )`;
+          this.penetration.total = effect.system.penetration;
+          this.item.frequency = effect.system.effectfrequency;
+          this.item.charges = item.system.enchantments.charges;
+          this.item.form = effect.system.form.value;
+          this.item.charged = item.system.enchantments.charged;
+          this.item.id = dataset.id;
+        }
         break;
 
       case "power": // No roll here
@@ -382,6 +400,7 @@ export class ArM5eRollData {
       form: ""
     };
 
+    this.item = {};
     this.spell = null;
 
     this.penetration = {
@@ -481,21 +500,5 @@ export class ArM5eRollData {
         };
       })
     );
-
-    // add label + value for stances
-    if (this._actor._isMagus()) {
-      this.activeEffects.push({
-        label: game.i18n.localize(
-          ARM5E.magic.mod.voice[this._actor.system.stances.voiceStance].mnemonic
-        ),
-        value: this._actor.system.stances.voice[this._actor.system.stances.voiceStance]
-      });
-      this.activeEffects.push({
-        label: game.i18n.localize(
-          ARM5E.magic.mod.gestures[this._actor.system.stances.gesturesStance].mnemonic
-        ),
-        value: this._actor.system.stances.gestures[this._actor.system.stances.gesturesStance]
-      });
-    }
   }
 }

@@ -263,7 +263,24 @@ async function getRollFormula(actor) {
         rollData.magic.divide *= 2;
       }
 
-      // TODO NOW
+      const voiceMod = actorSystemData.stances.voice[actorSystemData.stances.voiceStance];
+      if (voiceMod) {
+        total += voiceMod;
+        msg = newLine(msg);
+        msg +=
+          game.i18n.localize(ARM5E.magic.mod.voice[actorSystemData.stances.voiceStance].mnemonic) +
+          ` (${voiceMod})`;
+      }
+      const gestureMod = actorSystemData.stances.gestures[actorSystemData.stances.gesturesStance];
+      if (gestureMod) {
+        total += gestureMod;
+        msg = newLine(msg);
+        msg +=
+          game.i18n.localize(
+            ARM5E.magic.mod.gestures[actorSystemData.stances.gesturesStance].mnemonic
+          ) + ` (${gestureMod})`;
+      }
+
       if (rollData.magic.masteryScore > 0) {
         total += rollData.magic.masteryScore;
         msg = newLine(msg);
@@ -488,6 +505,11 @@ async function getRollFormula(actor) {
         msg += " ( Score (" + score + ") * Multiplier (" + multiplier + ") )";
       }
       rollData.penetration.total = rollData.secondaryScore;
+    }
+
+    if (rollData.type == "item") {
+      msg += `<br /> + <b>Penetration </b> (${rollData.penetration.total}) :  <br />`;
+      rollData.secondaryScore = rollData.penetration.total;
     }
 
     rollData.formula = total;
@@ -741,4 +763,8 @@ async function changeMight(actor, roll, message) {
   await actor.changeMight(-actor.rollData.power.cost);
 }
 
-export { simpleDie, stressDie, noRoll, changeMight };
+async function useItemCharge(actor, roll, message) {
+  const item = actor.items.get(actor.rollData.item.id);
+  await item.useItemCharge();
+}
+export { simpleDie, stressDie, noRoll, changeMight, useItemCharge };

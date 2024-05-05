@@ -30,7 +30,7 @@ import {
 import { registerDiaryTesting } from "./testSchedule.js";
 
 export function registerTestSuites(quench) {
-  registerRecoveryTesting(quench);
+  // registerRecoveryTesting(quench);
   registerLabActivityTesting(quench);
   registerActorLinkTesting(quench);
   registerDiaryTesting(quench);

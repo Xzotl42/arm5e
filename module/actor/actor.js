@@ -474,9 +474,8 @@ export class ArM5ePCActor extends Actor {
             */
 
       // compute the spellcasting bonus:
-      this.system.bonuses.arts.spellcasting +=
-        (this.system.stances.voice[system.stances.voiceStance] || 0) +
-        (this.system.stances.gestures[system.stances.gesturesStance] || 0);
+      // (this.system.stances.voice[system.stances.voiceStance] || 0) +
+      // (this.system.stances.gestures[system.stances.gesturesStance] || 0);
       // log(false, `Bonus spellcasting: ${this.system.bonuses.arts.spellcasting}`);
       if (system.laboratory === undefined) {
         system.laboratory = {};

@@ -27,7 +27,10 @@ export class ArM5eItemSheet extends ItemSheet {
           initial: "description"
         }
       ],
-      dragDrop: [{ dragSelector: null, dropSelector: ".drop-enchant" }],
+      dragDrop: [
+        { dragSelector: null, dropSelector: ".drop-enchant" },
+        { dragSelector: ".drag-enchant", dropSelector: null }
+      ],
       scrollY: [".window-content"]
     });
   }
@@ -39,6 +42,13 @@ export class ArM5eItemSheet extends ItemSheet {
       this.enchantSheet = new ArM5eItemEnchantmentSheet(this);
     }
   }
+
+  // _onDragStart(event) {
+  //   const li = event.currentTarget;
+  //   // Create drag data
+  //   let dragData;
+
+  // }
 
   async _onDrop(event) {
     const dropData = TextEditor.getDragEventData(event);

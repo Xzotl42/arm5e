@@ -234,6 +234,7 @@
   "arm5e.sheet.fullSet": "Full Set",
   "arm5e.sheet.focus": "Focus",
   "arm5e.sheet.uses": "Uses",
+  "arm5e.sheet.usesLeft": "Uses left",
   "arm5e.sheet.familiar": "Familiar",
   "arm5e.sheet.cord": "Cords",
   "arm5e.sheet.bronze": "Bronze",
@@ -1030,6 +1031,7 @@
   "arm5e.dialog.damageCalculator": "Damage calculator",
   "arm5e.dialog.combatDamage": "Combat damage",
   "arm5e.dialog.powerUse": "Use power",
+  "arm5e.dialog.magicItemUse": "Use magic item",
   "arm5e.dialog.hint.abilityOption": "Only alphanumeric characters.",
   "arm5e.dialog.delete-topic": "Delete topic",
   "arm5e.dialog.confirmTransfer-question": "Are you sure you want to transfer the item named \"{name}\"?",
@@ -1051,6 +1053,7 @@
   "arm5e.notification.roll.botchNum": "Please enter the number of botch dice.",
   "arm5e.notification.doubleAbility": "That character already have the ability",
   "arm5e.notification.noMightPoints": "Not enough points remaining in might pool.",
+  "arm5e.notification.noChargesLeft": "No charges left in the magic item.",
   "arm5e.notification.setDate": "The current date has been set to {season} {year}",
   "arm5e.notification.synchActors": "All actors have been synchronized to {season} {year}",
   "arm5e.notification.missingSpell": "Spell \"{spellName}\" doesn't exist anymore or has moved. Aborting.",
@@ -1461,6 +1464,7 @@
   "arm5e.hints.copy": "Copy {item}",
   "arm5e.hints.recover": "Recover from {item}",
   "arm5e.hints.createLabText": "Create draft laboratory text",
+  "arm5e.hints.useMagicItem": "Trigger the effect \"{name}\"",
 
   "arm5e.sheet.label.details": "Details",
 

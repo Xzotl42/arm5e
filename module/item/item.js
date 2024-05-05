@@ -454,6 +454,21 @@ export class ArM5eItem extends Item {
     lab.sheet._tabs[0].activate("planning");
   }
 
+  get canBeEnchanted() {
+    return Object.keys(ARM5E.lab.enchantment.enchantableTypes).includes(this.type);
+  }
+
+  async useItemCharge() {
+    if (this.canBeEnchanted) {
+      const chargesLeft = this.system.enchantments.charges;
+      if (chargesLeft) {
+        await this.update({ "system.enchantments.charges": chargesLeft - 1 });
+      } else {
+        log(false, "No charge left");
+      }
+    }
+  }
+
   /**
    * Handle clickable rolls.
    * @param {Event} event   The originating click event
