@@ -205,6 +205,10 @@ async function stressDie(actor, type = "OPTION", modes = 0, callBack = undefined
       },
       { rollMode: rollMode }
     );
+  } else {
+    if (game.modules.get("dice-so-nice")?.active) {
+      game.dice3d.showForRoll(dieRoll); //, user, synchronize, whisper, blind, chatMessageID, speaker)
+    }
   }
 
   if (callBack) {
@@ -259,7 +263,24 @@ async function getRollFormula(actor) {
         rollData.magic.divide *= 2;
       }
 
-      // TODO NOW
+      const voiceMod = actorSystemData.stances.voice[actorSystemData.stances.voiceStance];
+      if (voiceMod) {
+        total += voiceMod;
+        msg = newLine(msg);
+        msg +=
+          game.i18n.localize(ARM5E.magic.mod.voice[actorSystemData.stances.voiceStance].mnemonic) +
+          ` (${voiceMod})`;
+      }
+      const gestureMod = actorSystemData.stances.gestures[actorSystemData.stances.gesturesStance];
+      if (gestureMod) {
+        total += gestureMod;
+        msg = newLine(msg);
+        msg +=
+          game.i18n.localize(
+            ARM5E.magic.mod.gestures[actorSystemData.stances.gesturesStance].mnemonic
+          ) + ` (${gestureMod})`;
+      }
+
       if (rollData.magic.masteryScore > 0) {
         total += rollData.magic.masteryScore;
         msg = newLine(msg);
@@ -486,6 +507,11 @@ async function getRollFormula(actor) {
       rollData.penetration.total = rollData.secondaryScore;
     }
 
+    if (rollData.type == "item") {
+      msg += `<br /> + <b>Penetration </b> (${rollData.penetration.total}) :  <br />`;
+      rollData.secondaryScore = rollData.penetration.total;
+    }
+
     rollData.formula = total;
     rollData.details = msg;
 
@@ -509,12 +535,13 @@ function newLineSub(msg) {
   return msg;
 }
 
-async function CheckBotch(botchDice) {
+async function CheckBotch(botchDice, offset) {
   let rollCommand = String(botchDice).concat("d10cf=10");
   const botchRoll = new Roll(rollCommand);
   await botchRoll.roll({
     async: true
   });
+  botchRoll.offset = offset;
   botchRoll.botches = botchRoll.total;
   botchRoll.botchDice = botchDice;
   return botchRoll;
@@ -611,7 +638,7 @@ async function explodingRoll(actorData, rollOptions = {}, botchNum = -1) {
                   label: game.i18n.localize("arm5e.dialog.button.rollbotch"),
                   callback: async (html) => {
                     botchNum = html.find("#botchDice").val();
-                    botchRoll = await CheckBotch(botchNum);
+                    botchRoll = await CheckBotch(botchNum, dieRoll.offset);
                     resolve();
                   }
                 },
@@ -639,7 +666,7 @@ async function explodingRoll(actorData, rollOptions = {}, botchNum = -1) {
           ).render(true);
         });
       } else {
-        botchRoll = await CheckBotch(botchNum);
+        botchRoll = await CheckBotch(botchNum, dieRoll.offset);
       }
       if (botchRoll) {
         if (botchRoll.botches == 0) {
@@ -736,4 +763,8 @@ async function changeMight(actor, roll, message) {
   await actor.changeMight(-actor.rollData.power.cost);
 }
 
-export { simpleDie, stressDie, noRoll, changeMight };
+async function useItemCharge(actor, roll, message) {
+  const item = actor.items.get(actor.rollData.item.id);
+  await item.useItemCharge();
+}
+export { simpleDie, stressDie, noRoll, changeMight, useItemCharge };

@@ -1,105 +1,77 @@
-This is the long awaited user guide for the Ars Magica system in Foundry VTT.
 
-This document is not intended as a substitute to the rules book and rather focus on the system features to help managing your game sessions  
+Salve, sodalis!
 
-Status: _Everdraft_  
-  
-  
+Welcome to the user guide for the Ars Magica system in Foundry VTT.
+
+Please note this document is in no way intended as a substitute for the core rules book or any of the supplements published by Atlas Games, and no rules of the system will be explained here - it will focus on how to navigate and use this specific system to help manage your game sessions.
+
+This document is always being updated as the system is developed, so be sure to check back often. New additions or changes will be marked under the session [[News and Modifications]].
+
 This document assumes that:
 
--   You have some basic knowledge of the Ars Magica 5th edition RPG.
+-   You have some basic knowledge of the Ars Magica 5th edition RPG;
     
--   You have some basic understanding of the FoundryVTT concepts like Actors, Items, Scenes, Compendium
+-   You have some basic understanding of Foundry VTT concepts, such as Actors, Items, Scenes, and Compendium;
     
--   You are able to navigate in the FoundryVTT GUI.
+-   You are able to navigate the Foundry VTT GUI.
     
+
 
 ### Conventions
 
-The word **system** in this guide refers to the Foundry VTT system for Ars Magica 5th Edition. The word **core** refers to the Foundry VTT API and engine.
+- **Actor** (capital A) = Foundry VTT concept;
+- **character** = any player character or NPC Actor;
+- **core** = the Foundry VTT API and engine;
+- **GM** = used instead of Storyguide since that is what Foundry calls it;
+- **Item** (capital I) = Foundry VTT concept;
+- **system** = the Foundry VTT system for Ars Magica 5th edition.
 
-A **character** englobes any player character or npc Actor
+Most Actor and Item sheets have tabs and subtabs to help keep information on the sheets organized. The following convention is used to specify where a subtab is:
+**<p style="text-align:center;">
+ActorName.TabName.SubtabName</p>
 
-Most Actors and Items sheets have tabs and subtabs. To help navigate in the sheet. the following convention is used in this guide : ActorName.TabName.SubtabName  
+For example: **Character.Abilities.Virtues&Flaws** indicates the subtab *Virtues&Flaws* in the tab *Abilities* of the *Character sheet* (in this case, Magnus's). Please look at the image below, where we navigated to that subtab:
 
-![](systems/arm5e/assets/userguide/CharacterTabs.webp)
+![](systems/arm5e/assets/userguide/CharacterSheet01.webp)
 
-For example: Character.Abilities.Virtues&Flaws indicates the subtab Virtues&Flaws in the tab Abilities of the character sheet
-
-**Actor** with a capital A and **Item** with a capital I refer to the Foundry VTT concepts.
-
-You will encounter list of items on the sheets, here is a description of the icons:
+The way the **system** organizes information, much like a character sheet on paper, is through lists. If you take a quick look at the above image, you will see some of Magnus's Virtues and Flaws listed and a few extra icons to help us managed that. Those icons are common throughout the **system** and are explained below:
 
 ![](systems/arm5e/assets/userguide/ListIcons.webp)
 
--   The Plus sign is to add a new item to the list.
-    
--   The parchment and feather quill is to edit the item
-    
--   The Perdo hand sign is to delete it.
-    
+- You can use the little plus sign to add something new that will be exclusive to this sheet. It will follow whatever part of the sheet you're adding it to (so, clicking on it here will add a new Virtue). In general, it's much better to add something from a compendium or item list than through this. See also [[Creating a character]] and [[Introduction#Everything is drag and drop]];
+- The parchment and quill icon will open a new window to edit the item;
+- The black hand (the Perdo sign) will delete this item. A pop up will confirm the deletion. Please be aware there's no going back if you confirm the deletion.
 
-**GM** (Gamemaster) is used instead of Storyguide in this document as it is how Foundry calls it
+### *Everything* is drag and drop
 
-### Everything is drag and drop
+The **system** was designed in such a way that almost everything can be dragged from somewhere onto somewhere else, saving a lot of typing. It may not do anything, but please try it all - you can't break anything this way.
 
-The concept is that everything can be dragged and dropped on everything else. It may have no effect but you are encouraged to try.
+Here are a few examples of what can be done:
 
-Drag and drop Items (Virtues, flaws, abilities, spells, equipment) to an Actor sheet
+#### Drag and drop Items (such as Virtues, Flaws, Abilities, Spells and Equipment)
 
--   From a compendium to a character sheet
-    
--   From a character sheet to another
-    
--   From the Codex to a character sheet (and vice versa)
-    
--   A spell from a character to a covenant will create a lab text for it.
-    
--   A folder full of Items will work too
-    
+- From a compendium to a character sheet;
 
-Drag and drop Actors on other Actors
+- From a character sheet to another;
 
--   A character on a covenant
+- From the Codex to a character sheet and vice versa;
+
+- A spell from a character sheet to a Covenant will create a lab text for it;
+
+- You can also drag and drop a folder full of items!
+
+#### Drag and drop Actors on other Actors
+
+- A character on a covenant, assigning that character as an inhabitant of that covenant;
+
+- A covenant on an Actor, doing the same as above;
+
+- A laboratory on a character, doing the same as above.
+
     
--   A covenant on an actor
-    
--   A laboratory on a character
-    
+![](systems/arm5e/assets/userguide/ChainLink.webp)
 
 A chain link symbol near a field often indicates it is possible to link the appropriate document by dropping it on the sheet. Clicking on the chain will generally open the linked document sheet.
 
-## Settings
 
-**Sourcebooks filter:** This settings allows to reduce the number options proposed to only the sourcebooks selected. That way it won't overwhelm a new user with items he or she is unfamiliar with. (_It only filter spell attributes for the moment)_
-
-**System Migration Version**: This setting allows to reset the version of the system to an older version in order to trigger a migration from that version. Useful to quickly migrate documents freshly imported from an old compendium.
-
-**Default icon style:** Whether black&white or color version of default icons are used at creation of documents. It only applies to brand new documents, a copy will keep the original icon.
-
-**Icon style for Arts:** Choose between the Hermetic Arts symbols or Hand gestures to represent Arts
-
-**Show metagame information:** Whether to show the sourcebook and page where an Item is coming from.
-
-**Show rolls**: Who can see the rolls of who
-
-**Show rolls formula**: Who can see the rolls formula of who
-
-**Show NPC magic details:** During magic contests against a NPC, choose between:
-
--   Tell only if it is a success or failure
-    
--   Tell exactly by how much a success or failure happened
-    
-
-**Fun stress die:** Show a dialog when rolling a 1 on a stress dice (Everyone, Nobody or only players).
-
-**Quick delete:** Whether to ask for confirmation before deleting an owned Item or not.
-
-**Dramatic pause when rolling a one:** [Dice so Nice integration] If you have the Dice so Nice module enabled and the "Fun stress die" setting disabled, it will add a dramatic pause (ms) after rolling a one.
-
-**Enforce schedule constraints**: Whether to prevent users to schedule or apply seasonal activities due to constraints put in the system. (For example: reading a book twice the same season).
-
-**Winter first** : Whether the first season of the year is winter or spring (recommendation: do not change in the middle of a Saga)
-
-**Clear user cache:** reset the browser session data on next refresh. Currently the user cache contains all filters criteria  for all actors as well as the folding state of all foldable sections. With time, it can grow bigger than necessary as every sheet opened will store its data in it
+If you're done reading all this, we do recommend you check out the [[Settings]] next.

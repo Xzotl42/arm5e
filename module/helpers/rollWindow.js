@@ -1,6 +1,6 @@
 import { ARM5E } from "../config.js";
 
-import { simpleDie, stressDie, noRoll, changeMight } from "../dice.js";
+import { simpleDie, stressDie, noRoll, changeMight, useItemCharge } from "../dice.js";
 import { PickRequisites, checkTargetAndCalculateResistance, noFatigue } from "./magic.js";
 import { chatFailedCasting } from "./chat.js";
 import { ArM5ePCActor } from "../actor/actor.js";
@@ -332,6 +332,50 @@ function getDialogData(dataset, html, actor) {
   };
 }
 
+async function useMagicItem(dataset, item) {
+  if (item.system.enchantments.charges == 0) {
+    ui.notifications.warn(game.i18n.localize("arm5e.notification.noChargesLeft"));
+    return;
+  }
+
+  prepareRollVariables(dataset, item.actor);
+  log(false, `Roll variables: ${JSON.stringify(item.actor.system.roll)}`);
+  let template = "systems/arm5e/templates/actor/parts/actor-itemUse.html";
+  item.actor.system.roll = item.actor.rollData;
+  item.actor.config = CONFIG.ARM5E;
+  const renderedTemplate = await renderTemplate(template, item.actor);
+
+  const dialog = new Dialog(
+    {
+      title: game.i18n.localize("arm5e.dialog.magicItemUse"),
+      content: renderedTemplate,
+      render: addListenersDialog,
+      buttons: {
+        yes: {
+          icon: "<i class='fas fa-check'></i>",
+          label: game.i18n.localize("arm5e.dialog.magicItemUse"),
+          callback: async (html) => {
+            getFormData(html, item.actor);
+            await noRoll(item.actor, 1, useItemCharge);
+          }
+        },
+        no: {
+          icon: "<i class='fas fa-ban'></i>",
+          label: game.i18n.localize("arm5e.dialog.button.cancel"),
+          callback: null
+        }
+      }
+    },
+    {
+      jQuery: true,
+      height: "600px",
+      width: "400px",
+      classes: ["roll-dialog", "arm5e-dialog", "dialog"]
+    }
+  );
+  dialog.render(true);
+}
+
 async function usePower(dataset, actor) {
   if (Number(dataset.cost > actor.system.might.points)) {
     ui.notifications.warn(game.i18n.localize("arm5e.notification.noMightPoints"));
@@ -400,14 +444,14 @@ function addListenersDialog(html) {
     actor.rollData.magic.formLabel = formData[0];
     actor.rollData.magic.formScore = formData[1];
     actor.rollData.magic.formDeficiency = formData[2];
-
-    // actor.system.roll =
   });
-  // html.find(".toggleHidden").click(event => {
-  //   // log(false, "toggle Hidden");
-  //   const hidden = $(event.target).data("hidden");
-  //   html.find(`.${hidden}`).toggle();
-  // });
+
+  html.find(".voice-and-gestures").change(async (event) => {
+    const dataset = getDataset(event);
+    const actor = game.actors.get(dataset.actorid);
+    const name = $(event.target).attr("effect");
+    await actor.selectVoiceAndGestures(name, $(event.target).val());
+  });
 }
 
 async function renderRollTemplate(dataset, template, actor) {
@@ -415,6 +459,7 @@ async function renderRollTemplate(dataset, template, actor) {
     return;
   }
   actor.system.roll = actor.rollData;
+  actor.config = CONFIG.ARM5E;
   const renderedTemplate = await renderTemplate(template, actor);
   const dialogData = getDialogData(dataset, renderedTemplate, actor);
   const dialog = new Dialog(
@@ -429,6 +474,7 @@ async function renderRollTemplate(dataset, template, actor) {
     }
   );
   dialog.render(true);
+  return dialog;
 }
 
 async function castSpell(actorCaster, roll, message) {
@@ -620,5 +666,6 @@ export {
   ROLL_MODIFIERS,
   ROLL_PROPERTIES,
   getRollTypeProperties,
-  usePower
+  usePower,
+  useMagicItem
 };

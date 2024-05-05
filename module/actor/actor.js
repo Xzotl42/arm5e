@@ -474,9 +474,8 @@ export class ArM5ePCActor extends Actor {
             */
 
       // compute the spellcasting bonus:
-      this.system.bonuses.arts.spellcasting +=
-        (this.system.stances.voice[system.stances.voiceStance] || 0) +
-        (this.system.stances.gestures[system.stances.gesturesStance] || 0);
+      // (this.system.stances.voice[system.stances.voiceStance] || 0) +
+      // (this.system.stances.gestures[system.stances.gesturesStance] || 0);
       // log(false, `Bonus spellcasting: ${this.system.bonuses.arts.spellcasting}`);
       if (system.laboratory === undefined) {
         system.laboratory = {};
@@ -1458,7 +1457,7 @@ export class ArM5ePCActor extends Actor {
 
   async changeWound(amount, wtype) {
     if (!this._isCharacter() || (amount < 0 && this.system.wounds[type].length == 0)) {
-      return;
+      return [];
     }
     let wounds = [];
     const datetime = game.settings.get("arm5e", "currentDate");
@@ -1484,7 +1483,7 @@ export class ArM5ePCActor extends Actor {
       };
       wounds.push(woundData);
     }
-    await this.createEmbeddedDocuments("Item", wounds);
+    return await this.createEmbeddedDocuments("Item", wounds);
   }
 
   // Used by Quick magic dialog
@@ -1844,6 +1843,25 @@ export class ArM5ePCActor extends Actor {
     await this.update({
       system: { might: { points: this.system.might.points + amount } }
     });
+  }
+
+  get hasWounds() {
+    const res = Object.entries(this.system.wounds).filter((e) => {
+      return CONFIG.ARM5E.recovery.wounds[e[0]].rank > 0 && e[1].length > 0;
+    });
+    return res.length > 0;
+  }
+
+  async restoreHealth(clearHistory = false) {
+    let wounds = this.items.filter((e) => e.type == "wound");
+    if (!clearHistory) {
+      wounds = wounds.filter((w) => w.system.gravity != "healthy");
+    }
+
+    return await this.deleteEmbeddedDocuments(
+      "Item",
+      wounds.map((w) => w._id)
+    );
   }
 
   // IDEA: check if the sheet is not null and filter the system activities instead.

@@ -1502,26 +1502,26 @@ ARM5E.magic.durations = {
     impact: 4
   },
   AM: {
-    label: "arm5e.sheet.source.AM",
-    source: "AM",
+    label: "arm5e.sheet.source.AnM",
+    source: "AnM",
     disabled: true
   },
   event: {
     label: "arm5e.spell.durations.event",
     dtype: "String",
-    source: "AM",
+    source: "AnM",
     impact: 0
   },
   rune: {
     label: "arm5e.spell.durations.rune",
     dtype: "String",
-    source: "AM",
+    source: "AnM",
     impact: 3
   },
   "19year": {
     label: "arm5e.spell.durations.19year",
     dtype: "String",
-    source: "AM",
+    source: "AnM",
     impact: 5
   },
 
@@ -1683,21 +1683,21 @@ ARM5E.magic.ranges = {
     source: "TMRE",
     impact: 4
   },
-  AM: {
-    label: "arm5e.sheet.source.AM",
-    source: "AM",
+  AnM: {
+    label: "arm5e.sheet.source.AnM",
+    source: "AnM",
     disabled: true
   },
   veil: {
     label: "arm5e.spell.ranges.veil",
     dtype: "String",
-    source: "AM",
+    source: "AnM",
     impact: 3
   },
   unlimited: {
     label: "arm5e.spell.ranges.unlimited",
     dtype: "String",
-    source: "AM",
+    source: "AnM",
     impact: 6
   },
   custom: {
@@ -1964,22 +1964,22 @@ ARM5E.magic.targets = {
     source: "TMRE",
     impact: 4
   },
-  AM: {
-    label: "arm5e.sheet.source.AM",
-    source: "AM",
+  AnM: {
+    label: "arm5e.sheet.source.AnM",
+    source: "AnM",
     disabled: true
   },
   unborn: {
     label: "arm5e.spell.targets.unborn",
     dtype: "String",
-    source: "AM",
+    source: "AnM",
     impact: 0
   },
 
   inscription: {
     label: "arm5e.spell.targets.inscription",
     dtype: "String",
-    source: "AM",
+    source: "AnM",
     impact: 0
   },
   custom: {
@@ -2962,7 +2962,7 @@ ARM5E.generic.sourcesTypes = {
     label: "arm5e.sheet.source.Hooks"
   },
   "F&F": {
-    label: "arm5e.sheet.source.faithAndFlame"
+    label: "arm5e.sheet.source.F&F"
   }
 };
 

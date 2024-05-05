@@ -56,7 +56,6 @@ ARM5E_DEFAULT_ICONS.MONO = {
   laboratoryText: "systems/arm5e/assets/icons/journal-book.svg",
   magicCodex: "icons/commodities/materials/parchment-secrets.webp",
   covenant: "icons/svg/castle.svg",
-  crucible: "icons/tools/laboratory/bowl-liquid-orange.webp",
   npc: "icons/svg/mystery-man-black.svg",
   laboratory: "icons/svg/tower.svg",
   enchantment: "icons/svg/daze.svg",
@@ -102,7 +101,6 @@ ARM5E_DEFAULT_ICONS.COLOR = {
   magicCodex: "icons/commodities/materials/parchment-secrets.webp",
   npc: "icons/svg/mystery-man-black.svg",
   laboratory: "icons/tools/laboratory/vials-blue-pink.webp",
-  crucible: "icons/tools/laboratory/bowl-liquid-orange.webp",
   container: "icons/containers/chest/chest-elm-steel-brown.webp"
 };
 

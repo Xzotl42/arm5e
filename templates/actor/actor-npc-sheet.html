@@ -29,9 +29,7 @@
             <label for="system.charType.value" class="header-label"
               style="padding-top: 4px">{{localize "arm5e.sheet.charType"}}</label>
             <select name="system.charType.value" data-type="String">
-              {{#select system.charType.value}} {{#each config.npc.types as |type key|}}
-                  <option value="{{key}}">{{localize type.label}}</option>
-                {{/each}} {{/select}}
+              {{selectOptions config.npc.types selected=system.charType.value labelAttr="label" localize=true}}
             </select>
           </span>
           {{#if (eq system.charType.value "entity")}}
@@ -48,16 +46,12 @@
               </div>
               <div style="padding-top: 15px; padding-left: 5px;">
                 <select class="change-realm" name="" data-type="String" data-realm="{{system.realm}}">
-                  {{#select system.realm}} {{#each config.realmsExt as |realm key|}}
-                      <option value="{{key}}">{{localize realm.label}}</option>
-                    {{/each}} {{/select}}
+                  {{selectOptions config.realmsExt selected=system.realm labelAttr="label" localize=true}}
                 </select>
               </div>
               <div style="padding-top: 15px">
                 <select name="system.might.form" data-type="String">
-                  {{#select system.might.form}} {{#each config.magic.forms as |forms key|}}
-                      <option value="{{key}}">{{forms.label}}</option>
-                    {{/each}} {{/select}}
+                  {{selectOptions config.magic.forms selected=system.might.form labelAttr="label" }}
                 </select>
               </div>
             </div>
@@ -71,9 +65,7 @@
               <label for="system.house.value" class="bold flex0"
                 style="padding-left: 5px; padding-top: 4px; padding-right: 5px;">{{localize "arm5e.sheet.house"}}</label>
               <select name="system.house.value" data-type="String" style="width: 100%">
-                {{#select system.house.value}} {{#each config.character.houses as |house key|}}
-                    <option value="{{key}}">{{house.label}}</option>
-                  {{/each}} {{/select}}
+                {{selectOptions config.character.houses selected=system.house.value labelAttr="label" }}
               </select>
             </span>
           {{/if}}

@@ -8,6 +8,7 @@
       <input type="number" name="system.roll.magic.level" value="{{system.roll.magic.level}}" data-dtype="Number"
         class="SelectedLevel resource-focus" style="max-width: 100px;" />
     </div>
+    {{> "systems/arm5e/templates/actor/parts/actor-voice-and-gestures.html" }}
     <div class="flexrow flex-group-center">
       <select name="system.roll.technique" data-dtype="String" class="SelectedTechnique">
         {{#select system.roll.magic.technique}} {{#each system.arts.techniques as |item key|}}
@@ -21,6 +22,7 @@
           {{/each}} {{/select}}
       </select>
     </div>
+
     <div class="flexrow flex-group-center">
       <label class="resource-label">+</label>
     </div>

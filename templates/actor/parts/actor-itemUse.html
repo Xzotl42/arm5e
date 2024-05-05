@@ -1,0 +1,46 @@
+<form class="{{cssClass}} arm5eRoll" autocomplete="off">
+  {{> "systems/arm5e/templates/roll/parts/roll-header.html" header="Confirmation" }}
+  <div class="roll-options">
+    <div class="flexrow flex-group-center" style="word-break: break-all;">
+      <label class="resource-label" style="font-size: 13pt; position: relative;
+      top: -15px;">{{ system.roll.label}}</label>
+    </div>
+
+    {{#unless system.roll.item.charged}}
+      <div class="resource flexcol flex-center">
+        <label class="header-label">{{localize "arm5e.lab.enchantment.effectFrequency" }}
+          {{ lookup config.lab.enchantment.effectUses system.roll.item.frequency}}
+          {{localize "arm5e.lab.enchantment.uses-per-day"}}
+        </label>
+      </div>
+    {{else}}
+      <div class="resource flexcol flex-center">
+        <label class="header-label">{{localize "arm5e.sheet.usesLeft" }} :
+          {{ system.roll.item.charges}}
+        </label>
+      </div>
+    {{/unless}}
+    <div class="flexrow flex-group-center">
+      <label class="resource-label"><img src="systems/arm5e/assets/icons/Icon_Details_option1.png" title="Penetration"
+          width="24" height="24" style="border :0px" /></label>
+    </div>
+    <div class="flexrow flex-group-center sub">
+      <label class="resource-label">{{localize "arm5e.sheet.penetration" }} ({{
+        numberFormat
+        system.roll.penetration.total decimals=0
+        sign=true }})
+      </label>
+    </div>
+
+
+    <div class="flexrow flex-group-center">
+      <label class="resource-label">+</label>
+    </div>
+    <div class="flexrow flex-group-center">
+      <label class="resource-label flex0">{{localize "arm5e.sheet.modifier" }}</label>
+      <input type="number" name="modifier" value="{{modifier}}" data-dtype="Number" class="SelectedModifier modifier" />
+    </div>
+
+  </div>
+  {{> "systems/arm5e/templates/roll/parts/roll-footer.html" footer="Confirmation"}}
+</form>

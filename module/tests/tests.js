@@ -13,6 +13,7 @@ import { registerTrainingTesting } from "./diaryTrainingTest.js";
 import { registerItemCreationTests } from "./itemCreationTests.js";
 import { registerLabActivityTesting } from "./labActivityTest.js";
 import { registerOnRollTesting } from "./onRollTest.js";
+import { registerRecoveryTesting } from "./recoveryTests.js";
 import { registerRollTesting } from "./rollsTest.js";
 import { registerSheetDisplayTests } from "./sheetDisplayTests.js";
 import { registerStressDieTesting } from "./stressDieTesting.js";
@@ -29,6 +30,7 @@ import {
 import { registerDiaryTesting } from "./testSchedule.js";
 
 export function registerTestSuites(quench) {
+  // registerRecoveryTesting(quench);
   registerLabActivityTesting(quench);
   registerActorLinkTesting(quench);
   registerDiaryTesting(quench);

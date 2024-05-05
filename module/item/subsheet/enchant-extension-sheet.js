@@ -10,6 +10,7 @@ import {
   PickRequisites,
   computeLevel
 } from "../../helpers/magic.js";
+import { useMagicItem } from "../../helpers/rollWindow.js";
 // import { ArM5eItemMagicSheet } from "../item-magic-sheet.js";
 /**
  */
@@ -629,6 +630,19 @@ export class ArM5eItemEnchantmentSheet {
       effects[dataset.index]["receptacleId"] = receptacleId;
       const updateData = { "system.enchantments.effects": effects };
       await this.sheet.item.update(updateData);
+    });
+
+    html.find(".drag-enchant").click(async (e) => {
+      const dataset = getDataset(e);
+      const item = this.item;
+      const enchantIdx = dataset.index;
+      if (item.isOwned) {
+        dataset.name = item.name;
+        dataset.roll = "item";
+        dataset.id = item._id;
+        dataset.physicalcondition = false;
+        await useMagicItem(dataset, item);
+      }
     });
   }
 
