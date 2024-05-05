@@ -11,7 +11,7 @@ import { getConfirmation } from "../constants/ui.js";
 export class ArM5eCovenantActorSheet extends ArM5eActorSheet {
   /** @override */
   static get defaultOptions() {
-    return mergeObject(super.defaultOptions, {
+    return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["arm5e", "sheet", "actor"],
       template: "systems/arm5e/templates/actor/actor-covenant-sheet.html",
       width: 790,

@@ -1,4 +1,4 @@
-## 2.2.4.21, Pralix, founder of a new House
+## 2.2.4.22, Pralix, founder of a new House
 
 ### Dependencies updates
 
@@ -24,6 +24,7 @@
 - Sourcebooks filter for "Ancient Magic" had a typo, it is now fixed.
 - Non-interactive rolls (eg: recovery) with [Dice so nice] are rolling dice again
 - Recovery logs are now displaying the correct bonus when rolling for botch.
+- [technical] added foundry.utils namespace whenever appropriate (first pass)
 
 ## 2.2.4.17, Pralix, founder of a new Order bis
 

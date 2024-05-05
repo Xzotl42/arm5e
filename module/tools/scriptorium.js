@@ -15,7 +15,7 @@ export class ScriptoriumObject {
   arts = CONFIG.ARM5E.magic.arts;
   techs = CONFIG.ARM5E.magic.techniques;
   forms = CONFIG.ARM5E.magic.forms;
-  bookTopics = deepClone(CONFIG.ARM5E.books.categories);
+  bookTopics = foundry.utils.deepClone(CONFIG.ARM5E.books.categories);
   bookTypes = CONFIG.ARM5E.books.types;
   year = game.settings.get("arm5e", "currentDate").year;
   season = game.settings.get("arm5e", "currentDate").season;
@@ -329,7 +329,9 @@ export class Scriptorium extends FormApplication {
         });
       switch (currentTopic.category) {
         case "ability": {
-          let availableAbilities = duplicate(CONFIG.ARM5E.LOCALIZED_ABILITIES_ENRICHED);
+          let availableAbilities = foundry.utils.duplicate(
+            CONFIG.ARM5E.LOCALIZED_ABILITIES_ENRICHED
+          );
           for (let a of reader.system.abilities) {
             let found = availableAbilities.findIndex(
               (e) => e.system.key == a.system.key && e.system.option == a.system.option
@@ -874,7 +876,7 @@ export class Scriptorium extends FormApplication {
     const writer = game.actors.get(objectData.writing.writer.id);
 
     const writerData = objectData.writing.writer;
-    const book = deepClone(objectData.writing.book);
+    const book = foundry.utils.deepClone(objectData.writing.book);
     const dataset = event.currentTarget.dataset;
     // create a safe copy of the topics
     const bookTopics = book.system.topics;
@@ -895,7 +897,7 @@ export class Scriptorium extends FormApplication {
         console.error(`Could not find labtext from uuid: ${e.uuid}`);
         return;
       }
-      const topic = deepClone(topicTemplate);
+      const topic = foundry.utils.deepClone(topicTemplate);
       topic.author = writer.name;
       topic.language = writer.items.get(writerData.language).name;
       topic.labtextTitle = e.name;
@@ -1457,7 +1459,7 @@ export class Scriptorium extends FormApplication {
   async _removeLabText(event) {
     const dataset = getDataset(event);
 
-    let labtexts = duplicate(this.object.labTexts);
+    let labtexts = foundry.utils.duplicate(this.object.labTexts);
     labtexts.splice(Number(dataset.index), 1);
     await this.submit({
       preventClose: true,
@@ -1537,11 +1539,11 @@ export class Scriptorium extends FormApplication {
   }
 
   async _updateObject(event, formData) {
-    const expanded = expandObject(formData);
+    const expanded = foundry.utils.expandObject(formData);
 
     if (expanded.writing?.book?.system?.topics) {
       const topics = this.object.writing.book.system.topics;
-      mergeObject(topics, expanded.writing.book.system.topics);
+      foundry.utils.mergeObject(topics, expanded.writing.book.system.topics);
       delete expanded.writing.book.system.topics;
     }
     if (expanded.copying?.books) {
@@ -1549,16 +1551,18 @@ export class Scriptorium extends FormApplication {
       for (const index of bookIndexes) {
         if (expanded.copying.books[index].system?.topics) {
           const topics = this.object.copying.books[index].system.topics;
-          mergeObject(topics, expanded.copying.books[index].system.topics, { recursive: true });
+          foundry.utils.mergeObject(topics, expanded.copying.books[index].system.topics, {
+            recursive: true
+          });
           delete expanded.copying.books[index].system.topics;
         }
       }
       const books = this.object.copying.books;
-      mergeObject(books, expanded.copying.books);
+      foundry.utils.mergeObject(books, expanded.copying.books);
       delete expanded.copying.books;
     }
 
-    mergeObject(this.object, expanded, { recursive: true });
+    foundry.utils.mergeObject(this.object, expanded, { recursive: true });
     this.render();
     // if (formData.season) {
     //   this.object.season = formData.season;

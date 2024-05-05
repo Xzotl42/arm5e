@@ -14,7 +14,7 @@ import {
 export class ArM5eItemMagicSheet extends ArM5eItemSheet {
   /** @override */
   static get defaultOptions() {
-    return mergeObject(super.defaultOptions, {
+    return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["arm5e", "sheet", "item"],
       width: 654,
       height: 800,

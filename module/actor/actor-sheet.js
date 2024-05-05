@@ -68,7 +68,7 @@ export class ArM5eActorSheet extends ActorSheet {
 
   // /** @override */
   static get defaultOptions() {
-    const res = mergeObject(super.defaultOptions, {
+    const res = foundry.utils.mergeObject(super.defaultOptions, {
       dragDrop: [
         { dragSelector: ".item-list .item", dropSelector: null },
         { dragSelector: ".macro-ready" }
@@ -1361,7 +1361,7 @@ export class ArM5eActorSheet extends ActorSheet {
       {
         name: name,
         type: type,
-        system: duplicate(dataset)
+        system: foundry.utils.duplicate(dataset)
       }
     ];
     // Remove the type from the dataset since it's in the itemData.type prop.

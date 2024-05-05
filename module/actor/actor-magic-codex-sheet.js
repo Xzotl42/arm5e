@@ -15,7 +15,7 @@ export class ArM5eMagicCodexSheet extends ArM5eActorSheet {
   /** @override */
   static get defaultOptions() {
     const options = super.defaultOptions;
-    return mergeObject(options, {
+    return foundry.utils.mergeObject(options, {
       classes: [...options.classes, "arm5e", "sheet", "actor"],
       template: "systems/arm5e/templates/actor/actor-magic-codex-sheet.html",
       width: 790,
@@ -105,7 +105,7 @@ export class ArM5eMagicCodexSheet extends ArM5eActorSheet {
               }
             }
           }
-          subset = duplicate(tmp);
+          subset = foundry.utils.duplicate(tmp);
           tmp = {};
         }
         context.system.filteredAspects = subset;
@@ -129,7 +129,7 @@ export class ArM5eMagicCodexSheet extends ArM5eActorSheet {
               }
             }
           }
-          subset = duplicate(tmp);
+          subset = foundry.utils.duplicate(tmp);
           tmp = {};
         }
         context.system.filteredAspects = subset;

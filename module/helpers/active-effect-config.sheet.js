@@ -10,7 +10,7 @@ import ACTIVE_EFFECTS_TYPES from "../constants/activeEffectsTypes.js";
  */
 export class ArM5eActiveEffectConfig extends ActiveEffectConfig {
   static get defaultOptions() {
-    return mergeObject(super.defaultOptions, {
+    return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["arm5e", "sheet", "active-effect-sheet"],
       width: 700,
       height: "600px",

@@ -488,10 +488,10 @@ export class DiaryEntrySchema extends foundry.abstract.DataModel {
     // }
 
     // Fixing Array problems
-    if (itemData.system.progress == undefined || isEmpty(itemData.system.progress)) {
+    if (itemData.system.progress == undefined || foundry.utils.isEmpty(itemData.system.progress)) {
       updateData["system.progress"] = { abilities: [], spells: [], arts: [], newSpells: [] };
     } else {
-      const prog = duplicate(itemData.system.progress);
+      const prog = foundry.utils.duplicate(itemData.system.progress);
       let updateNeeded = false;
       if (!(prog.abilities instanceof Array)) {
         prog.abilities = Object.values(prog.abilities);

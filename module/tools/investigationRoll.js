@@ -179,8 +179,8 @@ export class InvestigationRoll extends FormApplication {
   }
 
   async _updateObject(event, formData) {
-    const expanded = expandObject(formData);
-    mergeObject(this.object, expanded, { recursive: true });
+    const expanded = foundry.utils.expandObject(formData);
+    foundry.utils.mergeObject(this.object, expanded, { recursive: true });
     this.render();
   }
 }

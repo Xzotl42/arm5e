@@ -978,7 +978,7 @@ export class ArM5ePCActor extends Actor {
 
     // var baseSafetyEffect = this.effects.find((e) => e.getFlag("arm5e", "baseSafetyEffect"));
     // if (baseSafetyEffect != null && baseSafetyEffect.changes[0].value != String(baseSafety)) {
-    //   let changes = duplicate(baseSafetyEffect.changes);
+    //   let changes = foundry.utils.duplicate(baseSafetyEffect.changes);
     //   changes[0].value = String(baseSafety);
     //   baseSafetyEffect.update({ changes });
     // }

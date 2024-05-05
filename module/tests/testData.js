@@ -808,7 +808,7 @@ export async function getMagus(magusName = "MerlinTheMagus", items = [], overrid
     type: "ability",
     system: readingSkill
   });
-  let skillData = duplicate(magicTheorySkill);
+  let skillData = foundry.utils.duplicate(magicTheorySkill);
   skillData.xp = 30;
   items.push({ name: "Magic theory", type: "ability", system: skillData });
   items.push({ name: "Gaelic", type: "ability", system: languageSkill });
@@ -850,8 +850,8 @@ export async function getMagus(magusName = "MerlinTheMagus", items = [], overrid
 }
 
 export async function getTeacher(magusName = "Master", items = [], override = {}) {
-  let newData = duplicate(magusData);
-  mergeObject(newData, foundry.utils.expandObject(override));
+  let newData = foundry.utils.duplicate(magusData);
+  foundry.utils.mergeObject(newData, foundry.utils.expandObject(override));
   let character = await Actor.create({
     name: magusName,
     type: "player",
@@ -887,7 +887,7 @@ export async function getTeacher(magusName = "Master", items = [], override = {}
     type: "magicalEffect",
     system: magicalEffect3
   });
-  let spellData = duplicate(spellData1);
+  let spellData = foundry.utils.duplicate(spellData1);
   spellData.xp = 75;
   items.push({
     name: "Standard spell",

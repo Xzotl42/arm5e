@@ -40,7 +40,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
 
   /** @override */
   static get defaultOptions() {
-    return mergeObject(super.defaultOptions, {
+    return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["arm5e", "sheet", "actor"],
       template: "systems/arm5e/templates/actor/actor-laboratory-sheet.html",
       width: 790,
@@ -91,7 +91,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
       };
     } else {
       let sections = { visibility: { common: {}, planning: {} } };
-      mergeObject(sections, usercache[this.actor.id].sections);
+      foundry.utils.mergeObject(sections, usercache[this.actor.id].sections);
       usercache[this.actor.id].sections = sections;
     }
     sessionStorage.setItem(`usercache-${game.user.id}`, JSON.stringify(usercache));
@@ -395,7 +395,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
         planning.type === "learnSpell" ? "disabled" : ""
       );
       if (update) {
-        let tmp = mergeObject(planning.data, update);
+        let tmp = foundry.utils.mergeObject(planning.data, update);
         planning.data = tmp;
         await this.actor.setFlag(ARM5E.SYSTEM_ID, "planning", planning);
       }

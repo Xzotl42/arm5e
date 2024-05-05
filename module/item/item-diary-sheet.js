@@ -20,7 +20,7 @@ import { spellFormLabel, spellTechniqueLabel } from "../helpers/magic.js";
 export class ArM5eItemDiarySheet extends ArM5eItemSheet {
   /** @override */
   static get defaultOptions() {
-    return mergeObject(super.defaultOptions, {
+    return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["arm5e", "sheet", "item"],
       width: 654,
       height: 800,
@@ -379,7 +379,7 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
         }
       }
     } else {
-      availableAbilities = duplicate(CONFIG.ARM5E.LOCALIZED_ABILITIES_ENRICHED);
+      availableAbilities = foundry.utils.duplicate(CONFIG.ARM5E.LOCALIZED_ABILITIES_ENRICHED);
       // merge all abilities with the character ones
       for (let a of this.actor.system.abilities) {
         let found = availableAbilities.findIndex(
@@ -1233,7 +1233,7 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
             );
             if (indexToDelete >= 0) {
               log(false, `Deleted topic : ${topicToDelete}`);
-              let topics = duplicate(book.system.topics);
+              let topics = foundry.utils.duplicate(book.system.topics);
               topics.splice(indexToDelete, 1);
               await this.actor.updateEmbeddedDocuments(
                 "Item",
@@ -1246,7 +1246,7 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
             }
           } else if (dependency.data.topicNumber) {
             //lab texts
-            let topics = duplicate(book.system.topics);
+            let topics = foundry.utils.duplicate(book.system.topics);
             topics.splice(dependency.data.topicIndex, dependency.data.topicNumber);
             await this.actor.updateEmbeddedDocuments(
               "Item",
@@ -1422,7 +1422,7 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
 
   async _addNewSpell(spell) {
     let newSpells = this.item.system.progress.newSpells;
-    let system = duplicate(spell.system);
+    let system = foundry.utils.duplicate(spell.system);
     spell.type = "spell";
     system.applyFocus = false;
     system.bonus = 0;
@@ -1469,7 +1469,7 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
           {
             name: ability.name,
             type: "ability",
-            system: duplicate(ability.system)
+            system: foundry.utils.duplicate(ability.system)
           }
         ];
         ability = await this.actor.createEmbeddedDocuments("Item", itemData, {});
@@ -1797,7 +1797,7 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
   }
 
   async _updateObject(event, formData) {
-    const expanded = expandObject(formData);
+    const expanded = foundry.utils.expandObject(formData);
     const source = this.object.toObject();
     const abilities = expanded?.system?.progress?.abilities;
     let options = { diff: false, recursive: true };

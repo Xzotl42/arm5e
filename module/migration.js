@@ -785,7 +785,7 @@ export const migrateActorData = async function (actorDoc, actorItems) {
           if (!isEmpty(effectUpdate)) {
             // Update the effect
             effectUpdate._id = effectData._id;
-            effects.push(expandObject(effectUpdate));
+            effects.push(foundry.utils.expandObject(effectUpdate));
           }
         }
 
@@ -850,7 +850,7 @@ export const migrateActorData = async function (actorDoc, actorItems) {
           if (!isEmpty(effectUpdate)) {
             // Update the effect
             effectUpdate._id = effectData._id;
-            effects.push(expandObject(effectUpdate));
+            effects.push(foundry.utils.expandObject(effectUpdate));
           }
         }
 
@@ -1409,7 +1409,7 @@ export const migrateItemData = async function (item) {
       if (!isEmpty(effectUpdate)) {
         // Update the effect
         effectUpdate._id = effectData._id;
-        effects.push(expandObject(effectUpdate));
+        effects.push(foundry.utils.expandObject(effectUpdate));
       }
     }
     if (toDelete.length > 0) {
