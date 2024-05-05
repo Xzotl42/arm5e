@@ -440,6 +440,22 @@ export class ArM5eActorSheet extends ActorSheet {
 
         // castingTotals
         context.system.castingTotals = {};
+        // dividing options
+
+        context.spellCastingDividers = [
+          {
+            key: "1",
+            label: game.i18n.localize("arm5e.messages.die.divideBy") + "1"
+          },
+          {
+            key: "2",
+            label: game.i18n.localize("arm5e.messages.die.divideBy") + "2"
+          },
+          {
+            key: "5",
+            label: game.i18n.localize("arm5e.messages.die.divideBy") + "5"
+          }
+        ];
         // labTotals
         context.system.labTotals = {};
         context.system.labTotal = context.system.labTotal ?? {};

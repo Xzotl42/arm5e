@@ -17,12 +17,12 @@
             data-category="{{category}}"
           >
             {{#with (lookup (lookup ui.filters category) list)}}
-              {{#select techniqueFilter}}
-                <option value=""></option>
-                {{#each @root.config.magic.techniques as |technique key|}}
-                  <option value="{{key}}">{{technique.label}}</option>
-                {{/each}}
-              {{/select}}
+              {{selectOptions
+                @root.config.magic.techniques
+                selected=techniqueFilter
+                labelAttr="label"
+                blank=""
+              }}
             {{/with}}
           </select>
         </span>
@@ -39,12 +39,12 @@
             data-category="{{category}}"
           >
             {{#with (lookup (lookup ui.filters category) list)}}
-              {{#select formFilter}}
-                <option value=""></option>
-                {{#each @root.config.magic.forms as |form key|}}
-                  <option value="{{key}}">{{form.label}}</option>
-                {{/each}}
-              {{/select}}
+              {{selectOptions
+                @root.config.magic.forms
+                selected=formFilter
+                labelAttr="label"
+                blank=""
+              }}
             {{/with}}
           </select>
         </span>
@@ -64,11 +64,13 @@
               data-category="{{category}}"
             >
               {{#with (lookup (lookup ui.filters category) list)}}
-                {{#select levelOperator}}
-                  <option value="0">=</option>
-                  <option value="-1">&leq;</option>
-                  <option value="1">&geq;</option>
-                {{/select}}
+                {{selectOptions
+                  @root.config.genericOptions.filterOperator
+                  selected=levelOperator
+                  nameAttr="key"
+                  labelAttr="label"
+                  blank=""
+                }}
               {{/with}}
             </select>
             {{#with (lookup (lookup ui.filters category) list)}}
@@ -100,11 +102,13 @@
               data-category="{{category}}"
             >
               {{#with (lookup (lookup ui.filters category) list)}}
-                {{#select qualityOperator}}
-                  <option value="0">=</option>
-                  <option value="-1">&leq;</option>
-                  <option value="1">&geq;</option>
-                {{/select}}
+                {{selectOptions
+                  @root.config.genericOptions.filterOperator
+                  selected=qualityOperator
+                  nameAttr="key"
+                  labelAttr="label"
+                  blank=""
+                }}
               {{/with}}
             </select>
             {{#with (lookup (lookup ui.filters category) list)}}

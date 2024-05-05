@@ -32,11 +32,8 @@
               style="padding-left: 24px">{{localize "arm5e.sheet.level"}}</label>
             <select name="levelOperator" data-type="Number" data-list="filter" data-category="hermetic"
               style="flex: 0 0; font-family: bookAntiqua" class="levelOperator-filter">
-              {{#select ui.filters.hermetic.filter.levelOperator}}
-                <option value="0">=</option>
-                <option value="-1">&leq;</option>
-                <option value="1">&geq;</option>
-              {{/select}}
+              {{selectOptions config.genericOptions.filterOperator selected=ui.filters.hermetic.filter.levelOperator
+                 nameAttr="key" labelAttr="label" blank=""}}
             </select>
             <input type="number" name="levelFilter" data-list="filter" data-category="hermetic"
               value="{{ui.filters.hermetic.filter.levelFilter}}" data-dtype="Number" class="level-filter" />

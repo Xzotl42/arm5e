@@ -62,8 +62,7 @@ export class ArM5eMagicCodexSheet extends ArM5eActorSheet {
       view: game.settings.get("arm5e", "metagame"),
       edit: context.isGM ? "" : "readonly"
     };
-    context.config = {};
-    context.config.magic = CONFIG.ARM5E.magic;
+    context.config = CONFIG.ARM5E;
     this._prepareCodexItems(context);
 
     let filters = context.ui.filters.hermetic.filter;

@@ -39,11 +39,12 @@
     <div class="flexrow flex-group-center" style="border: 0px">
       <label class="header-label">{{localize "arm5e.sheet.divider"}}</label>
       <select name="system.castingtotal.divider" data-type="number" class="divider">
-        {{#select system.castingtotal.divider}}
-          <option value="1">{{localize "arm5e.messages.die.divideBy"}}1</option>
-          <option value="2">{{localize "arm5e.messages.die.divideBy"}}2</option>
-          <option value="5">{{localize "arm5e.messages.die.divideBy"}}5</option>
-        {{/select}}
+        {{selectOptions
+          spellCastingDividers
+          selected=system.castingtotal.divider
+          nameAttr="key"
+          labelAttr="label"
+        }}
       </select>
 
     </div>

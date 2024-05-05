@@ -2,7 +2,7 @@
 
 ### Dependencies updates
 
-- arm5e-compendia module minimum version 0.3.2
+- arm5e-compendia module minimum version 0.3.3
 
 ### Features & changes
 
@@ -25,6 +25,7 @@
 - Non-interactive rolls (eg: recovery) with [Dice so nice] are rolling dice again
 - Recovery logs are now displaying the correct bonus when rolling for botch.
 - [technical] added foundry.utils namespace whenever appropriate (first pass)
+- [technical] replace {{#select }} handlebars helper with {{selectOptions}} (148 remaining)
 
 ## 2.2.4.17, Pralix, founder of a new Order bis
 

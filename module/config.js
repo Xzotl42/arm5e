@@ -30,6 +30,14 @@ ARM5E.lang = {
   fr: { aspects: true }
 };
 
+ARM5E.genericOptions = {
+  filterOperator: [
+    { key: "0", label: "=" },
+    { key: "-1", label: "<=" },
+    { key: "1", label: ">=" }
+  ]
+};
+
 ARM5E.character.charTypes = {
   magus: {
     label: "arm5e.sheet.magus",
@@ -2610,24 +2618,24 @@ ARM5E.activities.lab = {
       spellCombobox: "disabled"
     }
   },
-  openEnchantment: {
-    label: "arm5e.lab.activity.openEnchantment",
-    enabled: "disabled",
-    edition: {
-      aura: "",
-      spellField: "readonly",
-      spellCombobox: "disabled"
-    }
-  },
-  longevityRitual: {
-    label: "arm5e.lab.activity.longevityRitual",
-    enabled: "disabled",
-    edition: {
-      aura: "",
-      spellField: "readonly",
-      spellCombobox: "disabled"
-    }
-  },
+  // openEnchantment: {
+  //   label: "arm5e.lab.activity.openEnchantment",
+  //   enabled: "disabled",
+  //   edition: {
+  //     aura: "",
+  //     spellField: "readonly",
+  //     spellCombobox: "disabled"
+  //   }
+  // },
+  // longevityRitual: {
+  //   label: "arm5e.lab.activity.longevityRitual",
+  //   enabled: "disabled",
+  //   edition: {
+  //     aura: "",
+  //     spellField: "readonly",
+  //     spellCombobox: "disabled"
+  //   }
+  // },
   chargedItem: {
     label: "arm5e.lab.activity.chargedEnchantment",
     enabled: "",
@@ -2646,15 +2654,15 @@ ARM5E.activities.lab = {
       spellCombobox: ""
     }
   },
-  majorEnchantment: {
-    label: "arm5e.lab.activity.majorEnchantment",
-    enabled: "disabled",
-    edition: {
-      aura: "",
-      spellField: "",
-      spellCombobox: ""
-    }
-  },
+  // majorEnchantment: {
+  //   label: "arm5e.lab.activity.majorEnchantment",
+  //   enabled: "disabled",
+  //   edition: {
+  //     aura: "",
+  //     spellField: "",
+  //     spellCombobox: ""
+  //   }
+  // },
   investigateItem: {
     label: "arm5e.lab.activity.itemInvestigation",
     enabled: "",
