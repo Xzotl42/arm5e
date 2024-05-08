@@ -1121,7 +1121,7 @@
   "arm5e.messages.applyDamage": "Aplicar dano",
   "arm5e.messages.useConf": "Usar ponto de determinação",
   "arm5e.messages.die.exploding": "Explodindo dado crítico!",
-  "arm5e.messages.die.noBotch": "Zero falhas de {dicenum} dados rolled!",
+  "arm5e.messages.die.noBotch": "Zero falhas de {dicenum} dados rolados!",
   "arm5e.messages.die.botch": "Uma falha crítica!",
   "arm5e.messages.die.botches": "{num} falhas críticas!",
   "arm5e.messages.die.bonus": "Bônus",
