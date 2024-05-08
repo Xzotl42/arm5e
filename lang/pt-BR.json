@@ -125,7 +125,7 @@
   "arm5e.sheet.action.Create": "Criar",
   "arm5e.sheet.action.Edit": "Editar",
   "arm5e.sheet.action.Delete": "Deletar",
-  "arm5e.sheet.action.Filter": "Filter",
+  "arm5e.sheet.action.Filter": "Filtrar",
   "arm5e.sheet.effectsToggle": "Ativar",
   "arm5e.sheet.house": "Casa",
   "arm5e.sheet.domusMagnus": "Domus Magna",
@@ -347,7 +347,7 @@
   "arm5e.combat.damage.ignored": "Ignorado na rolagem",
   "arm5e.sheet.genericModifier": "{mod} modificador",
 
-  "arm5e.sheet.yearBorn": "Ano de Nascença",
+  "arm5e.sheet.yearBorn": "Ano de Nascimento",
   "arm5e.sheet.apprenticeshipYears": "Aprendizado",
   "arm5e.sheet.birthName": "Nome de Nascença",
   "arm5e.sheet.name": "Nome",
