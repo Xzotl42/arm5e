@@ -1296,7 +1296,7 @@
   "arm5e.activity.msg.noSpell": "Nenhuma magia restante",
   "arm5e.activity.msg.duplicates": "Esses são duplicados {param}",
   "arm5e.activity.msg.wrongSingleItemXp": "Não mais que {param} XP pode ser atribuído a uma única habilidade, magia ou arte.",
-  "arm5e.activity.msg.wrongTotalXp": "Experiência total ({param}) deve ser igual a fonte.",
+  "arm5e.activity.msg.wrongTotalXp": "Experiência total ({param}) deve ser igual a qualidade da atividade.",
   "arm5e.activity.msg.missingMotherTongue": "Infância dever incluir uma língua viva no nível 5 (75xps).",
   "arm5e.activity.msg.abilityMissing": "Essa habilidade não existe mais.",
   "arm5e.activity.msg.spellMissing": "Essa magia não existe mais.",
