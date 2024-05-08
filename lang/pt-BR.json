@@ -1174,7 +1174,7 @@
   "arm5e.sheet.activeEffect.types.realmAlignment": "Alinhamento de Reino",
   "arm5e.sheet.activeEffect.types.optional": "Bônus opcional",
   "arm5e.sheet.activeEffect.types.spellmastery": "Aperfeiçoamento de magia",
-  "arm5e.sheet.activeEffect.types.roll.optional": "Rolar bônus opcional",
+  "arm5e.sheet.activeEffect.types.roll.optional": "Bônus de rolagem opcional",
 
   "arm5e.sheet.activeEffect.subtypes.none": "Nenhum",
   "arm5e.sheet.activeEffect.subtypes.fatigueTotal": "Total de fadiga",
