@@ -21,18 +21,14 @@
     <div class="flexrow flex-group-center" style="border: 0px">
       <label for="system.familiar.techniqueFam.value" class="bold">{{localize "arm5e.sheet.technique"}}</label>
       <select name="system.familiar.techniqueFam.value" data-type="String">
-        {{#select system.familiar.techniqueFam.value}} {{#each system.arts.techniques as |techniques key|}}
-            <option value="{{key}}">{{techniques.label}}</option>
-          {{/each}} {{/select}}
+        {{selectOptions system.arts.techniques selected=system.familiar.techniqueFam.value labelAttr="label"}}
       </select>
     </div>
 
     <div class="flexrow flex-group-center" style="border: 0px">
       <label for="system.familiar.formFam.value" class="bold">{{localize "arm5e.sheet.form"}}</label>
       <select name="system.familiar.formFam.value" data-type="String">
-        {{#select system.familiar.formFam.value}} {{#each system.arts.forms as |techniques key|}}
-            <option value="{{key}}">{{techniques.label}}</option>
-          {{/each}} {{/select}}
+        {{selectOptions system.arts.forms selected=system.familiar.formFam.value labelAttr="label"}}
       </select>
     </div>
   </div>

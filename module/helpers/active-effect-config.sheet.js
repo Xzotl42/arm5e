@@ -10,7 +10,7 @@ import ACTIVE_EFFECTS_TYPES from "../constants/activeEffectsTypes.js";
  */
 export class ArM5eActiveEffectConfig extends ActiveEffectConfig {
   static get defaultOptions() {
-    return mergeObject(super.defaultOptions, {
+    return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["arm5e", "sheet", "active-effect-sheet"],
       width: 700,
       height: "600px",
@@ -76,9 +76,19 @@ export class ArM5eActiveEffectConfig extends ActiveEffectConfig {
           context.selectedSubtypes[idx]
         ].default == "boolean"
       ) {
-        tmpSubTypes[context.selectedSubtypes[idx]].bool = true;
+        tmpSubTypes[context.selectedSubtypes[idx]].isBool = true;
       } else {
-        tmpSubTypes[context.selectedSubtypes[idx]].bool = false;
+        tmpSubTypes[context.selectedSubtypes[idx]].isBool = false;
+      }
+
+      if (
+        typeof ACTIVE_EFFECTS_TYPES[context.selectedTypes[idx]].subtypes[
+          context.selectedSubtypes[idx]
+        ].default == "string"
+      ) {
+        tmpSubTypes[context.selectedSubtypes[idx]].isString = true;
+      } else {
+        tmpSubTypes[context.selectedSubtypes[idx]].isString = false;
       }
 
       let withChoice =

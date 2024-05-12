@@ -19,11 +19,12 @@
       <label class="header-label flex01" style="padding-right: 5px;">{{localize "arm5e.activity.activity"}}</label>
       <select class="lab-activity flex01" name="flags.arm5e.planning.type" data-dtype="String"
         data-activity="{{planning.type}}">
-        {{#select flags.arm5e.planning.type}}
-          {{#each config.activities.lab as |activity key|}}
-            <option value="{{key}}" {{activity.enabled}}>{{localize activity.label}}</option>
-          {{/each}}
-        {{/select}}
+        {{selectOptions
+          config.activities.lab
+          selected=flags.arm5e.planning.type
+          labelAttr="label"
+          localize=true
+        }}
       </select>
     </div>
     {{> (lookup . "activitySheet") }}
@@ -55,10 +56,12 @@
                 <label class="header-label ">{{localize "arm5e.lab.distraction.label"}}
                 </label>
                 <select name="flags.arm5e.planning.distractions" data-dtype="String" style="max-height: 22px">
-                  {{#select flags.arm5e.planning.distractions}}
-                    {{#each config.activities.distractions as |type key|}}
-                      <option value="{{key}}">{{localize type.label}}</option>
-                    {{/each}} {{/select}}
+                  {{selectOptions
+                    config.activities.distractions
+                    selected=flags.arm5e.planning.distractions
+                    labelAttr="label"
+                    localize=true
+                  }}
                 </select>
               </div>
             </div>
@@ -103,9 +106,12 @@
       <label for="datetime.season" class="smallTitle">{{localize "arm5e.sheet.season"}}</label>
       <div class="resource-content flexrow flex-center flex-between margintop6">
         <select name="flags.arm5e.planning.date.season" data-type="String" style="width: 100%">
-          {{#select planning.date.season}} {{#each config.seasons as |season key|}}
-              <option value="{{key}}">{{localize season.label}}</option>
-            {{/each}} {{/select}}
+          {{selectOptions
+            config.seasons
+            selected=planning.date.season
+            labelAttr="label"
+            localize=true
+          }}
         </select>
       </div>
     </div>

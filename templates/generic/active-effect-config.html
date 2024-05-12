@@ -2,7 +2,7 @@
   {{> "systems/arm5e/templates/generic/largeDialog-header.html" header="Inputs" }}
   <!-- Effect Header -->
   <header class="sheet-header effect-options">
-    <img class="effect-icon" src="{{ data.ui.img }}" data-edit="icon" />
+    <img class="item-small-img" src="{{ data.ui.img }}" />
     <h1 class="effect-title">{{ data.ui.name }}</h1>
   </header>
 
@@ -111,14 +111,16 @@
                         <option value="{{key}}">{{localize value}}</option>
                       {{/each}} {{/select}}
                   </select>
+                {{else if (lookup (lookup (lookup ../subtypes i) (lookup ../selectedSubtypes i)) "isBool")}}
+                  <input class="effect-value" type="checkbox" name="changes.{{i}}.value" {{checked change.value}}
+                    data-dtype="Boolean" data-index="{{i}}" />
+                {{else if (lookup (lookup (lookup ../subtypes i) (lookup ../selectedSubtypes i)) "isString")}}
+                  <input class="effect-value" type="text" name="changes.{{i}}.value" value="{{change.value}}"
+                    data-dtype="String" data-index="{{i}}" />
+
                 {{else}}
-                  {{#if (lookup (lookup (lookup ../subtypes i) (lookup ../selectedSubtypes i)) "bool")}}
-                    <input class="effect-value" type="checkbox" name="changes.{{i}}.value" {{checked change.value}}
-                      data-dtype="Boolean" data-index="{{i}}" />
-                  {{else}}
-                    <input class="effect-value resource-focus" type="number" name="changes.{{i}}.value"
-                      value="{{change.value}}" data-dtype="Number" data-index="{{i}}" />
-                  {{/if }}
+                  <input class="effect-value resource-focus" type="number" name="changes.{{i}}.value"
+                    value="{{change.value}}" data-dtype="Number" data-index="{{i}}" />
                 {{/if }}
               </div>
 

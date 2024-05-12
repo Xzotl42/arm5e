@@ -68,7 +68,7 @@ export class ArM5eActorSheet extends ActorSheet {
 
   // /** @override */
   static get defaultOptions() {
-    const res = mergeObject(super.defaultOptions, {
+    const res = foundry.utils.mergeObject(super.defaultOptions, {
       dragDrop: [
         { dragSelector: ".item-list .item", dropSelector: null },
         { dragSelector: ".macro-ready" }
@@ -440,6 +440,22 @@ export class ArM5eActorSheet extends ActorSheet {
 
         // castingTotals
         context.system.castingTotals = {};
+        // dividing options
+
+        context.spellCastingDividers = [
+          {
+            key: "1",
+            label: game.i18n.localize("arm5e.messages.die.divideBy") + "1"
+          },
+          {
+            key: "2",
+            label: game.i18n.localize("arm5e.messages.die.divideBy") + "2"
+          },
+          {
+            key: "5",
+            label: game.i18n.localize("arm5e.messages.die.divideBy") + "5"
+          }
+        ];
         // labTotals
         context.system.labTotals = {};
         context.system.labTotal = context.system.labTotal ?? {};
@@ -1361,7 +1377,7 @@ export class ArM5eActorSheet extends ActorSheet {
       {
         name: name,
         type: type,
-        system: duplicate(dataset)
+        system: foundry.utils.duplicate(dataset)
       }
     ];
     // Remove the type from the dataset since it's in the itemData.type prop.
@@ -1603,6 +1619,28 @@ export class ArM5eActorSheet extends ActorSheet {
     });
     this.actor.apps[schedule.appId] = schedule;
     const res = await schedule.render(true);
+  }
+
+  // adding the correct topic index to the drag data for topics
+  _onDragStart(event) {
+    if (!event.target.classList.contains("topic")) {
+      super._onDragStart(event);
+      return;
+    }
+
+    let dragData;
+    const li = event.currentTarget;
+    // Owned Items
+    if (li.dataset.itemId) {
+      const item = this.actor.items.get(li.dataset.itemId);
+      log(false, "Added index to topic");
+      dragData = item.toDragData();
+      dragData.topicIdx = li.dataset.index;
+    }
+    if (!dragData) return;
+
+    // Set data transfer
+    event.dataTransfer.setData("text/plain", JSON.stringify(dragData));
   }
 
   static getFlavor(actorType) {

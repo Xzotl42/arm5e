@@ -416,6 +416,10 @@ async function onDropActorSheetData(actor, sheet, data) {
   if (data.type == "Item") {
     let item = await fromUuid(data.uuid);
 
+    // for book topics
+    if (data.topicIdx) {
+      item.topicIdx = data.topicIdx;
+    }
     if (sheet.isItemDropAllowed(item)) {
       return true;
     } else {

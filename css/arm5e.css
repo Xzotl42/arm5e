@@ -1874,6 +1874,7 @@ img.art-icon {
   -ms-flex: 0 0 24px;
   flex: 0 0 45px;
   margin-right: 5px;
+  object-fit: contain;
 }
 
 .arm5e .vignette {

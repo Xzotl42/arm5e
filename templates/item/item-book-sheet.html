@@ -79,6 +79,11 @@
         <div class="navItem-left-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
         {{localize "arm5e.sheet.enchantments"}}
       </a>
+      <a class="item posRelative" data-tab="effects">
+        <div class="navItem-right-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
+        <div class="navItem-left-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
+        {{localize "arm5e.sheet.effects"}}
+      </a>
     {{/if}}
 
     <!-- <a class="item posRelative" data-tab="authorship">
@@ -172,9 +177,10 @@
                       class="header-label">{{localize "arm5e.sheet.bookType"}}</label>
                     <select name="system.topics.{{topicIdx}}.type" class="book-type" data-type="String" {{lookup (lookup
                       topicsUi topicIdx) "bookTypeEdit" }} data-index="{{topicIdx}}">
-                      {{#select currentTopic.type}} {{#each @root.config.books.types }}
-                          <option value="{{this}}">{{this}}</option>
-                        {{/each}} {{/select}}
+                      {{selectOptions
+                        @root.config.books.types
+                        selected=currentTopic.type
+                      }}
                     </select>
                   </div>
 
@@ -294,6 +300,9 @@
         {{> "systems/arm5e/templates/item/parts/enchant-attributes-section.html" }}
     </div> <!-- END DESCRIPTION TAB -->
     {{> "systems/arm5e/templates/item/parts/enchant-extension.html" }}
+    <div class="tab effects" data-group="primary" data-tab="effects" style="overflow-y: scroll">
+      {{> "systems/arm5e/templates/generic/active-effects.html" }}
+    </div>
     {{/if}}
 
 

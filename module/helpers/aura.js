@@ -26,9 +26,13 @@ export default class Aura {
       this.scene = game.scenes.get(this.sceneId);
     }
     // If scene doesn't specify aura data, merge with defaultAura to always have correct structure
-    return mergeObject(this.scene?.getFlag("arm5e", "aura") || {}, this.constructor.defaultAura, {
-      overwrite: false
-    });
+    return foundry.utils.mergeObject(
+      this.scene?.getFlag("arm5e", "aura") || {},
+      this.constructor.defaultAura,
+      {
+        overwrite: false
+      }
+    );
   }
 
   /**

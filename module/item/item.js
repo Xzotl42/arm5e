@@ -461,10 +461,8 @@ export class ArM5eItem extends Item {
   async useItemCharge() {
     if (this.canBeEnchanted) {
       const chargesLeft = this.system.enchantments.charges;
-      if (chargesLeft) {
+      if (this.system.enchantments.charged && chargesLeft) {
         await this.update({ "system.enchantments.charges": chargesLeft - 1 });
-      } else {
-        log(false, "No charge left");
       }
     }
   }

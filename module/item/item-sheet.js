@@ -14,7 +14,7 @@ import { Sanatorium } from "../tools/sanatorium.js";
 export class ArM5eItemSheet extends ItemSheet {
   /** @override */
   static get defaultOptions() {
-    return mergeObject(super.defaultOptions, {
+    return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["arm5e", "sheet", "item"],
       width: 650,
       height: 750,
@@ -233,8 +233,13 @@ export class ArM5eItemSheet extends ItemSheet {
           break;
       }
     }
-
-    if (itemData.type == "virtue" || itemData.type == "flaw") {
+    if (["weapon", "armor", "book", "item"].includes(itemData.type)) {
+      if (context.isOwned) {
+        context.system.effectCreation = CONFIG.ISV10 ? false : true;
+      } else {
+        context.system.effectCreation = true;
+      }
+    } else if (itemData.type == "virtue" || itemData.type == "flaw") {
       if (context.isOwned) {
         context.system.effectCreation = CONFIG.ISV10 ? false : true;
         switch (context.item.parent.type) {
@@ -268,7 +273,7 @@ export class ArM5eItemSheet extends ItemSheet {
         };
       }
     } else if (itemData.type == "inhabitant") {
-      context.inhabitantCategory = deepClone(CONFIG.ARM5E.covenant.inhabitants);
+      context.inhabitantCategory = foundry.utils.deepClone(CONFIG.ARM5E.covenant.inhabitants);
       if (itemData.system.linked) {
         if (["magi", "companions"].includes(itemData.system.category)) {
           context.canEdit = "readonly";
@@ -569,7 +574,7 @@ export class ArM5eItemSheetNoDesc extends ArM5eItemSheet {
   /** @override */
   static get defaultOptions() {
     // No tabs
-    return mergeObject(super.defaultOptions, {
+    return foundry.utils.mergeObject(super.defaultOptions, {
       tabs: []
     });
   }

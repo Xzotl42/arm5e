@@ -9,7 +9,7 @@ import { ArM5eActorSheet } from "./actor-sheet.js";
 export class ArM5eBeastActorSheet extends ArM5eActorSheet {
   /** @override */
   static get defaultOptions() {
-    return mergeObject(super.defaultOptions, {
+    return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["arm5e", "sheet", "actor"],
       template: "systems/arm5e/templates/actor/actor-beast-sheet.html",
       width: 790,

@@ -30,7 +30,7 @@ export class NullableSchemaField extends fields.SchemaField {
 
   /** @inheritdoc */
   static get _defaults() {
-    return mergeObject(super._defaults, {
+    return foundry.utils.mergeObject(super._defaults, {
       required: false,
       nullable: true,
       initial: null
@@ -51,7 +51,7 @@ export class NullableSchemaField extends fields.SchemaField {
 export class NullableDocumentIdField extends fields.DocumentIdField {
   /** @inheritdoc */
   static get _defaults() {
-    return mergeObject(super._defaults, {
+    return foundry.utils.mergeObject(super._defaults, {
       required: false,
       blank: false,
       nullable: true,

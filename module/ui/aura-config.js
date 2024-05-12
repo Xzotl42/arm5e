@@ -16,9 +16,13 @@ export class AuraConfig extends FormApplication {
     const data = await super.getData();
 
     // Some scenes may have null or empty objects for their aura, so merge with the default aura data structure
-    data.aura = mergeObject(this.object.getFlag("arm5e", "aura") || {}, Aura.defaultAura, {
-      overwrite: false
-    });
+    data.aura = foundry.utils.mergeObject(
+      this.object.getFlag("arm5e", "aura") || {},
+      Aura.defaultAura,
+      {
+        overwrite: false
+      }
+    );
     return data;
   }
 

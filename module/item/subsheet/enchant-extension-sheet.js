@@ -65,7 +65,7 @@ export class ArM5eItemEnchantmentSheet {
         }
       };
 
-      mergeObject(sections, usercache[this.item.id].sections);
+      foundry.utils.mergeObject(sections, usercache[this.item.id].sections);
       sections.visibility.enchantments = enchantments;
       usercache[this.item.id].sections = sections;
     }
@@ -81,7 +81,7 @@ export class ArM5eItemEnchantmentSheet {
     context.ui = this.getUserCache();
     context.ui.flavor = "Neutral";
     enchants.totalCapa = 0;
-    enchants.states = duplicate(ARM5E.lab.enchantment.state);
+    enchants.states = foundry.utils.duplicate(ARM5E.lab.enchantment.state);
 
     context = await GetFilteredMagicalAttributes(context);
 
@@ -257,7 +257,7 @@ export class ArM5eItemEnchantmentSheet {
   }
 
   async _updateObject(event, formData) {
-    const expanded = expandObject(formData);
+    const expanded = foundry.utils.expandObject(formData);
     const source = this.sheet.object.toObject();
 
     const aspects = expanded?.system?.enchantments?.aspects;

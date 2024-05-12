@@ -878,7 +878,7 @@
   "arm5e.messages.die.botch": "¡Una pifia!",
   "arm5e.messages.die.botches": "¡{num} pifias!",
   "arm5e.messages.die.bonus": "Bono",
-  "arm5e.messages.die.divideBy": "Divide entre",
+  "arm5e.messages.die.divideBy": "Divide entre ",
   "arm5e.messages.die.warpGain": "Gana {num} punto(s) de Informidad",
 
   "arm5e.sheet.magic.gesturesType.exaggerated": "Gestos vigorosos",

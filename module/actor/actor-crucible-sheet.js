@@ -9,7 +9,7 @@ import { log } from "../tools.js";
 export class ArM5eCrucibleSheet extends ArM5eActorSheet {
   /** @override */
   static get defaultOptions() {
-    return mergeObject(super.defaultOptions, {
+    return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["arm5e", "sheet", "actor"],
       template: "systems/arm5e/templates/actor/actor-crucible-sheet.html",
       width: 790,

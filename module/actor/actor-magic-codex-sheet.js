@@ -15,7 +15,7 @@ export class ArM5eMagicCodexSheet extends ArM5eActorSheet {
   /** @override */
   static get defaultOptions() {
     const options = super.defaultOptions;
-    return mergeObject(options, {
+    return foundry.utils.mergeObject(options, {
       classes: [...options.classes, "arm5e", "sheet", "actor"],
       template: "systems/arm5e/templates/actor/actor-magic-codex-sheet.html",
       width: 790,
@@ -62,8 +62,7 @@ export class ArM5eMagicCodexSheet extends ArM5eActorSheet {
       view: game.settings.get("arm5e", "metagame"),
       edit: context.isGM ? "" : "readonly"
     };
-    context.config = {};
-    context.config.magic = CONFIG.ARM5E.magic;
+    context.config = CONFIG.ARM5E;
     this._prepareCodexItems(context);
 
     let filters = context.ui.filters.hermetic.filter;
@@ -105,7 +104,7 @@ export class ArM5eMagicCodexSheet extends ArM5eActorSheet {
               }
             }
           }
-          subset = duplicate(tmp);
+          subset = foundry.utils.duplicate(tmp);
           tmp = {};
         }
         context.system.filteredAspects = subset;
@@ -129,7 +128,7 @@ export class ArM5eMagicCodexSheet extends ArM5eActorSheet {
               }
             }
           }
-          subset = duplicate(tmp);
+          subset = foundry.utils.duplicate(tmp);
           tmp = {};
         }
         context.system.filteredAspects = subset;
@@ -403,7 +402,13 @@ export class ArM5eMagicCodexSheet extends ArM5eActorSheet {
       case "spell":
       case "laboratoryText":
         return item.system.type !== "raw";
-
+      case "book":
+        if (item.topicIdx) {
+          let topic = item.system.topics[item.topicIdx];
+          if (topic.category == "labText") {
+            return topic.labtext.type != "raw";
+          }
+        }
       default:
         return false;
     }
@@ -427,6 +432,19 @@ export class ArM5eMagicCodexSheet extends ArM5eActorSheet {
       // create a spell or enchantment data:
       if (item.system.type != "raw") {
         return await super._onDropItemCreate(labTextToEffect(foundry.utils.deepClone(item)));
+      }
+    } else if (type == "book") {
+      if (data.topicIdx) {
+        const topic = item.system.topics[data.topicIdx];
+        if (topic.category == "labText") {
+          return await super._onDropItemCreate(
+            labTextToEffect({
+              name: topic.labtextTitle,
+              type: "laboratoryText",
+              system: foundry.utils.deepClone(topic.labtext)
+            })
+          );
+        }
       }
     }
     const res = await super._onDropItem(event, data);

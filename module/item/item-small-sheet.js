@@ -8,7 +8,7 @@ import { ArM5eItemSheetNoDesc } from "./item-sheet.js";
 export class ArM5eSmallSheet extends ArM5eItemSheetNoDesc {
   /** @override */
   static get defaultOptions() {
-    return mergeObject(super.defaultOptions, {
+    return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["arm5e", "sheet", "item"],
       width: 400,
       height: 602

@@ -11,7 +11,7 @@ import { BookSchema } from "../schemas/bookSchema.js";
 export class ArM5eBookSheet extends ArM5eItemSheet {
   /** @override */
   static get defaultOptions() {
-    return mergeObject(super.defaultOptions, {
+    return foundry.utils.mergeObject(super.defaultOptions, {
       dragDrop: [{ dragSelector: null, dropSelector: ".drop-labtext" }]
     });
   }
@@ -346,11 +346,11 @@ export class ArM5eBookSheet extends ArM5eItemSheet {
   /** @inheritdoc */
   async _updateObject(event, formData) {
     if (!this.object.id) return;
-    const expanded = expandObject(formData);
+    const expanded = foundry.utils.expandObject(formData);
     const source = this.object.toObject();
     if (expanded.system?.topics) {
       const index = Number(Object.keys(expanded.system.topics)[0]);
-      mergeObject(source.system.topics, expanded.system.topics);
+      foundry.utils.mergeObject(source.system.topics, expanded.system.topics);
       expanded.system.topics = source.system.topics;
 
       // manage readonly fields

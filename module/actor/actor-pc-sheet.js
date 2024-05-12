@@ -10,7 +10,7 @@ import { labTextToEffect } from "../item/item-converter.js";
 export class ArM5ePCActorSheet extends ArM5eActorSheet {
   /** @override */
   static get defaultOptions() {
-    return mergeObject(super.defaultOptions, {
+    return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["arm5e", "sheet", "actor"],
       template: "systems/arm5e/templates/actor/actor-pc-sheet.html",
       width: 790,

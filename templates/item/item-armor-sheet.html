@@ -72,6 +72,11 @@
         <div class="navItem-left-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
         {{localize "arm5e.sheet.item.enchantments"}}
       </a>
+      <a class="item posRelative" data-tab="effects">
+        <div class="navItem-right-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
+        <div class="navItem-left-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
+        {{localize "arm5e.sheet.effects"}}
+      </a>
     {{/if}}
   </nav>
   {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
@@ -89,7 +94,10 @@
         {{> "systems/arm5e/templates/item/parts/enchant-attributes-section.html" }}
       </div> <!-- Description Tab END -->
       {{> "systems/arm5e/templates/item/parts/enchant-extension.html" }}
-
+      {{!-- Effects Tab --}}
+      <div class="tab effects" data-group="primary" data-tab="effects" style="overflow-y: scroll">
+        {{> "systems/arm5e/templates/generic/active-effects.html" }}
+      </div>
     {{/if}}
 
     {{#if metagame.view }}
@@ -98,6 +106,7 @@
         <input type="text" name="system.indexKey" value="{{system.indexKey}}" data-dtype="String"
           style="font-size: 10px; border:none; color:grey" {{metagame.edit}} />
       </div>
+
     {{/if}}
   </section>
 </form>
