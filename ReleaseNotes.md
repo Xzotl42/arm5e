@@ -11,8 +11,13 @@
   - Tracactus copy
 - Practice base XP is now editable.
 - Updated French version by @orneen
+- New Brazilian Portuguese version by @Gabriel Mendes
 - Casting stances are now available in the roll dialogs.
 - It is now possible to "use" a magic item's power
+- Physical items that are enchanted can now have active effects.
+- Lab texts copying
+- it is now possible to do individual copies instead of putting everything in one book.
+- Abilities specialties can be taken into account when writing or copying.
 
 ### Bug fixes
 
@@ -26,6 +31,7 @@
 - Recovery logs are now displaying the correct bonus when rolling for botch.
 - [technical] added foundry.utils namespace whenever appropriate (first pass)
 - [technical] replace {{#select }} handlebars helper with {{selectOptions}} (148 remaining)
+- When drag and dropping book topics from an actor's library, the correct topic is dropped.
 
 ## 2.2.4.17, Pralix, founder of a new Order bis
 

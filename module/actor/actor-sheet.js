@@ -1621,6 +1621,28 @@ export class ArM5eActorSheet extends ActorSheet {
     const res = await schedule.render(true);
   }
 
+  // adding the correct topic index to the drag data for topics
+  _onDragStart(event) {
+    if (!event.target.classList.contains("topic")) {
+      super._onDragStart(event);
+      return;
+    }
+
+    let dragData;
+    const li = event.currentTarget;
+    // Owned Items
+    if (li.dataset.itemId) {
+      const item = this.actor.items.get(li.dataset.itemId);
+      log(false, "Added index to topic");
+      dragData = item.toDragData();
+      dragData.topicIdx = li.dataset.index;
+    }
+    if (!dragData) return;
+
+    // Set data transfer
+    event.dataTransfer.setData("text/plain", JSON.stringify(dragData));
+  }
+
   static getFlavor(actorType) {
     switch (actorType) {
       case "player":

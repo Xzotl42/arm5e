@@ -88,7 +88,7 @@ export class BookSchema extends foundry.abstract.DataModel {
             blank: false,
             nullable: true,
             initial: "Summa",
-            choices: ARM5E.books.types
+            choices: Object.values(ARM5E.books.types)
           })
         }),
         {

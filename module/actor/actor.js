@@ -124,6 +124,13 @@ export class ArM5ePCActor extends Actor {
       ability: 0
     };
 
+    // // CHARACTER FEATURES
+    // if (this.system.features == undefined) {
+    //   this.system.features = { hedgeTradition: "" };
+    // } else {
+    //   this.system.features.hedgeTradition = "";
+    // }
+
     this.system.bonuses = {};
 
     if (this._isMagus()) {

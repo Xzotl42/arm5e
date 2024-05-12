@@ -776,7 +776,19 @@ export default {
       }
     }
   },
-
+  // characterFeatures: {
+  //   category: "character",
+  //   type: "characterFeatures",
+  //   label: "Character features",
+  //   subtypes: {
+  //     hedgeTradition: {
+  //       label: "Hedge magic tradition",
+  //       key: "system.features.hedgeTradition",
+  //       mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+  //       default: "Hedge Magic"
+  //     }
+  //   }
+  // },
   bonusGeneralAbility: {
     category: "abilities",
     type: "bonusGeneralAbility",

@@ -2573,7 +2573,7 @@ ARM5E.activities.generic = {
 };
 
 ARM5E.books = {};
-ARM5E.books.types = ["Summa", "Tractatus"];
+ARM5E.books.types = { Summa: "Summa", Tractatus: "Tractatus" };
 ARM5E.books.categories = {
   art: "arm5e.sheet.art",
   ability: "arm5e.sheet.ability",

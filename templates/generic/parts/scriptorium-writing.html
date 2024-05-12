@@ -30,35 +30,27 @@
           </div>
           <div class="scriptorium resource">
             <label for="writing.writer.language" class="header-label">{{localize "arm5e.scriptorium.languages"}}</label>
-            <select name="writing.writer.language" data-dtype="String" class="ability-key">
-              {{#select writing.writer.language}}
-                {{#each writing.writer.languages }}
-                  <option value="{{this.id}}">{{this.name}} ({{this.score}})</option>
-                {{/each}}
-              {{/select}}
+            <select name="writing.writer.language" data-dtype="String" class="ability-key language-writer">
+              {{selectOptions writing.writer.languages selected=writing.writer.language labelAttr="label" nameAttr="id"}}
             </select>
+            <input class="flex01" title="{{writing.writer.languageSpec}}" type="text"
+              value="{{writing.writer.languageSpec}}" readonly style="max-width: 150px" />
+            <input type="checkbox" name="writing.writer.languageSpecApply" {{checked writing.writer.languageSpecApply
+              }} />
           </div>
 
           <div class="scriptorium item-header resource">
             <label class="header-label">{{localize "arm5e.sheet.bookTopic"}}</label>
             <select class="book-topic-change writing" name="writing.book.system.topics.{{newTopicIndex}}.category"
               data-activity="writing" data-index="{{newTopicIndex}}" data-dtype="String" {{ui.disabledBook}}>
-              {{#select writing.book.newTopic.category}}
-                {{#each bookTopics as |book key|}}
-                  <option value="{{key}}">{{localize book}}</option>
-                {{/each}}
-                <option value="labText">{{localize "ITEM.TypeLaboratorytext"}}</option>
-              {{/select}}
+              {{selectOptions bookTopics selected=writing.book.newTopic.category localize=true}}
             </select>
             {{#unless (eq writing.book.newTopic.category "labText")}}
               <label for="writing.book.system.topics.{{newTopicIndex}}.type"
                 class="header-label">{{localize "arm5e.sheet.bookType"}}</label>
               <select name="writing.book.system.topics.{{newTopicIndex}}.type" data-type="String"
                 data-index="{{topicIndex}}" {{ui.disabledBook}} {{ui.writing.disableType}}>
-                {{#select writing.book.newTopic.type}} {{#each @root.bookTypes }}
-                    <option value="{{this}}">{{this}}</option>
-                  {{/each}}
-                {{/select}}
+                {{selectOptions @root.bookTypes selected=writing.book.newTopic.type  }}
               </select>
               <div class="scriptorium item-header" style="padding-top: 5px;">
                 <label for="writing.writer.writingBonus"
@@ -97,11 +89,7 @@
             <div class="scriptorium resource">
               <label for="writing.writer.ability" class="header-label">{{localize "arm5e.sheet.abilities"}}</label>
               <select name="writing.writer.ability" data-dtype="String" class="ability-key" {{ui.editItem}}>
-                {{#select writing.writer.ability}}
-                  {{#each writing.filteredAbilities }}
-                    <option value="{{this.id}}">{{this.name}} ({{this.system.finalScore}})</option>
-                  {{/each}}
-                {{/select}}
+                {{selectOptions writing.filteredAbilities selected=writing.writer.ability nameAttr="id" labelAttr="label"  }}
               </select>
             </div>
 
@@ -112,11 +100,7 @@
             <div class="scriptorium resource">
               <label for="writing.writer.art" class="header-label">{{localize "arm5e.sheet.arts"}}</label>
               <select name="writing.writer.art" data-dtype="String" class="ability-key" {{ui.editItem}}>
-                {{#select writing.writer.art}}
-                  {{#each writing.filteredArts }}
-                    <option value="{{this.id}}">{{this.label}} ({{this.finalScore}})</option>
-                  {{/each}}
-                {{/select}}
+                {{selectOptions writing.filteredArts selected=writing.writer.art nameAttr="id" labelAttr="label"}}
               </select>
             </div>
 
@@ -125,11 +109,7 @@
             <div class="scriptorium resource">
               <label for="writing.book.system.spell" class="header-label">{{localize "arm5e.sheet.spells"}}</label>
               <select name="writing.writer.spell" data-dtype="String" class="ability-key" {{ui.editItem}}>
-                {{#select writing.writer.spell}}
-                  {{#each writing.writer.filteredSpells }}
-                    <option value="{{this.id}}">{{this.name}} ({{this.mastery}})</option>
-                  {{/each}}
-                {{/select}}
+                {{selectOptions writing.writer.filteredSpells selected=writing.writer.spell nameAttr="id" labelAttr="label"}}
               </select>
             </div>
           {{/if}}

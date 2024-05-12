@@ -43,22 +43,14 @@
               <label class="header-label">{{localize "arm5e.sheet.bookTopic"}}</label>
               <select class="book-topic-change reading" name="reading.book.system.topics.{{topicIndex}}.category"
                 data-index="{{topicIndex}}" data-activity="reading" data-dtype="String" {{ui.disabledBook}}>
-                {{#select reading.book.currentTopic.category}}
-                  {{#each bookTopics as |book key|}}
-                    <option value="{{key}}">{{localize book}}</option>
-                  {{/each}}
-                  <option value="labText" disabled>{{localize "ITEM.TypeLaboratorytext"}}</option>
-                {{/select}}
+                {{selectOptions bookTopics selected=reading.book.currentTopic.category localize=true}}
               </select>
               {{#unless (eq reading.book.currentTopic.category "labText")}}
                 <label for="reading.book.system.topics.{{topicIndex}}.type"
                   class="header-label">{{localize "arm5e.sheet.bookType"}}</label>
                 <select name="reading.book.system.topics.{{topicIndex}}.type" data-type="String"
                   data-index="{{topicIndex}}" {{ui.disabledBook}} {{ui.reading.disableType}}>
-                  {{#select reading.book.currentTopic.type}} {{#each @root.bookTypes }}
-                      <option value="{{this}}">{{this}}</option>
-                    {{/each}}
-                  {{/select}}
+                  {{selectOptions @root.bookTypes selected=reading.book.currentTopic.type  }}
                 </select>
               {{/unless}}
             </div>
@@ -114,9 +106,7 @@
                   <label for="reading.book.system.topics.{{topicIndex}}.art"
                     class="header-label">{{localize "arm5e.sheet.art"}}</label>
                   <select name="reading.book.system.topics.{{topicIndex}}.art" data-type="String" {{ui.disabledBook}}>
-                    {{#select reading.book.currentTopic.art}} {{#each arts as |art key|}}
-                        <option value="{{key}}">{{art.label}}</option>
-                      {{/each}} {{/select}}
+                    {{selectOptions arts selected=reading.book.currentTopic.art labelAttr="label"}}
                   </select>
                 </div>
               {{/if}}
@@ -130,15 +120,12 @@
                 <div class="scriptorium resource">
                   <select name="reading.book.system.topics.{{topicIndex}}.spellTech" data-type="String"
                     {{ui.disabledBook}}>
-                    {{#select reading.book.currentTopic.spellTech}} {{#each techs as |tech key|}}
-                        <option value="{{key}}">{{tech.label}}</option>
-                      {{/each}} {{/select}}
+                    {{selectOptions techs selected=reading.book.currentTopic.spellTech labelAttr="label"}}
+
                   </select>
                   <select name="reading.book.system.topics.{{topicIndex}}.spellForm" data-type="String"
                     {{ui.disabledBook}}>
-                    {{#select reading.book.currentTopic.spellForm}} {{#each forms as |form key|}}
-                        <option value="{{key}}">{{form.label}}</option>
-                      {{/each}} {{/select}}
+                    {{selectOptions forms selected=reading.book.currentTopic.spellForm labelAttr="label"}}
                   </select>
                 </div>
               {{/if}}
@@ -188,11 +175,7 @@
           <div class="scriptorium resource">
             <label for="reading.reader.language" class="header-label">{{localize "arm5e.scriptorium.languages"}}</label>
             <select name="reading.reader.language" data-dtype="String" class="ability-key">
-              {{#select reading.reader.language}}
-                {{#each reading.reader.languages }}
-                  <option value="{{this.id}}">{{this.name}}</option>
-                {{/each}}
-              {{/select}}
+              {{selectOptions reading.reader.languages selected=reading.reader.language labelAttr="name" nameAttr="id"}}
             </select>
           </div>
           <div class="scriptorium resource"></div>
@@ -201,11 +184,7 @@
             <div class="scriptorium resource">
               <label for="reading.reader.ability" class="header-label">{{localize "arm5e.sheet.abilities"}}</label>
               <select name="reading.reader.ability" data-dtype="String" class="ability-key" {{ui.editItem}}>
-                {{#select reading.reader.ability}}
-                  {{#each reading.reader.abilities }}
-                    <option value="{{this._id}}">{{this.name}}</option>
-                  {{/each}}
-                {{/select}}
+                {{selectOptions reading.reader.abilities selected=reading.reader.ability labelAttr="name" nameAttr="_id"}}
               </select>
             </div>
 
@@ -215,11 +194,7 @@
             <div class="scriptorium resource">
               <label for="reading.reader.spell" class="header-label">{{localize "arm5e.sheet.spells"}}</label>
               <select name="reading.reader.spell" data-dtype="String" class="ability-key" {{ui.editItem}}>
-                {{#select reading.reader.spell}}
-                  {{#each reading.reader.spells }}
-                    <option value="{{this.id}}">{{this.name}}</option>
-                  {{/each}}
-                {{/select}}
+                {{selectOptions reading.reader.spells selected=reading.reader.spell labelAttr="name" nameAttr="id"}}
               </select>
             </div>
           {{/if}}

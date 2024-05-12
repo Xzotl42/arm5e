@@ -233,8 +233,13 @@ export class ArM5eItemSheet extends ItemSheet {
           break;
       }
     }
-
-    if (itemData.type == "virtue" || itemData.type == "flaw") {
+    if (["weapon", "armor", "book", "item"].includes(itemData.type)) {
+      if (context.isOwned) {
+        context.system.effectCreation = CONFIG.ISV10 ? false : true;
+      } else {
+        context.system.effectCreation = true;
+      }
+    } else if (itemData.type == "virtue" || itemData.type == "flaw") {
       if (context.isOwned) {
         context.system.effectCreation = CONFIG.ISV10 ? false : true;
         switch (context.item.parent.type) {

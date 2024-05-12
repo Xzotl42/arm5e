@@ -402,7 +402,13 @@ export class ArM5eMagicCodexSheet extends ArM5eActorSheet {
       case "spell":
       case "laboratoryText":
         return item.system.type !== "raw";
-
+      case "book":
+        if (item.topicIdx) {
+          let topic = item.system.topics[item.topicIdx];
+          if (topic.category == "labText") {
+            return topic.labtext.type != "raw";
+          }
+        }
       default:
         return false;
     }
@@ -426,6 +432,19 @@ export class ArM5eMagicCodexSheet extends ArM5eActorSheet {
       // create a spell or enchantment data:
       if (item.system.type != "raw") {
         return await super._onDropItemCreate(labTextToEffect(foundry.utils.deepClone(item)));
+      }
+    } else if (type == "book") {
+      if (data.topicIdx) {
+        const topic = item.system.topics[data.topicIdx];
+        if (topic.category == "labText") {
+          return await super._onDropItemCreate(
+            labTextToEffect({
+              name: topic.labtextTitle,
+              type: "laboratoryText",
+              system: foundry.utils.deepClone(topic.labtext)
+            })
+          );
+        }
       }
     }
     const res = await super._onDropItem(event, data);

@@ -58,7 +58,7 @@
   <div id="topic-abilities" class="topic toggle-collapse">
     {{#each system.filteredMundaneTopics as |item id|}}
 
-      <li class="item item-value flexrow flex-center" data-name="{{item.book}}" data-index="{{item.index}}"
+      <li class="item item-value flexrow flex-center topic" data-name="{{item.book}}" data-index="{{item.index}}"
         data-item-id="{{item.id}}">
         <div class="item-image item-control item-edit"><img src="{{item.img}}" title="{{item.name}}" /></div>
         <div class="flexrow flex-center">
@@ -110,7 +110,7 @@
   <div id="topic-masteries" class="topic toggle-collapse">
     {{#each system.filteredMasteriesTopics as |item id|}}
 
-      <li class="item item-value flexrow flex-center" data-name="{{item.book}}" data-index="{{item.index}}"
+      <li class="item item-value flexrow flex-center topic" data-name="{{item.book}}" data-index="{{item.index}}"
         data-item-id="{{item.id}}">
         <div class="item-image item-control item-edit"><img src="{{item.img}}" title="{{item.name}}" /></div>
         <div class="flexrow flex-center">
@@ -157,7 +157,7 @@
   <div id="topic-labtext" class="topic toggle-collapse">
     {{#each system.filteredLaboratoryTexts as |item id|}}
 
-      <li class="item item-value flexrow flex-center" data-name="{{item.name}}" data-index="{{item.index}}"
+      <li class="item item-value flexrow flex-center topic" data-name="{{item.name}}" data-index="{{item.index}}"
         data-item-id="{{item.id}}">
         <div class="item-image item-control item-edit"><img src="{{item.img}}" title="{{item.name}}" /></div>
         <div class="flexrow flex-center">

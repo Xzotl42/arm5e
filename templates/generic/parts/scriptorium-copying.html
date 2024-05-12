@@ -46,10 +46,15 @@
             <div class="scriptorium item-header resource">
               <label class="header-label checkbox-label">{{localize "arm5e.scriptorium.quickCopy"}}</label>
               <input type="checkbox" name="copying.quickCopy" {{checked copying.quickCopy }} />
+              <label class="header-label checkbox-label">{{localize "arm5e.scriptorium.individualCopies"}}</label>
+              <input type="checkbox" name="copying.individualCopies" {{checked copying.individualCopies }} />
             </div>
             <div class="scriptorium item-header resource">
               <label for="copying.scribe.copyingScore" class="header-label">{{copying.scribe.writingScoreLabel}} :
                 {{copying.scribe.writingScore}}</label>
+              <input class="flex01" title="{{copying.scribe.speciality}}" type="text"
+                value="{{copying.scribe.speciality}}" readonly style="max-width: 150px" />
+              <input type="checkbox" name="copying.scribe.specApply" {{checked copying.scribe.specApply }} />
             </div>
             <div class="scriptorium item-header resource">
               <label for="copying.scribe.copyingScore" class="header-label">{{localize "arm5e.sheet.duration"}} :
@@ -69,12 +74,7 @@
         id="scriptorium-book-copy">
         <div class="resource">
           <select class="copying" name="copying.topicType" data-dtype="String" {{copying.topicTypeChange}}>
-            {{#select copying.topicType}}
-              {{#each bookTypes}}
-                <option value="{{this}}">{{this}}</option>
-              {{/each}}
-              <!-- <option value="labText">{{localize "ITEM.TypeLaboratorytext"}}</option> -->
-            {{/select}}
+            {{selectOptions copying.copyTypes selected=copying.topicType  }}
           </select>
         </div>
         {{#unless copying.books.length}}
@@ -84,50 +84,51 @@
         {{/unless}}
         {{> "systems/arm5e/templates/generic/metalic-bar.html" topoffset="-7px" }}
         <div class="drop-book" data-drop="copy-book">
-          {{#each copying.books}}
-
-            <div class="backSection resource">
-              <div class="scriptorium item-header resource flexrow">
-                <div class="scriptorium item-header resource">
-                  <label class="header-label">{{localize "arm5e.activity.book.title"}}</label>
-                  <input type="text" name="copying.books.{{@index}}.name" value="{{this.name}}" data-dtype="String">
-                </div>
-                <div class="scriptorium item-header resource">
-                  <label class="header-label">{{localize "arm5e.sheet.authorship.language"}}</label>
-                  <input type="text" name="copying.books.{{@index}}.system.topics.{{this.system.topicIndex}}.language"
-                    value="{{this.currentTopic.language}}" data-dtype="String" readonly style="max-width: 150px;">
-                </div>
-                <div class="scriptorium item-header resource" style="max-width: 50px;">
-                  <input type="checkbox"
-                    name="copying.books.{{@index}}.system.topics.{{this.system.topicIndex}}.languageConfirmed" {{checked
-                    this.currentTopic.languageConfirmed }} />
-                </div>
-              </div>
-              <div class="flexrow">
-                <div class="flexcol">
+          {{#unless (or (eq this.currentTopic.category "labText") (eq copying.topicType "labText"))}}
+            {{#each copying.books}}
+              <div class="backSection resource">
+                <div class="scriptorium item-header resource flexrow">
                   <div class="scriptorium item-header resource">
-                    <label class="header-label">{{localize "arm5e.sheet.bookTopic"}}</label>
-                    <input type="text" value="{{localize (lookup @root.bookTopics  this.currentTopic.category) }}"
-                      data-dtype="String" readonly>
+                    <label class="header-label">{{localize "arm5e.activity.book.title"}}</label>
+                    <input type="text" name="copying.books.{{@index}}.name" value="{{this.name}}" data-dtype="String">
+                  </div>
+                  <div class="scriptorium item-header resource">
+                    <label class="header-label">{{localize "arm5e.sheet.authorship.language"}}</label>
+                    <input type="text" name="copying.books.{{@index}}.system.topics.{{this.system.topicIndex}}.language"
+                      value="{{this.currentTopic.language}}" data-dtype="String" readonly style="max-width: 150px;">
+                  </div>
+                  <div class="scriptorium item-header resource" style="max-width: 50px;">
+                    <input type="checkbox"
+                      name="copying.books.{{@index}}.system.topics.{{this.system.topicIndex}}.languageConfirmed"
+                      {{checked this.currentTopic.languageConfirmed }} />
                   </div>
                 </div>
-                {{#if (gt this.system.topics.length 1)}}
-                  <div class="flexrow" style="max-width: 180px;">
-                    <div class="img-container"><img class="nav-arrow previous-topicToCopy clickable"
-                        data-index="{{this.system.topicIndex}}" data-book-index="{{@index}}"
-                        src="systems/arm5e/assets/bLeft.png" />
+                <div class="flexrow">
+                  <div class="flexcol">
+                    <div class="scriptorium item-header resource">
+                      <label class="header-label">{{localize "arm5e.sheet.bookTopic"}}</label>
+                      <input type="text" value="{{localize (lookup @root.bookTopics  this.currentTopic.category) }}"
+                        data-dtype="String" readonly>
                     </div>
-                    <div style="align-items:center;justify-content: center;display: flex;">
-                      <label>{{localize "arm5e.sheet.topics.current" current=currentTopicToCopyNumber total=copyTopicNum}}</label>
-                    </div>
-                    <div class="img-container"><img class="nav-arrow next-topicToCopy clickable"
-                        data-index="{{this.system.topicIndex}}" data-book-index="{{@index}}"
-                        src="systems/arm5e/assets/bRight.png" /></div>
                   </div>
-                {{/if}}
-              </div>
-              <div class="scriptorium resource">
-                {{#unless (eq this.currentTopic.category "labText")}}
+                  {{#if (gt this.system.topics.length 1)}}
+                    <div class="flexrow" style="max-width: 180px;">
+                      <div class="img-container"><img class="nav-arrow previous-topicToCopy clickable"
+                          data-index="{{this.system.topicIndex}}" data-book-index="{{@index}}"
+                          src="systems/arm5e/assets/bLeft.png" />
+                      </div>
+                      <div style="align-items:center;justify-content: center;display: flex;">
+                        <label>{{localize "arm5e.sheet.topics.current" current=currentTopicToCopyNumber total=copyTopicNum}}</label>
+                      </div>
+                      <div class="img-container"><img class="nav-arrow next-topicToCopy clickable"
+                          data-index="{{this.system.topicIndex}}" data-book-index="{{@index}}"
+                          src="systems/arm5e/assets/bRight.png" /></div>
+                    </div>
+                  {{/if}}
+                </div>
+                <div class="scriptorium resource">
+
+
                   <div class="flexrow">
                     <fieldset>
                       <legend>{{localize "arm5e.generic.params"}}</legend>
@@ -199,33 +200,34 @@
                           class="icon-Icon_Delete_Hand_Gesture"></i></a>
                     </div>
                   </div>
-                {{else}}
-                  <div class="scriptorium item-header resource copy-labtext" data-drop="copy-labtext">
-                    <fieldset style="min-height: 100px;">
-                      <legend><label>{{localize "arm5e.sheet.labTexts"}}</label></legend>
-                      {{#if labTexts.length}}
-                        <div class="scriptorium resource">
-                          <ul>
-                            {{#each labTexts}}
-                              <li data-index="{{@index}}" data-uuid="{{this.uuid}}"><label>"{{this.name}}" :
-                                  {{this.label}}{{this.level}}</label><a class="remove-labText" data-index="{{@index}}"
-                                  title="Delete lab text">
-                                  <i class="icon-Icon_Delete_Hand_Gesture"></i></a>
-                              </li>
-                            {{/each}}
-                          </ul>
-                        </div>
-                      {{else}}
-                        <label>{{localize "arm5e.scriptorium.msg.dropLabText"}}</label>
-                      {{/if}}
-                    </fieldset>
 
-                  </div>
-                {{/unless}}
+                </div>
               </div>
+              <div class="greenBar" style="margin: 4px;"></div>
+            {{/each}}
+          {{else}}
+            <div class="scriptorium item-header resource copy-labtext" data-drop="copy-labtext">
+              <fieldset style="min-height: 100px;">
+                <legend><label>{{localize "arm5e.sheet.labTexts"}}</label></legend>
+                {{#if copying.labTexts.length}}
+                  <div class="scriptorium resource">
+                    <ul>
+                      {{#each copying.labTexts}}
+                        <li data-index="{{@index}}" data-uuid="{{this.uuid}}"><label>"{{this.name}}" :
+                            {{this.label}}{{this.level}}</label><a class="remove-labTextCopy" data-index="{{@index}}"
+                            title="Delete lab text">
+                            <i class="icon-Icon_Delete_Hand_Gesture"></i></a>
+                        </li>
+                      {{/each}}
+                    </ul>
+                  </div>
+                {{else}}
+                  <label>{{localize "arm5e.scriptorium.msg.dropLabText"}}</label>
+                {{/if}}
+              </fieldset>
+
             </div>
-            <div class="greenBar" style="margin: 4px;"></div>
-          {{/each}}
+          {{/unless}}
         </div>
       </div>
       <div>
