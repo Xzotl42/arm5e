@@ -282,7 +282,7 @@ function getFlavorForPlayersResult({
 }
 
 async function chatFailedCasting(actorCaster, roll, message, fatigue) {
-  const levelOfSpell = actorCaster.rollData.magic.level;
+  const levelOfSpell = actorCaster.rollInfo.magic.level;
   const totalOfSpell = roll._total;
   const title =
     '<h2 class="ars-chat-title">' + game.i18n.localize("arm5e.sheet.spellFailed") + "</h2>";

@@ -123,8 +123,8 @@ export class InvestigationRoll extends FormApplication {
       }),
       physicalcondition: false
     };
-    this.actor.rollData.init(dataset, this.actor);
-    this.actor.rollData.setGenericField(
+    this.actor.rollInfo.init(dataset, this.actor);
+    this.actor.rollInfo.setGenericField(
       game.i18n.localize("arm5e.sheet.labTotal"),
       labTotal,
       1,

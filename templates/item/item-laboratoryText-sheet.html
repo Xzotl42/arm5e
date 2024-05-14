@@ -55,7 +55,7 @@
   <section class="sheet-body">
     {{!-- Description Tab --}}
     {{#if (eq system.type "raw")}}
-      {{editor system.description target="system.description" button=true owner=owner engine="prosemirror" editable=editable}}
+      {{editor enrichedDescription target="system.description" button=true owner=owner engine="prosemirror" editable=editable}}
     {{else}}
       {{> "systems/arm5e/templates/item/parts/spell-design-V2.html" docId=@root.item._id container="book" 
     prefix="" spelldata=@root visibility=@root.ui.sections.visibility.book ritual=(eq system.type "spell") noApplyFocus=true}}

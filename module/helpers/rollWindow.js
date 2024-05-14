@@ -177,8 +177,8 @@ function getRollTypeProperties(type) {
 }
 
 function prepareRollVariables(dataset, actor) {
-  actor.rollData.init(dataset, actor);
-  // log(false, `Roll data: ${JSON.stringify(actor.rollData)}`);
+  actor.rollInfo.init(dataset, actor);
+  // log(false, `Roll data: ${JSON.stringify(actor.rollInfo)}`);
 }
 
 function chooseTemplate(dataset) {
@@ -219,7 +219,7 @@ function updateCharacteristicDependingOnRoll(dataset, actor) {
       dataset.roll
     )
   ) {
-    actor.rollData.characteristic = "sta";
+    actor.rollInfo.characteristic = "sta";
   }
 }
 
@@ -230,14 +230,14 @@ function getDebugButtonsIfNeeded(actor, callback) {
       label: "DEV Roll 1",
       callback: async (html) => {
         actor = getFormData(html, actor);
-        await stressDie(actor, actor.rollData.type, 1, callback);
+        await stressDie(actor, actor.rollInfo.type, 1, callback);
       }
     },
     zero: {
       label: "DEV Roll 0",
       callback: async (html) => {
         actor = getFormData(html, actor);
-        await stressDie(actor, actor.rollData.type, 2, callback);
+        await stressDie(actor, actor.rollInfo.type, 2, callback);
       }
     }
   };
@@ -296,7 +296,7 @@ function getDialogData(dataset, html, actor) {
         icon: "<i class='fas fa-ban'></i>",
         label: game.i18n.localize("arm5e.dialog.button.cancel"),
         callback: async (html) => {
-          await actor.rollData.reset();
+          await actor.rollInfo.reset();
         }
       };
     }
@@ -317,7 +317,7 @@ function getDialogData(dataset, html, actor) {
       icon: "<i class='fas fa-ban'></i>",
       label: game.i18n.localize("arm5e.dialog.button.cancel"),
       callback: async (html) => {
-        await actor.rollData.reset();
+        await actor.rollInfo.reset();
       }
     };
   }
@@ -341,7 +341,7 @@ async function useMagicItem(dataset, item) {
   prepareRollVariables(dataset, item.actor);
   log(false, `Roll variables: ${JSON.stringify(item.actor.system.roll)}`);
   let template = "systems/arm5e/templates/actor/parts/actor-itemUse.html";
-  item.actor.system.roll = item.actor.rollData;
+  item.actor.system.roll = item.actor.rollInfo;
   item.actor.config = CONFIG.ARM5E;
   const renderedTemplate = await renderTemplate(template, item.actor);
 
@@ -385,7 +385,7 @@ async function usePower(dataset, actor) {
   prepareRollVariables(dataset, actor);
   log(false, `Roll variables: ${JSON.stringify(actor.system.roll)}`);
   let template = "systems/arm5e/templates/actor/parts/actor-powerUse.html";
-  actor.system.roll = actor.rollData;
+  actor.system.roll = actor.rollInfo;
   const renderedTemplate = await renderTemplate(template, actor);
 
   const dialog = new Dialog(
@@ -437,13 +437,13 @@ function addListenersDialog(html) {
     let update = await PickRequisites(newSpell.system, dataset.flavor);
     await newSpell.updateSource(update);
     let techData = newSpell._getTechniqueData(actor.system);
-    actor.rollData.magic.techniqueLabel = techData[0];
-    actor.rollData.magic.techniqueScore = techData[1];
-    actor.rollData.magic.techDeficiency = techData[2];
+    actor.rollInfo.magic.techniqueLabel = techData[0];
+    actor.rollInfo.magic.techniqueScore = techData[1];
+    actor.rollInfo.magic.techDeficiency = techData[2];
     let formData = newSpell._getFormData(actor.system);
-    actor.rollData.magic.formLabel = formData[0];
-    actor.rollData.magic.formScore = formData[1];
-    actor.rollData.magic.formDeficiency = formData[2];
+    actor.rollInfo.magic.formLabel = formData[0];
+    actor.rollInfo.magic.formScore = formData[1];
+    actor.rollInfo.magic.formDeficiency = formData[2];
   });
 
   html.find(".voice-and-gestures").change(async (event) => {
@@ -458,7 +458,7 @@ async function renderRollTemplate(dataset, template, actor) {
   if (!template) {
     return;
   }
-  actor.system.roll = actor.rollData;
+  actor.system.roll = actor.rollInfo;
   actor.config = CONFIG.ARM5E;
   const renderedTemplate = await renderTemplate(template, actor);
   const dialogData = getDialogData(dataset, renderedTemplate, actor);
@@ -479,7 +479,7 @@ async function renderRollTemplate(dataset, template, actor) {
 
 async function castSpell(actorCaster, roll, message) {
   // first check that the spell succeeds
-  const levelOfSpell = actorCaster.rollData.magic.level;
+  const levelOfSpell = actorCaster.rollInfo.magic.level;
   const totalOfSpell = Math.round(roll._total);
 
   if (roll.botches > 0) {
@@ -487,10 +487,10 @@ async function castSpell(actorCaster, roll, message) {
       "system.warping.points": actorCaster.system.warping.points + roll.botches
     });
   }
-  if (actorCaster.rollData.type == "spell") {
-    if (totalOfSpell < levelOfSpell || actorCaster.rollData.magic.ritual) {
+  if (actorCaster.rollInfo.type == "spell") {
+    if (totalOfSpell < levelOfSpell || actorCaster.rollInfo.magic.ritual) {
       let fatigue = 1;
-      if (actorCaster.rollData.magic.ritual) {
+      if (actorCaster.rollInfo.magic.ritual) {
         fatigue = Math.max(Math.ceil((levelOfSpell - totalOfSpell) / 5), 1);
       }
       // lose fatigue levels
@@ -502,7 +502,7 @@ async function castSpell(actorCaster, roll, message) {
     }
     // Uncomment when A-A integration is ready
     // let data = {
-    //   itemId: actorCaster.rollData.itemId,
+    //   itemId: actorCaster.rollInfo.itemId,
     //   targets: game.user.targets,
     //   actorId: actorCaster._id
     // };
@@ -523,133 +523,133 @@ async function castSpell(actorCaster, roll, message) {
 export function getFormData(html, actor) {
   let find = html.find(".SelectedCharacteristic");
   if (find.length > 0) {
-    actor.rollData.characteristic = find[0].value;
+    actor.rollInfo.characteristic = find[0].value;
   }
   find = html.find(".SelectedAbility");
   if (find.length > 0) {
     if (find[0].value == "None") {
       const dataset = {
-        name: actor.rollData.name,
+        name: actor.rollInfo.name,
         roll: "char",
-        characteristic: actor.rollData.characteristic,
-        modifier: actor.rollData.modifier
+        characteristic: actor.rollInfo.characteristic,
+        modifier: actor.rollInfo.modifier
       };
-      actor.rollData.init(dataset, actor);
-      // actor.rollData.ability.score = 0;
-      // actor.rollData.ability.name = "";
-      // actor.rollData.type = "char";
+      actor.rollInfo.init(dataset, actor);
+      // actor.rollInfo.ability.score = 0;
+      // actor.rollInfo.ability.name = "";
+      // actor.rollInfo.type = "char";
     } else {
       const dataset = {
-        name: actor.rollData.name,
+        name: actor.rollInfo.name,
         roll: "ability",
         ability: find[0].value,
-        defaultcharacteristic: actor.rollData.characteristic,
-        modifier: actor.rollData.modifier
+        defaultcharacteristic: actor.rollInfo.characteristic,
+        modifier: actor.rollInfo.modifier
       };
-      actor.rollData.init(dataset, actor);
+      actor.rollInfo.init(dataset, actor);
 
       // const ability = actor.items.get(find[0].value);
-      // actor.rollData.ability.score = ability.system.finalScore;
-      // actor.rollData.ability.name = ability.name;
-      // actor.rollData.type = "ability";
+      // actor.rollInfo.ability.score = ability.system.finalScore;
+      // actor.rollInfo.ability.name = ability.name;
+      // actor.rollInfo.type = "ability";
     }
   }
 
   find = html.find(".abilitySpeciality");
   if (find.length > 0) {
-    actor.rollData.ability.specApply = find[0].checked;
+    actor.rollInfo.ability.specApply = find[0].checked;
   }
 
   find = html.find(".SelectedTechnique");
   if (find.length > 0) {
-    actor.rollData.magic.technique = find[0].value;
-    actor.rollData.magic.techniqueLabel = ARM5E.magic.techniques[find[0].value].label;
-    actor.rollData.magic.techniqueScore = parseInt(
+    actor.rollInfo.magic.technique = find[0].value;
+    actor.rollInfo.magic.techniqueLabel = ARM5E.magic.techniques[find[0].value].label;
+    actor.rollInfo.magic.techniqueScore = parseInt(
       actor.system.arts.techniques[find[0].value].finalScore
     );
 
     if (actor.system.arts.techniques[find[0].value].deficient) {
-      actor.rollData.magic.techDeficiency = true;
+      actor.rollInfo.magic.techDeficiency = true;
     } else {
-      actor.rollData.magic.techDeficiency = false;
+      actor.rollInfo.magic.techDeficiency = false;
     }
   }
 
   find = html.find(".SelectedForm");
   if (find.length > 0) {
-    actor.rollData.magic.form = find[0].value;
-    actor.rollData.magic.formLabel = ARM5E.magic.forms[find[0].value].label;
-    actor.rollData.magic.formScore = parseInt(actor.system.arts.forms[find[0].value].finalScore);
+    actor.rollInfo.magic.form = find[0].value;
+    actor.rollInfo.magic.formLabel = ARM5E.magic.forms[find[0].value].label;
+    actor.rollInfo.magic.formScore = parseInt(actor.system.arts.forms[find[0].value].finalScore);
     if (actor.system.arts.forms[find[0].value].deficient) {
-      actor.rollData.magic.formDeficiency = true;
+      actor.rollInfo.magic.formDeficiency = true;
     } else {
-      actor.rollData.magic.formDeficiency = false;
+      actor.rollInfo.magic.formDeficiency = false;
     }
   }
 
   find = html.find(".SelectedAura");
   if (find.length > 0) {
-    actor.rollData.environment.aura.modifier = Number(find[0].value) ?? 0;
+    actor.rollInfo.environment.aura.modifier = Number(find[0].value) ?? 0;
   }
 
   find = html.find(".SelectedLevel");
   if (find.length > 0) {
-    actor.rollData.magic.level = Number(find[0].value) ?? 0;
+    actor.rollInfo.magic.level = Number(find[0].value) ?? 0;
   }
 
   find = html.find(".SelectedModifier");
   if (find.length > 0) {
-    actor.rollData.modifier = Number(find[0].value) ?? 0;
+    actor.rollInfo.modifier = Number(find[0].value) ?? 0;
     // negative modifier
-    if ([ROLL_PROPERTIES.CRISIS.VAL].includes(actor.rollData.type)) {
-      actor.rollData.modifier = -actor.rollData.modifier;
+    if ([ROLL_PROPERTIES.CRISIS.VAL].includes(actor.rollInfo.type)) {
+      actor.rollInfo.modifier = -actor.rollInfo.modifier;
     }
   }
 
   find = html.find(".SelectedAdvantage");
   if (find.length > 0) {
-    actor.rollData.combat.advantage = Number(find[0].value) ?? 0;
+    actor.rollInfo.combat.advantage = Number(find[0].value) ?? 0;
   }
 
   find = html.find(".SelectedFocus");
   if (find.length > 0) {
-    actor.rollData.magic.focus = find[0].checked;
+    actor.rollInfo.magic.focus = find[0].checked;
   }
 
   find = html.find(".SelectedYear");
   if (find.length > 0) {
-    actor.rollData.environment.year = Number(find[0].value) ?? 1220;
+    actor.rollInfo.environment.year = Number(find[0].value) ?? 1220;
   }
 
   if (
     [ROLL_PROPERTIES.SPONT.VAL, ROLL_PROPERTIES.MAGIC.VAL, ROLL_PROPERTIES.SPELL.VAL].includes(
-      actor.rollData.type
+      actor.rollInfo.type
     ) ||
-    actor.rollData.type == "power"
+    actor.rollInfo.type == "power"
   ) {
     find = html.find(".penSpeciality");
     if (find.length > 0) {
-      actor.rollData.penetration.specApply = find[0].checked;
+      actor.rollInfo.penetration.specApply = find[0].checked;
     }
     find = html.find(".spellMastery");
     if (find.length > 0) {
-      actor.rollData.penetration.penetrationMastery = find[0].checked;
+      actor.rollInfo.penetration.penetrationMastery = find[0].checked;
     }
     find = html.find(".multiplierBonusArcanic");
     if (find.length > 0) {
-      actor.rollData.penetration.multiplierBonusArcanic = Number(find[0].value) ?? 0;
+      actor.rollInfo.penetration.multiplierBonusArcanic = Number(find[0].value) ?? 0;
     }
 
     find = html.find(".multiplierBonusSympathic");
     if (find.length > 0) {
-      actor.rollData.penetration.multiplierBonusSympathic = Number(find[0].value) ?? 0;
+      actor.rollInfo.penetration.multiplierBonusSympathic = Number(find[0].value) ?? 0;
     }
   }
   let idx = 0;
-  for (let optEffect of actor.rollData.optionalBonuses) {
+  for (let optEffect of actor.rollInfo.optionalBonuses) {
     find = html.find(`.SelectedOptional${idx}`);
     if (find.length > 0) {
-      actor.rollData.optionalBonuses[idx].active = find[0].checked;
+      actor.rollInfo.optionalBonuses[idx].active = find[0].checked;
     }
     idx++;
   }

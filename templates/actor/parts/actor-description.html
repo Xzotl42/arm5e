@@ -40,7 +40,7 @@
       <div class="flex-group-left backSection padding12">
         <label for="system.sigil" class="smallTitle">{{localize "arm5e.sheet.sigil"}}</label>
         <div class="flex-group-left marginbot6" style="height: 210px; overflow-y: auto;max-height: 210px;">
-          {{editor system.sigil.value target="system.sigil.value" button=true owner=owner engine="prosemirror" editable=editable}}
+          {{editor enrichedSigil target="system.sigil.value" button=true owner=owner engine="prosemirror" editable=editable}}
         </div>
       </div>
     </div>
@@ -67,7 +67,7 @@
         <label for="system.warping.effects" class="bold">{{localize "arm5e.sheet.effects"}}</label>
       </div>
       <div class="flex-group-left marginbot6">
-        {{editor system.warping.effects target="system.warping.effects" button=true owner=owner engine="prosemirror" editable=editable}}
+        {{editor enrichedWarping target="system.warping.effects" button=true owner=owner engine="prosemirror" editable=editable}}
       </div>
     </div>
 
@@ -97,7 +97,7 @@
         <label for="system.decrepitude.effects" class="bold">{{localize "arm5e.sheet.effects"}}</label>
       </div>
       <div class="flex-group-left marginbot6" style="height: auto; overflow-y: auto;max-height: 210px;">
-        {{editor system.decrepitude.effects target="system.decrepitude.effects" button=true owner=owner engine="prosemirror"
+        {{editor enrichedDecrepitude target="system.decrepitude.effects" button=true owner=owner engine="prosemirror"
       editable=editable}}
       </div>
       <div class="flexrow">
@@ -119,7 +119,7 @@
 <div class="flexcol grid grid-2col margintop18">
   <div class="flex-group-left padding12 backSection">
     <label class="smallTitle">{{localize "arm5e.sheet.biography"}}</label>
-    {{editor system.biography target="system.biography" button=true owner=owner engine="prosemirror" editable=editable}}
+    {{editor enrichedBiography target="system.biography" button=true owner=owner engine="prosemirror" editable=editable}}
   </div>
 
   <div>

@@ -2,15 +2,15 @@ import { log, putInFoldableLinkWithAnimation } from "../tools.js";
 import { stressDie } from "../dice.js";
 
 // export function doubleAbility(actor) {
-//   actor.rollData.ability.score *= 2;
+//   actor.rollInfo.ability.score *= 2;
 // }
 
 export async function exertSelf(actor, mode, callback) {
   log(false, "Exert self in combat");
 
-  actor.rollData.combat.exertion = true;
+  actor.rollInfo.combat.exertion = true;
 
-  await stressDie(actor, actor.rollData.type, callback, mode, -1);
+  await stressDie(actor, actor.rollInfo.type, callback, mode, -1);
 
   await actor.loseFatigueLevel(1);
 }
@@ -262,7 +262,7 @@ export async function rolledDamage(soakData, actor) {
     dataset.operator6 = "-";
   }
 
-  actor.rollData.init(dataset, actor);
+  actor.rollInfo.init(dataset, actor);
   let roll = await stressDie(actor, "option", 16, null, 1);
   soakData.roll = roll.total - roll.offset;
   soakData.damageToApply -= soakData.roll;

@@ -1,4 +1,4 @@
-## 2.2.4.22, Pralix, founder of a new House
+## 2.2.4.23, Pralix, founder of a new House
 
 ### Dependencies updates
 
@@ -9,15 +9,18 @@
 - New copying tab in the scriptorium.
   - Summa copy
   - Tracactus copy
+  - Lab texts copying
 - Practice base XP is now editable.
 - Updated French version by @orneen
 - New Brazilian Portuguese version by @Gabriel Mendes
+- Updated French version by @orneen
 - Casting stances are now available in the roll dialogs.
 - It is now possible to "use" a magic item's power
 - Physical items that are enchanted can now have active effects.
-- Lab texts copying
 - it is now possible to do individual copies instead of putting everything in one book.
 - Abilities specialties can be taken into account when writing or copying.
+- Simplified rollData for easier inline rolls
+- Most of the text editor fields are now enriched, allowing inline rolls, content-link, etc.
 
 ### Bug fixes
 
@@ -30,7 +33,8 @@
 - Non-interactive rolls (eg: recovery) with [Dice so nice] are rolling dice again
 - Recovery logs are now displaying the correct bonus when rolling for botch.
 - [technical] added foundry.utils namespace whenever appropriate (first pass)
-- [technical] replace {{#select }} handlebars helper with {{selectOptions}} (148 remaining)
+- [technical] replace {{#select }} handlebars helper with {{selectOptions}} (134 remaining)
+- [technical] relocated and renamed rollData to rollInfo.
 - When drag and dropping book topics from an actor's library, the correct topic is dropped.
 
 ## 2.2.4.17, Pralix, founder of a new Order bis

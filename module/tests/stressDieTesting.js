@@ -41,7 +41,7 @@ export function registerStressDieTesting(quench) {
           for (const score of Array(20).keys()) {
             it(`Roll exploding`, async function () {
               let dataset = { roll: "char", characteristic: "pre" };
-              actor.rollData.init(dataset, actor);
+              actor.rollInfo.init(dataset, actor);
               let roll = await stressDie(actor, "char", 1, null, 10);
               assert.equal(roll.total > 0, true, "No explosion!");
               log(false, `Roll result: ${roll.total}`);

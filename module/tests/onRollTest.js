@@ -138,7 +138,7 @@ export function registerOnRollTesting(quench) {
           const result = actor.sheet._onRoll(event);
 
           expect(result).to.be.true;
-          expect(actor.rollData).to.deep.equal(expectedRollData);
+          expect(actor.rollInfo).to.deep.equal(expectedRollData);
         });
 
         // Tests that the roll is marked as a no botch roll when the roll type has the NO_BOTCH flag
@@ -155,7 +155,7 @@ export function registerOnRollTesting(quench) {
           const result = actor.sheet._onRoll(event);
 
           expect(result).to.be.true;
-          expect(actor.rollData).to.deep.equal(expectedRollData);
+          expect(actor.rollInfo).to.deep.equal(expectedRollData);
         });
 
         // Tests that the roll is marked as a no confidence roll when the roll type has the NO_CONF flag
@@ -172,7 +172,7 @@ export function registerOnRollTesting(quench) {
           const result = actor.sheet._onRoll(event);
 
           expect(result).to.be.true;
-          expect(actor.rollData).to.deep.equal(expectedRollData);
+          expect(actor.rollInfo).to.deep.equal(expectedRollData);
         });
       });
     },
