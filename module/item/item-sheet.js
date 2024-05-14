@@ -168,7 +168,7 @@ export class ArM5eItemSheet extends ItemSheet {
     // Use a safe clone of the item data for further operations.
     const itemData = context.item;
     context.subsheet = this.subsheetTemplate;
-
+    context.rollData = this.item.getRollData();
     context.ui = this.getUserCache();
     context.ui.flavor = "Neutral";
 
@@ -186,6 +186,32 @@ export class ArM5eItemSheet extends ItemSheet {
       } else {
         context.stateEdit = "disabled";
       }
+    }
+
+    if (this.item.system.description) {
+      context.enrichedDescription = await TextEditor.enrichHTML(this.item.system.description, {
+        // Whether to show secret blocks in the finished html
+        secrets: this.document.isOwner,
+        // Necessary in v11, can be removed in v12
+        async: true,
+        // Data to fill in for inline rolls
+        rollData: context.rollData,
+        // Relative UUID resolution
+        relativeTo: this.item
+      });
+    }
+
+    if (this.item.system.form) {
+      context.enrichedForm = await TextEditor.enrichHTML(this.item.system.form, {
+        // Whether to show secret blocks in the finished html
+        secrets: this.document.isOwner,
+        // Necessary in v11, can be removed in v12
+        async: true,
+        // Data to fill in for inline rolls
+        rollData: context.rollData,
+        // Relative UUID resolution
+        relativeTo: this.item
+      });
     }
 
     context.flags = itemData.flags;

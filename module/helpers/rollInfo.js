@@ -6,7 +6,7 @@ import { getRollTypeProperties, ROLL_MODIFIERS, ROLL_PROPERTIES } from "./rollWi
 import Aura from "./aura.js";
 import { computeLevel, spellFormLabel, spellTechniqueLabel } from "./magic.js";
 
-export class ArM5eRollData {
+export class ArM5eRollInfo {
   constructor(actor) {
     this._actor = actor;
     this.reset();

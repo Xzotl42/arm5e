@@ -39,12 +39,12 @@
     {{!-- Attributes Tab --}}
     <div class="tab attributes" data-group="primary" data-tab="attributes">
       <label for="system.form" class="header-label">{{localize "arm5e.sheet.physicalForm"}}</label>
-      {{editor system.form target="system.form" button=true owner=owner engine="prosemirror" editable=editable}}
+      {{editor system.enrichedForm target="system.form" button=true owner=owner engine="prosemirror" editable=editable}}
     </div>
 
     {{!-- Description Tab --}}
     <div class="tab" data-group="primary" data-tab="description">
-      {{editor system.description target="system.description" button=true owner=owner engine="prosemirror" editable=editable}}
+      {{editor enrichedDescription target="system.description" button=true owner=owner engine="prosemirror" editable=editable}}
     </div>
   </section>
 </form>

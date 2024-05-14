@@ -15,7 +15,7 @@ import ACTIVE_EFFECTS_TYPES from "../constants/activeEffectsTypes.js";
 import { migrateActorData } from "../migration.js";
 
 import ArM5eActiveEffect from "../helpers/active-effects.js";
-import { ArM5eRollData } from "../helpers/rollData.js";
+import { ArM5eRollInfo } from "../helpers/rollInfo.js";
 import { compareDiaryEntries, isInThePast } from "../tools/time.js";
 import Aura from "../helpers/aura.js";
 
@@ -30,7 +30,7 @@ export class ArM5ePCActor extends Actor {
 
   constructor(data, context) {
     super(data, context);
-    this.rollData = new ArM5eRollData(this);
+    this.rollInfo = new ArM5eRollInfo(this);
   }
 
   prepareData() {
@@ -847,14 +847,43 @@ export class ArM5ePCActor extends Actor {
   }
 
   getRollData() {
-    let rollData = super.getRollData();
-    rollData.config = {
-      character: {},
-      magic: {}
-    };
-    rollData.config.character.magicAbilities = CONFIG.ARM5E.character.magicAbilities;
-    rollData.config.magic.arts = ARM5E.magic.arts;
-    rollData.config.magic.penetration = ARM5E.magic.penetration;
+    // let rollData = super.getRollData();
+    // rollData.config = {
+    //   character: {},
+    //   magic: {}
+    // };
+    // rollData.config.character.magicAbilities = CONFIG.ARM5E.character.magicAbilities;
+    // rollData.config.magic.arts = ARM5E.magic.arts;
+    // rollData.config.magic.penetration = ARM5E.magic.penetration;
+    let rollData = {};
+    if (this._isCharacter()) {
+      rollData.char = Object.fromEntries(
+        Object.entries(this.system.characteristics).map(([k, v]) => [k, v.value])
+      );
+      rollData.ability = {};
+      for (let ab of this.system.abilities) {
+        if (ab.system.option === "") {
+          rollData.ability[ab.system.key] = ab.system.finalScore;
+        } else {
+          rollData.ability[ab.system.key] = { [ab.system.option]: ab.system.finalScore };
+        }
+      }
+      rollData.combat = this.system.combat;
+
+      if (this._isMagus()) {
+        rollData.magic = {};
+
+        for (let [k, v] of Object.entries(this.system.arts.techniques)) {
+          rollData.magic[k] = v.finalScore;
+        }
+
+        for (let [k, v] of Object.entries(this.system.arts.forms)) {
+          rollData.magic[k] = v.finalScore;
+        }
+      }
+    } else {
+      rollData = super.getRollData();
+    }
     return rollData;
   }
 

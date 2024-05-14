@@ -98,7 +98,7 @@ Hooks.once("init", async function () {
    * @type {String}
    */
   CONFIG.Combat.initiative = {
-    formula: "1ds + @characteristics.qik.value + @combat.init - @combat.overload",
+    formula: "1ds + @char.qik + @combat.init - @combat.overload",
     decimals: 2
   };
 

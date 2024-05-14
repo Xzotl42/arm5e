@@ -467,6 +467,15 @@ export class ArM5eItem extends Item {
     }
   }
 
+  // /**
+  //  * Prepare a data object which defines the data schema used by dice roll commands against this Item
+  //  * @returns {object}
+  //  */
+  // getRollData() {
+  //   const rollData = this.system;
+  //   return ;
+  // }
+
   /**
    * Handle clickable rolls.
    * @param {Event} event   The originating click event

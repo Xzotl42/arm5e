@@ -199,9 +199,9 @@ export class ArM5eActorSheet extends ActorSheet {
 
     const actorData = context.actor;
     context.ui = this.getUserCache();
-
-    // Add the actor's data to context.system for easier access, as well as flags.
-    context.system = actorData.system;
+    (context.rollData = this.actor.getRollData()),
+      // Add the actor's data to context.system for easier access, as well as flags.
+      (context.system = actorData.system);
     context.flags = actorData.flags;
 
     context.config = CONFIG.ARM5E;
@@ -211,6 +211,18 @@ export class ArM5eActorSheet extends ActorSheet {
       option: false,
       selection: "disabled"
     };
+    if (this.actor.system.description) {
+      context.enrichedDescription = await TextEditor.enrichHTML(this.actor.system.description, {
+        // Whether to show secret blocks in the finished html
+        secrets: this.document.isOwner,
+        // Necessary in v11, can be removed in v12
+        async: true,
+        // Data to fill in for inline rolls
+        rollData: context.rollData,
+        // Relative UUID resolution
+        relativeTo: this.actor
+      });
+    }
 
     // context.system.dtypes = ["String", "Number", "Boolean"];
 

@@ -9,9 +9,9 @@ export async function setAgingEffects(actor, roll, message) {
   let res = agingTable.getResultsForRoll(roll.total)[0].text;
   let dialogData = CONFIG.ARM5E.activities.aging[res];
 
-  dialogData.year = actor.rollData.environment.year;
-  dialogData.season = actor.rollData.environment.season;
-  dialogData.seasonLabel = CONFIG.ARM5E.seasons[actor.rollData.environment.season].label;
+  dialogData.year = actor.rollInfo.environment.year;
+  dialogData.season = actor.rollInfo.environment.season;
+  dialogData.seasonLabel = CONFIG.ARM5E.seasons[actor.rollInfo.environment.season].label;
   dialogData.choice = res === "crisis" || res === "anyAgingPt";
   dialogData.chars = CONFIG.ARM5E.character.characteristics;
 
@@ -55,7 +55,7 @@ export async function setAgingEffects(actor, roll, message) {
     ).render(true);
   });
   resultAging.roll = { formula: roll._formula, result: roll.result };
-  resultAging.year = actor.rollData.environment.year;
+  resultAging.year = actor.rollInfo.environment.year;
 
   await updateAgingDiaryEntry(actor, resultAging);
 }
@@ -93,7 +93,7 @@ export async function agingCrisis(actor, roll, message) {
 }
 
 export async function updateAgingDiaryEntry(actor, input) {
-  let item = actor.items.get(actor.rollData.additionalData.diaryId);
+  let item = actor.items.get(actor.rollInfo.additionalData.diaryId);
   let desc =
     item.system.description +
     game.i18n.localize("arm5e.aging.result0") +
@@ -812,24 +812,24 @@ export function computeTotals(context) {
   context.system.totalXp = { abilities: 0, arts: 0, masteries: 0 };
 }
 
-export async function setVisStudyResults(actor, roll, message, rollData) {
+export async function setVisStudyResults(actor, roll, message, rollInfo) {
   if (roll.botches > 0) {
     await actor.update({
       "system.warping.points": actorCaster.system.warping.points + roll.botches
     });
     //ui.notifications.info()
   } else {
-    let diaryitem = actor.items.get(actor.rollData.additionalData.diaryId);
+    let diaryitem = actor.items.get(actor.rollInfo.additionalData.diaryId);
     const xpGain = roll.total + actor.system.bonuses.activities.visStudy;
 
     const updateData = { "system.sourceQuality": xpGain };
     const progressArts = diaryitem.system.progress.arts;
 
-    progressArts.push({ key: rollData.additionalData.art, maxLevel: 0, xp: xpGain });
+    progressArts.push({ key: rollInfo.additionalData.art, maxLevel: 0, xp: xpGain });
     updateData["system.progress.arts"] = progressArts;
     const externalIds = diaryitem.system.externalIds;
     externalIds[0].data = {
-      amount: rollData.additionalData.amount
+      amount: rollInfo.additionalData.amount
     };
     updateData["system.externalIds"] = externalIds;
     // updateData["system.rollDone"] = true;

@@ -240,7 +240,7 @@ export class Sanatorium extends FormApplication {
           incapacited = true;
         }
 
-        patient.rollData.init(dataset, patient);
+        patient.rollInfo.init(dataset, patient);
 
         let roll = await stressDie(
           patient,
@@ -410,7 +410,7 @@ export class Sanatorium extends FormApplication {
             }
 
             dataset.option5 = wound.bonus;
-            patient.rollData.init(dataset, patient);
+            patient.rollInfo.init(dataset, patient);
             let roll = await stressDie(
               patient,
               dataset.roll,

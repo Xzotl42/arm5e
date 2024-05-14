@@ -198,7 +198,7 @@
     {{!-- Description Tab --}}
     <div class="tab" data-group="primary" data-tab="description">
       <div style="height: 235px">
-        {{editor system.description target="system.description" button=true owner=owner engine="prosemirror" editable=editable}}
+        {{editor enrichedDescription target="system.description" button=true owner=owner engine="prosemirror" editable=editable}}
       </div>
       {{#if metagame.view }}
         {{> "systems/arm5e/templates/generic/source.html" }}

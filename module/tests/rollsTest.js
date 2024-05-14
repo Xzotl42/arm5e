@@ -63,7 +63,7 @@ export function registerRollTesting(quench) {
             } else {
               try {
                 let dataset = { roll: "char", characteristic: c };
-                actor.rollData.init(dataset, actor);
+                actor.rollInfo.init(dataset, actor);
 
                 let roll = await stressDie(actor, "char", 0, null, 10);
                 log(false, roll);
@@ -89,7 +89,7 @@ export function registerRollTesting(quench) {
             } else {
               try {
                 let dataset = { roll: "char", characteristic: c };
-                actor.rollData.init(dataset, actor);
+                actor.rollInfo.init(dataset, actor);
                 let roll = await simpleDie(actor, "char", null);
                 log(false, roll);
                 assert.ok(roll);
@@ -115,8 +115,8 @@ export function registerRollTesting(quench) {
                 season: "winter",
                 year: "1222"
               };
-              actor.rollData.init(dataset, actor);
-              const ageMod = actor.rollData.getGenericFieldValue(1);
+              actor.rollInfo.init(dataset, actor);
+              const ageMod = actor.rollInfo.getGenericFieldValue(1);
               let roll = await stressDie(actor, "aging", 4, null, 0);
               log(false, roll);
               assert.ok(roll);
@@ -139,9 +139,9 @@ export function registerRollTesting(quench) {
                 season: "winter",
                 year: "1222"
               };
-              actor.rollData.init(dataset, actor);
+              actor.rollInfo.init(dataset, actor);
               const ageMod =
-                actor.rollData.getGenericFieldValue(1) + actor.rollData.getGenericFieldValue(2);
+                actor.rollInfo.getGenericFieldValue(1) + actor.rollInfo.getGenericFieldValue(2);
               let roll = await simpleDie(actor, "crisis", null);
               log(false, roll);
               assert.ok(roll);
@@ -161,7 +161,7 @@ export function registerRollTesting(quench) {
         it("Personality roll", async function () {
           try {
             let dataset = { roll: "option", name: "Loyal", option1: 1, txtoption1: "score" };
-            actor.rollData.init(dataset, actor);
+            actor.rollInfo.init(dataset, actor);
             let roll = await stressDie(actor, "option", 0, null, 10);
             if (roll.botched) {
               assert.equal(roll.total, 0, "botched");
@@ -177,7 +177,7 @@ export function registerRollTesting(quench) {
         it("Reputation roll", async function () {
           try {
             let dataset = { roll: "option", name: "Dead", option1: 1, txtoption1: "score" };
-            actor.rollData.init(dataset, actor);
+            actor.rollInfo.init(dataset, actor);
             let roll = await stressDie(actor, "char", 0, null, 10);
             // log(false, roll);
             assert.ok(roll);
@@ -208,7 +208,7 @@ export function registerRollTesting(quench) {
               option5: 10,
               txtoption5: "score 5"
             };
-            actor.rollData.init(dataset, actor);
+            actor.rollInfo.init(dataset, actor);
             let roll = await simpleDie(actor, "option", null);
             log(false, roll);
             assert.ok(roll.total > 50);
@@ -233,7 +233,7 @@ export function registerRollTesting(quench) {
               option3: actor.system.combat.overload,
               txtoption3: "overload"
             };
-            actor.rollData.init(dataset, actor);
+            actor.rollInfo.init(dataset, actor);
             let roll = await stressDie(actor, type, 0, null, 10);
             assert.ok(roll);
             if (roll.botches) {
@@ -265,7 +265,7 @@ export function registerRollTesting(quench) {
               option3: actor.system.combat.atk,
               txtoption3: "attack"
             };
-            actor.rollData.init(dataset, actor);
+            actor.rollInfo.init(dataset, actor);
             let roll = await stressDie(actor, type, 0, null, 10);
             log(false, roll);
             assert.ok(roll);
@@ -296,7 +296,7 @@ export function registerRollTesting(quench) {
               option3: actor.system.combat.dfn,
               txtoption3: "defense"
             };
-            actor.rollData.init(dataset, actor);
+            actor.rollInfo.init(dataset, actor);
             let roll = await stressDie(actor, type, 0, null, 10);
             log(false, roll);
             assert.ok(roll);
@@ -328,8 +328,8 @@ export function registerRollTesting(quench) {
               option3: actor.system.combat.atk,
               txtoption3: "attack"
             };
-            actor.rollData.init(dataset, actor);
-            actor.rollData.combat.exertion = true;
+            actor.rollInfo.init(dataset, actor);
+            actor.rollInfo.combat.exertion = true;
             let roll = await stressDie(actor, type, 0, null, 10);
             log(false, roll);
             assert.ok(roll);
@@ -361,7 +361,7 @@ export function registerRollTesting(quench) {
               option3: actor.system.combat.atk,
               txtoption3: "attack"
             };
-            actor.rollData.init(dataset, actor);
+            actor.rollInfo.init(dataset, actor);
             let roll = await stressDie(actor, type, 0, null, 10);
             log(false, roll);
             assert.ok(roll);
@@ -394,7 +394,7 @@ export function registerRollTesting(quench) {
               form: "co",
               usefatigue: true
             };
-            magus.rollData.init(dataset, magus);
+            magus.rollInfo.init(dataset, magus);
             let roll = await stressDie(magus, type, 0, undefined, 10);
             log(false, roll);
             assert.ok(roll);
@@ -426,7 +426,7 @@ export function registerRollTesting(quench) {
               form: "co",
               usefatigue: true
             };
-            magus.rollData.init(dataset, magus);
+            magus.rollInfo.init(dataset, magus);
             let roll = await stressDie(magus, type, 0, undefined, 10);
             log(false, roll);
             assert.ok(roll);
@@ -457,7 +457,7 @@ export function registerRollTesting(quench) {
               id: ME1._id,
               usefatigue: true
             };
-            magus.rollData.init(dataset, magus);
+            magus.rollInfo.init(dataset, magus);
             let roll = await stressDie(magus, type, 0, undefined, 100);
             log(false, roll);
             assert.ok(roll);
@@ -489,7 +489,7 @@ export function registerRollTesting(quench) {
               id: ME2._id,
               usefatigue: true
             };
-            magus.rollData.init(dataset, magus);
+            magus.rollInfo.init(dataset, magus);
             let roll = await stressDie(magus, type, 0, undefined, 1);
             log(false, roll);
             assert.ok(roll);
@@ -521,7 +521,7 @@ export function registerRollTesting(quench) {
               // divide: 2,
               // usefatigue: true
             };
-            magus.rollData.init(dataset, magus);
+            magus.rollInfo.init(dataset, magus);
             let roll = await stressDie(magus, type, 0, undefined, 1);
             log(false, roll);
             assert.ok(roll);
@@ -529,7 +529,7 @@ export function registerRollTesting(quench) {
               assert.equal(roll.total, 0, "botched");
               return;
             }
-            // assert.equal(ME3.system.applyFocus, magus.rollData.magic.focus);
+            // assert.equal(ME3.system.applyFocus, magus.rollInfo.magic.focus);
             let tot =
               magus.system.arts.techniques.mu.finalScore +
               magus.system.arts.forms.an.finalScore * 2 +
@@ -552,7 +552,7 @@ export function registerRollTesting(quench) {
               bonusActiveEffects: magus.system.bonuses.arts.spellcasting,
               id: Sp1._id
             };
-            magus.rollData.init(dataset, magus);
+            magus.rollInfo.init(dataset, magus);
             let roll = await stressDie(magus, type, 0, undefined, 4);
             log(false, roll);
             assert.ok(roll);
@@ -561,8 +561,8 @@ export function registerRollTesting(quench) {
               return;
             }
 
-            // assert.equal(Sp1.system.masteryScore, magus.rollData.magic.mastery);
-            // assert.equal(Sp1.system.bonus, magus.rollData.magic.bonus);
+            // assert.equal(Sp1.system.masteryScore, magus.rollInfo.magic.mastery);
+            // assert.equal(Sp1.system.bonus, magus.rollInfo.magic.bonus);
             let tot =
               magus.system.arts.techniques.mu.finalScore +
               magus.system.arts.forms.im.finalScore +
@@ -587,7 +587,7 @@ export function registerRollTesting(quench) {
               bonusActiveEffects: magus.system.bonuses.arts.spellcasting,
               id: Sp2._id
             };
-            magus.rollData.init(dataset, magus);
+            magus.rollInfo.init(dataset, magus);
             let roll = await stressDie(magus, type, 0, undefined, 3);
             log(false, roll);
             assert.ok(roll);
@@ -596,8 +596,8 @@ export function registerRollTesting(quench) {
               return;
             }
 
-            // assert.equal(Sp1.system.masteryScore, magus.rollData.magic.mastery);
-            // assert.equal(Sp1.system.bonus, magus.rollData.magic.bonus);
+            // assert.equal(Sp1.system.masteryScore, magus.rollInfo.magic.mastery);
+            // assert.equal(Sp1.system.bonus, magus.rollInfo.magic.bonus);
             let tot =
               magus.system.arts.techniques.mu.finalScore +
               magus.system.arts.forms.co.finalScore * 2 +
@@ -626,7 +626,7 @@ export function registerRollTesting(quench) {
               bonusActiveEffects: magus.system.bonuses.arts.spellcasting,
               id: Sp2._id
             };
-            magus.rollData.init(dataset, magus);
+            magus.rollInfo.init(dataset, magus);
             let roll = await stressDie(magus, type, 0, undefined, 3);
             log(false, roll);
             assert.ok(roll);
@@ -635,8 +635,8 @@ export function registerRollTesting(quench) {
               return;
             }
 
-            // assert.equal(Sp1.system.masteryScore, magus.rollData.magic.mastery);
-            // assert.equal(Sp1.system.bonus, magus.rollData.magic.bonus);
+            // assert.equal(Sp1.system.masteryScore, magus.rollInfo.magic.mastery);
+            // assert.equal(Sp1.system.bonus, magus.rollInfo.magic.bonus);
             let tot =
               magus.system.arts.techniques.mu.finalScore +
               magus.system.arts.forms.co.finalScore * 2 +
@@ -661,7 +661,7 @@ export function registerRollTesting(quench) {
               bonusActiveEffects: magus.system.bonuses.arts.spellcasting,
               id: Sp3._id
             };
-            magus.rollData.init(dataset, magus);
+            magus.rollInfo.init(dataset, magus);
             let roll = await stressDie(magus, type, 0, undefined, 2);
             log(false, roll);
             assert.ok(roll);

@@ -112,7 +112,7 @@ export class VisSchema extends foundry.abstract.DataModel {
       physicalcondition: false,
       moredata: { id: this.parent._id, art: this.art, amount: amount, diaryId: item._id }
     };
-    actor.rollData.init(dataset, actor);
+    actor.rollInfo.init(dataset, actor);
     const html = await renderTemplate("systems/arm5e/templates/generic/vis-study.html", dialogData);
     new Dialog(
       {
@@ -124,7 +124,7 @@ export class VisSchema extends foundry.abstract.DataModel {
             label: game.i18n.localize("arm5e.dialog.button.roll"),
             callback: async (html) => {
               let val = html.find('input[name="aura"]');
-              actor.rollData.setGenericField(auraLabel, Number(val.val()), 1, "+");
+              actor.rollInfo.setGenericField(auraLabel, Number(val.val()), 1, "+");
               await stressDie(actor, dataset.roll, 0, setVisStudyResults);
             }
           }

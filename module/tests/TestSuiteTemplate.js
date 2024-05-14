@@ -43,7 +43,7 @@ export function register__TEMPLATE__Testing(quench) {
         it("__TEMPLATE__1: ", async function () {
           try {
             let dataset = { roll: "char", characteristic: c };
-            actor.rollData.init(dataset, actor);
+            actor.rollInfo.init(dataset, actor);
             let roll = await stressDie(actor, "char", 0, null, 10);
             log(false, roll);
             assert.ok(roll);

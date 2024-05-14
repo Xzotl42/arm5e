@@ -109,7 +109,7 @@
               class="foldable-section-small backSection item-description {{ui.sections.visibility.common.item-description}}"
               id="common-item-description-{{@root.item._id}}">
               <div class="flex-group-left" style="height: auto; overflow-y: auto;max-height: 210px;">
-                {{editor system.description target="system.description" button=true owner=owner engine="prosemirror" editable=editable}}
+                {{editor enrichedDescription target="system.description" button=true owner=owner engine="prosemirror" editable=editable}}
               </div>
             </div>
 
@@ -287,7 +287,8 @@
                         class="icon-Icon_Read"></i></a>
 
                   </div>
-                  {{editor currentTopic.labtext.description target="currentTopic.labtext.description" button=false owner=owner editable=false}}
+                  {{editor currentTopic.labtext.description target="currentTopic.labtext.description" button=false owner=owner editable=false
+                  engine="prosemirror"}}
                 {{/if}}
               {{/if}}
             </div>

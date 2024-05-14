@@ -70,7 +70,19 @@ export class ArM5ePCActorSheet extends ArM5eActorSheet {
 
     context.config = CONFIG.ARM5E;
     // Add roll data for TinyMCE editors.
-    context.rollData = context.actor.getRollData();
+
+    if (this.actor.system.biography) {
+      context.enrichedBiography = await TextEditor.enrichHTML(this.actor.system.biography, {
+        // Whether to show secret blocks in the finished html
+        secrets: this.document.isOwner,
+        // Necessary in v11, can be removed in v12
+        async: true,
+        // Data to fill in for inline rolls
+        rollData: context.rollData,
+        // Relative UUID resolution
+        relativeTo: this.actor
+      });
+    }
 
     // Prepare items.
     this._prepareCharacterItems(context);
