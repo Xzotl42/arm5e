@@ -35,9 +35,7 @@ async function simpleDie(actor, type = "OPTION", callBack) {
     formula = "(1D10+" + rollInfo.formula + ")/" + rollInfo.magic.divide;
   }
   const dieRoll = new Roll(formula, actor.system);
-  let tmp = await dieRoll.roll({
-    async: true
-  });
+  let tmp = await dieRoll.roll();
 
   let rollMode = game.settings.get("core", "rollMode");
   // let showRolls = game.settings.get("arm5e", "showRolls");
@@ -100,7 +98,6 @@ async function stressDie(actor, type = "OPTION", modes = 0, callBack = undefined
   let rollOptions = {
     minimize: false,
     maximize: false,
-    async: true,
     prompt: true
   };
   if (modes & 1) {
@@ -538,9 +535,7 @@ function newLineSub(msg) {
 async function CheckBotch(botchDice, offset) {
   let rollCommand = String(botchDice).concat("d10cf=10");
   const botchRoll = new Roll(rollCommand);
-  await botchRoll.roll({
-    async: true
-  });
+  await botchRoll.roll();
   botchRoll.offset = offset;
   botchRoll.botches = botchRoll.total;
   botchRoll.botchDice = botchDice;
@@ -696,7 +691,6 @@ export async function createRoll(rollFormula, mult, divide, options = {}) {
   if (Number.parseInt(divide) > 1) {
     rollInit = `( ${rollInit} ) / ${divide}`;
   }
-  options.async = true;
   let output_roll = new Roll(rollInit, {}, options);
   output_roll.offset = rollFormula;
   output_roll.multiplier = mult;
@@ -739,9 +733,7 @@ async function noRoll(actor, mode, callback, roll) {
   }
   const dieRoll = new Roll(formula, actor.system);
   dieRoll.diviser = rollInfo.magic.divide;
-  let tmp = await dieRoll.roll({
-    async: true
-  });
+  let tmp = await dieRoll.roll();
   const message = await tmp.toMessage(
     {
       content: "",

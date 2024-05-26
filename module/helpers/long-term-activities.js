@@ -13,7 +13,11 @@ export async function setAgingEffects(actor, roll, message) {
   dialogData.season = actor.rollInfo.environment.season;
   dialogData.seasonLabel = CONFIG.ARM5E.seasons[actor.rollInfo.environment.season].label;
   dialogData.choice = res === "crisis" || res === "anyAgingPt";
-  dialogData.chars = CONFIG.ARM5E.character.characteristics;
+  if (actor.type == "beast" && !actor.system.intelligent) {
+    dialogData.chars = CONFIG.ARM5E.beast.characteristics;
+  } else {
+    dialogData.chars = CONFIG.ARM5E.character.characteristics;
+  }
 
   const renderedTemplate = await renderTemplate(
     "systems/arm5e/templates/generic/aging-dialog.html",

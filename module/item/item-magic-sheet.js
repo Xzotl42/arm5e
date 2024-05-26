@@ -39,7 +39,8 @@ export class ArM5eItemMagicSheet extends ArM5eItemSheet {
     // editable, the items array, and the effects array.
     let context = await super.getData();
     context.system.localizedDesc = GetEffectAttributesLabel(this.item);
-    context = await GetFilteredMagicalAttributes(context);
+
+    await GetFilteredMagicalAttributes(context.selection);
 
     if (context.flags && context.flags[CONFIG.ARM5E.SYSTEM_ID]?.readonly === "true") {
       context.noEdit = "readonly";
@@ -57,15 +58,41 @@ export class ArM5eItemMagicSheet extends ArM5eItemSheet {
       case "enchantment":
       case "magicItem":
       case "magicalEffect":
-        context.ranges[context.system.range.value] =
-          CONFIG.ARM5E.magic.ranges[context.system.range.value];
-        context.targets[context.system.target.value] =
-          CONFIG.ARM5E.magic.targets[context.system.target.value];
-        context.durations[context.system.duration.value] =
-          CONFIG.ARM5E.magic.durations[context.system.duration.value];
+        if (!context.selection.ranges[context.system.range.value]) {
+          const currentRange = context.system.range.value;
+          context.selection.ranges[currentRange] = CONFIG.ARM5E.magic.ranges[currentRange];
+          context.selection.ranges[currentRange].label = `${game.i18n.localize(
+            CONFIG.ARM5E.magic.ranges[currentRange].label
+          )}  (${CONFIG.ARM5E.magic.ranges[currentRange].impact})`;
+        }
+
+        if (!context.selection.targets[context.system.target.value]) {
+          const currentTarget = context.system.target.value;
+          context.selection.targets[currentTarget] = CONFIG.ARM5E.magic.targets[currentTarget];
+          context.selection.targets[currentTarget].label = `${game.i18n.localize(
+            CONFIG.ARM5E.magic.targets[currentTarget].label
+          )}  (${CONFIG.ARM5E.magic.targets[currentTarget].impact})`;
+        }
+        if (!context.selection.durations[context.system.duration.value]) {
+          const currentDuration = context.system.duration.value;
+          context.selection.durations[currentDuration] =
+            CONFIG.ARM5E.magic.durations[currentDuration];
+          context.selection.durations[currentDuration].label = `${game.i18n.localize(
+            CONFIG.ARM5E.magic.durations[currentDuration].label
+          )}  (${CONFIG.ARM5E.magic.durations[currentDuration].impact})`;
+        }
+
         break;
       default:
         break;
+    }
+
+    if (this.item.type === "enchantment") {
+      context.selection.frequency = Object.fromEntries(
+        Object.entries(CONFIG.ARM5E.lab.enchantment.effectUses).map(([k, v]) => {
+          return [k, `${v} ${game.i18n.localize("arm5e.lab.enchantment.uses-per-day")}`];
+        })
+      );
     }
 
     return context;

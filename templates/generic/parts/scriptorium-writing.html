@@ -31,7 +31,8 @@
           <div class="scriptorium resource">
             <label for="writing.writer.language" class="header-label">{{localize "arm5e.scriptorium.languages"}}</label>
             <select name="writing.writer.language" data-dtype="String" class="ability-key language-writer">
-              {{selectOptions writing.writer.languages selected=writing.writer.language labelAttr="label" nameAttr="id"}}
+              {{selectOptions writing.writer.languages selected=writing.writer.language labelAttr="label" 
+              valueAttr="id" nameAttr="id"}}
             </select>
             <input class="flex01" title="{{writing.writer.languageSpec}}" type="text"
               value="{{writing.writer.languageSpec}}" readonly style="max-width: 150px" />
@@ -89,7 +90,8 @@
             <div class="scriptorium resource">
               <label for="writing.writer.ability" class="header-label">{{localize "arm5e.sheet.abilities"}}</label>
               <select name="writing.writer.ability" data-dtype="String" class="ability-key" {{ui.editItem}}>
-                {{selectOptions writing.filteredAbilities selected=writing.writer.ability nameAttr="id" labelAttr="label"  }}
+                {{selectOptions writing.filteredAbilities selected=writing.writer.ability 
+                  valueAttr="id" nameAttr="id" labelAttr="label"  }}
               </select>
             </div>
 
@@ -100,7 +102,8 @@
             <div class="scriptorium resource">
               <label for="writing.writer.art" class="header-label">{{localize "arm5e.sheet.arts"}}</label>
               <select name="writing.writer.art" data-dtype="String" class="ability-key" {{ui.editItem}}>
-                {{selectOptions writing.filteredArts selected=writing.writer.art nameAttr="id" labelAttr="label"}}
+                {{selectOptions writing.filteredArts selected=writing.writer.art 
+                  valueAttr="id" nameAttr="id" labelAttr="label"}}
               </select>
             </div>
 
@@ -109,7 +112,8 @@
             <div class="scriptorium resource">
               <label for="writing.book.system.spell" class="header-label">{{localize "arm5e.sheet.spells"}}</label>
               <select name="writing.writer.spell" data-dtype="String" class="ability-key" {{ui.editItem}}>
-                {{selectOptions writing.writer.filteredSpells selected=writing.writer.spell nameAttr="id" labelAttr="label"}}
+                {{selectOptions writing.writer.filteredSpells selected=writing.writer.spell 
+                  valueAttr="id" nameAttr="id" labelAttr="label"}}
               </select>
             </div>
           {{/if}}

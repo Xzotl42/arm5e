@@ -142,7 +142,7 @@ export class Scriptorium extends FormApplication {
         {
           navSelector: ".sheet-tabs",
           contentSelector: ".sheet-body",
-          initial: "copying"
+          initial: "reading"
         }
       ],
       width: "600",

@@ -4,10 +4,7 @@
     <div class="flexrow flex-group-center">
       <label class="resource-label">{{localize "arm5e.sheet.characteristic"}}</label>
       <select name="system.roll.characteristic" data-type="String" class="SelectedCharacteristic">
-        {{#select system.roll.characteristic}} {{#each system.characteristics as |item key|}} {{#with (lookup
-        @root.system.charmetadata key)~}}
-              <option value="{{key}}">{{localize label}} ({{ item.value }})</option>
-            {{/with}} {{/each}} {{/select}}
+        {{selectOptions system.roll.selection.characteristics selected=system.roll.characteristic  }}
       </select>
     </div>
     <div class="flexrow flex-group-center">
@@ -16,10 +13,7 @@
     <div class="flexrow flex-group-center">
       <label class="resource-label">{{localize "arm5e.sheet.abilities"}}</label>
       <select name="system.roll.ability.id" data-type="String" class="ability-key SelectedAbility">
-        <option value="None">{{localize "arm5e.sheet.activeEffect.subtypes.none"}} (0)</option>
-        {{#select system.roll.ability.id}} {{#each system.abilities as |item key|}}
-            <option value="{{ item._id }}">{{ item.name}} ({{ item.system.finalScore }})</option>
-          {{/each}} {{/select}}
+        {{selectOptions system.roll.selection.abilities selected=system.roll.ability.id }}
       </select>
     </div>
     <div class="flexrow flex-group-center">

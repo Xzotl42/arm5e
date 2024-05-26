@@ -8,9 +8,7 @@
       <div class="resource-content flexrow flex-center flex-between margintop6">
         <label for="season" class="smallTitle">{{localize "arm5e.sheet.season"}}</label>
         <select name="season" data-type="String" class="change-season flex0 scriptorium">
-          {{#select season}} {{#each seasons as |season key|}}
-              <option value="{{key}}">{{localize season.label}}</option>
-            {{/each}} {{/select}}
+          {{selectOptions seasons selected=season localize=true labelAttr=label}}
         </select>
       </div>
       <div class="resource-content flexrow flex-center flex-between margintop6">

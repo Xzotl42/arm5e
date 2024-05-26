@@ -33,7 +33,7 @@
             <select name="levelOperator" data-type="Number" data-list="filter" data-category="hermetic"
               style="flex: 0 0; font-family: bookAntiqua" class="levelOperator-filter">
               {{selectOptions config.genericOptions.filterOperator selected=ui.filters.hermetic.filter.levelOperator
-                 nameAttr="key" labelAttr="label" blank=""}}
+                 nameAttr="key" valueAttr="key" labelAttr="label" blank=""}}
             </select>
             <input type="number" name="levelFilter" data-list="filter" data-category="hermetic"
               value="{{ui.filters.hermetic.filter.levelFilter}}" data-dtype="Number" class="level-filter" />

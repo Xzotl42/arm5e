@@ -7,15 +7,11 @@
         <div class="resource">
           <label for="system.type" class="header-label">{{localize "arm5e.sheet.type"}}</label>
           <select name="system.type" data-type="String" class="change-VFType">
-            {{#select system.type}} {{#each config.virtueFlawTypes.available as |type key|}}
-                <option value="{{key}}">{{localize label}}</option>
-              {{/each}} {{/select}}
+            {{selectOptions config.virtueFlawTypes.available selected=system.type labelAttr="label" localize=true }}
           </select>
           <label for="system.impact.value" class="header-label">{{localize system.impact.label}}</label>
           <select name="system.impact.value" data-type="String">
-            {{#select system.impact.value}} {{#each config.impacts as |impact key|}}
-                <option value="{{key}}">{{localize impact.label}}</option>
-              {{/each}} {{/select}}
+            {{selectOptions config.impacts selected=system.impact.value labelAttr="label" localize=true }}
           </select>
         </div>
       </div>

@@ -17,9 +17,8 @@
           <label>{{localize "arm5e.sheet.season"}}</label>
           <select name="system.dates.0.season" class="change-season" data-type="String" style="width: 100%"
             {{@root.ui.editDate}}>
-            {{#select firstSeason.season}} {{#each config.seasons as |season key|}}
-                <option value="{{key}}">{{localize season.label}}</option>
-              {{/each}} {{/select}}
+            {{selectOptions config.seasons selected=firstSeason.season labelAttr="label" localize=true }}
+
           </select>
         </div>
       </div>
@@ -35,9 +34,7 @@
           <div class="resource">
             <label>{{localize "arm5e.sheet.season"}}</label>
             <select name="lastSeason.season" data-type="String" style="width: 100%" disabled>
-              {{#select lastSeason.season}} {{#each config.seasons as |season key|}}
-                  <option value="{{key}}">{{localize season.label}}</option>
-                {{/each}} {{/select}}
+              {{selectOptions config.seasons selected=lastSeason.season labelAttr="label" localize=true }}
             </select>
           </div>
         </div>
@@ -51,10 +48,7 @@
           <label class="header-label">{{localize "arm5e.activity.activity"}}</label>
           <select class="progress-activity" name="system.activity" data-type="String" style="width: 100%"
             {{@root.system.disabled}}>
-            {{#select system.activity}} {{#each config.activities.generic as |activity key|}}
-
-                <option value="{{key}}" {{activity.display.attribute}}>{{localize activity.label}}</option>
-              {{/each}} {{/select}}
+            {{selectOptions selection.activities selected=system.activity localize=true}}
           </select>
         </div>
       </div>

@@ -76,10 +76,13 @@ export default class ArM5eActiveEffect extends ActiveEffect {
           }
         };
         if (CONFIG.ISV10) {
-          data.label = "New Effect";
+          data.label = game.i18n.localize("arm5e.sheet.activeEffect.new");
           data.icon = "icons/svg/aura.svg";
+        } else if (CONFIG.ISV12) {
+          data.name = game.i18n.localize("arm5e.sheet.activeEffect.new");
+          data.img = "icons/svg/aura.svg";
         } else {
-          data.name = "New Effect";
+          data.name = game.i18n.localize("arm5e.sheet.activeEffect.new");
           // TODO when deprecated
           data.icon = "icons/svg/aura.svg";
           //data.img = "icons/svg/aura.svg";
@@ -104,17 +107,17 @@ export default class ArM5eActiveEffect extends ActiveEffect {
     const categories = {
       temporary: {
         type: "temporary",
-        label: "Temporary Effects",
+        label: "arm5e.sheet.activeEffect.section.temporary",
         effects: []
       },
       passive: {
         type: "passive",
-        label: "Passive Effects",
+        label: "arm5e.sheet.activeEffect.section.passive",
         effects: []
       },
       inactive: {
         type: "inactive",
-        label: "Inactive Effects",
+        label: "arm5e.sheet.activeEffect.section.inactive",
         effects: []
       }
     };

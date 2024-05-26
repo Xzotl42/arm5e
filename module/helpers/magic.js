@@ -14,11 +14,17 @@ export async function GetFilteredAspects() {
       ([key, f]) => f.value === true
     )
   );
-  return Object.fromEntries(
-    Object.entries(CONFIG.ARM5E.ASPECTS).filter(([key, val]) => {
-      return val.src in filterBooks;
-    })
-  );
+  const filteredAspects = Object.entries(CONFIG.ARM5E.ASPECTS).filter(([key, val]) => {
+    return val.src in filterBooks;
+  });
+  for (const [k, a] of filteredAspects) {
+    a.effects = Object.fromEntries(
+      Object.entries(a.effects).map(([key, val]) => {
+        return [key, { ...val, selectLabel: `${val.name} (+${val.bonus})` }];
+      })
+    );
+  }
+  return Object.fromEntries(filteredAspects);
 }
 
 export async function GetFilteredMagicalAttributes(data) {
@@ -28,24 +34,66 @@ export async function GetFilteredMagicalAttributes(data) {
     )
   );
   // Filter to only the values configured in settings
+  let tmp = Object.entries(CONFIG.ARM5E.magic.ranges).filter(([key, val]) => {
+    return val.source in filterBooks;
+  });
+
   data.ranges = Object.fromEntries(
-    Object.entries(CONFIG.ARM5E.magic.ranges).filter(([key, val]) => {
-      return val.source in filterBooks;
-    })
+    Object.entries(CONFIG.ARM5E.magic.ranges)
+      .filter(([key, val]) => {
+        return val.source in filterBooks;
+      })
+      .map(([k, v]) => {
+        {
+          if (v.impact != undefined) {
+            return [
+              k,
+              { label: `${game.i18n.localize(v.label)}  (${v.impact})`, source: v.source }
+            ];
+          } else {
+            return [k, { label: `${game.i18n.localize(v.label)}`, disabled: true }];
+          }
+        }
+      })
   );
 
   data.targets = Object.fromEntries(
-    Object.entries(CONFIG.ARM5E.magic.targets).filter(([key, val]) => {
-      return val.source in filterBooks;
-    })
+    Object.entries(CONFIG.ARM5E.magic.targets)
+      .filter(([key, val]) => {
+        return val.source in filterBooks;
+      })
+      .map(([k, v]) => {
+        {
+          if (v.impact != undefined) {
+            return [
+              k,
+              { label: `${game.i18n.localize(v.label)}  (${v.impact})`, source: v.source }
+            ];
+          } else {
+            return [k, { label: `${game.i18n.localize(v.label)}`, disabled: true }];
+          }
+        }
+      })
   );
 
   data.durations = Object.fromEntries(
-    Object.entries(CONFIG.ARM5E.magic.durations).filter(([key, val]) => {
-      return val.source in filterBooks;
-    })
+    Object.entries(CONFIG.ARM5E.magic.durations)
+      .filter(([key, val]) => {
+        return val.source in filterBooks;
+      })
+      .map(([k, v]) => {
+        {
+          if (v.impact != undefined) {
+            return [
+              k,
+              { label: `${game.i18n.localize(v.label)}  (${v.impact})`, source: v.source }
+            ];
+          } else {
+            return [k, { label: `${game.i18n.localize(v.label)}`, disabled: true }];
+          }
+        }
+      })
   );
-  return data;
 }
 
 export async function PickRequisites(spelldata, flavor, editable) {
@@ -158,7 +206,29 @@ export class QuickMagic extends FormApplication {
       system: sys,
       technique: this.object.technique,
       form: this.object.form,
-      config: { magic: CONFIG.ARM5E.magic }
+      config: { magic: CONFIG.ARM5E.magic },
+      selection: {
+        voiceStances: Object.fromEntries(
+          Object.entries(this.object.actor.system.stances.voice).map(([k, v]) => {
+            return [k, `${game.i18n.localize(CONFIG.ARM5E.magic.mod.voice[k].mnemonic)} (${v})`];
+          })
+        ),
+        gesturesStances: Object.fromEntries(
+          Object.entries(this.object.actor.system.stances.gestures).map(([k, v]) => {
+            return [k, `${game.i18n.localize(CONFIG.ARM5E.magic.mod.gestures[k].mnemonic)} (${v})`];
+          })
+        ),
+        techniques: Object.fromEntries(
+          Object.entries(this.object.actor.system.arts.techniques).map(([k, v]) => {
+            return [k, `${CONFIG.ARM5E.magic.arts[k].short} (${v.finalScore})`];
+          })
+        ),
+        forms: Object.fromEntries(
+          Object.entries(this.object.actor.system.arts.forms).map(([k, v]) => {
+            return [k, `${CONFIG.ARM5E.magic.arts[k].short} (${v.finalScore})`];
+          })
+        )
+      }
     };
     log(false, `QuickMagic: ${JSON.stringify(context)}`);
     return context;
@@ -632,4 +702,14 @@ function calculateSuccessOfMagicItem({ actorCaster, actorTarget, roll }) {
   };
 }
 
-export { calculateSuccessOfMagic, checkTargetAndCalculateResistance, noFatigue };
+function magicalAttributesHelper(attributes, options) {
+  // for (const range of Object.entries(ranges))
+  return HandlebarsHelpers.selectOptions(attributes, options);
+}
+
+export {
+  calculateSuccessOfMagic,
+  checkTargetAndCalculateResistance,
+  noFatigue,
+  magicalAttributesHelper
+};

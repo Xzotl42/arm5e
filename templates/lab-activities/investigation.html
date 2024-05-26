@@ -47,10 +47,7 @@
           <div>
             <select class="receptacle-idx-change" data-dtype="Number" data-index="{{idx}}" style="max-width: 180px;"
               disabled>
-              {{#select effect.receptacleId}}
-                {{#each @root.planning.data.receptacle.system.enchantments.capacities as |capa idx|}}
-                  <option value="{{capa.id}}">{{capa.desc}} ({{idx}})</option>
-                {{/each}} {{/select}}
+              {{selectOptions @root.planning.data.receptacle.system.enchantments.capacities selected=effect.receptacleId}}
             </select>
           </div>
         </div>

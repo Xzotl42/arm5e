@@ -5,9 +5,7 @@
       <div class="flexrow">
         <label for="system.type" class="smallTitle" style="padding-left: 24px">{{localize "arm5e.sheet.type"}}</label>
         <select {{noSelect}} class="width2" name="system.type" data-type="String">
-          {{#select system.type}} {{#each config.lab.labTextType as |type key|}}
-              <option value="{{key}}">{{localize type}}</option>
-            {{/each}} {{/select}}
+          {{selectOptions config.lab.labTextType selected=system.type localize=true}}
         </select>
         <div>
           <label class="label-light" style="position: relative; bottom: 10px;">{{localize "Draft"}}</label>

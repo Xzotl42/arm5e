@@ -29,7 +29,7 @@ export class GroupSchedule extends FormApplication {
     data.curSeason = currentDate.season;
     data.selectedActors = [];
     data.title = game.i18n.localize("arm5e.time.troupeSchedule");
-
+    data.troupeFilters = ARM5E.activities.troupeFilters;
     if (data.displayYear == null) {
       this.object.displayYear = data.curYear;
     }

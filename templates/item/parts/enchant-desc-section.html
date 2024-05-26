@@ -19,9 +19,7 @@
         <div class="resource">
           <label class="header-label">{{localize "arm5e.sheet.season"}}</label>
           <select {{noSelect}} name="system.enchantments.season" data-dtype="String">
-            {{#select system.enchantments.season}} {{#each config.seasons as |season key|}}
-                <option value="{{key}}">{{localize season.label}}</option>
-              {{/each}} {{/select}}
+            {{selectOptions config.seasons selected=system.enchantments.season labelAttr="label" localize=true }}
           </select>
         </div>
         <div class="resource">

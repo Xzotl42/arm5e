@@ -43,11 +43,7 @@
         id="planning-receptacle-{{@root.actor._id}}">
         <div class="padding4 flexrow flex-group-left">
           <select class="type-change" name="{{planning.namePrefix}}itemType" style="max-width: 175px;">
-            {{#select planning.data.itemType}}
-              {{#each @root.config.lab.enchantment.enchantableTypes as |type key|}}
-                <option value="{{key}}">{{localize type}}</option>
-              {{/each}}
-            {{/select}}
+            {{selectOptions @root.config.lab.enchantment.enchantableTypes selected=planning.data.itemType localize=true}}
           </select>
         </div>
         <div class="padding4 flexrow flex-group-left">
@@ -74,22 +70,15 @@
             <div class="padding2 flex0">
               <select name="{{planning.namePrefix}}receptacle.system.enchantments.capacities.0.materialBase"
                 style="max-width: 140px;">
-                {{#select planning.data.receptacle.system.enchantments.capacities.0.materialBase}}
-                  {{#each @root.config.lab.enchantment.materialBase as |attr key|}}
-                    <option value="{{key}}">({{attr.base}}) {{localize attr.eg}} </option>
-                  {{/each}}
-                {{/select}}
+                {{selectOptions @root.selection.materialBase 
+                  selected=planning.data.receptacle.system.enchantments.capacities.0.materialBase }}
               </select>
             </div>
             <div class="padding2 flex0">
               <select name="{{planning.namePrefix}}receptacle.system.enchantments.capacities.0.sizeMultiplier"
                 style="max-width: 105px;">
-                {{#select planning.data.receptacle.system.enchantments.capacities.0.sizeMultiplier}}
-                  {{#each @root.config.lab.enchantment.sizeMultiplier as |attr key|}}
-                    <option value="{{key}}" title="{{localize attr.eg}}">{{localize attr.value}} (x {{attr.mult}})
-                    </option>
-                  {{/each}}
-                {{/select}}
+                {{selectOptions @root.selection.sizeMultiplier 
+                  selected=planning.data.receptacle.system.enchantments.capacities.0.sizeMultiplier }}
               </select>
             </div>
             <div class="padding2 flex0">
@@ -125,22 +114,15 @@
               <div class="padding2">
                 <select name="{{planning.namePrefix}}receptacle.system.enchantments.aspects.0.aspect"
                   style="max-width: 175px;" class="aspect-change" data-index="0">
-                  {{#select planning.data.receptacle.system.enchantments.aspects.0.aspect}}
-                    {{#each planning.data.ASPECTS as |s key|}}
-                      <option value="{{key}}">{{s.name}}</option>
-                    {{/each}}
-                  {{/select}}
+                  {{selectOptions planning.data.ASPECTS labelAttr="name"
+                    selected=planning.data.receptacle.system.enchantments.aspects.0.aspect}}
                 </select>
               </div>
               <div class="padding2">
                 <select name="{{planning.namePrefix}}receptacle.system.enchantments.aspects.0.effect"
                   style="max-width: 175px;width: 175px;" class="effect-change" data-index="0">
-                  {{#select planning.data.receptacle.system.enchantments.aspects.0.effect}}
-                    {{#each planning.data.receptacle.system.enchantments.aspects.0.effects as |e key|}}
-                      <option value="{{key}}">{{e.name}} (+{{e.bonus}})
-                      </option>
-                    {{/each}}
-                  {{/select}}
+                  {{selectOptions planning.data.receptacle.system.enchantments.aspects.0.effects
+                    selected=planning.data.receptacle.system.enchantments.aspects.0.effect labelAttr="selectLabel" }}
                 </select>
               </div>
               <div class="padding2 modifier">

@@ -41,6 +41,11 @@ export class ArM5eActiveEffectConfig extends ActiveEffectConfig {
         name: context.data.label,
         img: context.data.icon
       };
+    } else if (CONFIG.ISV12) {
+      context.data.ui = {
+        name: context.data.name,
+        img: context.data.img
+      };
     } else {
       context.data.ui = {
         name: context.data.name,

@@ -834,14 +834,11 @@
   "arm5e.sheet.filters": "Filters",
   "arm5e.sheet.count": "Count",
 
-  "arm5e.sheet.crucible.instructions1": "Drop an item to start",
-  "arm5e.sheet.crucible.instructions2": "Drop an enchantment",
-  "arm5e.sheet.crucible.receptacle": "Receptacle",
-  "arm5e.sheet.crucible.invest": "Invest power",
-
   "arm5e.enchantment.attributes": "Enchantment attributes",
   "arm5e.enchantment.capacity.label": "Capacity",
   "arm5e.enchantment.capacity.summary": "Used/Total Capacity",
+  "arm5e.enchantment.capacity.sumMode": "Sum",
+  "arm5e.enchantment.capacity.maxMode": "Maximum",
   "arm5e.enchantment.capacities": "Capacities",
   "arm5e.enchantment.aspects": "Shapes & Materials",
   "arm5e.enchantment.attuned": "Attuned",
@@ -1146,6 +1143,10 @@
   "arm5e.sheet.skill.abilityOption": "Ability option",
   "arm5e.sheet.skill.abilityNoKey": "Custom ability (legacy)",
 
+  "arm5e.sheet.activeEffect.new": "New effect",
+  "arm5e.sheet.activeEffect.section.temporary": "Temporary effects",
+  "arm5e.sheet.activeEffect.section.passive": "Passive effects",
+  "arm5e.sheet.activeEffect.section.inactive": "Inactive effects",
   "arm5e.sheet.activeEffect.info.noedit": "Note: Active effect creation is not possible if the Item is owned by an Actor, edit the original or make a copy in your world to edit.",
   "arm5e.sheet.activeEffect.types.arts.affinity": "Art affinity",
   "arm5e.sheet.activeEffect.types.arts.deficiency": "Art deficiency",

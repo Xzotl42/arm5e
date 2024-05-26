@@ -208,7 +208,7 @@ async function useConfidence(ev) {
       log(false, flavor);
       let newContent = parseFloat(total) + bonus;
       const dieRoll = new Roll(newContent.toString(10));
-      await dieRoll.evaluate({ async: true });
+      await dieRoll.evaluate();
       let msgData = {};
       msgData.speaker = message.speaker;
       msgData.flavor = flavor;

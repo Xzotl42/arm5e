@@ -9,9 +9,8 @@
             <div class="resource flexcol flexrow">
               <label for="system.ability" class="header-label">{{localize "arm5e.sheet.ability"}} </label>
               <select name="system.ability" data-type="String" class="ability-key">
-                {{#select system.ability}} {{#each system.abilities }}
-                    <option value="{{id}}">{{name}}</option>
-                  {{/each}} {{/select}}
+                {{selectOptions system.abilities selected=system.ability labelAttr="name" 
+                valueAttr="id" nameAttr="id"}}
               </select>
             </div>
           {{/if}}
@@ -64,9 +63,8 @@
             <div class="flexrow">
               <div class="resource">
                 <label class="header-label">{{localize "arm5e.sheet.state.label"}}</label>
-                <input type="text" name="system.state"
-                  value="{{localize (lookup config.lab.enchantment.receptacle.state system.state)}}" data-dtype="String"
-                  readonly>
+                <input type="text" value="{{localize (lookup config.lab.enchantment.receptacle.state system.state)}}"
+                  data-dtype="String" readonly>
               </div>
               <div class="resource" style="max-width: 100px;">
                 <img src="systems/arm5e/assets/icons/Icon_Details_option1.png" class="appraise" title="Appraisal"
@@ -86,9 +84,7 @@
         <div class="resource">
           <label for="system.cost.value" class="header-label">{{localize "arm5e.sheet.cost"}}</label>
           <select name="system.cost.value" data-type="String">
-            {{#select system.cost.value}} {{#each config.item.costs as |costs key|}}
-                <option value="{{key}}">{{localize label}}</option>
-              {{/each}} {{/select}}
+            {{selectOptions config.item.costs selected=system.cost.value localize=true}}
           </select>
         </div>
         <div class="resource">

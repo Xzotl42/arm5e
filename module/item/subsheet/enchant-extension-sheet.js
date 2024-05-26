@@ -82,8 +82,10 @@ export class ArM5eItemEnchantmentSheet {
     context.ui.flavor = "Neutral";
     enchants.totalCapa = 0;
     enchants.states = foundry.utils.duplicate(ARM5E.lab.enchantment.state);
-
-    context = await GetFilteredMagicalAttributes(context);
+    if (!context.selection) {
+      context.selection = {};
+    }
+    await GetFilteredMagicalAttributes(context.selection);
 
     if (enchants.capacities.length > 1) {
       enchants.states["charged"].selection = "disabled";
@@ -95,6 +97,12 @@ export class ArM5eItemEnchantmentSheet {
     }
 
     enchants.prepared = false;
+    let capaIdx = 0;
+    context.selection.capacityMode = {
+      sum: "arm5e.enchantment.capacity.sumMode",
+      max: "arm5e.enchantment.capacity.maxMode"
+    };
+    context.selection.capacities = {};
     for (let capa of enchants.capacities) {
       capa.used = 0;
       capa.total =
@@ -104,6 +112,9 @@ export class ArM5eItemEnchantmentSheet {
       if (capa.prepared) {
         enchants.prepared = true;
       }
+      // TODO: set invisible if all effects linked are hidden
+      capa.visible = true;
+      context.selection.capacities[capa.id] = `${capa.desc} (${capaIdx++})`;
     }
     enchants.ASPECTS = await GetFilteredAspects();
 
@@ -136,6 +147,29 @@ export class ArM5eItemEnchantmentSheet {
       enchants.expiryAllowed = false;
       // enchants.prepared = true;
     }
+
+    context.selection.states = Object.fromEntries(
+      Object.entries(enchants.states).filter(([k, v]) => !(v.selection === "disabled"))
+    );
+
+    context.selection.frequency = Object.fromEntries(
+      Object.entries(CONFIG.ARM5E.lab.enchantment.effectUses).map(([k, v]) => {
+        return [k, `${v} ${game.i18n.localize("arm5e.lab.enchantment.uses-per-day")}`];
+      })
+    );
+
+    context.selection.materialBase = Object.fromEntries(
+      Object.entries(CONFIG.ARM5E.lab.enchantment.materialBase).map(([k, v]) => {
+        return [k, `(${v.base}) ${game.i18n.localize(v.eg)}`];
+      })
+    );
+
+    context.selection.sizeMultiplier = Object.fromEntries(
+      Object.entries(CONFIG.ARM5E.lab.enchantment.sizeMultiplier).map(([k, v]) => {
+        return [k, `${game.i18n.localize(v.value)} (x ${v.mult})`];
+      })
+    );
+
     let idx = 0;
     let overcap = false;
     enchants.visibleEnchant = 0;

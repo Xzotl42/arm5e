@@ -109,7 +109,8 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
     log(false, "GET WORKBENCH DATA");
     let context = await super.getData();
     let isValid = true;
-    context = await GetFilteredMagicalAttributes(context);
+
+    await GetFilteredMagicalAttributes(context.selection);
 
     if (context.system.owner && context.system.owner.linked) {
       // Owner

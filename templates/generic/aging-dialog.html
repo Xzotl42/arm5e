@@ -15,9 +15,7 @@
     {{#if choice}}
       <div class="flexrow marginbot6" style="padding: 5px">
         <select class="SelectedCharacteristic" name="char" data-type="String">
-          {{#select char}} {{#each chars as |char key|}} {{#if (ne key "cun")}}
-                <option value="{{key}}">{{localize char.label}}</option>
-              {{/if}} {{/each}} {{/select}}
+          {{selectOptions chars selected=char labelAttr=label localize=true}}
         </select>
       </div>
     {{/if}}

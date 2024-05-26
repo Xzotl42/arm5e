@@ -13,9 +13,7 @@
           <label for="season" class="smallTitle" style="font-size:16pt">{{localize "arm5e.sheet.season"}}</label>
           <select name="season" {{dateChange}} data-type="String" class="change-season flex0 astrolab"
             style="font-size: 14pt;">
-            {{#select season}} {{#each seasons as |season key|}}
-                <option value="{{key}}">{{localize season.label}}</option>
-              {{/each}} {{/select}}
+            {{selectOptions seasons selected=season localize=true labelAttr=label}}
           </select>
         </div>
         <div class="resource-content flexrow flex-center flex-between margintop6">

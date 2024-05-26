@@ -2,24 +2,14 @@
   <div class="flexrow flex-group-left">
     <label class="item-title stance">{{localize "arm5e.sheet.magic.voice"}}</label>
     <select name="system.stances.voiceStance" class="voice-and-gestures stance" effect="voice" data-actorId="{{_id}}">
-      {{#select system.stances.voiceStance}} {{#each config.magic.mod.voice as
-      |voiceType key| }}
-          <option value="{{key}}" data-dtype="Number">{{localize voiceType.mnemonic}}
-            ({{lookup ../system.stances.voice key}})
-          </option>
-        {{/each}} {{/select}}
+      {{selectOptions selection.voiceStances selected=system.stances.voiceStance  }}
     </select>
   </div>
   <div class="flexrow flex-group-left">
     <label class="item-title stance">{{localize "arm5e.sheet.magic.gestures"}}</label>
     <select name="system.stances.gesturesStance" class="voice-and-gestures stance" effect="gestures"
       data-actorId="{{_id}}">
-      {{#select system.stances.gesturesStance}} {{#each config.magic.mod.gestures as
-      |gestureType key| }}
-          <option value="{{key}}" data-dtype="Number">{{localize gestureType.mnemonic}}
-            ({{lookup ../system.stances.gestures key}})
-          </option>
-        {{/each}} {{/select}}
+      {{selectOptions selection.gesturesStances selected=system.stances.gesturesStance  }}
     </select>
   </div>
 </div>

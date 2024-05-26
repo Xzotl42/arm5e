@@ -21,7 +21,7 @@
       <div class="form-group">
         <label>{{ localize "EFFECT.Name" }}</label>
         <div class="form-fields">
-          <input type="text" name="label" value="{{ data.ui.name }}" class="resource-focus" />
+          <input type="text" name="name" value="{{ data.ui.name }}" class="resource-focus" />
         </div>
       </div>
 
@@ -85,6 +85,8 @@
             <div class="flexrow">
               <div class="type">
                 <select name="../flags.arm5e.type.{{i}}" data-type="String" class="effect-type" data-index="{{i}}">
+                  {{log "type"}}
+                  <!-- {{selectOptions @root.types selected=(lookup ../selectedTypes i) labelAttr="label" localize=true}} -->
                   {{#select (lookup ../selectedTypes i)}} {{#each ../types as |type id|}}
                       <option value="{{id}}">{{localize type.label}}</option>
                     {{/each}} {{/select}}
@@ -93,9 +95,12 @@
               <div class="subtype">
                 <select name="changes.{{i}}.key" data-subtype="{{lookup ../subtypes i}}" class="effect-subtype"
                   data-index="{{i}}">
+                  <!-- {{selectOptions @root.subtypes selected=(lookup (lookup (lookup ../subtypes i) (lookup ../selectedSubtypes i)) "computedKey")
+                     labelAttr="label" nameAttr="computedKey" valueAttr="computedKey" localize=true}} -->
                   {{log "value: " (lookup (lookup (lookup ../subtypes i) (lookup ../selectedSubtypes i)) "computedKey")}}
                   {{#select (lookup (lookup (lookup ../subtypes i) (lookup ../selectedSubtypes i)) "computedKey")}}
                     {{#each (lookup ../subtypes i) as |st id |}}
+                      {{log "subtype: " subtype}}
                       <option data-subtype="{{id}}" value="{{st.computedKey}}">{{localize st.label}}</option>
                     {{/each}} {{/select}}
                 </select>

@@ -661,11 +661,6 @@
   "arm5e.sheet.filters": "Filtros",
   "arm5e.sheet.count": "Contar",
 
-  "arm5e.sheet.crucible.instructions1": "Arrastra un objeto para empezar",
-  "arm5e.sheet.crucible.instructions2": "Arrastra un encantamiento",
-  "arm5e.sheet.crucible.receptacle": "Receptáculo",
-  "arm5e.sheet.crucible.invest": "Imbuir efecto",
-
   "arm5e.lab.planning.labQuality": "Calidad del Laboratorio",
   "arm5e.lab.planning.labSpecTotal": "Espec. laboratorio",
   "arm5e.lab.planning.label": "Planificación",

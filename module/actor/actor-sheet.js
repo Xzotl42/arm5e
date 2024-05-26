@@ -199,10 +199,11 @@ export class ArM5eActorSheet extends ActorSheet {
 
     const actorData = context.actor;
     context.ui = this.getUserCache();
-    (context.rollData = this.actor.getRollData()),
-      // Add the actor's data to context.system for easier access, as well as flags.
-      (context.system = actorData.system);
+    context.rollData = this.actor.getRollData();
+    // Add the actor's data to context.system for easier access, as well as flags.
+    context.system = actorData.system;
     context.flags = actorData.flags;
+    context.selection = {};
 
     context.config = CONFIG.ARM5E;
     context.abilityKeys = CONFIG.ARM5E.ALL_ABILITIES;
@@ -341,6 +342,17 @@ export class ArM5eActorSheet extends ActorSheet {
         context.system?.charType?.value == "magusNPC" ||
         context.system?.charType?.value == "magus"
       ) {
+        context.selection.voiceStances = Object.fromEntries(
+          Object.entries(context.system.stances.voice).map(([k, v]) => {
+            return [k, `${game.i18n.localize(CONFIG.ARM5E.magic.mod.voice[k].mnemonic)} (${v})`];
+          })
+        );
+        context.selection.gesturesStances = Object.fromEntries(
+          Object.entries(context.system.stances.gestures).map(([k, v]) => {
+            return [k, `${game.i18n.localize(CONFIG.ARM5E.magic.mod.gestures[k].mnemonic)} (${v})`];
+          })
+        );
+
         // Arts icons style
         context.artsIcons = game.settings.get("arm5e", "artsIcons");
 
@@ -1849,6 +1861,77 @@ export class ArM5eActorSheet extends ActorSheet {
       updateData["system.sanctum.actorId"] = null;
     }
     return updateData;
+  }
+
+  async enrichCharacterEditors(context) {
+    if (this.actor.system.biography) {
+      context.enrichedBiography = await TextEditor.enrichHTML(this.actor.system.biography, {
+        // Whether to show secret blocks in the finished html
+        secrets: this.document.isOwner,
+        // Necessary in v11, can be removed in v12
+        async: true,
+        // Data to fill in for inline rolls
+        rollData: context.rollData,
+        // Relative UUID resolution
+        relativeTo: this.actor
+      });
+    }
+    if (this.actor.system.sigil?.value) {
+      context.enrichedSigil = await TextEditor.enrichHTML(this.actor.system.sigil.value, {
+        // Whether to show secret blocks in the finished html
+        secrets: this.document.isOwner,
+        // Necessary in v11, can be removed in v12
+        async: true,
+        // Data to fill in for inline rolls
+        rollData: context.rollData,
+        // Relative UUID resolution
+        relativeTo: this.actor
+      });
+    }
+
+    if (this.actor.system.warping?.effects) {
+      context.enrichedWarping = await TextEditor.enrichHTML(this.actor.system.warping.effects, {
+        // Whether to show secret blocks in the finished html
+        secrets: this.document.isOwner,
+        // Necessary in v11, can be removed in v12
+        async: true,
+        // Data to fill in for inline rolls
+        rollData: context.rollData,
+        // Relative UUID resolution
+        relativeTo: this.actor
+      });
+    }
+
+    if (this.actor.system.decrepitude?.effects) {
+      context.enrichedDecrepitude = await TextEditor.enrichHTML(
+        this.actor.system.decrepitude.effects,
+        {
+          // Whether to show secret blocks in the finished html
+          secrets: this.document.isOwner,
+          // Necessary in v11, can be removed in v12
+          async: true,
+          // Data to fill in for inline rolls
+          rollData: context.rollData,
+          // Relative UUID resolution
+          relativeTo: this.actor
+        }
+      );
+    }
+    if (this.actor.system.laboratory?.longevityRitual?.twilightScars) {
+      context.enrichedTwilightScars = await TextEditor.enrichHTML(
+        this.actor.system.laboratory.longevityRitual.twilightScars,
+        {
+          // Whether to show secret blocks in the finished html
+          secrets: this.document.isOwner,
+          // Necessary in v11, can be removed in v12
+          async: true,
+          // Data to fill in for inline rolls
+          rollData: context.rollData,
+          // Relative UUID resolution
+          relativeTo: this.actor
+        }
+      );
+    }
   }
 }
 

@@ -31,9 +31,8 @@
         <div class="resource" style="margin-top: 8px">
           <label class="bold">{{localize "arm5e.lab.usage.label"}}</label>
           <select name="system.usage" data-type="String">
-            {{#select system.usage}} {{#each config.lab.usage as |usage key|}}
-                <option value="{{key}}">{{localize usage.label}}</option>
-              {{/each}} {{/select}}
+            {{selectOptions config.lab.usage selected=system.usage labelAttr="label" localize=true}}
+
           </select>
         </div>
 

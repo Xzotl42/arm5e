@@ -460,6 +460,7 @@ async function renderRollTemplate(dataset, template, actor) {
   }
   actor.system.roll = actor.rollInfo;
   actor.config = CONFIG.ARM5E;
+  actor.selection = actor.rollInfo.selection;
   const renderedTemplate = await renderTemplate(template, actor);
   const dialogData = getDialogData(dataset, renderedTemplate, actor);
   const dialog = new Dialog(

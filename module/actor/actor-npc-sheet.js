@@ -64,59 +64,7 @@ export class ArM5eNPCActorSheet extends ArM5eActorSheet {
     const context = await super.getData();
 
     context.config = CONFIG.ARM5E;
-    if (this.actor.system.biography) {
-      context.enrichedBiography = await TextEditor.enrichHTML(this.actor.system.biography, {
-        // Whether to show secret blocks in the finished html
-        secrets: this.document.isOwner,
-        // Necessary in v11, can be removed in v12
-        async: true,
-        // Data to fill in for inline rolls
-        rollData: context.rollData,
-        // Relative UUID resolution
-        relativeTo: this.actor
-      });
-    }
-    if (this.actor.system.sigil?.value) {
-      context.enrichedSigil = await TextEditor.enrichHTML(this.actor.system.sigil.value, {
-        // Whether to show secret blocks in the finished html
-        secrets: this.document.isOwner,
-        // Necessary in v11, can be removed in v12
-        async: true,
-        // Data to fill in for inline rolls
-        rollData: context.rollData,
-        // Relative UUID resolution
-        relativeTo: this.actor
-      });
-    }
-
-    if (this.actor.system.warping?.effects) {
-      context.enrichedWarping = await TextEditor.enrichHTML(this.actor.system.warping.effects, {
-        // Whether to show secret blocks in the finished html
-        secrets: this.document.isOwner,
-        // Necessary in v11, can be removed in v12
-        async: true,
-        // Data to fill in for inline rolls
-        rollData: context.rollData,
-        // Relative UUID resolution
-        relativeTo: this.actor
-      });
-    }
-
-    if (this.actor.system.decrepitude?.effects) {
-      context.enrichedDecrepitude = await TextEditor.enrichHTML(
-        this.actor.system.decrepitude.effects,
-        {
-          // Whether to show secret blocks in the finished html
-          secrets: this.document.isOwner,
-          // Necessary in v11, can be removed in v12
-          async: true,
-          // Data to fill in for inline rolls
-          rollData: context.rollData,
-          // Relative UUID resolution
-          relativeTo: this.actor
-        }
-      );
-    }
+    await this.enrichCharacterEditors(context);
 
     // Prepare items.
     this._prepareCharacterItems(context);

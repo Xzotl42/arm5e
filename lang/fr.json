@@ -92,7 +92,7 @@
   "TYPES.Item.enchantment": "Enchantement",
   "TYPES.Item.mundaneBook": "Livre ordinaire (Obsolète)",
   "TYPES.Item.wound": "Blessure",
-  
+
   "arm5e.sheet.labTexts": "Textes de laboratoire",
 
   "arm5e.system.dependencyWarning": "Le système exige que le module {name} soit au moins de la version {minimum}, la version actuelle est {current}. Il se peut que vous rencontriez des erreurs et des bugs, veuillez mettre à jour le module.",
@@ -566,7 +566,7 @@
   "arm5e.sheet.constructionPoints": "Points de construction",
   "arm5e.sheet.library": "Bibliothèque",
   "arm5e.sheet.blankBook": "Livre vierge",
-  
+
   "arm5e.sheet.physicalBooks": "Livres physiques",
   "arm5e.sheet.laboratoryTexts": "Textes de laboratoire",
   "arm5e.sheet.vis": "Vis",
@@ -832,11 +832,6 @@
   "arm5e.sheet.enchantment": "Enchantement",
   "arm5e.sheet.filters": "Filtres",
   "arm5e.sheet.count": "Compte",
-
-  "arm5e.sheet.crucible.instructions1": "Déposer un objet pour commencer",
-  "arm5e.sheet.crucible.instructions2": "Déposer un enchantement",
-  "arm5e.sheet.crucible.receptacle": "Receptacle",
-  "arm5e.sheet.crucible.invest": "Investir un pouvoir",
 
   "arm5e.enchantment.attributes": "Attributs de l'enchantement",
   "arm5e.enchantment.capacity.label": "Composition",
@@ -1357,7 +1352,7 @@
   "arm5e.astrolab.restAll": "Reposez tout le monde",
 
   "arm5e.scriptorium.index": "Index",
-  
+
   "arm5e.scriptorium.writer.title": "Ecrivain",
   "arm5e.scriptorium.writer.name": "Nom de l'écrivain",
   "arm5e.scriptorium.copying.writingScoreLabel": "Score d'écriture (Profession: scribe + 6)",
@@ -1466,7 +1461,7 @@
   "arm5e.hints.recover": "Récupération de {item}",
   "arm5e.hints.createLabText": "Créer un texte de laboratoire",
   "arm5e.hints.useMagicItem": "Déclencher l'effet \"{name}\"",
-  
+
   "arm5e.sheet.label.details": "Détails",
 
   "arm5e.config.sourcebookFilter": "Filtre livre source",
@@ -1486,7 +1481,7 @@
   "arm5e.rolltables.experimentation.discovery.art": "Vous gagnez 3 points d’expérience dans l’un des Arts utilisés pour l’expérience.",
   "arm5e.rolltables.experimentation.discovery.artPlus": "Vous gagnez suffisamment de points d’expérience pour monter l’un des Arts utilisés pour l’expérience au niveau supérieur ou trois points d’expérience (le plus haut des deux).",
   "arm5e.rolltables.experimentation.discovery.rollTwice": "Relancez deux fois et relancez à nouveau si vous obtenez ce résultat.",
-  
+
   "arm5e.rolltables.experimentation.extrordinaryResults.none": "Pas d’effet extraordinaire.",
   "arm5e.rolltables.experimentation.extrordinaryResults.sideEffect": "Effet secondaire.",
   "arm5e.rolltables.experimentation.extrordinaryResults.noBenefit": "Pas d’avantage.",
@@ -1496,8 +1491,7 @@
   "arm5e.rolltables.experimentation.extrordinaryResults.modifiedEffect": "Effet modifié.",
   "arm5e.rolltables.experimentation.extrordinaryResults.rollTwice": "Faites deux jets de plus sur cette table.",
   "arm5e.rolltables.experimentation.extrordinaryResults.disaster": "Désastre.",
-  
-  
+
   "arm5e.generic.yes": "Oui",
   "arm5e.generic.no": "Non",
   "arm5e.generic.always": "Toujours",

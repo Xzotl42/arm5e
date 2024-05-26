@@ -34,9 +34,7 @@
         <div class="resource flexcol flexrow">
           <label for="system.category" class="bold">{{localize "arm5e.skill.category.label"}}</label>
           <select name="system.category" data-dtype="String" class="category-change" {{canSelect}}>
-            {{#select system.category}} {{#each inhabitantCategory as |type key|}}
-                <option value="{{key}}">{{localize type.label}}</option>
-              {{/each}} {{/select}}
+            {{selectOptions inhabitantCategory selected=system.category labelAttr="label" localize=true}}
           </select>
         </div>
       </div>

@@ -5,35 +5,32 @@
     <div class="flexcol" style="gap: 0px">
       <div class="flexrow flex-group-left">
         <select class="voice-and-gestures marginsides10" effect="voice">
-          {{#select system.stances.voiceStance}} {{#each config.magic.mod.voice as
-        |voiceType key| }}
-              <option value="{{key}}" data-dtype="Number">{{localize voiceType.mnemonic}}</option>
-            {{/each}} {{/select}}
+          {{selectOptions selection.voiceStances selected=system.stances.voiceStance  }}
         </select>
       </div>
       <div class="flexrow flex-group-left">
         <select class="voice-and-gestures marginsides10" effect="gestures">
-          {{#select system.stances.gesturesStance}} {{#each config.magic.mod.gestures as
-        |gestureType key| }} {{!--log "key" key--}}
-              <option value="{{key}}" data-dtype="Number">{{localize gestureType.mnemonic}}</option>
-            {{/each}} {{/select}}
+          {{selectOptions selection.gesturesStances selected=system.stances.gesturesStance  }}
         </select>
       </div>
       <div class="flexrow flex-group-center">
         <select name="technique" data-dtype="String" class="SelectedTechnique marginsides10"
           style="text-align: center;">
-          {{#select technique}} {{#each system.arts.techniques as |item key|}}
-              <option value="{{key}}"><b>{{lookup (lookup ../config.magic.arts key) "short" }}</b> ({{ item.finalScore
-                }})
-              </option>
-            {{/each}} {{/select}}
+          {{selectOptions
+            selection.techniques
+            selected=technique
+            blank=""
+          }}
+
         </select>
         <select name="form" data-dtype="String" class="SelectedForm marginsides10" style="text-align: center;">
-          {{#select form}} {{#each system.arts.forms as |item key|}}
-              <option value="{{ key }}"><b>{{lookup (lookup ../config.magic.arts key) "short" }}</b> ({{ item.finalScore
-                }})
-              </option>
-            {{/each}} {{/select}}
+          {{selectOptions
+            selection.forms
+            selected=form
+            blank=""
+          }}
+
+
         </select>
       </div>
       <div class="flexrow flex-group-left">

@@ -20,7 +20,7 @@
               {{selectOptions
                 @root.config.magic.techniques
                 selected=techniqueFilter
-                labelAttr="label"
+                labelAttr="label2"
                 blank=""
               }}
             {{/with}}
@@ -68,8 +68,8 @@
                   @root.config.genericOptions.filterOperator
                   selected=levelOperator
                   nameAttr="key"
+                  valueAttr="key"
                   labelAttr="label"
-                  blank=""
                 }}
               {{/with}}
             </select>
@@ -106,8 +106,8 @@
                   @root.config.genericOptions.filterOperator
                   selected=qualityOperator
                   nameAttr="key"
+                  valueAttr="key"
                   labelAttr="label"
-                  blank=""
                 }}
               {{/with}}
             </select>

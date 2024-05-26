@@ -6,11 +6,7 @@
     <div class="arm5e backSection padding12 flex-group-left ">
         <div>
             <select name="referenceModule" data-type="String">
-                {{#select referenceModule}}
-                    {{#each arsModules }}
-                        <option value="{{this.id}}">{{this.name}}</option>
-                    {{/each}}
-                {{/select}}
+                {{selectOptions arsModules selected=referenceModule labelAttr=name nameAttr=id valueAttr=id}}
             </select>
         </div>
         <div>

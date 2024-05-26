@@ -25,9 +25,7 @@
       <div class="resource" style="margin-top: 8px">
         <label class="bold">{{localize "arm5e.sheet.giftType"}}</label>
         <select name="system.extradata.giftType" data-dtype="String">
-          {{#select system.extradata.giftType}} {{#each config.magic.gift as |type key|}}
-              <option value="{{key}}">{{localize type}}</option>
-            {{/each}} {{/select}}
+          {{selectOptions config.magic.gift selected=system.extradata.giftType localize=true}}
         </select>
       </div>
 
@@ -43,9 +41,7 @@
         <div class="resource flexcol flexrow">
           <label for="system.category" class="bold">{{localize "arm5e.skill.category.label"}}</label>
           <select name="system.category" data-dtype="String" class="category-change" {{canSelect}}>
-            {{#select system.category}} {{#each inhabitantCategory as |type key|}}
-                <option value="{{key}}">{{localize type.label}}</option>
-              {{/each}} {{/select}}
+            {{selectOptions inhabitantCategory selected=system.category labelAttr="label" localize=true}}
           </select>
         </div>
       </div>

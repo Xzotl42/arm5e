@@ -22,9 +22,7 @@
       {{#if ui.bonusOptions}}
         <label class="header-label"> + </label>
         <select class="progress-bonus" name="system.optionKey" data-dtype="String" {{@root.system.disabled}}>
-          {{#select system.optionKey}} {{#each bonusOptions as |option key|}}
-              <option value="{{key}}">{{localize option.label}} ({{option.modifier}})</option>
-            {{/each}} {{/select}}
+          {{selectOptions bonusOptions selected=system.optionKey labelAttr="selectLabel"}}
         </select>
       {{/if}}
       {{#unless (or (eq system.sourceModifier 0) system.cappedGain)}}

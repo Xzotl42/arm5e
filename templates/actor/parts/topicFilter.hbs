@@ -17,12 +17,7 @@
             data-category="bookTopics"
           >
             {{#with (lookup ui.filters.bookTopics list)}}
-              {{#select topicFilter}}
-                <option value=""></option>
-                {{#each ../topics as |topic key|}}
-                  <option value="{{key}}" {{topic.selection}}>{{topic.label}}</option>
-                {{/each}}
-              {{/select}}
+              {{selectOptions ../topics selected=topicFilter labelAttr="label" blank=""}}
             {{/with}}
           </select>
         </span>
@@ -41,11 +36,7 @@
             data-category="bookTopics"
           >
             {{#with (lookup ui.filters.bookTopics list)}}
-              {{#select typeFilter}}
-                <option value=""></option>
-                <option value="Summa">Summa</option>
-                <option value="Tractatus">Tractatus</option>
-              {{/select}}
+              {{selectOptions @root.config.books.types selected=typeFilter blank=""}}
             {{/with}}
           </select>
         </span>
@@ -62,11 +53,13 @@
             data-category="bookTopics"
           >
             {{#with (lookup ui.filters.bookTopics list)}}
-              {{#select levelOperator}}
-                <option value="0">=</option>
-                <option value="-1">&leq;</option>
-                <option value="1">&geq;</option>
-              {{/select}}
+              {{selectOptions
+                @root.config.genericOptions.filterOperator
+                selected=levelOperator
+                nameAttr="key"
+                valueAttr="key"
+                labelAttr="label"
+              }}
             {{/with}}
           </select>
           {{#with (lookup ui.filters.bookTopics list)}}
@@ -95,11 +88,13 @@
             data-category="bookTopics"
           >
             {{#with (lookup ui.filters.bookTopics list)}}
-              {{#select qualityOperator}}
-                <option value="0">=</option>
-                <option value="-1">&leq;</option>
-                <option value="1">&geq;</option>
-              {{/select}}
+              {{selectOptions
+                @root.config.genericOptions.filterOperator
+                selected=qualityOperator
+                nameAttr="key"
+                valueAttr="key"
+                labelAttr="label"
+              }}
             {{/with}}
           </select>
           {{#with (lookup ui.filters.bookTopics list)}}

@@ -17,12 +17,13 @@
             data-category="events"
           >
             {{#with (lookup ui.filters.events list)}}
-              {{#select typeFilter}}
-                <option value=""></option>
-                {{#each @root.config.activities.generic as |activity key|}}
-                  <option value="{{key}}">{{localize activity.label}}</option>
-                {{/each}}
-              {{/select}}
+              {{selectOptions
+                @root.config.activities.generic
+                selected=typeFilter
+                labelAttr="label"
+                blank=""
+                localize=true
+              }}
             {{/with}}
           </select>
         </span>
@@ -38,7 +39,7 @@
               data-dtype="Number"
               style="margin-right: 4px; max-width:40px"
               class="minyear-filter resource-focus"
-              data-list="{{../list}}"
+              data-list="{{@root.list}}"
               data-category="events"
             />
           {{/with}}
@@ -54,7 +55,7 @@
               data-dtype="Number"
               style="margin-right: 4px; max-width:40px"
               class="maxyear-filter resource-focus"
-              data-list="{{../list}}"
+              data-list="{{@root.list}}"
               data-category="events"
             />
           {{/with}}

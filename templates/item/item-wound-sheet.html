@@ -14,9 +14,7 @@
         <div class="resource flexrow">
           <label for="system.season" class="header-label">{{localize "arm5e.sheet.wound.inflicted"}}</label>
           <select name="system.inflictedDate.season" data-type="String">
-            {{#select system.inflictedDate.season}} {{#each config.seasons as |season key|}}
-                <option value="{{key}}">{{localize season.label}}</option>
-              {{/each}} {{/select}}
+            {{selectOptions config.seasons selected=system.inflictedDate.season labelAttr="label" localize=true }}
           </select>
           <input type="number" name="system.inflictedDate.year" value="{{system.inflictedDate.year}}"
             data-dtype="Number" />
@@ -25,9 +23,7 @@
           {{#if system.healedDate.year}}
             <label for="system.season" class="header-label">{{localize "arm5e.sheet.wound.healed"}}</label>
             <select name="system.healedDate.season" data-type="String">
-              {{#select system.healedDate.season}} {{#each config.seasons as |season key|}}
-                  <option value="{{key}}">{{localize season.label}}</option>
-                {{/each}} {{/select}}
+              {{selectOptions config.seasons selected=system.healedDate.season labelAttr="label" localize=true }}
             </select>
             <input type="number" name="system.healedDate.year" value="{{system.healedDate.year}}" data-dtype="Number" />
           {{else}}
@@ -43,9 +39,7 @@
         <div class="resource flexcol">
           <label for="system.gravity" class="header-label">{{localize "arm5e.sheet.wound.gravity"}}</label>
           <select class="change-gravity" name="system.gravity" data-type="String">
-            {{#select system.gravity}} {{#each config.recovery.wounds as |wound key|}}
-                <option value="{{key}}">{{localize wound.label}}</option>
-              {{/each}} {{/select}}
+            {{selectOptions config.recovery.wounds selected=system.gravity labelAttr="label" localize=true }}
           </select>
         </div>
         <div class="resource">

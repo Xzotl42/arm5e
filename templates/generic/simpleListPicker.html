@@ -2,10 +2,8 @@
   <!-- TODOV10 Check-->
   {{> "systems/arm5e/templates/item/parts/item-header.html" header="Inputs"}}
   <div class="flexrow backSection" style="padding: 8px">
-    <select class="SelectedItem" name="data.data.choice" data-type="String">
-      {{#select data.data.choice}} {{#each data.data.list}}
-          <option value="{{this.id}}">{{this.name}}</option>
-        {{/each}} {{/select}}
+    <select class="SelectedItem" name="choice" data-type="String">
+      {{selectOptions list selected=choice labelAttr="name" nameAttr="id" valueAttr="id"}}
     </select>
   </div>
   {{> "systems/arm5e/templates/item/parts/item-footer.html" footer="Inputs"}}

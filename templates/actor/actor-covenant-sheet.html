@@ -89,7 +89,7 @@
             <label for="system.scene.id" class="header-label" style="padding-top: 4px; padding-left: 24px">Scene</label>
             <select name="system.scene.id" data-type="String" style="flex: 0 0 60px" {{#unless
               (isGM)}}disabled{{/unless}}>
-              {{selectOptions scenes selected=system.scene.id labelAttr="name" nameAttr="id" blank=""}}
+              {{selectOptions scenes selected=system.scene.id labelAttr="name" nameAttr="id" valueAttr="id" blank=""}}
             </select>
           </span>
           <span class="covenantname flexrow" style="padding-top: 4px">

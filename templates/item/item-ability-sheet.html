@@ -42,18 +42,14 @@
         <div class="flexcol">
           <label>{{localize "arm5e.sheet.defaultCharacteristicForAbility"}}</label>
           <select name="system.defaultChaAb" data-type="String" class="default-characteristic">
-            {{#select system.defaultChaAb}} {{#each config.character.characteristics as |item key|}}
-                <option value="{{key}}">{{localize label}}</option>
-              {{/each}} {{/select}}
+            {{selectOptions config.character.characteristics selected=system.defaultChaAb localize=true }}
           </select>
         </div>
         {{#if (eq system.category "supernaturalCat") }}
           <div class="flexcol " style="padding-left:5px">
             <label class>{{localize "arm5e.sheet.realm.label"}}</label>
             <select name="system.realm" data-type="String">
-              {{#select system.realm}} {{#each config.realmsExt as |r key|}}
-                  <option value="{{key}}">{{localize r.label}}</option>
-                {{/each}} {{/select}}
+              {{selectOptions config.realmsExt selected=system.realm labelAttr="label" localize=true }}
             </select>
           </div>
         {{/if}}
@@ -77,11 +73,7 @@
       <div class="resource flexrow">
         <label for="system.key" class="header-label">{{localize "arm5e.sheet.skill.abilityKey"}}</label>
         <select class="change-abilitykey ability-key" name="system.key" data-dtype="String">
-          {{#select system.key}}
-            {{#each abilityKeysList as |item key|}}
-              <option value="{{key}}" {{item.selection}}>{{item.label}}</option>
-            {{/each}}
-          {{/select}}
+          {{selectOptions abilityKeysList selected=system.key labelAttr="label"}}
         </select>
         {{#if (lookup (lookup abilityKeysList system.key) "option")}}
           <label for="system.option" class="header-label">{{localize "arm5e.sheet.skill.abilityOption"}}</label>

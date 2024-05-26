@@ -1238,15 +1238,7 @@ export class ArM5ePCActor extends Actor {
   }
 
   _prepareContainerData() {
-    log(false, "_prepareCrucibleData");
-
-    for (let [key, item] of this.items.entries()) {
-      if (item.type == "magicItem") {
-        this.system.receptacle = item;
-      } else if (item.type == "enchantment") {
-        this.system.enchantments.push(item);
-      }
-    }
+    log(false, "_prepareContainerData");
   }
 
   // Utility functions
@@ -1766,7 +1758,7 @@ export class ArM5ePCActor extends Actor {
       });
       const updateData = await migrateActorData(this, this.items);
 
-      if (!isEmpty(updateData)) {
+      if (!foundry.utils.isEmpty(updateData)) {
         console.log(`Migrating Actor entity ${this.name}`);
         await this.update(updateData, {
           enforceTypes: false
