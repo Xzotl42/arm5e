@@ -47,9 +47,7 @@ export class ArM5eBeastActorSheet extends ArM5eActorSheet {
     const context = await super.getData();
 
     context.config = CONFIG.ARM5E;
-    // Add roll data for TinyMCE editors.
-    context.rollData = context.actor.getRollData();
-
+    await this.enrichCharacterEditors(context);
     // Prepare items.
     this._prepareCharacterItems(context);
     //}
