@@ -374,7 +374,7 @@ export class ArM5eItem extends Item {
       });
       const updateData = migrateItemData(this);
 
-      if (!isEmpty(updateData)) {
+      if (!foundry.utils.isEmpty(updateData)) {
         console.log(`Migrating Item document ${this.name}`);
         await this.update(updateData, {
           diff: false
@@ -467,14 +467,17 @@ export class ArM5eItem extends Item {
     }
   }
 
-  // /**
-  //  * Prepare a data object which defines the data schema used by dice roll commands against this Item
-  //  * @returns {object}
-  //  */
-  // getRollData() {
-  //   const rollData = this.system;
-  //   return ;
-  // }
+  /**
+   * Prepare a data object which defines the data schema used by dice roll commands against this Item
+   * @returns {object}
+   */
+  getRollData() {
+    const rollData = super.getRollData();
+    if (this.owned) {
+      rollData.owner = this.actor.getRollData();
+    }
+    return rollData;
+  }
 
   /**
    * Handle clickable rolls.

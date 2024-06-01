@@ -1,3 +1,18 @@
+## 2.2.4.24, Pralix, disappeared
+
+### Dependencies updates
+
+### Features & changes
+
+- added "owner" field for owned items in rollData (used for inline rolls)
+
+### Bug fixes
+
+- Some PC sheet's text editor fields were not setup properly (decrepitude, twilight scars, sigil)
+- Default tab of scriptorium is back to "Reading".
+- Capped progression while reading was not taking affinity into account
+- Reading source quality modifiers were counted twice, it is now done only in the scriptorium
+
 ## 2.2.4.23, Pralix, founder of a new House
 
 ### Dependencies updates

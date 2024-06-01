@@ -53,6 +53,11 @@ export class DiaryEntrySchema extends foundry.abstract.DataModel {
         nullable: true,
         initial: null
       }),
+      cappedGain: new fields.BooleanField({
+        required: false,
+        nullable: false,
+        initial: false
+      }),
       sourceQuality: new fields.NumberField({
         required: false,
         nullable: false,

@@ -481,7 +481,7 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
         context.system.ownedAbilities[a.category].push({
           id: a.id,
           category: a.category,
-          secondaryId: ability.secondaryId,
+          secondaryId: a.secondaryId,
           name: a.name,
           key: a.key,
           currentXp: a.xp,
@@ -1136,7 +1136,7 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
 
         description += "</ol>";
         // }
-        let newTitle = getNewTitleForActivity(this.actor, this.item);
+        let newTitle = await getNewTitleForActivity(this.actor, this.item);
 
         // store the list of ids created
         let res = await this.actor.createEmbeddedDocuments("Item", abilitiesToAdd);
@@ -1169,7 +1169,9 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
               done: true,
               description: description,
               progress: this.item.system.progress,
-              sourceQuality: sourceQuality - sourceModifier - context.system.sourceBonus,
+              sourceQuality: this.item.system.cappedGain
+                ? sourceQuality
+                : sourceQuality - sourceModifier - context.system.sourceBonus,
               achievements: this.item.system.achievements
             }
           },
