@@ -618,7 +618,7 @@ export class ArM5eItemEnchantmentSheet {
       const dataset = getDataset(e);
       let effects = this.item.system.enchantments.effects;
       const effect = effects[dataset.index];
-      const item = await Item.create(
+      const item = new ArM5eItem(
         {
           name: effect.name,
           type: "enchantment",

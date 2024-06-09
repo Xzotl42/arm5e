@@ -10,6 +10,7 @@ import {
   spellFormLabel,
   spellTechniqueLabel
 } from "../helpers/magic.js";
+import { ArM5eItem } from "../item/item.js";
 import { EnchantmentExtension } from "../schemas/enchantmentSchema.js";
 import { error, getDataset, log } from "../tools.js";
 
@@ -94,7 +95,7 @@ export class LabActivity extends Activity {
   activateListeners(html) {}
 
   async getDefaultData() {
-    const item = await Item.create(
+    const item = new ArM5eItem(
       {
         name: this.title,
         type: "spell"
@@ -301,7 +302,7 @@ export class SpellActivity extends LabActivity {
   }
 
   async getDefaultData() {
-    const effect = await Item.create(
+    const effect = new ArM5eItem(
       {
         name: this.title,
         type: "spell"
@@ -547,7 +548,7 @@ export class MinorEnchantment extends LabActivity {
   }
   async getDefaultData() {
     const result = {};
-    let enchant = await Item.create(
+    let enchant = new ArM5eItem(
       {
         name: "New enchantment",
         type: "enchantment"
@@ -559,7 +560,7 @@ export class MinorEnchantment extends LabActivity {
     enchant = enchant.toObject();
     enchant.receptacleId = receptacleID;
 
-    let item = await Item.create(
+    let item = new ArM5eItem(
       {
         name: this.title,
         type: "item",

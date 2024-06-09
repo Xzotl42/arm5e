@@ -717,21 +717,8 @@ export function validReading(context, actor, item) {
         return;
       }
     }
-    const coeff = actor._getAbilityXpCoeff(ability.system.key, ability.system.option);
-    checkIfCapped(context, maxLevel, coeff, ability);
-    // let newXp = (context.system.sourceQuality + ability.system.xp) * coeff;
-    // let maxXp = ArM5ePCActor.getAbilityXp(maxLevel);
-    // if (newXp > maxXp && !context.system.applied) {
-    //   let newSource = maxXp / coeff - ability.system.xp;
-    //   context.system.theoriticalSource = context.system.sourceQuality;
-    //   context.system.sourceQuality = newSource > 0 ? newSource : 0;
-    //   context.system.errorParam = context.system.sourceQuality;
-    //   context.system.applyError = "arm5e.activity.msg.gainCapped";
-    //   context.system.cappedGain = true;
-    // }
-    context.system.progress.abilities[0].xp = context.system.cappedGain
-      ? context.system.sourceQuality
-      : context.system.sourceQuality + context.system.sourceModifier;
+    // Reading take all modifiers into account in the scriptorium already
+
     context.system.totalXp.abilities += context.system.progress.abilities[0].xp;
   } else if (spellsArr.length > 0) {
     const maxLevel =
@@ -742,20 +729,6 @@ export function validReading(context, actor, item) {
     const spell = Object.values(actor.system.spells).find((e) => {
       return e._id === item.system.progress.spells[0].id;
     });
-    checkIfCapped(context, maxLevel, coeff, spell);
-    // let newXp = context.system.sourceQuality + spell.system.xp;
-    // let maxXp = ArM5ePCActor.getAbilityXp(maxLevel);
-    // if (newXp > maxXp) {
-    //   let newSource = maxXp - spell.system.xp;
-    //   context.system.theoriticalSource = context.system.sourceQuality;
-    //   context.system.sourceQuality = newSource > 0 ? newSource : 0;
-    //   context.system.errorParam = context.system.sourceQuality;
-    //   context.system.applyError = "arm5e.activity.msg.gainCapped";
-    //   context.system.cappedGain = true;
-    // }
-    context.system.progress.spells[0].xp = context.system.cappedGain
-      ? context.system.sourceQuality
-      : context.system.sourceQuality + context.system.sourceModifier;
     context.system.totalXp.masteries += context.system.progress.spells[0].xp;
   } else if (artsArr.length > 0) {
     const progressArt = item.system.progress.arts[0];
@@ -765,25 +738,11 @@ export function validReading(context, actor, item) {
       artType = "forms";
     }
     const art = actor.system.arts[artType][progressArt.key];
-    let newXp = context.system.sourceQuality + art.xp;
-    let maxXp = ArM5ePCActor.getArtXp(maxLevel);
-    if (newXp > maxXp) {
-      let newSource = maxXp - art.xp;
-      context.system.theoriticalSource = context.system.sourceQuality;
-      context.system.sourceQuality = newSource > 0 ? newSource : 0;
-      context.system.errorParam = context.system.sourceQuality;
-      context.system.applyError = "arm5e.activity.msg.gainCapped";
-      context.system.cappedGain = true;
-    }
-    context.system.progress.arts[0].xp = context.system.cappedGain
-      ? context.system.sourceQuality
-      : context.system.sourceQuality + context.system.sourceModifier;
     context.system.totalXp.arts += context.system.progress.arts[0].xp;
   }
 
   if (context.system.cappedGain && context.system.sourceQuality == 0) {
-    context.system.applyError = "arm5e.activity.msg.uselessTeacher";
-    context.system.errorParam = context.system.teacher.name;
+    context.system.applyError = "arm5e.scriptorium.msg.tooSkilled";
     context.system.applyPossible = false;
   }
 }
@@ -865,7 +824,7 @@ export async function investigate(item) {
 }
 
 // get a new title for a diary entry if it is still the default : "New DiaryEntry"
-export function getNewTitleForActivity(actor, item) {
+export async function getNewTitleForActivity(actor, item) {
   const DEFAULT_TITLE = "New DiaryEntry";
   if (item.name !== DEFAULT_TITLE) {
     return item.name;
@@ -874,7 +833,16 @@ export function getNewTitleForActivity(actor, item) {
   let teacher = systemData.teacher.name;
   let skills = "";
   for (const ability of Object.values(systemData.progress.abilities)) {
-    let tmp = actor.items.get(ability.id);
+    let tmp;
+    if (
+      ability.id.length < 16 ||
+      (["training", "teaching"].includes(item.system.activity) && ability.secondaryId)
+    ) {
+      // get the ability template from the shared compendia
+      tmp = await getAbilityFromCompendium(ability.key, ability.option);
+    } else {
+      tmp = actor.items.get(ability.id);
+    }
     if (tmp != null && ability.xp > 0) {
       skills += `${tmp.name}, `;
     }
@@ -892,6 +860,7 @@ export function getNewTitleForActivity(actor, item) {
     }
   }
 
+  // remove last comma
   skills = skills.slice(0, -2);
   switch (item.system.activity) {
     case "adventuring":

@@ -30,12 +30,12 @@
             </a>
             {{#unless effect.noEdit}}
               <!-- trigger an error if the effect is on an item while belonging to an actor -->
-              <a class="effect-control" data-action="edit" title="{{localize 'arm5e.sheet.effectsEdit'}}">
+              <a class="effect-control" data-action="edit" title="{{localize 'arm5e.sheet.action.Edit'}}">
                 <i class="icon-Icon_Edit"></i>
               </a>
             {{/unless}}
             {{#unless (and effect.noDelete (eq ../../mode "actor"))}}
-              <a class="effect-control" data-action="delete" title="{{localize 'arm5e.sheet.effectsDelete'}}">
+              <a class="effect-control" data-action="delete" title="{{localize 'arm5e.sheet.action.Delete'}}">
                 <i class="icon-Icon_Delete_Hand_Gesture"></i>
               </a>
             {{/unless}}

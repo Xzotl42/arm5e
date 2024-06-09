@@ -31,6 +31,16 @@ export default class ArM5eActiveEffect extends ActiveEffect {
       (this.parent.documentName === "Actor" && this.origin?.includes("Item"));
   }
 
+  async getSource() {
+    if (
+      this.target instanceof dnd5e.documents.ArM5ePCActor &&
+      this.parent instanceof dnd5e.documents.ArM5eItem
+    ) {
+      return this.parent;
+    }
+    return fromUuid(this.origin);
+  }
+
   /** @inheritdoc */
   apply(actor, change) {
     //  Here check that every effect is properly configured before applying
@@ -83,9 +93,8 @@ export default class ArM5eActiveEffect extends ActiveEffect {
           data.img = "icons/svg/aura.svg";
         } else {
           data.name = game.i18n.localize("arm5e.sheet.activeEffect.new");
-          // TODO when deprecated
+          // V11
           data.icon = "icons/svg/aura.svg";
-          //data.img = "icons/svg/aura.svg";
         }
         return await owner.createEmbeddedDocuments("ActiveEffect", [data]);
       case "edit":
@@ -129,6 +138,7 @@ export default class ArM5eActiveEffect extends ActiveEffect {
         e.name = e.label;
         e.img = e.icon;
         e.UUID = e._id;
+        // } else if (CONFIG.ISV12) {
       } else {
         e.UUID = e.uuid;
       }
@@ -260,9 +270,9 @@ export default class ArM5eActiveEffect extends ActiveEffect {
       let effectOption = this.getFlag("arm5e", "option");
       for (let c of Object.values(this.changes)) {
         // log(false, ACTIVE_EFFECTS_TYPES[effectTypes[idx]]);
-        descr += game.i18n.localize(ACTIVE_EFFECTS_TYPES[effectTypes[idx]].label) + ": ";
+        descr += game.i18n.localize(ACTIVE_EFFECTS_TYPES[effectTypes[idx]].mnemonic) + ": ";
         let subtype = game.i18n.localize(
-          ACTIVE_EFFECTS_TYPES[effectTypes[idx]].subtypes[effectSubtypes[idx]].label
+          ACTIVE_EFFECTS_TYPES[effectTypes[idx]].subtypes[effectSubtypes[idx]].mnemonic
         );
         switch (c.mode) {
           case CONST.ACTIVE_EFFECT_MODES.MULTIPLY:

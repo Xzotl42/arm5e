@@ -1,3 +1,4 @@
+import { ArM5eItem } from "../item/item.js";
 import { sleep } from "../tools.js";
 const DEPRECATED = [
   "personality",
