@@ -5,6 +5,7 @@ import { ArM5eActorSheet } from "../../actor/actor-sheet.js";
 import { EnchantmentExtension, EnchantmentSchema } from "../../schemas/enchantmentSchema.js";
 import {
   GetEffectAttributesLabel,
+  GetEnchantmentSelectOptions,
   GetFilteredAspects,
   GetFilteredMagicalAttributes,
   PickRequisites,
@@ -152,23 +153,7 @@ export class ArM5eItemEnchantmentSheet {
       Object.entries(enchants.states).filter(([k, v]) => !(v.selection === "disabled"))
     );
 
-    context.selection.frequency = Object.fromEntries(
-      Object.entries(CONFIG.ARM5E.lab.enchantment.effectUses).map(([k, v]) => {
-        return [k, `${v} ${game.i18n.localize("arm5e.lab.enchantment.uses-per-day")}`];
-      })
-    );
-
-    context.selection.materialBase = Object.fromEntries(
-      Object.entries(CONFIG.ARM5E.lab.enchantment.materialBase).map(([k, v]) => {
-        return [k, `(${v.base}) ${game.i18n.localize(v.eg)}`];
-      })
-    );
-
-    context.selection.sizeMultiplier = Object.fromEntries(
-      Object.entries(CONFIG.ARM5E.lab.enchantment.sizeMultiplier).map(([k, v]) => {
-        return [k, `${game.i18n.localize(v.value)} (x ${v.mult})`];
-      })
-    );
+    GetEnchantmentSelectOptions(context);
 
     let idx = 0;
     let overcap = false;

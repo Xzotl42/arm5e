@@ -2,6 +2,7 @@ import { ARM5E } from "../config.js";
 import ArM5eActiveEffect from "../helpers/active-effects.js";
 import {
   GetEffectAttributesLabel,
+  GetEnchantmentSelectOptions,
   GetFilteredMagicalAttributes,
   PickRequisites,
   computeLevel,
@@ -111,6 +112,8 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
     let isValid = true;
 
     await GetFilteredMagicalAttributes(context.selection);
+
+    GetEnchantmentSelectOptions(context);
 
     if (context.system.owner && context.system.owner.linked) {
       // Owner

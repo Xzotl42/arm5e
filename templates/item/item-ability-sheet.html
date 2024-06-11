@@ -42,7 +42,7 @@
         <div class="flexcol">
           <label>{{localize "arm5e.sheet.defaultCharacteristicForAbility"}}</label>
           <select name="system.defaultChaAb" data-type="String" class="default-characteristic">
-            {{selectOptions config.character.characteristics selected=system.defaultChaAb localize=true }}
+            {{selectOptions config.character.characteristics selected=system.defaultChaAb localize=true labelAttr="label" }}
           </select>
         </div>
         {{#if (eq system.category "supernaturalCat") }}

@@ -96,6 +96,26 @@ export async function GetFilteredMagicalAttributes(data) {
   );
 }
 
+export function GetEnchantmentSelectOptions(context) {
+  context.selection.frequency = Object.fromEntries(
+    Object.entries(CONFIG.ARM5E.lab.enchantment.effectUses).map(([k, v]) => {
+      return [k, `${v} ${game.i18n.localize("arm5e.lab.enchantment.uses-per-day")}`];
+    })
+  );
+
+  context.selection.materialBase = Object.fromEntries(
+    Object.entries(CONFIG.ARM5E.lab.enchantment.materialBase).map(([k, v]) => {
+      return [k, `(${v.base}) ${game.i18n.localize(v.eg)}`];
+    })
+  );
+
+  context.selection.sizeMultiplier = Object.fromEntries(
+    Object.entries(CONFIG.ARM5E.lab.enchantment.sizeMultiplier).map(([k, v]) => {
+      return [k, `${game.i18n.localize(v.value)} (x ${v.mult})`];
+    })
+  );
+}
+
 export async function PickRequisites(spelldata, flavor, editable) {
   spelldata.config = {
     magic: {

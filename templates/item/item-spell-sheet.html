@@ -81,20 +81,20 @@
         <div class="resource">
           <label class="header-label">{{localize "arm5e.sheet.range"}}</label>
           <select {{noSelect}} name="system.range.value" data-dtype="String" class="spell-attribute">
-            {{magicalAttributesHelper selection.ranges selected=system.range.value}}
+            {{magicalAttributesHelper selection.ranges selected=system.range.value  labelAttr="label"}}
           </select>
         </div>
         <div class="resource">
           <label class="header-label">{{localize "arm5e.sheet.duration"}}</label>
           <select {{noSelect}} name="system.duration.value" data-dtype="String" class="spell-attribute">
-            {{magicalAttributesHelper selection.durations selected=system.duration.value}}
+            {{magicalAttributesHelper selection.durations selected=system.duration.value  labelAttr="label"}}
           </select>
         </div>
         <div class="resource">
           <label class="header-label">{{localize "arm5e.sheet.target"}}</label>
           <select {{noSelect}} name="system.target.value" data-dtype="String" style="min-width: 95%"
             class="spell-attribute">
-            {{magicalAttributesHelper selection.targets selected=system.target.value}}
+            {{magicalAttributesHelper selection.targets selected=system.target.value  labelAttr="label"}}
           </select>
         </div>
       </div>

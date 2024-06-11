@@ -25,7 +25,7 @@
       <label class="resource flex01 ">{{planning.label}}</label>
       <div>
         {{> "systems/arm5e/templates/item/parts/spell-design-V2.html" docId=@root.actor._id container="planning" 
-      prefix=enchantPrefix spelldata=planning.data.enchantment visibility=@root.ui.sections.visibility.planning ritual=false}}
+      prefix=enchantPrefix spelldata=planning.data.enchantment visibility=@root.ui.sections.visibility.planning ritual=false noApplyFocus=true}}
       </div>
 
       <div>
@@ -71,7 +71,7 @@
               <select name="{{planning.namePrefix}}receptacle.system.enchantments.capacities.0.materialBase"
                 style="max-width: 140px;">
                 {{selectOptions @root.selection.materialBase 
-                  selected=planning.data.receptacle.system.enchantments.capacities.0.materialBase }}
+                  selected=planning.data.receptacle.system.enchantments.capacities.0.materialBase  }}
               </select>
             </div>
             <div class="padding2 flex0">

@@ -79,21 +79,21 @@
         <label class="header-label">{{localize "arm5e.sheet.range"}}</label>
         <select name="{{prefix}}system.range.value" data-type="String" class="spell-attribute"
           {{edition.spellCombobox}}>
-          {{magicalAttributesHelper @root.selection.ranges selected=spelldata.system.range.value}}
+          {{magicalAttributesHelper @root.selection.ranges selected=spelldata.system.range.value  labelAttr="label"}}
         </select>
       </div>
       <div class="resource flex-group-center">
         <label class="header-label">{{localize "arm5e.sheet.duration"}}</label>
         <select name="{{prefix}}system.duration.value" data-type="String" class="spell-attribute"
           {{edition.spellCombobox}}>
-          {{magicalAttributesHelper @root.selection.durations selected=spelldata.system.duration.value}}
+          {{magicalAttributesHelper @root.selection.durations selected=spelldata.system.duration.value labelAttr="label"}}
         </select>
       </div>
       <div class="resource flex-group-center">
         <label class="header-label">{{localize "arm5e.sheet.target"}}</label>
         <select name="{{prefix}}system.target.value" data-type="String" class="spell-attribute"
           {{edition.spellCombobox}}>
-          {{magicalAttributesHelper @root.selection.targets selected=spelldata.system.target.value}}
+          {{magicalAttributesHelper @root.selection.targets selected=spelldata.system.target.value  labelAttr="label"}}
         </select>
       </div>
     </div>

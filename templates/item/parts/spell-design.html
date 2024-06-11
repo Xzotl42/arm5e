@@ -32,21 +32,21 @@
   <div class="resource">
     <label class="header-label">{{localize "arm5e.sheet.range"}}</label>
     <select name="system.range.value" {{noSelect}} data-type="String" class="spell-attribute">
-      {{magicalAttributesHelper selection.ranges selected=system.range.value}}
+      {{magicalAttributesHelper selection.ranges selected=system.range.value  labelAttr="label"}}
     </select>
     <!--input type="text" name="system.range" value="{{system.range}}" data-dtype="String"/-->
   </div>
   <div class="resource">
     <label class="header-label">{{localize "arm5e.sheet.duration"}}</label>
     <select name="system.duration.value" {{noSelect}} data-type="String" class="spell-attribute">
-      {{magicalAttributesHelper selection.durations selected=system.duration.value}}
+      {{magicalAttributesHelper selection.durations selected=system.duration.value  labelAttr="label"}}
     </select>
     <!-- <input type="text" name="system.duration" value="{{system.duration}}" data-dtype="String"/> -->
   </div>
   <div class="resource">
     <label class="header-label">{{localize "arm5e.sheet.target"}}</label>
     <select name="system.target.value" {{noSelect}} data-type="String" class="spell-attribute">
-      {{magicalAttributesHelper selection.targets selected=system.target.value}}
+      {{magicalAttributesHelper selection.targets selected=system.target.value  labelAttr="label"}}
     </select>
     <!-- <input type="text" name="system.target" value="{{system.target}}" data-dtype="String"/> -->
   </div>
