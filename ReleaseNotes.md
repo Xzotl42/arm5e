@@ -1,19 +1,16 @@
-## 2.2.4.24, Pralix, disappeared
-
-### Dependencies updates
+## 2.3.0.0, Quendalon
 
 ### Features & changes
 
-- added "owner" field for owned items in rollData (used for inline rolls)
+- [technical] migration of select helper to selectOptions
 
 ### Bug fixes
 
 - Some PC sheet's text editor fields were not setup properly (decrepitude, twilight scars, sigil)
-- Default tab of scriptorium is back to "Reading".
-- Capped progression while reading was not taking affinity into account
-- Reading source quality modifiers were counted twice, it is now done only in the scriptorium
+- Default tab of scriptorium is back to "Reading"
+- Changing the value of an active effect with option won't reset it anymore
 
-## 2.2.4.23, Pralix, founder of a new House
+## 2.2.4.24, Pralix, founder of a new House
 
 ### Dependencies updates
 

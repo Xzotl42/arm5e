@@ -433,7 +433,7 @@ function addListenersDialog(html) {
     const actor = game.actors.get(dataset.actorid);
     const item = actor.items.get(dataset.itemid);
     // create a tmp Item in memory
-    let newSpell = await Item.create(item.toObject(), { temporary: true });
+    let newSpell = new ArM5eItem(item.toObject(), { temporary: true });
     let update = await PickRequisites(newSpell.system, dataset.flavor);
     await newSpell.updateSource(update);
     let techData = newSpell._getTechniqueData(actor.system);
@@ -460,6 +460,7 @@ async function renderRollTemplate(dataset, template, actor) {
   }
   actor.system.roll = actor.rollInfo;
   actor.config = CONFIG.ARM5E;
+  actor.selection = actor.rollInfo.selection;
   const renderedTemplate = await renderTemplate(template, actor);
   const dialogData = getDialogData(dataset, renderedTemplate, actor);
   const dialog = new Dialog(

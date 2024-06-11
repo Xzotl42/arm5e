@@ -15,9 +15,8 @@
         {{#if isGM}}
           <div class="resource">
             <label class="header-label">{{localize "arm5e.sheet.state.label"}}</label>
-            <input type="text" name="system.state"
-              value="{{localize (lookup config.lab.enchantment.receptacle.state system.state)}}" data-dtype="String"
-              readonly style="max-width: 200px;">
+            <input type="text" value="{{localize (lookup config.lab.enchantment.receptacle.state system.state)}}"
+              data-dtype="String" readonly style="max-width: 200px;">
           </div>
           <div class="resource" style="max-width:44px">
             <img src="systems/arm5e/assets/icons/Icon_Details_option1.png" class="appraise"
@@ -137,11 +136,8 @@
                   <label class="header-label">{{localize "arm5e.sheet.bookTopic"}}</label>
                   <select class="book-category" name="system.topics.{{topicIdx}}.category" data-index="{{topicIdx}}"
                     data-dtype="String">
-                    {{#select currentTopic.category}}
-                      {{#each config.books.categories as |cat key|}}
-                        <option value="{{key}}">{{localize cat}}</option>
-                      {{/each}}
-                    {{/select}}
+                    {{selectOptions config.books.categories selected=currentTopic.category localize=true}}
+
                   </select>
                 </div>
                 <div class="resource" style="width: 35%;">
@@ -159,9 +155,7 @@
                 <div class="resource">
                   <label class="header-label">{{localize "arm5e.sheet.season"}}</label>
                   <select {{noSelect}} name="system.topics.{{topicIdx}}.season" data-dtype="String">
-                    {{#select currentTopic.season}} {{#each config.seasons as |season key|}}
-                        <option value="{{key}}">{{localize season.label}}</option>
-                      {{/each}} {{/select}}
+                    {{selectOptions config.seasons selected=currentTopic.season labelAttr="label" localize=true }}
                   </select>
                 </div>
                 <div class="resource" style="width: 50%;">
@@ -203,9 +197,7 @@
                   <label for="system.topics.{{topicIdx}}.art"
                     class="header-label">{{localize "arm5e.sheet.art"}}</label>
                   <select name="system.topics.{{topicIdx}}.art" data-type="String">
-                    {{#select currentTopic.art}} {{#each config.magic.arts as |art key|}}
-                        <option value="{{key}}">{{art.label}}</option>
-                      {{/each}} {{/select}}
+                    {{selectOptions config.magic.arts selected=currentTopic.art labelAttr="label" }}
                   </select>
                 </div>
               {{/if}}
@@ -220,11 +212,7 @@
                     <label for="system.topics.{{topicIdx}}.key"
                       class="header-label flex01">{{localize "arm5e.sheet.skill.abilityKey"}}</label>
                     <select name="system.topics.{{topicIdx}}.key" data-dtype="String" class="ability-key">
-                      {{#select currentTopic.key}}
-                        {{#each abilityKeysList as |item key|}}
-                          <option value="{{key}}" {{item.selection}}>{{item.label}}</option>
-                        {{/each}}
-                      {{/select}}
+                      {{selectOptions abilityKeysList selected=currentTopic.key labelAttr="label"}}
                     </select>
                   </div>
                 </div>
@@ -253,20 +241,14 @@
                     <label for="system.topics.{{topicIdx}}.spellTech"
                       class="header-label">{{localize "arm5e.sheet.technique"}}</label>
                     <select name="system.topics.{{topicIdx}}.spellTech" data-type="String">
-                      {{#select currentTopic.spellTech}}
-                        {{#each config.magic.techniques as |technique key|}}
-                          <option value="{{key}}">{{technique.label}}</option>
-                        {{/each}} {{/select}}
+                      {{selectOptions config.magic.techniques selected=currentTopic.spellTech labelAttr="label"}}
                     </select>
                   </div>
                   <div class="resource flexcol flex0">
                     <label for="system.topics.{{topicIdx}}.spellForm"
                       class="header-label">{{localize "arm5e.sheet.form"}}</label>
                     <select name="system.topics.{{topicIdx}}.spellForm" data-type="String">
-                      {{#select currentTopic.spellForm}}
-                        {{#each config.magic.forms as |form key|}}
-                          <option value="{{key}}">{{form.label}}</option>
-                        {{/each}} {{/select}}
+                      {{selectOptions config.magic.forms selected=currentTopic.spellForm labelAttr="label"}}
                     </select>
                   </div>
                 </div>

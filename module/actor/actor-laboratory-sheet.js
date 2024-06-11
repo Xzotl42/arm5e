@@ -2,6 +2,7 @@ import { ARM5E } from "../config.js";
 import ArM5eActiveEffect from "../helpers/active-effects.js";
 import {
   GetEffectAttributesLabel,
+  GetEnchantmentSelectOptions,
   GetFilteredMagicalAttributes,
   PickRequisites,
   computeLevel,
@@ -109,7 +110,10 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
     log(false, "GET WORKBENCH DATA");
     let context = await super.getData();
     let isValid = true;
-    context = await GetFilteredMagicalAttributes(context);
+
+    await GetFilteredMagicalAttributes(context.selection);
+
+    GetEnchantmentSelectOptions(context);
 
     if (context.system.owner && context.system.owner.linked) {
       // Owner
@@ -420,7 +424,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
       let newType = event.currentTarget.selectedOptions[0].value;
       this.actor.flags.arm5e.planning.data.itemType = newType;
       const receptacle = this.actor.flags.arm5e.planning.data.receptacle;
-      let newReceptacle = await Item.create(
+      let newReceptacle = new ArM5eItem(
         {
           name: receptacle.name,
           type: newType,
@@ -703,7 +707,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
           }
           case "magicalEffect":
           case "spell": {
-            let newSpell = await Item.create(item.toObject(), { temporary: true });
+            let newSpell = new ArM5eItem(item.toObject(), { temporary: true });
             planning.type = "learnSpell";
             let data = newSpell.toObject();
             planning.data = resetOwnerFields(data);
@@ -714,7 +718,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
             return true;
           }
           case "enchantment": {
-            let newEnchant = await Item.create(item.toObject(), { temporary: true });
+            let newEnchant = new ArM5eItem(item.toObject(), { temporary: true });
             planning.type = "learnSpell";
             let data = newEnchant.toObject();
             planning.data = resetOwnerFields(data);
@@ -737,7 +741,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
           }
           case "magicalEffect":
           case "spell": {
-            let newSpell = await Item.create(item.toObject(), { temporary: true });
+            let newSpell = new ArM5eItem(item.toObject(), { temporary: true });
             let data = newSpell.toObject();
             resetOwnerFields(data);
             planning.data.enchantment = {
@@ -753,7 +757,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
             return true;
           }
           case "enchantment": {
-            let newEnchant = await Item.create(item.toObject(), { temporary: true });
+            let newEnchant = new ArM5eItem(item.toObject(), { temporary: true });
             let data = newEnchant.toObject();
             resetOwnerFields(data);
             planning.data.enchantment = {

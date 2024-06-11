@@ -14,17 +14,13 @@
         <div class="resource flexcol">
           <label for="system.art" class="header-label">{{localize "arm5e.sheet.art"}}</label>
           <select name="system.art" data-type="String">
-            {{#select system.art}} {{#each config.magic.arts as |arts key|}}
-                <option value="{{key}}">{{arts.label}}</option>
-              {{/each}} {{/select}}
+            {{selectOptions config.magic.arts selected=system.art labelAttr="label"}}
           </select>
         </div>
         <div class="resource flexcol">
           <label for="system.season" class="header-label">{{localize "arm5e.sheet.season"}}</label>
           <select name="system.season" data-type="String">
-            {{#select system.season}} {{#each config.seasons as |arts key|}}
-                <option value="{{key}}">{{localize arts.label}}</option>
-              {{/each}} {{/select}}
+            {{selectOptions config.seasons selected=system.season labelAttr="label" localize=true }}
           </select>
         </div>
       </div>

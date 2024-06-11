@@ -49,7 +49,7 @@
                 <div>
                   {{> "systems/arm5e/templates/item/parts/spell-design-V2.html" container="enchantments" index=idx docId=@root.item._id
             prefix=prefix spelldata=(lookup @root.system.enchantments.effects idx) docId=@root.item._id 
-            visibility=(lookup @root.ui.sections.visibility.enchantments idx) ritual=false }}
+            visibility=(lookup @root.ui.sections.visibility.enchantments idx) ritual=false noApplyFocus=true }}
                 </div>
 
                 <div style="margin-top: 10px;">

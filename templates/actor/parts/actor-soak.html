@@ -33,10 +33,7 @@
       <div class="flexrow flex-group-center">
         <label class="header-label">{{localize "arm5e.sheet.formRes"}}</label>
         <select name="formRes" data-type="String">
-          <option value="0">{{localize "arm5e.sheet.option.none"}}</option>
-          {{#select formRes}} {{#each extraData.formRes as |form key|}}
-              <option value="{{form.res}}">{{form.label}}</option>
-            {{/each}} {{/select}}
+          {{selectOptions extraData.formRes selected=formRes nameAttr="label" valueAttr="label" keyAttr="res" blank="" }}
         </select>
       </div>
     {{/if}}
@@ -47,10 +44,7 @@
       <div class="flexrow flex-group-center">
         <label class="header-label">{{localize "arm5e.sheet.natRes"}}</label>
         <select name="natRes" data-type="String">
-          <option value="0">{{localize "arm5e.sheet.option.none"}}</option>
-          {{#select natRes}} {{#each extraData.natRes as |resist key|}}
-              <option value="{{resist.res}}">{{resist.label}}</option>
-            {{/each}} {{/select}}
+          {{selectOptions extraData.natRes selected=natRes nameAttr="label" valueAttr="label" keyAttr="res" blank="" }}
         </select>
       </div>
     {{/if}}

@@ -289,7 +289,7 @@ export class ArM5eBookSheet extends ArM5eItemSheet {
     let index = Number(getDataset(event).index);
     const topic = item.system.topics[index];
 
-    const labText = await Item.create(
+    const labText = new ArM5eItem(
       {
         name: topic.labtextTitle,
         type: "laboratoryText",

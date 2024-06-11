@@ -2,9 +2,7 @@
   <div class="resource">
     <label for="system.source" class="header-label">{{localize "arm5e.sheet.source.label"}}</label>
     <select {{noSelect}} name="system.source" data-dtype="String">
-      {{#select system.source}} {{#each config.generic.sourcesTypes as |type key|}}
-          <option value="{{key}}">{{localize label}}</option>
-        {{/each}} {{/select}}
+      {{selectOptions config.generic.sourcesTypes selected=system.source labelAttr="label" localize=true}}
     </select>
   </div>
   <div class="resource" style="max-width: 100px;">

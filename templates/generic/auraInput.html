@@ -6,9 +6,7 @@
       <input type="text" class="textInput resource-focus" name="inputField" value="{{value}}"
         placeholder="{{localize placeholder}}" />
       <select class="aura-type" name="realm" data-type="Number">
-        {{#select realm}} {{#each realms as |realm key|}}
-            <option value="{{realm.value}}">{{localize realm.label}}</option>
-          {{/each}} {{/select}}
+        {{selectOptions realms selected=realm labelAttr="label" localize=true nameAttr="value" valueAttr="value"}}
       </select>
     </div>
   </div>

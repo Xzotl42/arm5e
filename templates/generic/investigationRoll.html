@@ -57,9 +57,7 @@
                 <div>
                   <select class="receptacle-idx-change" data-dtype="Number" data-index="{{idx}}"
                     style="max-width: 180px;" disabled>
-                    {{#select effect.receptacleId}} {{#each @root.system.enchantments.capacities as |capa idx|}}
-                        <option value="{{capa.id}}">{{capa.desc}} ({{idx}})</option>
-                      {{/each}} {{/select}}
+                    {{selectOptions @root.selection.capacities selected=effect.receptacleId }}
                   </select>
                 </div>
               </div>
@@ -106,9 +104,7 @@
                 <div>
                   <select class="receptacle-idx-change" data-dtype="Number" data-index="{{idx}}"
                     style="max-width: 180px;" disabled>
-                    {{#select effect.receptacleId}} {{#each @root.system.enchantments.capacities as |capa idx|}}
-                        <option value="{{capa.id}}">{{capa.desc}} ({{idx}})</option>
-                      {{/each}} {{/select}}
+                    {{selectOptions @root.selection.capacities selected=effect.receptacleId }}
                   </select>
                 </div>
               </div>

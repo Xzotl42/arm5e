@@ -32,11 +32,8 @@
               <label for="copying.scribe.language"
                 class="header-label">{{localize "arm5e.scriptorium.languages"}}</label>
               <select name="copying.scribe.language" data-dtype="String" class="ability-key">
-                {{#select copying.scribe.language}}
-                  {{#each copying.scribe.languages }}
-                    <option value="{{this.id}}">{{this.name}}</option>
-                  {{/each}}
-                {{/select}}
+                {{selectOptions copying.scribe.languages selected=copying.scribe.language labelAttr="name" 
+                nameAttr="id" valueAttr="id" }}
               </select>
             </div>
             <div class="scriptorium resource"></div>

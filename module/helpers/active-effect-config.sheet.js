@@ -38,12 +38,23 @@ export class ArM5eActiveEffectConfig extends ActiveEffectConfig {
     // backward compatibility with V10
     if (CONFIG.ISV10) {
       context.data.ui = {
+        nameAttr: "label",
         name: context.data.label,
+        imgAttr: "icon",
         img: context.data.icon
+      };
+    } else if (CONFIG.ISV12) {
+      context.data.ui = {
+        nameAttr: "name",
+        name: context.data.name,
+        img: context.data.img,
+        imgAttr: "img"
       };
     } else {
       context.data.ui = {
+        nameAttr: "name",
         name: context.data.name,
+        imgAttr: "icon",
         img: context.data.icon
       };
     }
@@ -61,47 +72,51 @@ export class ArM5eActiveEffectConfig extends ActiveEffectConfig {
     // get the data for all subtypes of the selected types
     // replace #OPTION# in key if it applies
     context.subtypes = [];
+    context.currentProperties = [];
     context.options = this.object.getFlag("arm5e", "option");
     for (let idx = 0; idx < context.selectedTypes.length; idx++) {
-      let tmpSubTypes = context.types[context.selectedTypes[idx]].subtypes;
-      let tmp = tmpSubTypes[context.selectedSubtypes[idx]].key;
-      // option key replacement only done for abilities for now.
-      if (ACTIVE_EFFECTS_TYPES[context.selectedTypes[idx]].category === "abilities") {
-        if (context.options[idx] != null) {
-          tmp = tmp.replace("#OPTION#", context.options[idx]);
+      let subTypes = [];
+      for (const [k, v] of Object.entries(
+        ACTIVE_EFFECTS_TYPES[context.selectedTypes[idx]].subtypes
+      )) {
+        let subType = {
+          name: k,
+          ...v
+        };
+
+        let tmp = subType.key;
+        // option key replacement only done for abilities for now.
+        if (ACTIVE_EFFECTS_TYPES[context.selectedTypes[idx]].category === "abilities") {
+          if (context.options[idx] != null) {
+            tmp = tmp.replace("#OPTION#", context.options[idx]);
+          }
+        }
+        if (typeof v.default == "boolean") {
+          subType.isBool = true;
+        } else {
+          subType.isBool = false;
+        }
+
+        if (typeof v.default == "string") {
+          subType.isString = true;
+        } else {
+          subType.isString = false;
+        }
+
+        let withChoice = v.choice;
+        if (withChoice) {
+          subType.withChoice = true;
+        } else {
+          subType.withChoice = false;
+        }
+        subType.computedKey = tmp;
+
+        subTypes.push(subType);
+        if (k == context.selectedSubtypes[idx]) {
+          context.currentProperties.push(subType);
         }
       }
-      if (
-        typeof ACTIVE_EFFECTS_TYPES[context.selectedTypes[idx]].subtypes[
-          context.selectedSubtypes[idx]
-        ].default == "boolean"
-      ) {
-        tmpSubTypes[context.selectedSubtypes[idx]].isBool = true;
-      } else {
-        tmpSubTypes[context.selectedSubtypes[idx]].isBool = false;
-      }
-
-      if (
-        typeof ACTIVE_EFFECTS_TYPES[context.selectedTypes[idx]].subtypes[
-          context.selectedSubtypes[idx]
-        ].default == "string"
-      ) {
-        tmpSubTypes[context.selectedSubtypes[idx]].isString = true;
-      } else {
-        tmpSubTypes[context.selectedSubtypes[idx]].isString = false;
-      }
-
-      let withChoice =
-        ACTIVE_EFFECTS_TYPES[context.selectedTypes[idx]].subtypes[context.selectedSubtypes[idx]]
-          .choice;
-      if (withChoice) {
-        tmpSubTypes[context.selectedSubtypes[idx]].withChoice = true;
-      } else {
-        tmpSubTypes[context.selectedSubtypes[idx]].withChoice = false;
-      }
-      tmpSubTypes[context.selectedSubtypes[idx]].computedKey = tmp;
-
-      context.subtypes.push(tmpSubTypes);
+      context.subtypes.push(subTypes);
     }
 
     context.devMode = game.modules
@@ -127,7 +142,7 @@ export class ArM5eActiveEffectConfig extends ActiveEffectConfig {
 
     html.find(".effect-subtype").change(async (ev) => {
       const index = parseInt(ev.currentTarget.dataset.index);
-      await this._setSubtype(ev.currentTarget.selectedOptions[0].dataset.subtype, index);
+      await this._setSubtype(ev.currentTarget.selectedOptions[0].value, index);
     });
 
     html.find(".effect-value").change(async (ev) => {
@@ -143,10 +158,15 @@ export class ArM5eActiveEffectConfig extends ActiveEffectConfig {
   async _setValue(value, index) {
     let arrayTypes = this.object.getFlag("arm5e", "type");
     let arraySubtypes = this.object.getFlag("arm5e", "subtype");
+    let arrayOptions = this.object.getFlag("arm5e", "option");
+    let newKey = ACTIVE_EFFECTS_TYPES[arrayTypes[index]].subtypes[arraySubtypes[index]].key;
+    if (arrayOptions[index] != null) {
+      newKey = newKey.replace("#OPTION#", arrayOptions[index]);
+    }
     const changesData = this.document.changes;
     changesData[index] = {
       mode: ACTIVE_EFFECTS_TYPES[arrayTypes[index]].subtypes[arraySubtypes[index]].mode,
-      key: ACTIVE_EFFECTS_TYPES[arrayTypes[index]].subtypes[arraySubtypes[index]].key,
+      key: newKey,
       value: value
     };
     let updateFlags = {

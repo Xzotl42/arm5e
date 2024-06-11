@@ -2,17 +2,15 @@
   <div class="resource">
     <label class="header-label">{{localize "arm5e.lab.enchantment.item.material.base" }}</label>
     <select name="system.materialBase" data-dtype="Number">
-      {{#select system.materialBase}} {{#each config.lab.enchantment.materialBase as |mat key|}}
-          <option value="{{mat.value}}">{{localize mat.eg}}</option>
-        {{/each}} {{/select}}
+      {{selectOptions config.lab.enchantment.materialBase selected=system.materialBase localize=true
+        nameAttr="base" valueAttr="base" labelAttr="eg"}}
     </select>
   </div>
   <div class="resource">
     <label class="header-label">{{localize "arm5e.lab.enchantment.item.size.label" }}</label>
     <select name="system.sizeMultiplier" data-dtype="Number">
-      {{#select system.sizeMultiplier}} {{#each config.lab.enchantment.sizeMultiplier as |size key|}}
-          <option value="{{size.value}}">{{localize size.eg}}</option>
-        {{/each}} {{/select}}
+      {{selectOptions config.lab.enchantment.sizeMultiplier selected=system.sizeMultiplier localize=true
+      nameAttr="value" valueAttr="value" labelAttr="eg"}}
     </select>
   </div>
   <div class="resource">
@@ -34,9 +32,7 @@
   <div class="resource">
     <label class="header-label">{{localize "arm5e.lab.enchantment.item.expiry.label"}}</label>
     <select name="system.expiry" data-dtype="Number">
-      {{#select system.expiry}} {{#each config.lab.enchantment.expiry as |exp key|}}
-          <option value="{{key}}">{{localize exp}}</option>
-        {{/each}} {{/select}}
+      {{selectOptions @root.config.lab.enchantment.expiry selected=system.expiry localize=true}}
     </select>
   </div>
 </div>

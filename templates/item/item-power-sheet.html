@@ -6,9 +6,7 @@
       <div class="resource flexcol flexrow">
         <label for="system.form" class="header-label">{{localize "arm5e.sheet.form"}}</label>
         <select name="system.form" data-type="String">
-          {{#select system.form}} {{#each config.magic.forms as |form key|}}
-              <option value="{{key}}">{{form.label}}</option>
-            {{/each}} {{/select}}
+          {{selectOptions config.magic.forms selected=system.form labelAttr="label"}}
         </select>
       </div>
       <div class="resource flexcol flexrow">

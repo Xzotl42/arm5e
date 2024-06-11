@@ -31,6 +31,7 @@ export class InvestigationRoll extends FormApplication {
     this.object.botchDice = 1;
     this.object.failedInvestigation = false;
     this.object.diaryDescription = "<br/><ul>";
+
     Hooks.on("closeApplication", (app, html) => this.onClose(app));
   }
 
@@ -61,6 +62,11 @@ export class InvestigationRoll extends FormApplication {
       .sort((a, b) => a.level - b.level);
 
     context.config = CONFIG.ARM5E;
+    context.selection = { capacities: {} };
+    let idx = 0;
+    for (const capa of context.system.enchantments.capacities) {
+      context.selection.capacities[capa.id] = `${capa.desc} (${idx++})`;
+    }
 
     log(false, context);
     return context;

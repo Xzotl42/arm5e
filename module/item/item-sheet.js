@@ -171,7 +171,7 @@ export class ArM5eItemSheet extends ItemSheet {
     context.rollData = this.item.getRollData();
     context.ui = this.getUserCache();
     context.ui.flavor = "Neutral";
-
+    context.selection = {};
     // Add the item's data to context.system for easier access, as well as flags.
     context.system = itemData.system;
     if (CONFIG.ISV10) {
@@ -416,7 +416,6 @@ export class ArM5eItemSheet extends ItemSheet {
     html
       .find(".default-characteristic")
       .change((event) => this._onSelectDefaultCharacteristic(this.item, event));
-    html.find(".item-enchant").click((event) => this._enchantItemQuestion(this.item));
     html.find(".ability-option").change((event) => this._cleanUpOption(this.item, event));
     html
       .find(".category-change")
@@ -535,65 +534,6 @@ export class ArM5eItemSheet extends ItemSheet {
       {}
     );
   }
-
-  async _enchantItemQuestion(item) {
-    const question = game.i18n.localize("arm5e.dialog.enchant-question");
-    new Dialog({
-      title: game.i18n.localize("arm5e.sheet.enchantment"),
-      content: `<p>${question}</p>`,
-      buttons: {
-        yes: {
-          icon: "<i class='fas fa-check'></i>",
-          label: game.i18n.localize("arm5e.dialog.button.yes"),
-          callback: () => this._onEnchant(item)
-        },
-        no: {
-          icon: "<i class='fas fa-ban'></i>",
-          label: game.i18n.localize("arm5e.dialog.button.no"),
-          callback: null
-        }
-      }
-    }).render(true);
-  }
-
-  async _onEnchant(item) {
-    var codex = game.actors.filter((a) => a.type === "magicCodex");
-
-    if (codex.length === 0) {
-      ui.notifications.warn(game.i18n.localize("arm5e.notification.codex.enchant"), {
-        permanent: false
-      });
-      return;
-    }
-    this.item.system.list = codex[0].items.filter((i) => i.type === "enchantment");
-
-    let template = "systems/arm5e/templates/generic/simpleListPicker.html";
-    var item = this.item;
-    renderTemplate(template, this.item).then(function (html) {
-      new Dialog(
-        {
-          title: game.i18n.localize("arm5e.sheet.enchantment"),
-          content: html,
-          buttons: {
-            yes: {
-              icon: "<i class='fas fa-check'></i>",
-              label: `Yes`,
-              callback: (html) => createMagicItem(html, item, codex[0])
-            },
-            no: {
-              icon: "<i class='fas fa-ban'></i>",
-              label: `Cancel`,
-              callback: null
-            }
-          }
-        },
-        {
-          height: "140px",
-          classes: ["arm5e-dialog", "dialog"]
-        }
-      ).render(true);
-    });
-  }
 }
 
 export class ArM5eItemSheetNoDesc extends ArM5eItemSheet {
@@ -607,30 +547,5 @@ export class ArM5eItemSheetNoDesc extends ArM5eItemSheet {
   /** @override */
   async getData() {
     return await super.getData();
-  }
-}
-
-export async function createMagicItem(html, item, codex) {
-  let found = html.find(".SelectedItem");
-  if (found.length === 0) {
-    return null;
-  } else {
-    log(false, found[0].value);
-    const enchantment = codex.items.get(found[0].value).system;
-    let itemData = [
-      {
-        name: item.name,
-        type: "magicItem",
-        system: foundry.utils.deepClone(enchantment.system)
-      }
-    ];
-
-    // prepend the item description
-    // itemData[0].system.enchantmentName = enchantment.name;
-    itemData[0].system.description =
-      `<p>${item.system.description}</p>` + itemData[0].system.description;
-    let item = await ArM5eItemSheet.createDocument();
-
-    log(false, itemData);
   }
 }

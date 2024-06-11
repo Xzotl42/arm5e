@@ -17,9 +17,8 @@
         {{#if isGM}}
           <div class="resource">
             <label class="header-label">{{localize "arm5e.sheet.state.label"}}</label>
-            <input type="text" name="system.state"
-              value="{{localize (lookup config.lab.enchantment.receptacle.state system.state)}}" data-dtype="String"
-              readonly>
+            <input type="text" value="{{localize (lookup config.lab.enchantment.receptacle.state system.state)}}"
+              data-dtype="String" readonly>
           </div>
           <div class="resource">
             <img src="systems/arm5e/assets/icons/Icon_Details_option1.png" class="appraise"

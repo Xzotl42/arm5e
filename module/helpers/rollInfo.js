@@ -51,7 +51,8 @@ export class ArM5eRollInfo {
         "-"
       );
     }
-
+    this.selection = {};
+    this.addSelectObjects();
     switch (this.type) {
       case ROLL_PROPERTIES.INIT.VAL:
         break;
@@ -64,6 +65,7 @@ export class ArM5eRollInfo {
         break;
       case ROLL_PROPERTIES.CHAR.VAL:
         this.characteristic = dataset.characteristic;
+
         break;
       case ROLL_PROPERTIES.ABILITY.VAL:
         if (dataset.defaultcharacteristic) {
@@ -268,10 +270,62 @@ export class ArM5eRollInfo {
     this.penetration.multiplierBonusSympathic = 0;
     this.penetration.config = ARM5E.magic.penetration;
     this.penetration.total = 0;
+    this.penetration.selection = { sympathic: {}, arcanic: {} };
+    this.penetration.selection.sympathic = Object.fromEntries(
+      Object.entries(this.penetration.config.sympathy).map(([k, v]) => {
+        return [k, `${game.i18n.localize(v.label)} (+${v.bonus})`];
+      })
+    );
+    this.penetration.selection.arcanic = Object.fromEntries(
+      Object.entries(this.penetration.config.arcaneCon).map(([k, v]) => {
+        return [k, `${game.i18n.localize(v.label)} (+${v.bonus})`];
+      })
+    );
   }
 
   get isMagic() {
     return ["magic", "spont", "spell"].includes(this.type);
+  }
+
+  addSelectObjects() {
+    this.selection.characteristics = Object.fromEntries(
+      Object.entries(this._actor.system.characteristics).map(([k, v]) => {
+        return [
+          k,
+          `${game.i18n.localize(CONFIG.ARM5E.character.characteristics[k].label)} (${v.value})`
+        ];
+      })
+    );
+    this.selection.abilities = {
+      None: game.i18n.localize("arm5e.sheet.activeEffect.subtypes.none"),
+      ...Object.fromEntries(
+        this._actor.system.abilities.map((a) => {
+          return [a._id, `${a.name} (${a.system.finalScore})`];
+        })
+      )
+    };
+    if (this.isMagic) {
+      (this.selection.voiceStances = Object.fromEntries(
+        Object.entries(this._actor.system.stances.voice).map(([k, v]) => {
+          return [k, `${game.i18n.localize(CONFIG.ARM5E.magic.mod.voice[k].mnemonic)} (${v})`];
+        })
+      )),
+        (this.selection.gesturesStances = Object.fromEntries(
+          Object.entries(this._actor.system.stances.gestures).map(([k, v]) => {
+            return [k, `${game.i18n.localize(CONFIG.ARM5E.magic.mod.gestures[k].mnemonic)} (${v})`];
+          })
+        )),
+        (this.selection.techniques = Object.fromEntries(
+          Object.entries(this._actor.system.arts.techniques).map(([k, v]) => {
+            return [k, `${CONFIG.ARM5E.magic.arts[k].label} (${v.finalScore})`];
+          })
+        )),
+        (this.selection.forms = Object.fromEntries(
+          Object.entries(this._actor.system.arts.forms).map(([k, v]) => {
+            return [k, `${CONFIG.ARM5E.magic.arts[k].label} (${v.finalScore})`];
+          })
+        ));
+    }
   }
 
   getOptionalBonuses(type) {

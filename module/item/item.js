@@ -443,7 +443,7 @@ export class ArM5eItem extends Item {
       lab = item.actor.system.sanctum.document;
     }
     let planning = lab.getFlag(CONFIG.ARM5E.SYSTEM_ID, "planning") || {};
-    let newSpell = await Item.create(spellEffectData, { temporary: true });
+    let newSpell = new ArM5eItem(spellEffectData, { temporary: true });
     planning.type = "learnSpell";
     let data = newSpell.toObject();
     planning.data = resetOwnerFields(data);

@@ -21,37 +21,18 @@
       <div class="form-group">
         <label>{{ localize "EFFECT.Name" }}</label>
         <div class="form-fields">
-          <input type="text" name="label" value="{{ data.ui.name }}" class="resource-focus" />
+          <input type="text" name="{{data.ui.nameAttr}}" value="{{ data.ui.name }}" class="resource-focus" />
         </div>
       </div>
 
       <div class="form-group">
         <label>{{ localize "EFFECT.Icon" }}</label>
         <div class="form-fields">
-          {{filePicker target="icon" type="image"}}
-          <input class="image" type="text" name="icon" placeholder="path/image.png" value="{{data.ui.img}}" />
+          {{filePicker target="img" type="image"}}
+          <input class="image" type="text" name="{{data.ui.imgAttr}}" placeholder="path/image.png"
+            value="{{data.ui.img}}" />
         </div>
       </div>
-
-      <!-- <div class="form-group">
-        <label>{{!-- localize "arm5e.sheet.type" --}}</label>
-        <div class="form-fields">
-          <select name="flags.arm5e.type" class="effect-type" data-type="String">
-
-            <option value="{{this}}">TRAITS</option>
-          </select>
-        </div>
-      </div> -->
-
-      <!-- not sure of the use of this one -->
-
-      <!-- <div class="form-group">
-        <label>{{ localize "EFFECT.IconTint" }}</label>
-        <div class="form-fields">
-          <input class="color" type="text" name="tint" value="{{tint}}" />
-          <input type="color" value="{{tint}}" data-edit="tint" />
-        </div>
-      </div> -->
 
       <div class="form-group">
         <label>{{ localize "EFFECT.Disabled" }}</label>
@@ -81,40 +62,36 @@
       </header>
       <ol class="changes-list" style="min-height: 48px;">
         {{#each data.changes as |change i|}}
+          {{log (lookup ../currentProperties i) }}
           <li class="effect-change">
             <div class="flexrow">
               <div class="type">
                 <select name="../flags.arm5e.type.{{i}}" data-type="String" class="effect-type" data-index="{{i}}">
-                  {{#select (lookup ../selectedTypes i)}} {{#each ../types as |type id|}}
-                      <option value="{{id}}">{{localize type.label}}</option>
-                    {{/each}} {{/select}}
+                  {{selectOptions @root.types selected=(lookup ../selectedTypes i) labelAttr="mnemonic" localize=true}}
                 </select>
               </div>
               <div class="subtype">
-                <select name="changes.{{i}}.key" data-subtype="{{lookup ../subtypes i}}" class="effect-subtype"
-                  data-index="{{i}}">
-                  {{log "value: " (lookup (lookup (lookup ../subtypes i) (lookup ../selectedSubtypes i)) "computedKey")}}
-                  {{#select (lookup (lookup (lookup ../subtypes i) (lookup ../selectedSubtypes i)) "computedKey")}}
-                    {{#each (lookup ../subtypes i) as |st id |}}
-                      <option data-subtype="{{id}}" value="{{st.computedKey}}">{{localize st.label}}</option>
-                    {{/each}} {{/select}}
+                <select name="../flags.arm5e.subtype.{{i}}" class="effect-subtype" data-index="{{i}}">
+                  {{selectOptions (lookup @root.subtypes i) selected=(lookup ../selectedSubtypes i) labelAttr="mnemonic" localize=true
+                    nameAttr="name" valueAttr="name"}}
                 </select>
                 <div style="font-size: 8pt; overflow-wrap: break-word">{{#if ../devMode}}{{change.key}}{{/if}}</div>
               </div>
               <div class="mode">{{localize (concat "arm5e.sheet.activeEffect.mode_" change.mode)}}</div>
 
               <div class="value">
-                {{#if (lookup (lookup (lookup ../subtypes i) (lookup ../selectedSubtypes i)) "withChoice")}}
+                {{#if (lookup (lookup ../currentProperties i) "withChoice")}}
                   <select name="changes.{{i}}.value" data-index="{{i}}">
+                    {{selectOptions }}
                     {{#select (lookup change "value") }} {{#each (lookup (lookup (lookup ../subtypes i) (lookup
                 ../selectedSubtypes i)) "choice") as | value key|}}
                         <option value="{{key}}">{{localize value}}</option>
                       {{/each}} {{/select}}
                   </select>
-                {{else if (lookup (lookup (lookup ../subtypes i) (lookup ../selectedSubtypes i)) "isBool")}}
+                {{else if (lookup (lookup ../currentProperties i) "isBool")}}
                   <input class="effect-value" type="checkbox" name="changes.{{i}}.value" {{checked change.value}}
                     data-dtype="Boolean" data-index="{{i}}" />
-                {{else if (lookup (lookup (lookup ../subtypes i) (lookup ../selectedSubtypes i)) "isString")}}
+                {{else if (lookup (lookup ../currentProperties i) "isString")}}
                   <input class="effect-value" type="text" name="changes.{{i}}.value" value="{{change.value}}"
                     data-dtype="String" data-index="{{i}}" />
 
@@ -125,7 +102,7 @@
               </div>
 
               <div class="effect-controls">
-                {{#if (lookup (lookup (lookup ../subtypes i) (lookup ../selectedSubtypes i)) "option")}}
+                {{#if (lookup (lookup ../currentProperties i) "option")}}
                   <a class="effect-control" data-idx="{{i}}" data-action="option"><i class="fas fa-cogs"></i></a>
                 {{/if}}
                 <a class="effect-control" data-idx="{{i}}" data-action="delete"><i

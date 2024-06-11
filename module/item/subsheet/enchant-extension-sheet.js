@@ -5,6 +5,7 @@ import { ArM5eActorSheet } from "../../actor/actor-sheet.js";
 import { EnchantmentExtension, EnchantmentSchema } from "../../schemas/enchantmentSchema.js";
 import {
   GetEffectAttributesLabel,
+  GetEnchantmentSelectOptions,
   GetFilteredAspects,
   GetFilteredMagicalAttributes,
   PickRequisites,
@@ -82,8 +83,10 @@ export class ArM5eItemEnchantmentSheet {
     context.ui.flavor = "Neutral";
     enchants.totalCapa = 0;
     enchants.states = foundry.utils.duplicate(ARM5E.lab.enchantment.state);
-
-    context = await GetFilteredMagicalAttributes(context);
+    if (!context.selection) {
+      context.selection = {};
+    }
+    await GetFilteredMagicalAttributes(context.selection);
 
     if (enchants.capacities.length > 1) {
       enchants.states["charged"].selection = "disabled";
@@ -95,6 +98,12 @@ export class ArM5eItemEnchantmentSheet {
     }
 
     enchants.prepared = false;
+    let capaIdx = 0;
+    context.selection.capacityMode = {
+      sum: "arm5e.enchantment.capacity.sumMode",
+      max: "arm5e.enchantment.capacity.maxMode"
+    };
+    context.selection.capacities = {};
     for (let capa of enchants.capacities) {
       capa.used = 0;
       capa.total =
@@ -104,6 +113,9 @@ export class ArM5eItemEnchantmentSheet {
       if (capa.prepared) {
         enchants.prepared = true;
       }
+      // TODO: set invisible if all effects linked are hidden
+      capa.visible = true;
+      context.selection.capacities[capa.id] = `${capa.desc} (${capaIdx++})`;
     }
     enchants.ASPECTS = await GetFilteredAspects();
 
@@ -136,6 +148,13 @@ export class ArM5eItemEnchantmentSheet {
       enchants.expiryAllowed = false;
       // enchants.prepared = true;
     }
+
+    context.selection.states = Object.fromEntries(
+      Object.entries(enchants.states).filter(([k, v]) => !(v.selection === "disabled"))
+    );
+
+    GetEnchantmentSelectOptions(context);
+
     let idx = 0;
     let overcap = false;
     enchants.visibleEnchant = 0;
@@ -584,7 +603,7 @@ export class ArM5eItemEnchantmentSheet {
       const dataset = getDataset(e);
       let effects = this.item.system.enchantments.effects;
       const effect = effects[dataset.index];
-      const item = await Item.create(
+      const item = new ArM5eItem(
         {
           name: effect.name,
           type: "enchantment",

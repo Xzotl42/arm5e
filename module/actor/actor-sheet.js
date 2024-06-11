@@ -203,6 +203,7 @@ export class ArM5eActorSheet extends ActorSheet {
     // Add the actor's data to context.system for easier access, as well as flags.
     context.system = actorData.system;
     context.flags = actorData.flags;
+    context.selection = {};
 
     context.config = CONFIG.ARM5E;
     context.abilityKeys = CONFIG.ARM5E.ALL_ABILITIES;
@@ -341,6 +342,17 @@ export class ArM5eActorSheet extends ActorSheet {
         context.system?.charType?.value == "magusNPC" ||
         context.system?.charType?.value == "magus"
       ) {
+        context.selection.voiceStances = Object.fromEntries(
+          Object.entries(context.system.stances.voice).map(([k, v]) => {
+            return [k, `${game.i18n.localize(CONFIG.ARM5E.magic.mod.voice[k].mnemonic)} (${v})`];
+          })
+        );
+        context.selection.gesturesStances = Object.fromEntries(
+          Object.entries(context.system.stances.gestures).map(([k, v]) => {
+            return [k, `${game.i18n.localize(CONFIG.ARM5E.magic.mod.gestures[k].mnemonic)} (${v})`];
+          })
+        );
+
         // Arts icons style
         context.artsIcons = game.settings.get("arm5e", "artsIcons");
 

@@ -49,8 +49,6 @@ export const ArM5ePreloadHandlebarsTemplates = async function () {
     "systems/arm5e/templates/actor/parts/topicFilter.hbs",
     "systems/arm5e/templates/actor/parts/timeFilter.hbs",
 
-    "systems/arm5e/templates/actor/parts/crucible-magic-item.html",
-    "systems/arm5e/templates/actor/parts/crucible-enchantment.html",
     // Item Sheet Partials
     "systems/arm5e/templates/item/parts/spell-design.html",
     "systems/arm5e/templates/item/parts/spell-design-V2.html",

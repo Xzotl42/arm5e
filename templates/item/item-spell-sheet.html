@@ -31,17 +31,13 @@
         <div class="resource flexcol flexrow">
           <label for="system.technique.value" class="header-label">{{localize "arm5e.sheet.technique"}}</label>
           <select {{noSelect}} name="system.technique.value" data-type="String">
-            {{#select system.technique.value}} {{#each config.magic.techniques as |techniques key|}}
-                <option value="{{key}}">{{techniques.label}}</option>
-              {{/each}} {{/select}}
+            {{selectOptions config.magic.techniques selected=system.technique.value labelAttr="label"}}
           </select>
         </div>
         <div class="resource flexcol flexrow">
           <label for="system.form.value" class="header-label">{{localize "arm5e.sheet.form"}}</label>
           <select {{noSelect}} name="system.form.value" data-type="String" class="select-form">
-            {{#select system.form.value}} {{#each config.magic.forms as |forms key|}}
-                <option value="{{key}}">{{forms.label}}</option>
-              {{/each}} {{/select}}
+            {{selectOptions config.magic.forms selected=system.form.value labelAttr="label"}}
           </select>
         </div>
       </div>
@@ -85,34 +81,20 @@
         <div class="resource">
           <label class="header-label">{{localize "arm5e.sheet.range"}}</label>
           <select {{noSelect}} name="system.range.value" data-dtype="String" class="spell-attribute">
-            {{#select system.range.value}} {{#each ranges as |range key|}}
-                <option value="{{key}}" {{disabled range.disabled}}>
-                  {{localize range.label}}{{#if (eq range.disabled undefined)}}
-                    ({{range.impact}}){{/if}}
-                </option>
-              {{/each}} {{/select}}
+            {{magicalAttributesHelper selection.ranges selected=system.range.value  labelAttr="label"}}
           </select>
         </div>
         <div class="resource">
           <label class="header-label">{{localize "arm5e.sheet.duration"}}</label>
           <select {{noSelect}} name="system.duration.value" data-dtype="String" class="spell-attribute">
-            {{#select system.duration.value}} {{#each durations as |duration key|}}
-                <option value="{{key}}" {{disabled duration.disabled}}>
-                  {{localize duration.label}}{{#if (eq duration.disabled undefined)}} ({{duration.impact}}){{/if}}
-                </option>
-              {{/each}} {{/select}}
+            {{magicalAttributesHelper selection.durations selected=system.duration.value  labelAttr="label"}}
           </select>
         </div>
         <div class="resource">
           <label class="header-label">{{localize "arm5e.sheet.target"}}</label>
           <select {{noSelect}} name="system.target.value" data-dtype="String" style="min-width: 95%"
             class="spell-attribute">
-            {{#select system.target.value}} {{#each targets as |target key|}}
-                <option value="{{key}}" {{disabled target.disabled}}>{{localize target.label}}
-                  {{#if (eq target.disabled undefined)}}
-                    ({{target.impact}}){{/if}}
-                </option>
-              {{/each}} {{/select}}
+            {{magicalAttributesHelper selection.targets selected=system.target.value  labelAttr="label"}}
           </select>
         </div>
       </div>

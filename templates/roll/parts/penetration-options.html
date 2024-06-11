@@ -40,12 +40,9 @@
         <label class="resource-label flex02">{{localize "arm5e.sheet.penetrationBonusArcanic"}}</label>
         <select name="system.roll.penetration.multiplierBonusArcanic" data-type="number"
             class="multiplierBonusArcanic  flex01">
-            {{#select system.roll.penetration.multiplierBonusArcanic}}
-                <option value=0>{{localize "arm5e.generic.none"}} (0)</option>
-                {{#each system.roll.penetration.config.arcaneCon as |item key|}}
-                    <option value="{{item.bonus}}">{{ localize item.label }} (+{{ item.bonus }})</option>
-                {{/each}}
-            {{/select}}
+            {{selectOptions system.roll.penetration.selection.sympathic 
+                selected=system.roll.penetration.config.arcaneCon
+                labelAttr="label" nameAttr=bonus valueAttr="bonus"}}
         </select>
     </div>
     <div class="flexrow flex-group-center sub">
@@ -55,12 +52,9 @@
         <label class="resource-label flex02">{{localize "arm5e.sheet.penetrationBonusSympathic"}}</label>
         <select name="system.roll.penetration.multiplierBonusSympathic" data-type="number"
             class="multiplierBonusSympathic flex01">
-            {{#select system.roll.penetration.multiplierBonusSympathic}}
-                <option value=0>{{localize "arm5e.generic.none"}} (0)</option>
-                {{#each system.roll.penetration.config.sympathy as |item key|}}
-                    <option value="{{item.bonus}}">{{ localize item.label }} (+{{ item.bonus }})</option>
-                {{/each}}
-            {{/select}}
+            {{selectOptions system.roll.penetration.selection.sympathic 
+                selected=system.roll.penetration.multiplierBonusSympathic 
+                labelAttr="label" nameAttr=bonus valueAttr="bonus"}}
         </select>
     </div>
 </div>

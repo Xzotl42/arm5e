@@ -28,7 +28,7 @@ export class StressDie extends Die {
   async evaluate() {
     this.options.ddd = this.number;
     this.number = 1;
-    super.evaluate();
+    await super.evaluate();
     if (this.results[0].result === 10) {
       this.number = this.options.ddd;
       this._evaluated = false;
@@ -100,9 +100,9 @@ export class StressDieInternal extends Die {
   /** @inheritdoc */
   static DENOMINATION = "i";
 
-  async evaluate({ minimize = false, maximize = false, async = true } = {}) {
+  async evaluate({ minimize = false, maximize = false } = {}) {
     this.number = 1; // only ever one dice
-    super.evaluate({ minimize: minimize, maximize: maximize, async: async });
+    await super.evaluate({ minimize: minimize, maximize: maximize });
     if (this.results[0].result === 10) {
       this.results[0].result = 0;
       return this;

@@ -3,6 +3,7 @@ import { getCompanion, getMagus, newSpell1 } from "./testData.js";
 import { ArsLayer } from "../ui/ars-layer.js";
 import { ARM5E } from "../config.js";
 import Aura from "../helpers/aura.js";
+import { ArM5eItem } from "../item/item.js";
 
 // import { Quench } from "../quench.js";
 
@@ -270,11 +271,14 @@ export function registerApprenticeshipTesting(quench) {
           expect(entry.system.dates.length).to.equal(1);
 
           expect(entry.system.progress.newSpells.length).to.equal(0);
-          const spell = await Item.create({
-            name: "SpellXYZ",
-            type: "spell",
-            system: newSpell1
-          });
+          const spell = new ArM5eItem(
+            {
+              name: "SpellXYZ",
+              type: "spell",
+              system: newSpell1
+            },
+            { temporary: true }
+          );
 
           await sheet._addNewSpell(spell);
 

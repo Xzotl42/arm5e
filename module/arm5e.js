@@ -63,6 +63,7 @@ import { SimpleCalendarSeasons, seasonOrder, seasonOrderInv } from "./tools/time
 import { WoundSchema } from "./schemas/woundSchema.js";
 import { ArM5eSmallSheet } from "./item/item-small-sheet.js";
 import { EnchantmentSchema } from "./schemas/enchantmentSchema.js";
+import { magicalAttributesHelper } from "./helpers/magic.js";
 Hooks.once("init", async function () {
   game.arm5e = {
     ArsLayer,
@@ -71,9 +72,10 @@ Hooks.once("init", async function () {
     rollItemMacro
   };
 
-  // Flag to manage V11 backward compatibility
+  // Flags to manage backward compatibility
   CONFIG.ISV10 = foundry.utils.isNewerVersion(11, game.version);
-
+  CONFIG.ISV11 = foundry.utils.isNewerVersion(12, game.release.generation);
+  CONFIG.ISV12 = game.release.generation >= 12;
   // Add system metadata
   CONFIG.ARM5E = ARM5E;
   CONFIG.ARM5E.ItemDataModels = CONFIG.ISV10
@@ -191,7 +193,12 @@ Hooks.once("init", async function () {
   // Preload handlebars templates
   ArM5ePreloadHandlebarsTemplates();
 
-  // If you need to add Handlebars helpers, here are a few useful examples:
+  ///////////
+  // HANDLEBARS HELPERS
+  ///////////
+
+  Handlebars.registerHelper("magicalAttributesHelper", magicalAttributesHelper);
+
   Handlebars.registerHelper("concat", function () {
     var outStr = "";
     for (var arg in arguments) {
@@ -455,7 +462,7 @@ function rollItemMacro(itemId, actorId) {
   if (!item)
     return ui.notifications.warn(`Your controlled Actor does not have an item with ID: ${itemId}`);
   const dataset = prepareDatasetByTypeOfItem(item);
-  if (isEmpty(dataset)) {
+  if (foundry.utils.isEmpty(dataset)) {
     item.sheet.render(true);
   } else if (item.type == "power") {
     actor.sheet._onUsePower(dataset);
@@ -617,7 +624,7 @@ function registerSheets() {
         "sanctumRoom",
         "reputation",
         "inhabitant",
-        "habitantMagi",
+        "habitantMagi", // deprecated
         "habitantCompanion", // deprecated
         "habitantSpecialists", // deprecated
         "habitantHabitants", // deprecated

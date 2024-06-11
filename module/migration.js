@@ -31,14 +31,14 @@ export async function migration(originalVersion) {
         log(true, `Invalid items in actor: ${a.items.invalidDocumentIds.size}`);
         const updateData = await migrateActorData(a, a.items);
 
-        if (!isEmpty(updateData)) {
+        if (!foundry.utils.isEmpty(updateData)) {
           console.log(`Migrating Actor document ${a.name}`);
           updateData._id = a._id;
           actorsUpdates.push(foundry.utils.expandObject(updateData));
         }
 
         // const cleanData = cleanActorData(a)
-        // if (!isEmpty(cleanData)) {
+        // if (!foundry.utils.isEmpty(cleanData)) {
         //     console.log(`Cleaning up Actor entity ${a.name}`);
         //     a.system = cleanData.system;
         // }
@@ -72,7 +72,7 @@ export async function migration(originalVersion) {
         const updateData = await migrateActorData(rawData, rawData.items);
         // let updateData = await invalidActor.update(updateData, { diff: true });
         console.log(`Migrated invalid Actor document: ${rawData.name}`);
-        if (!isEmpty(updateData)) {
+        if (!foundry.utils.isEmpty(updateData)) {
           updateData._id = invalidId;
           invalidActorsUpdates.push(foundry.utils.expandObject(updateData));
         }
@@ -104,7 +104,7 @@ export async function migration(originalVersion) {
         console.log(`Migrated Item document ${i.name}`);
 
         // const cleanData = cleanItemData(i)
-        // if (!isEmpty(cleanData)) {
+        // if (!foundry.utils.isEmpty(cleanData)) {
         //     console.log(`Cleaning up Item document ${i.name}`);
         //     i.system = cleanData.system;
         // }
@@ -127,7 +127,7 @@ export async function migration(originalVersion) {
         let invalidItem = game.items.getInvalid(invalidId);
         const updateData = await migrateItemData(invalidItem);
         updateData._id = invalidId;
-        if (!isEmpty(updateData)) {
+        if (!foundry.utils.isEmpty(updateData)) {
           invalidItemsUpdates.push({ _id: invalidId, ...updateData });
         }
       } catch (err) {
@@ -782,7 +782,7 @@ export const migrateActorData = async function (actorDoc, actorItems) {
           const effectData = e instanceof CONFIG.ActiveEffect.documentClass ? e.toObject() : e;
 
           let effectUpdate = await migrateActiveEffectData(effectData);
-          if (!isEmpty(effectUpdate)) {
+          if (!foundry.utils.isEmpty(effectUpdate)) {
             // Update the effect
             effectUpdate._id = effectData._id;
             effects.push(foundry.utils.expandObject(effectUpdate));
@@ -847,7 +847,7 @@ export const migrateActorData = async function (actorDoc, actorItems) {
           const effectData = e instanceof CONFIG.ActiveEffect.documentClass ? e.toObject() : e;
 
           let effectUpdate = await migrateActiveEffectData(effectData);
-          if (!isEmpty(effectUpdate)) {
+          if (!foundry.utils.isEmpty(effectUpdate)) {
             // Update the effect
             effectUpdate._id = effectData._id;
             effects.push(foundry.utils.expandObject(effectUpdate));
@@ -907,7 +907,7 @@ export const migrateActorData = async function (actorDoc, actorItems) {
         }
         let itemUpdate = await migrateItemData(i);
         // Update the Owned Item
-        if (!isEmpty(itemUpdate)) {
+        if (!foundry.utils.isEmpty(itemUpdate)) {
           itemUpdate._id = i._id;
           items.push(itemUpdate);
         }
@@ -929,7 +929,7 @@ export const migrateActorData = async function (actorDoc, actorItems) {
         );
         let invalidItem = actorDoc.items.getInvalid(invalidItemId);
         const itemUpdate = await migrateItemData(invalidItem);
-        if (!isEmpty(itemUpdate)) {
+        if (!foundry.utils.isEmpty(itemUpdate)) {
           invalidItemsUpdates.push({ _id: invalidItemId, ...itemUpdate });
         }
 
@@ -1406,7 +1406,7 @@ export const migrateItemData = async function (item) {
       // Migrate effects
       const effectData = e instanceof CONFIG.ActiveEffect.documentClass ? e.toObject() : e;
       let effectUpdate = await migrateActiveEffectData(effectData);
-      if (!isEmpty(effectUpdate)) {
+      if (!foundry.utils.isEmpty(effectUpdate)) {
         // Update the effect
         effectUpdate._id = effectData._id;
         effects.push(foundry.utils.expandObject(effectUpdate));

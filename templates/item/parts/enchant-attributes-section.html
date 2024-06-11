@@ -61,9 +61,7 @@
                 <div>
                   <select class="receptacle-idx-change" data-dtype="Number" data-index="{{idx}}"
                     style="max-width: 180px;">
-                    {{#select effect.receptacleId}} {{#each @root.system.enchantments.capacities as |capa idx|}}
-                        <option value="{{capa.id}}">{{capa.desc}} ({{idx}})</option>
-                      {{/each}} {{/select}}
+                    {{selectOptions @root.selection.capacities selected=effect.receptacleId }}
                   </select>
                 </div>
               </div>
@@ -89,11 +87,7 @@
                 <label class="header-label">{{localize "arm5e.sheet.type"}}</label>
                 <select class="enchantment-state flex01" data-dtype="String" {{stateEdit}}
                   data-state="{{system.enchantments.state}}">
-                  {{#select system.enchantments.state}}
-                    {{#each system.enchantments.states as |state key|}}
-                      <option value="{{key}}" {{state.selection}}>{{localize state.label}}</option>
-                    {{/each}}
-                  {{/select}}
+                  {{selectOptions selection.states selected=system.enchantments.state labelAttr="label" localize=true}}
                 </select>
               </div>
             {{/if}}
@@ -157,10 +151,7 @@
             <label class="label-light">Computation</label>
             <div class="padding2">
               <select name="system.enchantments.capacityMode" style="max-width: 100px;">
-                {{#select system.enchantments.capacityMode}}
-                  <option value="sum">{{localize "Sum"}}</option>
-                  <option value="max">{{localize "Maximum"}}</option>
-                {{/select}}
+                {{selectOptions selection.capacityMode selected=system.enchantments.capacityMode localize=true}}
               </select>
             </div>
             <div class="resource flexrow">
@@ -182,25 +173,17 @@
         </div>
 
         {{#each system.enchantments.capacities as |capa idx|}}
+          {{log "capa" capa}}
           {{#if capa.visible}}
             <div class="resource flexrow">
               <div class="padding2">
                 <select name="system.enchantments.capacities.{{idx}}.materialBase" style="max-width: 140px;">
-                  {{#select capa.materialBase}}
-                    {{#each ../config.lab.enchantment.materialBase as |attr key|}}
-                      <option value="{{key}}">({{attr.base}}) {{localize attr.eg}} </option>
-                    {{/each}}
-                  {{/select}}
+                  {{selectOptions @root.selection.materialBase selected=capa.materialBase }}
                 </select>
               </div>
               <div class="padding2">
                 <select name="system.enchantments.capacities.{{idx}}.sizeMultiplier" style="max-width: 130px;">
-                  {{#select capa.sizeMultiplier}}
-                    {{#each ../config.lab.enchantment.sizeMultiplier as |attr key|}}
-                      <option value="{{key}}" title="{{localize attr.eg}}">{{localize attr.value}} (x {{attr.mult}})
-                      </option>
-                    {{/each}}
-                  {{/select}}
+                  {{selectOptions @root.selection.sizeMultiplier selected=capa.sizeMultiplier }}
                 </select>
               </div>
               <div class="padding2">
@@ -268,22 +251,13 @@
             <div class="padding2">
               <select name="system.enchantments.aspects.{{idx}}.aspect" style="max-width: 175px;" class="aspect-change"
                 data-index="{{idx}}">
-                {{#select aspect.aspect}}
-                  {{#each ../system.enchantments.ASPECTS as |s key|}}
-                    <option value="{{key}}">{{s.name}}</option>
-                  {{/each}}
-                {{/select}}
+                {{selectOptions @root.system.enchantments.ASPECTS selected=aspect.aspect labelAttr="name" }}
               </select>
             </div>
             <div class="padding2">
               <select name="system.enchantments.aspects.{{idx}}.effect" style="max-width: 175px;width: 175px;"
                 class="effect-change" data-index="{{idx}}">
-                {{#select aspect.effect}}
-                  {{#each aspect.effects as |e key|}}
-                    <option value="{{key}}">{{e.name}} (+{{e.bonus}})
-                    </option>
-                  {{/each}}
-                {{/select}}
+                {{selectOptions aspect.effects selected=aspect.effect labelAttr="selectLabel" }}
               </select>
             </div>
             <div class="padding2 modifier">

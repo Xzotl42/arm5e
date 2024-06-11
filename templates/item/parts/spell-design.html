@@ -32,36 +32,21 @@
   <div class="resource">
     <label class="header-label">{{localize "arm5e.sheet.range"}}</label>
     <select name="system.range.value" {{noSelect}} data-type="String" class="spell-attribute">
-      {{#select system.range.value}} {{#each ranges as |range key|}}
-          <option value="{{key}}" {{disabled range.disabled}}>
-            {{localize range.label}}{{#if (eq range.disabled undefined)}}
-              ({{range.impact}}){{/if}}
-          </option>
-        {{/each}} {{/select}}
-      <option></option>
+      {{magicalAttributesHelper selection.ranges selected=system.range.value  labelAttr="label"}}
     </select>
     <!--input type="text" name="system.range" value="{{system.range}}" data-dtype="String"/-->
   </div>
   <div class="resource">
     <label class="header-label">{{localize "arm5e.sheet.duration"}}</label>
     <select name="system.duration.value" {{noSelect}} data-type="String" class="spell-attribute">
-      {{#select system.duration.value}} {{#each durations as |duration key|}}
-          <option value="{{key}}" {{disabled duration.disabled}}>
-            {{localize duration.label}}{{#if (eq duration.disabled undefined)}} ({{duration.impact}}){{/if}}
-          </option>
-        {{/each}} {{/select}}
+      {{magicalAttributesHelper selection.durations selected=system.duration.value  labelAttr="label"}}
     </select>
     <!-- <input type="text" name="system.duration" value="{{system.duration}}" data-dtype="String"/> -->
   </div>
   <div class="resource">
     <label class="header-label">{{localize "arm5e.sheet.target"}}</label>
     <select name="system.target.value" {{noSelect}} data-type="String" class="spell-attribute">
-      {{#select system.target.value}} {{#each targets as |target key|}}
-          <option value="{{key}}" {{disabled target.disabled}}>{{localize target.label}}
-            {{#if (eq target.disabled undefined)}}
-              ({{target.impact}}){{/if}}
-          </option>
-        {{/each}} {{/select}}
+      {{magicalAttributesHelper selection.targets selected=system.target.value  labelAttr="label"}}
     </select>
     <!-- <input type="text" name="system.target" value="{{system.target}}" data-dtype="String"/> -->
   </div>

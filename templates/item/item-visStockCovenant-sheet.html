@@ -7,9 +7,7 @@
         <div class="resource flexcol">
           <label for="system.art" class="header-label">{{localize "arm5e.sheet.art"}}</label>
           <select name="system.art" data-type="String">
-            {{#select system.art}} {{#each config.magic.arts as |arts key|}}
-                <option value="{{key}}">{{arts.label}}</option>
-              {{/each}} {{/select}}
+            {{selectOptions config.magic.arts selected=system.art labelAttr="label"}}
           </select>
         </div>
       </div>

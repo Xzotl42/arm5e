@@ -26,9 +26,7 @@
         <div class="flexrow margintop18">
           <label class="flex02">{{localize "arm5e.sheet.type"}}</label>
           <select name="system.type" data-dtype="String" style="max-width: 165px" class="ressource ">
-            {{#select system.type}} {{#each config.reputations as |type key|}}
-                <option value="{{key}}">{{localize type.label}}</option>
-              {{/each}} {{/select}}
+            {{selectOptions config.reputations selected=system.type labelAttr="label" localize=true }}
           </select>
         </div>
       </div>

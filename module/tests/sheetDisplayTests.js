@@ -1,5 +1,15 @@
+import { ArM5eItem } from "../item/item.js";
 import { sleep } from "../tools.js";
-
+const DEPRECATED = [
+  "personality",
+  "mundaneBook",
+  "habitantCompanion",
+  "habitantSpecialists",
+  "habitantHabitants",
+  "habitantHorses",
+  "habitantLivestock",
+  "habitantMagi"
+];
 export function registerSheetDisplayTests(quench) {
   quench.registerBatch(
     "Ars-document-constructors",
@@ -32,7 +42,7 @@ export function registerSheetDisplayTests(quench) {
       describe("Item create and display sheet ", function () {
         let item;
         for (let t of CONFIG.Item.documentClass.TYPES) {
-          if (!["personality", "mundaneBook"].includes(t)) {
+          if (!DEPRECATED.includes(t)) {
             //TMP
             it(`Test ${t}'s constructor`, async function () {
               try {

@@ -7,9 +7,7 @@
         <div class="resource">
           <label class="resource-label">{{localize "arm5e.sheet.season"}}</label>
           <select name="system.season" data-type="String" style="width: 100%">
-            {{#select system.season}} {{#each config.seasons as |season key|}}
-                <option value="{{key}}">{{localize season.label}}</option>
-              {{/each}} {{/select}}
+            {{selectOptions config.seasons selected=system.season labelAttr="label" localize=true }}
           </select>
         </div>
       </div>

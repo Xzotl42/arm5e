@@ -21,17 +21,13 @@
       <div class="resource flexcol flex01">
         <label for="{{prefix}}system.technique.value" class="header-label">{{localize "arm5e.sheet.technique"}}</label>
         <select name="{{prefix}}system.technique.value" data-type="String" {{edition.spellCombobox}}>
-          {{#select spelldata.system.technique.value}} {{#each @root.config.magic.techniques as |techniques key|}}
-              <option value="{{key}}">{{techniques.label}}</option>
-            {{/each}} {{/select}}
+          {{selectOptions @root.config.magic.techniques selected=spelldata.system.technique.value labelAttr="label"}}
         </select>
       </div>
       <div class="resource flexcol flex01">
         <label for="system.form.value" class="header-label">{{localize "arm5e.sheet.form"}}</label>
         <select name="{{prefix}}system.form.value" data-type="String" {{edition.spellCombobox}}>
-          {{#select spelldata.system.form.value }} {{#each @root.config.magic.forms as |forms key|}}
-              <option value="{{key}}">{{forms.label}}</option>
-            {{/each}} {{/select}}
+          {{selectOptions @root.config.magic.forms selected=spelldata.system.form.value labelAttr="label"}}
         </select>
       </div>
       <div class="resource flexcol flex-center flex01">
@@ -83,40 +79,22 @@
         <label class="header-label">{{localize "arm5e.sheet.range"}}</label>
         <select name="{{prefix}}system.range.value" data-type="String" class="spell-attribute"
           {{edition.spellCombobox}}>
-          {{#select spelldata.system.range.value}} {{#each @root.ranges as |range key|}}
-              <option value="{{key}}" {{disabled range.disabled}}>
-                {{localize range.label}}{{#if (eq range.disabled undefined)}}
-                  ({{range.impact}}){{/if}}
-              </option>
-            {{/each}} {{/select}}
-          <option></option>
+          {{magicalAttributesHelper @root.selection.ranges selected=spelldata.system.range.value  labelAttr="label"}}
         </select>
-        <!--input type="text" name="system.range" value="{{system.range}}" data-dtype="String"/-->
       </div>
       <div class="resource flex-group-center">
         <label class="header-label">{{localize "arm5e.sheet.duration"}}</label>
         <select name="{{prefix}}system.duration.value" data-type="String" class="spell-attribute"
           {{edition.spellCombobox}}>
-          {{#select spelldata.system.duration.value}} {{#each @root.durations as |duration key|}}
-              <option value="{{key}}" {{disabled duration.disabled}}>
-                {{localize duration.label}}{{#if (eq duration.disabled undefined)}} ({{duration.impact}}){{/if}}
-              </option>
-            {{/each}} {{/select}}
+          {{magicalAttributesHelper @root.selection.durations selected=spelldata.system.duration.value labelAttr="label"}}
         </select>
-        <!-- <input type="text" name="system.duration" value="{{system.duration}}" data-dtype="String"/> -->
       </div>
       <div class="resource flex-group-center">
         <label class="header-label">{{localize "arm5e.sheet.target"}}</label>
         <select name="{{prefix}}system.target.value" data-type="String" class="spell-attribute"
           {{edition.spellCombobox}}>
-          {{#select spelldata.system.target.value}} {{#each @root.targets as |target key|}}
-              <option value="{{key}}" {{disabled target.disabled}}>{{localize target.label}}
-                {{#if (eq target.disabled undefined)}}
-                  ({{target.impact}}){{/if}}
-              </option>
-            {{/each}} {{/select}}
+          {{magicalAttributesHelper @root.selection.targets selected=spelldata.system.target.value  labelAttr="label"}}
         </select>
-        <!-- <input type="text" name="system.target" value="{{system.target}}" data-dtype="String"/> -->
       </div>
     </div>
 
