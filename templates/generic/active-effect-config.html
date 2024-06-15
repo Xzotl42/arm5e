@@ -62,7 +62,6 @@
       </header>
       <ol class="changes-list" style="min-height: 48px;">
         {{#each data.changes as |change i|}}
-          {{log (lookup ../currentProperties i) }}
           <li class="effect-change">
             <div class="flexrow">
               <div class="type">
@@ -77,12 +76,11 @@
                 </select>
                 <div style="font-size: 8pt; overflow-wrap: break-word">{{#if ../devMode}}{{change.key}}{{/if}}</div>
               </div>
-              <div class="mode">{{localize (concat "arm5e.sheet.activeEffect.mode_" change.mode)}}</div>
+              <div class="mode">{{localize change.modeStr}}</div>
 
               <div class="value">
                 {{#if (lookup (lookup ../currentProperties i) "withChoice")}}
                   <select name="changes.{{i}}.value" data-index="{{i}}">
-                    {{selectOptions }}
                     {{#select (lookup change "value") }} {{#each (lookup (lookup (lookup ../subtypes i) (lookup
                 ../selectedSubtypes i)) "choice") as | value key|}}
                         <option value="{{key}}">{{localize value}}</option>

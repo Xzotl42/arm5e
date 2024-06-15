@@ -1088,8 +1088,12 @@ export class ArM5eActorSheet extends ActorSheet {
 
     html.find(".effect-edit").click(async (ev) => {
       const li = $(ev.currentTarget).parents(".item");
-
-      const effect = await fromUuid(li.data("effectId"));
+      let effect;
+      if (CONFIG.ISV10) {
+        effect = this.actor.effects.get(li.data("effectId"));
+      } else {
+        effect = await fromUuid(li.data("effectId"));
+      }
       // const item = this.actor.items.get(li.data("itemId"))
       effect.sheet.render(true, { focus: true });
     });

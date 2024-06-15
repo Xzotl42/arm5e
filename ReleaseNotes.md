@@ -1,14 +1,16 @@
 ## 2.3.0.0, Quendalon
 
+### Compatibility
+
+- V12 ready
+
 ### Features & changes
 
 - [technical] migration of select helper to selectOptions
 
 ### Bug fixes
 
-- Some PC sheet's text editor fields were not setup properly (decrepitude, twilight scars, sigil)
-- Default tab of scriptorium is back to "Reading"
-- Changing the value of an active effect with option won't reset it anymore
+- [technical] Rework and cleaning of active effect config dialog
 
 ## 2.2.4.24, Pralix, founder of a new House
 
