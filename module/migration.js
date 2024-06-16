@@ -562,7 +562,7 @@ export const migrateActorData = async function (actorDoc, actorItems) {
     if (actor.system.reputation) {
       if (actorDoc instanceof ArM5ePCActor) {
         for (let rep of Object.values(actor.system.reputation)) {
-          if (rep.label === "" || rep.label === null) continue;
+          if (rep.label === "" || rep.label === null || rep.label == undefined) continue;
 
           let reputationData = {
             name: rep.label,
@@ -593,7 +593,7 @@ export const migrateActorData = async function (actorDoc, actorItems) {
     if (actor.system.personality) {
       if (actorDoc instanceof ArM5ePCActor) {
         for (let pers of Object.values(actor.system.personality)) {
-          if (pers.label === "" || pers.label === null) {
+          if (pers.label === "" || pers.label === null || pers.label === undefined) {
             continue;
           }
 

@@ -1,14 +1,15 @@
-## 2.3.1.0, Quendalon
+## 2.3.0.1, Quendalon
 
 ### Compatibility
 
-- V12 ready (verifier 12.327)
+- V12 ready (verified 12.327)
 
 ### Features & changes
 
 ### Bug fixes
 
 - Fixed display bug of Scriptorium and Astrolabium
+- Fixed migration error for reputation and personality traits
 
 ## 2.3.0.0, Quendalon
 
