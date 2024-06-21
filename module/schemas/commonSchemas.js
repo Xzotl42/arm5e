@@ -114,6 +114,16 @@ export const DateField = (year = 1220, season = "spring") =>
 export const basicTextField = () =>
   new fields.StringField({ required: false, blank: true, initial: "" });
 
+export const basicIntegerField = (initial = 0, min = 0) =>
+  new fields.NumberField({
+    required: false,
+    nullable: false,
+    integer: true,
+    initial: initial,
+    step: 1,
+    min: min
+  });
+
 export const CostField = (value = "n-a", coeff = 1, pounds = 1) =>
   new fields.SchemaField(
     {

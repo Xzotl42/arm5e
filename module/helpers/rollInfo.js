@@ -273,12 +273,12 @@ export class ArM5eRollInfo {
     this.penetration.selection = { sympathic: {}, arcanic: {} };
     this.penetration.selection.sympathic = Object.fromEntries(
       Object.entries(this.penetration.config.sympathy).map(([k, v]) => {
-        return [k, `${game.i18n.localize(v.label)} (+${v.bonus})`];
+        return [v.bonus, `${game.i18n.localize(v.label)} (+${v.bonus})`];
       })
     );
     this.penetration.selection.arcanic = Object.fromEntries(
       Object.entries(this.penetration.config.arcaneCon).map(([k, v]) => {
-        return [k, `${game.i18n.localize(v.label)} (+${v.bonus})`];
+        return [v.bonus, `${game.i18n.localize(v.label)} (+${v.bonus})`];
       })
     );
   }
@@ -288,14 +288,25 @@ export class ArM5eRollInfo {
   }
 
   addSelectObjects() {
-    this.selection.characteristics = Object.fromEntries(
-      Object.entries(this._actor.system.characteristics).map(([k, v]) => {
-        return [
-          k,
-          `${game.i18n.localize(CONFIG.ARM5E.character.characteristics[k].label)} (${v.value})`
-        ];
-      })
-    );
+    if (this._actor.type === "beast") {
+      this.selection.characteristics = Object.fromEntries(
+        Object.entries(this._actor.system.characteristics).map(([k, v]) => {
+          return [
+            k,
+            `${game.i18n.localize(CONFIG.ARM5E.beast.characteristics[k].label)} (${v.value})`
+          ];
+        })
+      );
+    } else {
+      this.selection.characteristics = Object.fromEntries(
+        Object.entries(this._actor.system.characteristics).map(([k, v]) => {
+          return [
+            k,
+            `${game.i18n.localize(CONFIG.ARM5E.character.characteristics[k].label)} (${v.value})`
+          ];
+        })
+      );
+    }
     this.selection.abilities = {
       None: game.i18n.localize("arm5e.sheet.activeEffect.subtypes.none"),
       ...Object.fromEntries(
