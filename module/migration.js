@@ -423,6 +423,12 @@ export const migrateActorData = async function (actorDoc, actorItems) {
       updateData["system.-=size"] = null;
     }
 
+    if (actor.system.apprentice) {
+      if (actor.system.apprentice.int === null) {
+        updateData["system.apprentice.int"] = 0;
+      }
+    }
+
     // for beasts
     if (actor.system.description == undefined) {
       updateData["system.description"] = { born: { value: 1200 } };

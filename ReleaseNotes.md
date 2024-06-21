@@ -1,8 +1,22 @@
+## 2.3.0.2, Quendalon
+
+### Compatibility
+
+- V12 ready ( 12.327 verified )
+
+### Features & changes
+
+### Bug fixes
+
+- Fix apprentice intelligence equals to null during migration
+- Rolls on beast sheet are possible again
+- Penetration bonuses are computed properly again
+
 ## 2.3.0.1, Quendalon
 
 ### Compatibility
 
-- V12 ready (verified 12.327)
+- V12 ready ( 12.327 verified )
 
 ### Features & changes
 
