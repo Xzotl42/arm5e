@@ -106,6 +106,19 @@ export class ArM5eCovenantActorSheet extends ArM5eActorSheet {
     context.scenes = game.scenes.contents.map((e) => {
       return { name: e.name, id: e._id };
     });
+
+    for (const exp of Object.keys(context.system.yearExpenditure)) {
+      context.system.yearExpenditure[exp].label =
+        context.config.covenant.yearExpenditure[exp].label;
+      context.system.yearExpenditure[exp].sumary =
+        context.config.covenant.yearExpenditure[exp].sumary;
+    }
+
+    for (const save of Object.keys(context.system.costsSavings)) {
+      context.system.costsSavings[save].label = context.config.covenant.costsSavings[save].label;
+      context.system.costsSavings[save].sumary = context.config.covenant.costsSavings[save].sumary;
+    }
+
     return context;
   }
 

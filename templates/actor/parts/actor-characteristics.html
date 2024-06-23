@@ -4,9 +4,10 @@
   </label>
   <div class="characteristics grid grid-4col" style="gap: 8px;
 margin-top: -10px;">
+
     {{#each system.characteristics as |characteristic key|}}
       <div class="characteristic flexrow flex-group-center">
-        {{#with (lookup @root.config.character.characteristics key)}}
+        {{#with (lookup ../charCfg key)}}
           <label for="system.characteristics.{{key}}.value" class="resource-label rollable-aging" data-roll="char"
             data-characteristic="{{key}}">{{localize short}}</label>
         {{/with}}

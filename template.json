@@ -669,8 +669,7 @@
           "money": {
             "initials": 0,
             "actuals": 0,
-            "notes": "",
-            "label": "arm5e.sheet.money"
+            "notes": ""
           }
         }
       },
@@ -705,88 +704,62 @@
       "incomingSources": [],
       "yearExpenditure": {
         "buildings": {
-          "sumary": "arm5e.sheet.buildingsSumary",
           "expenditure": 0,
-          "notes": "",
-          "label": "arm5e.sheet.buildings"
+          "notes": ""
         },
         "consumables": {
-          "sumary": "arm5e.sheet.consumablesSumary",
           "expenditure": 0,
-          "notes": "",
-          "label": "arm5e.sheet.consumables"
+          "notes": ""
         },
         "inflation": {
-          "sumary": "arm5e.sheet.inflationSumary",
           "expenditure": 0,
-          "notes": "",
-          "label": "arm5e.sheet.inflation"
+          "notes": ""
         },
         "laboratories": {
-          "sumary": "arm5e.sheet.laboratoriesSumary",
           "expenditure": 0,
-          "notes": "",
-          "label": "arm5e.sheet.laboratories"
+          "notes": ""
         },
         "provisions": {
-          "sumary": "arm5e.sheet.provisionsSumary",
           "expenditure": 0,
-          "notes": "",
-          "label": "arm5e.sheet.provisions"
+          "notes": ""
         },
         "titles": {
-          "sumary": "arm5e.sheet.titlesSumary",
           "expenditure": 0,
-          "notes": "",
-          "label": "arm5e.sheet.titles"
+          "notes": ""
         },
         "wages": {
-          "sumary": "arm5e.sheet.wagesSumary",
           "expenditure": 0,
-          "notes": "",
-          "label": "arm5e.sheet.wages"
+          "notes": ""
         },
         "weapons": {
-          "sumary": "arm5e.sheet.weaponsSumary",
           "expenditure": 0,
-          "notes": "",
-          "label": "arm5e.sheet.weapons"
+          "notes": ""
         },
         "writingMaterials": {
-          "sumary": "arm5e.sheet.writingMaterialsSumary",
           "expenditure": 0,
-          "notes": "",
-          "label": "arm5e.sheet.writingMaterials"
+          "notes": ""
         }
       },
       "costsSavings": {
         "laborers": {
-          "sumary": "arm5e.sheet.laborersSumary",
           "quantity": 0,
           "saving": 0,
-          "notes": "",
-          "label": "arm5e.sheet.laborers"
+          "notes": ""
         },
         "craftsmenCommon": {
-          "sumary": "arm5e.sheet.craftsmenCommonSumary",
           "quantity": 0,
           "saving": 0,
-          "notes": "",
-          "label": "arm5e.sheet.craftmenCommon"
+          "notes": ""
         },
         "craftsmenRare": {
-          "sumary": "arm5e.sheet.craftsmenRareSumary",
           "quantity": 0,
           "saving": 0,
-          "notes": "",
-          "label": "arm5e.sheet.craftmenRare"
+          "notes": ""
         },
         "magicItems": {
-          "sumary": "arm5e.sheet.magicItemsSumary",
           "quantity": 0,
           "saving": 0,
-          "notes": "",
-          "label": "arm5e.sheet.magicItems"
+          "notes": ""
         }
       },
       "wealth": {
