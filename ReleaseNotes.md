@@ -1,4 +1,4 @@
-## 2.3.0.2, Quendalon
+## 2.3.0.3, Quendalon
 
 ### Compatibility
 
@@ -6,11 +6,16 @@
 
 ### Features & changes
 
+- Covenant data model migration (on going)
+  - first draft (not active)
+  - moved mnemonics to config
+
 ### Bug fixes
 
 - Fix apprentice intelligence equals to null during migration
 - Rolls on beast sheet are possible again
 - Penetration bonuses are computed properly again
+- Fix Cunning label on beast sheet
 
 ## 2.3.0.1, Quendalon
 

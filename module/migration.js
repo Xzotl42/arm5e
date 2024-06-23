@@ -364,6 +364,15 @@ export const migrateActorData = async function (actorDoc, actorItems) {
     if (actor.system.currentYear != undefined) {
       updateData["system.-=currentYear"] = null;
     }
+    // remove mnemonics from the document
+    for (const exp of Object.keys(actor.system.yearExpenditure)) {
+      updateData[`system.yearExpenditure.${exp}.-=sumary`] = null;
+      updateData[`system.yearExpenditure.${exp}.-=label`] = null;
+    }
+    for (const sav of Object.keys(actor.system.costsSavings)) {
+      updateData[`system.costsSavings.${sav}.-=sumary`] = null;
+      updateData[`system.costsSavings.${sav}.-=label`] = null;
+    }
   }
 
   // external links

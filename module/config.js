@@ -969,6 +969,64 @@ ARM5E.covenant.inhabitants = {
   horses: { label: "arm5e.sheet.horses", points: 1 },
   livestock: { label: "arm5e.sheet.livestock", points: 0 }
 };
+ARM5E.covenant.yearExpenditure = {
+  buildings: {
+    sumary: "arm5e.sheet.buildingsSumary",
+    label: "arm5e.sheet.buildings"
+  },
+  consumables: {
+    sumary: "arm5e.sheet.consumablesSumary",
+    label: "arm5e.sheet.consumables"
+  },
+  inflation: {
+    sumary: "arm5e.sheet.inflationSumary",
+    label: "arm5e.sheet.inflation"
+  },
+  laboratories: {
+    sumary: "arm5e.sheet.laboratoriesSumary",
+    label: "arm5e.sheet.laboratories"
+  },
+  provisions: {
+    sumary: "arm5e.sheet.provisionsSumary",
+    label: "arm5e.sheet.provisions"
+  },
+  titles: {
+    sumary: "arm5e.sheet.titlesSumary",
+    label: "arm5e.sheet.titles"
+  },
+  wages: {
+    sumary: "arm5e.sheet.wagesSumary",
+    label: "arm5e.sheet.wages"
+  },
+  weapons: {
+    sumary: "arm5e.sheet.weaponsSumary",
+    label: "arm5e.sheet.weapons"
+  },
+  writingMaterials: {
+    sumary: "arm5e.sheet.writingMaterialsSumary",
+    label: "arm5e.sheet.writingMaterials"
+  }
+};
+
+ARM5E.covenant.costsSavings = {
+  laborers: {
+    sumary: "arm5e.sheet.laborersSumary",
+    label: "arm5e.sheet.laborers"
+  },
+  craftsmenCommon: {
+    sumary: "arm5e.sheet.craftsmenCommonSumary",
+    label: "arm5e.sheet.craftsmenCommon"
+  },
+  craftsmenRare: {
+    sumary: "arm5e.sheet.craftsmenRareSumary",
+    label: "arm5e.sheet.craftsmenRare"
+  },
+  magicItems: {
+    sumary: "arm5e.sheet.magicItemsSumary",
+    label: "arm5e.sheet.magicItems"
+  }
+};
+
 ARM5E.REALM_TYPES = {
   MUNDANE: 0,
   MAGIC: 1,
