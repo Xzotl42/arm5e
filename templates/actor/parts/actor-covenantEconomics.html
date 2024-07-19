@@ -5,43 +5,50 @@
       <label for="system.governForm" class="smallTitle">{{localize "arm5e.sheet.wealth"}}</label>
     </span>
   </div>
-
+  {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
   <div class="resources grid grid-2col" style="border: 0px">
-    <span style="border: 0px">
-      <label for="system.wealth.inhabitantsPoints" class="bold">{{localize "arm5e.sheet.inhabitantsPoints"}}</label>
-      <input type="text" name="system.wealth.inhabitantsPoints" value="{{system.wealth.inhabitantsPoints}}"
-        data-dtype="String" />
+    <span class="flex-group-right" style="border: 0px">
+      <label for="system.finances.inhabitantsPoints"
+        class="label-medium">{{localize "arm5e.sheet.inhabitantsPoints"}}</label>
+      <input type="number" name="system.finances.inhabitantsPoints" value="{{system.finances.inhabitantsPoints}}"
+        data-dtype="Number" class="resource-focus" />
     </span>
-    <span style="border: 0px">
-      <label for="system.wealth.totalIncome" class="bold">{{localize "arm5e.sheet.totalIncome"}}</label>
-      <input type="number" name="system.wealth.totalIncome" value="{{system.wealth.totalIncome}}" data-dtype="String" />
+    <span class="flex-group-right" style="border: 0px">
+      <label for="system.finances.totalIncome" class="label-medium">{{localize "arm5e.sheet.totalIncome"}}</label>
+      <input type="number" name="system.finances.totalIncome" value="{{system.finances.totalIncome}}"
+        data-dtype="Number" class="resource-focus" />
     </span>
-    <span style="border: 0px">
-      <label for="system.wealth.laboratoriesPoints" class="bold">{{localize "arm5e.sheet.laboratoriesPoints"}}</label>
-      <input type="text" name="system.wealth.laboratoriesPoints" value="{{system.wealth.laboratoriesPoints}}"
-        data-dtype="String" />
+    <span class="flex-group-right" style="border: 0px">
+      <label for="system.finances.laboratoriesPoints"
+        class="label-medium">{{localize "arm5e.sheet.laboratoriesPoints"}}</label>
+      <input type="number" name="system.finances.laboratoriesPoints" value="{{system.finances.laboratoriesPoints}}"
+        data-dtype="Number" class="resource-focus" />
     </span>
-    <span style="border: 0px">
-      <label for="system.wealth.baseExpenditure" class="bold">{{localize "arm5e.sheet.baseExpenditure"}}</label>
-      <input type="text" name="system.wealth.baseExpenditure" value="{{system.wealth.baseExpenditure}}"
-        data-dtype="String" />
+    <span class="flex-group-right" style="border: 0px">
+      <label for="system.finances.baseExpenditure"
+        class="label-medium">{{localize "arm5e.sheet.baseExpenditure"}}</label>
+      <input type="number" name="system.finances.baseExpenditure" value="{{system.finances.baseExpenditure}}"
+        data-dtype="Number" class="resource-focus" />
     </span>
-    <span style="border: 0px">
-      <label for="system.wealth.weaponsPoints" class="bold">{{localize "arm5e.sheet.weaponsPoints"}}</label>
-      <input type="text" name="system.wealth.weaponsPoints" value="{{system.wealth.weaponsPoints}}"
-        data-dtype="String" />
+    <span class="flex-group-right" style="border: 0px">
+      <label for="system.finances.weaponsPoints" class="label-medium">{{localize "arm5e.sheet.weaponsPoints"}}</label>
+      <input type="number" name="system.finances.weaponsPoints" value="{{system.finances.weaponsPoints}}"
+        data-dtype="Number" class="resource-focus" />
     </span>
-    <span style="border: 0px">
-      <label for="system.wealth.costSavings" class="bold">{{localize "arm5e.sheet.costSavings"}}</label>
-      <input type="text" name="system.wealth.costSavings" value="{{system.wealth.costSavings}}" data-dtype="String" />
+    <span class="flex-group-right" style="border: 0px">
+      <label for="system.finances.costSavings" class="label-medium">{{localize "arm5e.sheet.costSavings"}}</label>
+      <input type="number" name="system.finances.costSavings" value="{{system.finances.costSavings}}"
+        data-dtype="Number" class="resource-focus" />
     </span>
-    <span style="border: 0px">
-      <br />
+    <span class="flex-group-right" style="border: 0px">
+      <label for="system.finances.wealth" class="label-medium">{{localize "arm5e.sheet.wealth"}}</label>
+      <input type="number" name="system.finances.wealth" value="{{ system.finances.wealth }}" data-dtype="Number"
+        class="resource-focus editable" />
     </span>
-    <span style="border: 0px">
-      <label for="system.wealth.totalExpenditure" class="bold">{{localize "arm5e.sheet.totalExpenditure"}}</label>
-      <input type="text" name="system.wealth.totalExpenditure" value="{{system.wealth.totalExpenditure}}"
-        data-dtype="String" />
+    <span class="flex-group-right" style="border: 0px">
+      <label for="system.finances.totalExpenditure" class="bold">{{localize "arm5e.sheet.totalExpenditure"}}</label>
+      <input type="number" name="system.finances.totalExpenditure" value="{{system.finances.totalExpenditure}}"
+        data-dtype="Number" class="resource-focus summary" />
     </span>
   </div>
 </div>
@@ -75,7 +82,7 @@
   {{/each}}
 </ol>
 
-{{!-- "yearExpenditure" --}}
+{{!-- "yearlyExpenses" --}}
 <div class="backSection margintop18">
   <div class="flexrow flex-group-center" style="border: 0px">
     <ol style="width: 100%">
@@ -84,17 +91,18 @@
         <label class="bold flex05">{{localize "arm5e.sheet.expenditure"}}</label>
         <label class="bold width2">{{localize "arm5e.sheet.notes"}}</label>
       </li>
-      {{#each system.yearExpenditure as |exp key|}}
+      {{#each system.yearlyExpenses as |exp key|}}
         <li class="flexrow flex-group-left" style="border: 0px" data-attribute="{{key}}">
           <span class="width2">
-            <label class="bold">{{localize exp.label}} ({{localize exp.sumary}})</label>
+            <label class="bold">{{localize exp.label}}</label>
+            <div class="label-light">{{localize exp.sumary}}</div>
           </span>
           <span class="flex05">
-            <input type="text" name="system.yearExpenditure.{{key}}.expenditure"
-              value="{{numberFormat exp.expenditure decimals=0 sign=true}}" data-dtype="Number" />
+            <input type="text" name="system.yearlyExpenses.{{key}}.amount" class="resource-focus"
+              value="{{numberFormat exp.amount decimals=0 sign=true}}" data-dtype="Number" />
           </span>
           <span class="width2">
-            <input type="text" name="system.yearExpenditure.{{key}}.notes" value="{{exp.notes}}" data-dtype="String" />
+            <input type="text" name="system.yearlyExpenses.{{key}}.notes" value="{{exp.notes}}" data-dtype="String" />
           </span>
         </li>
       {{/each}}
@@ -102,7 +110,7 @@
   </div>
 </div>
 
-{{!-- "costsSavings" --}}
+{{!-- "yearlySavings" --}}
 <div class="backSection padding12 margintop18">
   <div class="flexrow flex-group-center" style="border: 0px">
     <ol style="width: 100%">
@@ -112,21 +120,22 @@
         <label class="bold flex05">{{localize "arm5e.sheet.saving"}}</label>
         <label class="bold">{{localize "arm5e.sheet.notes"}}</label>
       </li>
-      {{#each system.costsSavings as |saving key|}}
+      {{#each system.yearlySavings as |saving key|}}
         <li class="flexrow flex-group-left" style="border: 0px" data-attribute="{{key}}">
           <span class="flex07">
-            <label class="bold">{{localize saving.label}} ({{localize saving.sumary}})</label>
+            <label class="bold">{{localize saving.label}}</label>
+            <div class="label-light">({{localize saving.sumary}})</div>
           </span>
           <span class="flex05">
-            <input type="text" name="system.costsSavings.{{key}}.quantity"
+            <input type="text" name="system.yearlySavings.{{key}}.quantity" class="resource-focus"
               value="{{numberFormat saving.quantity decimals=0 sign=true}}" data-dtype="Number" />
           </span>
           <span class="flex05">
-            <input type="text" name="system.costsSavings.{{key}}.saving"
-              value="{{numberFormat saving.saving decimals=0 sign=true}}" data-dtype="Number" />
+            <input type="text" name="system.yearlySavings.{{key}}.amount" class="resource-focus"
+              value="{{numberFormat saving.amount decimals=0 sign=true}}" data-dtype="Number" />
           </span>
           <span class="width">
-            <input type="text" name="system.costsSavings.{{key}}.notes" value="{{saving.notes}}" data-dtype="String" />
+            <input type="text" name="system.yearlySavings.{{key}}.notes" value="{{saving.notes}}" data-dtype="String" />
           </span>
         </li>
       {{/each}}

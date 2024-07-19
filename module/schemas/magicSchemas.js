@@ -439,6 +439,10 @@ export class LabTextSchema extends foundry.abstract.DataModel {
     return LabTextSchema.sanitizeData(this.toObject());
   }
 
+  get buildPoints() {
+    return Math.ceil(this.level / 5) * this.quantity;
+  }
+
   static sanitizeData(data) {
     if (data.type != "raw") {
       data.description = "";

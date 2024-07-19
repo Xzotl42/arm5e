@@ -47,6 +47,13 @@ export class VirtueFlawSchema extends foundry.abstract.DataModel {
     };
   }
 
+  get cost() {
+    if (this.impact == "Special") {
+      return 0;
+    }
+    return CONFIG.ARM5E.impacts[this.impact].cost;
+  }
+
   static getIcon(item, newValue = null) {
     if (newValue != null) {
       if (item.type == "virtue") {
@@ -365,6 +372,13 @@ export class SanctumSchema extends foundry.abstract.DataModel {
       }),
       owner: new fields.StringField({ required: false, blank: true, initial: "" }),
       upkeep: new fields.NumberField({
+        required: false,
+        nullable: false,
+        integer: true,
+        initial: 0,
+        step: 1
+      }),
+      buildPoints: new fields.NumberField({
         required: false,
         nullable: false,
         integer: true,

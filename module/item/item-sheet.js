@@ -116,27 +116,7 @@ export class ArM5eItemSheet extends ItemSheet {
 
     if (this.item.testUserPermission(game.user, CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER)) {
       if (this.item.type === "inhabitant") {
-        switch (this.item.system.category) {
-          case "magi":
-            return `${path}/item-habitantMagi-sheet.html`;
-          case "companions":
-            return `${path}/item-habitantCompanion-sheet.html`;
-          case "specialists":
-          case "craftmen":
-            return `${path}/item-habitantSpecialists-sheet.html`;
-          case "turbula":
-          case "servants":
-          case "laborers":
-          case "teamsters":
-          case "dependants":
-            return `${path}/item-habitantHabitants-sheet.html`;
-            break;
-          case "horses":
-            return `${path}/item-habitantHorses-sheet.html`;
-            break;
-          case "livestock":
-            return `${path}/item-habitantLivestock-sheet.html`;
-        }
+        return this.getInhabitantSheet(path, this.item.system.category);
       }
 
       return `${path}/item-${this.item.type}-sheet.html`;
@@ -297,17 +277,6 @@ export class ArM5eItemSheet extends ItemSheet {
           ...context.config.virtueFlawTypes.covenant,
           ...context.config.virtueFlawTypes.all
         };
-      }
-    } else if (itemData.type == "inhabitant") {
-      context.inhabitantCategory = foundry.utils.deepClone(CONFIG.ARM5E.covenant.inhabitants);
-      if (itemData.system.linked) {
-        if (["magi", "companions"].includes(itemData.system.category)) {
-          context.canEdit = "readonly";
-          context.canSelect = "disabled";
-        } else {
-          delete context.inhabitantCategory.magi;
-          delete context.inhabitantCategory.companions;
-        }
       }
     } else if (itemData.type == "labCovenant") {
       if (itemData.system.linked) {

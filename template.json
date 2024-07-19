@@ -542,7 +542,7 @@
       }
     },
     "npc": {
-      "templates": ["base", "npcbase", "familiar", "laboratoryPC", "fatigue", "arts"],
+      "templates": ["base", "npcbase", "familiar", "laboratoryPC", "fatigue", "arts", "apprentice"],
       "charType": {
         "value": "mundane",
         "label": "Char. Type"

@@ -24,7 +24,7 @@
         <div class="padding2">
           <label>{{system.localizedDesc}}</label>
         </div>
-        {{#if isOwned}}
+        {{#if canBeRead}}
           <div class="modifier" style="margin-top: 10px;">
             <a class=" study-labtext" title='{{localize "arm5e.hints.read" item=(localize "arm5e.sheet.book")}}'
               style="padding-left: 5px; padding-top: 5px;"><i class="icon-Icon_Readspell"></i></a>
@@ -59,11 +59,9 @@
     prefix="" spelldata=@root visibility=@root.ui.sections.visibility.book ritual=(eq system.type "spell") noApplyFocus=true}}
     {{/if}}
     {{#if (eq system.type "enchantment")}}
-
       {{> "systems/arm5e/templates/item/parts/enchantment-attributes.html" docId=@root.item._id container="book"
     prefix="" enchantData=@root visibility=@root.ui.sections.visibility.book expiryAllowed=true}}
     {{/if}}
-
 
     <div>
       {{#if metagame.view }} {{> "systems/arm5e/templates/generic/source.html" }} {{/if}}

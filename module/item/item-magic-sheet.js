@@ -4,6 +4,7 @@ import { ARM5E } from "../config.js";
 import { ARM5E_DEFAULT_ICONS } from "../constants/ui.js";
 import {
   GetEffectAttributesLabel,
+  GetEnchantmentSelectOptions,
   GetFilteredMagicalAttributes,
   PickRequisites
 } from "../helpers/magic.js";
@@ -54,8 +55,11 @@ export class ArM5eItemMagicSheet extends ArM5eItemSheet {
         if (this.item.system.type === "raw") {
           break;
         }
+        GetEnchantmentSelectOptions(context);
+        context.canBeRead = context.isOwned && this.actor.type != "covenant";
       case "spell":
       case "enchantment":
+
       case "magicItem":
       case "magicalEffect":
         if (!context.selection.ranges[context.system.range.value]) {

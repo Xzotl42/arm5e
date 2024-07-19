@@ -85,6 +85,7 @@ export const ArM5ePreloadHandlebarsTemplates = async function () {
     "systems/arm5e/templates/item/item-habitantLivestock-sheet.html",
     "systems/arm5e/templates/item/item-habitantMagi-sheet.html",
     "systems/arm5e/templates/item/item-habitantSpecialists-sheet.html",
+    "systems/arm5e/templates/item/item-habitantCraftsmen-sheet.html",
     "systems/arm5e/templates/item/item-incomingSource-sheet.html",
     "systems/arm5e/templates/item/item-item-sheet.html",
     "systems/arm5e/templates/item/item-labCovenant-sheet.html",

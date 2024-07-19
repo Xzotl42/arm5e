@@ -117,6 +117,32 @@ export class BookSchema extends foundry.abstract.DataModel {
     return BookSchema.sanitizeData(this.toObject());
   }
 
+  buildPoints(topic) {
+    switch (topic.category) {
+      case "mastery":
+        return topic.quality;
+      case "ability":
+        if (topic.type == "Summa") {
+          return 3 * topic.level + topic.quality;
+        } else if (topic.type == "Tractatus") {
+          return topic.quality;
+        }
+        break;
+      case "art":
+        if (topic.type == "Summa") {
+          return topic.level + topic.quality;
+        } else if (topic.type == "Tractatus") {
+          return topic.quality;
+        }
+        break;
+      case "labText":
+        return topic.labtext.buildPoints;
+      default:
+        break;
+    }
+    return 0;
+  }
+
   static sanitizeData(data) {
     data.topics = data.topics instanceof Array ? data.topics : Object.values(data.topics);
     for (const topic of data.topics) {

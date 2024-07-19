@@ -126,6 +126,11 @@ label {
   font-family: bookAntiqua;
   font-size: 9pt;
 }
+.label-medium {
+  font-family: bookAntiqua;
+  font-size: 10pt;
+}
+
 .label-light.checkbox {
   font-family: bookAntiqua;
   font-size: 9pt;
@@ -1706,6 +1711,21 @@ div[class*="foldable-section"] {
 .posRelative {
   position: relative;
 }
+
+input[type="number"].resource-focus {
+  max-width: 70px;
+  text-align: center;
+}
+
+input[type="number"].resource-focus.summary {
+  background: rgba(0, 0, 0, 0.15);
+  box-shadow: 3px 3px 3px rgb(0 0 0 / 28%);
+}
+
+input[type="number"].resource-focus.editable {
+  background-color: rgb(208 182 130 / 50%);
+}
+
 input[type="text"].magic-total,
 input[type="text"].combat-total,
 input[type="text"].wound-level,

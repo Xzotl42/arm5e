@@ -1,5 +1,6 @@
 import { ARM5E } from "../config.js";
 import { UI } from "../constants/ui.js";
+import { computeLevel } from "../helpers/magic.js";
 import { ArM5eItem } from "../item/item.js";
 import { log } from "../tools.js";
 import {
@@ -176,6 +177,16 @@ export class EnchantmentExtension extends foundry.abstract.DataModel {
 
   //   return data;
   // }
+
+  get buildPoints() {
+    let result = 0;
+    for (let e of this.effects) {
+      result += computeLevel(e.system, "enchantment");
+    }
+    return (
+      Math.ceil(result / ARM5E.covenant.enchantments.slice) * ARM5E.covenant.enchantments.points
+    );
+  }
 
   sanitize() {
     return EnchantmentExtension.sanitizeData(this.toObject());

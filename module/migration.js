@@ -347,433 +347,423 @@ export const migrateActorData = async function (actorDoc, actorItems) {
       actor,
       actorDoc.items ? actorDoc.items : []
     );
-  }
-
-  if (!actor?.flags?.arm5e) {
-    updateData["flags.arm5e"] = {};
-  } else if (actor?.flags.arm5e.filters) {
-    updateData["flags.arm5e.-=filters"] = null;
-  }
-
-  // token with barely anything to migrate
-  if (actor.system == undefined) {
-    return updateData;
-  }
-
-  if (actor.type == "covenant") {
-    if (actor.system.currentYear != undefined) {
-      updateData["system.-=currentYear"] = null;
-    }
-    // remove mnemonics from the document
-    for (const exp of Object.keys(actor.system.yearExpenditure)) {
-      updateData[`system.yearExpenditure.${exp}.-=sumary`] = null;
-      updateData[`system.yearExpenditure.${exp}.-=label`] = null;
-    }
-    for (const sav of Object.keys(actor.system.costsSavings)) {
-      updateData[`system.costsSavings.${sav}.-=sumary`] = null;
-      updateData[`system.costsSavings.${sav}.-=label`] = null;
-    }
-  }
-
-  // external links
-  if (
-    actor.system.covenant?.value &&
-    (actor.system.covenant?.actorId == null || actor.system.covenant?.actorId == "")
-  ) {
-    let cov = game.actors.filter(
-      (a) => a.type == "covenant" && a.name == actor.system.covenant.value
-    );
-    if (cov.length > 0) {
-      updateData["system.covenant.actorId"] = cov[0]._id;
-    }
-  }
-  if (
-    actor.system.sanctum?.value &&
-    (actor.system.sanctum?.actorId == null || actor.system.sanctum?.actorId == "")
-  ) {
-    let lab = game.actors.filter(
-      (a) => a.type == "laboratory" && a.name == actor.system.sanctum.value
-    );
-    if (lab.length > 0) {
-      updateData["system.sanctum.actorId"] = lab[0]._id;
-    }
-  }
-
-  if (
-    actor.system.owner?.value &&
-    (actor.system.owner?.actorId == null || actor.system.owner?.actorId == "")
-  ) {
-    let owner = game.actors.filter(
-      (a) => ["player", "npc"].includes(a.type) && a.name == actor.system.owner.value
-    );
-    if (owner.length > 0) {
-      updateData["system.owner.actorId"] = owner[0]._id;
-    }
-  }
-
-  if (["player", "npc", "beast"].includes(actor.type)) {
-    if (actor.system.mightsFam) {
-      updateData["system.powersFam"] = actor.system.mightsFam;
-      updateData["system.-=mightsFam"] = null;
+  } else {
+    if (!actor?.flags?.arm5e) {
+      updateData["flags.arm5e"] = {};
+    } else if (actor?.flags.arm5e.filters) {
+      updateData["flags.arm5e.-=filters"] = null;
     }
 
-    if (actor.system.mights) {
-      updateData["system.powers"] = actor.system.mights;
-      updateData["system.-=mights"] = null;
+    // token with barely anything to migrate
+    if (actor.system == undefined) {
+      return updateData;
     }
 
-    if (actor.system.soak) {
-      updateData["system.vitals.soa.value"] = actor.system.soak.value;
-      updateData["system.-=soak"] = null;
-    }
-
-    if (actor.system.size) {
-      updateData["system.vitals.siz.value"] = actor.system.size.value;
-      updateData["system.-=size"] = null;
-    }
-
-    if (actor.system.apprentice) {
-      if (actor.system.apprentice.int === null) {
-        updateData["system.apprentice.int"] = 0;
+    if (actor.type == "covenant") {
+      if (actor.system.currentYear != undefined) {
+        updateData["system.-=currentYear"] = null;
       }
     }
 
-    // for beasts
-    if (actor.system.description == undefined) {
-      updateData["system.description"] = { born: { value: 1200 } };
-    }
-
-    // remove redundant data
-    if (actor.system.houses != undefined) {
-      updateData["system.-=houses"] = null;
-    }
-
-    if (actor.system.year?.value != undefined) {
-      updateData["system.-=year"] = null;
-    }
-    if (actor.system.datetime != undefined) {
-      updateData["system.-=datetime"] = null;
-    }
-
-    if (actor.system.season?.value != undefined) {
-      updateData["system.-=season"] = null;
-    }
-
-    if (actor.system.stances === undefined) {
-      updateData["system.stances"] = { voiceStance: "firm", gesturesStance: "bold" };
-    } else {
-      if (actor.system.stances.voiceStance == undefined) {
-        updateData["system.stances.voiceStance"] = "firm";
+    // external links
+    if (
+      actor.system.covenant?.value &&
+      (actor.system.covenant?.actorId == null || actor.system.covenant?.actorId == "")
+    ) {
+      let cov = game.actors.filter(
+        (a) => a.type == "covenant" && a.name == actor.system.covenant.value
+      );
+      if (cov.length > 0) {
+        updateData["system.covenant.actorId"] = cov[0]._id;
       }
-      if (actor.system.stances.gesturesStance == undefined) {
-        updateData["system.stances.gesturesStance"] = "bold";
+    }
+    if (
+      actor.system.sanctum?.value &&
+      (actor.system.sanctum?.actorId == null || actor.system.sanctum?.actorId == "")
+    ) {
+      let lab = game.actors.filter(
+        (a) => a.type == "laboratory" && a.name == actor.system.sanctum.value
+      );
+      if (lab.length > 0) {
+        updateData["system.sanctum.actorId"] = lab[0]._id;
       }
     }
 
-    // if (actor.system.)
-
-    // if (actor.system?.roll != undefined) {
-    //   updateData["system.-=roll"] = null;
-    // }
-    // if (actor.system.decrepitude == undefined) {
-    //   updateData["system.decrepitude"] = {};
-    // }
-
-    // if (actor.system.warping == undefined) {
-    //   updateData["system.warping"] = {};
-    // }
-
-    // remove garbage stuff if it exists
-    if (actor.system.str) updateData["system.-=str"] = null;
-    if (actor.system.sta) updateData["system.-=sta"] = null;
-    if (actor.system.int) updateData["system.-=int"] = null;
-    if (actor.system.per) updateData["system.-=per"] = null;
-    if (actor.system.dex) updateData["system.-=dex"] = null;
-    if (actor.system.qik) updateData["system.-=qik"] = null;
-    if (actor.system.cha) updateData["system.-=cha"] = null;
-    if (actor.system.com) updateData["system.-=com"] = null;
-
-    if (actor.system.pendingXP != undefined && actor.system.pendingXP > 0) {
-      ChatMessage.create({
-        content:
-          "<b>MIGRATION NOTIFICATION</b><br/>" +
-          `The field "Pending experience" has been repurposed for the new long term activities feature. ` +
-          `This is a one time notification that <b>the character ${actor.name} had ${actor.system.pendingXP} xps pending.</b>`
-      });
-      updateData["system.-=pendingXP"] = null;
+    if (
+      actor.system.owner?.value &&
+      (actor.system.owner?.actorId == null || actor.system.owner?.actorId == "")
+    ) {
+      let owner = game.actors.filter(
+        (a) => ["player", "npc"].includes(a.type) && a.name == actor.system.owner.value
+      );
+      if (owner.length > 0) {
+        updateData["system.owner.actorId"] = owner[0]._id;
+      }
     }
-    let wounds = [];
-    let sendMsg = false;
-    let syntheticWoundsMsg = `<b>MIGRATION NOTIFICATION</b><br/>The character ${actorDoc.name}'s token was unable to migrate his/her wounds.<ul>`;
-    for (let wtype of Object.keys(CONFIG.ARM5E.recovery.wounds)) {
-      if (wtype == "healthy") continue;
-      if (actor.system.wounds && actor.system.wounds[wtype]?.number != undefined) {
-        // if (actor.synthetic) {
-        //   syntheticWoundsMsg += `<li>${actor.system.wounds[wtype]?.number.value} ${wtype} wounds</li>`;
-        //   sendMsg = true;
 
-        //   await actorDoc.delta.update({ "system.-=wounds": null });
-        //   break;
-        //   // updateData[`system.wounds.${wtype}.-=number`] = null;
-        //   // updateData[`system.wounds.${wtype}.-=penalty`] = null;
-        //   // updateData[`system.wounds.${wtype}.-=notes`] = null;
-        // } else {
-        if (actorDoc instanceof ArM5ePCActor || actor.synthetic) {
-          let datetime = game.settings.get("arm5e", "currentDate");
-          for (let ii = 0; ii < actor.system.wounds[wtype].number.value; ii++) {
-            let woundData = {
-              name: `${game.i18n.localize(`arm5e.sheet.${wtype}`)} ${game.i18n.localize(
-                "arm5e.sheet.wound.label"
-              )}`,
-              type: "wound",
+    if (["player", "npc", "beast"].includes(actor.type)) {
+      if (actor.system.mightsFam) {
+        updateData["system.powersFam"] = actor.system.mightsFam;
+        updateData["system.-=mightsFam"] = null;
+      }
+
+      if (actor.system.mights) {
+        updateData["system.powers"] = actor.system.mights;
+        updateData["system.-=mights"] = null;
+      }
+
+      if (actor.system.soak) {
+        updateData["system.vitals.soa.value"] = actor.system.soak.value;
+        updateData["system.-=soak"] = null;
+      }
+
+      if (actor.system.size) {
+        updateData["system.vitals.siz.value"] = actor.system.size.value;
+        updateData["system.-=size"] = null;
+      }
+
+      if (actor.system.apprentice) {
+        if (actor.system.apprentice.int === null) {
+          updateData["system.apprentice.int"] = 0;
+        }
+      }
+
+      // for beasts
+      if (actor.system.description == undefined) {
+        updateData["system.description"] = { born: { value: 1200 } };
+      }
+
+      // remove redundant data
+      if (actor.system.houses != undefined) {
+        updateData["system.-=houses"] = null;
+      }
+
+      if (actor.system.year?.value != undefined) {
+        updateData["system.-=year"] = null;
+      }
+      if (actor.system.datetime != undefined) {
+        updateData["system.-=datetime"] = null;
+      }
+
+      if (actor.system.season?.value != undefined) {
+        updateData["system.-=season"] = null;
+      }
+
+      if (actor.system.stances === undefined) {
+        updateData["system.stances"] = { voiceStance: "firm", gesturesStance: "bold" };
+      } else {
+        if (actor.system.stances.voiceStance == undefined) {
+          updateData["system.stances.voiceStance"] = "firm";
+        }
+        if (actor.system.stances.gesturesStance == undefined) {
+          updateData["system.stances.gesturesStance"] = "bold";
+        }
+      }
+
+      // if (actor.system.)
+
+      // if (actor.system?.roll != undefined) {
+      //   updateData["system.-=roll"] = null;
+      // }
+      // if (actor.system.decrepitude == undefined) {
+      //   updateData["system.decrepitude"] = {};
+      // }
+
+      // if (actor.system.warping == undefined) {
+      //   updateData["system.warping"] = {};
+      // }
+
+      // remove garbage stuff if it exists
+      if (actor.system.str) updateData["system.-=str"] = null;
+      if (actor.system.sta) updateData["system.-=sta"] = null;
+      if (actor.system.int) updateData["system.-=int"] = null;
+      if (actor.system.per) updateData["system.-=per"] = null;
+      if (actor.system.dex) updateData["system.-=dex"] = null;
+      if (actor.system.qik) updateData["system.-=qik"] = null;
+      if (actor.system.cha) updateData["system.-=cha"] = null;
+      if (actor.system.com) updateData["system.-=com"] = null;
+
+      if (actor.system.pendingXP != undefined && actor.system.pendingXP > 0) {
+        ChatMessage.create({
+          content:
+            "<b>MIGRATION NOTIFICATION</b><br/>" +
+            `The field "Pending experience" has been repurposed for the new long term activities feature. ` +
+            `This is a one time notification that <b>the character ${actor.name} had ${actor.system.pendingXP} xps pending.</b>`
+        });
+        updateData["system.-=pendingXP"] = null;
+      }
+      let wounds = [];
+      let sendMsg = false;
+      let syntheticWoundsMsg = `<b>MIGRATION NOTIFICATION</b><br/>The character ${actorDoc.name}'s token was unable to migrate his/her wounds.<ul>`;
+      for (let wtype of Object.keys(CONFIG.ARM5E.recovery.wounds)) {
+        if (wtype == "healthy") continue;
+        if (actor.system.wounds && actor.system.wounds[wtype]?.number != undefined) {
+          // if (actor.synthetic) {
+          //   syntheticWoundsMsg += `<li>${actor.system.wounds[wtype]?.number.value} ${wtype} wounds</li>`;
+          //   sendMsg = true;
+
+          //   await actorDoc.delta.update({ "system.-=wounds": null });
+          //   break;
+          //   // updateData[`system.wounds.${wtype}.-=number`] = null;
+          //   // updateData[`system.wounds.${wtype}.-=penalty`] = null;
+          //   // updateData[`system.wounds.${wtype}.-=notes`] = null;
+          // } else {
+          if (actorDoc instanceof ArM5ePCActor || actor.synthetic) {
+            let datetime = game.settings.get("arm5e", "currentDate");
+            for (let ii = 0; ii < actor.system.wounds[wtype].number.value; ii++) {
+              let woundData = {
+                name: `${game.i18n.localize(`arm5e.sheet.${wtype}`)} ${game.i18n.localize(
+                  "arm5e.sheet.wound.label"
+                )}`,
+                type: "wound",
+                system: {
+                  inflictedDate: {
+                    year: datetime.year,
+                    season: datetime.season
+                  },
+                  healedDate: { year: null, season: "spring" },
+                  gravity: wtype,
+                  originalGravity: wtype,
+                  trend: 0,
+                  bonus: 0,
+                  nextRoll: 0,
+                  description: `Migrated: notes = ${actor.system.wounds[wtype].notes.value}`
+                }
+              };
+              wounds.push(woundData);
+            }
+            updateData[`system.wounds.${wtype}.-=number`] = null;
+            updateData[`system.wounds.${wtype}.-=penalty`] = null;
+            updateData[`system.wounds.${wtype}.-=notes`] = null;
+          } else {
+            sendMsg = true;
+          }
+          // }
+        }
+      }
+
+      // if (sendMsg && actorDoc.synthetic) {
+      //   syntheticWoundsMsg += "</ul><br/>You will have to add them manually.";
+
+      //   ChatMessage.create({
+      //     content: syntheticWoundsMsg
+      //   });
+      // } else
+      if (wounds.length > 0) {
+        log(false, `${wounds.length} wound items created`);
+        if (actorDoc instanceof ArM5ePCActor) {
+          await actorDoc.createEmbeddedDocuments("Item", wounds);
+        } else if (actor.synthetic) {
+          await actorDoc.delta.createEmbeddedDocuments("Item", wounds);
+        }
+      } else if (sendMsg) {
+        ChatMessage.create({
+          content:
+            "<b>MIGRATION NOTIFICATION</b><br/>" +
+            `The character ${actor.name} was unable to migrate his/her wounds. Triggering a new migration will fix it (See FAQ)`
+        });
+      }
+
+      if (actor.system.reputation) {
+        if (actorDoc instanceof ArM5ePCActor) {
+          for (let rep of Object.values(actor.system.reputation)) {
+            if (rep.label === "" || rep.label === null || rep.label == undefined) continue;
+
+            let reputationData = {
+              name: rep.label,
+              type: "reputation",
               system: {
-                inflictedDate: {
-                  year: datetime.year,
-                  season: datetime.season
-                },
-                healedDate: { year: null, season: "spring" },
-                gravity: wtype,
-                originalGravity: wtype,
-                trend: 0,
-                bonus: 0,
-                nextRoll: 0,
-                description: `Migrated: notes = ${actor.system.wounds[wtype].notes.value}`
+                xp: ((rep.score * (rep.score + 1)) / 2) * 5,
+                type: "local",
+                description: `Migration: type = ${rep.type}`
               }
             };
-            wounds.push(woundData);
+
+            await actorDoc.createEmbeddedDocuments("Item", [reputationData]);
           }
-          updateData[`system.wounds.${wtype}.-=number`] = null;
-          updateData[`system.wounds.${wtype}.-=penalty`] = null;
-          updateData[`system.wounds.${wtype}.-=notes`] = null;
-        } else {
-          sendMsg = true;
-        }
-        // }
-      }
-    }
-
-    // if (sendMsg && actorDoc.synthetic) {
-    //   syntheticWoundsMsg += "</ul><br/>You will have to add them manually.";
-
-    //   ChatMessage.create({
-    //     content: syntheticWoundsMsg
-    //   });
-    // } else
-    if (wounds.length > 0) {
-      log(false, `${wounds.length} wound items created`);
-      if (actorDoc instanceof ArM5ePCActor) {
-        await actorDoc.createEmbeddedDocuments("Item", wounds);
-      } else if (actor.synthetic) {
-        await actorDoc.delta.createEmbeddedDocuments("Item", wounds);
-      }
-    } else if (sendMsg) {
-      ChatMessage.create({
-        content:
-          "<b>MIGRATION NOTIFICATION</b><br/>" +
-          `The character ${actor.name} was unable to migrate his/her wounds. Triggering a new migration will fix it (See FAQ)`
-      });
-    }
-
-    if (actor.system.reputation) {
-      if (actorDoc instanceof ArM5ePCActor) {
-        for (let rep of Object.values(actor.system.reputation)) {
-          if (rep.label === "" || rep.label === null || rep.label == undefined) continue;
-
-          let reputationData = {
-            name: rep.label,
-            type: "reputation",
-            system: {
-              xp: ((rep.score * (rep.score + 1)) / 2) * 5,
-              type: "local",
-              description: `Migration: type = ${rep.type}`
-            }
-          };
-
-          await actorDoc.createEmbeddedDocuments("Item", [reputationData]);
-        }
-        updateData["system.-=reputation"] = null;
-      } else {
-        if (actor.synthetic) {
           updateData["system.-=reputation"] = null;
         } else {
-          ChatMessage.create({
-            content:
-              "<b>MIGRATION NOTIFICATION</b><br/>" +
-              `The character ${actor.name} was unable to migrate his/her reputations. Triggering a new migration will fix it (See FAQ)`
-          });
+          if (actor.synthetic) {
+            updateData["system.-=reputation"] = null;
+          } else {
+            ChatMessage.create({
+              content:
+                "<b>MIGRATION NOTIFICATION</b><br/>" +
+                `The character ${actor.name} was unable to migrate his/her reputations. Triggering a new migration will fix it (See FAQ)`
+            });
+          }
         }
       }
-    }
 
-    if (actor.system.personality) {
-      if (actorDoc instanceof ArM5ePCActor) {
-        for (let pers of Object.values(actor.system.personality)) {
-          if (pers.label === "" || pers.label === null || pers.label === undefined) {
-            continue;
-          }
-
-          let persData = {
-            name: pers.label,
-            type: "personalityTrait",
-            system: {
-              xp: ((pers.score * (pers.score + 1)) / 2) * 5,
-              description: ``
+      if (actor.system.personality) {
+        if (actorDoc instanceof ArM5ePCActor) {
+          for (let pers of Object.values(actor.system.personality)) {
+            if (pers.label === "" || pers.label === null || pers.label === undefined) {
+              continue;
             }
-          };
 
-          await actorDoc.createEmbeddedDocuments("Item", [persData]);
-        }
-        updateData["system.-=personality"] = null;
-      } else {
-        if (actor.synthetic) {
+            let persData = {
+              name: pers.label,
+              type: "personalityTrait",
+              system: {
+                xp: ((pers.score * (pers.score + 1)) / 2) * 5,
+                description: ``
+              }
+            };
+
+            await actorDoc.createEmbeddedDocuments("Item", [persData]);
+          }
           updateData["system.-=personality"] = null;
         } else {
-          ChatMessage.create({
-            content:
-              "<b>MIGRATION NOTIFICATION</b><br/>" +
-              `The character ${actor.name} was unable to migrate his/her personality traits. Triggering a new migration will fix it (See FAQ)`
-          });
+          if (actor.synthetic) {
+            updateData["system.-=personality"] = null;
+          } else {
+            ChatMessage.create({
+              content:
+                "<b>MIGRATION NOTIFICATION</b><br/>" +
+                `The character ${actor.name} was unable to migrate his/her personality traits. Triggering a new migration will fix it (See FAQ)`
+            });
+          }
         }
-      }
-    }
-  } else {
-    if (actor.system.roll) {
-      updateData["system.-=roll"] = null;
-    }
-  }
-
-  if (actor.type == "player" || actor.type == "npc") {
-    let realms = {
-      magic: { aligned: false },
-      faeric: { aligned: false },
-      divine: { aligned: false },
-      infernal: { aligned: false }
-    };
-    let realmsUpdate = false;
-    if (actor.system.realms === undefined) {
-      realmsUpdate = true;
-    }
-    if (actor.system.charType.value !== "entity") {
-      if (actor.system.decrepitude?.score != undefined) {
-        let exp = (actor.system.decrepitude.score * (actor.system.decrepitude.score + 1) * 5) / 2;
-        if (actor.system.decrepitude.points >= 5 * (actor.system.decrepitude.score + 1)) {
-          // if the experience is bigger than the needed for next level, ignore it
-          updateData["system.decrepitude.points"] = exp;
-        } else {
-          // compute normally
-          updateData["system.decrepitude.points"] = exp + actor.system.decrepitude.points;
-        }
-        updateData["system.decrepitude.-=score"] = null;
-      }
-
-      if (actor.system.warping?.score != undefined) {
-        let exp =
-          (Number(actor.system.warping.score) * (Number(actor.system.warping.score) + 1) * 5) / 2;
-        if (actor.system.warping.points >= 5 * (Number(actor.system.warping.score) + 1)) {
-          // if the experience is bigger than the needed for next level, ignore it
-          updateData["system.warping.points"] = exp;
-        } else {
-          // compute normally
-          updateData["system.warping.points"] = exp + Number(actor.system.warping.points);
-        }
-        updateData["system.warping.-=score"] = null;
       }
     } else {
-      // entity
-      // migrate might type to realms Alignment
-      if (actor.system?.might?.realm != undefined) {
-        realmsUpdate = true;
-        realms[actor.system.might.realm].aligned = true;
-        updateData["system.might.-=realm"] = null;
-        updateData["system.might.-=type"] = null;
-      } else if (actor.system?.might?.type != undefined) {
-        realmsUpdate = true;
-        realms[actor.system.might.type].aligned = true;
-        updateData["system.might.-=realm"] = null;
-        updateData["system.might.-=type"] = null;
+      if (actor.system.roll) {
+        updateData["system.-=roll"] = null;
       }
     }
 
-    if (actor.system?.realmAlignment != undefined) {
-      realmsUpdate = true;
-      if (Number.isNaN(actor.system.realmAlignment)) {
-        if (ARM5E.lookupRealm.indexOf(actor.system.realmAlignment) != -1) {
-          realms[actor.system.realmAlignment].aligned = true;
+    if (actor.type == "player" || actor.type == "npc") {
+      let realms = {
+        magic: { aligned: false },
+        faeric: { aligned: false },
+        divine: { aligned: false },
+        infernal: { aligned: false }
+      };
+      let realmsUpdate = false;
+      if (actor.system.realms === undefined) {
+        realmsUpdate = true;
+      }
+      if (actor.system.charType.value !== "entity") {
+        if (actor.system.decrepitude?.score != undefined) {
+          let exp = (actor.system.decrepitude.score * (actor.system.decrepitude.score + 1) * 5) / 2;
+          if (actor.system.decrepitude.points >= 5 * (actor.system.decrepitude.score + 1)) {
+            // if the experience is bigger than the needed for next level, ignore it
+            updateData["system.decrepitude.points"] = exp;
+          } else {
+            // compute normally
+            updateData["system.decrepitude.points"] = exp + actor.system.decrepitude.points;
+          }
+          updateData["system.decrepitude.-=score"] = null;
+        }
+
+        if (actor.system.warping?.score != undefined) {
+          let exp =
+            (Number(actor.system.warping.score) * (Number(actor.system.warping.score) + 1) * 5) / 2;
+          if (actor.system.warping.points >= 5 * (Number(actor.system.warping.score) + 1)) {
+            // if the experience is bigger than the needed for next level, ignore it
+            updateData["system.warping.points"] = exp;
+          } else {
+            // compute normally
+            updateData["system.warping.points"] = exp + Number(actor.system.warping.points);
+          }
+          updateData["system.warping.-=score"] = null;
         }
       } else {
-        if (actor.system.realmAlignment > 0) {
-          realms[ARM5E.lookupRealm[actor.system.realmAlignment]].aligned = true;
-        } else if (["magus", "magusNPC"].includes(actor.system.charType.value)) {
-          realms["magic"].aligned = true;
+        // entity
+        // migrate might type to realms Alignment
+        if (actor.system?.might?.realm != undefined) {
+          realmsUpdate = true;
+          realms[actor.system.might.realm].aligned = true;
+          updateData["system.might.-=realm"] = null;
+          updateData["system.might.-=type"] = null;
+        } else if (actor.system?.might?.type != undefined) {
+          realmsUpdate = true;
+          realms[actor.system.might.type].aligned = true;
+          updateData["system.might.-=realm"] = null;
+          updateData["system.might.-=type"] = null;
         }
       }
-      updateData["system.-=realmAlignment"] = null;
-    }
 
-    if (["magus", "magusNPC"].includes(actor.system.charType.value)) {
-      if (actor.system.realms === undefined) {
-        realms["magic"].aligned = true;
+      if (actor.system?.realmAlignment != undefined) {
         realmsUpdate = true;
+        if (Number.isNaN(actor.system.realmAlignment)) {
+          if (ARM5E.lookupRealm.indexOf(actor.system.realmAlignment) != -1) {
+            realms[actor.system.realmAlignment].aligned = true;
+          }
+        } else {
+          if (actor.system.realmAlignment > 0) {
+            realms[ARM5E.lookupRealm[actor.system.realmAlignment]].aligned = true;
+          } else if (["magus", "magusNPC"].includes(actor.system.charType.value)) {
+            realms["magic"].aligned = true;
+          }
+        }
         updateData["system.-=realmAlignment"] = null;
       }
-      if (actor.system?.sanctum?.value === undefined) {
-        let sanctum = {
-          value: actor.system.sanctum
-        };
-        updateData["system.sanctum"] = sanctum;
-      }
 
-      //
-      // migrate arts xp
-      //
-      if (actor.system?.arts?.techniques != undefined) {
-        for (const [key, technique] of Object.entries(actor.system.arts.techniques)) {
-          if (technique.experienceNextLevel != undefined) {
-            // if the experience is equal or bigger than the xp for this score, use it as total xp
-            let exp = (technique.score * (technique.score + 1)) / 2;
-            if (technique.experience >= exp) {
-              updateData["system.arts.techniques." + key + ".xp"] = technique.experience;
-            } else if (technique.experience >= technique.score + 1) {
-              // if the experience is bigger than the neeeded for next level, ignore it
-              updateData["system.arts.techniques." + key + ".xp"] = exp;
-            } else {
-              // compute normally
-              updateData["system.arts.techniques." + key + ".xp"] = exp + technique.experience;
+      if (["magus", "magusNPC"].includes(actor.system.charType.value)) {
+        if (actor.system.realms === undefined) {
+          realms["magic"].aligned = true;
+          realmsUpdate = true;
+          updateData["system.-=realmAlignment"] = null;
+        }
+        if (actor.system?.sanctum?.value === undefined) {
+          let sanctum = {
+            value: actor.system.sanctum
+          };
+          updateData["system.sanctum"] = sanctum;
+        }
+
+        //
+        // migrate arts xp
+        //
+        if (actor.system?.arts?.techniques != undefined) {
+          for (const [key, technique] of Object.entries(actor.system.arts.techniques)) {
+            if (technique.experienceNextLevel != undefined) {
+              // if the experience is equal or bigger than the xp for this score, use it as total xp
+              let exp = (technique.score * (technique.score + 1)) / 2;
+              if (technique.experience >= exp) {
+                updateData["system.arts.techniques." + key + ".xp"] = technique.experience;
+              } else if (technique.experience >= technique.score + 1) {
+                // if the experience is bigger than the neeeded for next level, ignore it
+                updateData["system.arts.techniques." + key + ".xp"] = exp;
+              } else {
+                // compute normally
+                updateData["system.arts.techniques." + key + ".xp"] = exp + technique.experience;
+              }
+
+              updateData["system.-=experience"] = null;
+              updateData["system.-=score"] = null;
+              updateData["system.arts.techniques." + key + ".-=experienceNextLevel"] = null;
             }
+          }
+        }
+        if (actor.system?.arts?.forms != undefined) {
+          for (const [key, form] of Object.entries(actor.system.arts.forms)) {
+            if (form.experienceNextLevel != undefined) {
+              // if the experience is equal or bigger than the xp for this score, use it as total xp
+              let exp = (form.score * (form.score + 1)) / 2;
+              if (form.experience >= exp) {
+                updateData["system.arts.forms." + key + ".xp"] = form.experience;
+              } else if (form.experience >= form.score + 1) {
+                // if the experience is bigger than the neeeded for next level, ignore it
+                updateData["system.arts.forms." + key + ".xp"] = exp;
+              } else {
+                // compute normally
+                updateData["system.arts.forms." + key + ".xp"] = exp + form.experience;
+              }
 
-            updateData["system.-=experience"] = null;
-            updateData["system.-=score"] = null;
-            updateData["system.arts.techniques." + key + ".-=experienceNextLevel"] = null;
+              updateData["system.forms." + key + ".-=experience"] = null;
+              updateData["system.forms." + key + "-=score"] = null;
+              updateData["system.arts.forms." + key + ".-=experienceNextLevel"] = null;
+            }
           }
         }
       }
-      if (actor.system?.arts?.forms != undefined) {
-        for (const [key, form] of Object.entries(actor.system.arts.forms)) {
-          if (form.experienceNextLevel != undefined) {
-            // if the experience is equal or bigger than the xp for this score, use it as total xp
-            let exp = (form.score * (form.score + 1)) / 2;
-            if (form.experience >= exp) {
-              updateData["system.arts.forms." + key + ".xp"] = form.experience;
-            } else if (form.experience >= form.score + 1) {
-              // if the experience is bigger than the neeeded for next level, ignore it
-              updateData["system.arts.forms." + key + ".xp"] = exp;
-            } else {
-              // compute normally
-              updateData["system.arts.forms." + key + ".xp"] = exp + form.experience;
-            }
-
-            updateData["system.forms." + key + ".-=experience"] = null;
-            updateData["system.forms." + key + "-=score"] = null;
-            updateData["system.arts.forms." + key + ".-=experienceNextLevel"] = null;
-          }
-        }
+      if (realmsUpdate == true) {
+        updateData["system.realms"] = realms;
       }
-    }
-    if (realmsUpdate == true) {
-      updateData["system.realms"] = realms;
     }
   }
-
   if (
     actor.type == "player" ||
     actor.type == "npc" ||

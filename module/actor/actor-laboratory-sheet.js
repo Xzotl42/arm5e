@@ -22,6 +22,7 @@ import {
 import { DiaryEntrySchema } from "../schemas/diarySchema.js";
 import { LabActivity, SpellActivity } from "../seasonal-activities/activity.js";
 import { investigate } from "../helpers/long-term-activities.js";
+import { ArM5eItem } from "../item/item.js";
 /**
  * Extend the basic ArM5eActorSheet
  * @extends {ArM5eActorSheet}

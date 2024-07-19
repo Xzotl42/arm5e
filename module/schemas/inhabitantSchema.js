@@ -45,6 +45,12 @@ export class InhabitantSchema extends foundry.abstract.DataModel {
         initial: 0,
         step: 1
       }),
+      fieldExpertise: new fields.StringField({
+        required: false,
+        blank: true,
+        initial: "",
+        choices: Object.keys(ARM5E.covenant.fieldOfExpertise)
+      }),
       quantity: new fields.NumberField({
         required: false,
         nullable: false,
@@ -59,6 +65,32 @@ export class InhabitantSchema extends foundry.abstract.DataModel {
         integer: true,
         // positive: true, // for testing
         initial: 1200,
+        step: 1
+      }),
+      specialistType: new fields.StringField({
+        required: false,
+        blank: true,
+        initial: "other",
+        choices: Object.keys(ARM5E.covenant.specialists)
+      }),
+      giftType: new fields.StringField({
+        required: false,
+        blank: true,
+        initial: "normal",
+        choices: Object.keys(ARM5E.covenant.gift)
+      }),
+      specialistChar: new fields.NumberField({
+        required: false,
+        nullable: false,
+        integer: true,
+        initial: 0,
+        step: 1
+      }),
+      teacherScore: new fields.NumberField({
+        required: false,
+        nullable: false,
+        integer: true,
+        initial: 0,
         step: 1
       }),
       extradata: new fields.ObjectField({ required: false, nullable: true, initial: {} })
@@ -88,6 +120,41 @@ export class InhabitantSchema extends foundry.abstract.DataModel {
       data.category = "turbula";
     }
     return data;
+  }
+
+  get baseLoyalty() {
+    if (this.category == "magi") {
+      return CONFIG.ARM5E.covenant.gift[this.giftType ?? "normal"].loyalty;
+    } else {
+      return 0;
+    }
+  }
+
+  get buildPoints() {
+    if (this.category == "specialists") {
+      if (this.specialistType == "teacher") {
+        return this.specialistChar ?? 0 + this.score ?? 0 + this.teacherScore ?? 0;
+      } else {
+        return this.score ?? 0;
+      }
+    }
+    return 0;
+  }
+
+  get loyaltyGain() {
+    if (this.category == "specialists") {
+      switch (this.specialistType) {
+        case "steward":
+        case "chamberlain":
+        case "turbCaptain": {
+          return this.specialistChar ?? 0 + this.score ?? 0;
+        }
+        default: {
+          return 0;
+        }
+      }
+    }
+    return 0;
   }
 
   static migrate(data) {
@@ -171,6 +238,11 @@ export class InhabitantSchema extends foundry.abstract.DataModel {
     }
     if (typeof data.system.yearBorn != "number") {
       updateData["system.yearBorn"] = convertToNumber(data.system.yearBorn, 1200);
+    }
+
+    if (data.system.extradata.giftType) {
+      updateData["system.giftType"] = data.system.extradata.giftType;
+      updateData["system.extradata.-=giftType"] = null;
     }
 
     return updateData;
