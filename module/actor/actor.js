@@ -18,6 +18,7 @@ import ArM5eActiveEffect from "../helpers/active-effects.js";
 import { ArM5eRollInfo } from "../helpers/rollInfo.js";
 import { compareDiaryEntries, isInThePast } from "../tools/time.js";
 import Aura from "../helpers/aura.js";
+import { canBeEnchanted } from "../helpers/magic.js";
 
 /**
  * Extend the base Actor entity by defining a custom roll data structure which is ideal for the Simple system.
@@ -1006,7 +1007,7 @@ export class ArM5ePCActor extends Actor {
     system.freeVirtues = system.size.total + system.refinement.total;
     system.occupiedSize = Math.max(totalVirtues - totalFlaws, 0) - system.refinement.total;
     system.baseSafety = system.refinement.total - Math.max(system.occupiedSize, 0);
-    system.safety.bonus += system.safety.bonus;
+    system.safety.bonus += system.baseSafety;
     system.safety.total = system.safety.value + system.safety.bonus;
 
     system.totalVirtues = totalVirtues;
@@ -1051,6 +1052,17 @@ export class ArM5ePCActor extends Actor {
     let totalFlaws = 0;
     system.scene.document = game.scenes.get(system.scene.id);
 
+    let inhabitantPts = 0;
+    let libraryPts = 0;
+    let labTextPts = 0;
+    let visPts = 0;
+    let visStock = 0;
+    let enchantmentPts = 0;
+    let specialistPts = 0;
+    let labPts = 0;
+    let moneyPts = 0;
+
+    let inhabitantNumber = 0;
     for (let [key, item] of this.items.entries()) {
       item.img = item.img || DEFAULT_TOKEN;
       item._index = key;
@@ -1074,22 +1086,28 @@ export class ArM5ePCActor extends Actor {
         switch (item.system.category) {
           case "magi":
             magi.push(item);
+            inhabitantNumber++;
             break;
           case "companions":
             companion.push(item);
+            inhabitantNumber++;
             break;
           case "specialists":
+            specialistPts += item.system.buildPoints;
           case "craftmen":
             specialists.push(item);
+            inhabitantNumber++;
             break;
           case "turbula":
             turbula.push(item);
+            inhabitantNumber++;
             break;
           case "servants":
           case "laborers":
           case "teamsters":
           case "dependants":
             habitants.push(item);
+            inhabitantNumber++;
             break;
           case "horses":
             horses.push(item);
@@ -1098,11 +1116,14 @@ export class ArM5ePCActor extends Actor {
             livestock.push(item);
             break;
         }
+        inhabitantPts += ARM5E.covenant.inhabitants[item.system.category].points;
       } else if (item.type === "possessionsCovenant") {
         possessions.push(item);
       } else if (item.type === "visSourcesCovenant") {
+        visPts += ARM5E.covenant.vis.sourceCost * item.system.pawns;
         visSources.push(item);
       } else if (item.type === "visStockCovenant" || item.type === "vis") {
+        visStock += item.system.quantity;
         vis.push(item);
       } else if (item.type === "calendarCovenant") {
         calendar.push(item);
@@ -1118,7 +1139,7 @@ export class ArM5ePCActor extends Actor {
           name: item.name,
           system: item.system
         };
-
+        labTextPts += item.system.buildPoints;
         laboratoryTexts.push(topic);
       } else if (item.type === "book") {
         let idx = 0;
@@ -1129,12 +1150,15 @@ export class ArM5ePCActor extends Actor {
           topic.book = item.name;
           switch (topic.category) {
             case "ability":
+              libraryPts += item.system.buildPoints(topic);
               mundaneTopics.push(topic);
               break;
             case "art":
+              libraryPts += item.system.buildPoints(topic);
               artsTopics.push(topic);
               break;
             case "mastery":
+              libraryPts += item.system.buildPoints(topic);
               masteryTopics.push(topic);
               break;
             case "labText":
@@ -1142,6 +1166,7 @@ export class ArM5ePCActor extends Actor {
                 topic.system = { type: "" };
               } else {
                 topic.system = topic.labtext;
+                labTextPts += item.system.buildPoints(topic);
               }
 
               if (topic.labtext != null) {
@@ -1162,74 +1187,79 @@ export class ArM5ePCActor extends Actor {
         armor.push(item);
       } else if (item.type === "item") {
         items.push(item);
-      } else if (item.type === "labCovenant") labs.push(item);
-    }
-    if (system.reputations) {
-      system.reputations = reputations;
-    }
-    if (system.habitants) {
-      system.habitants.magi = magi;
-      system.habitants.companion = companion;
-      system.habitants.specialists = specialists;
-      system.habitants.turbula = turbula;
-      system.habitants.habitants = habitants;
-      system.habitants.horses = horses;
-      system.habitants.livestock = livestock;
-    }
-    if (system.possessions) {
-      system.possessions = possessions;
-    }
-    if (system.visSources) {
-      system.visSources = visSources;
-    }
-    system.vis = vis;
+      } else if (item.type === "labCovenant") {
+        labPts += item.system.buildPoints;
+        labs.push(item);
+      }
 
-    if (system.calendar) {
-      system.calendar = calendar;
+      if (canBeEnchanted(item)) {
+        if (item.system.state === "enchanted") {
+          enchantmentPts += item.system.enchantments.buildPoints * item.system.quantity;
+        }
+      }
     }
-    if (system.incomingSources) {
-      system.incomingSources = incomingSources;
-    }
+
+    system.buildPoints.laboratoryTexts.computed = labTextPts;
+    system.buildPoints.library.computed = libraryPts;
+    system.buildPoints.vis.computed = Math.ceil(visStock / ARM5E.covenant.vis.stockCost) + visPts;
+    system.buildPoints.magicItems.computed = enchantmentPts;
+    system.buildPoints.laboratories.computed = labPts;
+    system.buildPoints.money.computed = system.finances.wealth;
+    system.buildPoints.specialists.computed = specialistPts;
+
+    system.reputations = reputations;
+
+    system.finances.inhabitantsPoints = inhabitantPts;
+
+    // if (system.habitants) {
+    //   system.habitants.magi = magi;
+    //   system.habitants.companion = companion;
+    //   system.habitants.specialists = specialists;
+    //   system.habitants.turbula = turbula;
+    //   system.habitants.habitants = habitants;
+    //   system.habitants.horses = horses;
+    //   system.habitants.livestock = livestock;
+    // }
+    system.inhabitants = {};
+    system.inhabitants.magi = magi;
+    system.inhabitants.companion = companion;
+    system.inhabitants.specialists = specialists;
+    system.inhabitants.turbula = turbula;
+    system.inhabitants.habitants = habitants;
+    system.inhabitants.horses = horses;
+    system.inhabitants.livestock = livestock;
+    system.inhabitants.npcgrogs = system.npcInhabitants;
+    system.inhabitants.totalPopulation = inhabitantNumber + system.npcInhabitants;
+
+    system.possessions = possessions;
+    system.visSources = visSources;
+    system.vis = vis;
+    system.calendar = calendar;
+    system.incomingSources = incomingSources;
     system.physicalBooks = physicalBooks.sort((a, b) => (a.sort || 0) - (b.sort || 0));
     system.artsTopics = artsTopics.sort(compareTopics);
     system.mundaneTopics = mundaneTopics.sort(compareTopics);
     system.masteryTopics = masteryTopics.sort(compareTopics);
-    // system.laboratoryTexts = laboratoryTexts.sort(compareTopics);
-    if (system.diaryEntries) {
-      system.diaryEntries = diaryEntries;
-    }
-
-    if (system.virtues) {
-      system.virtues = boons;
-    }
-    if (system.flaws) {
-      system.flaws = hooks;
-    }
-
-    if (system.items) {
-      system.items = items;
-    }
-
+    system.diaryEntries = diaryEntries;
+    system.virtues = boons;
+    system.flaws = hooks;
+    system.items = items;
     system.weapons = weapons;
     system.armor = armor;
 
-    if (system.laboratoryTexts) {
-      let flag = this.getFlag("arm5e", "sorting", "laboratoryTexts");
-      if (flag && flag["laboratoryTexts"] == true) {
-        system.laboratoryTexts = laboratoryTexts.sort(compareLabTexts);
-      } else {
-        system.laboratoryTexts = laboratoryTexts;
-      }
+    let flag = this.getFlag("arm5e", "sorting", "laboratoryTexts");
+    if (flag && flag["laboratoryTexts"] == true) {
+      system.laboratoryTexts = laboratoryTexts.sort(compareLabTexts);
+    } else {
+      system.laboratoryTexts = laboratoryTexts;
     }
 
-    if (system.labs) {
-      system.labs = labs;
-    }
+    system.labs = labs;
 
     system.labs.sort((a, b) => (a.sort || 0) - (b.sort || 0));
     system.virtues.sort((a, b) => (a.sort || 0) - (b.sort || 0));
     system.flaws.sort((a, b) => (a.sort || 0) - (b.sort || 0));
-    system.visStock.sort((a, b) => (a.sort || 0) - (b.sort || 0));
+    system.vis.sort((a, b) => (a.sort || 0) - (b.sort || 0));
     system.visSources.sort((a, b) => (a.sort || 0) - (b.sort || 0));
     system.possessions.sort((a, b) => (a.sort || 0) - (b.sort || 0));
     system.incomingSources.sort((a, b) => (a.sort || 0) - (b.sort || 0));

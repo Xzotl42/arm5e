@@ -955,21 +955,40 @@ ARM5E.covenant.labels = {
 ARM5E.covenant.inhabitants = {
   magi: {
     label: "arm5e.sheet.maguss",
-    points: 5
+    points: 5,
+    advancedPts: 10
   },
-  companions: { label: "arm5e.sheet.companion", points: 3 },
-
-  turbula: { label: "arm5e.sheet.turbula", points: 1 },
-  craftmen: { label: "arm5e.sheet.craftmen", points: 2 },
-  specialists: { label: "arm5e.sheet.specialists", points: 2 },
-  dependants: { label: "arm5e.sheet.dependants", points: 1 },
-  laborers: { label: "arm5e.sheet.laborers", points: 1 },
-  servants: { label: "arm5e.sheet.servants", points: 1 },
-  teamsters: { label: "arm5e.sheet.teamsters", points: 1 },
-  horses: { label: "arm5e.sheet.horses", points: 1 },
-  livestock: { label: "arm5e.sheet.livestock", points: 0 }
+  companions: { label: "arm5e.sheet.companion", points: 3, advancedPts: 5 },
+  turbula: { label: "arm5e.sheet.turbula", points: 1, advancedPts: 2 },
+  craftmen: { label: "arm5e.sheet.craftmen", points: 2, advancedPts: 3 },
+  specialists: { label: "arm5e.sheet.specialists", points: 2, advancedPts: 3 },
+  dependants: { label: "arm5e.sheet.dependants", points: 1, advancedPts: 2 },
+  laborers: { label: "arm5e.sheet.laborers", points: 1, advancedPts: 2 },
+  servants: { label: "arm5e.sheet.servants", points: 1, advancedPts: 2 },
+  teamsters: { label: "arm5e.sheet.teamsters", points: 1, advancedPts: 2 },
+  horses: { label: "arm5e.sheet.horses", points: 1, advancedPts: 1 },
+  livestock: { label: "arm5e.sheet.livestock", points: 0, advancedPts: 0 }
 };
-ARM5E.covenant.yearExpenditure = {
+ARM5E.covenant.vis = {
+  stockCost: 1,
+  sourceCost: 5
+};
+
+ARM5E.covenant.enchantments = {
+  slice: 5,
+  points: 2
+};
+ARM5E.covenant.fieldOfExpertise = {
+  none: "arm5e.generic.none",
+  buildings: "arm5e.sheet.buildings",
+  consumables: "arm5e.sheet.consumables",
+  laboratories: "arm5e.sheet.laboratories",
+  provisions: "arm5e.sheet.provisions",
+  weapons: "arm5e.sheet.weapons",
+  books: "arm5e.sheet.books"
+};
+
+ARM5E.covenant.yearlyExpenses = {
   buildings: {
     sumary: "arm5e.sheet.buildingsSumary",
     label: "arm5e.sheet.buildings"
@@ -1008,7 +1027,7 @@ ARM5E.covenant.yearExpenditure = {
   }
 };
 
-ARM5E.covenant.costsSavings = {
+ARM5E.covenant.yearlySavings = {
   laborers: {
     sumary: "arm5e.sheet.laborersSumary",
     label: "arm5e.sheet.laborers"
@@ -1025,6 +1044,32 @@ ARM5E.covenant.costsSavings = {
     sumary: "arm5e.sheet.magicItemsSumary",
     label: "arm5e.sheet.magicItems"
   }
+};
+
+ARM5E.covenant.gift = {
+  normal: { label: "arm5e.sheet.gift.normal", loyalty: -30 },
+  blatant: { label: "arm5e.sheet.gift.blatant", loyalty: -105 },
+  gentle: { label: "arm5e.sheet.gift.gentle", loyalty: 0 }
+};
+
+ARM5E.covenant.specialists = {
+  teacher: { label: "arm5e.covenant.specialist.teacher" },
+  steward: { label: "arm5e.covenant.specialist.steward" },
+  chamberlain: { label: "arm5e.covenant.specialist.chamberlain" },
+  turbCaptain: { label: "arm5e.covenant.specialist.trubCaptain" },
+  other: { label: "arm5e.covenant.specialist.other" }
+};
+
+ARM5E.covenant.loyalty = {
+  wages: {
+    none: { factor: 0, label: "arm5e.covenant.wages.none", mod: -20 },
+    low: { factor: 0.5, label: "arm5e.covenant.wages.low", mod: -10 },
+    normal: { factor: 1, label: "arm5e.covenant.wages.normal", mod: 0 },
+    generous: { factor: 1.5, label: "arm5e.covenant.wages.generous", mod: 10 },
+    lavish: { factor: 2, label: "arm5e.covenant.wages.lavish", mod: 20 }
+  },
+  pension: { label: "arm5e.covenant.wages.pension", mod: 10 },
+  livingConditions: {}
 };
 
 ARM5E.REALM_TYPES = {
@@ -1213,11 +1258,6 @@ ARM5E.magic.forms = {
 ARM5E.magic.arts = {
   ...ARM5E.magic.techniques,
   ...ARM5E.magic.forms
-};
-ARM5E.magic.gift = {
-  normal: "arm5e.sheet.gift.normal",
-  blatant: "arm5e.sheet.gift.blatant",
-  gentle: "arm5e.sheet.gift.gentle"
 };
 
 ARM5E.magic.shorts = {

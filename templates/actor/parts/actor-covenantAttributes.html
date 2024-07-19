@@ -1,7 +1,7 @@
-<div class="backSection margintop18" stype="height: 150px;">
+<div class="backSection margintop18 flexcol" style="height: 265px;">
 
-  <label class="smallTitle padding12" stype="height: 32px;">{{localize "arm5e.sheet.description"}}</label>
-  <div class="flexrow padding12" style="border: 0px; height: 150px">
+  <label class="smallTitle padding12 flex0">{{localize "arm5e.sheet.description"}}</label>
+  <div class="flex-group-left marginbot6" style="height: 200px; overflow-y: auto;max-height: 210px;">
     {{editor enrichedDescription target="system.description" button=true owner=owner engine="prosemirror" editable=editable}}
   </div>
 </div>
@@ -34,33 +34,30 @@
   <div class="flexrow flex-group-center" style="border: 0px">
     <ol style="width: 100%">
       <li class="flexrow flex-group-left" style="border: 0px">
-        <label for="system.constructionPoints.data.{{key}}.constructionPoints"
+        <label for="system.buildPoint.{{key}}.constructionPoints"
           class="smallTitle flex08">{{localize "arm5e.sheet.constructionPoints" }}</label>
-        <label for="system.constructionPoints.data.{{key}}.initials"
-          class="bold flex03">{{localize "arm5e.sheet.initials" }}</label>
-        <label for="system.constructionPoints.data.{{key}}.actuals"
-          class="bold flex05">{{localize "arm5e.sheet.actuals" }}</label>
-        <label for="system.constructionPoints.data.{{key}}.notes"
-          class="bold width2">{{localize "arm5e.sheet.notes" }}</label>
+        <label for="system.buildPoints.{{key}}.value" class="bold flex03">{{localize "arm5e.sheet.initials" }}</label>
+        <label for="system.buildPoints.{{key}}.computed" class="bold flex05">{{localize "arm5e.sheet.actuals" }}</label>
+        <label for="system.buildPoints.{{key}}.notes" class="bold width2">{{localize "arm5e.sheet.notes" }}</label>
       </li>
-      {{#each system.constructionPoints.data as |data key|}}
+      {{#each system.buildPoints as |data key|}}
         <li class="flexrow flex-group-left" style="border: 0px" data-attribute="{{key}}">
           <span class="flex07">
             {{#with (lookup @root.config.covenant.labels key)}}
-              <label for="system.constructionPoints.data.{{key}}.initials" class="bold">{{localize label}}</label>
+              <label for="system.buildPoints.{{key}}.buildPoints" class="bold">{{localize label}}</label>
             {{/with}}
           </span>
           <span class="flex03" style="margin-right: 6px">
-            <input type="text" name="system.constructionPoints.data.{{key}}.initials" class="resource-focus"
-              value="{{numberFormat data.initials decimals=0 sign=true}}" data-dtype="Number" />
+            <input type="text" name="system.buildPoints.{{key}}.value" class="resource-focus"
+              value="{{numberFormat data.value decimals=0 sign=true}}" class="resource-focus" data-dtype="Number" />
           </span>
           <span class="flex03" style="margin-right: 6px">
-            <input type="text" name="system.constructionPoints.data.{{key}}.actuals"
-              value="{{numberFormat data.actuals decimals=0 sign=true}}" data-dtype="Number" />
+            <input type="text" name="system.buildPoints.{{key}}.computed"
+              value="{{numberFormat data.computed decimals=0 sign=true}}" readonly class="resource-focus"
+              data-dtype="Number" />
           </span>
           <span class="flex2">
-            <input type="text" name="data.constructionPoints.data.{{key}}.notes" value="{{ system.notes }}"
-              data-dtype="String" />
+            <input type="text" name="system.buildPoints.{{key}}.notes" value="{{ data.notes }}" data-dtype="String" />
           </span>
         </li>
       {{/each}}

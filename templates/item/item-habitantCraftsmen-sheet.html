@@ -2,7 +2,7 @@
   <header class="sheet-header">
     <img class="item-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" />
     <div class="header-fields">
-      <h1 class="charname">
+      <h1 class="charname" style="margin-top: 36px">
         <input name="name" type="text" value="{{item.name}}" placeholder="Name" />
       </h1>
 
@@ -28,36 +28,17 @@
           <label class="bold">{{localize "arm5e.sheet.job"}}</label>
           <input type="text" name="system.job" value="{{system.job}}" data-dtype="String" />
         </div>
-        {{#unless details}}
-          <div class="resource flexcol flex0">
-            <label for="system.score" class="bold">{{localize "arm5e.sheet.score"}}</label>
-            <input class="resource-focus" type="number" name="system.score" value="{{system.score}}"
-              data-dtype="Number" />
-          </div>
-        {{/unless}}
-      </div>
-      {{#if (or details teacherDetails)}}
-        <div class="flexrow" style="margin: 8px">
-          <div class="resource">
-            <label class="bold">{{localize specialistChar}} </label>
-            <input class="resource-focus" type="number" name="system.specialistChar" value="{{system.specialistChar}}"
-              data-dtype="Number" />
-            <label class="bold">{{localize specialistAbility}}</label>
-            {{#if teacherDetails}}
-              <input class="resource-focus" type="number" name="system.teacherScore" value="{{system.teacherScore}}"
-                data-dtype="Number" />
-            {{else}}
-              <input class="resource-focus" type="number" name="system.score" value="{{system.score}}"
-                data-dtype="Number" />
-            {{/if}}
-          </div>
+        <div class="resource flexcol flex0">
+          <label for="system.score" class="bold">{{localize "arm5e.sheet.score"}}</label>
+          <input class="resource-focus" type="number" name="system.score" value="{{system.score}}"
+            data-dtype="Number" />
         </div>
-      {{/if}}
+      </div>
       <div class="flexrow" style="margin: 8px">
-        <div class="resource flexcol">
-          <label class="bold">{{localize "arm5e.sheet.type"}}</label>
-          <select name="system.specialistType" data-dtype="String" class="spec-change">
-            {{selectOptions config.covenant.specialists selected=system.specialistType labelAttr="label" localize=true}}
+        <div class="resource flexcol flexrow">
+          <label for="system.fieldExpertise" class="bold">{{localize "arm5e.sheet.fieldExpert"}}</label>
+          <select name="system.fieldExpertise" data-dtype="String">
+            {{selectOptions config.covenant.fieldOfExpertise selected=system.fieldExpertise localize=true}}
           </select>
         </div>
         <div class="resource flexcol flex0">
@@ -66,7 +47,6 @@
             data-dtype="Number" />
         </div>
       </div>
-
     </div>
 
   </header>

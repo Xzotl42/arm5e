@@ -64,6 +64,8 @@ import { WoundSchema } from "./schemas/woundSchema.js";
 import { ArM5eSmallSheet } from "./item/item-small-sheet.js";
 import { EnchantmentSchema } from "./schemas/enchantmentSchema.js";
 import { magicalAttributesHelper } from "./helpers/magic.js";
+import { CovenantSchema } from "./schemas/covenantSchema.js";
+import { ArM5eCovenantInhabitantSheet } from "./item/item-inhabitantCovenant.js";
 Hooks.once("init", async function () {
   game.arm5e = {
     ArsLayer,
@@ -550,6 +552,7 @@ function setDatamodels() {
   //Actors
   CONFIG.ARM5E.ActorDataModels["laboratory"] = LabSchema;
   CONFIG.ARM5E.ActorDataModels["magicCodex"] = CodexSchema;
+  CONFIG.ARM5E.ActorDataModels["covenant"] = CovenantSchema;
 
   // Deprecated types
 
@@ -623,7 +626,7 @@ function registerSheets() {
         "distinctive",
         "sanctumRoom",
         "reputation",
-        "inhabitant",
+        //"inhabitant",
         "habitantMagi", // deprecated
         "habitantCompanion", // deprecated
         "habitantSpecialists", // deprecated
@@ -653,6 +656,11 @@ function registerSheets() {
       types: ["diaryEntry"],
       makeDefault: true
     });
+    Items.registerSheet("arm5e", ArM5eCovenantInhabitantSheet, {
+      types: ["inhabitant"],
+      makeDefault: true
+    });
+
     Items.registerSheet("arm5e", ArM5eItemMagicSheet, {
       types: ["magicalEffect", "enchantment", "spell", "baseEffect", "laboratoryText", "magicItem"],
       makeDefault: true

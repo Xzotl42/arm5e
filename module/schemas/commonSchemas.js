@@ -78,6 +78,10 @@ export const convertToInteger = function (value, fallback = 0) {
   return Math.round(convertToNumber(value, fallback));
 };
 
+export const newComputedField = function (fieldName, originalValue) {
+  return `<li>${fieldName} (${originalValue})</li>`;
+};
+
 export const itemBase = () => {
   return {
     description: new fields.StringField({ required: false, blank: true, initial: "" }),
@@ -92,6 +96,19 @@ export const itemBase = () => {
     }),
     indexKey: new fields.StringField({ required: false, blank: true, initial: "" })
   };
+};
+
+export const actorLink = () => {
+  return new fields.SchemaField({
+    value: new fields.StringField({ required: false, blank: true, initial: "" }),
+    actorId: new fields.StringField({
+      nullable: true,
+      required: false,
+      blank: true,
+      initial: null
+    }),
+    linked: new fields.BooleanField({ required: false, initial: false })
+  });
 };
 
 export const DateField = (year = 1220, season = "spring") =>

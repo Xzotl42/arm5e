@@ -1,3 +1,25 @@
+## 2.3.0.4, Quendalon
+
+### Compatibility
+
+- V12 ready ( 12.327 verified )
+
+### Features & changes
+
+- Covenant data model migration (on going)
+  - first draft (not active)
+  - moved mnemonics to config
+  - cosmetic improvements
+  - build points computation
+
+### Bug fixes
+
+- Dropping a lab text in the "learn spell" workbench won't raise an error anymore
+- Form bonus to soak mundane damage was incorrectly rounded down.
+- Fix drop down menu in soak dialog for Form bonus.
+- Added "apprentice" data structure to npc template.
+- Fixed display problem with enchantments lab texts.
+
 ## 2.3.0.3, Quendalon
 
 ### Compatibility

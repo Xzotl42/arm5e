@@ -1,6 +1,6 @@
 import { log } from "../tools.js";
 import { actorBase } from "./actorCommonSchema.js";
-import { basicTextField } from "./commonSchemas.js";
+import { actorLink, basicTextField } from "./commonSchemas.js";
 const fields = foundry.data.fields;
 
 const labAttribute = () => {
@@ -13,19 +13,6 @@ const labAttribute = () => {
       initial: 0,
       step: 1
     })
-  });
-};
-
-const actorLink = () => {
-  return new fields.SchemaField({
-    value: new fields.StringField({ required: false, blank: true, initial: "" }),
-    actorId: new fields.StringField({
-      nullable: true,
-      required: false,
-      blank: true,
-      initial: null
-    }),
-    linked: new fields.BooleanField({ required: false, initial: false })
   });
 };
 
@@ -61,6 +48,21 @@ export class LabSchema extends foundry.abstract.DataModel {
       rooms: basicTextField(),
       personalities: basicTextField()
     };
+  }
+
+  get buildPoints() {
+    let res = 0;
+    if (this.parent?.system.virtues) {
+      for (let virtue of this.parent.system.virtues) {
+        if (virtue.system.impact.value == "minor") {
+          res += 10;
+        } else if (virtue.system.impact.value == "major") {
+          res += 20;
+        }
+      }
+      return res + Math.max(0, this.size.total * 20);
+    }
+    return 0;
   }
 
   static migrate(data, itemsData) {

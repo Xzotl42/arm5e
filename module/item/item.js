@@ -145,6 +145,7 @@ export class ArM5eItem extends Item {
         this.name = this.system.document.name;
         this.system.owner = this.system.document.system.owner.value;
         this.system.quality = this.system.document.system.generalQuality.total;
+        this.system.buildPoints = this.system.document.system.buildPoints;
         this.system.linked = true;
       } else {
         this.system.linked = false;

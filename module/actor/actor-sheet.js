@@ -1465,8 +1465,8 @@ export class ArM5eActorSheet extends ActorSheet {
       extraData.formRes = {};
       for (let [key, form] of Object.entries(actor.system.arts.forms)) {
         extraData.formRes[key] = {
-          res: Math.floor(form.finalScore / 5),
-          label: `${form.label} (${Math.floor(form.finalScore / 5)})`
+          res: Math.ceil(form.finalScore / 5),
+          label: `${form.label} (${Math.ceil(form.finalScore / 5)})`
         };
       }
     }

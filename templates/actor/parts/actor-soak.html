@@ -30,10 +30,11 @@
       <div class="flexrow flex-group-center">
         <label class="resource-label">-</label>
       </div>
+      {{log extraData.formRes}}
       <div class="flexrow flex-group-center">
         <label class="header-label">{{localize "arm5e.sheet.formRes"}}</label>
         <select name="formRes" data-type="String">
-          {{selectOptions extraData.formRes selected=formRes nameAttr="label" valueAttr="label" keyAttr="res" blank="" }}
+          {{selectOptions extraData.formRes selected=formRes nameAttr="res" valueAttr="res" labelAttr="label" blank="" }}
         </select>
       </div>
     {{/if}}
@@ -44,7 +45,7 @@
       <div class="flexrow flex-group-center">
         <label class="header-label">{{localize "arm5e.sheet.natRes"}}</label>
         <select name="natRes" data-type="String">
-          {{selectOptions extraData.natRes selected=natRes nameAttr="label" valueAttr="label" keyAttr="res" blank="" }}
+          {{selectOptions extraData.natRes selected=natRes nameAttr="res" valueAttr="res" labelAttr="label" blank="" }}
         </select>
       </div>
     {{/if}}
