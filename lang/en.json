@@ -650,12 +650,15 @@
   "arm5e.sheet.governForm": "Type of Governance",
   "arm5e.sheet.loyaltyPoints.base": "Base Loyalty Points",
   "arm5e.sheet.loyaltyPoints.actuals": "Current Loyalty Points",
+  "arm5e.sheet.loyaltyPoints.modifiersTotal": "Total modifiers",
   "arm5e.sheet.loyaltyPoints.predominant": "Prevailing Loyalty Score",
   "arm5e.sheet.loyaltyModifiers.header": "Situational Modifiers for",
   "arm5e.sheet.loyaltyModifiers.livingConditions": "Living Conditions",
   "arm5e.sheet.loyaltyModifiers.equipment": "Equipment",
   "arm5e.sheet.loyaltyModifiers.money": "Money",
   "arm5e.sheet.loyaltyModifiers.specialists": "Specialists",
+  "arm5e.sheet.loyaltyModifiers.familiarity": "Familiarity",
+  "arm5e.sheet.loyaltyModifiers.events": "Actions and events",
 
   "arm5e.sheet.realm.label": "Realm",
   "arm5e.sheet.realm.magic": "Magical",
@@ -1005,6 +1008,11 @@
   "arm5e.covenant.specialist.chamberlain": "Chamberlain",
   "arm5e.covenant.specialist.trubCaptain": "Turb Captain",
   "arm5e.covenant.specialist.other": "Other",
+
+  "arm5e.covenant.equipment.low": "Only inexpensive",
+  "arm5e.covenant.equipment.standard": "Standard",
+  "arm5e.covenant.equipment.standardPlus": "Standard + one expensive piece",
+  "arm5e.covenant.equipment.any": "Anything they need",
 
   "arm5e.sheet.bonus.activeEffects": "Effects bonuses",
   "arm5e.sheet.action.rest": "Rest",

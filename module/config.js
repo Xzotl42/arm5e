@@ -1069,7 +1069,15 @@ ARM5E.covenant.loyalty = {
     lavish: { factor: 2, label: "arm5e.covenant.wages.lavish", mod: 20 }
   },
   pension: { label: "arm5e.covenant.wages.pension", mod: 10 },
-  livingConditions: {}
+  livingConditions: {
+    factor: 10
+  },
+  equipment: {
+    inexpensive: { label: "arm5e.covenant.equipment.low", mod: -10 },
+    standard: { label: "arm5e.covenant.equipment.standard", mod: 0 },
+    standardPlus: { label: "arm5e.covenant.equipment.standardPlus", mod: 10 },
+    any: { label: "arm5e.covenant.equipment.any", mod: 20 }
+  }
 };
 
 ARM5E.REALM_TYPES = {
@@ -1083,22 +1091,22 @@ ARM5E.REALM_TYPES = {
 ARM5E.realms = {
   magic: {
     label: "arm5e.sheet.realm.magic",
-    value: ARM5E.REALM_TYPES.MAGIC,
+    index: ARM5E.REALM_TYPES.MAGIC,
     influence: [0, 1, 0.5, 0, -1]
   },
   faeric: {
     label: "arm5e.sheet.realm.faeric",
-    value: ARM5E.REALM_TYPES.FAERIC,
+    index: ARM5E.REALM_TYPES.FAERIC,
     influence: [0, 0.5, 1, 0, -1]
   },
   divine: {
     label: "arm5e.sheet.realm.divine",
-    value: ARM5E.REALM_TYPES.DIVINE,
+    index: ARM5E.REALM_TYPES.DIVINE,
     influence: [0, -3, -4, 1, -5]
   },
   infernal: {
     label: "arm5e.sheet.realm.infernal",
-    value: ARM5E.REALM_TYPES.INFERNAL,
+    index: ARM5E.REALM_TYPES.INFERNAL,
     influence: [0, -1, -2, 0, 1]
   }
 };
@@ -1108,7 +1116,7 @@ ARM5E.lookupRealm = ["mundane", "magic", "faeric", "divine", "infernal"];
 ARM5E.realmsExt = {
   mundane: {
     label: "arm5e.sheet.realm.mundane",
-    value: 0,
+    index: 0,
     influence: [0, 0, 0, 0, 0]
   },
   ...ARM5E.realms

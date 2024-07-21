@@ -1,4 +1,4 @@
-## 2.3.0.4, Quendalon
+## 2.3.0.5, Quendalon
 
 ### Compatibility
 
@@ -7,10 +7,10 @@
 ### Features & changes
 
 - Covenant data model migration (on going)
-  - first draft (not active)
   - moved mnemonics to config
   - cosmetic improvements
   - build points computation
+  - loyalty computation
 
 ### Bug fixes
 
@@ -19,6 +19,7 @@
 - Fix drop down menu in soak dialog for Form bonus.
 - Added "apprentice" data structure to npc template.
 - Fixed display problem with enchantments lab texts.
+- Supernatural abilities sheet is no longer raising an error.
 
 ## 2.3.0.3, Quendalon
 

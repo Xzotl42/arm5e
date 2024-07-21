@@ -75,6 +75,11 @@ export class ArM5eCovenantActorSheet extends ArM5eActorSheet {
     log(false, "Covenant-sheet getData");
     log(false, context);
     context.system.loyalty.points.base = 0;
+
+    context.system.loyalty.modifiers.livingConditions =
+      context.system.modifiersLife.mundane * CONFIG.ARM5E.covenant.loyalty.livingConditions.factor;
+    context.system.loyalty.modifiers.specialists = 0;
+
     for (let person of context.system.inhabitants.magi) {
       if (person.system.linked) {
         this.actor.apps[person.system.document.sheet.appId] = person.system.document.sheet;
@@ -102,7 +107,7 @@ export class ArM5eCovenantActorSheet extends ArM5eActorSheet {
       if (person.system.linked) {
         this.actor.apps[person.system.document.sheet.appId] = person.system.document.sheet;
       }
-      context.system.loyalty.modifiers.specialists + person.loyaltyGain;
+      context.system.loyalty.modifiers.specialists += person.system.loyaltyGain;
     }
 
     for (let person of context.system.inhabitants.habitants) {
@@ -116,13 +121,20 @@ export class ArM5eCovenantActorSheet extends ArM5eActorSheet {
         this.actor.apps[lab.system.document.sheet.appId] = lab.system.document.sheet;
       }
     }
-    context.system.loyalty.points.actuals =
-      context.system.loyalty.points.base +
+
+    context.system.loyalty.points.modifiersTotal =
       context.system.loyalty.modifiers.livingConditions +
-      context.system.loyalty.modifiers.equipment +
       context.system.loyalty.modifiers.specialists +
-      context.system.loyalty.modifiers.familiarity +
-      CONFIG.ARM5E.covenant.loyalty.wages[context.system.loyalty.modifiers.wages ?? "normal"].mod;
+      (context.system.loyalty.modifiers.familiarity ?? 0) +
+      (context.system.loyalty.modifiers.events ?? 0) +
+      CONFIG.ARM5E.covenant.loyalty.wages[context.system.loyalty.modifiers.wages ?? "normal"].mod +
+      (CONFIG.ARM5E.covenant.loyalty.equipment[
+        context.system.loyalty.modifiers.equipment ?? "standard"
+      ]?.mod ?? 0);
+
+    context.system.loyalty.points.actuals =
+      context.system.loyalty.points.base + context.system.loyalty.points.modifiersTotal;
+
     context.system.loyalty.points.prevailing = ArM5ePCActor.getAbilityScoreFromXp(
       Math.abs(context.system.loyalty.points.actuals)
     );
