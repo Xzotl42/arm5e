@@ -528,7 +528,7 @@ export class ArM5eRollInfo {
       this.environment.aura = Aura.fromActor(this._actor);
       if (superNatAbility) {
         this.environment.aura.computeAuraModifierFor(
-          CONFIG.ARM5E.realmsExt[this.ability.realm].value
+          CONFIG.ARM5E.realmsExt[this.ability.realm].index
         );
       } else {
         this.environment.aura.computeMaxAuraModifier(this._actor.system.realms);

@@ -137,15 +137,14 @@ export class CovenantSchema extends foundry.abstract.DataModel {
       npcInhabitants: basicIntegerField(),
       loyalty: new fields.SchemaField({
         points: new fields.SchemaField({
-          actuals: basicIntegerField(),
+          modifier: basicIntegerField(),
           prevailing: basicIntegerField()
         }),
         modifiers: new fields.SchemaField({
-          livingConditions: basicIntegerField(),
-          equipment: basicIntegerField(),
-          specialists: basicIntegerField(),
+          equipment: new fields.StringField({ required: false, blank: false, initial: "standard" }),
           wages: new fields.StringField({ required: false, blank: false, initial: "normal" }),
-          familiarity: basicIntegerField()
+          familiarity: basicIntegerField(),
+          events: basicIntegerField(0)
         })
       }),
       // DEPRECATED
@@ -256,7 +255,6 @@ export class CovenantSchema extends foundry.abstract.DataModel {
 
     if (data.system.loyaltyPoints) {
       update[`system.loyalty.points.base`] = data.system.loyaltyPoints.base ?? 0;
-      update[`system.loyalty.points.actuals`] = data.system.loyaltyPoints.actuals ?? 0;
       update[`system.loyalty.points.prevailing`] = data.system.loyaltyPoints.predominant ?? 0;
       if (data.system.loyaltyPoints.base) {
         descriptionUpdate += newComputedField(

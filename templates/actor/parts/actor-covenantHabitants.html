@@ -13,9 +13,15 @@
           readonly />
       </span>
       <span class="resource flexrow">
+        <label for="system.loyalty.points.base"
+          class="label-medium">{{localize "arm5e.sheet.loyaltyPoints.modifiersTotal"}}</label>
+        <input type="number" value="{{system.loyalty.points.modifiersTotal}}" data-dtype="Number"
+          class="resource-focus" />
+      </span>
+      <span class="resource flexrow">
         <label for="system.loyalty.points.actuals"
           class="label-medium">{{localize "arm5e.sheet.loyaltyPoints.actuals"}}</label>
-        <input type="number" name="system.loyalty.points.actuals" value="{{system.loyalty.points.actuals}}"
+        <input type="number" name="system.loyalty.points.actuals" value="{{system.loyalty.points.actuals}}" readonly
           data-dtype="Number" class="resource-focus" />
       </span>
       <span class="resource flexrow">
@@ -25,7 +31,6 @@
           data-dtype="Number" class="resource-focus summary" />
       </span>
     </div>
-
     <div class="resources flexcol">
       <span class="resource">
         <label for="system.governForm" class="bold">{{localize "arm5e.sheet.loyaltyModifiers.header"}} :
@@ -40,13 +45,21 @@
       <span class="resource flexrow">
         <label for="system.loyalty.modifiers.equipment"
           class="label-medium">{{localize "arm5e.sheet.loyaltyModifiers.equipment"}}</label>
-        <input type="number" name="system.loyalty.modifiers.equipment" value="{{system.loyalty.modifiers.equipment}}"
-          data-dtype="Number" class="resource-focus" />
+
+        <select name="system.loyalty.modifiers.equipment" data-dtype="String" class="marginsides6"
+          style="max-width: 160px;">
+          {{selectOptions config.covenant.loyalty.equipment selected=system.loyalty.modifiers.equipment 
+             labelAttr="label" localize=true}}
+        </select>
+        <input type="number"
+          value="{{lookup (lookup config.covenant.loyalty.equipment system.loyalty.modifiers.equipment) 'mod'}}"
+          data-dtype="Number" readonly class="resource-focus" />
       </span>
       <span class="resource flexrow">
         <label for="system.loyalty.modifiers.wages"
           class="label-medium">{{localize "arm5e.sheet.loyaltyModifiers.money"}}</label>
-        <select name="system.loyalty.modifiers.wages" data-dtype="String" class="marginsides6">
+        <select name="system.loyalty.modifiers.wages" data-dtype="String" class="marginsides6"
+          style="max-width: 160px;">
           {{selectOptions config.covenant.loyalty.wages selected=system.loyalty.modifiers.wages 
             labelAttr="label" localize=true}}
         </select>
@@ -59,6 +72,18 @@
           class="label-medium">{{localize "arm5e.sheet.loyaltyModifiers.specialists"}}</label>
         <input type="number" name="system.loyalty.modifiers.specialists"
           value="{{system.loyalty.modifiers.specialists}}" data-dtype="Number" class="resource-focus" />
+      </span>
+      <span class="resource flexrow">
+        <label for="system.loyalty.modifiers.specialists"
+          class="label-medium">{{localize "arm5e.sheet.loyaltyModifiers.familiarity"}}</label>
+        <input type="number" name="system.loyalty.modifiers.familiarity"
+          value="{{system.loyalty.modifiers.familiarity}}" data-dtype="Number" class="resource-focus editable" />
+      </span>
+      <span class="resource flexrow">
+        <label for="system.loyalty.modifiers.specialists"
+          class="label-medium">{{localize "arm5e.sheet.loyaltyModifiers.events"}}</label>
+        <input type="number" name="system.loyalty.modifiers.events" value="{{system.loyalty.modifiers.events}}"
+          data-dtype="Number" class="resource-focus editable" />
       </span>
     </div>
   </div>

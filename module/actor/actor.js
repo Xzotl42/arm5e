@@ -1204,7 +1204,7 @@ export class ArM5ePCActor extends Actor {
     system.buildPoints.vis.computed = Math.ceil(visStock / ARM5E.covenant.vis.stockCost) + visPts;
     system.buildPoints.magicItems.computed = enchantmentPts;
     system.buildPoints.laboratories.computed = labPts;
-    system.buildPoints.money.computed = system.finances.wealth;
+    system.buildPoints.money.computed = Math.ceil(system.finances.wealth / 10);
     system.buildPoints.specialists.computed = specialistPts;
 
     system.reputations = reputations;

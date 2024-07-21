@@ -19,11 +19,11 @@
       <div class="grid grid-2col" style="margin-top: 8px">
         <div class="resource flexcol flexrow">
           <label for="system.quality" class="bold">{{localize "arm5e.sheet.quality"}}</label>
-          <input type="text" name="system.quality" value="{{system.quality}}" data-dtype="Number" {{canEdit}} />
+          <input type="number" name="system.quality" value="{{system.quality}}" data-dtype="Number" {{canEdit}} />
         </div>
         <div class="resource flexcol flexrow">
           <label for="system.score" class="bold">{{localize "arm5e.lab.upkeep"}}</label>
-          <input type="text" name="system.upkeep" value="{{system.upkeep}}" data-dtype="Number" {{canEdit}} />
+          <input type="number" name="system.upkeep" value="{{system.upkeep}}" data-dtype="Number" {{canEdit}} />
         </div>
       </div>
 
@@ -35,10 +35,10 @@
 
           </select>
         </div>
-
         <div class="resource" style="margin-top: 8px">
-          <label class="bold">{{localize "arm5e.sheet.points"}}</label>
-          <input type="text" readonly name="system.buildPoints" value="{{system.buildPoints}}" data-dtype="Number" />
+          <label class="bold">{{localize "arm5e.sheet.constructionPoints"}}</label>
+          <input type="number" {{canEdit}} name="system.buildPoints" value="{{system.buildPoints}}"
+            data-dtype="Number" />
         </div>
       </div>
     </div>

@@ -147,7 +147,7 @@ export class InhabitantSchema extends foundry.abstract.DataModel {
         case "steward":
         case "chamberlain":
         case "turbCaptain": {
-          return this.specialistChar ?? 0 + this.score ?? 0;
+          return (this.specialistChar ?? 0) + (this.score ?? 0);
         }
         default: {
           return 0;
