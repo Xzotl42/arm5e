@@ -5,7 +5,7 @@
   "version": "2.3.0.5",
   "compatibility": {
     "minimum": "10.290",
-    "verified": "12.327"
+    "verified": "12.329"
   },
   "relationships": {
     "requires": [
