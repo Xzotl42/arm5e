@@ -69,6 +69,17 @@ export async function getDocumentFromCompendium(pack, id) {
   return doc;
 }
 
+export function slugify(str) {
+  return String(str)
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "") // remove all accents.
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9 -]/g, "") // remove non-alphanumeric characters
+    .replace(/\s+/g, "-") // replace spaces with hyphens
+    .replace(/-+/g, "-"); // remove consecutive hyphens
+}
+
 export function compareBaseEffects(e1, e2) {
   if (e1.system.form.value < e2.system.form.value) {
     return -1;
@@ -383,28 +394,6 @@ export function compareLabTexts(e1, e2) {
     return 1;
   } else {
     return compareMagicalEffects(e1, e2);
-  }
-}
-
-export function getLabUpkeepCost(upkeep) {
-  if (upkeep < -5) return 0;
-  switch (upkeep) {
-    case -5:
-      return 1;
-    case -4:
-      return 2;
-    case -3:
-      return 3;
-    case -2:
-      return 5;
-    case -1:
-      return 7;
-    case 0:
-      return 10;
-    case 1:
-      return 15;
-    default:
-      return upkeep * (upkeep + 1) * 5;
   }
 }
 

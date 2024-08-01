@@ -16,14 +16,21 @@
         <input type="text" name="system.location" value="{{system.location}}" data-dtype="String" />
       </div>
 
-      <div class="grid grid-2col" style="margin-top: 8px">
+      <div class="grid grid-3col" style="margin-top: 8px">
         <div class="resource flexcol flexrow">
           <label for="system.quality" class="bold">{{localize "arm5e.sheet.quality"}}</label>
-          <input type="number" name="system.quality" value="{{system.quality}}" data-dtype="Number" {{canEdit}} />
+          <input type="number" name="system.quality" value="{{system.quality}}" data-dtype="Number"
+            class="resource-focus" {{canEdit}} />
         </div>
         <div class="resource flexcol flexrow">
           <label for="system.score" class="bold">{{localize "arm5e.lab.upkeep"}}</label>
-          <input type="number" name="system.upkeep" value="{{system.upkeep}}" data-dtype="Number" {{canEdit}} />
+          <input type="number" name="system.upkeep" value="{{system.upkeep}}" data-dtype="Number" class="resource-focus"
+            {{canEdit}} />
+        </div>
+        <div class="resource" style="margin-top: 8px">
+          <label class="bold">{{localize "arm5e.sheet.constructionPoints"}}</label>
+          <input type="number" {{canEdit}} name="system.buildPoints" value="{{system.buildPoints}}" data-dtype="Number"
+            class="resource-focus" />
         </div>
       </div>
 
@@ -35,15 +42,11 @@
 
           </select>
         </div>
-        <div class="resource" style="margin-top: 8px">
-          <label class="bold">{{localize "arm5e.sheet.constructionPoints"}}</label>
-          <input type="number" {{canEdit}} name="system.buildPoints" value="{{system.buildPoints}}"
-            data-dtype="Number" />
-        </div>
+
       </div>
     </div>
   </header>
-  {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+
   {{!-- Sheet Tab Navigation --}}
   <nav class="arm5eTabs sheet-tabs tabs" data-group="primary">
     <a class="item posRelative" data-tab="description">
@@ -51,13 +54,22 @@
       <div class="navItem-left-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
       {{localize "arm5e.sheet.description"}}
     </a>
+    <a class="item posRelative" data-tab="effects">
+      <div class="navItem-right-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
+      <div class="navItem-left-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
+      {{localize "arm5e.sheet.effects"}}
+    </a>
   </nav>
-
+  {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
   {{!-- Sheet Body --}}
   <section class="sheet-body">
     {{!-- Description Tab --}}
     <div class="tab" data-group="primary" data-tab="description">
       {{editor enrichedDescription target="system.description" button=true owner=owner engine="prosemirror" editable=editable}}
+    </div>
+    {{!-- Effects Tab --}}
+    <div class="tab effects" data-group="primary" data-tab="effects" style="overflow-y: scroll">
+      {{> "systems/arm5e/templates/generic/active-effects.html" filter="covenant" }}
     </div>
   </section>
 </form>

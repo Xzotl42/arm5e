@@ -65,6 +65,25 @@ export class ArmorSchema extends foundry.abstract.DataModel {
     return data;
   }
 
+  get maintenance() {
+    let coeff = 1;
+    if (this.full) {
+      coeff = 2;
+    }
+    switch (this.cost.value) {
+      case "n-a":
+      case "priceless":
+      case "none":
+        return 0;
+      case "inexp":
+        return 2 * coeff;
+      case "std":
+        return 8 * coeff;
+      case "exp":
+        return 32 * coeff;
+    }
+  }
+
   static migrate(itemData) {
     let update = {};
 
@@ -181,6 +200,21 @@ export class WeaponSchema extends foundry.abstract.DataModel {
     //   data.cost = data.cost.value;
     // }
     return data;
+  }
+
+  get maintenance() {
+    switch (this.cost.value) {
+      case "n-a":
+      case "priceless":
+      case "none":
+        return 0;
+      case "inexp":
+        return 1;
+      case "std":
+        return 4;
+      case "exp":
+        return 16;
+    }
   }
 
   hasQuantity() {

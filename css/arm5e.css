@@ -1717,11 +1717,25 @@ input[type="number"].resource-focus {
   text-align: center;
 }
 
+input[type="text"].resource-focus-slim,
+input[type="number"].resource-focus-slim {
+  max-width: 50px;
+  text-align: center;
+}
+
+input[type="text"].resource-focus {
+  max-width: 70px;
+  text-align: center;
+}
+
 input[type="number"].resource-focus.summary {
   background: rgba(0, 0, 0, 0.15);
   box-shadow: 3px 3px 3px rgb(0 0 0 / 28%);
 }
 
+input[type="text"].resource-focus-slim.editable,
+input[type="text"].resource-focus.editable,
+input[type="number"].resource-focus-slim.editable,
 input[type="number"].resource-focus.editable {
   background-color: rgb(208 182 130 / 50%);
 }
@@ -2185,6 +2199,41 @@ img.art-icon {
   padding-right: 34px; */
   font-size: 9pt;
   /* max-width: 800px; */
+}
+
+#tooltip.covenant-tooltip,
+.locked-tooltip.covenant-tooltip {
+  position: absolute;
+  width: max-content;
+  max-width: 320px;
+  padding: 6px 8px;
+  background: rgb(236 222 187 / 90%);
+  font-family: bookAntiquaBold;
+  font-size: var(--font-size-16);
+  line-height: var(--font-size-16);
+  color: rgb(0 0 0 / 90%);
+  border-width: 0px 1px 1px 0px;
+  border-radius: 3px;
+  box-shadow: 3px 3px 3px rgb(0 0 0 / 28%);
+  z-index: var(--z-index-tooltip);
+  pointer-events: none;
+  overflow-wrap: break-word;
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s 500ms, opacity 500ms;
+  text-align: left;
+}
+
+h3.covenant-tooltip {
+  font-family: bookAntiquaBold;
+  font-size: 18px;
+}
+
+#tooltip.active.covenant-tooltip,
+.locked-tooltip.active {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 500ms;
 }
 
 /* .content {

@@ -43,7 +43,8 @@ export class VirtueFlawSchema extends foundry.abstract.DataModel {
           })
         },
         { required: false, blank: false, initial: { value: "free" } }
-      )
+      ),
+      hidden: boolOption(false)
     };
   }
 
@@ -405,6 +406,28 @@ export class SanctumSchema extends foundry.abstract.DataModel {
   //   super.migrateData(data);
   //   return data;
   // }
+
+  get upkeepCost() {
+    if (this.upkeep < -5) return 0;
+    switch (this.upkeep) {
+      case -5:
+        return 1;
+      case -4:
+        return 2;
+      case -3:
+        return 3;
+      case -2:
+        return 5;
+      case -1:
+        return 7;
+      case 0:
+        return 10;
+      case 1:
+        return 15;
+      default:
+        return this.upkeep * (this.upkeep + 1) * 5;
+    }
+  }
 
   static migrate(data) {
     const updateData = {};

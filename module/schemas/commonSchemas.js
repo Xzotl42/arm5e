@@ -147,7 +147,7 @@ export const CostField = (value = "n-a", coeff = 1, pounds = 1) =>
       value: new fields.StringField({
         required: false,
         blank: false,
-        initial: "n-a",
+        initial: value,
         choices: Object.keys(ARM5E.item.costs)
       }),
       mythicPounds: new fields.NumberField({
@@ -161,11 +161,11 @@ export const CostField = (value = "n-a", coeff = 1, pounds = 1) =>
                 return 9999999;
               case "none":
                 return 0;
-              case "inexpensive":
+              case "inexp":
                 return 1 * coeff;
-              case "standard":
+              case "std":
                 return 4 * coeff;
-              case "expensive":
+              case "exp":
                 return 16 * coeff;
             }
           }

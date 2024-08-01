@@ -978,52 +978,66 @@ ARM5E.covenant.enchantments = {
   slice: 5,
   points: 2
 };
-ARM5E.covenant.fieldOfExpertise = {
+ARM5E.covenant.fieldOfWork = {
   none: "arm5e.generic.none",
   buildings: "arm5e.sheet.buildings",
   consumables: "arm5e.sheet.consumables",
   laboratories: "arm5e.sheet.laboratories",
   provisions: "arm5e.sheet.provisions",
   weapons: "arm5e.sheet.weapons",
-  books: "arm5e.sheet.books"
+  writingMaterials: "arm5e.sheet.writingMaterials"
 };
 
 ARM5E.covenant.yearlyExpenses = {
   buildings: {
     sumary: "arm5e.sheet.buildingsSumary",
-    label: "arm5e.sheet.buildings"
+    label: "arm5e.sheet.buildings",
+    maxSaving: 0.5
   },
   consumables: {
     sumary: "arm5e.sheet.consumablesSumary",
-    label: "arm5e.sheet.consumables"
+    label: "arm5e.sheet.consumables",
+    maxSaving: 0.2
   },
   inflation: {
     sumary: "arm5e.sheet.inflationSumary",
-    label: "arm5e.sheet.inflation"
+    label: "arm5e.sheet.inflation",
+    maxSaving: 0
   },
   laboratories: {
     sumary: "arm5e.sheet.laboratoriesSumary",
-    label: "arm5e.sheet.laboratories"
+    label: "arm5e.sheet.laboratories",
+    maxSaving: 0.2
   },
   provisions: {
     sumary: "arm5e.sheet.provisionsSumary",
-    label: "arm5e.sheet.provisions"
+    label: "arm5e.sheet.provisions",
+    maxSaving: 0.2
   },
-  titles: {
-    sumary: "arm5e.sheet.titlesSumary",
-    label: "arm5e.sheet.titles"
+  tithes: {
+    sumary: "arm5e.sheet.tithesSumary",
+    label: "arm5e.sheet.tithes",
+    maxSaving: 0
   },
   wages: {
     sumary: "arm5e.sheet.wagesSumary",
-    label: "arm5e.sheet.wages"
+    label: "arm5e.sheet.wages",
+    maxSaving: 0
   },
   weapons: {
     sumary: "arm5e.sheet.weaponsSumary",
-    label: "arm5e.sheet.weapons"
+    label: "arm5e.sheet.weapons",
+    maxSaving: 0.5
   },
   writingMaterials: {
     sumary: "arm5e.sheet.writingMaterialsSumary",
-    label: "arm5e.sheet.writingMaterials"
+    label: "arm5e.sheet.writingMaterials",
+    maxSaving: 0.5
+  },
+  sundry: {
+    sumary: "arm5e.sheet.sundrySumary",
+    label: "arm5e.sheet.sundry",
+    maxSaving: 0
   }
 };
 
@@ -1056,7 +1070,8 @@ ARM5E.covenant.specialists = {
   teacher: { label: "arm5e.covenant.specialist.teacher" },
   steward: { label: "arm5e.covenant.specialist.steward" },
   chamberlain: { label: "arm5e.covenant.specialist.chamberlain" },
-  turbCaptain: { label: "arm5e.covenant.specialist.trubCaptain" },
+  turbCaptain: { label: "arm5e.covenant.specialist.turbCaptain" },
+  books: { label: "arm5e.covenant.specialist.books" },
   other: { label: "arm5e.covenant.specialist.other" }
 };
 

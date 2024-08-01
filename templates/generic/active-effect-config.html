@@ -5,7 +5,7 @@
     <img class="item-small-img" src="{{ data.ui.img }}" />
     <h1 class="effect-title">{{ data.ui.name }}</h1>
   </header>
-
+  {{log "THIS: " this}}
   <!-- Effect Configuration Tabs -->
   <nav class="arm5eTabs sheet-tabs tabs">
     <a class="item" data-tab="details" style="font-size: 16pt; padding: 0px;"><i class="icon-Icon_Details"></i>
@@ -65,18 +65,19 @@
           <li class="effect-change">
             <div class="flexrow">
               <div class="type">
-                <select name="../flags.arm5e.type.{{i}}" data-type="String" class="effect-type" data-index="{{i}}">
+                <select data-type="String" class="effect-type" data-index="{{i}}">
                   {{selectOptions @root.types selected=(lookup ../selectedTypes i) labelAttr="mnemonic" localize=true}}
                 </select>
               </div>
               <div class="subtype">
-                <select name="../flags.arm5e.subtype.{{i}}" class="effect-subtype" data-index="{{i}}">
+                {{log "subtypes:" @root.subtypes}}
+                <select class="effect-subtype" data-index="{{i}}">
                   {{selectOptions (lookup @root.subtypes i) selected=(lookup ../selectedSubtypes i) labelAttr="mnemonic" localize=true
                     nameAttr="name" valueAttr="name"}}
                 </select>
                 <div style="font-size: 8pt; overflow-wrap: break-word">{{#if ../devMode}}{{change.key}}{{/if}}</div>
               </div>
-              <div class="mode">{{localize change.modeStr}}</div>
+              <div class="mode">{{localize (lookup (lookup ../currentProperties i) "modeStr")}}</div>
 
               <div class="value">
                 {{#if (lookup (lookup ../currentProperties i) "withChoice")}}
@@ -109,6 +110,7 @@
             </div>
             <div style="position: absolute; right: -2300px">
               <input type="hidden" name="changes.{{i}}.mode" value="{{change.mode}}" data-dtype="Number" />
+              <input type="hidden" name="changes.{{i}}.key" value="{{change.key}}" data-dtype="String" />
 
             </div>
           </li>

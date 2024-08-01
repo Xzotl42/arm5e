@@ -239,7 +239,7 @@ export class ArM5eItemSheet extends ItemSheet {
           break;
       }
     }
-    if (["weapon", "armor", "book", "item"].includes(itemData.type)) {
+    if (["weapon", "armor", "book", "item", "inhabitant", "labCovenant"].includes(itemData.type)) {
       if (context.isOwned) {
         context.system.effectCreation = CONFIG.ISV10 ? false : true;
       } else {
@@ -278,10 +278,14 @@ export class ArM5eItemSheet extends ItemSheet {
           ...context.config.virtueFlawTypes.all
         };
       }
-    } else if (itemData.type == "labCovenant") {
+    }
+
+    if (itemData.type == "labCovenant") {
       if (itemData.system.linked) {
         context.canEdit = "readonly";
         context.canSelect = "disabled";
+        context.system.upkeep = context.system.document.system.upkeep.total;
+        context.system.quality = context.system.document.system.generalQuality.total;
       }
     }
 

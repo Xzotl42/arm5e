@@ -33,7 +33,7 @@ export class ArM5eCovenantInhabitantSheet extends ArM5eItemSheet {
 
     // Use a safe clone of the item data for further operations.
     const itemData = context.item;
-
+    context.selection.points = 0;
     context.inhabitantCategory = foundry.utils.deepClone(CONFIG.ARM5E.covenant.inhabitants);
     if (itemData.system.linked) {
       if (["magi", "companions"].includes(itemData.system.category)) {
@@ -78,7 +78,50 @@ export class ArM5eCovenantInhabitantSheet extends ArM5eItemSheet {
   }
 
   /* -------------------------------------------- */
+  // livingCost(livingConditions) {
+  //   switch (this.item.system.category) {
+  //     case "magi":
+  //       switch (livingConditions) {
+  //         case 1:
+  //           return ARM5E.covenant.inhabitants[this.item.system.category].points;
+  //         case 2:
+  //           return ARM5E.covenant.inhabitants[this.item.system.category].advancedPts;
+  //         case 0:
+  //           return 2;
+  //       }
+  //     default:
+  //       switch (livingConditions) {
+  //         case 0:
+  //           return ARM5E.covenant.inhabitants[this.item.system.category].points;
+  //         case 1:
+  //           return ARM5E.covenant.inhabitants[this.item.system.category].advancedPts;
+  //       }
 
+  //   break;
+  // case "companions":
+  //   switch (livingConditions) {
+  //     case 0:
+  //       return ARM5E.covenant.inhabitants[this.item.system.category].points;
+  //     case 1:
+  //       return ARM5E.covenant.inhabitants[this.item.system.category].advancedPts;
+  //   }
+  //   break;
+  // case "craftmen":
+  // case "specialists":
+  //   break;
+  // case "turbula":
+  //   break;
+  // case "servants":
+  // case "laborers":
+  // case "teamsters":
+  // case "dependants":
+  //   break;
+  // case "horses":
+  //   break;
+  // case "livestock":
+  //   break;
+  // }
+  // }
   /* -------------------------------------------- */
 
   /** @override */

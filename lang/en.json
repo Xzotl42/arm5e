@@ -579,7 +579,7 @@
   "arm5e.sheet.loyalty": "Loyalty",
   "arm5e.sheet.giftType": "Gift Type",
   "arm5e.sheet.job": "Responsibilities",
-  "arm5e.sheet.fieldExpert": "Field of expertise",
+  "arm5e.sheet.fieldOfWork": "Field of work",
   "arm5e.sheet.habitants": "Inhabitants",
   "arm5e.sheet.npcgrogs": "Other People",
   "arm5e.sheet.totalHabitants": "Total Inhabitants",
@@ -594,7 +594,9 @@
   "arm5e.sheet.consumables": "Consumables",
   "arm5e.sheet.inflation": "Inflation",
   "arm5e.sheet.provisions": "Provisions",
+  "arm5e.sheet.sundry": "Sundry",
   "arm5e.sheet.titles": "Titles",
+  "arm5e.sheet.tithes": "Tithes",
   "arm5e.sheet.wages": "Wages",
   "arm5e.sheet.writingMaterials": "Writing Materials",
   "arm5e.sheet.buildingsSumary": "1 pound per 10 pts Inhabitants (50% per craft)",
@@ -602,14 +604,15 @@
   "arm5e.sheet.inflationSumary": "increases yearly",
   "arm5e.sheet.laboratoriesSumary": "1 pound per 10 pts Laboratories (20% per craft)",
   "arm5e.sheet.provisionsSumary": "5 pounds per 10 pts Inhabitants (50% + 20% per craft)",
-  "arm5e.sheet.titlesSumary": "debts and taxes",
+  "arm5e.sheet.tithesSumary": "Debts and taxes",
   "arm5e.sheet.wagesSumary": "2 pounds per 10 pts Inhabitants",
   "arm5e.sheet.weaponsSumary": "1 pound per 320 points Weapons and Armor (50% per craft)",
   "arm5e.sheet.writingMaterialsSumary": "1 pound per Magus and book specialist (50% per craft)",
+  "arm5e.sheet.sundrySumary": "Other exceptional expenses",
 
   "arm5e.sheet.laborersSumary": "1 pound per person",
-  "arm5e.sheet.craftsmenCommonSumary": "1 + (Ability / 2) pounds per season",
-  "arm5e.sheet.craftsmenRareSumary": "Ability pounds per season",
+  "arm5e.sheet.craftsmenCommonSumary": "1 + (Ability / 2) pounds per year",
+  "arm5e.sheet.craftsmenRareSumary": "Ability pounds per year",
   "arm5e.sheet.magicItemsSumary": "1 pound per magnitude",
 
   "arm5e.sheet.wealth": "Wealth",
@@ -626,6 +629,7 @@
 
   "arm5e.sheet.yearExpenditure": "Yearly Expenditure",
   "arm5e.sheet.expenditure": "Expenditure",
+  "arm5e.sheet.equipmentMaintenance": "Average maintenance per grog",
 
   "arm5e.sheet.costsSavings": "Cost Savings",
   "arm5e.sheet.saving": "Savings",
@@ -1006,7 +1010,8 @@
   "arm5e.covenant.specialist.teacher": "Teacher",
   "arm5e.covenant.specialist.steward": "Steward",
   "arm5e.covenant.specialist.chamberlain": "Chamberlain",
-  "arm5e.covenant.specialist.trubCaptain": "Turb Captain",
+  "arm5e.covenant.specialist.turbCaptain": "Turb Captain",
+  "arm5e.covenant.specialist.books": "Books related profession",
   "arm5e.covenant.specialist.other": "Other",
 
   "arm5e.covenant.equipment.low": "Only inexpensive",
@@ -1232,6 +1237,24 @@
 
   "arm5e.sheet.activeEffect.changeValue": "Effect Value",
   "arm5e.sheet.activeEffect.type.spellcasting": "Spellcasting",
+
+  "arm5e.sheet.activeEffect.type.covenantBuildPoint": "Covenant's build points",
+  "arm5e.sheet.activeEffect.subtypes.library": "Library",
+  "arm5e.sheet.activeEffect.subtypes.labText": "Laboratory texts",
+  "arm5e.sheet.activeEffect.subtypes.vis": "Vis",
+  "arm5e.sheet.activeEffect.subtypes.magicItems": "MagicItems",
+  "arm5e.sheet.activeEffect.subtypes.specialists": "Specialists",
+  "arm5e.sheet.activeEffect.subtypes.labs": "Laboratories",
+  "arm5e.sheet.activeEffect.subtypes.money": "Money",
+  "arm5e.sheet.activeEffect.type.yearlyExpenses": "Covenant's expenses ",
+  "arm5e.sheet.activeEffect.subtypes.inhabitantPoints": "Inhabitant points",
+  "arm5e.sheet.activeEffect.subtypes.buildings": "Buildings",
+  "arm5e.sheet.activeEffect.subtypes.consumables": "Consumables",
+  "arm5e.sheet.activeEffect.subtypes.provisions": "Provisions",
+  "arm5e.sheet.activeEffect.subtypes.wages": "Wages",
+  "arm5e.sheet.activeEffect.subtypes.laboratories": "Laboratories",
+  "arm5e.sheet.activeEffect.subtypes.writingMaterials": "Writting materials",
+  "arm5e.sheet.activeEffect.subtypes.weapons": "Weapons & Armor",
 
   "arm5e.sheet.freeVirtues": "Free Virtues",
   "arm5e.sheet.occupiedSize": "Occupied Size",
@@ -1550,5 +1573,7 @@
   "arm5e.generic.hidden": "Hidden",
   "arm5e.generic.locked": "Locked",
   "arm5e.generic.params": "Parameters",
-  "arm5e.generic.total": "Total"
+  "arm5e.generic.total": "Total",
+  "arm5e.generic.needed": "Needed",
+  "arm5e.generic.numberOf": "Number of {thing}"
 }

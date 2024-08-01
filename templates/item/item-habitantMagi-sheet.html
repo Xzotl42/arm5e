@@ -50,6 +50,11 @@
       <div class="navItem-left-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
       {{localize "arm5e.sheet.description"}}
     </a>
+    <a class="item posRelative" data-tab="effects">
+      <div class="navItem-right-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
+      <div class="navItem-left-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
+      {{localize "arm5e.sheet.effects"}}
+    </a>
   </nav>
 
   {{!-- Sheet Body --}}
@@ -57,6 +62,10 @@
     {{!-- Description Tab --}}
     <div class="tab" data-group="primary" data-tab="description">
       {{editor enrichedDescription target="system.description" button=true owner=owner engine="prosemirror" editable=editable}}
+    </div>
+    {{!-- Effects Tab --}}
+    <div class="tab effects" data-group="primary" data-tab="effects" style="overflow-y: scroll">
+      {{> "systems/arm5e/templates/generic/active-effects.html" filter="covenant" }}
     </div>
   </section>
 </form>

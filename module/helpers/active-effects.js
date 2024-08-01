@@ -98,6 +98,7 @@ export default class ArM5eActiveEffect extends ActiveEffect {
         }
         return await owner.createEmbeddedDocuments("ActiveEffect", [data]);
       case "edit":
+        effect.sheet.setFilter(li.dataset.filter);
         return effect.sheet.render(true);
       case "delete":
         return await effect.delete();
