@@ -5,14 +5,22 @@
       <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name" /></h1>
       <div class="grid grid-2col">
         <div class="resource">
-          <label for="system.type" class="header-label">{{localize "arm5e.sheet.type"}}</label>
-          <select name="system.type" data-dtype="String" class="change-VFType">
-            {{selectOptions config.virtueFlawTypes.available selected=system.type labelAttr="label" localize=true}}
-          </select>
-          <label for="system.impact.value" class="header-label">{{localize system.impact.label}}</label>
-          <select name="system.impact.value" data-type="String">
-            {{selectOptions config.impacts selected=system.impact.value labelAttr="label" localize=true}}
-          </select>
+          <div class="resource">
+            <label for="system.type" class="header-label">{{localize "arm5e.sheet.type"}}</label>
+            <select name="system.type" data-type="String" class="change-VFType">
+              {{selectOptions config.virtueFlawTypes.available selected=system.type labelAttr="label" localize=true }}
+            </select>
+          </div>
+          <div class="resource">
+            <label for="system.impact.value" class="header-label">{{localize system.impact.label}}</label>
+            <select name="system.impact.value" data-type="String">
+              {{selectOptions config.impacts selected=system.impact.value labelAttr="label" localize=true }}
+            </select>
+          </div>
+          <div class="resource">
+            <label for="system.hidden" class="label-light checkbox">{{localize "arm5e.generic.hidden"}}</label>
+            <input type="checkbox" name="system.hidden" {{checked system.hidden}}>
+          </div>
         </div>
       </div>
     </div>

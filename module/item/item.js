@@ -1,4 +1,4 @@
-import { getDataset, getLabUpkeepCost, log } from "../tools.js";
+import { getDataset, log } from "../tools.js";
 import { ArM5ePCActor } from "../actor/actor.js";
 import { migrateItemData } from "../migration.js";
 import { IsMagicalEffect, computeLevel } from "../helpers/magic.js";
@@ -89,7 +89,7 @@ export class ArM5eItem extends Item {
     }
 
     if (this.type == "labCovenant") {
-      let pts = getLabUpkeepCost(system.upkeep);
+      let pts = this.system.upkeepCost;
       this.system.points = pts * CONFIG.ARM5E.lab.usage[system.usage].coeff;
     } else if (this.type == "magicItem") {
       this.system.maxLevel = 10 * this.system.materialBase * this.system.sizeMultiplier;

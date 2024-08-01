@@ -60,6 +60,14 @@
             {{selectOptions config.covenant.specialists selected=system.specialistType labelAttr="label" localize=true}}
           </select>
         </div>
+        {{#if (eq system.specialistType "other")}}
+          <div class="resource flexcol flexrow">
+            <label for="system.fieldOfWork" class="bold">{{localize "arm5e.sheet.fieldOfWork"}}</label>
+            <select name="system.fieldOfWork" data-dtype="String">
+              {{selectOptions config.covenant.fieldOfWork selected=system.fieldOfWork localize=true}}
+            </select>
+          </div>
+        {{/if}}
         <div class="resource flexcol flex0">
           <label for="system.loyalty" class="bold">{{localize "arm5e.sheet.loyalty"}}</label>
           <input class="resource-focus" type="number" name="system.loyalty" value="{{system.loyalty}}"
@@ -77,6 +85,11 @@
       <div class="navItem-left-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
       {{localize "arm5e.sheet.description"}}
     </a>
+    <a class="item posRelative" data-tab="effects">
+      <div class="navItem-right-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
+      <div class="navItem-left-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
+      {{localize "arm5e.sheet.effects"}}
+    </a>
   </nav>
   {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
   {{!-- Sheet Body --}}
@@ -84,6 +97,10 @@
     {{!-- Description Tab --}}
     <div class="tab" data-group="primary" data-tab="description">
       {{editor enrichedDescription target="system.description" button=true owner=owner engine="prosemirror" editable=editable}}
+    </div>
+    {{!-- Effects Tab --}}
+    <div class="tab effects" data-group="primary" data-tab="effects" style="overflow-y: scroll">
+      {{> "systems/arm5e/templates/generic/active-effects.html" filter="covenant" }}
     </div>
   </section>
 </form>

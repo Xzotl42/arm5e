@@ -51,7 +51,7 @@ export class LabSchema extends foundry.abstract.DataModel {
   }
 
   get buildPoints() {
-    let res = 0;
+    let res = 50;
     if (this.parent?.system.virtues) {
       for (let virtue of this.parent.system.virtues) {
         if (virtue.system.impact.value == "minor") {
@@ -60,9 +60,17 @@ export class LabSchema extends foundry.abstract.DataModel {
           res += 20;
         }
       }
-      return res + Math.max(0, this.size.total * 20);
     }
-    return 0;
+    if (this.parent?.system.flaws) {
+      for (let flaw of this.parent.system.flaws) {
+        if (flaw.system.impact.value == "minor") {
+          res -= 10;
+        } else if (flaw.system.impact.value == "major") {
+          res -= 20;
+        }
+      }
+    }
+    return Math.max(0, res + this.size.total * 20);
   }
 
   static migrate(data, itemsData) {

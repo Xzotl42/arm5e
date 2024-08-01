@@ -1,7 +1,7 @@
 // Rule: all subtypes of a given type must have a different "key" value or it becomes impossible to edit them properly
 export default {
   none: {
-    category: "magic",
+    category: "none",
     type: "none",
     mnemonic: "arm5e.sheet.activeEffect.types.nullEffect",
     subtypes: {
@@ -1974,6 +1974,159 @@ export default {
         key: "defense",
         mode: CONST.ACTIVE_EFFECT_MODES.ADD,
         default: 3
+      }
+    }
+  },
+  covenantBuildPoints: {
+    category: "covenant",
+    type: "buildPoints",
+    mnemonic: "arm5e.sheet.activeEffect.type.covenantBuildPoint",
+    subtypes: {
+      library: {
+        mnemonic: "arm5e.sheet.activeEffect.subtypes.library",
+        key: "system.buildPoints.library.computed",
+        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        default: 10
+      },
+      labText: {
+        mnemonic: "arm5e.sheet.activeEffect.subtypes.labText",
+        key: "system.buildPoints.labText.computed",
+        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        default: 10
+      },
+      vis: {
+        mnemonic: "arm5e.sheet.activeEffect.subtypes.vis",
+        key: "system.buildPoints.vis.computed",
+        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        default: 10
+      },
+      magicItems: {
+        mnemonic: "arm5e.sheet.activeEffect.subtypes.magicItems",
+        key: "system.buildPoints.magicItems.computed",
+        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        default: 10
+      },
+      specialists: {
+        mnemonic: "arm5e.sheet.activeEffect.subtypes.specialists",
+        key: "system.buildPoints.specialists.computed",
+        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        default: 10
+      },
+      labs: {
+        mnemonic: "arm5e.sheet.activeEffect.subtypes.labs",
+        key: "system.buildPoints.labs.computed",
+        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        default: 10
+      },
+      money: {
+        mnemonic: "arm5e.sheet.activeEffect.subtypes.money",
+        key: "system.buildPoints.money.computed",
+        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        default: 10
+      }
+    }
+  },
+  covenantExpenses: {
+    category: "covenant",
+    type: "expenses",
+    mnemonic: "arm5e.sheet.activeEffect.type.yearlyExpenses",
+    subtypes: {
+      inhabitant: {
+        mnemonic: "arm5e.sheet.activeEffect.subtypes.inhabitantPoints",
+        key: "system.finances.inhabitantsPoints",
+        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        default: 2
+      },
+      buildings: {
+        mnemonic: "arm5e.sheet.activeEffect.subtypes.buildings",
+        key: "system.yearlyExpenses.buildings.amount",
+        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        default: 2
+      },
+      consumables: {
+        mnemonic: "arm5e.sheet.activeEffect.subtypes.consumables",
+        key: "system.yearlyExpenses.consumables.amount",
+        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        default: 2
+      },
+      provisions: {
+        mnemonic: "arm5e.sheet.activeEffect.subtypes.provisions",
+        key: "system.yearlyExpenses.provisions.amount",
+        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        default: 2
+      },
+      wages: {
+        mnemonic: "arm5e.sheet.activeEffect.subtypes.wages",
+        key: "system.yearlyExpenses.wages.amount",
+        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        default: 2
+      },
+      laboratories: {
+        mnemonic: "arm5e.sheet.activeEffect.subtypes.laboratories",
+        key: "system.yearlyExpenses.laboratories.amount",
+        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        default: 2
+      },
+      books: {
+        mnemonic: "arm5e.sheet.activeEffect.subtypes.writingMaterials",
+        key: "system.yearlyExpenses.writingMaterials.amount",
+        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        default: 2
+      },
+      weapons: {
+        mnemonic: "arm5e.sheet.activeEffect.subtypes.weapons",
+        key: "system.yearlyExpenses.weapons.amount",
+        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        default: 2
+      }
+    }
+  },
+  covenantCostSaving: {
+    category: "covenant",
+    type: "savings",
+    mnemonic: "arm5e.sheet.activeEffect.type.yearlySavings",
+    subtypes: {
+      buildings: {
+        mnemonic: "arm5e.sheet.activeEffect.subtypes.buildings",
+        key: "system.yearlyExpenses.buildings.craftSavings",
+        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        default: 2
+      },
+      consumables: {
+        mnemonic: "arm5e.sheet.activeEffect.subtypes.consumables",
+        key: "system.yearlyExpenses.consumables.craftSavings",
+        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        default: 2
+      },
+      provisions: {
+        mnemonic: "arm5e.sheet.activeEffect.subtypes.provisions",
+        key: "system.yearlyExpenses.provisions.craftSavings",
+        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        default: 2
+      },
+      wages: {
+        mnemonic: "arm5e.sheet.activeEffect.subtypes.wages",
+        key: "system.yearlyExpenses.wages.craftSavings",
+        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        default: 2
+      },
+      laboratories: {
+        mnemonic: "arm5e.sheet.activeEffect.subtypes.laboratories",
+        key: "system.yearlyExpenses.laboratories.craftSavings",
+        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        default: 2
+      },
+      books: {
+        mnemonic: "arm5e.sheet.activeEffect.subtypes.writingMaterials",
+        key: "system.yearlyExpenses.writingMaterials.craftSavings",
+        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        default: 2
+      },
+      weapons: {
+        mnemonic: "arm5e.sheet.activeEffect.subtypes.weapons",
+        key: "system.yearlyExpenses.weapons.craftSavings",
+        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        default: 2
       }
     }
   }

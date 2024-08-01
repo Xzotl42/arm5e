@@ -772,11 +772,17 @@ export class ArM5eActorSheet extends ActorSheet {
         if (virtue.effects.size > 0) {
           virtue.system.ui = { style: 'style="font-style:italic"' };
         }
+        if (!virtue.system.hidden || actorData.isGM) {
+          virtue.system.visible = true;
+        }
       }
 
       for (let flaw of actorData.system.flaws) {
         if (flaw.effects.size > 0) {
           flaw.system.ui = { style: 'style="font-style:italic"' };
+        }
+        if (!flaw.system.hidden || actorData.isGM) {
+          flaw.system.visible = true;
         }
       }
 

@@ -170,6 +170,15 @@ export function registerSettings() {
     default: false
   });
 
+  // game.settings.register(ARM5E.SYSTEM_ID, "complexeEquipmentMaintenance", {
+  //   name: "Complex equipment maintenance",
+  //   hint: "How detailed the maintenance of armor and weapons of a covenant is",
+  //   scope: "world",
+  //   config: true,
+  //   type: Boolean,
+  //   default: false
+  // });
+
   game.settings.registerMenu(ARM5E.SYSTEM_ID, "sourcebookFilter", {
     name: game.i18n.localize("arm5e.config.sourcebookFilter"),
     label: game.i18n.localize("arm5e.config.sourcebookFilter"),

@@ -164,11 +164,12 @@ export class CovenantSchema extends foundry.abstract.DataModel {
         consumables: ExpenseField(),
         laboratories: ExpenseField(),
         provisions: ExpenseField(),
-        titles: ExpenseField(),
         wages: ExpenseField(),
         weapons: ExpenseField(),
         writingMaterials: ExpenseField(),
-        inflation: ExpenseField()
+        tithes: ExpenseField(),
+        inflation: ExpenseField(),
+        sundry: ExpenseField()
       }),
       // DEPRECATED
       yearExpenditure: new fields.ObjectField({
@@ -190,13 +191,14 @@ export class CovenantSchema extends foundry.abstract.DataModel {
       }),
       finances: new fields.SchemaField({
         wealth: basicIntegerField(),
-        totalIncome: basicIntegerField(10),
+        totalIncome: basicIntegerField(),
         baseExpenditure: basicIntegerField(),
         costSavings: basicIntegerField(),
         totalExpenditure: basicIntegerField(),
         inhabitantsPoints: basicIntegerField(),
         laboratoriesPoints: basicIntegerField(),
-        weaponsPoints: basicIntegerField()
+        weaponsPoints: basicIntegerField(),
+        averageEquipMaintenance: basicIntegerField(5)
       }),
       // DEPRECATED
       wealth: new fields.ObjectField({
@@ -233,7 +235,12 @@ export class CovenantSchema extends foundry.abstract.DataModel {
 
     if (data.system.yearExpenditure) {
       for (let [k, v] of Object.entries(data.system.yearExpenditure)) {
-        update[`system.yearlyExpenses.${k}.notes`] = v.notes ?? "";
+        if (k === "titles") {
+          // fix titles => tithes
+          update[`system.yearlyExpenses.tithes.notes`] = v.notes ?? "";
+        } else {
+          update[`system.yearlyExpenses.${k}.notes`] = v.notes ?? "";
+        }
 
         if (v.expenditure) {
           descriptionUpdate += newComputedField(`Expenditure ${k}`, v.expenditure);

@@ -134,6 +134,13 @@
         <div class="navItem-left-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
         {{localize "arm5e.sheet.diary"}}
       </a>
+      {{#if isGM}}
+        <a class="item posRelative" data-tab="effects">
+          <div class="navItem-right-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
+          <div class="navItem-left-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
+          {{localize "arm5e.sheet.effects"}}
+        </a>
+      {{/if}}
     </nav>
 
     {{!-- Sheet Body --}}
@@ -167,6 +174,11 @@
       <div class="tab diary" data-group="primary" data-tab="diary">
         {{> "systems/arm5e/templates/actor/parts/actor-diary.html" }} {{>
       "systems/arm5e/templates/actor/parts/actor-covenantCalendar.html" }}
+      </div>
+
+      {{!-- Effects Tab --}}
+      <div class="tab effects" data-group="primary" data-tab="effects">
+        {{> "systems/arm5e/templates/generic/active-effects.html"  mode="actor" filter="covenant"}}
       </div>
     </section>
 

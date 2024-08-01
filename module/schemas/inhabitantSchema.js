@@ -45,17 +45,17 @@ export class InhabitantSchema extends foundry.abstract.DataModel {
         initial: 0,
         step: 1
       }),
-      fieldExpertise: new fields.StringField({
+      fieldOfWork: new fields.StringField({
         required: false,
         blank: true,
-        initial: "",
-        choices: Object.keys(ARM5E.covenant.fieldOfExpertise)
+        initial: "none",
+        choices: Object.keys(ARM5E.covenant.fieldOfWork)
       }),
       quantity: new fields.NumberField({
         required: false,
         nullable: false,
         integer: true,
-        initial: 0,
+        initial: 1,
         min: 0,
         step: 1
       }),
@@ -87,6 +87,13 @@ export class InhabitantSchema extends foundry.abstract.DataModel {
         step: 1
       }),
       teacherScore: new fields.NumberField({
+        required: false,
+        nullable: false,
+        integer: true,
+        initial: 0,
+        step: 1
+      }),
+      points: new fields.NumberField({
         required: false,
         nullable: false,
         integer: true,
@@ -155,6 +162,90 @@ export class InhabitantSchema extends foundry.abstract.DataModel {
       }
     }
     return 0;
+  }
+
+  /* -------------------------------------------- */
+  livingCost(livingConditions) {
+    switch (this.category) {
+      case "magi":
+        switch (livingConditions.magi) {
+          case 1:
+            return ARM5E.covenant.inhabitants[this.category].points;
+          case 2:
+            return ARM5E.covenant.inhabitants[this.category].advancedPts;
+          case 0:
+            return 2;
+        }
+      default:
+        switch (livingConditions.mundane) {
+          case 0:
+            return ARM5E.covenant.inhabitants[this.category].points;
+          case 1:
+            return ARM5E.covenant.inhabitants[this.category].advancedPts;
+          case 2:
+            return ARM5E.covenant.inhabitants[this.category].advancedPts + 1;
+          default:
+            return ARM5E.covenant.inhabitants[this.category].advancedPts + 2;
+        }
+    }
+  }
+
+  // TEMPLATE CATEGORY
+  // switch (this.category) {
+  //   case "magi":
+  //     break;
+  //   case "companions":
+  //     break;
+  //   case "craftmen":
+  //   case "specialists":
+  //     break;
+  //   case "turbula":
+  //     break;
+  //   case "servants":
+  //   case "laborers":
+  //   case "teamsters":
+  //   case "dependants":
+  //     break;
+  //   case "horses":
+  //     break;
+  //   case "livestock":
+  //     break;
+  // }
+
+  get number() {
+    switch (this.category) {
+      case "magi":
+      case "companions":
+      case "craftmen":
+      case "specialists":
+        return 1;
+      case "turbula":
+      case "servants":
+      case "laborers":
+      case "teamsters":
+      case "dependants":
+      case "horses":
+      case "livestock":
+        return this.quantity;
+      default:
+        return 1;
+    }
+  }
+
+  get craftSavings() {
+    switch (this.category) {
+      case "craftmen":
+        return Math.floor((1 + this.score) / 2);
+      case "specialists":
+        if (this.specialistType == "other") {
+          return this.score;
+        }
+        return 0;
+      case "laborers":
+        return 1;
+      default:
+        return 0;
+    }
   }
 
   static migrate(data) {

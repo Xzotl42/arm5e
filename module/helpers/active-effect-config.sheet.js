@@ -30,11 +30,22 @@ export class ArM5eActiveEffectConfig extends ActiveEffectConfig {
     return "systems/arm5e/templates/generic/active-effect-config.html";
   }
 
+  setFilter(filter, mod) {
+    this.filter = filter;
+  }
+
   /** @override */
   async getData() {
     const context = await super.getData();
-    context.types = ACTIVE_EFFECTS_TYPES;
-
+    if (this.filter) {
+      context.types = Object.fromEntries(
+        Object.entries(ACTIVE_EFFECTS_TYPES).filter(
+          ([k, v]) => v.category == this.filter || v.category === "none"
+        )
+      );
+    } else {
+      context.types = ACTIVE_EFFECTS_TYPES;
+    }
     // backward compatibility with V10
     if (CONFIG.ISV10) {
       context.data.ui = {
@@ -76,9 +87,7 @@ export class ArM5eActiveEffectConfig extends ActiveEffectConfig {
     context.options = this.object.getFlag("arm5e", "option");
     for (let idx = 0; idx < context.selectedTypes.length; idx++) {
       let subTypes = [];
-      for (const [k, v] of Object.entries(
-        ACTIVE_EFFECTS_TYPES[context.selectedTypes[idx]].subtypes
-      )) {
+      for (const [k, v] of Object.entries(context.types[context.selectedTypes[idx]].subtypes)) {
         let subType = {
           name: k,
           ...v
@@ -86,7 +95,7 @@ export class ArM5eActiveEffectConfig extends ActiveEffectConfig {
 
         let tmp = subType.key;
         // option key replacement only done for abilities for now.
-        if (ACTIVE_EFFECTS_TYPES[context.selectedTypes[idx]].category === "abilities") {
+        if (context.types[context.selectedTypes[idx]].category === "abilities") {
           if (context.options[idx] != null) {
             tmp = tmp.replace("#OPTION#", context.options[idx]);
           }

@@ -11,6 +11,16 @@
   - cosmetic improvements
   - build points computation
   - loyalty computation
+  - Expenses and savings
+- Active effects for Actors are now filtered
+- Covenant's labs and inhabitants can have active effects
+- New active effects for covenants
+  - build points
+  - habitantPoints
+  - expenses
+  - savings
+- Virtues, flaws, boons and hooks have now a new attribute "hidden"
+  making them only visible by the GM
 
 ### Bug fixes
 

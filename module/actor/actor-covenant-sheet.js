@@ -83,6 +83,7 @@ export class ArM5eCovenantActorSheet extends ArM5eActorSheet {
     for (let person of context.system.inhabitants.magi) {
       if (person.system.linked) {
         this.actor.apps[person.system.document.sheet.appId] = person.system.document.sheet;
+        person.system.yearBorn = person.system.document.system.description.born.value;
       }
 
       context.system.loyalty.points.base += person.system.baseLoyalty;
@@ -94,18 +95,21 @@ export class ArM5eCovenantActorSheet extends ArM5eActorSheet {
     for (let person of context.system.inhabitants.companion) {
       if (person.system.linked) {
         this.actor.apps[person.system.document.sheet.appId] = person.system.document.sheet;
+        person.system.yearBorn = person.system.document.system.description.born.value;
       }
     }
 
     for (let person of context.system.inhabitants.turbula) {
       if (person.system.linked) {
         this.actor.apps[person.system.document.sheet.appId] = person.system.document.sheet;
+        person.system.yearBorn = person.system.document.system.description.born.value;
       }
     }
 
     for (let person of context.system.inhabitants.specialists) {
       if (person.system.linked) {
         this.actor.apps[person.system.document.sheet.appId] = person.system.document.sheet;
+        person.system.yearBorn = person.system.document.system.description.born.value;
       }
       context.system.loyalty.modifiers.specialists += person.system.loyaltyGain;
     }
@@ -113,7 +117,9 @@ export class ArM5eCovenantActorSheet extends ArM5eActorSheet {
     for (let person of context.system.inhabitants.habitants) {
       if (person.system.linked) {
         this.actor.apps[person.system.document.sheet.appId] = person.system.document.sheet;
+        person.system.yearBorn = person.system.document.system.description.born.value;
       }
+      person.system.categoryLabel = CONFIG.ARM5E.covenant.inhabitants[person.system.category].label;
     }
 
     for (let lab of context.system.labs) {
@@ -150,12 +156,22 @@ export class ArM5eCovenantActorSheet extends ArM5eActorSheet {
       context.system.yearlyExpenses[exp].label = context.config.covenant.yearlyExpenses[exp].label;
       context.system.yearlyExpenses[exp].sumary =
         context.config.covenant.yearlyExpenses[exp].sumary;
+      if (["tithes", "sundry", "inflation"].includes(exp)) {
+        context.system.yearlyExpenses[exp].classes = "editable";
+      } else {
+        context.system.yearlyExpenses[exp].canEdit = "readonly";
+      }
     }
 
     for (const save of Object.keys(context.system.yearlySavings)) {
       context.system.yearlySavings[save].label = context.config.covenant.yearlySavings[save].label;
       context.system.yearlySavings[save].sumary =
         context.config.covenant.yearlySavings[save].sumary;
+      // if (["tithes", "other", "inflation"].includes(save)) {
+      //   context.system.yearlySavings[save].classes = "editable";
+      // } else {
+      //   context.system.yearlySavings[save].canEdit = "readonly";
+      // }
     }
 
     return context;
