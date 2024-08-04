@@ -2,7 +2,7 @@
 
 ### Compatibility
 
-- V12 ready ( 12.329 verified )
+- V12 ready ( 12.330 verified )
 
 ### Features & changes
 
