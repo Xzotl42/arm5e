@@ -106,7 +106,7 @@ export class ArM5eCovenantInhabitantSheet extends ArM5eItemSheet {
   //       return ARM5E.covenant.inhabitants[this.item.system.category].advancedPts;
   //   }
   //   break;
-  // case "craftmen":
+  // case "craftsmen":
   // case "specialists":
   //   break;
   // case "turbula":
@@ -137,7 +137,7 @@ export class ArM5eCovenantInhabitantSheet extends ArM5eItemSheet {
         return `${path}/item-habitantCompanion-sheet.html`;
       case "specialists":
         return `${path}/item-habitantSpecialists-sheet.html`;
-      case "craftmen":
+      case "craftsmen":
         return `${path}/item-habitantCraftsmen-sheet.html`;
       case "turbula":
       case "servants":

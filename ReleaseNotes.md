@@ -1,4 +1,4 @@
-## 2.3.0.5, Quendalon
+## 2.3.0.7, Quendalon
 
 ### Compatibility
 
@@ -19,8 +19,11 @@
   - habitantPoints
   - expenses
   - savings
-- Virtues, flaws, boons and hooks have now a new attribute "hidden"
-  making them only visible by the GM
+  - magic item modifier on covenant stats
+- Virtues, flaws, boons and hooks have now a new attribute "hidden" making them only visible by the GM
+- Active effects have a new hidden flag
+- Inhabitants lists are foldable
+- Folded state of abilities and inhabitants lists is stored in the user-cache.
 
 ### Bug fixes
 
@@ -30,6 +33,7 @@
 - Added "apprentice" data structure to npc template.
 - Fixed display problem with enchantments lab texts.
 - Supernatural abilities sheet is no longer raising an error.
+- Fixed typo in "craftmen" to "craftsmen"
 
 ## 2.3.0.3, Quendalon
 

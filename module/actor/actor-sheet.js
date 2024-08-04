@@ -182,12 +182,19 @@ export class ArM5eActorSheet extends ActorSheet {
         },
         sections: {
           visibility: { common: {} }
+        },
+        lists: {
+          visibility: { abilities: {} }
         }
       };
 
       sessionStorage.setItem(`usercache-${game.user.id}`, JSON.stringify(usercache));
     } else if (usercache[this.actor.id].sections?.visibility == undefined) {
       usercache[this.actor.id].sections = { visibility: { common: {} } };
+      sessionStorage.setItem(`usercache-${game.user.id}`, JSON.stringify(usercache));
+    }
+    if (usercache[this.actor.id].lists?.visibility == undefined) {
+      usercache[this.actor.id].lists = { visibility: { abilities: {} } };
       sessionStorage.setItem(`usercache-${game.user.id}`, JSON.stringify(usercache));
     }
     return usercache[this.actor.id];
@@ -863,7 +870,19 @@ export class ArM5eActorSheet extends ActorSheet {
 
     html.find(".ability-category").click(async (ev) => {
       const category = $(ev.currentTarget).data("category");
-      document.getElementById(category).classList.toggle("hide");
+
+      let usercache = JSON.parse(sessionStorage.getItem(`usercache-${game.user.id}`));
+      let scope = usercache[this.actor._id].lists.visibility.abilities;
+      const classes = document.getElementById(category).classList;
+      if (scope) {
+        if (classes.contains("hide")) {
+          scope[category] = "";
+        } else {
+          scope[category] = "hide";
+        }
+        sessionStorage.setItem(`usercache-${game.user.id}`, JSON.stringify(usercache));
+      }
+      classes.toggle("hide");
       // let tmp2 = tmp.toggle("hide");
     });
 

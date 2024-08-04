@@ -125,6 +125,8 @@ export class InhabitantSchema extends foundry.abstract.DataModel {
   static migrateData(data) {
     if (data.category === "grogs") {
       data.category = "turbula";
+    } else if (data.category === "craftmen") {
+      data.category = "craftsmen";
     }
     return data;
   }
@@ -196,7 +198,7 @@ export class InhabitantSchema extends foundry.abstract.DataModel {
   //     break;
   //   case "companions":
   //     break;
-  //   case "craftmen":
+  //   case "craftsmen":
   //   case "specialists":
   //     break;
   //   case "turbula":
@@ -216,7 +218,7 @@ export class InhabitantSchema extends foundry.abstract.DataModel {
     switch (this.category) {
       case "magi":
       case "companions":
-      case "craftmen":
+      case "craftsmen":
       case "specialists":
         return 1;
       case "turbula":
@@ -234,7 +236,7 @@ export class InhabitantSchema extends foundry.abstract.DataModel {
 
   get craftSavings() {
     switch (this.category) {
-      case "craftmen":
+      case "craftsmen":
         return Math.floor((1 + this.score) / 2);
       case "specialists":
         if (this.specialistType == "other") {
@@ -315,6 +317,11 @@ export class InhabitantSchema extends foundry.abstract.DataModel {
           }
       }
     }
+
+    if (data.system.category === "craftmen") {
+      updateData["system.category"] = "craftsmen";
+    }
+
     if (data.system.category === "grogs") {
       updateData["system.category"] = "turbula";
     }

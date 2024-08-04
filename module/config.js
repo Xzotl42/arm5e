@@ -960,7 +960,7 @@ ARM5E.covenant.inhabitants = {
   },
   companions: { label: "arm5e.sheet.companion", points: 3, advancedPts: 5 },
   turbula: { label: "arm5e.sheet.turbula", points: 1, advancedPts: 2 },
-  craftmen: { label: "arm5e.sheet.craftmen", points: 2, advancedPts: 3 },
+  craftsmen: { label: "arm5e.sheet.craftsmen", points: 2, advancedPts: 3 },
   specialists: { label: "arm5e.sheet.specialists", points: 2, advancedPts: 3 },
   dependants: { label: "arm5e.sheet.dependants", points: 1, advancedPts: 2 },
   laborers: { label: "arm5e.sheet.laborers", points: 1, advancedPts: 2 },
@@ -1046,13 +1046,13 @@ ARM5E.covenant.yearlySavings = {
     sumary: "arm5e.sheet.laborersSumary",
     label: "arm5e.sheet.laborers"
   },
-  craftsmenCommon: {
-    sumary: "arm5e.sheet.craftsmenCommonSumary",
-    label: "arm5e.sheet.craftsmenCommon"
+  craftsmen: {
+    sumary: "arm5e.sheet.craftsmenSumary",
+    label: "arm5e.sheet.craftsmen"
   },
-  craftsmenRare: {
-    sumary: "arm5e.sheet.craftsmenRareSumary",
-    label: "arm5e.sheet.craftsmenRare"
+  specialists: {
+    sumary: "arm5e.sheet.specialistsSumary",
+    label: "arm5e.sheet.specialists"
   },
   magicItems: {
     sumary: "arm5e.sheet.magicItemsSumary",

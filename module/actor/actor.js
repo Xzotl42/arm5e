@@ -66,6 +66,22 @@ export class ArM5ePCActor extends Actor {
       this.system.buildPoints.money.computed = 0;
       this.system.buildPoints.specialists.computed = 0;
 
+      this.system.yearlyExpenses.buildings.magicMod = 0;
+      this.system.yearlyExpenses.consumables.magicMod = 0;
+      this.system.yearlyExpenses.laboratories.magicMod = 0;
+      this.system.yearlyExpenses.provisions.magicMod = 0;
+      this.system.yearlyExpenses.wages.magicMod = 0;
+      this.system.yearlyExpenses.weapons.magicMod = 0;
+      this.system.yearlyExpenses.writingMaterials.magicMod = 0;
+
+      this.system.yearlyExpenses.buildings.mod = 0;
+      this.system.yearlyExpenses.consumables.mod = 0;
+      this.system.yearlyExpenses.laboratories.mod = 0;
+      this.system.yearlyExpenses.provisions.mod = 0;
+      this.system.yearlyExpenses.wages.mod = 0;
+      this.system.yearlyExpenses.weapons.mod = 0;
+      this.system.yearlyExpenses.writingMaterials.mod = 0;
+
       this.system.yearlyExpenses.buildings.amount = 0;
       this.system.yearlyExpenses.consumables.amount = 0;
       this.system.yearlyExpenses.laboratories.amount = 0;
@@ -84,6 +100,22 @@ export class ArM5ePCActor extends Actor {
       this.system.finances.inhabitantsPoints = 0;
       this.system.finances.laboratoriesPoints = 0;
       this.system.finances.weaponsPoints = 0;
+
+      this.system.census = {
+        magi: 0,
+        companions: 0,
+        specialists: 0,
+        craftsmen: 0,
+        turbula: 0,
+        laborers: 0,
+        teamsters: 0,
+        servants: 0,
+        dependants: 0,
+        horses: 0,
+        livestock: 0,
+        servantsNeeded: 0,
+        teamstersNeeded: 0
+      };
     }
 
     if (this.type == "laboratory") {
@@ -1082,7 +1114,6 @@ export class ArM5ePCActor extends Actor {
     let totalFlaws = 0;
     system.scene.document = game.scenes.get(system.scene.id);
 
-    let inhabitantPts = 0;
     system.finances.totalIncome = 0;
 
     let libraryPts = 0;
@@ -1092,20 +1123,6 @@ export class ArM5ePCActor extends Actor {
     let enchantmentPts = 0;
     let specialistPts = 0;
     let labPts = 0;
-    let laborersSavings = 0;
-    system.census = {
-      magi: 0,
-      companions: 0,
-      specialists: 0,
-      craftmen: 0,
-      turbula: 0,
-      laborers: 0,
-      teamsters: 0,
-      servants: 0,
-      dependants: 0,
-      horses: 0,
-      livestock: 0
-    };
 
     for (let [key, item] of this.items.entries()) {
       item.img = item.img || DEFAULT_TOKEN;
@@ -1141,8 +1158,8 @@ export class ArM5ePCActor extends Actor {
             specialistPts += item.system.buildPoints;
             specialists.push(item);
             break;
-          case "craftmen":
-            system.census.craftmen++;
+          case "craftsmen":
+            system.census.craftsmen++;
             specialists.push(item);
             break;
           case "turbula":
@@ -1151,7 +1168,6 @@ export class ArM5ePCActor extends Actor {
             break;
           case "laborers":
             system.census.laborers += item.system.number;
-            laborersSavings++;
             habitants.push(item);
             break;
           case "servants":
@@ -1273,8 +1289,6 @@ export class ArM5ePCActor extends Actor {
     system.buildPoints.money.computed += Math.ceil(system.finances.wealth / 10);
     system.buildPoints.specialists.computed += specialistPts;
 
-    system.reputations = reputations;
-
     // YEARLY EXPENSES
 
     system.yearlyExpenses.buildings.amount += Math.ceil(system.finances.inhabitantsPoints / 10);
@@ -1292,7 +1306,14 @@ export class ArM5ePCActor extends Actor {
     system.finances.weaponsPoints +=
       system.finances.averageEquipMaintenance * system.census.turbula;
     system.yearlyExpenses.weapons.amount += Math.ceil(system.finances.weaponsPoints / 320);
-    system.yearlyExpenses.writingMaterials.amount += system.census.magi;
+
+    // const bookSpecCnt = system.inhabitants.specialists.reduce((bookSpecialistCnt,current) => { if (current.system.category) })
+
+    system.yearlyExpenses.writingMaterials.amount +=
+      system.census.magi +
+      specialists.filter((e) => {
+        return e.system.category === "specialists" && e.system.specialistType === "books";
+      }).length;
 
     // INHABITANTS
 
@@ -1314,15 +1335,15 @@ export class ArM5ePCActor extends Actor {
       system.census.magi +
       system.census.companions +
       system.census.specialists +
-      system.census.craftmen +
+      system.census.craftsmen +
       system.census.turbula +
       system.census.inhabitants +
       system.census.horses +
       system.census.livestock +
       system.npcInhabitants;
-    system.census.servantsNeeded =
+    system.census.servantsNeeded +=
       2 * Math.ceil((system.census.total - system.census.workers) / 10);
-    system.census.teamstersNeeded = Math.ceil(
+    system.census.teamstersNeeded += Math.ceil(
       (system.census.total - 3 * system.census.laborers - system.census.teamsters) / 10
     );
 
@@ -1387,55 +1408,101 @@ export class ArM5ePCActor extends Actor {
         CONFIG.ARM5E.covenant.yearlyExpenses.provisions.maxSaving
     );
 
-    craftSavings.provisions.crafts.laborer = system.yearlySavings.laborers.amount;
-
     for (let spe of system.inhabitants.specialists) {
       if (spe.system.category === "specialists") {
         if (spe.system.specialistType == "other" && spe.system.fieldOfWork != "none") {
           let craft = slugify(spe.system.job);
           let saves = spe.system.craftSavings;
           if (!craftSavings[spe.system.fieldOfWork].crafts[craft]) {
-            craftSavings[spe.system.fieldOfWork].crafts[craft] = saves;
+            craftSavings[spe.system.fieldOfWork].crafts[craft] = { val: saves, type: "spec" };
           } else {
-            craftSavings[spe.system.fieldOfWork].crafts[craft] += saves;
+            craftSavings[spe.system.fieldOfWork].crafts[craft].val += saves;
           }
           craftSavings[spe.system.fieldOfWork].total += saves;
         }
-      } else if (spe.system.category === "craftmen" && spe.system.fieldOfWork != "none") {
+      } else if (spe.system.category === "craftsmen" && spe.system.fieldOfWork != "none") {
         let craft = slugify(spe.system.job);
         let saves = spe.system.craftSavings;
         if (!craftSavings[spe.system.fieldOfWork].crafts[craft]) {
-          craftSavings[spe.system.fieldOfWork].crafts[craft] = saves;
+          craftSavings[spe.system.fieldOfWork].crafts[craft] = { val: saves, type: "craft" };
         } else {
-          craftSavings[spe.system.fieldOfWork].crafts[craft] += saves;
+          craftSavings[spe.system.fieldOfWork].crafts[craft].val += saves;
         }
         craftSavings[spe.system.fieldOfWork].total += saves;
       }
     }
 
+    const activeEffects = CONFIG.ISV10 ? this.effects : this.appliedEffects;
+    system.yearlySavings.magicItems.quantity =
+      ArM5eActiveEffect.findAllActiveEffectsWithTypeFiltered(
+        activeEffects,
+        "covenantCostSavingMagic"
+      ).length;
+    // savings from magic
+    const magicLocalized = slugify(game.i18n.localize("arm5e.sheet.magicLabel"));
+    // savings from mundane effects
+    const otherLocalized = slugify(game.i18n.localize("arm5e.generic.other"));
+    // savings from laborers
+    // get slugify version of localized "laborer"
+    const laborerLocalized = slugify(game.i18n.localize("arm5e.sheet.laborers"));
+    craftSavings.provisions.crafts[laborerLocalized] = {
+      val: system.yearlySavings.laborers.amount,
+      max: system.yearlyExpenses.provisions.amount / 2
+    };
+
+    system.yearlySavings.specialists.amount = 0;
+    system.yearlySavings.craftsmen.amount = 0;
+
     for (let [category, v] of Object.entries(craftSavings)) {
       system.yearlyExpenses[category].savingsDetails = craftSavings[category].details + "<ul>";
+      if (system.yearlyExpenses[category].magicMod) {
+        craftSavings[category].crafts[magicLocalized] = {
+          val: system.yearlyExpenses[category].magicMod,
+          max: system.yearlyExpenses[category].amount / 2
+        };
+      }
+
+      if (system.yearlyExpenses[category].mod) {
+        craftSavings[category].crafts[otherLocalized] = {
+          val: system.yearlyExpenses[category].mod,
+          max: system.yearlyExpenses[category].amount / 2
+        };
+      }
 
       for (let [craft, save] of Object.entries(craftSavings[category].crafts)) {
-        system.yearlyExpenses[category].craftSavings += Math.min(save, craftSavings[category].max);
-        system.yearlyExpenses[category].savingsDetails += `<li>${
+        const increment = Math.min(save.val, save.max ? save.max : craftSavings[category].max);
+        system.yearlyExpenses[category].craftSavings += increment;
+        if (save.type == "spec") {
+          system.yearlySavings.specialists.amount += increment;
+        } else if (save.type === "craft") {
+          system.yearlySavings.craftsmen.amount += increment;
+        }
+        if (craft == magicLocalized) {
+          system.yearlySavings.magicItems.amount += increment;
+        }
+        system.yearlyExpenses[category].savingsDetails += `<li class='label-light'>${
           craft.charAt(0).toUpperCase() + craft.slice(1)
-        } : ${save.toFixed(1)} (max ${craftSavings[category].max.toFixed(1)})</li>`;
+        } : ${save.val.toFixed(1)} (max ${
+          save.max ? save.max.toFixed(1) : craftSavings[category].max.toFixed(1)
+        })</li>`;
       }
       system.yearlyExpenses[category].savingsDetails += `</ul>`;
-      system.yearlyExpenses[category].craftSavings = Math.min(
-        system.yearlyExpenses[category].amount,
-        system.yearlyExpenses[category].craftSavings
+      system.yearlyExpenses[category].craftSavings = Math.round(
+        Math.min(
+          system.yearlyExpenses[category].amount,
+          system.yearlyExpenses[category].craftSavings
+        )
       );
     }
 
-    // if (category === "provisions" && craft == "laborer") {
-    //   system.yearlyExpenses[category].craftSavings += Math.min(
-    //     save,
-    //     system.yearlyExpenses.provisions.amount * 0.5
-    //   );
-    // }
+    system.yearlySavings.specialists.amount = Math.round(system.yearlySavings.specialists.amount);
+    system.yearlySavings.craftsmen.amount = Math.round(system.yearlySavings.craftsmen.amount);
+    system.yearlySavings.specialists.amount = Math.round(system.yearlySavings.specialists.amount);
+    system.yearlySavings.magicItems.amount = Math.round(system.yearlySavings.magicItems.amount);
 
+    system.yearlySavings.laborers.quantity = system.census.laborers;
+    system.yearlySavings.craftsmen.quantity = system.census.craftsmen;
+    system.yearlySavings.specialists.quantity = system.census.specialists;
     // SUMARY
     system.finances.costSavings =
       system.yearlyExpenses.buildings.craftSavings +
@@ -1461,6 +1528,7 @@ export class ArM5ePCActor extends Actor {
     system.finances.totalExpenditure =
       system.finances.baseExpenditure - system.finances.costSavings;
 
+    system.reputations = reputations;
     system.possessions = possessions;
     system.visSources = visSources;
     system.vis = vis;

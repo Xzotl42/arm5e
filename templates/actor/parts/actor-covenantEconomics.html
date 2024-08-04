@@ -139,19 +139,19 @@
       </li>
       {{#each system.yearlySavings as |saving key|}}
         <li class="flexrow flex-group-left" style="border: 0px" data-attribute="{{key}}">
-          <span class="flex07">
+          <span class="flexcol flex07">
             <label class="bold">{{localize saving.label}}</label>
             <div class="label-light">({{localize saving.sumary}})</div>
           </span>
           <span class="flex05">
-            <input type="text" name="system.yearlySavings.{{key}}.quantity" class="resource-focus"
-              value="{{numberFormat saving.quantity decimals=0 sign=true}}" data-dtype="Number" />
+            <input type="text" name="system.yearlySavings.{{key}}.quantity" class="resource-focus-slim"
+              value="{{numberFormat saving.quantity decimals=0 sign=true}}" data-dtype="Number" readonly />
           </span>
           <span class="flex05">
-            <input type="text" name="system.yearlySavings.{{key}}.amount" class="resource-focus"
-              value="{{numberFormat saving.amount decimals=0 sign=true}}" data-dtype="Number" />
+            <input type="text" name="system.yearlySavings.{{key}}.amount" class="resource-focus-slim"
+              value="{{numberFormat saving.amount decimals=0 sign=true}}" data-dtype="Number" readonly />
           </span>
-          <span class="width">
+          <span class="">
             <input type="text" name="system.yearlySavings.{{key}}.notes" value="{{saving.notes}}" data-dtype="String" />
           </span>
         </li>
