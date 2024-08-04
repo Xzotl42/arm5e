@@ -51,11 +51,18 @@ export class ArM5eCovenantActorSheet extends ArM5eActorSheet {
             diaryEvents: TIME_FILTER,
             calendarEvents: TIME_FILTER
           }
+        },
+        lists: {
+          visibility: { inhabitants: {} }
         }
       };
 
       sessionStorage.setItem(`usercache-${game.user.id}`, JSON.stringify(usercache));
+    } else if (usercache[this.actor.id].lists?.visibility == undefined) {
+      usercache[this.actor.id].lists = { visibility: { inhabitants: {} } };
+      sessionStorage.setItem(`usercache-${game.user.id}`, JSON.stringify(usercache));
     }
+
     return usercache[this.actor.id];
   }
 
@@ -318,6 +325,22 @@ export class ArM5eCovenantActorSheet extends ArM5eActorSheet {
       let itemId = li.data("itemId");
       const item = this.actor.items.get(itemId);
       await item.system.harvest();
+    });
+
+    html.find(".inhabitants").click(async (ev) => {
+      const category = $(ev.currentTarget).data("category");
+      let usercache = JSON.parse(sessionStorage.getItem(`usercache-${game.user.id}`));
+      let scope = usercache[this.actor._id].lists.visibility.inhabitants;
+      const classes = document.getElementById(category).classList;
+      if (scope) {
+        if (classes.contains("hide")) {
+          scope[category] = "";
+        } else {
+          scope[category] = "hide";
+        }
+        sessionStorage.setItem(`usercache-${game.user.id}`, JSON.stringify(usercache));
+      }
+      classes.toggle("hide");
     });
   }
   /**

@@ -16,32 +16,34 @@
     <ol class="item-list">
 
       {{#each section.effects as |effect|}}
-        <li class="item effect flexrow" data-effect-id="{{effect.UUID}}" data-filter="{{../../filter}}"
-          data-mode="{{../../mode}}">
-          <div class="item-name effect-name flexrow">
-            <img class="item-image effect-control" data-action="edit" style="max-width: 100px" src="{{effect.img}}"
-              title="{{{effect.descr}}}" width="36" height="36" />
-            <h4>{{effect.name}}</h4>
-          </div>
-          <div class="effect-source">{{effect.sourceName}}</div>
-          <div class="effect-duration">{{effect.duration.label}}</div>
-          <div class="item-controls effect-controls flexrow">
-            <a class="effect-control" data-action="toggle" title="{{localize 'arm5e.sheet.effectsToggle'}}">
-              <i class="fas {{#if effect.disabled}}fa-check{{else}}fa-times{{/if}}"></i>
-            </a>
-            {{#unless effect.noEdit}}
-              <!-- trigger an error if the effect is on an item while belonging to an actor -->
-              <a class="effect-control" data-action="edit" title="{{localize 'arm5e.sheet.action.Edit'}}">
-                <i class="icon-Icon_Edit"></i>
+        {{#unless isHidden}}
+          <li class="item effect flexrow" data-effect-id="{{effect.UUID}}" data-filter="{{../../filter}}"
+            data-mode="{{../../mode}}">
+            <div class="item-name effect-name flexrow">
+              <img class="item-image effect-control" data-action="edit" style="max-width: 100px" src="{{effect.img}}"
+                title="{{{effect.descr}}}" width="36" height="36" />
+              <h4>{{effect.displayName}}</h4>
+            </div>
+            <div class="effect-source">{{effect.sourceName}}</div>
+            <div class="effect-duration">{{effect.duration.label}}</div>
+            <div class="item-controls effect-controls flexrow">
+              <a class="effect-control" data-action="toggle" title="{{localize 'arm5e.sheet.effectsToggle'}}">
+                <i class="fas {{#if effect.disabled}}fa-check{{else}}fa-times{{/if}}"></i>
               </a>
-            {{/unless}}
-            {{#unless (and effect.noDelete (eq ../../mode "actor"))}}
-              <a class="effect-control" data-action="delete" title="{{localize 'arm5e.sheet.action.Delete'}}">
-                <i class="icon-Icon_Delete_Hand_Gesture"></i>
-              </a>
-            {{/unless}}
-          </div>
-        </li>
+              {{#unless effect.noEdit}}
+                <!-- trigger an error if the effect is on an item while belonging to an actor -->
+                <a class="effect-control" data-action="edit" title="{{localize 'arm5e.sheet.action.Edit'}}">
+                  <i class="icon-Icon_Edit"></i>
+                </a>
+              {{/unless}}
+              {{#unless (and effect.noDelete (eq ../../mode "actor"))}}
+                <a class="effect-control" data-action="delete" title="{{localize 'arm5e.sheet.action.Delete'}}">
+                  <i class="icon-Icon_Delete_Hand_Gesture"></i>
+                </a>
+              {{/unless}}
+            </div>
+          </li>
+        {{/unless}}
       {{/each}}
     </ol>
   {{/each}} {{#unless system.effectCreation}}

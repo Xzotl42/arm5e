@@ -179,8 +179,8 @@ export class CovenantSchema extends foundry.abstract.DataModel {
       }),
       yearlySavings: new fields.SchemaField({
         laborers: SavingField(),
-        craftsmenCommon: SavingField(),
-        craftsmenRare: SavingField(),
+        craftsmen: SavingField(),
+        specialists: SavingField(),
         magicItems: SavingField()
       }),
       // DEPRECATED

@@ -13,7 +13,7 @@
     <a class="item" data-tab="effects" style="font-size: 16pt; padding: 0px"><i class="icon-Icon_Effects"></i>
       {{localize "EFFECT.TabEffects"}}</a>
   </nav>
-
+  {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
   <!-- Details Tab -->
   {{!-- Sheet Body --}}
   <section class="sheet-body effect-options" style="height: auto; min-height: 115px;">
@@ -21,7 +21,7 @@
       <div class="form-group">
         <label>{{ localize "EFFECT.Name" }}</label>
         <div class="form-fields">
-          <input type="text" name="{{data.ui.nameAttr}}" value="{{ data.ui.name }}" class="resource-focus" />
+          <input type="text" name="{{data.ui.nameAttr}}" value="{{ data.ui.name }}" class="resource" />
         </div>
       </div>
 
@@ -37,6 +37,12 @@
       <div class="form-group">
         <label>{{ localize "EFFECT.Disabled" }}</label>
         <input type="checkbox" name="disabled" {{ checked data.disabled }} />
+      </div>
+      <div class="form-group">
+        {{#if isGM}}
+          <label>{{ localize "arm5e.generic.hidden" }}</label>
+          <input type="checkbox" name="flags.arm5e.hidden" {{ checked data.flags.arm5e.hidden }} />
+        {{/if}}
       </div>
 
       {{#if isItemEffect}}

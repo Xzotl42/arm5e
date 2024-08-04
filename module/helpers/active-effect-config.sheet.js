@@ -133,6 +133,9 @@ export class ArM5eActiveEffectConfig extends ActiveEffectConfig {
     context.devMode = game.modules
       .get("_dev-mode")
       ?.api?.getPackageDebugValue(CONFIG.ARM5E.SYSTEM_ID);
+
+    context.isGM = game.user.isGM;
+
     log(false, "Effect config sheet data");
     log(false, context);
     return context;

@@ -21,7 +21,7 @@
       <li class="ability-category item flexrow item-header" data-category="{{id}}">
         <label style="font-size:12pt; border-bottom: 1px solid #4a4a48;">{{localize abilitySet.label }}</label>
       </li>
-      <div id="{{id}}" class="toggle-collapse">
+      <div id="{{id}}" class="toggle-collapse {{lookup ../ui.lists.visibility.abilities id}}">
         {{#each abilitySet.abilities as |item id|}}
           <li class="item item-value flexrow flex-center macro-ready" data-name="{{item.name}}" data-attribute="{{id}}"
             data-item-id="{{item._id}}">

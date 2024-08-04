@@ -29,6 +29,8 @@ export default class ArM5eActiveEffect extends ActiveEffect {
       // (CONFIG.ISV10 && this.noEdit) ||
       (this.parent.documentName === "Item" && this.parent.isOwned == true) ||
       (this.parent.documentName === "Actor" && this.origin?.includes("Item"));
+
+    this.isHidden = this.flags.arm5e.hidden && !game.user.isGM;
   }
 
   async getSource() {
@@ -134,6 +136,7 @@ export default class ArM5eActiveEffect extends ActiveEffect {
 
     // Iterate over active effects, classifying them into categories
     for (let e of effects) {
+      const isHidden = e.flags.arm5e.hidden;
       if (CONFIG.ISV10) {
         e._getSourceName(); // Trigger a lookup for the source name
         e.name = e.label;
@@ -143,6 +146,12 @@ export default class ArM5eActiveEffect extends ActiveEffect {
       } else {
         e.UUID = e.uuid;
       }
+      if (isHidden) {
+        e.displayName = `${e.name} (${game.i18n.localize("arm5e.generic.hidden")})`;
+      } else {
+        e.displayName = e.name;
+      }
+
       // TODO V11 use description field
       e.descr = e.buildActiveEffectDescription();
       // let effectTypes = e.getFlag("arm5e", "type");

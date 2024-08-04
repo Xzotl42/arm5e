@@ -1508,6 +1508,7 @@ div[class*="foldable-section"] {
 .details.hide,
 .toggle-collapse.hide {
   max-height: 0px;
+  min-height: 0px;
   opacity: 0;
   overflow: hidden;
 }
@@ -1810,7 +1811,7 @@ img.art-icon {
   margin: 7px 0;
   padding: 0;
   overflow-y: auto;
-  min-height: 200px;
+  /* min-height: 200px; */
 }
 
 .filter-item {

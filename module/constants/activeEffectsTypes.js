@@ -2081,50 +2081,130 @@ export default {
       }
     }
   },
-  covenantCostSaving: {
+  covenantCostSavingMundane: {
     category: "covenant",
-    type: "savings",
-    mnemonic: "arm5e.sheet.activeEffect.type.yearlySavings",
+    type: "savingsMundane",
+    mnemonic: "arm5e.sheet.activeEffect.type.yearlySavings.mundane",
     subtypes: {
       buildings: {
         mnemonic: "arm5e.sheet.activeEffect.subtypes.buildings",
-        key: "system.yearlyExpenses.buildings.craftSavings",
+        key: "system.yearlyExpenses.buildings.mod",
         mode: CONST.ACTIVE_EFFECT_MODES.ADD,
         default: 2
       },
       consumables: {
         mnemonic: "arm5e.sheet.activeEffect.subtypes.consumables",
-        key: "system.yearlyExpenses.consumables.craftSavings",
+        key: "system.yearlyExpenses.consumables.mod",
         mode: CONST.ACTIVE_EFFECT_MODES.ADD,
         default: 2
       },
       provisions: {
         mnemonic: "arm5e.sheet.activeEffect.subtypes.provisions",
-        key: "system.yearlyExpenses.provisions.craftSavings",
+        key: "system.yearlyExpenses.provisions.mod",
         mode: CONST.ACTIVE_EFFECT_MODES.ADD,
         default: 2
       },
       wages: {
         mnemonic: "arm5e.sheet.activeEffect.subtypes.wages",
-        key: "system.yearlyExpenses.wages.craftSavings",
+        key: "system.yearlyExpenses.wages.mod",
         mode: CONST.ACTIVE_EFFECT_MODES.ADD,
         default: 2
       },
       laboratories: {
         mnemonic: "arm5e.sheet.activeEffect.subtypes.laboratories",
-        key: "system.yearlyExpenses.laboratories.craftSavings",
+        key: "system.yearlyExpenses.laboratories.mod",
         mode: CONST.ACTIVE_EFFECT_MODES.ADD,
         default: 2
       },
-      books: {
+      writingMaterials: {
         mnemonic: "arm5e.sheet.activeEffect.subtypes.writingMaterials",
-        key: "system.yearlyExpenses.writingMaterials.craftSavings",
+        key: "system.yearlyExpenses.writingMaterials.mod",
         mode: CONST.ACTIVE_EFFECT_MODES.ADD,
         default: 2
       },
       weapons: {
         mnemonic: "arm5e.sheet.activeEffect.subtypes.weapons",
-        key: "system.yearlyExpenses.weapons.craftSavings",
+        key: "system.yearlyExpenses.weapons.mod",
+        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        default: 2
+      }
+    }
+  },
+  covenantCostSavingMagic: {
+    category: "covenant",
+    type: "savingsMagic",
+    mnemonic: "arm5e.sheet.activeEffect.type.yearlySavings.magic",
+    subtypes: {
+      buildings: {
+        mnemonic: "arm5e.sheet.activeEffect.subtypes.buildings",
+        key: "system.yearlyExpenses.buildings.magicMod",
+        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        default: 2
+      },
+      consumables: {
+        mnemonic: "arm5e.sheet.activeEffect.subtypes.consumables",
+        key: "system.yearlyExpenses.consumables.magicMod",
+        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        default: 2
+      },
+      provisions: {
+        mnemonic: "arm5e.sheet.activeEffect.subtypes.provisions",
+        key: "system.yearlyExpenses.provisions.magicMod",
+        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        default: 2
+      },
+      wages: {
+        mnemonic: "arm5e.sheet.activeEffect.subtypes.wages",
+        key: "system.yearlyExpenses.wages.magicMod",
+        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        default: 2
+      },
+      laboratories: {
+        mnemonic: "arm5e.sheet.activeEffect.subtypes.laboratories",
+        key: "system.yearlyExpenses.laboratories.magicMod",
+        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        default: 2
+      },
+      writingMaterials: {
+        mnemonic: "arm5e.sheet.activeEffect.subtypes.writingMaterials",
+        key: "system.yearlyExpenses.writingMaterials.magicMod",
+        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        default: 2
+      },
+      weapons: {
+        mnemonic: "arm5e.sheet.activeEffect.subtypes.weapons",
+        key: "system.yearlyExpenses.weapons.magicMod",
+        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        default: 2
+      }
+    }
+  },
+  covenantInhabitants: {
+    category: "covenant",
+    type: "covenantInhabitants",
+    mnemonic: "arm5e.sheet.activeEffect.type.covenantInhabitants",
+    subtypes: {
+      turbula: {
+        mnemonic: "arm5e.sheet.activeEffect.subtypes.turbula",
+        key: "system.census.turbula",
+        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        default: 2
+      },
+      laborers: {
+        mnemonic: "arm5e.sheet.activeEffect.subtypes.laborers",
+        key: "system.census.laborers",
+        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        default: 2
+      },
+      teamsters: {
+        mnemonic: "arm5e.sheet.activeEffect.subtypes.teamsters",
+        key: "system.census.teamsters",
+        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        default: 2
+      },
+      servants: {
+        mnemonic: "arm5e.sheet.activeEffect.subtypes.servants",
+        key: "system.census.servants",
         mode: CONST.ACTIVE_EFFECT_MODES.ADD,
         default: 2
       }
