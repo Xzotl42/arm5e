@@ -1123,7 +1123,8 @@ export class ArM5ePCActor extends Actor {
     let enchantmentPts = 0;
     let specialistPts = 0;
     let labPts = 0;
-
+    let workersPts = 0;
+    let servantPts = 0;
     for (let [key, item] of this.items.entries()) {
       item.img = item.img || DEFAULT_TOKEN;
       item._index = key;
@@ -1144,6 +1145,8 @@ export class ArM5ePCActor extends Actor {
       } else if (item.type === "reputation") {
         reputations.push(item);
       } else if (item.type === "inhabitant") {
+        item.system.points = item.system.livingCost(this.system.modifiersLife) * item.system.number;
+        system.finances.inhabitantsPoints += item.system.points;
         switch (item.system.category) {
           case "magi":
             magi.push(item);
@@ -1169,15 +1172,19 @@ export class ArM5ePCActor extends Actor {
           case "laborers":
             system.census.laborers += item.system.number;
             habitants.push(item);
+            workersPts += item.system.points;
+            servantPts += item.system.points;
             break;
           case "servants":
             system.census.servants += item.system.number;
             habitants.push(item);
+            workersPts += item.system.points;
             break;
           case "teamsters":
             system.census.teamsters += item.system.number;
             habitants.push(item);
             break;
+            workersPts += item.system.points;
           case "dependants":
             system.census.dependants += item.system.number;
             habitants.push(item);
@@ -1191,8 +1198,6 @@ export class ArM5ePCActor extends Actor {
             livestock.push(item);
             break;
         }
-        item.system.points = item.system.livingCost(this.system.modifiersLife) * item.system.number;
-        system.finances.inhabitantsPoints += item.system.points;
       } else if (item.type === "possessionsCovenant") {
         possessions.push(item);
       } else if (item.type === "visSourcesCovenant") {
@@ -1329,6 +1334,7 @@ export class ArM5ePCActor extends Actor {
 
     system.census.workers =
       system.census.laborers + system.census.teamsters + system.census.servants;
+
     system.census.inhabitants = system.census.workers + system.census.dependants;
 
     system.census.total =
@@ -1342,9 +1348,10 @@ export class ArM5ePCActor extends Actor {
       system.census.livestock +
       system.npcInhabitants;
     system.census.servantsNeeded +=
-      2 * Math.ceil((system.census.total - system.census.workers) / 10);
-    system.census.teamstersNeeded += Math.ceil(
-      (system.census.total - 3 * system.census.laborers - system.census.teamsters) / 10
+      2 * Math.round((system.finances.inhabitantsPoints - workersPts) / 10);
+
+    system.census.teamstersNeeded = Math.round(
+      (system.finances.inhabitantsPoints - servantPts - 2 * system.census.laborers) / 10
     );
 
     // SAVINGS :
@@ -1446,7 +1453,7 @@ export class ArM5ePCActor extends Actor {
     // get slugify version of localized "laborer"
     const laborerLocalized = slugify(game.i18n.localize("arm5e.sheet.laborers"));
     craftSavings.provisions.crafts[laborerLocalized] = {
-      val: system.yearlySavings.laborers.amount,
+      val: system.census.laborers,
       max: system.yearlyExpenses.provisions.amount / 2
     };
 

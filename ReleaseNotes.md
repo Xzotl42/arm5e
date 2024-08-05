@@ -1,4 +1,17 @@
-## 2.3.0.7, Quendalon
+## 2.3.0.8, Quendalon, raised by the Fae BF1
+
+### Bug fixes
+
+- Servants needed were not computed properly
+- Teamsters needed were not computed properly
+- Savings from craftsmen was not computed properly
+- Few cosmetic fixes
+- added new handling of the aegis field when it is not a number.
+- Rounded base loyalty
+- user-cache was retrieved 2 times for covenants, overwritting configuration of filters.
+- Magus inhabitant gift type can no longer be blank
+
+## 2.3.0.7, Quendalon, raised by the Fae
 
 ### Compatibility
 
@@ -6,7 +19,7 @@
 
 ### Features & changes
 
-- Covenant data model migration (on going)
+- Covenant data model migration
   - moved mnemonics to config
   - cosmetic improvements
   - build points computation
