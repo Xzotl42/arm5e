@@ -33,7 +33,7 @@
           <span class="covenantname flexrow" style="padding-top: 4px">
             <label for="system.aegisCovenant" class="header-label"
               style="padding-top: 4px; padding-left: 24px">{{localize "arm5e.sheet.aegisCovenant"}}</label>
-            <input name="system.aegisCovenant" type="text" value="{{system.aegisCovenant}}" data-dtype="String"
+            <input name="system.aegisCovenant" type="number" value="{{system.aegisCovenant}}" data-dtype="Number"
               style="flex: 0 0 100px" />
           </span>
         </div>
@@ -48,8 +48,8 @@
           <span class="covenantname flexrow" style="padding-top: 4px">
             <label for="system.foundationYear" class="header-label"
               style="padding-top: 4px; padding-left: 24px">{{localize "arm5e.sheet.foundationYear"}}</label>
-            <input class="flex08" name="system.foundationYear" type="text" value="{{system.foundationYear}}"
-              data-dtype="String" style="flex: 0 0 100px" />
+            <input class="flex08" name="system.foundationYear" type="number" value="{{system.foundationYear}}"
+              data-dtype="Number" style="flex: 0 0 100px" />
           </span>
         </div>
 
@@ -57,7 +57,7 @@
           <span class="covenantname flexrow" style="padding-top: 4px">
             <label for="system.datetime.year" class="header-label"
               style="padding-top: 4px; padding-left: 24px">{{localize "arm5e.sheet.currentYear"}}</label>
-            <input class="flex08" name="year" type="text" value="{{datetime.year}}" readonly data-dtype="String"
+            <input class="flex08" name="year" type="number" value="{{datetime.year}}" readonly data-dtype="Number"
               style="flex: 0 0 120px" />
           </span>
           <span class="covenantname flexrow" style="padding-top: 4px">
@@ -95,8 +95,8 @@
           <span class="covenantname flexrow" style="padding-top: 4px">
             <label for="system.levelsRegio" class="header-label"
               style="padding-top: 4px; padding-left: 24px">{{localize "arm5e.sheet.levelsRegio"}}</label>
-            <input class="flex04 resource-focus" name="system.levelsRegio" type="text" value="{{system.levelsRegio}}"
-              data-dtype="String" style="flex: 0 0 40px" />
+            <input class="flex04 resource-focus" name="system.levelsRegio" type="number" value="{{system.levelsRegio}}"
+              data-dtype="Number" style="flex: 0 0 40px" />
           </span>
         </div>
       </div>
@@ -144,7 +144,7 @@
     </nav>
 
     {{!-- Sheet Body --}}
-    <section class="sheet-body">
+    <section class="sheet-body" style="min-height: 262px;">
       {{!-- attributes Tab --}}
       <div class="tab attributes" data-group="primary" data-tab="attributes">
         {{> "systems/arm5e/templates/actor/parts/actor-covenantAttributes.html" }}

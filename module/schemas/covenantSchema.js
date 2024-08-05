@@ -1,3 +1,4 @@
+import { convertToNumber } from "../tools.js";
 import { actorBase } from "./actorCommonSchema.js";
 import {
   actorLink,
@@ -64,6 +65,14 @@ export class CovenantSchema extends foundry.abstract.DataModel {
     return {
       ...actorBase(),
       aegisCovenant: new fields.NumberField({
+        required: false,
+        nullable: false,
+        integer: true,
+        min: 0,
+        initial: 0,
+        step: 1
+      }),
+      aegisPenetration: new fields.NumberField({
         required: false,
         nullable: false,
         integer: true,
@@ -221,7 +230,15 @@ export class CovenantSchema extends foundry.abstract.DataModel {
         // update["system.habitants.-=npcgrogs"] = null;
       }
     }
+
     let descriptionUpdate = "";
+
+    if (typeof data.system.aegisCovenant != "number") {
+      descriptionUpdate += `<li>Covenant aegis is now stricly a number, previous value (${
+        data.system.aegisCovenant
+      }) => new value (${convertToNumber(data.system.aegisCovenant, 0)})</li>`;
+    }
+
     if (data.system.constructionPoints) {
       for (let [k, v] of Object.entries(data.system.constructionPoints.data)) {
         update[`system.buildPoints.${k}`] = { value: v.initials ?? 0, notes: v.notes ?? "" };

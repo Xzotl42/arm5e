@@ -47,7 +47,7 @@ export class InhabitantSchema extends foundry.abstract.DataModel {
       }),
       fieldOfWork: new fields.StringField({
         required: false,
-        blank: true,
+        blank: false,
         initial: "none",
         choices: Object.keys(ARM5E.covenant.fieldOfWork)
       }),
@@ -69,13 +69,13 @@ export class InhabitantSchema extends foundry.abstract.DataModel {
       }),
       specialistType: new fields.StringField({
         required: false,
-        blank: true,
+        blank: false,
         initial: "other",
         choices: Object.keys(ARM5E.covenant.specialists)
       }),
       giftType: new fields.StringField({
         required: false,
-        blank: true,
+        blank: false,
         initial: "normal",
         choices: Object.keys(ARM5E.covenant.gift)
       }),
@@ -237,7 +237,7 @@ export class InhabitantSchema extends foundry.abstract.DataModel {
   get craftSavings() {
     switch (this.category) {
       case "craftsmen":
-        return Math.floor((1 + this.score) / 2);
+        return Math.floor(1 + this.score / 2);
       case "specialists":
         if (this.specialistType == "other") {
           return this.score;

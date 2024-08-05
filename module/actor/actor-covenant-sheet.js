@@ -77,10 +77,7 @@ export class ArM5eCovenantActorSheet extends ArM5eActorSheet {
     // sheets are the actor object, the data object, whether or not it's
     // editable, the items array, and the effects array.
     const context = await super.getData();
-    context.ui = this.getUserCache();
     context.config = CONFIG.ARM5E;
-    log(false, "Covenant-sheet getData");
-    log(false, context);
     context.system.loyalty.points.base = 0;
 
     context.system.loyalty.modifiers.livingConditions =
@@ -98,6 +95,8 @@ export class ArM5eCovenantActorSheet extends ArM5eActorSheet {
     context.system.loyalty.points.base /= context.system.inhabitants.magi.length
       ? context.system.inhabitants.magi.length
       : 1;
+
+    context.system.loyalty.points.base = Math.round(context.system.loyalty.points.base);
 
     for (let person of context.system.inhabitants.companion) {
       if (person.system.linked) {
@@ -180,7 +179,8 @@ export class ArM5eCovenantActorSheet extends ArM5eActorSheet {
       //   context.system.yearlySavings[save].canEdit = "readonly";
       // }
     }
-
+    log(false, "Covenant-sheet getData");
+    log(false, context);
     return context;
   }
 

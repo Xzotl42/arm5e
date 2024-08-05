@@ -13,10 +13,11 @@
     <a class="item" data-tab="effects" style="font-size: 16pt; padding: 0px"><i class="icon-Icon_Effects"></i>
       {{localize "EFFECT.TabEffects"}}</a>
   </nav>
-  {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+
   <!-- Details Tab -->
   {{!-- Sheet Body --}}
   <section class="sheet-body effect-options" style="height: auto; min-height: 115px;">
+    {{> "systems/arm5e/templates/generic/metalic-bar.html" topoffset="-6px"}}
     <section class="tab" data-tab="details">
       <div class="form-group">
         <label>{{ localize "EFFECT.Name" }}</label>

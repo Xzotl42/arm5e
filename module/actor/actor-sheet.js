@@ -1409,6 +1409,7 @@ export class ArM5eActorSheet extends ActorSheet {
    */
   async _onItemCreate(event) {
     event.preventDefault();
+    event.stopPropagation();
     const dataset = getDataset(event);
     let newItem = await this._itemCreate(dataset);
     newItem[0].sheet.render(true);
