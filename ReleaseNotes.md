@@ -1,3 +1,9 @@
+## 2.3.0.9, Quendalon, raised by the Fae BF2
+
+### Bug fixes
+
+- Proper migration fix for the aegisCovenant field
+
 ## 2.3.0.8, Quendalon, raised by the Fae BF1
 
 ### Bug fixes
