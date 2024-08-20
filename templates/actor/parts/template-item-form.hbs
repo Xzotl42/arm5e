@@ -4,16 +4,6 @@
     <select name="system.magicSystem.templates.{{this.id}}.components.{{this.compIdx}}.option">
       {{selectOptions this.selection selected=this.option}}
     </select>
-    {{#if @root.isMagus}}
-      <div class="flexrow flex02">
-        <input
-          type="checkbox"
-          class="tiny-checkbox"
-          name="system.magicSystem.templates.{{this.id}}.components.{{this.compIdx}}.hermetic"
-          {{checked hermetic}}
-        /><label class="label-light">Hermetic forms</label>
-      </div>
-    {{/if}}
     <div id="top-right-icon">
       <a
         class="template-item"
