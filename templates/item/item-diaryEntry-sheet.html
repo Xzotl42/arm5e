@@ -47,7 +47,7 @@
         <div class="resource">
           <label class="header-label">{{localize "arm5e.activity.activity"}}</label>
           <select class="progress-activity" name="system.activity" data-type="String" style="width: 100%"
-            {{@root.system.disabled}}>
+            {{@root.activityState}}>
             {{selectOptions selection.activities selected=system.activity localize=true}}
           </select>
         </div>

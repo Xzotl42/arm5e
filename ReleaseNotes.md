@@ -1,3 +1,10 @@
+## 2.3.0.10, Quendalon, raised by the Fae BF3
+
+### Bug fixes
+
+- Fixed critical bug where all diary activities created from outside the sheet where reset to standard diary.
+- added new handling of the regio levels field when it is not a number during migration.
+
 ## 2.3.0.9, Quendalon, raised by the Fae BF2
 
 ### Bug fixes

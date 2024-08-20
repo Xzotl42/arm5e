@@ -239,6 +239,12 @@ export class CovenantSchema extends foundry.abstract.DataModel {
       update["system.aegisCovenant"] = newValue;
     }
 
+    if (typeof data.system.levelsRegio != "number" || isNaN(data.system.levelsRegio)) {
+      const newValue = convertToNumber(data.system.levelsRegio, 0);
+      descriptionUpdate += `<li>Covenant regio levels is now stricly a number, previous value (${data.system.levelsRegio}) => new value (${newValue})</li>`;
+      update["system.levelsRegio"] = newValue;
+    }
+
     if (data.system.constructionPoints) {
       for (let [k, v] of Object.entries(data.system.constructionPoints.data)) {
         update[`system.buildPoints.${k}`] = { value: v.initials ?? 0, notes: v.notes ?? "" };
