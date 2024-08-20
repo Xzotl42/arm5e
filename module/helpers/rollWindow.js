@@ -1,5 +1,4 @@
 import { ARM5E } from "../config.js";
-
 import { simpleDie, stressDie, noRoll, changeMight, useItemCharge } from "../dice.js";
 import { PickRequisites, checkTargetAndCalculateResistance, noFatigue } from "./magic.js";
 import { chatFailedCasting } from "./chat.js";
@@ -7,15 +6,15 @@ import { ArM5ePCActor } from "../actor/actor.js";
 import { setAgingEffects, agingCrisis } from "./long-term-activities.js";
 import { exertSelf } from "./combat.js";
 import { getDataset, log } from "../tools.js";
-
-// below is a bitmap
+import { ArM5eItem } from "../item/item.js";
+// Below is a bitmap
 const ROLL_MODES = {
   STRESS: 1,
   SIMPLE: 2,
   NO_BOTCH: 4,
-  NO_CONF: 8, // no confidence use
-  UNCONSCIOUS: 16, // can roll unconscious
-  PRIVATE: 32, // roll is private between the GM and player
+  NO_CONF: 8, // No confidence use
+  UNCONSCIOUS: 16, // Can roll unconscious
+  PRIVATE: 32, // Roll is private between the GM and player
   // common combos
   STRESS_OR_SIMPLE: 3
 };
@@ -36,7 +35,7 @@ const DEFAULT_ROLL_PROPERTIES = {
   ABILITY: {
     VAL: "ability",
     MODE: ROLL_MODES.STRESS_OR_SIMPLE,
-    MODIFIERS: 5, // impacted by aura, if realm of the ability <> mundane
+    MODIFIERS: 5, // Impacted by aura, if realm of the ability <> mundane
     TITLE: "arm5e.dialog.title.rolldie"
   },
   // COMBAT: {
@@ -120,7 +119,7 @@ const DEFAULT_ROLL_PROPERTIES = {
   }
 };
 
-// experimental, allow simple die for everything
+// Experimental, allow simple die for everything
 const ALTERNATE_ROLL_PROPERTIES = {
   OPTION: {
     MODE: ROLL_MODES.SIMPLE,
@@ -170,17 +169,30 @@ const ALTERNATE_ROLL_PROPERTIES = {
 };
 
 const ROLL_PROPERTIES = DEFAULT_ROLL_PROPERTIES;
-//const ROLL_PROPERTIES = ALTERNATE_ROLL_PROPERTIES;
+// Const ROLL_PROPERTIES = ALTERNATE_ROLL_PROPERTIES;
 
+/**
+ *
+ * @param type
+ */
 function getRollTypeProperties(type) {
   return ROLL_PROPERTIES[type.toUpperCase()] ?? ROLL_PROPERTIES.OPTION;
 }
 
+/**
+ *
+ * @param dataset
+ * @param actor
+ */
 function prepareRollVariables(dataset, actor) {
   actor.rollInfo.init(dataset, actor);
-  // log(false, `Roll data: ${JSON.stringify(actor.rollInfo)}`);
+  // Log(false, `Roll data: ${JSON.stringify(actor.rollInfo)}`);
 }
 
+/**
+ *
+ * @param dataset
+ */
 function chooseTemplate(dataset) {
   if (
     [
@@ -196,23 +208,28 @@ function chooseTemplate(dataset) {
     return "systems/arm5e/templates/roll/roll-characteristic.html";
   }
   if (dataset.roll == ROLL_PROPERTIES.SPONT.VAL) {
-    //spontaneous magic
+    // Spontaneous magic
     return "systems/arm5e/templates/roll/roll-magic.html";
   }
   if ([ROLL_PROPERTIES.MAGIC.VAL, ROLL_PROPERTIES.SPELL.VAL].includes(dataset.roll)) {
     return "systems/arm5e/templates/roll/roll-spell.html";
   }
   if (dataset.roll == ROLL_PROPERTIES.AGING.VAL) {
-    //aging roll
+    // Aging roll
     return "systems/arm5e/templates/roll/roll-aging.html";
   }
   if (dataset.roll == ROLL_PROPERTIES.CRISIS.VAL) {
-    //aging crisis roll
+    // Aging crisis roll
     return "systems/arm5e/templates/roll/roll-aging-crisis.html";
   }
   return "";
 }
 
+/**
+ *
+ * @param dataset
+ * @param actor
+ */
 function updateCharacteristicDependingOnRoll(dataset, actor) {
   if (
     [ROLL_PROPERTIES.SPONT.VAL, ROLL_PROPERTIES.MAGIC.VAL, ROLL_PROPERTIES.SPELL.VAL].includes(
@@ -223,6 +240,11 @@ function updateCharacteristicDependingOnRoll(dataset, actor) {
   }
 }
 
+/**
+ *
+ * @param actor
+ * @param callback
+ */
 function getDebugButtonsIfNeeded(actor, callback) {
   if (!game.modules.get("_dev-mode")?.api?.getPackageDebugValue(ARM5E.SYSTEM_ID)) return {};
   return {
@@ -243,6 +265,12 @@ function getDebugButtonsIfNeeded(actor, callback) {
   };
 }
 
+/**
+ *
+ * @param dataset
+ * @param html
+ * @param actor
+ */
 function getDialogData(dataset, html, actor) {
   const callback = getRollTypeProperties(dataset.roll).CALLBACK;
 
@@ -269,7 +297,7 @@ function getDialogData(dataset, html, actor) {
   const title = getRollTypeProperties(dataset.roll).TITLE;
   if (getRollTypeProperties(dataset.roll).MODE & ROLL_MODES.STRESS) {
     if (getRollTypeProperties(dataset.roll).MODE & ROLL_MODES.NO_BOTCH) {
-      mode = 4; // no botches
+      mode = 4; // No botches
     }
     btns.yes = {
       icon: "<i class='fas fa-check'></i>",
@@ -332,6 +360,11 @@ function getDialogData(dataset, html, actor) {
   };
 }
 
+/**
+ *
+ * @param dataset
+ * @param item
+ */
 async function useMagicItem(dataset, item) {
   if (item.system.enchantments.charges == 0) {
     ui.notifications.warn(game.i18n.localize("arm5e.notification.noChargesLeft"));
@@ -376,6 +409,11 @@ async function useMagicItem(dataset, item) {
   dialog.render(true);
 }
 
+/**
+ *
+ * @param dataset
+ * @param actor
+ */
 async function usePower(dataset, actor) {
   if (Number(dataset.cost > actor.system.might.points)) {
     ui.notifications.warn(game.i18n.localize("arm5e.notification.noMightPoints"));
@@ -418,6 +456,10 @@ async function usePower(dataset, actor) {
   );
   dialog.render(true);
 }
+/**
+ *
+ * @param html
+ */
 function addListenersDialog(html) {
   html.find(".clickable").click((ev) => {
     $(ev.currentTarget).next().toggleClass("hide");
@@ -432,7 +474,7 @@ function addListenersDialog(html) {
     const dataset = getDataset(e);
     const actor = game.actors.get(dataset.actorid);
     const item = actor.items.get(dataset.itemid);
-    // create a tmp Item in memory
+    // Create a tmp Item in memory
     let newSpell = new ArM5eItem(item.toObject(), { temporary: true });
     let update = await PickRequisites(newSpell.system, dataset.flavor);
     await newSpell.updateSource(update);
@@ -454,6 +496,12 @@ function addListenersDialog(html) {
   });
 }
 
+/**
+ *
+ * @param dataset
+ * @param template
+ * @param actor
+ */
 async function renderRollTemplate(dataset, template, actor) {
   if (!template) {
     return;
@@ -478,8 +526,14 @@ async function renderRollTemplate(dataset, template, actor) {
   return dialog;
 }
 
+/**
+ *
+ * @param actorCaster
+ * @param roll
+ * @param message
+ */
 async function castSpell(actorCaster, roll, message) {
-  // first check that the spell succeeds
+  // First check that the spell succeeds
   const levelOfSpell = actorCaster.rollInfo.magic.level;
   const totalOfSpell = Math.round(roll._total);
 
@@ -494,7 +548,7 @@ async function castSpell(actorCaster, roll, message) {
       if (actorCaster.rollInfo.magic.ritual) {
         fatigue = Math.max(Math.ceil((levelOfSpell - totalOfSpell) / 5), 1);
       }
-      // lose fatigue levels
+      // Lose fatigue levels
       await actorCaster.loseFatigueLevel(fatigue);
       if (totalOfSpell < levelOfSpell - 10) {
         await chatFailedCasting(actorCaster, roll, message, fatigue);
@@ -517,10 +571,15 @@ async function castSpell(actorCaster, roll, message) {
       return false;
     }
   }
-  // then do contest of magic
+  // Then do contest of magic
   await checkTargetAndCalculateResistance(actorCaster, roll, message);
 }
 
+/**
+ *
+ * @param html
+ * @param actor
+ */
 export function getFormData(html, actor) {
   let find = html.find(".SelectedCharacteristic");
   if (find.length > 0) {
@@ -536,7 +595,7 @@ export function getFormData(html, actor) {
         modifier: actor.rollInfo.modifier
       };
       actor.rollInfo.init(dataset, actor);
-      // actor.rollInfo.ability.score = 0;
+      // Actor.rollInfo.ability.score = 0;
       // actor.rollInfo.ability.name = "";
       // actor.rollInfo.type = "char";
     } else {
@@ -549,7 +608,7 @@ export function getFormData(html, actor) {
       };
       actor.rollInfo.init(dataset, actor);
 
-      // const ability = actor.items.get(find[0].value);
+      // Const ability = actor.items.get(find[0].value);
       // actor.rollInfo.ability.score = ability.system.finalScore;
       // actor.rollInfo.ability.name = ability.name;
       // actor.rollInfo.type = "ability";
@@ -601,7 +660,7 @@ export function getFormData(html, actor) {
   find = html.find(".SelectedModifier");
   if (find.length > 0) {
     actor.rollInfo.modifier = Number(find[0].value) ?? 0;
-    // negative modifier
+    // Negative modifier
     if ([ROLL_PROPERTIES.CRISIS.VAL].includes(actor.rollInfo.type)) {
       actor.rollInfo.modifier = -actor.rollInfo.modifier;
     }

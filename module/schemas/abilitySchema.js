@@ -1,7 +1,7 @@
 import { ARM5E } from "../config.js";
 import { ABILITIES_DEFAULT_ICONS } from "../constants/ui.js";
 import { log } from "../tools.js";
-import { itemBase, RealmField, XpField } from "./commonSchemas.js";
+import { boolOption, itemBase, RealmField, XpField } from "./commonSchemas.js";
 const fields = foundry.data.fields;
 export class AbilitySchema extends foundry.abstract.DataModel {
   // TODO remove in V11
@@ -13,17 +13,30 @@ export class AbilitySchema extends foundry.abstract.DataModel {
       defaultChaAb: new fields.StringField({ required: false, blank: false, initial: "int" }),
       speciality: new fields.StringField({ required: false, blank: true, initial: "" }),
       xp: XpField(),
+      accelerated: boolOption(false),
       key: new fields.StringField({ required: false, blank: false, initial: "awareness" }),
+      // category: new fields.StringField({
+      //   required: false,
+      //   blank: false,
+      //   initial: "general",
+      //   choices: Object.keys(ARM5E.ABILITIES_CATEGORIES)
+      // }),
       option: new fields.StringField({ required: false, blank: true, initial: "" }),
       realm: RealmField()
     };
   }
 
   static getIcon(item, newValue = null) {
-    if (newValue != null) {
-      return ABILITIES_DEFAULT_ICONS.MONO[newValue] ?? CONFIG.ARM5E_DEFAULT_ICONS["ability"];
+    if (["altTechnique", "altForm"].includes(item.system.category)) {
+      return "icons/magic/defensive/barrier-shield-dome-blue-purple.webp";
     } else {
-      return ABILITIES_DEFAULT_ICONS.MONO[item.system.key] ?? CONFIG.ARM5E_DEFAULT_ICONS["ability"];
+      if (newValue != null) {
+        return ABILITIES_DEFAULT_ICONS.MONO[newValue] ?? CONFIG.ARM5E_DEFAULT_ICONS["ability"];
+      } else {
+        return (
+          ABILITIES_DEFAULT_ICONS.MONO[item.system.key] ?? CONFIG.ARM5E_DEFAULT_ICONS["ability"]
+        );
+      }
     }
   }
 
@@ -39,15 +52,24 @@ export class AbilitySchema extends foundry.abstract.DataModel {
     return res;
   }
 
-  async _increaseScore() {
+  isAlternateArt() {
+    return ["altTechnique", "altForm"].includes(this.category);
+  }
+
+  async increaseScore() {
     let xpMod = 0;
-    if (this.category == "supernaturalCat" && this.parent.isOwned) {
+    if (
+      ["supernaturalCat", "altTechnique", "altForm"].includes(this.category) &&
+      this.parent.isOwned
+    ) {
       let key = this.option == "" ? this.key : this.key + "_" + this.option;
       xpMod = this.parent.parent.system.bonuses.skills[key].xpMod;
     }
     let oldXp = this.xp;
     let newXp = Math.round(
-      (((this.derivedScore + 1) * (this.derivedScore + 2) * 5) / 2 - xpMod) / this.xpCoeff
+      (((this.derivedScore + 1) * (this.derivedScore + 2) * (this.accelerated ? 1 : 5)) / 2 -
+        xpMod) /
+        this.xpCoeff
     );
 
     await this.parent.update(
@@ -62,19 +84,24 @@ export class AbilitySchema extends foundry.abstract.DataModel {
     console.log(`Added ${delta} xps from ${oldXp} to ${newXp}`);
   }
 
-  async _decreaseScore() {
+  async decreaseScore() {
     let xpMod = 0;
-    if (this.category == "supernaturalCat" && this.parent.isOwned) {
+    if (
+      ["supernaturalCat", "altTechnique", "altForm"].includes(this.category) &&
+      this.parent.isOwned
+    ) {
       let key = this.option == "" ? this.key : this.key + "_" + this.option;
       xpMod = this.parent.parent.system.bonuses.skills[key].xpMod;
     }
     let futureXp = Math.round(
-      ((this.derivedScore - 1) * this.derivedScore * 5) / (2 * this.xpCoeff)
+      ((this.derivedScore - 1) * this.derivedScore * (this.accelerated ? 1 : 5)) /
+        (2 * this.xpCoeff)
     );
     let newXp = 0;
     if (futureXp >= Math.round(xpMod * this.xpCoeff)) {
       newXp = Math.round(
-        (((this.derivedScore - 1) * this.derivedScore * 5) / 2 - xpMod) / this.xpCoeff
+        (((this.derivedScore - 1) * this.derivedScore * (this.accelerated ? 1 : 5)) / 2 - xpMod) /
+          this.xpCoeff
       );
     }
     if (newXp != this.xp) {

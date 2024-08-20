@@ -66,11 +66,15 @@ import { EnchantmentSchema } from "./schemas/enchantmentSchema.js";
 import { magicalAttributesHelper } from "./helpers/magic.js";
 import { CovenantSchema } from "./schemas/covenantSchema.js";
 import { ArM5eCovenantInhabitantSheet } from "./item/item-inhabitantCovenant.js";
+import { ArM5eSupernaturalEffectSheet } from "./item/item-supernaturalEffect-sheet.js";
+import { SupernaturalEffectSchema } from "./schemas/supernaturalEffectSchema.js";
+// import { ArtSchema } from "./schemas/artSchema.js";
 Hooks.once("init", async function () {
   game.arm5e = {
     ArsLayer,
     ArM5ePCActor,
     ArM5eItem,
+    // ArtSchema,
     rollItemMacro
   };
 
@@ -528,6 +532,7 @@ Hooks.on("renderPause", function () {
 });
 
 function setDatamodels() {
+  // CONFIG.ARM5E.ItemDataModels["art"] = ArtSchema;
   CONFIG.ARM5E.ItemDataModels["ability"] = AbilitySchema;
   CONFIG.ARM5E.ItemDataModels["virtue"] = VirtueFlawSchema;
   CONFIG.ARM5E.ItemDataModels["flaw"] = VirtueFlawSchema;
@@ -549,6 +554,7 @@ function setDatamodels() {
   CONFIG.ARM5E.ItemDataModels["enchantment"] = EnchantmentSchema;
   CONFIG.ARM5E.ItemDataModels["book"] = BookSchema;
   CONFIG.ARM5E.ItemDataModels["diaryEntry"] = DiaryEntrySchema;
+  CONFIG.ARM5E.ItemDataModels["supernaturalEffect"] = SupernaturalEffectSchema;
   //Actors
   CONFIG.ARM5E.ActorDataModels["laboratory"] = LabSchema;
   CONFIG.ARM5E.ActorDataModels["magicCodex"] = CodexSchema;
@@ -611,6 +617,7 @@ function registerSheets() {
 
     Items.registerSheet("arm5e", ArM5eItemSheet, {
       types: [
+        "art",
         "weapon",
         "armor",
         "item",
@@ -665,6 +672,12 @@ function registerSheets() {
       types: ["magicalEffect", "enchantment", "spell", "baseEffect", "laboratoryText", "magicItem"],
       makeDefault: true
     });
+
+    Items.registerSheet("arm5e", ArM5eSupernaturalEffectSheet, {
+      types: ["supernaturalEffect"],
+      makeDefault: true
+    });
+
     // Items.registerSheet("arm5e", ArM5eItemSheetNoDesc, { types: ["vis"] });
 
     // [DEV] comment line bellow to get access to the original sheet

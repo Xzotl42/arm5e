@@ -70,6 +70,8 @@ export class ArM5eItem extends Item {
             }
           }
         }
+      } else if (this.system.prepareData instanceof Function) {
+        this.system.prepareData();
       }
     }
     // compute reputation score
@@ -185,7 +187,7 @@ export class ArM5eItem extends Item {
       // if those values are not defined, this spell hasn't been migrated, no need to attempt to compute anything
 
       console.warn(
-        `The spell ${this.name} has not been migrated, please trigger a manual migration!`
+        `The spell "${this.name}" has not been migrated, please trigger a manual migration!`
       );
       return true;
     }

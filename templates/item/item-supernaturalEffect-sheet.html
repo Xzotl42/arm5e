@@ -1,0 +1,90 @@
+<form class="sheet-content flexcol" autocomplete="off">
+  <header class="sheet-header ">
+    <div class="flexcol">
+      <div class="flexrow">
+        <img class="item-img-medium" src="{{item.img}}" data-edit="img" title="{{item.name}}" />
+        <div class="">
+          <h1 class="charname" style="font-size: 24pt; font-family: blackmoor">
+            <div class="flexrow">{{localize "TYPES.Item.supernaturalEffect"}}
+            </div>
+          </h1>
+          <h1 class="charname">
+            <div class="flexrow"><input name="name" type="text" title="{{item.name}}" value="{{item.name}}"
+                placeholder="Name" />
+              {{#if item.isOwned}}
+                <div class="flex0 padding10 "><a class="rollable" data-roll="magic" data-id="{{item._id}}"
+                    data-modifier="{{ item.system.bonus }}" data-name="{{item.name}}" data-usefatigue="true"
+                    title='{{localize "arm5e.dialog.button.roll"}}'><img src="systems/arm5e/assets/dice.png"
+                      style="border: 0px; height:30px; min-height:30px; min-width: 30px;"></a>
+                </div>
+              {{/if}}
+            </div>
+          </h1>
+          {{#if locked}}
+            <i class="icon-Icon_Locked"></i>
+          {{/if}}
+        </div>
+      </div>
+      <div class="header-fields">
+        <div class="flexrow">
+          {{#unless ui.noVerb}}
+            <div class="resource flexcol flexrow">
+              <label for="system.verb.value" class="header-label">{{localize "arm5e.sheet.verb"}}</label>
+              <select {{noSelect}} name="system.verb.value" data-type="String">
+                {{selectOptions selection.verbs selected=system.verb.value labelAttr="label"}}
+              </select>
+            </div>
+          {{/unless}}
+          {{#unless ui.noVerb}}
+            <div class="resource flexcol flexrow">
+              <label for="system.noun.value" class="header-label">{{localize "arm5e.sheet.noun"}}</label>
+              <select {{noSelect}} name="system.noun.value" data-type="String">
+                {{selectOptions selection.nouns selected=system.noun.value labelAttr="label"}}
+              </select>
+            </div>
+          {{/unless}}
+          <div class="resource flexcol flex-center">
+            <label class="header-label">{{localize "Bonus ability"}}</label>
+            <input class="resource-focus-slim" type="number" readonly value="{{system.level}}" data-dtype="Number" />
+          </div>
+          <div class="resource flexcol flex-center">
+            <label class="header-label">{{localize "Bonus ability"}}</label>
+            <input class="resource-focus-slim" type="number" readonly value="{{system.modifier}}" data-dtype="Number" />
+          </div>
+
+          <div class="resource flexcol flex-center">
+            <label class="header-label">{{localize "arm5e.sheet.level"}}</label>
+            <input class="design-level" type="number" {{noEdit}} name="system.level" value="{{system.level}}"
+              data-dtype="Number" style="max-width: 60px;" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  {{!-- Sheet Tab Navigation --}}
+  <nav class="arm5eTabs sheet-tabs tabs" data-group="primary">
+    <a class="item posRelative" data-tab="description">
+      <div class="navItem-right-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
+      <div class="navItem-left-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
+      {{localize "arm5e.sheet.description"}}
+    </a>
+    <a class="item posRelative" data-tab="attributes">
+      <div class="navItem-right-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
+      <div class="navItem-left-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
+      {{localize "arm5e.sheet.attributes"}}
+    </a>
+  </nav>
+  {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+  {{!-- Sheet Body --}}
+  <section class="sheet-body">
+    {{!-- Description Tab --}}
+    <div class="tab" data-group="primary" data-tab="description">
+      <div style="height: 235px">
+        {{editor enrichedDescription target="system.description" button=true owner=owner engine="prosemirror" editable=editable}}
+      </div>
+      {{#if metagame.view }}
+        {{> "systems/arm5e/templates/generic/source.html" }}
+      {{/if}}
+    </div>
+  </section>
+</form>

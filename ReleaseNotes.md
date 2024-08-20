@@ -1,3 +1,16 @@
+## 2.3.1.0, Quendalon, lost in the Forest
+
+### Features & changes
+
+- New active effects
+  - custom magic system
+    - alternate Arts
+- new checkbox design
+
+### Bug fixes
+
+- Fix requisites editing on roll
+
 ## 2.3.0.8, Quendalon, raised by the Fae BF1
 
 ### Bug fixes

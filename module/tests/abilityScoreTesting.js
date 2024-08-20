@@ -79,7 +79,7 @@ export function registerAbilityScoresTesting(quench) {
         describe("Increase score", function () {
           for (const score of Array(MAX_SCORE).keys()) {
             it(`Increase score to ${score + 1}`, async function () {
-              await item.system._increaseScore();
+              await item.system.increaseScore();
               assert.equal(item.system.finalScore, score + 1, "Final score");
               // assert.equal(item.system.xpNextLevel, 5 * (score + 2), "xpNextLevel");
               // assert.equal(item.system.remainingXp, 0, "remainingXp");
@@ -90,7 +90,7 @@ export function registerAbilityScoresTesting(quench) {
         describe("Decrease score", function () {
           for (const score of Array(MAX_SCORE).keys()) {
             it(`Decrease score to ${MAX_SCORE - score}`, async function () {
-              await item.system._decreaseScore();
+              await item.system.decreaseScore();
               assert.equal(item.system.finalScore, MAX_SCORE - 1 - score, "Final score");
               // assert.equal(item.system.xpNextLevel, 5 * (MAX_SCORE - score), "xpNextLevel");
               // assert.equal(item.system.remainingXp, 0, "remainingXp");
@@ -128,7 +128,7 @@ export function registerAbilityScoresTesting(quench) {
         describe("Increase score", function () {
           for (const score of Array(MAX_SCORE).keys()) {
             it(`Increase score to ${score + 1}`, async function () {
-              await item.system._increaseScore();
+              await item.system.increaseScore();
               assert.equal(item.system.finalScore, score + 1, "Final score");
               assert.equal(
                 Math.round(item.system.xp * actor.system.bonuses.skills.dowsing.xpCoeff),
@@ -142,7 +142,7 @@ export function registerAbilityScoresTesting(quench) {
         describe("Decrease score", function () {
           for (const score of Array(MAX_SCORE).keys()) {
             it(`Decrease score to ${MAX_SCORE - score}`, async function () {
-              await item.system._decreaseScore();
+              await item.system.decreaseScore();
               assert.equal(item.system.finalScore, MAX_SCORE - 1 - score, "Final score");
               assert.equal(
                 Math.round(item.system.xp * 1.5),

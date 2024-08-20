@@ -92,6 +92,7 @@
   "TYPES.Item.enchantment": "Enchantment",
   "TYPES.Item.mundaneBook": "Mundane book (deprecated)",
   "TYPES.Item.wound": "Wound",
+  "TYPES.Item.supernaturalEffect": "Supernatural effect",
 
   "arm5e.sheet.labTexts": "Laboratory texts",
 
@@ -170,6 +171,16 @@
   "arm5e.sheet.form": "Form",
   "arm5e.sheet.fo": "Fo",
   "arm5e.sheet.formRequisite": "Form Requisite",
+
+  "arm5e.sheet.magicSystem": "Magic system",
+  "arm5e.sheet.verbs": "Verbs",
+  "arm5e.sheet.verb": "Verb",
+  "arm5e.sheet.verbRequisite": "Verb Requisite",
+
+  "arm5e.sheet.nouns": "Nouns",
+  "arm5e.sheet.noun": "Noun",
+  "arm5e.sheet.nounRequisite": "Noun Requisite",
+
   "arm5e.sheet.Requisites": "Requisites",
   "arm5e.sheet.labText.raw": "Raw",
   "arm5e.sheet.spells": "Spells",
@@ -428,6 +439,8 @@
   "arm5e.skill.category.arcane": "Arcane",
   "arm5e.skill.category.supernatural": "Supernatural",
   "arm5e.skill.category.mystery": "Mystery",
+  "arm5e.skill.category.technique": "Alternate technique",
+  "arm5e.skill.category.form": "Alternate form",
 
   "arm5e.skill.general.animalHandling": "Animal Handling",
   "arm5e.skill.general.areaLore": "Area ({option}) Lore",
@@ -503,6 +516,9 @@
   "arm5e.skill.mystery.verditiusMagic": "Verditius Magic",
   "arm5e.skill.mystery.cult": "Mystery Cult ({option}) Lore",
 
+  "arm5e.skill.technique.generic": "Technique ({option}) ",
+  "arm5e.skill.form.generic": "Form ({option}) ",
+
   "arm5e.skill.options.area": "Area's name",
   "arm5e.skill.options.knowledge": "Topic",
   "arm5e.skill.options.craft": "Craft's name",
@@ -516,6 +532,9 @@
 
   "arm5e.skill.options.mysteryCult": "Cult's name",
   "arm5e.skill.options.law": "Legal forum",
+
+  "arm5e.skill.options.technique": "Technique's name",
+  "arm5e.skill.options.form": "Form's name",
 
   "arm5e.sheet.ageModifier": "Age modifier",
   "arm5e.sheet.longevityRitual": "Longevity Ritual",
@@ -1187,11 +1206,14 @@
   "arm5e.sheet.activeEffect.types.martialAbilitiesBonus": "Bonus Martial abilities",
   "arm5e.sheet.activeEffect.types.mysteryAbilitiesBonus": "Bonus Mysteries abilities",
   "arm5e.sheet.activeEffect.types.supernaturalAbilitiesBonus": "Bonus Supernat. abilities",
+  "arm5e.sheet.activeEffect.types.AlternateArtBonus": "Bonus alternate Arts",
   "arm5e.sheet.activeEffect.types.academicAbilitiesAffinity": "Affinity Academic abilities (xp)",
   "arm5e.sheet.activeEffect.types.arcaneAbilitiesAffinity": "Affinity Arcane abilities (xp)",
   "arm5e.sheet.activeEffect.types.generalAbilitiesAffinity": "Affinity General abilities (xp)",
   "arm5e.sheet.activeEffect.types.martialAbilitiesAffinity": "Affinity Martial abilities (xp)",
   "arm5e.sheet.activeEffect.types.mysteryAbilitiesAffinity": "Affinity Mysteries abilities (xp)",
+  "arm5e.sheet.activeEffect.types.affinityAlternateArt": "Affinity alternate arts (xp)",
+
   "arm5e.sheet.activeEffect.types.supernaturalAbilitiesAffinity": "Affinity Supernat. abil. (xp)",
   "arm5e.sheet.activeEffect.types.supernaturalAbilitiesXPBonus": "Bonus to Supernat. abilities XP",
   "arm5e.sheet.activeEffect.types.laboratoryAttr": "Laboratory's attributes",
@@ -1551,6 +1573,8 @@
 
   "arm5e.rolltables.experimentation": "",
 
+  "arm5e.feature.magicSystem": "Alternate magic system - EXPERIMENTAL",
+
   "arm5e.generic.yes": "Yes",
   "arm5e.generic.no": "No",
   "arm5e.generic.always": "Always",
@@ -1567,6 +1591,8 @@
   "arm5e.generic.info": "Information",
   "arm5e.generic.base": "Base",
   "arm5e.generic.multipliers": "Multipliers",
+  "arm5e.generic.multiplier": "Multiplier",
+  "arm5e.generic.modifier": "Modifier",
   "arm5e.generic.other": "Other",
   "arm5e.generic.unknown": "Unknown",
   "arm5e.generic.current": "Current",
@@ -1580,5 +1606,8 @@
   "arm5e.generic.params": "Parameters",
   "arm5e.generic.total": "Total",
   "arm5e.generic.needed": "Needed",
-  "arm5e.generic.numberOf": "Number of {thing}"
+  "arm5e.generic.numberOf": "Number of {thing}",
+  "arm5e.generic.config": "Configuration",
+  "arm5e.generic.template": "Template",
+  "arm5e.generic.templates": "Templates"
 }

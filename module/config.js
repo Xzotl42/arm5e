@@ -387,7 +387,9 @@ ARM5E.ABILITIES_CATEGORIES = {
   arcane: { mnemonic: "arm5e.skill.category.arcane" },
   martial: { mnemonic: "arm5e.skill.category.martial" },
   mystery: { mnemonic: "arm5e.skill.category.mystery" },
-  supernaturalCat: { mnemonic: "arm5e.skill.category.supernatural" }
+  supernaturalCat: { mnemonic: "arm5e.skill.category.supernatural" },
+  altTechnique: { mnemonic: "arm5e.skill.category.technique" },
+  altForm: { mnemonic: "arm5e.skill.category.form" }
 };
 ARM5E.GENERAL_ABILITIES = {
   animalHandling: {
@@ -748,6 +750,26 @@ ARM5E.MYSTERY_ABILITIES = {
   }
 };
 
+ARM5E.ALT_TECHNIQUE_ABILITIES = {
+  technique: {
+    mnemonic: "arm5e.skill.technique.generic",
+    option: true,
+    category: "altTechnique",
+    optionPlaceholder: "arm5e.skill.options.technique",
+    optionDefault: "techniqueName"
+  }
+};
+
+ARM5E.ALT_FORM_ABILITIES = {
+  form: {
+    mnemonic: "arm5e.skill.form.generic",
+    option: true,
+    category: "altForm",
+    optionPlaceholder: "arm5e.skill.options.form",
+    optionDefault: "formName"
+  }
+};
+
 ARM5E.ALL_ABILITIES = {
   general: {
     mnemonic: ARM5E.ABILITIES_CATEGORIES.general.mnemonic,
@@ -784,7 +806,19 @@ ARM5E.ALL_ABILITIES = {
     option: false,
     disabled: true
   },
-  ...ARM5E.MYSTERY_ABILITIES
+  ...ARM5E.MYSTERY_ABILITIES,
+  technique: {
+    mnemonic: ARM5E.ABILITIES_CATEGORIES.altTechnique.mnemonic,
+    option: false,
+    disabled: true
+  },
+  ...ARM5E.ALT_TECHNIQUE_ABILITIES,
+  form: {
+    mnemonic: ARM5E.ABILITIES_CATEGORIES.altForm.mnemonic,
+    option: false,
+    disabled: true
+  },
+  ...ARM5E.ALT_FORM_ABILITIES
 };
 
 export function localizeAbilities() {
@@ -830,7 +864,21 @@ export function localizeAbilities() {
       option: false,
       disabled: true
     },
-    ...translateAndSort(ARM5E.MYSTERY_ABILITIES)
+    ...translateAndSort(ARM5E.MYSTERY_ABILITIES),
+    altTechnique: {
+      label: game.i18n.localize(ARM5E.ABILITIES_CATEGORIES.altTechnique.mnemonic),
+      mnemonic: ARM5E.ABILITIES_CATEGORIES.altTechnique.mnemonic,
+      option: false,
+      disabled: true
+    },
+    ...translateAndSort(ARM5E.ALT_TECHNIQUE_ABILITIES),
+    altForm: {
+      label: game.i18n.localize(ARM5E.ABILITIES_CATEGORIES.altForm.mnemonic),
+      mnemonic: ARM5E.ABILITIES_CATEGORIES.altForm.mnemonic,
+      option: false,
+      disabled: true
+    },
+    ...translateAndSort(ARM5E.ALT_FORM_ABILITIES)
   };
   return res;
 }

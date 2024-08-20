@@ -316,7 +316,7 @@ export class SpellSchema extends foundry.abstract.DataModel {
     }
   }
 
-  async _increaseScore() {
+  async increaseScore() {
     let xpMod = this.parent.parent.system.bonuses.arts.masteryXpMod;
     let oldXp = this.xp;
     let newXp = Math.round(
@@ -334,7 +334,7 @@ export class SpellSchema extends foundry.abstract.DataModel {
     let delta = newXp - oldXp;
     console.log(`Added ${delta} xps from ${oldXp} to ${newXp}`);
   }
-  async _decreaseScore(item) {
+  async decreaseScore(item) {
     let xpMod = this.parent.parent.system.bonuses.arts.masteryXpMod;
     let futureXp = Math.round(
       ((this.derivedScore - 1) * this.derivedScore * 5) / (2 * this.xpCoeff)

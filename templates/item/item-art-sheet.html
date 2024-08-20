@@ -1,0 +1,59 @@
+<form class="sheet-content flexcol" autocomplete="off">
+  <header class="sheet-header">
+    <img class="item-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" />
+    <div class="header-fields">
+      <h1 class="charname">
+        <div class="flexrow"><input name="name" type="text" title="{{item.name}}" value="{{item.name}}"
+            placeholder="Name" />
+        </div>
+      </h1>
+      <div class="resource flexrow">
+        <label for="system.key" class="header-label">{{localize "Art key"}}</label>
+        <input type="text" class="change-artKey " name="system.key" data-dtype="String" value="{{system.key}}">
+      </div>
+      <div class="resource flexrow">
+        <label for="system.key" class=".checkbox-label">{{localize "Accelerated"}}</label>
+        <input type="checkbox" class="" name="system.accelerated" data-dtype="String" {{checked system.accelerated}}>
+      </div>
+      {{#if item.isOwned }}
+        <div class="flexrow" style="padding-top:5px">
+          <label class="flex01" style="padding-right: 10px;">{{localize "arm5e.sheet.score"}} </label>
+          <input class="flex02" type="number" name="system.finalScore" value="{{system.finalScore}}" data-dtype="Number"
+            readonly />
+          <div class="flex02" style="padding-top:4px; padding-left: 10px;">
+            <a class="item-control increase-score flex0" title="Increase score"><i class="fas fa-plus"></i></a>
+            <a class="item-control decrease-score flex0" title="Decrease score"><i class="fas fa-minus"></i></a>
+          </div>
+          <div class="flexrow">
+            <label style="padding-right: 10px;" class="flex01">{{localize "arm5e.sheet.experience"}}</label>
+            <input style="min-width: 60px;" class="resource-focus flex02" type="number" name="system.xp"
+              value="{{system.xp}}" data-dtype="Number" />
+          </div>
+        </div>
+      {{/if}}
+    </div>
+  </header>
+
+  {{!-- Sheet Tab Navigation --}}
+  <nav class="arm5eTabs sheet-tabs tabs" data-group="primary">
+    <a class="item posRelative" data-tab="description">
+      <div class="navItem-right-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
+      <div class="navItem-left-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
+      {{localize "arm5e.sheet.description"}}
+    </a>
+  </nav>
+  {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+  {{!-- Sheet Body --}}
+  <section class="sheet-body">
+    {{!-- Description Tab --}}
+    <div class="tab">
+      <div class="tab editor" data-group="primary" data-tab="description" style="height:70%;">
+        {{editor enrichedDescription target="system.description" button=true owner=owner engine="prosemirror" editable=editable}}
+
+      </div>
+      {{#if metagame.view}}
+        {{> "systems/arm5e/templates/generic/source.html" }}
+      {{/if}}
+    </div>
+  </section>
+</form>

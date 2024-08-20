@@ -62,6 +62,7 @@ export class ArM5eItemMagicSheet extends ArM5eItemSheet {
 
       case "magicItem":
       case "magicalEffect":
+      case "supernaturalEffect":
         if (!context.selection.ranges[context.system.range.value]) {
           const currentRange = context.system.range.value;
           context.selection.ranges[currentRange] = CONFIG.ARM5E.magic.ranges[currentRange];
@@ -131,7 +132,7 @@ export class ArM5eItemMagicSheet extends ArM5eItemSheet {
 
       if (CONFIG.ARM5E.ItemDataModels[this.item.type]?.getIcon) {
         let currentDefIcon = CONFIG.ARM5E.ItemDataModels[this.item.type].getIcon(this.item);
-        // if the current img is the default icon of the previous value, allow change
+        // If the current img is the default icon of the previous value, allow change
         if (
           this.item.img === currentDefIcon ||
           this.item.img === ARM5E_DEFAULT_ICONS.MONO[this.item.type] ||
