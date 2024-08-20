@@ -98,10 +98,15 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
         context.selection.activities[k] = v.label;
       }
     }
+    // if not possible to create it from the sheet disable the selector
+    if (!Object.keys(context.selection.activities).includes(actType)) {
+      context.activityState = "disabled";
+    }
 
     if (this.actor == null || this.actor.type == "covenant" || this.actor.type == "laboratory") {
       context.ui.showTab = false;
       context.system.disabled = "disabled";
+      context.activityState = "disabled";
       return context;
     }
 
