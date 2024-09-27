@@ -773,7 +773,8 @@ export class ArM5eActorSheet extends ActorSheet {
       actorData.actor.type == "player" ||
       actorData.actor.type == "npc" ||
       actorData.actor.type == "laboratory" ||
-      actorData.actor.type == "covenant"
+      actorData.actor.type == "covenant" ||
+      actorData.actor.type == "beast"
     ) {
       for (let virtue of actorData.system.virtues) {
         if (virtue.effects.size > 0) {

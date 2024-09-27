@@ -263,6 +263,7 @@ export class ArM5eItemSheet extends ItemSheet {
             break;
           case "player":
           case "npc":
+          case "beast":
             context.config.virtueFlawTypes.available = {
               ...context.config.virtueFlawTypes.character,
               ...context.config.virtueFlawTypes.all

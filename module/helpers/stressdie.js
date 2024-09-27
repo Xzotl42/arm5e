@@ -33,7 +33,7 @@ export class StressDie extends Die {
       this.number = this.options.ddd;
       this._evaluated = false;
       this.modifiers = ["cs=10"];
-      super.evaluate();
+      await super.evaluate();
       return this;
     }
     this.explode("x=1");

@@ -1,3 +1,14 @@
+## 2.3.0.11, Quendalon, raised by the Fae BF4
+
+### Bug fixes
+
+- Fix requisites editing on roll
+- Applied activities can no longer have their type changed.
+- Fixed bug in sanatorium V12 when changing the data.
+- Virtues and flaws are working again on beast sheet
+- Vis source attributes are visible again
+- Quick dialogs (Vitals, Combat, Magic) are now updating when the linked character changes (V12 only)
+
 ## 2.3.0.10, Quendalon, raised by the Fae BF3
 
 ### Bug fixes

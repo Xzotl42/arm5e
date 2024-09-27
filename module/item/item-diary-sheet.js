@@ -152,6 +152,7 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
     if (this.actor.system.pendingCrisis) {
       context.system.applyError = "arm5e.notification.pendingCrisis";
       context.system.disabled = "disabled";
+      context.activityState = "disabled";
       context.system.applyPossible = false;
       return context;
     }
@@ -339,6 +340,10 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
     }
     context.totalQuality =
       context.system.sourceQuality + context.system.sourceModifier + context.system.sourceBonus;
+
+    if (context.system.disabled === "disabled") {
+      context.activityState = "disabled";
+    }
     log(false, "ITEM-DIARY-sheet get data");
     log(true, context);
     return context;

@@ -7,6 +7,7 @@ import { ArM5ePCActor } from "../actor/actor.js";
 import { setAgingEffects, agingCrisis } from "./long-term-activities.js";
 import { exertSelf } from "./combat.js";
 import { getDataset, log } from "../tools.js";
+import { ArM5eItem } from "../item/item.js";
 
 // below is a bitmap
 const ROLL_MODES = {
