@@ -928,6 +928,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
       updateData["system.owner.actorId"] = null;
       updateData["flags.arm5e.planning"] = await this._resetPlanning("none", true);
     }
+
     return updateData;
   }
 

@@ -1897,7 +1897,7 @@ export class ArM5eActorSheet extends ActorSheet {
       }
     } else if (droppedActor.type === "laboratory") {
       if (this.actor.system.sanctum.linked) {
-        delete this.actor.apps[this.actor.system.sanctum.document.sheet?.appId];
+        delete this.actor.apps[this.actor.system.owner.sanctum.sheet?.appId];
         delete this.actor.system.sanctum.document.apps[this.appId];
         updateArray.push(await this.actor.system.sanctum.document.sheet._unbindActor(this.actor));
       }

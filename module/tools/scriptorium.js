@@ -1740,6 +1740,7 @@ export class Scriptorium extends FormApplication {
       foundry.utils.mergeObject(topics, expanded.writing.book.system.topics);
       delete expanded.writing.book.system.topics;
     }
+
     if (expanded.copying?.books) {
       const bookIndexes = Object.keys(expanded.copying.books);
       for (const index of bookIndexes) {

@@ -133,8 +133,8 @@ Hooks.once("init", async function () {
   // CONFIG.Dice.types.push(StressDieNoBotchInternal);
   CONFIG.Dice.terms[StressDie.DENOMINATION] = StressDie;
   CONFIG.Dice.terms[StressDieInternal.DENOMINATION] = StressDieInternal;
-
   CONFIG.Dice.rolls[0] = ArsRoll;
+  //CONFIG.Dice.rolls.push(ArsRoll);
 
   // // CONFIG.Dice.terms[StressDieNoBotchInternal.DENOMINATION] = StressDieNoBotchInternal;
   // // instrumenting roll for testing

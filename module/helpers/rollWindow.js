@@ -7,7 +7,8 @@ import { setAgingEffects, agingCrisis } from "./long-term-activities.js";
 import { exertSelf } from "./combat.js";
 import { getDataset, log } from "../tools.js";
 import { ArM5eItem } from "../item/item.js";
-// Below is a bitmap
+
+// below is a bitmap
 const ROLL_MODES = {
   STRESS: 1,
   SIMPLE: 2,

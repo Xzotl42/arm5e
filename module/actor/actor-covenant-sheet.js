@@ -220,12 +220,6 @@ export class ArM5eCovenantActorSheet extends ArM5eActorSheet {
       }
     }
 
-    for (let person of this.actor.system.inhabitants.magi) {
-      if (person.system.linked) {
-        person.system.document.apps[this.appId] = this;
-      }
-    }
-
     for (let lab of this.actor.system.labs) {
       if (lab.system.linked) {
         lab.system.document.apps[this.appId] = this;

@@ -8,18 +8,36 @@
 - new checkbox design
 - [technical] Moved abilities localization in "i18nInit" Hook
 
+## 2.3.0.11, Quendalon, raised by the Fae BF4
+
 ### Bug fixes
 
 - Fix requisites editing on roll
-- Virtues and flaws are working again on beast sheet
+- Applied activities can no longer have their type changed.
 - Fixed bug in sanatorium V12 when changing the data.
+- Virtues and flaws are working again on beast sheet
 - Vis source attributes are visible again
+- Quick dialogs (Vitals, Combat, Magic) are now updating when the linked character changes (V12 only)
+- [V12] Changed actor links mechanics since appId of a sheet is only defined on render (instead of constructor).
 - Covenant laborers were wrongly considered servants
 - Covenant teamsters were not considered workers.
 - It is possible again to go to previous topic of a book in scriptorium
 - Missing spell warning is now properly formated in scriptorium
 - Multitopic book reading was not working after a change to the dialog (reader, date, ...)
-- There is no longer an error when you try to read an ability you are too skilled for.
+- There is no longer an error when you try to read an ability book you are too skilled for.
+
+## 2.3.0.10, Quendalon, raised by the Fae BF3
+
+### Bug fixes
+
+- Fixed critical bug where all diary activities created from outside the sheet where reset to standard diary.
+- added new handling of the regio levels field when it is not a number during migration.
+
+## 2.3.0.9, Quendalon, raised by the Fae BF2
+
+### Bug fixes
+
+- Proper migration fix for the aegisCovenant field
 
 ## 2.3.0.8, Quendalon, raised by the Fae BF1
 

@@ -59,6 +59,10 @@ export class QuickCombat extends FormApplication {
     // Parent class rendering workflow
     await super._render(force, options);
 
+  async _render(force, options = {}) {
+    // Parent class rendering workflow
+    await super._render(force, options);
+
     // Register the active Application with the referenced Documents
     this.object.actor.apps[this.appId] = this;
   }

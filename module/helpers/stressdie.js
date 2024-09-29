@@ -109,7 +109,9 @@ export class StressDie extends Die {
       if (i === 0 && r.result === 10) {
         return 0;
       }
-      if (i === 0 && r.result === 1) return 2;
+      if (i === 0 && r.result === 1) {
+        return 2;
+      }
       if (i === 0 && r.result !== 10 && r.result !== 1) return r.result;
       if (r.result === 1) return t * 2;
       return t * r.result;
