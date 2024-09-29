@@ -178,24 +178,27 @@
           <div class="scriptorium resource"></div>
           <div class="scriptorium resource"></div>
           {{#if (eq reading.book.currentTopic.category "ability")}}
-            <div class="scriptorium resource">
-              <label for="reading.reader.ability" class="header-label">{{localize "arm5e.sheet.abilities"}}</label>
-              <select name="reading.reader.ability" data-dtype="String" class="ability-key" {{ui.editItem}}>
-                {{selectOptions reading.reader.abilities selected=reading.reader.ability labelAttr="name" 
+            {{#unless ui.reading.error}}
+              <div class="scriptorium resource">
+                <label for="reading.reader.ability" class="header-label">{{localize "arm5e.sheet.abilities"}}</label>
+                <select name="reading.reader.ability" data-dtype="String" class="ability-key" {{ui.editItem}}>
+                  {{selectOptions reading.reader.abilities selected=reading.reader.ability labelAttr="name" 
                 nameAttr="_id" valueAttr="_id"}}
-              </select>
-            </div>
-
+                </select>
+              </div>
+            {{/unless}}
             <div class="scriptorium resource"></div>
           {{/if}}
           {{#if (eq reading.book.currentTopic.category "mastery")}}
-            <div class="scriptorium resource">
-              <label for="reading.reader.spell" class="header-label">{{localize "arm5e.sheet.spells"}}</label>
-              <select name="reading.reader.spell" data-dtype="String" class="ability-key" {{ui.editItem}}>
-                {{selectOptions reading.reader.spells selected=reading.reader.spell labelAttr="name" 
+            {{#unless ui.reading.error}}
+              <div class="scriptorium resource">
+                <label for="reading.reader.spell" class="header-label">{{localize "arm5e.sheet.spells"}}</label>
+                <select name="reading.reader.spell" data-dtype="String" class="ability-key" {{ui.editItem}}>
+                  {{selectOptions reading.reader.spells selected=reading.reader.spell labelAttr="name" 
                  nameAttr="id" valueAttr="id"}}
-              </select>
-            </div>
+                </select>
+              </div>
+            {{/unless}}
           {{/if}}
           <ul>
             {{#each ui.reading.warning }}

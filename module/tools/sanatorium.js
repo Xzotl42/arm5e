@@ -35,8 +35,8 @@ export class Sanatorium extends FormApplication {
   static async createDialog(actor) {
     // const dialogData = { patient: actor };
     const sanatorium = new Sanatorium(actor, {}, {}); // data, options
-    actor.apps[sanatorium.appId] = sanatorium;
     const res = await sanatorium.render(true);
+    actor.apps[sanatorium.appId] = sanatorium;
   }
   /** @override */
   static get defaultOptions() {

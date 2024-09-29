@@ -148,7 +148,7 @@ export const CostField = (value = "n-a", coeff = 1, pounds = 1) =>
         required: false,
         blank: false,
         initial: value,
-        choices: Object.keys(ARM5E.item.costs)
+        choices: Object.keys(CONFIG.ARM5E.item.costs)
       }),
       mythicPounds: new fields.NumberField({
         required: false,
@@ -175,9 +175,11 @@ export const CostField = (value = "n-a", coeff = 1, pounds = 1) =>
     { required: false, initial: { value: "n-a", mythicPounds: 0 } }
   );
 
-export const possibleRanges = Object.keys(ARM5E.magic.ranges).filter((r) => !r.disabled);
-export const possibleTargets = Object.keys(ARM5E.magic.targets).filter((r) => !r.disabled);
-export const possibleDurations = Object.keys(ARM5E.magic.durations).filter((r) => !r.disabled);
+// export const possibleRanges = Object.keys(CONFIG.ARM5E.magic.ranges).filter((r) => !r.disabled);
+// export const possibleTargets = Object.keys(CONFIG.ARM5E.magic.targets).filter((r) => !r.disabled);
+// export const possibleDurations = Object.keys(CONFIG.ARM5E.magic.durations).filter(
+//   (r) => !r.disabled
+// );
 export const boolOption = (val = false, nullable = false) =>
   new fields.BooleanField({ required: false, initial: val, nullable: nullable });
 export const baseDescription = (initial = "") =>
@@ -251,7 +253,7 @@ export const RealmField = (initial = "mundane") => {
     required: false,
     blank: false,
     initial: initial,
-    choices: Object.keys(ARM5E.realmsExt)
+    choices: Object.keys(CONFIG.ARM5E.realmsExt)
   });
 };
 
@@ -263,7 +265,7 @@ export const SpellAttributes = () => {
           required: true,
           blank: false,
           initial: "personal",
-          choices: possibleRanges
+          choices: Object.keys(CONFIG.ARM5E.magic.ranges).filter((r) => !r.disabled)
         })
       },
       { required: false, blank: false, initial: { value: "personal" } }
@@ -274,7 +276,7 @@ export const SpellAttributes = () => {
           required: true,
           blank: false,
           initial: "moment",
-          choices: possibleDurations
+          choices: Object.keys(CONFIG.ARM5E.magic.durations).filter((r) => !r.disabled)
         })
       },
       { required: false, blank: false, initial: { value: "moment" } }
@@ -285,7 +287,7 @@ export const SpellAttributes = () => {
           required: true,
           blank: false,
           initial: "ind",
-          choices: possibleTargets
+          choices: Object.keys(CONFIG.ARM5E.magic.targets).filter((r) => !r.disabled)
         })
       },
       { required: false, blank: false, initial: { value: "ind" } }
@@ -334,7 +336,7 @@ export const SeasonField = (season = "spring") =>
     required: false,
     blank: false,
     initial: season,
-    choices: Object.keys(ARM5E.seasons)
+    choices: Object.keys(CONFIG.ARM5E.seasons)
   });
 
 export const XpField = () =>
@@ -374,7 +376,7 @@ export const hermeticForm = () =>
     required: false,
     blank: false,
     initial: "an",
-    choices: Object.keys(ARM5E.magic.forms)
+    choices: Object.keys(CONFIG.ARM5E.magic.forms)
   });
 
 export const hermeticTechnique = () =>
@@ -382,7 +384,7 @@ export const hermeticTechnique = () =>
     required: false,
     blank: false,
     initial: "cr",
-    choices: Object.keys(ARM5E.magic.techniques)
+    choices: Object.keys(CONFIG.ARM5E.magic.techniques)
   });
 
 export const authorship = () => {

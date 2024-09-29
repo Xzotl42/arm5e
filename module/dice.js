@@ -3,6 +3,7 @@ import { checkTargetAndCalculateResistance } from "./helpers/magic.js";
 import { log, putInFoldableLink, putInFoldableLinkWithAnimation, sleep } from "./tools.js";
 import { ARM5E } from "./config.js";
 import { showRollResults } from "./helpers/chat.js";
+import { ArsRoll } from "./helpers/stressdie.js";
 let mult = 1;
 
 /**
@@ -34,7 +35,7 @@ async function simpleDie(actor, type = "OPTION", callBack) {
   if (rollInfo.magic.divide > 1) {
     formula = "(1D10+" + rollInfo.formula + ")/" + rollInfo.magic.divide;
   }
-  const dieRoll = new Roll(formula, actor.system);
+  const dieRoll = new ArsRoll(formula, actor.system);
   let tmp = await dieRoll.roll();
 
   let rollMode = game.settings.get("core", "rollMode");
@@ -534,7 +535,7 @@ function newLineSub(msg) {
 
 async function CheckBotch(botchDice, offset) {
   let rollCommand = String(botchDice).concat("d10cf=10");
-  const botchRoll = new Roll(rollCommand);
+  const botchRoll = new ArsRoll(rollCommand);
   await botchRoll.roll();
   botchRoll.offset = offset;
   botchRoll.botches = botchRoll.total;
@@ -613,7 +614,7 @@ async function explodingRoll(actorData, rollOptions = {}, botchNum = -1) {
         game.dice3d.showForRoll(dieRoll); //, user, synchronize, whisper, blind, chatMessageID, speaker)
       }
       if (rollOptions.noBotch) {
-        let output_roll = new Roll(actorData.rollInfo.formula.toString(), {}, options);
+        let output_roll = new ArsRoll(actorData.rollInfo.formula.toString(), {}, options);
         output_roll.data = {};
         return await output_roll.evaluate(options);
       }
@@ -691,7 +692,7 @@ export async function createRoll(rollFormula, mult, divide, options = {}) {
   if (Number.parseInt(divide) > 1) {
     rollInit = `( ${rollInit} ) / ${divide}`;
   }
-  let output_roll = new Roll(rollInit, {}, options);
+  let output_roll = new ArsRoll(rollInit, {}, options);
   output_roll.offset = rollFormula;
   output_roll.multiplier = mult;
   output_roll.diviser = divide;
@@ -731,7 +732,7 @@ async function noRoll(actor, mode, callback, roll) {
   if (rollInfo.magic.divide > 1) {
     formula += ` / ${rollInfo.magic.divide}`;
   }
-  const dieRoll = new Roll(formula, actor.system);
+  const dieRoll = new ArsRoll(formula, actor.system);
   dieRoll.diviser = rollInfo.magic.divide;
   let tmp = await dieRoll.roll();
   const message = await tmp.toMessage(

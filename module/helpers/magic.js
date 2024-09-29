@@ -192,7 +192,6 @@ export class QuickMagic extends FormApplication {
     super(data, options);
     this.object.technique = "cr";
     this.object.form = "an";
-    this.object.actor.apps[this.appId] = this;
     Hooks.on("closeApplication", (app, html) => this.onClose(app));
   }
   /** @override */
@@ -206,6 +205,14 @@ export class QuickMagic extends FormApplication {
       submitOnChange: true,
       closeOnSubmit: false
     });
+  }
+
+  async _render(force, options = {}) {
+    // Parent class rendering workflow
+    await super._render(force, options);
+
+    // Register the active Application with the referenced Documents
+    this.object.actor.apps[this.appId] = this;
   }
 
   onClose(app) {
