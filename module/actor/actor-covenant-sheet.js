@@ -86,7 +86,7 @@ export class ArM5eCovenantActorSheet extends ArM5eActorSheet {
 
     for (let person of context.system.inhabitants.magi) {
       if (person.system.linked) {
-        this.actor.apps[person.system.document.sheet.appId] = person.system.document.sheet;
+        // this.actor.apps[person.system.document.sheet.appId] = person.system.document.sheet;
         person.system.yearBorn = person.system.document.system.description.born.value;
       }
 
@@ -100,21 +100,21 @@ export class ArM5eCovenantActorSheet extends ArM5eActorSheet {
 
     for (let person of context.system.inhabitants.companion) {
       if (person.system.linked) {
-        this.actor.apps[person.system.document.sheet.appId] = person.system.document.sheet;
+        // this.actor.apps[person.system.document.sheet.appId] = person.system.document.sheet;
         person.system.yearBorn = person.system.document.system.description.born.value;
       }
     }
 
     for (let person of context.system.inhabitants.turbula) {
       if (person.system.linked) {
-        this.actor.apps[person.system.document.sheet.appId] = person.system.document.sheet;
+        // this.actor.apps[person.system.document.sheet.appId] = person.system.document.sheet;
         person.system.yearBorn = person.system.document.system.description.born.value;
       }
     }
 
     for (let person of context.system.inhabitants.specialists) {
       if (person.system.linked) {
-        this.actor.apps[person.system.document.sheet.appId] = person.system.document.sheet;
+        // this.actor.apps[person.system.document.sheet.appId] = person.system.document.sheet;
         person.system.yearBorn = person.system.document.system.description.born.value;
       }
       context.system.loyalty.modifiers.specialists += person.system.loyaltyGain;
@@ -122,17 +122,17 @@ export class ArM5eCovenantActorSheet extends ArM5eActorSheet {
 
     for (let person of context.system.inhabitants.habitants) {
       if (person.system.linked) {
-        this.actor.apps[person.system.document.sheet.appId] = person.system.document.sheet;
+        // this.actor.apps[person.system.document.sheet.appId] = person.system.document.sheet;
         person.system.yearBorn = person.system.document.system.description.born.value;
       }
       person.system.categoryLabel = CONFIG.ARM5E.covenant.inhabitants[person.system.category].label;
     }
 
-    for (let lab of context.system.labs) {
-      if (lab.system.linked) {
-        this.actor.apps[lab.system.document.sheet.appId] = lab.system.document.sheet;
-      }
-    }
+    // for (let lab of context.system.labs) {
+    //   if (lab.system.linked) {
+    //     this.actor.apps[lab.system.document.sheet.appId] = lab.system.document.sheet;
+    //   }
+    // }
 
     context.system.loyalty.points.modifiersTotal =
       context.system.loyalty.modifiers.livingConditions +
@@ -182,6 +182,55 @@ export class ArM5eCovenantActorSheet extends ArM5eActorSheet {
     log(false, "Covenant-sheet getData");
     log(false, context);
     return context;
+  }
+
+  async _render(force, options = {}) {
+    // Parent class rendering workflow
+    await super._render(force, options);
+
+    // Register the active Application with the referenced Documents
+
+    for (let person of this.actor.system.inhabitants.magi) {
+      if (person.system.linked) {
+        person.system.document.apps[this.appId] = this;
+      }
+    }
+
+    for (let person of this.actor.system.inhabitants.companion) {
+      if (person.system.linked) {
+        person.system.document.apps[this.appId] = this;
+      }
+    }
+
+    for (let person of this.actor.system.inhabitants.turbula) {
+      if (person.system.linked) {
+        person.system.document.apps[this.appId] = this;
+      }
+    }
+
+    for (let person of this.actor.system.inhabitants.specialists) {
+      if (person.system.linked) {
+        person.system.document.apps[this.appId] = this;
+      }
+    }
+
+    for (let person of this.actor.system.inhabitants.habitants) {
+      if (person.system.linked) {
+        person.system.document.apps[this.appId] = this;
+      }
+    }
+
+    for (let person of this.actor.system.inhabitants.magi) {
+      if (person.system.linked) {
+        person.system.document.apps[this.appId] = this;
+      }
+    }
+
+    for (let lab of this.actor.system.labs) {
+      if (lab.system.linked) {
+        lab.system.document.apps[this.appId] = this;
+      }
+    }
   }
 
   isItemDropAllowed(itemData) {

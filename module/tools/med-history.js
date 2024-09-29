@@ -16,8 +16,8 @@ export class MedicalHistory extends FormApplication {
       {}
     ); // data, options
 
-    actor.apps[medHist.appId] = medHist;
     const res = await medHist.render(true);
+    actor.apps[medHist.appId] = medHist;
   }
   /** @override */
   static get defaultOptions() {

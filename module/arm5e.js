@@ -21,7 +21,7 @@ import { ArM5ePreloadHandlebarsTemplates } from "./templates.js";
 import { ArM5eActiveEffectConfig } from "./helpers/active-effect-config.sheet.js";
 import * as Arm5eChatMessage from "./helpers/chat.js";
 
-// experiment
+// Experiment
 import { ArsLayer, addArsButtons } from "./ui/ars-layer.js";
 
 import { migration } from "./migration.js";
@@ -29,7 +29,7 @@ import { log } from "./tools.js";
 
 import { registerSettings } from "./settings.js";
 import { registerTestSuites } from "./tests/tests.js";
-import { StressDie, StressDieInternal } from "./helpers/stressdie.js";
+import { ArsRoll, StressDie, StressDieInternal } from "./helpers/stressdie.js";
 import { UserguideTour } from "./tours/userguide-tour.js";
 
 import {
@@ -68,7 +68,14 @@ import { CovenantSchema } from "./schemas/covenantSchema.js";
 import { ArM5eCovenantInhabitantSheet } from "./item/item-inhabitantCovenant.js";
 import { ArM5eSupernaturalEffectSheet } from "./item/item-supernaturalEffect-sheet.js";
 import { SupernaturalEffectSchema } from "./schemas/supernaturalEffectSchema.js";
-// import { ArtSchema } from "./schemas/artSchema.js";
+// Import { ArtSchema } from "./schemas/artSchema.js";
+
+Hooks.once("i18nInit", async function () {
+  CONFIG.ARM5E.LOCALIZED_ABILITIES = localizeAbilities();
+  CONFIG.ARM5E.LOCALIZED_ABILITIESCAT = localizeCategories();
+  CONFIG.ARM5E.LOCALIZED_ABILITIES_ENRICHED = enrichAbilities(CONFIG.ARM5E.LOCALIZED_ABILITIES);
+});
+
 Hooks.once("init", async function () {
   game.arm5e = {
     ArsLayer,
@@ -95,7 +102,7 @@ Hooks.once("init", async function () {
 
   registerSettings();
 
-  // game.tours.register(
+  // Game.tours.register(
   //   ARM5E.SYSTEM_ID,
   //   "userguide",
   //   await UserguideTour.fromJSON("systems/arm5e/tours/userguide.json")
@@ -103,7 +110,7 @@ Hooks.once("init", async function () {
 
   /**
    * Set an initiative formula for the system
-   * @type {String}
+   * @type {string}
    */
   CONFIG.Combat.initiative = {
     formula: "1ds + @char.qik + @combat.init - @combat.overload",
@@ -111,7 +118,7 @@ Hooks.once("init", async function () {
   };
 
   // Adding ars layer
-  CONFIG.Canvas.layers["arsmagica"] = {
+  CONFIG.Canvas.layers.arsmagica = {
     layerClass: ArsLayer,
     group: "primary"
   };
@@ -122,33 +129,37 @@ Hooks.once("init", async function () {
   // Experimental
   CONFIG.Dice.types.push(StressDie);
   CONFIG.Dice.types.push(StressDieInternal);
+  CONFIG.Dice.ArsRoll = ArsRoll;
   // CONFIG.Dice.types.push(StressDieNoBotchInternal);
   CONFIG.Dice.terms[StressDie.DENOMINATION] = StressDie;
   CONFIG.Dice.terms[StressDieInternal.DENOMINATION] = StressDieInternal;
-  // CONFIG.Dice.terms[StressDieNoBotchInternal.DENOMINATION] = StressDieNoBotchInternal;
-  // instrumenting roll for testing
-  Roll.prototype.botches = 0;
-  Roll.prototype.diviser = 1;
-  Roll.prototype.multiplier = 1;
-  Roll.prototype.offset = 0;
-  Roll.prototype.modifier = function () {
-    if (!this.result) {
-      return 0;
-    }
-    if (this.botches > 0) {
-      return 0;
-    }
-    if (this.dice.length != 1) {
-      log(false, "ERROR: wrong number of dice");
-      return 0;
-    }
 
-    log(
-      false,
-      `DBG: Roll total ${this.total} * ${this.diviser} - (${this.dice[0].total} * ${this.multiplier}) `
-    );
-    return this.total * this.diviser - this.dice[0].total * this.multiplier;
-  };
+  CONFIG.Dice.rolls[0] = ArsRoll;
+
+  // // CONFIG.Dice.terms[StressDieNoBotchInternal.DENOMINATION] = StressDieNoBotchInternal;
+  // // instrumenting roll for testing
+  // Roll.prototype.botches = 0;
+  // Roll.prototype.diviser = 1;
+  // Roll.prototype.multiplier = 1;
+  // Roll.prototype.offset = 0;
+  // Roll.prototype.modifier = function () {
+  //   if (!this.result) {
+  //     return 0;
+  //   }
+  //   if (this.botches > 0) {
+  //     return 0;
+  //   }
+  //   if (this.dice.length != 1) {
+  //     log(false, "ERROR: wrong number of dice");
+  //     return 0;
+  //   }
+
+  //   log(
+  //     false,
+  //     `DBG: Roll total ${this.total} * ${this.diviser} - (${this.dice[0].total} * ${this.multiplier}) `
+  //   );
+  //   return this.total * this.diviser - this.dice[0].total * this.multiplier;
+  // };
 
   // UI customization
   CONFIG.ui.actors = ArM5eActorsDirectory;
@@ -172,9 +183,9 @@ Hooks.once("init", async function () {
 
   CONFIG.ActiveEffect.legacyTransferral = false;
 
-  //////////////////////
+  // ////////////////////
   // CONFIG DONE!
-  //////////////////////
+  // ////////////////////
 
   Hooks.callAll("arm5e-config-done", CONFIG);
 
@@ -199,15 +210,15 @@ Hooks.once("init", async function () {
   // Preload handlebars templates
   ArM5ePreloadHandlebarsTemplates();
 
-  ///////////
+  // /////////
   // HANDLEBARS HELPERS
-  ///////////
+  // /////////
 
   Handlebars.registerHelper("magicalAttributesHelper", magicalAttributesHelper);
 
   Handlebars.registerHelper("concat", function () {
-    var outStr = "";
-    for (var arg in arguments) {
+    let outStr = "";
+    for (let arg in arguments) {
       if (typeof arguments[arg] != "object") {
         outStr += arguments[arg];
       }
@@ -250,12 +261,6 @@ Hooks.once("ready", async function () {
     }
   }
 
-  // TODO put this a function
-  // translate and sort all abilities keys
-  CONFIG.ARM5E.LOCALIZED_ABILITIES = localizeAbilities();
-  CONFIG.ARM5E.LOCALIZED_ABILITIESCAT = localizeCategories();
-  CONFIG.ARM5E.LOCALIZED_ABILITIES_ENRICHED = enrichAbilities(CONFIG.ARM5E.LOCALIZED_ABILITIES);
-
   // Wait to register hotbar drop hook on ready so that modules could register earlier if they want to
   Hooks.on("hotbarDrop", (bar, data, slot) => {
     if (["Item", "Actor"].includes(data.type)) {
@@ -285,11 +290,11 @@ Hooks.once("ready", async function () {
           content:
             "<b>IMPORTANT NOTIFICATION</b><br/>" +
             "You receive this notification because you upgraded from a version lower than 2.0.2.8." +
-            `On the change to V10 there was a bug introduced in the automatic update mechanism.<br/>` +
-            `<br/><b>The only way to fix it is to uninstall the system and reinstall it again on your side </b>` +
-            `(not the world, just the system, <b>your data is safe</b>).<br/>` +
-            `<br/>If you don't do it, when you update, you will receive the latest changes from the dev branch with features under construction, unfinished and sometime buggy...` +
-            `<br/>Sorry for the inconvenience`
+            "On the change to V10 there was a bug introduced in the automatic update mechanism.<br/>" +
+            "<br/><b>The only way to fix it is to uninstall the system and reinstall it again on your side </b>" +
+            "(not the world, just the system, <b>your data is safe</b>).<br/>" +
+            "<br/>If you don't do it, when you update, you will receive the latest changes from the dev branch with features under construction, unfinished and sometime buggy..." +
+            "<br/>Sorry for the inconvenience"
         });
       }
       // END TODO
@@ -301,7 +306,8 @@ Hooks.once("ready", async function () {
           currentVersion &&
           foundry.utils.isNewerVersion(COMPATIBLE_MIGRATION_VERSION, currentVersion)
         ) {
-          const warning = `Your Ars Magica system data is from too old a Foundry version and cannot be reliably migrated to the latest version. The process will be attempted, but errors may occur.`;
+          const warning =
+            "Your Ars Magica system data is from too old a Foundry version and cannot be reliably migrated to the latest version. The process will be attempted, but errors may occur.";
           ui.notifications.error(warning, {
             permanent: true
           });
@@ -311,7 +317,7 @@ Hooks.once("ready", async function () {
     }
   }
 
-  // setup session storage:
+  // Setup session storage:
 
   if (game.settings.get("arm5e", "clearUserCache")) {
     clearUserCache();
@@ -319,14 +325,14 @@ Hooks.once("ready", async function () {
   }
   let userData = sessionStorage.getItem(`usercache-${game.user.id}`);
   if (!userData) {
-    // create user cache if it doesn't exist yet
+    // Create user cache if it doesn't exist yet
     sessionStorage.setItem(
       `usercache-${game.user.id}`,
       JSON.stringify({ version: game.system.version })
     );
   }
 
-  // await createIndexKeys(`${ARM5E.REF_MODULE_ID}.abilities`);
+  // Await createIndexKeys(`${ARM5E.REF_MODULE_ID}.abilities`);
   // await createIndexKeys(`${ARM5E.REF_MODULE_ID}.flaws`);
   // await createIndexKeys(`${ARM5E.REF_MODULE_ID}.virtues`);
   // await createIndexKeys(`${ARM5E.REF_MODULE_ID}.laboratory-flaws`);
@@ -360,7 +366,7 @@ Hooks.on("quenchReady", (quench) => {
 });
 
 Hooks.on("simple-calendar-date-time-change", async (data) => {
-  // ignore change of less than an hour
+  // Ignore change of less than an hour
   if (Math.abs(data.diff) < 3600) return;
   let current = game.settings.get("arm5e", "currentDate");
   let newDatetime = {};
@@ -422,6 +428,12 @@ async function createArM5eMacro(data, slot) {
   }
 }
 
+/**
+ *
+ * @param actor
+ * @param sheet
+ * @param data
+ */
 async function onDropActorSheetData(actor, sheet, data) {
   if (data.type == "Folder") {
     return true;
@@ -429,14 +441,14 @@ async function onDropActorSheetData(actor, sheet, data) {
   if (data.type == "Item") {
     let item = await fromUuid(data.uuid);
 
-    // for book topics
+    // For book topics
     if (data.topicIdx) {
       item.topicIdx = data.topicIdx;
     }
     if (sheet.isItemDropAllowed(item)) {
       return true;
     } else {
-      log(true, "Prevented invalid item drop " + item.name + " on actor " + actor.name);
+      log(true, `Prevented invalid item drop ${item.name} on actor ${actor.name}`);
       return false;
     }
   } else if (data.type == "Actor") {
@@ -457,7 +469,9 @@ async function onDropActorSheetData(actor, sheet, data) {
  * Create a Macro from an Item drop.
  * Get an existing item macro if one exists, otherwise create a new one.
  * @param {string} itemName
- * @return {Promise}
+ * @param itemId
+ * @param actorId
+ * @returns {Promise}
  */
 function rollItemMacro(itemId, actorId) {
   const actor = game.actors.get(actorId);
@@ -514,6 +528,10 @@ Hooks.on("renderChatMessage", (message, html, data) =>
   Arm5eChatMessage.addChatListeners(message, html, data)
 );
 
+Hooks.on("createChatMessage", (message, html, data) =>
+  Arm5eChatMessage.enrichChatMessage(message, html, data)
+);
+
 // On Apply an ActiveEffect that uses a CUSTOM application mode.
 Hooks.on("applyActiveEffect", (actor, change, current, delta, changes) => {
   ArM5eActiveEffect.applyCustomEffect(actor, change, current, delta, changes);
@@ -524,47 +542,53 @@ Hooks.on("getSceneControlButtons", (buttons) => addArsButtons(buttons));
 Hooks.on("renderPause", function () {
   if ($("#pause").attr("class") !== "paused") return;
   const path = "systems/arm5e/assets/clockwork.svg";
-  // const opacity = 100
+  // Const opacity = 100
   const speed = "20s linear 0s infinite normal none running rotation";
   const opacity = 0.6;
   $("#pause.paused img").attr("src", path);
   $("#pause.paused img").css({ opacity: opacity, "--fa-animation-duration": "20s" });
 });
 
+/**
+ *
+ */
 function setDatamodels() {
   // CONFIG.ARM5E.ItemDataModels["art"] = ArtSchema;
-  CONFIG.ARM5E.ItemDataModels["ability"] = AbilitySchema;
-  CONFIG.ARM5E.ItemDataModels["virtue"] = VirtueFlawSchema;
-  CONFIG.ARM5E.ItemDataModels["flaw"] = VirtueFlawSchema;
-  CONFIG.ARM5E.ItemDataModels["item"] = ItemSchema;
-  CONFIG.ARM5E.ItemDataModels["vis"] = VisSchema;
-  CONFIG.ARM5E.ItemDataModels["visSourcesCovenant"] = VisSourceSchema;
-  CONFIG.ARM5E.ItemDataModels["baseEffect"] = BaseEffectSchema;
-  CONFIG.ARM5E.ItemDataModels["magicalEffect"] = MagicalEffectSchema;
-  CONFIG.ARM5E.ItemDataModels["spell"] = SpellSchema;
-  CONFIG.ARM5E.ItemDataModels["laboratoryText"] = LabTextSchema;
-  CONFIG.ARM5E.ItemDataModels["personalityTrait"] = PersonalityTraitSchema;
-  CONFIG.ARM5E.ItemDataModels["reputation"] = ReputationSchema;
-  CONFIG.ARM5E.ItemDataModels["armor"] = ArmorSchema;
-  CONFIG.ARM5E.ItemDataModels["weapon"] = WeaponSchema;
-  CONFIG.ARM5E.ItemDataModels["inhabitant"] = InhabitantSchema;
-  CONFIG.ARM5E.ItemDataModels["wound"] = WoundSchema;
-  CONFIG.ARM5E.ItemDataModels["labCovenant"] = SanctumSchema;
+  CONFIG.ARM5E.ItemDataModels.ability = AbilitySchema;
+  CONFIG.ARM5E.ItemDataModels.virtue = VirtueFlawSchema;
+  CONFIG.ARM5E.ItemDataModels.flaw = VirtueFlawSchema;
+  CONFIG.ARM5E.ItemDataModels.item = ItemSchema;
+  CONFIG.ARM5E.ItemDataModels.vis = VisSchema;
+  CONFIG.ARM5E.ItemDataModels.visSourcesCovenant = VisSourceSchema;
+  CONFIG.ARM5E.ItemDataModels.baseEffect = BaseEffectSchema;
+  CONFIG.ARM5E.ItemDataModels.magicalEffect = MagicalEffectSchema;
+  CONFIG.ARM5E.ItemDataModels.spell = SpellSchema;
+  CONFIG.ARM5E.ItemDataModels.laboratoryText = LabTextSchema;
+  CONFIG.ARM5E.ItemDataModels.personalityTrait = PersonalityTraitSchema;
+  CONFIG.ARM5E.ItemDataModels.reputation = ReputationSchema;
+  CONFIG.ARM5E.ItemDataModels.armor = ArmorSchema;
+  CONFIG.ARM5E.ItemDataModels.weapon = WeaponSchema;
+  CONFIG.ARM5E.ItemDataModels.inhabitant = InhabitantSchema;
+  CONFIG.ARM5E.ItemDataModels.wound = WoundSchema;
+  CONFIG.ARM5E.ItemDataModels.labCovenant = SanctumSchema;
 
-  CONFIG.ARM5E.ItemDataModels["enchantment"] = EnchantmentSchema;
-  CONFIG.ARM5E.ItemDataModels["book"] = BookSchema;
-  CONFIG.ARM5E.ItemDataModels["diaryEntry"] = DiaryEntrySchema;
-  CONFIG.ARM5E.ItemDataModels["supernaturalEffect"] = SupernaturalEffectSchema;
-  //Actors
-  CONFIG.ARM5E.ActorDataModels["laboratory"] = LabSchema;
-  CONFIG.ARM5E.ActorDataModels["magicCodex"] = CodexSchema;
-  CONFIG.ARM5E.ActorDataModels["covenant"] = CovenantSchema;
+  CONFIG.ARM5E.ItemDataModels.enchantment = EnchantmentSchema;
+  CONFIG.ARM5E.ItemDataModels.book = BookSchema;
+  CONFIG.ARM5E.ItemDataModels.diaryEntry = DiaryEntrySchema;
+  CONFIG.ARM5E.ItemDataModels.supernaturalEffect = SupernaturalEffectSchema;
+  // Actors
+  CONFIG.ARM5E.ActorDataModels.laboratory = LabSchema;
+  CONFIG.ARM5E.ActorDataModels.magicCodex = CodexSchema;
+  CONFIG.ARM5E.ActorDataModels.covenant = CovenantSchema;
 
   // Deprecated types
 
-  CONFIG.ARM5E.ItemDataModels["visStockCovenant"] = VisSchema;
+  CONFIG.ARM5E.ItemDataModels.visStockCovenant = VisSchema;
 }
 
+/**
+ *
+ */
 function registerSheets() {
   try {
     Actors.unregisterSheet("core", ActorSheet);
@@ -633,13 +657,13 @@ function registerSheets() {
         "distinctive",
         "sanctumRoom",
         "reputation",
-        //"inhabitant",
-        "habitantMagi", // deprecated
-        "habitantCompanion", // deprecated
-        "habitantSpecialists", // deprecated
-        "habitantHabitants", // deprecated
-        "habitantHorses", // deprecated
-        "habitantLivestock", // deprecated
+        // "inhabitant",
+        "habitantMagi", // Deprecated
+        "habitantCompanion", // Deprecated
+        "habitantSpecialists", // Deprecated
+        "habitantHabitants", // Deprecated
+        "habitantHorses", // Deprecated
+        "habitantLivestock", // Deprecated
         "possessionsCovenant",
         "visSourcesCovenant",
         "visStockCovenant",

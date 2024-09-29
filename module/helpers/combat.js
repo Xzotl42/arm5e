@@ -41,7 +41,6 @@ export class QuickCombat extends FormApplication {
   constructor(data, options) {
     super(data, options);
 
-    this.object.actor.apps[this.appId] = this;
     Hooks.on("closeApplication", (app, html) => this.onClose(app));
   }
   /** @override */
@@ -55,6 +54,13 @@ export class QuickCombat extends FormApplication {
       submitOnChange: true,
       closeOnSubmit: false
     });
+  }
+  async _render(force, options = {}) {
+    // Parent class rendering workflow
+    await super._render(force, options);
+
+    // Register the active Application with the referenced Documents
+    this.object.actor.apps[this.appId] = this;
   }
 
   onClose(app) {
@@ -105,7 +111,6 @@ export class QuickVitals extends FormApplication {
   constructor(data, options) {
     super(data, options);
 
-    this.object.actor.apps[this.appId] = this;
     Hooks.on("closeApplication", (app, html) => this.onClose(app));
   }
   /** @override */
@@ -119,6 +124,14 @@ export class QuickVitals extends FormApplication {
       submitOnChange: true,
       closeOnSubmit: false
     });
+  }
+
+  async _render(force, options = {}) {
+    // Parent class rendering workflow
+    await super._render(force, options);
+
+    // Register the active Application with the referenced Documents
+    this.object.actor.apps[this.appId] = this;
   }
 
   onClose(app) {
@@ -197,7 +210,7 @@ export async function combatDamage(selector, actor) {
   const messageDamage = `<h4 class="dice-total">${damage}</h4>`;
   ChatMessage.create({
     content: messageDamage,
-    flavor: title + putInFoldableLinkWithAnimation("arm5e.sheet.label.details", details),
+    flavor: title + putInFoldableLinkWithAnimation("arm5e.sheet.details", details),
     speaker: ChatMessage.getSpeaker({
       actor
     })
@@ -222,7 +235,7 @@ export async function nonCombatDamage(selector, actor) {
   const messageDamage = `<h4 class="dice-total">${damage}</h4>`;
   ChatMessage.create({
     content: messageDamage,
-    flavor: title + putInFoldableLinkWithAnimation("arm5e.sheet.label.details", details),
+    flavor: title + putInFoldableLinkWithAnimation("arm5e.sheet.details", details),
     speaker: ChatMessage.getSpeaker({
       actor
     })

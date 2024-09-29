@@ -4,7 +4,7 @@ import { ArM5ePCActor } from "../actor/actor.js";
 import { log } from "../tools.js";
 import { getRollTypeProperties, ROLL_MODIFIERS, ROLL_PROPERTIES } from "./rollWindow.js";
 import Aura from "./aura.js";
-import { computeLevel, spellFormLabel, spellTechniqueLabel } from "./magic.js";
+import { computeLevel } from "./magic.js";
 
 export class ArM5eRollInfo {
   constructor(actor) {
@@ -37,7 +37,7 @@ export class ArM5eRollInfo {
     } else {
       this.physicalCondition = false;
     }
-    // possible to override physicalCondition with dataset
+    // Possible to override physicalCondition with dataset
     if (dataset.physicalcondition != undefined) {
       this.physicalCondition = dataset.physicalcondition;
     }
@@ -78,6 +78,7 @@ export class ArM5eRollInfo {
         this.name = ab.name;
         this.label = this.name;
         this.ability.id = dataset.ability;
+        this.ability.active = true;
         this.ability.name = ab.name;
         this.ability.key = ab.system.key;
         this.ability.option = ab.system.option;
@@ -92,8 +93,8 @@ export class ArM5eRollInfo {
           const item = this._actor.items.get(dataset.id);
           const effect = item.system.enchantments.effects[dataset.index];
           this.label += ` : ${effect.name}`;
-          this.label += ` (${spellTechniqueLabel(effect.system, true)}`;
-          this.label += `${spellFormLabel(effect.system, true)}`;
+          this.label += ` (${spelltechnique.label(effect.system, true)}`;
+          this.label += `${spellform.label(effect.system, true)}`;
           this.label += ` ${computeLevel(effect.system, "enchantment")} )`;
           this.penetration.total = effect.system.penetration;
           this.item.frequency = effect.system.effectfrequency;
@@ -116,7 +117,50 @@ export class ArM5eRollInfo {
         }
         this.initPenetrationVariables();
         break;
+      case ROLL_PROPERTIES.SUPERNATURAL.VAL:
+        if (dataset.id) {
+          let effect = this._actor.items.get(dataset.id);
 
+          if (this.label === "") {
+            this.label = effect.name;
+          }
+          this.itemId = effect.id;
+          if (effect.system.characteristic) {
+            this.characteristic = effect.system.characteristic;
+            this.characteristicLabel =
+              CONFIG.ARM5E.character.characteristics[this.characteristic].label;
+            this.characteristicValue = actorSystemData.characteristics[this.characteristic].value;
+          }
+          this.magic.level = effect.system.level;
+          this.magic.technique.active = effect.system.verb.active ?? false;
+          this.magic.technique.value = effect.system.verb.option;
+          this.magic.technique.label = effect.system.verb.label;
+          this.magic.technique.score = effect.system.verb.score;
+          this.magic.technique.specialty = effect.system.verb.specialty;
+          this.magic.technique.specApply = effect.system.verb.specApply;
+          this.magic.form.value = effect.system.noun.option;
+          this.magic.form.active = effect.system.noun.active ?? false;
+          this.magic.form.label = effect.system.noun.label;
+          this.magic.form.score = effect.system.noun.score;
+          this.magic.form.specialty = effect.system.noun.specialty;
+          this.magic.form.specApply = effect.system.noun.specApply;
+          this.magic.bonus = effect.system.modifier.value ?? 0;
+          this.magic.bonusDesc = effect.system.modifier.label ?? "";
+
+          this.ability.realm = this._actor.system.magicSystem.realm;
+          this.ability.active = effect.system.bonusAbility.active;
+          this.ability.label = effect.system.bonusAbility.label ?? "";
+          this.ability.name = effect.system.bonusAbility.name ?? "";
+          this.ability.key = effect.system.bonusAbility.key;
+          this.ability.option = effect.system.bonusAbility.option;
+          this.ability.speciality = effect.system.bonusAbility.specialty;
+          this.ability.score = effect.system.bonusAbility.score;
+
+          const template = actorSystemData.magicSystem.templates[effect.system.template];
+          this.useFatigue = template.useFatigue;
+        }
+        this.initPenetrationVariables();
+        break;
       case ROLL_PROPERTIES.MAGIC.VAL:
       case ROLL_PROPERTIES.SPONT.VAL:
         this.useFatigue = true;
@@ -130,19 +174,19 @@ export class ArM5eRollInfo {
           if (this.label === "") {
             this.label = spell.name;
           }
-          this.label += " (" + spell.system.level + ")";
+          this.label += ` (${spell.system.level})`;
           if (this.img === "") this.img = spell.img;
           this.itemId = spell.id;
           let techData = spell._getTechniqueData(this._actor.system);
-          this.magic.technique = spell.system.technique.value;
-          this.magic.techniqueLabel = techData[0];
-          this.magic.techniqueScore = techData[1];
-          this.magic.techDeficiency = techData[2];
+          this.magic.technique.value = spell.system.technique.value;
+          this.magic.technique.label = techData[0];
+          this.magic.technique.score = techData[1];
+          this.magic.technique.deficiency = techData[2];
           let formData = spell._getFormData(this._actor.system);
-          this.magic.formLabel = formData[0];
-          this.magic.formScore = formData[1];
-          this.magic.formDeficiency = formData[2];
-          this.magic.form = spell.system.form.value;
+          this.magic.form.label = formData[0];
+          this.magic.form.score = formData[1];
+          this.magic.form.deficiency = formData[2];
+          this.magic.form.value = spell.system.form.value;
           this.magic.bonus = spell.system.bonus ?? 0;
           this.magic.bonusDesc = spell.system.bonusDesc ?? "";
           if (dataset.applyfocus != undefined) {
@@ -156,20 +200,20 @@ export class ArM5eRollInfo {
           this.bonuses = this.magic.bonus;
         } else {
           if (dataset.technique) {
-            this.magic.technique = dataset.technique;
-            this.magic.techniqueLabel = ARM5E.magic.techniques[dataset.technique].label;
-            this.magic.techniqueScore = parseInt(
+            this.magic.technique.value = dataset.technique;
+            this.magic.technique.label = ARM5E.magic.techniques[dataset.technique].label;
+            this.magic.technique.score = parseInt(
               actorSystemData.arts.techniques[dataset.technique].finalScore
             );
-            this.magic.techDeficiency =
+            this.magic.tech.deficiency =
               actorSystemData.arts.techniques[dataset.technique].deficient;
           }
 
           if (dataset.form) {
-            this.magic.form = dataset.form;
-            this.magic.formLabel = ARM5E.magic.forms[dataset.form].label;
-            this.magic.formScore = parseInt(actorSystemData.arts.forms[dataset.form].finalScore);
-            this.magic.formDeficiency = actorSystemData.arts.forms[dataset.form].deficient;
+            this.magic.form.value = dataset.form;
+            this.magic.form.label = ARM5E.magic.forms[dataset.form].label;
+            this.magic.form.score = parseInt(actorSystemData.arts.forms[dataset.form].finalScore);
+            this.magic.form.deficiency = actorSystemData.arts.forms[dataset.form].deficient;
           }
           this.magic.masteryScore = 0;
         }
@@ -179,12 +223,9 @@ export class ArM5eRollInfo {
         this.environment.year = parseInt(dataset.year);
         this.environment.season = dataset.season;
         this.environment.seasonLabel = ARM5E.seasons[dataset.season].label;
-        this.label =
-          game.i18n.localize("arm5e.aging.roll.label") +
-          " " +
-          game.i18n.localize(ARM5E.seasons[dataset.season].label) +
-          " " +
-          this.environment.year;
+        this.label = `${game.i18n.localize("arm5e.aging.roll.label")} ${game.i18n.localize(
+          ARM5E.seasons[dataset.season].label
+        )} ${this.environment.year}`;
         this.setGenericField(
           game.i18n.localize("arm5e.sheet.ageModifier"),
           Math.round(parseInt(this.environment.year - actorSystemData.description.born.value) / 10),
@@ -221,12 +262,9 @@ export class ArM5eRollInfo {
         this.environment.year = parseInt(dataset.year);
         this.environment.season = dataset.season;
         this.environment.seasonLabel = ARM5E.seasons[dataset.season].label;
-        this.label =
-          game.i18n.localize("arm5e.aging.crisis.label") +
-          " " +
-          game.i18n.localize(ARM5E.seasons[dataset.season].label) +
-          " " +
-          this.environment.year;
+        this.label = `${game.i18n.localize("arm5e.aging.crisis.label")} ${game.i18n.localize(
+          ARM5E.seasons[dataset.season].label
+        )} ${this.environment.year}`;
 
         this.setGenericField(
           game.i18n.localize("arm5e.sheet.decrepitude"),
@@ -239,7 +277,7 @@ export class ArM5eRollInfo {
           2
         );
         break;
-      //case "option":
+      // Case "option":
       default:
         break;
     }
@@ -251,7 +289,7 @@ export class ArM5eRollInfo {
       this.useFatigue = dataset.usefatigue;
     }
     this.activeEffects = [];
-    if (["magic", "power", "spont", "spell"].includes(this.type)) {
+    if (["magic", "power", "spont", "spell", "supernatural"].includes(this.type)) {
       this.getSpellcastingModifiers();
     }
     this.optionalBonuses = this.getOptionalBonuses(this.type);
@@ -316,26 +354,27 @@ export class ArM5eRollInfo {
       )
     };
     if (this.isMagic) {
-      (this.selection.voiceStances = Object.fromEntries(
+      this.selection.voiceStances = Object.fromEntries(
         Object.entries(this._actor.system.stances.voice).map(([k, v]) => {
           return [k, `${game.i18n.localize(CONFIG.ARM5E.magic.mod.voice[k].mnemonic)} (${v})`];
         })
-      )),
-        (this.selection.gesturesStances = Object.fromEntries(
-          Object.entries(this._actor.system.stances.gestures).map(([k, v]) => {
-            return [k, `${game.i18n.localize(CONFIG.ARM5E.magic.mod.gestures[k].mnemonic)} (${v})`];
-          })
-        )),
-        (this.selection.techniques = Object.fromEntries(
-          Object.entries(this._actor.system.arts.techniques).map(([k, v]) => {
-            return [k, `${CONFIG.ARM5E.magic.arts[k].label} (${v.finalScore})`];
-          })
-        )),
-        (this.selection.forms = Object.fromEntries(
-          Object.entries(this._actor.system.arts.forms).map(([k, v]) => {
-            return [k, `${CONFIG.ARM5E.magic.arts[k].label} (${v.finalScore})`];
-          })
-        ));
+      );
+      this.selection.gesturesStances = Object.fromEntries(
+        Object.entries(this._actor.system.stances.gestures).map(([k, v]) => {
+          return [k, `${game.i18n.localize(CONFIG.ARM5E.magic.mod.gestures[k].mnemonic)} (${v})`];
+        })
+      );
+
+      this.selection.techniques = Object.fromEntries(
+        Object.entries(this._actor.system.arts.techniques).map(([k, v]) => {
+          return [k, `${CONFIG.ARM5E.magic.arts[k].label} (${v.finalScore})`];
+        })
+      );
+      this.selection.forms = Object.fromEntries(
+        Object.entries(this._actor.system.arts.forms).map(([k, v]) => {
+          return [k, `${CONFIG.ARM5E.magic.arts[k].label} (${v.finalScore})`];
+        })
+      );
     }
   }
 
@@ -355,7 +394,7 @@ export class ArM5eRollInfo {
     let res = [];
     for (let effect of activeEffectsByType) {
       let total = 0;
-      // there should be only one, but just in case
+      // There should be only one, but just in case
       for (let ch of effect.changes) {
         total += Number(ch.value);
       }
@@ -391,13 +430,9 @@ export class ArM5eRollInfo {
   }
 
   getGenericFieldDetails(idx) {
-    return (
-      `${this.generic.operatorOpt[idx - 1]} ` +
-      this.getGenericFieldLabel(idx) +
-      " (" +
-      this.generic.option[idx - 1] +
-      `) <br/>`
-    );
+    return `${this.generic.operatorOpt[idx - 1]} ${this.getGenericFieldLabel(idx)} (${
+      this.generic.option[idx - 1]
+    }) <br/>`;
   }
 
   prepareRollFields(dataset) {
@@ -425,7 +460,7 @@ export class ArM5eRollInfo {
   }
 
   cleanBooleans() {
-    // clean booleans
+    // Clean booleans
     if (this.useFatigue === "false") {
       this.useFatigue = false;
     } else if (this.useFatigue === "true") {
@@ -441,12 +476,35 @@ export class ArM5eRollInfo {
 
   reset() {
     this.magic = {
-      technique: "",
-      techniqueScore: 0,
-      techniqueLabel: "",
-      form: "",
-      formScore: 0,
-      formLabel: "",
+      technique: {
+        active: true,
+        value: "",
+        score: 0,
+        label: "",
+        deficiency: false,
+        specialty: "",
+        specApply: false
+      },
+      form: {
+        active: true,
+        value: "",
+        score: 0,
+        label: "",
+        deficiency: false,
+        specialty: "",
+        specApply: false
+      },
+
+      // technique.active: true,
+      // technique: "",
+      // technique.score: 0,
+      // technique.label: "",
+      // techniqueSpec: false,
+      // form.active: true,
+      // form: "",
+      // form.score: 0,
+      // form.label: "",
+      // formSpec: false,
       bonus: 0,
       bonusDesc: "",
       masteryScore: 0,
@@ -454,9 +512,7 @@ export class ArM5eRollInfo {
       focus: false,
       masteryScore: 0,
       divide: 1,
-      level: 0,
-      techDeficiency: false,
-      formDeficiency: false
+      level: 0
     };
 
     this.power = {
@@ -500,21 +556,21 @@ export class ArM5eRollInfo {
     this.type = "";
     this.label = "";
     this.details = "";
-    // roll formula
+    // Roll formula
     this.formula = "";
-    // added to chat message as an icon for the roll
+    // Added to chat message as an icon for the roll
     this.img = "";
     this.itemId = "";
-    // roll window title
+    // Roll window title
     this.name = "";
     this.flavor = "";
-    // arbitrary bonus
+    // Arbitrary bonus
     this.modifier = 0;
     this.useFatigue = false;
-    // whether physical condition impact the roll
+    // Whether physical condition impact the roll
     this.physicalCondition = true;
     this.secondaryScore = 0;
-    // optional data used in the callback
+    // Optional data used in the callback
     this.additionalData = {};
   }
 
@@ -523,22 +579,29 @@ export class ArM5eRollInfo {
       this.type == "ability" &&
       this.ability.category == "supernaturalCat" &&
       this.ability.realm != "mundane";
-    const auraApply = superNatAbility || ["spell", "magic", "spont", "power"].includes(this.type);
+    const auraApply =
+      superNatAbility || ["spell", "magic", "spont", "power", "supernatural"].includes(this.type);
     if (auraApply) {
       this.environment.aura = Aura.fromActor(this._actor);
-      if (superNatAbility) {
+      if (this.type === "supernatural") {
         this.environment.aura.computeAuraModifierFor(
           CONFIG.ARM5E.realmsExt[this.ability.realm].index
         );
       } else {
-        this.environment.aura.computeMaxAuraModifier(this._actor.system.realms);
+        if (superNatAbility) {
+          this.environment.aura.computeAuraModifierFor(
+            CONFIG.ARM5E.realmsExt[this.ability.realm].index
+          );
+        } else {
+          this.environment.aura.computeMaxAuraModifier(this._actor.system.realms);
+        }
       }
     }
   }
 
   getSpellcastingModifiers() {
     this.bonuses += this._actor.system.bonuses.arts.spellcasting;
-    // log(false, `Bonus spellcasting: ${this._actor.system.bonuses.arts.spellcasting}`);
+    // Log(false, `Bonus spellcasting: ${this._actor.system.bonuses.arts.spellcasting}`);
     const activeEffects = CONFIG.ISV10 ? this._actor.effects : this._actor.appliedEffects;
     let activeEffectsByType = ArM5eActiveEffect.findAllActiveEffectsWithType(
       activeEffects,

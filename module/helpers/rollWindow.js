@@ -116,6 +116,13 @@ const DEFAULT_ROLL_PROPERTIES = {
     MODIFIERS: 0,
     TITLE: "arm5e.aging.crisis.label",
     CALLBACK: agingCrisis
+  },
+  SUPERNATURAL: {
+    VAL: "supernatural",
+    MODE: ROLL_MODES.STRESS_OR_SIMPLE,
+    MODIFIERS: 7,
+    TITLE: "arm5e.dialog.title.rolldie",
+    CALLBACK: castSupernaturalEffect
   }
 };
 
@@ -213,6 +220,9 @@ function chooseTemplate(dataset) {
   }
   if ([ROLL_PROPERTIES.MAGIC.VAL, ROLL_PROPERTIES.SPELL.VAL].includes(dataset.roll)) {
     return "systems/arm5e/templates/roll/roll-spell.html";
+  }
+  if (dataset.roll == ROLL_PROPERTIES.SUPERNATURAL.VAL) {
+    return "systems/arm5e/templates/roll/roll-supernatural.html";
   }
   if (dataset.roll == ROLL_PROPERTIES.AGING.VAL) {
     // Aging roll
@@ -570,6 +580,33 @@ async function castSpell(actorCaster, roll, message) {
       await chatFailedCasting(actorCaster, roll, message, 0);
       return false;
     }
+  }
+  // Then do contest of magic
+  await checkTargetAndCalculateResistance(actorCaster, roll, message);
+}
+
+/**
+ *
+ * @param actorCaster
+ * @param roll
+ * @param message
+ */
+async function castSupernaturalEffect(actorCaster, roll, message) {
+  // First check that the spell succeeds
+  const levelOfSpell = actorCaster.rollInfo.magic.level;
+  const totalOfSpell = Math.round(roll._total);
+
+  if (roll.botches > 0) {
+    await actorCaster.update({
+      "system.warping.points": actorCaster.system.warping.points + roll.botches
+    });
+  }
+
+  log(false, `Casting total: ${totalOfSpell}`);
+  // Magic effect
+  if (totalOfSpell < levelOfSpell) {
+    await chatFailedCasting(actorCaster, roll, message, 0);
+    return false;
   }
   // Then do contest of magic
   await checkTargetAndCalculateResistance(actorCaster, roll, message);

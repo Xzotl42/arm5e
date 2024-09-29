@@ -1,6 +1,5 @@
 <div class="flexrow backSection margintop18">
   <div class="flexrow resource">
-
     <div class="flexcol resource">
       <div class="resource flexrow flex-group-left">
         <div class="flex01">
@@ -18,10 +17,10 @@
             {{selectOptions selection.targetType selected=targetType}}
           </select>
         </div>
-        <div class="flex01 flexrow">
+        <div class="flexrow">
           <label for="system.magicSystem.templates.{{id}}.useFatigue"
-            class="header-label">{{localize "Use fatigue"}}</label>
-          <input type="checkbox" name="system.magicSystem.templates.{{id}}.useFatigue" {{checked useFatigue}}>
+            class="header-label flex02">{{localize "Use fatigue"}}</label>
+          <input type="checkbox" name="system.magicSystem.templates.{{id}}.useFatigue" {{checked template.useFatigue}}>
         </div>
         <div class="flex0">
           <a class="template-control" data-action="delete" data-id="{{id}}" title="Delete template"><i
@@ -57,6 +56,8 @@
           <label class="template-label">{{localize "arm5e.generic.other"}}</label>
           <button class="template-item" data-action="create" data-type="mod" data-id="{{id}}"
             {{buttons.mod}}>{{localize "arm5e.generic.modifier"}}</button>
+          <button class="template-item" data-action="create" data-type="ability" data-id="{{id}}"
+            {{buttons.bonusAb}}>{{localize "Bonus ability"}}</button>
           <button class="template-item" data-action="create" data-type="mult" data-id="{{id}}"
             {{buttons.mult}}>{{localize "arm5e.generic.multiplier"}}</button>
         </div>
@@ -70,21 +71,31 @@
           {{/each}}
         </div>
         <div class="flexcol">
-          {{#each template.verb as |component idx| }}
+          {{#each template.verbs as |component idx| }}
             <div class="resource flexrow">
               {{> (lookup . "partial" ) compIdx=component.compIdx id=../id}}
             </div>
           {{/each}}
         </div>
         <div class="flexcol">
-          {{#each template.noun as |component idx| }}
+          {{#each template.nouns as |component idx| }}
             <div class="resource flexrow">
               {{> (lookup . "partial" ) compIdx=component.compIdx id=../id}}
             </div>
           {{/each}}
         </div>
         <div class="flexcol">
-
+          {{#if template.bonusAbility.active}}
+            {{#with template.bonusAbility}}
+              {{log "with " this}}
+              {{> (lookup . "partial" ) compIdx=compIdx id=../id}}
+            {{/with}}
+          {{/if}}
+          {{#each template.others as |component idx| }}
+            <div class="resource flexrow">
+              {{> (lookup . "partial" ) compIdx=component.compIdx id=../id}}
+            </div>
+          {{/each}}
         </div>
       </div>
     </div>

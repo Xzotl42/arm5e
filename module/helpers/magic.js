@@ -8,6 +8,9 @@ const VOICE_AND_GESTURES_ICONS = {
   gestures: "icons/skills/social/wave-halt-stop.webp"
 };
 
+/**
+ *
+ */
 export async function GetFilteredAspects() {
   const filterBooks = Object.fromEntries(
     Object.entries(await game.settings.get(CONFIG.ARM5E.SYSTEM_ID, "sourcebookFilter")).filter(
@@ -27,6 +30,10 @@ export async function GetFilteredAspects() {
   return Object.fromEntries(filteredAspects);
 }
 
+/**
+ *
+ * @param data
+ */
 export async function GetFilteredMagicalAttributes(data) {
   const filterBooks = Object.fromEntries(
     Object.entries(await game.settings.get(CONFIG.ARM5E.SYSTEM_ID, "sourcebookFilter")).filter(
@@ -96,6 +103,10 @@ export async function GetFilteredMagicalAttributes(data) {
   );
 }
 
+/**
+ *
+ * @param context
+ */
 export function GetEnchantmentSelectOptions(context) {
   context.selection.frequency = Object.fromEntries(
     Object.entries(CONFIG.ARM5E.lab.enchantment.effectUses).map(([k, v]) => {
@@ -116,6 +127,12 @@ export function GetEnchantmentSelectOptions(context) {
   );
 }
 
+/**
+ *
+ * @param spelldata
+ * @param flavor
+ * @param editable
+ */
 export async function PickRequisites(spelldata, flavor, editable) {
   spelldata.config = {
     magic: {
@@ -126,7 +143,7 @@ export async function PickRequisites(spelldata, flavor, editable) {
   spelldata.edition = editable;
   spelldata.ui = { flavor: flavor };
   log("false", spelldata);
-  // var itemData = this.item;
+  // Var itemData = this.item;
   let template = "systems/arm5e/templates/item/parts/requisites.html";
   let html = await renderTemplate(template, spelldata);
 
@@ -158,13 +175,17 @@ export async function PickRequisites(spelldata, flavor, editable) {
   return itemUpdate;
 }
 
+/**
+ *
+ * @param selector
+ */
 function _setRequisites(selector) {
   let itemUpdate = {};
 
   for (const tech of Object.entries(CONFIG.ARM5E.magic.techniques)) {
     let found = selector.find(`.Selected${tech[1].label}`);
     if (found.length > 0) {
-      if (found[0].checked == true) {
+      if (found[0].checked === true) {
         itemUpdate[`system.technique-req.${tech[0]}`] = true;
       } else {
         itemUpdate[`system.technique-req.${tech[0]}`] = false;
@@ -176,7 +197,7 @@ function _setRequisites(selector) {
   for (const form of Object.entries(CONFIG.ARM5E.magic.forms)) {
     let found = selector.find(`.Selected${form[1].label}`);
     if (found.length > 0) {
-      if (found[0].checked == true) {
+      if (found[0].checked === true) {
         itemUpdate[`system.form-req.${form[0]}`] = true;
       } else {
         itemUpdate[`system.form-req.${form[0]}`] = false;
@@ -192,9 +213,9 @@ export class QuickMagic extends FormApplication {
     super(data, options);
     this.object.technique = "cr";
     this.object.form = "an";
-    this.object.actor.apps[this.appId] = this;
     Hooks.on("closeApplication", (app, html) => this.onClose(app));
   }
+
   /** @override */
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
@@ -206,6 +227,14 @@ export class QuickMagic extends FormApplication {
       submitOnChange: true,
       closeOnSubmit: false
     });
+  }
+
+  async _render(force, options = {}) {
+    // Parent class rendering workflow
+    await super._render(force, options);
+
+    // Register the active Application with the referenced Documents
+    this.object.actor.apps[this.appId] = this;
   }
 
   onClose(app) {
@@ -277,17 +306,20 @@ export class QuickMagic extends FormApplication {
     if (formData.form) {
       this.object.form = formData.form;
     }
-    // for (let [key, value] of Object.entries(formData)) {
+    // For (let [key, value] of Object.entries(formData)) {
     //   log(false, `Updated ${key} : ${value}`);
     //   this.object[key] = value;
     // }
     // this.object = foundry.utils.expandObject(this.object);
     // log(false, `Scriptorium object: ${JSON.stringify(this.object)}`);
     this.render();
-
-    return;
   }
 }
+/**
+ *
+ * @param tokenName
+ * @param actor
+ */
 export async function quickMagic(tokenName, actor) {
   if (!actor._isMagus()) return;
 
@@ -301,14 +333,19 @@ export async function quickMagic(tokenName, actor) {
   const res = await magic.render(true);
 }
 
+/**
+ *
+ * @param base
+ * @param num
+ */
 export function addSpellMagnitude(base, num) {
-  if (num == 0) {
+  if (num === 0) {
     return base;
   }
-  // in case base is a string
+  // In case base is a string
   base = parseInt(base);
   if (num > 0) {
-    // log(false, `Adding ${num} magnitudes from ${base}`);
+    // Log(false, `Adding ${num} magnitudes from ${base}`);
     if (base + num <= 5) {
       return base + num;
     }
@@ -324,7 +361,7 @@ export function addSpellMagnitude(base, num) {
     }
     return res;
   } else {
-    // log(false, `Adding ${num} magnitudes from ${base}`);
+    // Log(false, `Adding ${num} magnitudes from ${base}`);
     if (base + num <= 1) {
       return base + num;
     }
@@ -338,20 +375,25 @@ export function addSpellMagnitude(base, num) {
       }
       loop++;
     }
-    // log(false, `returns ${res}`);
+    // Log(false, `returns ${res}`);
     return res;
   }
 }
 
+/**
+ *
+ * @param item
+ * @param short
+ */
 export function spellTechniqueLabel(item, short = false) {
   let label = CONFIG.ARM5E.magic.techniques[item.technique.value][short ? "short" : "label"];
   let techReq = Object.entries(item["technique-req"]).filter((r) => r[1] === true);
   if (techReq.length > 0) {
     label += " (";
     techReq.forEach((key) => {
-      label += CONFIG.ARM5E.magic.arts[key[0]].short + " ";
+      label += `${CONFIG.ARM5E.magic.arts[key[0]].short} `;
     });
-    // remove last whitespace
+    // Remove last whitespace
     label = label.substring(0, label.length - 1);
     label += ")";
   }
@@ -359,15 +401,20 @@ export function spellTechniqueLabel(item, short = false) {
   return label;
 }
 
+/**
+ *
+ * @param item
+ * @param short
+ */
 export function spellFormLabel(item, short = false) {
   let label = CONFIG.ARM5E.magic.forms[item.form.value][short ? "short" : "label"];
   let techReq = Object.entries(item["form-req"]).filter((r) => r[1] === true);
   if (techReq.length > 0) {
     label += " (";
     techReq.forEach((key) => {
-      label += CONFIG.ARM5E.magic.arts[key[0]].short + " ";
+      label += `${CONFIG.ARM5E.magic.arts[key[0]].short} `;
     });
-    // remove last whitespace
+    // Remove last whitespace
     label = label.substring(0, label.length - 1);
     label += ")";
   }
@@ -375,28 +422,23 @@ export function spellFormLabel(item, short = false) {
   return label;
 }
 
-// return a localize string of a magic effect attributes
+// Return a localize string of a magic effect attributes
+/**
+ *
+ * @param item
+ */
 export function GetEffectAttributesLabel(item) {
   if (!IsMagicalEffect(item)) return "";
-  let label =
-    spellTechniqueLabel(item.system, true) +
-    " " +
-    spellFormLabel(item.system, true) +
-    " " +
-    (item.system.level ? item.system.level : computeLevel(item.system, item.type)) +
-    " - " +
-    game.i18n.localize("arm5e.spell.range.short") +
-    ": " +
-    game.i18n.localize(CONFIG.ARM5E.magic.ranges[item.system.range.value].label) +
-    " " +
-    game.i18n.localize("arm5e.spell.duration.short") +
-    ": " +
-    game.i18n.localize(CONFIG.ARM5E.magic.durations[item.system.duration.value].label) +
-    " " +
-    game.i18n.localize("arm5e.spell.target.short") +
-    ": " +
-    game.i18n.localize(CONFIG.ARM5E.magic.targets[item.system.target.value].label);
-  if (item.type == "enchantment") {
+  let label = `${spellTechniqueLabel(item.system, true)} ${spellFormLabel(item.system, true)} ${
+    item.system.level ? item.system.level : computeLevel(item.system, item.type)
+  } - ${game.i18n.localize("arm5e.spell.range.short")}: ${game.i18n.localize(
+    CONFIG.ARM5E.magic.ranges[item.system.range.value].label
+  )} ${game.i18n.localize("arm5e.spell.duration.short")}: ${game.i18n.localize(
+    CONFIG.ARM5E.magic.durations[item.system.duration.value].label
+  )} ${game.i18n.localize("arm5e.spell.target.short")}: ${game.i18n.localize(
+    CONFIG.ARM5E.magic.targets[item.system.target.value].label
+  )}`;
+  if (item.type === "enchantment") {
     label += `, ${game.i18n.localize("arm5e.lab.enchantment.effectFrequency")} : ${
       CONFIG.ARM5E.lab.enchantment.effectUses[item.system.effectfrequency]
     } ${game.i18n.localize("arm5e.lab.enchantment.uses-per-day")}`;
@@ -412,19 +454,32 @@ export function GetEffectAttributesLabel(item) {
   return label;
 }
 
+/**
+ *
+ * @param item
+ */
 export function IsMagicalEffect(item) {
   return (
-    item.type == "magicalEffect" ||
-    item.type == "enchantment" ||
-    item.type == "spell" ||
+    item.type === "magicalEffect" ||
+    item.type === "enchantment" ||
+    item.type === "spell" ||
     (item.type === "laboratoryText" &&
       (item.system.type === "spell" || item.system.type === "enchantment"))
   );
 }
+/**
+ *
+ * @param item
+ */
 export function canBeEnchanted(item) {
   return ["item", "armor", "weapon", "book"].includes(item.type);
 }
 
+/**
+ *
+ * @param system
+ * @param type
+ */
 export function computeLevel(system, type) {
   if (!system) return;
   let effectLevel = system.baseLevel;
@@ -457,9 +512,9 @@ export function computeLevel(system, type) {
     effectLevel = addSpellMagnitude(effectLevel, system.enhancingRequisite);
   }
 
-  if (type == "enchantment" || (type == "laboratoryText" && system.type == "enchantment")) {
+  if (type === "enchantment" || (type === "laboratoryText" && system.type === "enchantment")) {
     effectLevel += parseInt(system.effectfrequency);
-    if (system.penetration % 2 == 1) {
+    if (system.penetration % 2 === 1) {
       system.penetration += 1;
     }
     effectLevel += system.penetration / 2;
@@ -484,7 +539,7 @@ export function computeLevel(system, type) {
     // Duration above moon are rituals and rituals are minimum level 20
     if (
       CONFIG.ARM5E.magic.durations[system.duration.value].impact > 3 ||
-      system.target.value == "bound" ||
+      system.target.value === "bound" ||
       effectLevel > 50
     ) {
       shouldBeRitual = true;
@@ -501,6 +556,12 @@ export function computeLevel(system, type) {
   return effectLevel;
 }
 
+/**
+ *
+ * @param effect
+ * @param owner
+ * @param options
+ */
 export function computeRawCastingTotal(effect, owner, options = {}) {
   if (owner.type != "player" && owner.type != "npc") {
     return 0;
@@ -565,6 +626,10 @@ export function computeRawCastingTotal(effect, owner, options = {}) {
   };
 }
 
+/**
+ *
+ * @param actor
+ */
 async function noFatigue(actor) {
   if (actor._isMagus()) {
     actor.rollInfo.useFatigue = false;
@@ -572,6 +637,12 @@ async function noFatigue(actor) {
   }
 }
 
+/**
+ *
+ * @param actorCaster
+ * @param roll
+ * @param message
+ */
 async function checkTargetAndCalculateResistance(actorCaster, roll, message) {
   const actorsTargeted = getActorsFromTargetedTokens(actorCaster);
   if (!actorsTargeted) {
@@ -613,6 +684,13 @@ async function checkTargetAndCalculateResistance(actorCaster, roll, message) {
   }
 }
 
+/**
+ *
+ * @param root0
+ * @param root0.actorCaster
+ * @param root0.roll
+ * @param root0.spell
+ */
 function calculatePenetration({ actorCaster, roll, spell }) {
   const levelOfSpell = actorCaster.rollInfo.magic.level;
   const totalOfSpell = roll._total;
@@ -622,7 +700,7 @@ function calculatePenetration({ actorCaster, roll, spell }) {
   if (penetrationRolldata.specApply) {
     specialityIncluded = penetration.speciality;
   }
-  // if (
+  // If (
   //   CONFIG.ARM5E.magic.arts[spell.system.form.value].label.toUpperCase() ===
   //     penetration.speciality.toUpperCase() ||
   //   CONFIG.ARM5E.magic.arts[spell.system.form.value].label.toUpperCase() ===
@@ -641,11 +719,19 @@ function calculatePenetration({ actorCaster, roll, spell }) {
   };
 }
 
+/**
+ *
+ * @param actor
+ * @param form
+ */
 function calculateResistance(actor, form) {
   let magicResistance =
     Number(actor.system.laboratory?.magicResistance?.value) ||
     Number(actor.system?.might?.value) ||
-    0; //  no magicResistance != magicResistance of 0
+    0; //  No magicResistance != magicResistance of 0
+
+  // TODO support magic resistance for hedge magic forms
+
   let specialityIncluded = "";
   const parma = actor.getAbilityStats("parma");
   if (parma.speciality && parma.speciality.toUpperCase() === form.toUpperCase()) {
@@ -667,7 +753,7 @@ function calculateResistance(actor, form) {
     const formKey = Object.keys(arts.forms).filter(
       (key) => arts.forms[key].label.toUpperCase() === form.toUpperCase()
     )[0];
-    formScore = arts.forms[formKey].finalScore || 0;
+    formScore = arts.forms[formKey]?.finalScore || 0;
   }
 
   return {
@@ -680,8 +766,15 @@ function calculateResistance(actor, form) {
   };
 }
 
+/**
+ *
+ * @param root0
+ * @param root0.actorCaster
+ * @param root0.actorTarget
+ * @param root0.roll
+ */
 function calculateSuccessOfMagic({ actorCaster, actorTarget, roll }) {
-  const form = CONFIG.ARM5E.magic.arts[actorCaster.rollInfo.magic.form].label;
+  const form = CONFIG.ARM5E.magic.arts[actorCaster.rollInfo.magic.form.value]?.label ?? "NONE";
   const penetration = calculatePenetration({ actorCaster, roll });
   const magicResistance = calculateResistance(actorTarget, form);
   return {
@@ -694,11 +787,18 @@ function calculateSuccessOfMagic({ actorCaster, actorTarget, roll }) {
 
 // TODO: merge with above for big refactorization next version
 
+/**
+ *
+ * @param root0
+ * @param root0.actorCaster
+ * @param root0.actorTarget
+ * @param root0.roll
+ */
 function calculateSuccessOfPower({ actorCaster, actorTarget, roll }) {
   const form = CONFIG.ARM5E.magic.arts[actorCaster.rollInfo.power.form].label;
   const penetrationTotal = actorCaster.rollInfo.secondaryScore + roll.total;
 
-  // calculatePenetration({ actorCaster, roll, spell });
+  // CalculatePenetration({ actorCaster, roll, spell });
   const magicResistance = calculateResistance(actorTarget, form);
   return {
     penetrationTotal,
@@ -708,11 +808,18 @@ function calculateSuccessOfPower({ actorCaster, actorTarget, roll }) {
   };
 }
 
+/**
+ *
+ * @param root0
+ * @param root0.actorCaster
+ * @param root0.actorTarget
+ * @param root0.roll
+ */
 function calculateSuccessOfMagicItem({ actorCaster, actorTarget, roll }) {
   const form = CONFIG.ARM5E.magic.arts[actorCaster.rollInfo.item.form].label;
   const penetrationTotal = actorCaster.rollInfo.secondaryScore + roll.total;
 
-  // calculatePenetration({ actorCaster, roll, spell });
+  // CalculatePenetration({ actorCaster, roll, spell });
   const magicResistance = calculateResistance(actorTarget, form);
   return {
     penetrationTotal,
@@ -722,8 +829,13 @@ function calculateSuccessOfMagicItem({ actorCaster, actorTarget, roll }) {
   };
 }
 
+/**
+ *
+ * @param attributes
+ * @param options
+ */
 function magicalAttributesHelper(attributes, options) {
-  // for (const range of Object.entries(ranges))
+  // For (const range of Object.entries(ranges))
   return HandlebarsHelpers.selectOptions(attributes, options);
 }
 

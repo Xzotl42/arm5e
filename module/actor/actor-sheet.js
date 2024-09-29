@@ -339,12 +339,12 @@ export class ArM5eActorSheet extends ActorSheet {
       }
       context.isDead = this.actor.system.wounds.dead.length > 0;
       context.system.isMagus = this.actor._isMagus();
-      if (context.system.covenant) {
-        if (context.system.covenant.linked) {
-          this.actor.apps[context.system.covenant.document.sheet.appId] =
-            context.system.covenant.document.sheet;
-        }
-      }
+      // if (context.system.covenant) {
+      //   if (context.system.covenant.linked) {
+      //     this.actor.apps[context.system.covenant.document.sheet.appId] =
+      //       context.system.covenant.document.sheet;
+      //   }
+      // }
 
       if (
         context.system?.charType?.value == "magusNPC" ||
@@ -365,12 +365,12 @@ export class ArM5eActorSheet extends ActorSheet {
         context.artsIcons = game.settings.get("arm5e", "artsIcons");
 
         // check whether the character is linked to an existing lab
-        if (context.system.sanctum) {
-          if (context.system.sanctum.linked) {
-            this.actor.apps[context.system.sanctum.document.sheet.appId] =
-              context.system.sanctum.document.sheet;
-          }
-        }
+        // if (context.system.sanctum) {
+        //   if (context.system.sanctum.linked) {
+        //     this.actor.apps[context.system.sanctum.document.sheet.appId] =
+        //       context.system.sanctum.document.sheet;
+        //   }
+        // }
 
         // casting total modifiers
 
@@ -769,6 +769,31 @@ export class ArM5eActorSheet extends ActorSheet {
     return context;
   }
 
+  async _render(force, options = {}) {
+    // Parent class rendering workflow
+    await super._render(force, options);
+
+    // Register the active Application with the referenced Documents
+
+    if (this.actor.system.covenant) {
+      if (this.actor.system.covenant.linked) {
+        this.actor.system.covenant.document.apps[this.appId] = this;
+      }
+    }
+
+    if (this.actor.system.sanctum) {
+      if (this.actor.system.sanctum.linked) {
+        this.actor.system.sanctum.document.apps[this.appId] = this;
+      }
+    }
+
+    if (this.actor.system.owner) {
+      if (this.actor.system.owner.linked) {
+        this.actor.system.owner.document.apps[this.appId] = this;
+      }
+    }
+  }
+
   /**
    * Organize and classify Items for Character sheets.
    *
@@ -781,7 +806,8 @@ export class ArM5eActorSheet extends ActorSheet {
       actorData.actor.type == "player" ||
       actorData.actor.type == "npc" ||
       actorData.actor.type == "laboratory" ||
-      actorData.actor.type == "covenant"
+      actorData.actor.type == "covenant" ||
+      actorData.actor.type == "beast"
     ) {
       for (let virtue of actorData.system.virtues) {
         if (virtue.effects.size > 0) {
@@ -942,7 +968,8 @@ export class ArM5eActorSheet extends ActorSheet {
       let updateArray = [];
       // if the actor was linked, remove listener
       if (this.actor.system.covenant.linked) {
-        delete this.actor.apps[this.actor.system.covenant.document.sheet.appId];
+        delete this.actor.apps[this.actor.system.covenant.document.sheet?.appId];
+        delete this.actor.system.covenant.document.apps[this.appId];
         await this.actor.system.covenant.document.sheet._unbindActor(this.actor);
       }
 
@@ -966,7 +993,8 @@ export class ArM5eActorSheet extends ActorSheet {
       let updateArray = [];
       // if the actor was linked, remove listener
       if (this.actor.system.sanctum.linked) {
-        delete this.actor.apps[this.actor.system.sanctum.document.sheet.appId];
+        delete this.actor.apps[this.actor.system.sanctum.document.sheet?.appId];
+        delete this.actor.system.sanctum.document.apps[this.appId];
         updateArray.push(await this.actor.system.sanctum.document.sheet._unbindActor(this.actor));
       }
       let updateData = { "system.sanctum.value": val };
@@ -1420,9 +1448,9 @@ export class ArM5eActorSheet extends ActorSheet {
    * @private
    */
   async _onItemCreate(event) {
-    event.preventDefault();
-    event.stopPropagation();
     const dataset = getDataset(event);
+    if (event.stopPropagation) event.stopPropagation();
+
     let newItem = await this._itemCreate(dataset);
     newItem[0].sheet.render(true);
     return newItem;
@@ -1862,14 +1890,16 @@ export class ArM5eActorSheet extends ActorSheet {
 
     if (droppedActor.type === "covenant") {
       if (this.actor.system.covenant.linked) {
-        delete this.actor.apps[this.actor.system.owner.document.sheet.appId];
-        updateArray.push(await this.actor.system.owner.document.sheet._unbindActor(this.actor));
+        delete this.actor.apps[this.actor.system.covenant.document.sheet?.appId];
+        delete this.actor.system.covenant.document.apps[this.appId];
+        updateArray.push(await this.actor.system.covenant.document.sheet._unbindActor(this.actor));
         await droppedActor.sheet._bindActor(this.actor);
       }
     } else if (droppedActor.type === "laboratory") {
       if (this.actor.system.sanctum.linked) {
-        delete this.actor.apps[this.actor.system.owner.document.sheet.appId];
-        updateArray.push(await this.actor.system.owner.document.sheet._unbindActor(this.actor));
+        delete this.actor.apps[this.actor.system.sanctum.document.sheet?.appId];
+        delete this.actor.system.sanctum.document.apps[this.appId];
+        updateArray.push(await this.actor.system.sanctum.document.sheet._unbindActor(this.actor));
       }
       updateArray.push(await droppedActor.sheet._bindActor(this.actor));
     }
@@ -2028,7 +2058,7 @@ export async function setWounds(soakData, actor) {
   const details = ` ${messageDamage}<br/> ${messageStamina}<br/> ${messageProt}<br/> ${messageBonus}${messageModifier}<b>${messageTotal}</b>`;
   ChatMessage.create({
     content: `<h4 class="dice-total">${messageWound}</h4>`,
-    flavor: title + putInFoldableLinkWithAnimation("arm5e.sheet.label.details", details),
+    flavor: title + putInFoldableLinkWithAnimation("arm5e.sheet.details", details),
     speaker: ChatMessage.getSpeaker({
       actor
     })

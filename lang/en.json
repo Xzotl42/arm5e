@@ -360,6 +360,7 @@
   "arm5e.sheet.apprenticeshipYears": "Apprenticeship",
   "arm5e.sheet.birthName": "Birth Name",
   "arm5e.sheet.name": "Name",
+  "arm5e.sheet.label": "Label",
   "arm5e.sheet.specie": "Species",
   "arm5e.sheet.birthplace": "Place of Origin",
   "arm5e.sheet.nationality": "Race/Nationality",
@@ -1541,7 +1542,7 @@
   "arm5e.hints.createLabText": "Create draft laboratory text",
   "arm5e.hints.useMagicItem": "Trigger the effect \"{name}\"",
 
-  "arm5e.sheet.label.details": "Details",
+  "arm5e.sheet.details": "Details",
 
   "arm5e.config.sourcebookFilter": "Sourcebooks filter",
   "arm5e.config.compendiaRef": "Compendia reference",
@@ -1609,5 +1610,7 @@
   "arm5e.generic.numberOf": "Number of {thing}",
   "arm5e.generic.config": "Configuration",
   "arm5e.generic.template": "Template",
-  "arm5e.generic.templates": "Templates"
+  "arm5e.generic.templates": "Templates",
+  "arm5e.generic.orphans": "Orphans",
+  "arm5e.generic.invalid": "Invalid"
 }

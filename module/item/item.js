@@ -70,8 +70,6 @@ export class ArM5eItem extends Item {
             }
           }
         }
-      } else if (this.system.prepareData instanceof Function) {
-        this.system.prepareData();
       }
     }
     // compute reputation score

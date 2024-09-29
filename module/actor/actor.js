@@ -20,6 +20,7 @@ import { ArM5eRollInfo } from "../helpers/rollInfo.js";
 import { compareDiaryEntries, isInThePast } from "../tools/time.js";
 import Aura from "../helpers/aura.js";
 import { canBeEnchanted } from "../helpers/magic.js";
+import { ArM5eMagicSystem } from "./subsheets/magic-system.js";
 
 /**
  * Extend the base Actor entity by defining a custom roll data structure which is ideal for the Simple system.
@@ -328,7 +329,6 @@ export class ArM5ePCActor extends Actor {
     let armor = [];
     let spells = [];
     let magicalEffects = [];
-    let supernaturalEffectsTemplates = {};
     let vis = [];
     let items = [];
     let artsTopics = [];
@@ -371,29 +371,11 @@ export class ArM5ePCActor extends Actor {
     };
 
     if (this.system.features.magicSystem) {
-      if (!this.system.magicSystem) {
-        this.system.magicSystem = {
-          name: game.i18n.localize("arm5e.sheet.magicSystem"),
-          verbs: [],
-          nouns: [],
-          templates: {}
-        };
-      } else {
-        if (!this.system.magicSystem.verbs) {
-          this.system.magicSystem.verbs = [];
-        }
-        if (!this.system.magicSystem.nouns) {
-          this.system.magicSystem.nouns = [];
-        }
-        if (!this.system.magicSystem.templates) {
-          this.system.magicSystem.templates = {};
-        }
-        if (!this.system.magicSystem.name) {
-          this.system.magicSystem.name = game.i18n.localize("arm5e.sheet.magicSystem");
-        }
-      }
-      for (let t of Object.keys(this.system.magicSystem.templates)) {
-        supernaturalEffectsTemplates[t] = [];
+      try {
+        ArM5eMagicSystem.prepareData(this);
+      } catch (err) {
+        err.message = `Failed loading alternate magic system : ${err.message}`;
+        console.error(err);
       }
     }
 
@@ -543,40 +525,6 @@ export class ArM5ePCActor extends Actor {
             }
           }
         }
-      } else if (item.type == "spell") {
-        item.system.xpCoeff = this.system.bonuses.arts.masteryXpCoeff;
-        item.system.xpBonus = this.system.bonuses.arts.masteryXpMod;
-        item.system.derivedScore = ArM5ePCActor.getAbilityScoreFromXp(
-          Math.round((item.system.xp + item.system.xpBonus) * item.system.xpCoeff)
-        );
-
-        item.system.xpNextLevel = Math.round(
-          ArM5ePCActor.getAbilityXp(item.system.derivedScore + 1) / item.system.xpCoeff
-        );
-        item.system.remainingXp = item.system.xp + item.system.xpBonus;
-
-        item.system.finalScore = item.system.derivedScore;
-        // } else if (item.type == "art") {
-        //   item.system.xpCoeff = this.system.bonuses.arts[item.system.key].xpCoeff;
-        //   item.system.xpBonus = this.system.bonuses.arts[item.system.key].xpMod;
-        //   item.system.derivedScore = item.system.accelerated
-        //     ? ArM5ePCActor.getArtScore(
-        //         Math.round((item.system.xp + item.system.xpBonus) * item.system.xpCoeff)
-        //       )
-        //     : ArM5ePCActor.getAbilityScoreFromXp(
-        //         Math.round((item.system.xp + item.system.xpBonus) * item.system.xpCoeff)
-        //       );
-
-        //   item.system.xpNextLevel = item.system.accelerated
-        //     ? Math.round(ArM5ePCActor.getArtXp(item.system.derivedScore + 1) / item.system.xpCoeff)
-        //     : Math.round(
-        //         ArM5ePCActor.getAbilityXp(item.system.derivedScore + 1) / item.system.xpCoeff
-        //       );
-        //   item.system.remainingXp = item.system.xp + item.system.xpBonus;
-        //   item.system.finalScore =
-        //     item.system.derivedScore + this.system.bonuses.arts[item.system.key].bonus;
-
-        //   system.magicSystem[item.system.subtype + "s"].push(item);
       }
     }
 
@@ -667,6 +615,11 @@ export class ArM5ePCActor extends Actor {
     for (let [key, item] of this.items.entries()) {
       item.img = item.img || DEFAULT_TOKEN;
       item._index = key;
+
+      // TODO move code specific to type below in their respective datamodel schema.
+      if (item.system.prepareOwnerData instanceof Function) {
+        item.system.prepareOwnerData();
+      }
 
       if (item.type === "weapon" || item.type === "enchantedWeapon") {
         if (item.system.equipped == true) {
@@ -805,7 +758,11 @@ export class ArM5ePCActor extends Actor {
       } else if (item.type === "wound") {
         system.wounds[item.system.gravity].push(item);
       } else if (item.type === "supernaturalEffect") {
-        supernaturalEffectsTemplates[item.system.template].push(item);
+        if (system.supernaturalEffectsTemplates[item.system.template]) {
+          system.supernaturalEffectsTemplates[item.system.template].push(item);
+        } else {
+          system.supernaturalEffectsTemplates["orphans"].push(item);
+        }
       }
     }
 
@@ -885,8 +842,6 @@ export class ArM5ePCActor extends Actor {
     if (system.magicalEffects) {
       system.magicalEffects = magicalEffects.sort(compareMagicalEffects);
     }
-
-    system.supernaturalEffectsTemplates = supernaturalEffectsTemplates;
 
     if (system.vitals.soa) {
       system.vitals.soa.value = soak;
@@ -1234,18 +1189,18 @@ export class ArM5ePCActor extends Actor {
             system.census.laborers += item.system.number;
             habitants.push(item);
             workersPts += item.system.points;
-            servantPts += item.system.points;
             break;
           case "servants":
             system.census.servants += item.system.number;
             habitants.push(item);
+            servantPts += item.system.points;
             workersPts += item.system.points;
             break;
           case "teamsters":
             system.census.teamsters += item.system.number;
             habitants.push(item);
-            break;
             workersPts += item.system.points;
+            break;
           case "dependants":
             system.census.dependants += item.system.number;
             habitants.push(item);
@@ -1424,12 +1379,13 @@ export class ArM5ePCActor extends Actor {
       system.census.horses +
       system.census.livestock +
       system.npcInhabitants;
-    system.census.servantsNeeded +=
-      2 * Math.round((system.finances.inhabitantsPoints - workersPts) / 10);
 
-    system.census.teamstersNeeded = Math.round(
-      (system.finances.inhabitantsPoints - servantPts - 2 * system.census.laborers) / 10
-    );
+    // adjust the inhabitant points by removing the workers'
+    let tempTotal = system.finances.inhabitantsPoints - workersPts;
+    system.census.servantsNeeded += 2 * Math.round(tempTotal / 10);
+    // Add the points for these servants to the total
+    tempTotal += servantPts;
+    system.census.teamstersNeeded = Math.round((tempTotal - 2 * system.census.laborers) / 10);
 
     // SAVINGS :
 

@@ -118,10 +118,10 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
 
     if (context.system.owner && context.system.owner.linked) {
       // Owner
-      this.actor.apps[context.system.owner.document.sheet.appId] =
-        context.system.owner.document.sheet;
+      // this.actor.apps[context.system.owner.document.sheet.appId] =
+      //   context.system.owner.document.sheet;
 
-      context.system.owner.document.apps[this.appId] = this;
+      // context.system.owner.document.apps[this.appId] = this;
 
       context.planning = this.actor.getFlag(ARM5E.SYSTEM_ID, "planning");
       if (context.planning) {
@@ -181,8 +181,8 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
     // Covenant
     if (context.system.covenant) {
       if (context.system.covenant.linked) {
-        this.actor.apps[context.system.covenant.document.sheet.appId] =
-          context.system.covenant.document.sheet;
+        // this.actor.apps[context.system.covenant.document.sheet.appId] =
+        //   context.system.covenant.document.sheet;
         context.edition.aura = "readonly";
         context.planning.modifiers.aura = context.system.auraBonus;
       } else {
@@ -478,7 +478,8 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
       let updateArray = [];
       // if the actor was linked, remove listener
       if (this.actor.system.owner.linked) {
-        delete this.actor.apps[this.actor.system.owner.document.sheet.appId];
+        delete this.actor.apps[this.actor.system.owner.document.sheet?.appId];
+        delete this.actor.system.owner.document.apps[this.appId];
         updateArray.push(await this.actor.system.owner.document.sheet._unbindActor(this.actor));
       }
       let updateData = { "system.owner.value": val };
@@ -884,13 +885,15 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
 
     if (droppedActor._isCharacter()) {
       if (this.actor.system.owner.linked) {
-        delete this.actor.apps[this.actor.system.owner.document.sheet.appId];
+        delete this.actor.system.owner.document.apps[this.appId];
+        delete this.actor.apps[this.actor.system.owner.document.sheet?.appId];
         updateArray.push(await this.actor.system.owner.document.sheet._unbindActor(this.actor));
       }
       updateArray.push(await droppedActor.sheet._bindActor(this.actor));
     } else if (droppedActor.type === "covenant") {
       if (this.actor.system.covenant.linked) {
-        delete this.actor.apps[this.actor.system.covenant.document.sheet.appId];
+        delete this.actor.system.covenant.document.apps[this.appId];
+        delete this.actor.apps[this.actor.system.covenant.document.sheet?.appId];
         await this.actor.system.covenant.document.sheet._unbindActor(this.actor);
       }
       await droppedActor.sheet._bindActor(this.actor);

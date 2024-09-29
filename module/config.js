@@ -911,11 +911,18 @@ export function enrichAbilities(translatedList) {
 function translateAndSort(abilityList) {
   for (let [key, value] of Object.entries(abilityList)) {
     let translation;
-    if (value.option)
+    if (value.disabled && CONFIG.ISV11) {
+      continue;
+    }
+    if (value.option) {
+      abilityList[key].extendedKey = `${key}_${value.optionDefault}`;
       translation = game.i18n.format(value.mnemonic, {
         option: game.i18n.localize(value.optionPlaceholder)
       });
-    else translation = game.i18n.localize(value.mnemonic);
+    } else {
+      abilityList[key].extendedKey = key;
+      translation = game.i18n.localize(value.mnemonic);
+    }
     abilityList[key].label = translation;
   }
   let tmp = Object.entries(abilityList).sort((a, b) => {

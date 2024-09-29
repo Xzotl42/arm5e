@@ -6,10 +6,20 @@
   - custom magic system
     - alternate Arts
 - new checkbox design
+- [technical] Moved abilities localization in "i18nInit" Hook
 
 ### Bug fixes
 
 - Fix requisites editing on roll
+- Virtues and flaws are working again on beast sheet
+- Fixed bug in sanatorium V12 when changing the data.
+- Vis source attributes are visible again
+- Covenant laborers were wrongly considered servants
+- Covenant teamsters were not considered workers.
+- It is possible again to go to previous topic of a book in scriptorium
+- Missing spell warning is now properly formated in scriptorium
+- Multitopic book reading was not working after a change to the dialog (reader, date, ...)
+- There is no longer an error when you try to read an ability you are too skilled for.
 
 ## 2.3.0.8, Quendalon, raised by the Fae BF1
 

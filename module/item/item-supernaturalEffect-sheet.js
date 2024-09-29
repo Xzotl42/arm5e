@@ -1,4 +1,5 @@
 import { updateCharacteristicDependingOnRoll } from "../helpers/rollWindow.js";
+import { getDataset } from "../tools.js";
 import { ArM5eItemMagicSheet } from "./item-magic-sheet.js";
 
 /**
@@ -16,74 +17,112 @@ export class ArM5eSupernaturalEffectSheet extends ArM5eItemMagicSheet {
   async getData() {
     let context = await super.getData();
     if (!this.item.isOwned) {
+      context.system.valid = false;
+      context.system.invalidMsg = "Not owned by a character";
+      if (context.system.verb.option) {
+        context.system.verb.label = `Unknown (${context.system.verb.option})`;
+      }
+      if (context.system.noun.option) {
+        context.system.noun.label = `Unknown (${context.system.noun.option})`;
+      }
+
       return context;
     }
+    if (!this.item.system.valid) {
+      context.selection.templates = Object.entries(
+        this.item.actor.system.magicSystem.templates
+      ).map(([k, v]) => {
+        return { id: k, name: v.name };
+      });
+      context.selection.templates.unshift({ id: "NONE", name: "Pick one" });
+      return context;
+    }
+
     const owner = this.item.actor;
     const template = owner.system.magicSystem.templates[this.item.system.template];
     context.modifier = 0;
     context.multiplier = 1;
     const verbs = owner.system.magicSystem.verbs;
-    context.selection.verbs = {};
-    context.selection.nouns = {};
+    context.selection.verbs = [];
+    context.selection.nouns = [];
     for (let c of template.components) {
       switch (c.type) {
         case "verb":
           if (c.option === "any") {
             owner.system.magicSystem.verbs.reduce((res, e) => {
-              res[e.system.option] = {
+              res.push({
+                id: e._id,
                 label: `${e.name} (${e.system.finalScore})`,
-                score: e.system.finalScore
-              };
+                score: e.system.finalScore,
+                key: e.system.key,
+                option: e.system.option
+              });
               return res;
             }, context.selection.verbs);
           } else {
             const verb = owner.system.magicSystem.verbs.find((e) => {
               return e.system.option === c.option;
             });
-            context.selection.verbs[c.option] = {
+            context.selection.verbs.push({
+              id: verb._id,
               label: `${verb.name} (${verb.system.finalScore})`,
+              key: verb.system.key,
+              option: verb.system.option,
               score: verb.system.finalScore
-            };
+            });
           }
           break;
         case "noun":
           if (c.option === "any") {
             owner.system.magicSystem.nouns.reduce((res, e) => {
-              res[e.system.option] = {
+              res.push({
+                id: e._id,
                 label: `${e.name} (${e.system.finalScore})`,
-                score: e.system.finalScore
-              };
+                score: e.system.finalScore,
+                key: e.system.key,
+                option: e.system.option
+              });
               return res;
             }, context.selection.nouns);
           } else {
             const noun = owner.system.magicSystem.nouns.find((e) => {
               return e.system.option === c.option;
             });
-            context.selection.nouns[c.option] = {
+            context.selection.nouns.push({
+              id: noun._id,
               label: `${noun.name} (${noun.system.finalScore})`,
+              key: noun.system.key,
+              option: noun.system.option,
               score: noun.system.finalScore
-            };
+            });
           }
           break;
         case "ability":
           const ability = owner.getAbility(c.key, c.option);
-          if (c.art === "verb") {
-            context.selection.verbs[c.option] = {
-              label: `${ability.name} (${ability.system.finalScore})`,
-              score: ability.system.finalScore,
-              specialty: ability.system.specialty,
-              key: c.key
-            };
-          } // Noun
-          else if (c.art === "noun") {
-            context.selection.nouns[c.option] = {
-              label: `${ability.name} (${ability.system.finalScore})`,
-              score: ability.system.finalScore,
-              specialty: ability.system.specialty,
-              key: c.key
-            };
-          } else {
-            context.bonusAbility = { label: ability.name, value: c.value };
+          if (ability) {
+            if (c.art === "verb") {
+              context.selection.verbs.push({
+                id: ability._id,
+                label: `${ability.name} (${ability.system.finalScore})`,
+                score: ability.system.finalScore,
+                specialty: ability.system.specialty,
+                key: c.key
+              });
+            } // Noun
+            else if (c.art === "noun") {
+              context.selection.nouns.push({
+                id: ability._id,
+                label: `${ability.name} (${ability.system.finalScore})`,
+                score: ability.system.finalScore,
+                specialty: ability.system.specialty,
+                key: c.key
+              });
+            } else {
+              context.ui.bonusAb = true;
+              context.system.bonusAbility.label = `${ability.name} (${ability.system.finalScore})`;
+              context.system.bonusAbility.score = ability.system.finalScore;
+              context.system.bonusAbility.specialty = ability.system.speciality;
+            }
           }
           break;
         case "mod":
@@ -92,13 +131,15 @@ export class ArM5eSupernaturalEffectSheet extends ArM5eItemMagicSheet {
           context.multiplier = c.value;
       }
     }
-
-    if (context.selection.verbs.length === 0) {
-      context.ui.noVerb = true;
-    }
-    if (context.selection.nouns.length === 0) {
-      context.ui.noun = true;
-    }
+    // if (context.system.characteristic) {
+    //   context.ui.char = true;
+    // }
+    // if (Object.keys(context.selection.verbs).length > 0) {
+    //   context.ui.verb = true;
+    // }
+    // if (Object.keys(context.selection.nouns).length > 0) {
+    //   context.ui.noun = true;
+    // }
 
     return context;
   }
@@ -108,11 +149,46 @@ export class ArM5eSupernaturalEffectSheet extends ArM5eItemMagicSheet {
     super.activateListeners(html);
 
     if (!this.options.editable) return;
+
+    html.find(".verb-change").change(this.onVerbChange.bind(this));
+    html.find(".noun-change").change(this.onNounChange.bind(this));
   }
 
-  computeCastingTotal(actor) {
-    if (!this.item.isOwned) {
-      return 0;
-    }
+  async onVerbChange(event) {
+    const dataset = getDataset(event);
+    const owner = this.item.actor;
+    const id = event.target.value;
+
+    let ability = owner.items.get(id);
+
+    const updateData = {};
+    updateData["system.verb.key"] = ability.system.key;
+    updateData["system.verb.option"] = ability.system.option;
+    updateData["system.verb.specApply"] = false;
+
+    await this.submit({
+      preventClose: true,
+      updateData: updateData
+    });
+  }
+
+  // TODO
+  async onNounChange(event) {
+    const dataset = getDataset(event);
+    const owner = this.item.actor;
+
+    const id = event.target.value;
+
+    let ability = owner.items.get(id);
+
+    const updateData = {};
+    updateData["system.noun.key"] = ability.system.key;
+    updateData["system.noun.option"] = ability.system.option;
+    updateData["system.noun.specApply"] = false;
+
+    await this.submit({
+      preventClose: true,
+      updateData: updateData
+    });
   }
 }

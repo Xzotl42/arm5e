@@ -348,6 +348,10 @@ a.content-link i.fa-book-open {
   --color-shadow-primary: rgb(200, 0, 0);
 }
 
+.arm5e .warning {
+  color: rgb(200, 0, 0);
+}
+
 h4.window-title {
   font-family: Blackmoor;
   font-size: 20px;
@@ -1747,6 +1751,12 @@ input[type="number"].resource-focus-slim {
 input[type="text"].resource-focus {
   max-width: 70px;
   text-align: center;
+}
+
+input[type="text"].resource-focus-wide {
+  width: 100%;
+  text-align: center;
+  font-size: 9pt;
 }
 
 input[type="number"].resource-focus.summary {

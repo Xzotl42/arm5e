@@ -206,7 +206,7 @@
             }
         ],
         "capitalized-comments": [
-            "warn",
+            "ignore",
             "always",
             {
                 "ignoreConsecutiveComments": true,

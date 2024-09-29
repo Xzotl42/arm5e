@@ -3,6 +3,7 @@ import { checkTargetAndCalculateResistance } from "./helpers/magic.js";
 import { log, putInFoldableLink, putInFoldableLinkWithAnimation, sleep } from "./tools.js";
 import { ARM5E } from "./config.js";
 import { showRollResults } from "./helpers/chat.js";
+import { ArsRoll } from "./helpers/stressdie.js";
 let mult = 1;
 
 /**
@@ -20,10 +21,7 @@ async function simpleDie(actor, type = "OPTION", callBack) {
 
   //console.log('simple die');
   let flavorTxt = `<p>${game.i18n.localize("arm5e.dialog.button.simpledie")}:</p>`;
-  let details = putInFoldableLinkWithAnimation(
-    "arm5e.sheet.label.details",
-    flavorTxt + rollInfo.details
-  );
+  let details = putInFoldableLinkWithAnimation("arm5e.sheet.details", flavorTxt + rollInfo.details);
   let conf = actor.system.con.score;
 
   if ((getRollTypeProperties(type).MODE & ROLL_MODES.NO_CONF) != 0) {
@@ -34,7 +32,7 @@ async function simpleDie(actor, type = "OPTION", callBack) {
   if (rollInfo.magic.divide > 1) {
     formula = "(1D10+" + rollInfo.formula + ")/" + rollInfo.magic.divide;
   }
-  const dieRoll = new Roll(formula, actor.system);
+  const dieRoll = new ArsRoll(formula, actor.system);
   let tmp = await dieRoll.roll();
 
   let rollMode = game.settings.get("core", "rollMode");
@@ -126,10 +124,7 @@ async function stressDie(actor, type = "OPTION", modes = 0, callBack = undefined
   let formula = rollInfo.formula;
   let flavorTxt = rollInfo.flavor.length ? `<p>${rollInfo.flavor}</p>` : "";
   flavorTxt += `<p>${game.i18n.localize("arm5e.dialog.button.stressdie")}:</p>`;
-  let details = putInFoldableLinkWithAnimation(
-    "arm5e.sheet.label.details",
-    flavorTxt + rollInfo.details
-  );
+  let details = putInFoldableLinkWithAnimation("arm5e.sheet.details", flavorTxt + rollInfo.details);
   let chatTitle = `<h2 class="ars-chat-title">${rollInfo.label} </h2>`;
   let dieRoll = await explodingRoll(actor, rollOptions, botchNum);
 
@@ -225,25 +220,25 @@ async function getRollFormula(actor) {
     if (rollInfo.type == "spell" || rollInfo.type == "magic" || rollInfo.type == "spont") {
       let valueTech = 0;
       let valueForm = 0;
-      valueTech = parseInt(rollInfo.magic.techniqueScore);
-      valueForm = parseInt(rollInfo.magic.formScore);
+      valueTech = parseInt(rollInfo.magic.technique.score);
+      valueForm = parseInt(rollInfo.magic.form.score);
       if (rollInfo.magic.focus === true) {
         if (valueTech < valueForm) {
           total += 2 * valueTech + valueForm;
-          msg += rollInfo.magic.techniqueLabel;
+          msg += rollInfo.magic.technique.label;
           msg += " ( 2 x " + valueTech + ") <br />";
-          msg += rollInfo.magic.formLabel;
+          msg += rollInfo.magic.form.label;
           msg += " (" + valueForm + ")";
         } else {
           total += 2 * valueForm + valueTech;
-          msg += rollInfo.magic.techniqueLabel;
+          msg += rollInfo.magic.technique.label;
           msg += " (" + valueTech + ") + <br />";
-          msg += rollInfo.magic.formLabel;
+          msg += rollInfo.magic.form.label;
           msg += " ( 2 x " + valueForm + ")";
         }
       } else {
         total += valueTech;
-        msg += rollInfo.magic.techniqueLabel;
+        msg += rollInfo.magic.technique.label;
         msg += " (" + valueTech + ")";
 
         total += valueForm;
@@ -252,11 +247,11 @@ async function getRollFormula(actor) {
         msg += " (" + valueForm + ")";
       }
 
-      if (rollInfo.magic.techDeficiency) {
+      if (rollInfo.magic.technique.deficiency) {
         rollInfo.magic.divide *= 2;
       }
 
-      if (rollInfo.magic.formDeficiency) {
+      if (rollInfo.magic.form.deficiency) {
         rollInfo.magic.divide *= 2;
       }
 
@@ -285,6 +280,124 @@ async function getRollFormula(actor) {
       }
     }
 
+    if (rollInfo.type == "supernatural") {
+      let valueTech = 0;
+      let valueForm = 0;
+      valueTech = parseInt(rollInfo.magic.technique.score);
+      valueForm = parseInt(rollInfo.magic.form.score);
+      if (
+        rollInfo.magic.focus === true &&
+        rollInfo.magic.technique.active &&
+        rollInfo.magic.form.active
+      ) {
+        if (valueTech < valueForm) {
+          total += 2 * valueTech;
+          msg += rollInfo.magic.technique.label;
+          msg += " ( 2 x " + valueTech + ") ";
+          if (rollInfo.magic.technique.specApply) {
+            msg += " + 1 ";
+            total++;
+          }
+          msg += "<br />";
+
+          total += valueForm;
+          msg += rollInfo.magic.form.label;
+          msg += " (" + valueForm + ")";
+          if (rollInfo.magic.form.specApply) {
+            msg += " + 1 ";
+            total++;
+          }
+        } else {
+          total += valueTech;
+          msg += rollInfo.magic.technique.label;
+          msg += " (" + valueTech + ") ";
+          if (rollInfo.magic.technique.specApply) {
+            msg += " + 1 ";
+            total++;
+          }
+          msg = newLine(msg);
+          total += 2 * valueForm;
+          msg += rollInfo.magic.form.label;
+          msg += " ( 2 x " + valueForm + ")";
+          if (rollInfo.magic.form.specApply) {
+            msg += " + 1 ";
+            total++;
+          }
+        }
+      } else {
+        if (rollInfo.magic.technique.active) {
+          total += valueTech;
+          msg += rollInfo.magic.technique.label;
+          msg += " (" + valueTech + ")";
+          if (rollInfo.magic.technique.specApply) {
+            msg += " + 1 ";
+            total++;
+          }
+        }
+
+        if (rollInfo.magic.form.active) {
+          total += valueForm;
+          msg = newLine(msg);
+          msg += rollInfo.magic.form.label;
+          msg += " (" + valueForm + ")";
+          if (rollInfo.magic.form.specApply) {
+            msg += " + 1 ";
+            total++;
+          }
+        }
+      }
+      // const ab = rollInfo.ability;
+      // if (ab.active) {
+      //   total += ab.score;
+      //   msg = newLine(msg);
+      //   msg += ab.name;
+      //   msg += " (" + ab.score + ")";
+      //   if (ab.specApply) {
+      //     msg += " + 1 ";
+      //     total++;
+      //   }
+      // }
+
+      if (rollInfo.magic.bonus) {
+        total += rollInfo.magic.bonus;
+        msg = newLine(msg);
+        msg += rollInfo.magic.bonusDesc;
+        msg += " (" + rollInfo.magic.bonus + ")";
+      }
+
+      if (rollInfo.magic.technique.deficiency) {
+        rollInfo.magic.divide *= 2;
+      }
+
+      if (rollInfo.magic.form.deficiency) {
+        rollInfo.magic.divide *= 2;
+      }
+
+      // const voiceMod = actorSystemData.stances.voice[actorSystemData.stances.voiceStance];
+      // if (voiceMod) {
+      //   total += voiceMod;
+      //   msg = newLine(msg);
+      //   msg +=
+      //     game.i18n.localize(ARM5E.magic.mod.voice[actorSystemData.stances.voiceStance].mnemonic) +
+      //     ` (${voiceMod})`;
+      // }
+      // const gestureMod = actorSystemData.stances.gestures[actorSystemData.stances.gesturesStance];
+      // if (gestureMod) {
+      //   total += gestureMod;
+      //   msg = newLine(msg);
+      //   msg +=
+      //     game.i18n.localize(
+      //       ARM5E.magic.mod.gestures[actorSystemData.stances.gesturesStance].mnemonic
+      //     ) + ` (${gestureMod})`;
+      // }
+
+      // if (rollInfo.magic.masteryScore > 0) {
+      //   total += rollInfo.magic.masteryScore;
+      //   msg = newLine(msg);
+      //   msg += game.i18n.localize("arm5e.sheet.mastery") + ` (${rollInfo.magic.masteryScore})`;
+      // }
+    }
+
     if (rollInfo.type == "power") {
       msg += game.i18n.format("arm5e.sheet.powerCost", {
         might: actorSystemData.might.value,
@@ -306,11 +419,11 @@ async function getRollFormula(actor) {
       msg += " (" + value + ")";
     }
 
-    if (rollInfo.ability.name != "") {
+    if (rollInfo.ability.active) {
       value = rollInfo.ability.score;
       total += parseInt(value);
       msg = newLine(msg);
-      msg += rollInfo.label;
+      msg += rollInfo.ability.name;
       msg += " (" + value + ")";
 
       if (rollInfo.ability.specApply == true) {
@@ -358,8 +471,8 @@ async function getRollFormula(actor) {
       rollInfo.label =
         game.i18n.localize("arm5e.sheet.spontaneousMagic") +
         " (" +
-        ARM5E.magic.arts[rollInfo.magic.technique].short +
-        ARM5E.magic.arts[rollInfo.magic.form].short +
+        ARM5E.magic.arts[rollInfo.magic.technique.value].short +
+        ARM5E.magic.arts[rollInfo.magic.form.value].short +
         ")";
     } else if (rollInfo.type == "aging") {
       rollInfo.label =
@@ -451,7 +564,7 @@ async function getRollFormula(actor) {
     if (rollInfo.magic.divide > 1) {
       msg += "<br/>";
       msg += game.i18n.localize("arm5e.messages.die.divideBy") + rollInfo.magic.divide;
-      if (rollInfo.magic.techDeficiency || rollInfo.magic.formDeficiency) {
+      if (rollInfo.magic.technique.deficiency || rollInfo.magic.form.deficiency) {
         msg += ` (${game.i18n.localize("arm5e.sheet.activeEffect.types.arts.deficiency")})`;
       }
     }
@@ -534,7 +647,7 @@ function newLineSub(msg) {
 
 async function CheckBotch(botchDice, offset) {
   let rollCommand = String(botchDice).concat("d10cf=10");
-  const botchRoll = new Roll(rollCommand);
+  const botchRoll = new ArsRoll(rollCommand);
   await botchRoll.roll();
   botchRoll.offset = offset;
   botchRoll.botches = botchRoll.total;
@@ -613,7 +726,7 @@ async function explodingRoll(actorData, rollOptions = {}, botchNum = -1) {
         game.dice3d.showForRoll(dieRoll); //, user, synchronize, whisper, blind, chatMessageID, speaker)
       }
       if (rollOptions.noBotch) {
-        let output_roll = new Roll(actorData.rollInfo.formula.toString(), {}, options);
+        let output_roll = new ArsRoll(actorData.rollInfo.formula.toString(), {}, options);
         output_roll.data = {};
         return await output_roll.evaluate(options);
       }
@@ -691,7 +804,7 @@ export async function createRoll(rollFormula, mult, divide, options = {}) {
   if (Number.parseInt(divide) > 1) {
     rollInit = `( ${rollInit} ) / ${divide}`;
   }
-  let output_roll = new Roll(rollInit, {}, options);
+  let output_roll = new ArsRoll(rollInit, {}, options);
   output_roll.offset = rollFormula;
   output_roll.multiplier = mult;
   output_roll.diviser = divide;
@@ -707,7 +820,7 @@ async function noRoll(actor, mode, callback, roll) {
   const rollInfo = actor.rollInfo;
   //console.log('simple die');
   //console.log(actorData);
-  let details = putInFoldableLinkWithAnimation("arm5e.sheet.label.details", rollInfo.details);
+  let details = putInFoldableLinkWithAnimation("arm5e.sheet.details", rollInfo.details);
 
   let chatTitle = '<h2 class="ars-chat-title">' + rollInfo.label + "</h2>";
 
@@ -731,7 +844,7 @@ async function noRoll(actor, mode, callback, roll) {
   if (rollInfo.magic.divide > 1) {
     formula += ` / ${rollInfo.magic.divide}`;
   }
-  const dieRoll = new Roll(formula, actor.system);
+  const dieRoll = new ArsRoll(formula, actor.system);
   dieRoll.diviser = rollInfo.magic.divide;
   let tmp = await dieRoll.roll();
   const message = await tmp.toMessage(

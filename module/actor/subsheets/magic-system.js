@@ -1,9 +1,136 @@
-import { getDataset, slugify } from "../../tools.js";
+import { getAbilityStats, getDataset, slugify } from "../../tools.js";
 
 export class ArM5eMagicSystem {
   constructor(actor) {
     this.actor = actor;
   }
+
+  //
+  static prepareData(actor) {
+    // Not needed after character datamodel migration
+    if (!actor.system.magicSystem) {
+      actor.system.magicSystem = {
+        name: game.i18n.localize("arm5e.sheet.magicSystem"),
+        verbs: [],
+        nouns: [],
+        templates: {}
+      };
+    } else {
+      if (!actor.system.magicSystem.verbs) {
+        actor.system.magicSystem.verbs = [];
+      }
+      if (!actor.system.magicSystem.nouns) {
+        actor.system.magicSystem.nouns = [];
+      }
+      if (!actor.system.magicSystem.templates) {
+        actor.system.magicSystem.templates = {};
+      }
+      if (!actor.system.magicSystem.name) {
+        actor.system.magicSystem.name = game.i18n.localize("arm5e.sheet.magicSystem");
+      }
+    }
+    actor.system.supernaturalEffectsTemplates = {
+      ["orphans"]: []
+    };
+    for (let [key, template] of Object.entries(actor.system.magicSystem.templates)) {
+      actor.system.supernaturalEffectsTemplates[key] = [];
+      template.char = [];
+      template.verbs = [];
+      template.nouns = [];
+      template.bonusAbility = {};
+      template.others = [];
+      for (let item of template.components) {
+        switch (item.type) {
+          case "char":
+            template.char.push(item);
+            break;
+          case "ability":
+            let ability = actor.items.find(
+              (e) =>
+                e.type === "ability" && e.system.key === item.key && e.system.option === item.option
+            );
+            if (ability) {
+              item.abilityId = ability._id;
+              item.specialty = ability.system.speciality;
+              item.label = ability.name;
+              item.extendedKey = item.option ? `${item.key}_${item.option}` : `${item.key}`;
+            } else {
+              template.valid = false;
+              let abilityStat = getAbilityStats(item.key, item.option);
+              item.key = abilityStat.key;
+              item.extendedKey = abilityStat.extendedKey;
+              item.option = abilityStat.option;
+              item.label = item.label === "" ? abilityStat.label : item.label;
+            }
+            if (item.art === "verb") {
+              template.verbs.push(item);
+            } // Noun
+            else if (item.art === "noun") {
+              template.nouns.push(item);
+            } else {
+              item.active = true;
+              template.bonusAbility = item;
+            }
+
+            break;
+          case "verb":
+            if (item.option !== "any") {
+              let ability = ArM5eMagicSystem.getAltTechnique(actor, item.option);
+              if (ability) {
+                item.key = ability.system.key;
+                item.option = ability.system.option;
+                item.extendedKey = item.option ? `${item.key}_${item.option}` : `${item.key}`;
+              } else {
+                template.valid = false;
+                let abilityStat = getAbilityStats(item.key, item.option);
+                item.key = abilityStat.key;
+                item.option = abilityStat.option;
+                item.label = abilityStat.label;
+              }
+            } else {
+            }
+            template.verbs.push(item);
+            break;
+          case "noun":
+            if (item.option !== "any") {
+              let ability = ArM5eMagicSystem.getAltForm(actor, item.option);
+              if (ability) {
+                item.key = ability.system.key;
+                item.option = ability.system.option;
+                item.extendedKey = item.option ? `${item.key}_${item.option}` : `${item.key}`;
+              } else {
+                template.valid = false;
+                let abilityStat = getAbilityStats(item.key, item.option);
+                item.key = abilityStat.key;
+                item.option = abilityStat.option;
+                item.label = abilityStat.label;
+              }
+            }
+            template.nouns.push(item);
+            break;
+          case "mod":
+          case "mult":
+            template.others.push(item);
+            break;
+          default:
+            break;
+        }
+      }
+    }
+  }
+
+  static getAltTechnique(actor, option) {
+    return actor.items.find(
+      (e) => e.type === "ability" && e.system.key === "technique" && e.system.option === option
+    );
+  }
+
+  static getAltForm(actor, option) {
+    return actor.items.find(
+      (e) => e.type === "ability" && e.system.key === "form" && e.system.option === option
+    );
+  }
+
   async getData(context) {
     const templates = context.system.magicSystem.templates;
 
@@ -15,10 +142,9 @@ export class ArM5eMagicSystem {
 
       let idx = 0;
       template.buttons = { mult: "disabled" };
-      template.char = [];
-      template.verb = [];
-      template.noun = [];
+
       let hasModifier = false;
+      let hasBonusAbility = false;
       for (let item of template.components) {
         item.compIdx = idx;
         switch (item.type) {
@@ -36,21 +162,36 @@ export class ArM5eMagicSystem {
             );
 
             item.compIdx = idx;
-            template.char.push(item);
             break;
           case "ability":
             item.partial = "systems/arm5e/templates/actor/parts/template-item-ability.hbs";
-            if (item.art == "verb") {
-              template.verb.push(item);
-            } // noun
-            else if (item.art == "noun") {
-              template.noun.push(item);
-            } else {
-              template.other.push(item);
+            if (!item.art) {
+              hasBonusAbility = true;
             }
-            item.ability = this.actor.getAbility(item.key, item.option) ?? {};
+            item.selection = Object.entries(CONFIG.ARM5E.LOCALIZED_ABILITIES)
+              .filter(([k, v]) => {
+                return (
+                  k !== "altTechnique" &&
+                  k !== "altForm" &&
+                  v.category !== "altForm" &&
+                  v.category !== "altTechnique"
+                );
+              })
+              .map(([k, v]) => {
+                return {
+                  key: k,
+                  ...v
+                };
+              });
 
-            item.selection = this.actor.system.abilities;
+            if (CONFIG.ARM5E.LOCALIZED_ABILITIES[item.key].option) {
+              item.selection.push({
+                key: item.key,
+                extendedKey: `${item.key}_${item.option}`,
+                ...CONFIG.ARM5E.LOCALIZED_ABILITIES[item.key]
+              });
+            }
+
             break;
           case "verb":
             item.selection = { any: "Any" };
@@ -59,7 +200,6 @@ export class ArM5eMagicSystem {
               return res;
             }, item.selection);
             item.partial = "systems/arm5e/templates/actor/parts/template-item-tech.hbs";
-            template.verb.push(item);
             break;
           case "noun":
             item.selection = { any: "Any" };
@@ -68,7 +208,6 @@ export class ArM5eMagicSystem {
               return res;
             }, item.selection);
             item.partial = "systems/arm5e/templates/actor/parts/template-item-form.hbs";
-            template.noun.push(item);
             break;
           case "mod":
             hasModifier = true;
@@ -78,22 +217,20 @@ export class ArM5eMagicSystem {
             item.partial = "systems/arm5e/templates/actor/parts/template-item-mult.hbs";
             break;
         }
-        if (template.char.length) {
-          template.buttons.char = "disabled";
-        }
-        // if (template.verb.length) {
-        //   template.buttons.verb = "disabled";
-        // }
-        // if (template.noun.length) {
-        //   template.buttons.noun = "disabled";
-        // }
-        if (hasModifier) {
-          template.buttons.mod = "disabled";
-        }
 
         idx++;
       }
+      if (template.char.length) {
+        template.buttons.char = "disabled";
+      }
 
+      if (hasModifier) {
+        template.buttons.mod = "disabled";
+      }
+
+      if (hasBonusAbility) {
+        template.buttons.bonusAb = "disabled";
+      }
       template.isValid = this.isTemplateValid(context);
     }
     return context;
@@ -106,23 +243,121 @@ export class ArM5eMagicSystem {
   activateListeners(html) {
     html.find(".template-control").click(this.onManageTemplate.bind(this));
     html.find(".template-item").click(this.onManageTemplateComponents.bind(this));
+    html.find(".template-option").change(this._onOptionChange.bind(this));
     html.find(".item-ability-key").change(this.onAbilityChange.bind(this));
+    html.find(".supernatural-create").click(this._onItemCreate.bind(this));
+  }
+
+  async _onOptionChange(event) {
+    const dataset = getDataset(event);
+    let newOption = event.target.value;
+    if (newOption === "") {
+      return;
+    }
+    // remove any non alphanumeric character
+    newOption = newOption.replace(/[^a-zA-Z0-9]/gi, "");
+
+    const components = this.actor.system.magicSystem.templates[dataset.id].components;
+    components[dataset.index].key = dataset.key;
+    components[dataset.index].option = newOption;
+    await this.actor.sheet.submit({
+      preventClose: true,
+      updateData: {
+        [`system.magicSystem.templates.${dataset.id}.components`]: components
+      }
+    });
+  }
+
+  // Supernatural effect creation
+  async _onItemCreate(event) {
+    const dataset = getDataset(event);
+
+    const template = this.actor.system.magicSystem.templates[dataset.template];
+    dataset.char = template.char[0]?.characteristic ?? "sta";
+    const templateVerbs = template.verbs[0];
+    let verb = { key: null, option: null };
+    if (templateVerbs) {
+      if (templateVerbs.type === "verb") {
+        if (templateVerbs.option === "any") {
+          verb = this.actor.system.magicSystem.verbs[0].system;
+        } else {
+          verb = template.verbs[0];
+        }
+      } else {
+        verb = this.actor.getAbility(templateVerbs.key, templateVerbs.option)?.system;
+      }
+    }
+    let extKey = CONFIG.ARM5E.LOCALIZED_ABILITIES[verb.key].option
+      ? `${verb.key}_${verb.option}`
+      : verb.key;
+    dataset.verb = {
+      active: true,
+      key: verb.key,
+      option: verb.option,
+      extendedKey: extKey
+    };
+    const templateNouns = template.nouns[0];
+    let noun = { key: null, option: null };
+    if (templateNouns) {
+      if (templateNouns.type === "noun") {
+        if (templateNouns.option === "any") {
+          noun = this.actor.system.magicSystem.nouns[0].system;
+        } else {
+          noun = templateNouns;
+        }
+      } else {
+        noun = this.actor.getAbility(templateNouns.key, templateNouns.option)?.system;
+      }
+    }
+    extKey = CONFIG.ARM5E.LOCALIZED_ABILITIES[noun.key].option
+      ? `${noun.key}_${noun.option}`
+      : noun.key;
+    dataset.noun = { active: true, key: noun.key, option: noun.option, extendedKey: extKey };
+    // Dataset.other = template.other[0].key ?? {};
+
+    await this.actor.sheet._onItemCreate(dataset);
   }
 
   async onAbilityChange(event) {
     const dataset = getDataset(event);
-    const id = event.target.value;
-
-    const ability = this.actor.items.get(id);
-
+    const extendedKey = event.target.value;
     const components = this.actor.system.magicSystem.templates[dataset.id].components;
 
-    components[dataset.index].key = ability.system.key;
-    components[dataset.index].option = ability.system.option;
-    components[dataset.index].score = ability.system.finalScore;
+    if (CONFIG.ARM5E.LOCALIZED_ABILITIES[extendedKey]) {
+      components[dataset.index].key = extendedKey;
+      components[dataset.index].option = "";
+      let ability = this.actor.items.find((e) => (e.system.key = extendedKey));
+      if (ability) {
+        components[dataset.index].abilityId = ability._id;
+        components[dataset.index].score = ability.system.finalScore;
+      } else {
+        components[dataset.index].abilityId = "";
+      }
+    } else {
+      //
+      const regex = /^(?<key>\w+)_(?<option>\w+)/;
+      if (regex.test(extendedKey)) {
+        let matched = extendedKey.match(regex);
+        let ability = this.actor.getAbility(matched.groups.key, matched.groups.option);
+        components[dataset.index].key = matched.groups.key;
+        components[dataset.index].option = matched.groups.option;
+        if (ability) {
+          components[dataset.index].abilityId = ability._id;
+          components[dataset.index].score = ability.system.finalScore;
+        } else {
+          components[dataset.index].abilityId = "";
+        }
+      }
+    }
 
-    await this.actor.update({
-      [`system.magicSystem.templates.${dataset.id}.components`]: components
+    // await this.actor.update({
+    //   [`system.magicSystem.templates.${dataset.id}.components`]: components
+    // });
+    await this.actor.sheet.submit({
+      preventClose: true,
+      updateData: {
+        [`system.magicSystem.templates.${dataset.id}.components`]: components
+      }
     });
   }
 
@@ -132,7 +367,7 @@ export class ArM5eMagicSystem {
     switch (dataset.action) {
       case "create":
         const template = { name: "Template name", components: [{ type: "char" }] };
-        if (magicSystem.templates == undefined) {
+        if (magicSystem.templates === undefined) {
           magicSystem.templates = {};
         }
 
@@ -156,26 +391,38 @@ export class ArM5eMagicSystem {
       case "create":
         switch (dataset.type) {
           case "char":
-            components.push({ type: "char" });
+            components.push({ type: "char", characteristic: "sta" });
             break;
           case "ability":
-            components.push({ type: "ability", art: dataset.art });
+            const ab = CONFIG.ARM5E.LOCALIZED_ABILITIES["animalHandling"];
+            components.push({
+              type: "ability",
+              art: dataset.art,
+              option: ab.option,
+              key: "animalHandling"
+            });
             break;
           case "verb":
-            if (context.system.magicSystem.verbs.length === 0) {
+            if (this.actor.system.magicSystem.verbs.length === 0) {
               ui.notifications.info("Define a verb first");
               return;
             }
-            components.push({ type: "verb" });
+            const verb = this.actor.system.magicSystem.verbs.find((v, idx) => idx === 0);
+            components.push({ type: "verb", option: verb.system.option, key: verb.system.key });
             break;
           case "noun":
-            components.push({ type: "noun" });
+            if (this.actor.system.magicSystem.nouns.length === 0) {
+              ui.notifications.info("Define a noun first");
+              return;
+            }
+            const noun = this.actor.system.magicSystem.nouns.find((v, idx) => idx === 0);
+            components.push({ type: "noun", option: noun.system.option, key: noun.system.key });
             break;
           case "mod":
-            components.push({ type: "mod" });
+            components.push({ type: "mod", value: 0, label: "My modifier" });
             break;
           case "mult":
-            components.push({ type: "mult" });
+            components.push({ type: "mult", mult: 1 });
             break;
           default:
             break;

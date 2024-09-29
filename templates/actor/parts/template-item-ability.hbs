@@ -10,12 +10,33 @@
     >
       {{selectOptions
         this.selection
-        selected=this.ability._id
-        labelAttr="name"
-        valueAttr="id"
-        nameAttr="id"
+        selected=this.extendedKey
+        labelAttr="label"
+        valueAttr="extendedKey"
+        nameAttr="extendedKey"
       }}
     </select>
+    {{#if (lookup (lookup @root.config.LOCALIZED_ABILITIES key) "option")}}
+      <div class="flexcol">
+        <label class="resource label-light">{{localize "arm5e.sheet.skill.abilityOption"}}</label>
+        <input
+          type="text"
+          name="system.magicSystem.templates.{{this.id}}.components.{{this.compIdx}}.option"
+          class="resource-focus-wide template-option"
+          data-id="{{id}}"
+          data-key="{{this.key}}"
+          data-index="{{compIdx}}"
+          value="{{this.option}}"
+        />
+        <label class="resource label-light">{{localize "arm5e.sheet.label"}}</label>
+        <input
+          type="text"
+          name="system.magicSystem.templates.{{this.id}}.components.{{this.compIdx}}.label"
+          class="resource-focus-wide template-label"
+          value="{{this.label}}"
+        />
+      </div>
+    {{/if}}
     <div id="top-right-icon">
       <a
         class="template-item"

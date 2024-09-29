@@ -1,20 +1,31 @@
 <div class="template-item-box flexrow flex0">
   <div id="template-content">
-    <label class="template-item-label">{{localize "arm5e.generic.modifier"}}</label>
-    <input
-      type="number"
-      name="system.magicSystem.templates.{{this.id}}.components.{{this.compIdx}}.value"
-      class="resource-focus"
-      value="{{this.value}}"
-    />
-    <div id="top-right-icon">
-      <a
-        class="template-item"
-        data-action="delete"
-        data-id="{{id}}"
-        data-index="{{compIdx}}"
-        title="Delete template"
-      ><i class="icon-SmallIcon_Delete_Hand_Gesture"></i></a>
+    <div class="flexcol">
+      <label class="resource label">{{localize "arm5e.generic.modifier"}}</label>
+      <label class="resource label-light">{{localize "arm5e.sheet.label"}}</label>
+      <input
+        class="resource-focus-wide"
+        type="text"
+        name="system.magicSystem.templates.{{this.id}}.components.{{this.compIdx}}.label"
+        value="{{this.label}}"
+      />
+      <div class="resource">
+        <input
+          type="number"
+          name="system.magicSystem.templates.{{this.id}}.components.{{this.compIdx}}.value"
+          class="resource-focus"
+          value="{{this.value}}"
+        />
+      </div>
+      <div id="top-right-icon">
+        <a
+          class="template-item"
+          data-action="delete"
+          data-id="{{id}}"
+          data-index="{{compIdx}}"
+          title="Delete template"
+        ><i class="icon-SmallIcon_Delete_Hand_Gesture"></i></a>
+      </div>
     </div>
   </div>
 </div>
