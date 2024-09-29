@@ -60,6 +60,14 @@
               <input name="system.covenant.name" class="covenant-link" type="text" value="{{system.covenant.value}}"
                 data-dtype="String" style="margin-left: 8px" />
             </h2>
+            <div style="padding-top: 10px; padding-left: 3px; max-width:15px;">
+              {{#if (eq system.covenant.linked true)}}
+                <a class="flexrow0 actor-link" title="Linked to covenant" data-actorid="{{system.covenant.actorId}}"><i
+                    class="fas fa-link fa-sm"></i></a>
+              {{else}}
+                <a class="flexrow0" title="Not linked to covenant"><i class="fas fa-unlink fa-sm"></i></a>
+              {{/if}}
+            </div>
           {{/if}} {{#if (eq system.charType.value "magusNPC")}}
             <span class="covenantname flexrow" style="padding-top: 4px">
               <label for="system.house.value" class="bold flex0"

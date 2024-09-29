@@ -1,4 +1,5 @@
 import { log, putInFoldableLink, putInFoldableLinkWithAnimation } from "../tools.js";
+import { ArsRoll } from "./stressdie.js";
 
 export function showRollResults(actor, type) {
   let showRolls = game.settings.get("arm5e", "showRolls");
@@ -18,6 +19,15 @@ function showRollFormulas(actor, type) {
     (type === "player" && ["ALL", "PLAYERS"].includes(showFormulas)) ||
     "ALL" == showFormulas
   );
+}
+
+export async function enrichChatMessage(message, html, data) {
+  // if (message.flags.arm5e === undefined && message.rolls.length) {
+  //   await message.setFlag("arm5e", {
+  //     type: type,
+  //     actorType: actor.type // for if the actor is deleted
+  //   });
+  // }
 }
 
 export function addChatListeners(message, html, data) {
@@ -207,7 +217,7 @@ async function useConfidence(ev) {
 
       log(false, flavor);
       let newContent = parseFloat(total) + bonus;
-      const dieRoll = new Roll(newContent.toString(10));
+      const dieRoll = new ArsRoll(newContent.toString(10));
       await dieRoll.evaluate();
       let msgData = {};
       msgData.speaker = message.speaker;

@@ -442,9 +442,11 @@ export class Scriptorium extends FormApplication {
         case "mastery": {
           if (context.reading.reader.spells.length === 0) {
             context.ui.editItem = "disabled";
-            context.ui.reading.warning.push(game.i18n.format("arm5e.scriptorium.msg.missingItem"), {
-              item: game.i18n.localize("arm5e.sheet.spell")
-            });
+            context.ui.reading.warning.push(
+              game.i18n.format("arm5e.scriptorium.msg.missingItem", {
+                item: game.i18n.localize("arm5e.sheet.spell")
+              })
+            );
             context.ui.reading.error = true;
           } else {
             if (!context.reading.reader.spell) {
@@ -460,7 +462,7 @@ export class Scriptorium extends FormApplication {
           break;
         }
         default:
-          context.ui.warning.push("Error");
+          context.ui.reading.warning.push("Error");
           context.ui.reading.error = true;
           break;
       }
@@ -828,7 +830,9 @@ export class Scriptorium extends FormApplication {
     html.find(".section-handle").click(this._handle_section.bind(this));
 
     html.find(".next-topic").click(async (event) => this._changeCurrentTopic("reading", event, 1));
-    html.find(".previous-topic").click(async (event) => this._changeCurrentTopic("reading", -1));
+    html
+      .find(".previous-topic")
+      .click(async (event) => this._changeCurrentTopic("reading", event, -1));
     html.find(".next-topicToCopy").click(async (event) => this._changeTopic("copying", event, 1));
     html
       .find(".previous-topicToCopy")
@@ -1709,11 +1713,17 @@ export class Scriptorium extends FormApplication {
   async _updateObject(event, formData) {
     const expanded = foundry.utils.expandObject(formData);
 
+    if (expanded.reading?.book?.system?.topics) {
+      const topics = this.object.reading.book.system.topics;
+      foundry.utils.mergeObject(topics, expanded.reading.book.system.topics);
+      delete expanded.reading.book.system.topics;
+    }
     if (expanded.writing?.book?.system?.topics) {
       const topics = this.object.writing.book.system.topics;
       foundry.utils.mergeObject(topics, expanded.writing.book.system.topics);
       delete expanded.writing.book.system.topics;
     }
+
     if (expanded.copying?.books) {
       const bookIndexes = Object.keys(expanded.copying.books);
       for (const index of bookIndexes) {

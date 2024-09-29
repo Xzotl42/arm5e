@@ -1173,18 +1173,18 @@ export class ArM5ePCActor extends Actor {
             system.census.laborers += item.system.number;
             habitants.push(item);
             workersPts += item.system.points;
-            servantPts += item.system.points;
             break;
           case "servants":
             system.census.servants += item.system.number;
             habitants.push(item);
+            servantPts += item.system.points;
             workersPts += item.system.points;
             break;
           case "teamsters":
             system.census.teamsters += item.system.number;
             habitants.push(item);
-            break;
             workersPts += item.system.points;
+            break;
           case "dependants":
             system.census.dependants += item.system.number;
             habitants.push(item);
@@ -1284,6 +1284,22 @@ export class ArM5ePCActor extends Actor {
       }
     }
 
+    // SORTING
+
+    possessions.sort((a, b) => (a.sort || 0) - (b.sort || 0));
+    incomingSources.sort((a, b) => (a.sort || 0) - (b.sort || 0));
+
+    weapons.sort((a, b) => (a.sort || 0) - (b.sort || 0));
+    armor.sort((a, b) => (a.sort || 0) - (b.sort || 0));
+
+    magi.sort((a, b) => (a.sort || 0) - (b.sort || 0));
+    companion.sort((a, b) => (a.sort || 0) - (b.sort || 0));
+    specialists.sort((a, b) => (a.sort || 0) - (b.sort || 0));
+    turbula.sort((a, b) => (a.sort || 0) - (b.sort || 0));
+    habitants.sort((a, b) => (a.sort || 0) - (b.sort || 0));
+    horses.sort((a, b) => (a.sort || 0) - (b.sort || 0));
+    livestock.sort((a, b) => (a.sort || 0) - (b.sort || 0));
+
     // BUILD POINTS
 
     system.buildPoints.laboratoryTexts.computed += labTextPts;
@@ -1347,12 +1363,13 @@ export class ArM5ePCActor extends Actor {
       system.census.horses +
       system.census.livestock +
       system.npcInhabitants;
-    system.census.servantsNeeded +=
-      2 * Math.round((system.finances.inhabitantsPoints - workersPts) / 10);
 
-    system.census.teamstersNeeded = Math.round(
-      (system.finances.inhabitantsPoints - servantPts - 2 * system.census.laborers) / 10
-    );
+    // adjust the inhabitant points by removing the workers'
+    let tempTotal = system.finances.inhabitantsPoints - workersPts;
+    system.census.servantsNeeded += 2 * Math.round(tempTotal / 10);
+    // Add the points for these servants to the total
+    tempTotal += servantPts;
+    system.census.teamstersNeeded = Math.round((tempTotal - 2 * system.census.laborers) / 10);
 
     // SAVINGS :
 
