@@ -14,7 +14,7 @@
 - It is possible again to go to previous topic of a book in scriptorium
 - Missing spell warning is now properly formated in scriptorium
 - Multitopic book reading was not working after a change to the dialog (reader, date, ...)
-- There is no longer an error when you try to read an ability or spell mastery book you are too skilled for.
+- There is no longer an error when you try to read an ability book you are too skilled for.
 
 ## 2.3.0.10, Quendalon, raised by the Fae BF3
 
