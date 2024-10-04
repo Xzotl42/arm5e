@@ -8,7 +8,16 @@
 - new checkbox design
 - [technical] Moved abilities localization in "i18nInit" Hook
 
-## 2.3.0.11, Quendalon, raised by the Fae BF4
+## 2.3.0.12, Quendalon, raised by the Fae BF4
+
+### Compatibility
+
+- Verified for V12.331
+
+### Features & changes
+
+- Updated French version
+- Some cosmetic improvements for chat stress dice
 
 ### Bug fixes
 
@@ -23,8 +32,11 @@
 - Covenant teamsters were not considered workers.
 - It is possible again to go to previous topic of a book in scriptorium
 - Missing spell warning is now properly formated in scriptorium
-- Multitopic book reading was not working after a change to the dialog (reader, date, ...)
+- Multitopic book reading was not working after a change to the dialog data (reader, date, ...)
 - There is no longer an error when you try to read an ability book you are too skilled for.
+- Stress die in chat
+  - Proper number of botch dice rolled
+  - Exploding rolls are computed properly
 
 ## 2.3.0.10, Quendalon, raised by the Fae BF3
 

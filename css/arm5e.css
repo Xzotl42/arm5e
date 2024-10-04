@@ -2392,6 +2392,12 @@ input[type="checkbox"]:checked::before {
 input[type="checkbox"].tiny-checkbox:checked::before {
   transform: scale(1);
 }
+/* dice stuff */
+li.roll.stressdieinternal.d10.exploded.min,
+li.roll.stressdie.d10.exploded.min {
+  color: #065d12;
+  filter: sepia(0.5) hue-rotate(60deg);
+}
 
 /* .content {
   min-height: calc(58vh - 75px);

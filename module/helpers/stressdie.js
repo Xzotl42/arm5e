@@ -78,34 +78,41 @@ export class StressDie extends Die {
     if (typeof this.faces !== "number") {
       throw new Error("A StressDie term must have a numeric number of faces.");
     }
-
-    // this.faces = 10;
+    this.botchCheck = false;
   }
+
+  // whether we are botch checking
+  botchCheck;
 
   /** @inheritdoc */
   static DENOMINATION = "s";
 
   async evaluate() {
-    this.options.ddd = this.number;
+    this.options.botchDice = this.number;
     this.number = 1;
+    this.modifiers = ["x=1"];
+
     await super.evaluate();
     if (this.results[0].result === 10) {
-      this.number = this.options.ddd;
+      this.number = this.options.botchDice + 1;
       this._evaluated = false;
-      this.modifiers = ["cs=10"];
+      this.modifiers = ["cf=10"];
+      this.botchCheck = true;
       await super.evaluate();
       return this;
     }
-    this.explode("x=1");
+
     return this;
   }
 
   get total() {
     if (!this._evaluated) return null;
-    if (this.modifiers.length > 0) return 1 - super.total;
+    if (this.botchCheck) return 1 - super.total;
     const res = this.results.reduce((t, r, i, a) => {
-      log(false, `DBG: total.reduce res=${r.result}, i=${i} * t=${t} ; ${r.active}) `);
-      if (!r.active) return t;
+      // log(false, `DBG: total.reduce res=${r.result}, i=${i} * t=${t} ; ${r.active}) `);
+      if (!r.active) {
+        return t;
+      }
       if (i === 0 && r.result === 10) {
         return 0;
       }
@@ -116,8 +123,19 @@ export class StressDie extends Die {
       if (r.result === 1) return t * 2;
       return t * r.result;
     }, 0);
-    log(false, `DBG: total=${res}`);
+    // log(false, `DBG: total=${res}`);
     return res;
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Render the tooltip HTML for a Roll instance
+   * @returns {object}      The data object used to render the default tooltip template for this DiceTerm
+   */
+  getTooltipData() {
+    log(false, "GetTooltipdata");
+    return super.getTooltipData();
   }
 
   /** @inheritdoc */

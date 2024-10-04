@@ -76,7 +76,6 @@
                 </select>
               </div>
               <div class="subtype">
-                {{!--log "subtypes:" @root.subtypes--}}
                 <select class="effect-subtype" data-index="{{i}}">
                   {{selectOptions (lookup @root.subtypes i) selected=(lookup ../selectedSubtypes i) labelAttr="mnemonic" localize=true
                     nameAttr="name" valueAttr="name"}}
