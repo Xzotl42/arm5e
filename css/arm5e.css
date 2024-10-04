@@ -2237,6 +2237,13 @@ h3.covenant-tooltip {
   transition: opacity 500ms;
 }
 
+/* dice stuff */
+li.roll.stressdieinternal.d10.exploded.min,
+li.roll.stressdie.d10.exploded.min {
+  color: #065d12;
+  filter: sepia(0.5) hue-rotate(60deg);
+}
+
 /* .content {
   min-height: calc(58vh - 75px);
 }
