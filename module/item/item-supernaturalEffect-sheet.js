@@ -163,7 +163,8 @@ export class ArM5eSupernaturalEffectSheet extends ArM5eItemMagicSheet {
                 specialty: ability.system.specialty,
                 key: c.key
               });
-            } else if (!this.item.system.verb.valid) {
+            }
+            if (!this.item.system.verb.valid) {
               context.selection.verbs.unshift({
                 id: "",
                 label: this.item.system.verb.label,
@@ -182,7 +183,8 @@ export class ArM5eSupernaturalEffectSheet extends ArM5eItemMagicSheet {
                 specialty: ability.system.specialty,
                 key: c.key
               });
-            } else if (!this.item.system.noun.valid) {
+            }
+            if (!this.item.system.noun.valid) {
               context.selection.nouns.unshift({
                 id: "",
                 label: this.item.system.noun.label,
@@ -198,12 +200,12 @@ export class ArM5eSupernaturalEffectSheet extends ArM5eItemMagicSheet {
               context.system.bonusAbility.score = ability.system.finalScore;
               context.system.bonusAbility.specialty = ability.system.speciality;
             }
-            // else if (!this.item.system.noun.valid) {
-            //   context.selection.nouns.unshift({
+            // else if (!this.item.system.bonusAbility.valid) {
+            //   context.selection.bonusAbility.unshift({
             //     id: "",
-            //     label: this.item.system.noun.label,
-            //     key: this.item.system.noun.key,
-            //     option: this.item.system.noun.option
+            //     label: this.item.system.bonusAbility.label,
+            //     key: this.item.system.bonusAbility.key,
+            //     option: this.item.system.bonusAbility.option
             //     // score: noun.system.finalScore
             //   });
             // }
@@ -212,6 +214,7 @@ export class ArM5eSupernaturalEffectSheet extends ArM5eItemMagicSheet {
           break;
         case "mod":
           context.modifier = c.value;
+          break;
         case "mult":
           context.multiplier = c.value;
       }

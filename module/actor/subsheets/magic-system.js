@@ -302,26 +302,31 @@ export class ArM5eMagicSystem {
     const template = this.actor.system.magicSystem.templates[dataset.template];
     dataset.char = template.char[0]?.characteristic ?? "sta";
     const templateVerbs = template.verbs[0];
-    let verb = { key: null, option: null };
+    dataset.verb = { key: null, option: null };
     if (templateVerbs) {
       if (templateVerbs.type === "verb") {
         if (templateVerbs.option === "any") {
-          verb = this.actor.system.magicSystem.verbs[0].system;
+          dataset.verb = this.actor.system.magicSystem.verbs[0].system;
         } else {
-          verb = template.verbs[0];
+          dataset.verb = template.verbs[0];
         }
       } else {
-        verb = this.actor.getAbility(templateVerbs.key, templateVerbs.option)?.system;
+        dataset.verb = this.actor.getAbility(templateVerbs.key, templateVerbs.option)?.system;
+        if (dataset.verb === undefined) {
+          dataset.verb = {
+            key: templateVerbs.key,
+            option: templateVerbs.option,
+            label: game.i18n.format(CONFIG.ARM5E.LOCALIZED_ABILITIES[templateVerbs.key].mnemonic, {
+              option: templateVerbs.option
+            })
+          };
+        }
       }
-      let extKey = CONFIG.ARM5E.LOCALIZED_ABILITIES[verb.key].option
-        ? `${verb.key}_${verb.option}`
-        : verb.key;
-      dataset.verb = {
-        active: true,
-        key: verb.key,
-        option: verb.option,
-        extendedKey: extKey
-      };
+      let extKey = CONFIG.ARM5E.LOCALIZED_ABILITIES[dataset.verb.key].option
+        ? `${dataset.verb.key}_${dataset.verb.option}`
+        : dataset.verb.key;
+      dataset.verb.active = true;
+      dataset.verb.extendedKey = extKey;
     } else {
       dataset.verb = {
         active: false
@@ -329,21 +334,31 @@ export class ArM5eMagicSystem {
     }
 
     const templateNouns = template.nouns[0];
-    let noun = { key: null, option: null };
+    dataset.noun = { key: null, option: null };
     if (templateNouns) {
       if (templateNouns.type === "noun") {
         if (templateNouns.option === "any") {
-          noun = this.actor.system.magicSystem.nouns[0].system;
+          dataset.noun = this.actor.system.magicSystem.nouns[0].system;
         } else {
-          noun = templateNouns;
+          dataset.noun = templateNouns;
         }
       } else {
-        noun = this.actor.getAbility(templateNouns.key, templateNouns.option)?.system;
+        dataset.noun = this.actor.getAbility(templateNouns.key, templateNouns.option)?.system;
+        if (dataset.noun === undefined) {
+          dataset.noun = {
+            key: templateNouns.key,
+            option: templateNouns.option,
+            label: game.i18n.format(CONFIG.ARM5E.LOCALIZED_ABILITIES[templateNouns.key].mnemonic, {
+              option: templateNouns.option
+            })
+          };
+        }
       }
-      let extKey = CONFIG.ARM5E.LOCALIZED_ABILITIES[noun.key].option
-        ? `${noun.key}_${noun.option}`
-        : noun.key;
-      dataset.noun = { active: true, key: noun.key, option: noun.option, extendedKey: extKey };
+      let extKey = CONFIG.ARM5E.LOCALIZED_ABILITIES[dataset.noun.key].option
+        ? `${dataset.noun.key}_${dataset.noun.option}`
+        : dataset.noun.key;
+      dataset.noun.active = true;
+      dataset.extendedKey = extKey;
     } else {
       dataset.noun = {
         active: false

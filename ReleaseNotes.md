@@ -1,4 +1,4 @@
-## 2.3.1.0, Quendalon, lost in the Forest
+## 2.3.1.1 Quendalon, lost in the Forest
 
 ### Features & changes
 

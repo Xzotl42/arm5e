@@ -194,7 +194,12 @@ export class SupernaturalEffectSchema extends SpellSchema {
       }
       if (!found) {
         this.invalidMsg += "Verb attribute not found<br/>";
-        this.verb.label = `Unknown  ${this.verb.label} (${this.verb.key} ${this.verb.option})`;
+        this.verb.label = game.i18n.format(
+          CONFIG.ARM5E.LOCALIZED_ABILITIES[this.verb.key].mnemonic,
+          {
+            option: this.verb.option
+          }
+        );
         this.verb.score = 0;
         this.verb.valid = false;
         this.valid = false;
@@ -244,7 +249,12 @@ export class SupernaturalEffectSchema extends SpellSchema {
       if (!found) {
         this.valid = false;
         this.invalidMsg += "Noun attribute not found<br/>";
-        this.noun.label = `Unknown ${this.noun.label}  (${this.noun.key} ${this.noun.option})`;
+        this.noun.label = game.i18n.format(
+          CONFIG.ARM5E.LOCALIZED_ABILITIES[this.noun.key].mnemonic,
+          {
+            option: this.noun.option
+          }
+        );
         this.noun.score = 0;
         this.valid = false;
       }
@@ -289,7 +299,12 @@ export class SupernaturalEffectSchema extends SpellSchema {
       if (!found) {
         this.valid = false;
         this.invalidMsg = "Bonus ability attribute not found<br/>";
-        this.bonusAbility.label = `Unknown (${this.bonusAbility.key} ${this.bonusAbility.option})`;
+        this.bonusAbility.label = game.i18n.format(
+          CONFIG.ARM5E.LOCALIZED_ABILITIES[this.bonusAbility.key].mnemonic,
+          {
+            option: this.bonusAbility.option
+          }
+        );
         this.bonusAbility.score = 0;
         this.bonusAbility.valid = false;
       }
