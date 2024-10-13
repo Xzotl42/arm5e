@@ -243,7 +243,7 @@ async function getRollFormula(actor) {
 
         total += valueForm;
         msg = newLine(msg);
-        msg += rollInfo.magic.formLabel;
+        msg += rollInfo.magic.form.label;
         msg += " (" + valueForm + ")";
       }
 
@@ -295,7 +295,7 @@ async function getRollFormula(actor) {
           msg += rollInfo.magic.technique.label;
           msg += " ( 2 x " + valueTech + ") ";
           if (rollInfo.magic.technique.specApply) {
-            msg += " + 1 ";
+            msg += ` + 1 ${rollInfo.magic.technique.specialty}`;
             total++;
           }
           msg += "<br />";
@@ -304,7 +304,7 @@ async function getRollFormula(actor) {
           msg += rollInfo.magic.form.label;
           msg += " (" + valueForm + ")";
           if (rollInfo.magic.form.specApply) {
-            msg += " + 1 ";
+            msg += ` + 1 ${rollInfo.magic.form.specialty}`;
             total++;
           }
         } else {
@@ -312,7 +312,7 @@ async function getRollFormula(actor) {
           msg += rollInfo.magic.technique.label;
           msg += " (" + valueTech + ") ";
           if (rollInfo.magic.technique.specApply) {
-            msg += " + 1 ";
+            msg += ` + 1 ${rollInfo.magic.technique.specialty}`;
             total++;
           }
           msg = newLine(msg);
@@ -320,7 +320,7 @@ async function getRollFormula(actor) {
           msg += rollInfo.magic.form.label;
           msg += " ( 2 x " + valueForm + ")";
           if (rollInfo.magic.form.specApply) {
-            msg += " + 1 ";
+            msg += ` + 1 ${rollInfo.magic.form.specialty}`;
             total++;
           }
         }
@@ -330,7 +330,7 @@ async function getRollFormula(actor) {
           msg += rollInfo.magic.technique.label;
           msg += " (" + valueTech + ")";
           if (rollInfo.magic.technique.specApply) {
-            msg += " + 1 ";
+            msg += ` + 1 ${rollInfo.magic.technique.specialty}`;
             total++;
           }
         }
@@ -341,22 +341,11 @@ async function getRollFormula(actor) {
           msg += rollInfo.magic.form.label;
           msg += " (" + valueForm + ")";
           if (rollInfo.magic.form.specApply) {
-            msg += " + 1 ";
+            msg += ` + 1 ${rollInfo.magic.form.specialty}`;
             total++;
           }
         }
       }
-      // const ab = rollInfo.ability;
-      // if (ab.active) {
-      //   total += ab.score;
-      //   msg = newLine(msg);
-      //   msg += ab.name;
-      //   msg += " (" + ab.score + ")";
-      //   if (ab.specApply) {
-      //     msg += " + 1 ";
-      //     total++;
-      //   }
-      // }
 
       if (rollInfo.magic.bonus) {
         total += rollInfo.magic.bonus;
@@ -428,7 +417,7 @@ async function getRollFormula(actor) {
 
       if (rollInfo.ability.specApply == true) {
         total += 1;
-        msg += " ( + 1 " + game.i18n.localize("arm5e.sheet.speciality") + " )";
+        msg += ` ( + 1 ${rollInfo.ability.speciality} )`;
       }
     }
 

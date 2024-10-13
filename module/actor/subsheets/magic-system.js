@@ -1,4 +1,6 @@
+import { getConfirmation } from "../../constants/ui.js";
 import { getAbilityStats, getDataset, slugify } from "../../tools.js";
+import { ArM5eActorSheet } from "../actor-sheet.js";
 
 export class ArM5eMagicSystem {
   constructor(actor) {
@@ -139,7 +141,13 @@ export class ArM5eMagicSystem {
     for (let [name, template] of Object.entries(templates)) {
       template.selection = {};
       template.selection.targetType = { simple: "Simple", complex: "Complex" };
-
+      // see rollWindow.js for value significance
+      template.selection.rollType = [
+        { value: "STRESS", label: game.i18n.localize("arm5e.dialog.button.stressdie") },
+        { value: "SIMPLE", label: game.i18n.localize("arm5e.dialog.button.simpledie") },
+        { value: "STRESS_OR_SIMPLE", label: "Both" },
+        { value: "NONE", label: "No roll" }
+      ];
       let idx = 0;
       template.buttons = { mult: "disabled" };
 
@@ -168,29 +176,48 @@ export class ArM5eMagicSystem {
             if (!item.art) {
               hasBonusAbility = true;
             }
-            item.selection = Object.entries(CONFIG.ARM5E.LOCALIZED_ABILITIES)
-              .filter(([k, v]) => {
-                return (
-                  k !== "altTechnique" &&
-                  k !== "altForm" &&
-                  v.category !== "altForm" &&
-                  v.category !== "altTechnique"
-                );
-              })
-              .map(([k, v]) => {
-                return {
-                  key: k,
-                  ...v
-                };
-              });
+            item.selection = [];
 
+            // current item
             if (CONFIG.ARM5E.LOCALIZED_ABILITIES[item.key].option) {
               item.selection.push({
+                ...CONFIG.ARM5E.LOCALIZED_ABILITIES[item.key],
                 key: item.key,
                 extendedKey: `${item.key}_${item.option}`,
-                ...CONFIG.ARM5E.LOCALIZED_ABILITIES[item.key]
+                label: item.label
               });
             }
+            // custom abilities of the actor
+            this.actor.system.abilities.reduce((t, v) => {
+              if (CONFIG.ARM5E.LOCALIZED_ABILITIES[v.system.key].option) {
+                if (item.key != v.system.key || item.option != v.system.option) {
+                  t.push({
+                    ...CONFIG.ARM5E.LOCALIZED_ABILITIES[v.system.key],
+                    key: v.system.key,
+                    extendedKey: `${v.system.key}_${v.system.option}`,
+                    label: v.name
+                  });
+                }
+              }
+              return t;
+            }, item.selection);
+            item.selection = item.selection.concat(
+              Object.entries(CONFIG.ARM5E.LOCALIZED_ABILITIES)
+                .filter(([k, v]) => {
+                  return (
+                    k !== "altTechnique" &&
+                    k !== "altForm" &&
+                    v.category !== "altForm" &&
+                    v.category !== "altTechnique"
+                  );
+                })
+                .map(([k, v]) => {
+                  return {
+                    key: k,
+                    ...v
+                  };
+                })
+            );
 
             break;
           case "verb":
@@ -286,16 +313,21 @@ export class ArM5eMagicSystem {
       } else {
         verb = this.actor.getAbility(templateVerbs.key, templateVerbs.option)?.system;
       }
+      let extKey = CONFIG.ARM5E.LOCALIZED_ABILITIES[verb.key].option
+        ? `${verb.key}_${verb.option}`
+        : verb.key;
+      dataset.verb = {
+        active: true,
+        key: verb.key,
+        option: verb.option,
+        extendedKey: extKey
+      };
+    } else {
+      dataset.verb = {
+        active: false
+      };
     }
-    let extKey = CONFIG.ARM5E.LOCALIZED_ABILITIES[verb.key].option
-      ? `${verb.key}_${verb.option}`
-      : verb.key;
-    dataset.verb = {
-      active: true,
-      key: verb.key,
-      option: verb.option,
-      extendedKey: extKey
-    };
+
     const templateNouns = template.nouns[0];
     let noun = { key: null, option: null };
     if (templateNouns) {
@@ -308,11 +340,16 @@ export class ArM5eMagicSystem {
       } else {
         noun = this.actor.getAbility(templateNouns.key, templateNouns.option)?.system;
       }
+      let extKey = CONFIG.ARM5E.LOCALIZED_ABILITIES[noun.key].option
+        ? `${noun.key}_${noun.option}`
+        : noun.key;
+      dataset.noun = { active: true, key: noun.key, option: noun.option, extendedKey: extKey };
+    } else {
+      dataset.noun = {
+        active: false
+      };
     }
-    extKey = CONFIG.ARM5E.LOCALIZED_ABILITIES[noun.key].option
-      ? `${noun.key}_${noun.option}`
-      : noun.key;
-    dataset.noun = { active: true, key: noun.key, option: noun.option, extendedKey: extKey };
+
     // Dataset.other = template.other[0].key ?? {};
 
     await this.actor.sheet._onItemCreate(dataset);
@@ -322,8 +359,10 @@ export class ArM5eMagicSystem {
     const dataset = getDataset(event);
     const extendedKey = event.target.value;
     const components = this.actor.system.magicSystem.templates[dataset.id].components;
-
+    event.stopPropagation();
     if (CONFIG.ARM5E.LOCALIZED_ABILITIES[extendedKey]) {
+      // // check if it is a category
+      if (CONFIG.ARM5E.LOCALIZED_ABILITIES[extendedKey].disabled) return;
       components[dataset.index].key = extendedKey;
       components[dataset.index].option = "";
       let ability = this.actor.items.find((e) => (e.system.key = extendedKey));
@@ -338,6 +377,8 @@ export class ArM5eMagicSystem {
       const regex = /^(?<key>\w+)_(?<option>\w+)/;
       if (regex.test(extendedKey)) {
         let matched = extendedKey.match(regex);
+        // // check if it is a category
+        if (CONFIG.ARM5E.LOCALIZED_ABILITIES[matched.groups.key].disabled) return;
         let ability = this.actor.getAbility(matched.groups.key, matched.groups.option);
         components[dataset.index].key = matched.groups.key;
         components[dataset.index].option = matched.groups.option;
@@ -366,7 +407,11 @@ export class ArM5eMagicSystem {
     const magicSystem = this.actor.system.magicSystem;
     switch (dataset.action) {
       case "create":
-        const template = { name: "Template name", components: [{ type: "char" }] };
+        const template = {
+          name: "Template name",
+          useFatigue: false,
+          components: [{ type: "char" }]
+        };
         if (magicSystem.templates === undefined) {
           magicSystem.templates = {};
         }
@@ -376,10 +421,21 @@ export class ArM5eMagicSystem {
         });
         break;
       case "delete":
-        await this.actor.update({
-          [`system.magicSystem.templates.-=${dataset.id}`]: null
-        });
-        break;
+        let confirmed = true;
+        // if (game.settings.get("arm5e", "confirmDelete")) {
+        const question = game.i18n.localize("arm5e.dialog.delete-question");
+        confirmed = await getConfirmation(
+          dataset.name,
+          question,
+          ArM5eActorSheet.getFlavor(this.actor.type)
+        );
+        // }
+        if (confirmed) {
+          await this.actor.update({
+            [`system.magicSystem.templates.-=${dataset.id}`]: null
+          });
+          break;
+        }
     }
   }
 
@@ -432,12 +488,23 @@ export class ArM5eMagicSystem {
         });
         break;
       case "delete":
-        let clone = foundry.utils.deepClone(components);
-        clone.splice(dataset.index, 1);
-        components = clone;
-        await this.actor.update({
-          [`system.magicSystem.templates.${dataset.id}.components`]: components
-        });
+        let confirmed = true;
+        if (game.settings.get("arm5e", "confirmDelete")) {
+          const question = game.i18n.localize("arm5e.dialog.delete-question");
+          confirmed = await getConfirmation(
+            "Component",
+            question,
+            ArM5eActorSheet.getFlavor(this.actor.type)
+          );
+        }
+        if (confirmed) {
+          let clone = foundry.utils.deepClone(components);
+          clone.splice(dataset.index, 1);
+          components = clone;
+          await this.actor.update({
+            [`system.magicSystem.templates.${dataset.id}.components`]: components
+          });
+        }
         break;
     }
   }
@@ -458,6 +525,8 @@ export class ArM5eMagicSystem {
           }
         );
         source.system.magicSystem.templates[id].name = t.name;
+        source.system.magicSystem.templates[id].useFatigue = t.useFatigue;
+        source.system.magicSystem.templates[id].rollType = t.rollType;
       }
 
       expanded.system.magicSystem.templates = source.system.magicSystem.templates;

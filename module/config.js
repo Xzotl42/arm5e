@@ -824,6 +824,7 @@ ARM5E.ALL_ABILITIES = {
 export function localizeAbilities() {
   const res = {
     general: {
+      extendedKey: "general",
       label: game.i18n.localize(ARM5E.ABILITIES_CATEGORIES.general.mnemonic),
       mnemonic: ARM5E.ABILITIES_CATEGORIES.general.mnemonic,
       option: false,
@@ -831,6 +832,7 @@ export function localizeAbilities() {
     },
     ...translateAndSort(ARM5E.GENERAL_ABILITIES),
     academic: {
+      extendedKey: "academic",
       label: game.i18n.localize(ARM5E.ABILITIES_CATEGORIES.academic.mnemonic),
       mnemonic: ARM5E.ABILITIES_CATEGORIES.academic.mnemonic,
       option: false,
@@ -838,6 +840,7 @@ export function localizeAbilities() {
     },
     ...translateAndSort(ARM5E.ACADEMIC_ABILITIES),
     arcane: {
+      extendedKey: "arcane",
       label: game.i18n.localize(ARM5E.ABILITIES_CATEGORIES.arcane.mnemonic),
       mnemonic: ARM5E.ABILITIES_CATEGORIES.arcane.mnemonic,
       option: false,
@@ -845,6 +848,7 @@ export function localizeAbilities() {
     },
     ...translateAndSort(ARM5E.ARCANE_ABILITIES),
     martial: {
+      extendedKey: "martial",
       label: game.i18n.localize(ARM5E.ABILITIES_CATEGORIES.martial.mnemonic),
       mnemonic: ARM5E.ABILITIES_CATEGORIES.martial.mnemonic,
       option: false,
@@ -852,6 +856,7 @@ export function localizeAbilities() {
     },
     ...translateAndSort(ARM5E.MARTIAL_ABILITIES),
     supernaturalCat: {
+      extendedKey: "supernaturalCat",
       label: game.i18n.localize(ARM5E.ABILITIES_CATEGORIES.supernaturalCat.mnemonic),
       mnemonic: ARM5E.ABILITIES_CATEGORIES.supernaturalCat.mnemonic,
       option: false,
@@ -859,6 +864,7 @@ export function localizeAbilities() {
     },
     ...translateAndSort(ARM5E.SUPERNATURAL_ABILITIES),
     mystery: {
+      extendedKey: "mystery",
       label: game.i18n.localize(ARM5E.ABILITIES_CATEGORIES.mystery.mnemonic),
       mnemonic: ARM5E.ABILITIES_CATEGORIES.mystery.mnemonic,
       option: false,
@@ -866,6 +872,7 @@ export function localizeAbilities() {
     },
     ...translateAndSort(ARM5E.MYSTERY_ABILITIES),
     altTechnique: {
+      extendedKey: "altTechnique",
       label: game.i18n.localize(ARM5E.ABILITIES_CATEGORIES.altTechnique.mnemonic),
       mnemonic: ARM5E.ABILITIES_CATEGORIES.altTechnique.mnemonic,
       option: false,
@@ -873,6 +880,7 @@ export function localizeAbilities() {
     },
     ...translateAndSort(ARM5E.ALT_TECHNIQUE_ABILITIES),
     altForm: {
+      extendedKey: "altForm",
       label: game.i18n.localize(ARM5E.ABILITIES_CATEGORIES.altForm.mnemonic),
       mnemonic: ARM5E.ABILITIES_CATEGORIES.altForm.mnemonic,
       option: false,
@@ -911,9 +919,9 @@ export function enrichAbilities(translatedList) {
 function translateAndSort(abilityList) {
   for (let [key, value] of Object.entries(abilityList)) {
     let translation;
-    if (value.disabled && CONFIG.ISV11) {
-      continue;
-    }
+    // if (value.disabled && CONFIG.ISV11) {
+    //   continue;
+    // }
     if (value.option) {
       abilityList[key].extendedKey = `${key}_${value.optionDefault}`;
       translation = game.i18n.format(value.mnemonic, {

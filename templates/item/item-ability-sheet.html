@@ -42,20 +42,21 @@
         </div>
       {{/if}}
       <div class="resource flexrow">
-        {{#if system.altArt}}
+        {{#if canBeAccelerated}}
           <div class="resource flexrow">
             <label for="system.key" class=".checkbox-label">{{localize "Accelerated"}}</label>
             <input type="checkbox" class="" name="system.accelerated" data-dtype="Boolean" {{checked
               system.accelerated}}>
           </div>
-        {{else}}
+        {{/if}}
+        {{#unless system.altArt}}
           <div class="flexcol">
             <label>{{localize "arm5e.sheet.defaultCharacteristicForAbility"}}</label>
             <select name="system.defaultChaAb" data-type="String" class="default-characteristic">
               {{selectOptions config.character.characteristics selected=system.defaultChaAb localize=true labelAttr="label" }}
             </select>
           </div>
-        {{/if}}
+        {{/unless}}
         {{#if (eq system.category "supernaturalCat") }}
           <div class="flexcol " style="padding-left:5px">
             <label class>{{localize "arm5e.sheet.realm.label"}}</label>

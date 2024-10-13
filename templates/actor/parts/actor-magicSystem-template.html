@@ -2,7 +2,7 @@
   <div class="flexrow resource">
     <div class="flexcol resource">
       <div class="resource flexrow flex-group-left">
-        <div class="flex01">
+        <div class="resource flex01">
           <label for="system.magicSystem.templates.{{id}}.name"
             class="header-label">{{localize "Template name"}}</label>
 
@@ -10,21 +10,28 @@
             value="{{name}}" style="min-width: 250px;" data-id="{{id}}">
 
         </div>
-        <div class="flex01">
+        <div class="resource flex01">
           <label for="system.magicSystem.templates.{{id}}.targetLevel"
             class="header-label">{{localize "Target type"}}</label>
-          <select name="system.magicSystem.templates.{{id}}.targetLevel">
+          <select name="system.magicSystem.templates.{{id}}.targetLevel" disabled>
             {{selectOptions selection.targetType selected=targetType}}
           </select>
         </div>
-        <div class="flexrow">
+        <div class="resource flex01">
+          <label for="system.magicSystem.templates.{{id}}.rollType"
+            class="header-label">{{localize "Roll type"}}</label>
+          <select name="system.magicSystem.templates.{{id}}.rollType">
+            {{selectOptions selection.rollType selected=rollType labelAttr="label" nameAttr="value" valueAttr="value" }}
+          </select>
+        </div>
+        <div class="resource flexrow">
           <label for="system.magicSystem.templates.{{id}}.useFatigue"
             class="header-label flex02">{{localize "Use fatigue"}}</label>
-          <input type="checkbox" name="system.magicSystem.templates.{{id}}.useFatigue" {{checked template.useFatigue}}>
+          <input type="checkbox" name="system.magicSystem.templates.{{id}}.useFatigue" {{checked useFatigue}}>
         </div>
-        <div class="flex0">
-          <a class="template-control" data-action="delete" data-id="{{id}}" title="Delete template"><i
-              class="icon-Icon_Delete_Hand_Gesture"></i></a>
+        <div class="resource flex0">
+          <a class="template-control" data-action="delete" data-id="{{id}}" data-name="{{name}}"
+            title="Delete template"><i class="icon-Icon_Delete_Hand_Gesture"></i></a>
         </div>
       </div>
       <div class="resource flexrow">
@@ -64,34 +71,34 @@
       </div>
       <div class="resource flexrow">
         <div class="flexcol">
-          {{#each template.char as |component idx| }}
+          {{#each char as |component idx| }}
             <div class="resource flexrow">
               {{> (lookup . "partial" ) compIdx=component.compIdx id=../id}}
             </div>
           {{/each}}
         </div>
         <div class="flexcol">
-          {{#each template.verbs as |component idx| }}
+          {{#each verbs as |component idx| }}
             <div class="resource flexrow">
               {{> (lookup . "partial" ) compIdx=component.compIdx id=../id}}
             </div>
           {{/each}}
         </div>
         <div class="flexcol">
-          {{#each template.nouns as |component idx| }}
+          {{#each nouns as |component idx| }}
             <div class="resource flexrow">
               {{> (lookup . "partial" ) compIdx=component.compIdx id=../id}}
             </div>
           {{/each}}
         </div>
         <div class="flexcol">
-          {{#if template.bonusAbility.active}}
-            {{#with template.bonusAbility}}
+          {{#if bonusAbility.active}}
+            {{#with bonusAbility}}
               {{log "with " this}}
               {{> (lookup . "partial" ) compIdx=compIdx id=../id}}
             {{/with}}
           {{/if}}
-          {{#each template.others as |component idx| }}
+          {{#each others as |component idx| }}
             <div class="resource flexrow">
               {{> (lookup . "partial" ) compIdx=component.compIdx id=../id}}
             </div>

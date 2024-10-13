@@ -2308,6 +2308,10 @@ h3.covenant-tooltip {
   border-width: 0px 1px 1px 0px;
 }
 
+select.template-select {
+  max-width: 140px;
+}
+
 input[type="checkbox"] {
   appearance: none;
   -webkit-appearance: none;

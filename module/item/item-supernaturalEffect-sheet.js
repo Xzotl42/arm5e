@@ -28,23 +28,59 @@ export class ArM5eSupernaturalEffectSheet extends ArM5eItemMagicSheet {
 
       return context;
     }
-    if (!this.item.system.valid) {
-      context.selection.templates = Object.entries(
-        this.item.actor.system.magicSystem.templates
-      ).map(([k, v]) => {
-        return { id: k, name: v.name };
-      });
-      context.selection.templates.unshift({ id: "NONE", name: "Pick one" });
-      return context;
-    }
+    // if (!this.item.system.valid) {
+    //   context.selection.templates = Object.entries(
+    //     this.item.actor.system.magicSystem.templates
+    //   ).map(([k, v]) => {
+    //     return { id: k, name: v.name };
+    //   });
+    //   context.selection.templates.unshift({ id: "NONE", name: "Pick one" });
+    //   return context;
+    // }
 
     const owner = this.item.actor;
     const template = owner.system.magicSystem.templates[this.item.system.template];
+
     context.modifier = 0;
     context.multiplier = 1;
     const verbs = owner.system.magicSystem.verbs;
     context.selection.verbs = [];
     context.selection.nouns = [];
+    if (template === undefined) {
+      this.item.system.valid = false;
+      if (this.item.system.verb.active) {
+        context.selection.verbs = [
+          {
+            id: "",
+            label: this.item.system.verb.label,
+            key: this.item.system.verb.key,
+            option: this.item.system.verb.option
+          }
+        ];
+      }
+      if (this.item.system.noun.active) {
+        context.selection.nouns = [
+          {
+            id: "",
+            label: this.item.system.noun.label,
+            key: this.item.system.noun.key,
+            option: this.item.system.noun.option
+          }
+        ];
+      }
+      // if (this.item.system.bonusAbility.active) {
+      //   context.selection.verbs = [
+      //     {
+      //       id: "",
+      //       label: this.item.system.verb.label,
+      //       key: this.item.system.verb.key,
+      //       option: this.item.system.verb.option
+      //     }
+      //   ];
+      // }
+      return context;
+    }
+    context.dieType = template.rollType;
     for (let c of template.components) {
       switch (c.type) {
         case "verb":
@@ -69,6 +105,15 @@ export class ArM5eSupernaturalEffectSheet extends ArM5eItemMagicSheet {
               key: verb.system.key,
               option: verb.system.option,
               score: verb.system.finalScore
+            });
+          }
+          if (!this.item.system.verb.valid) {
+            context.selection.verbs.unshift({
+              id: "",
+              label: this.item.system.verb.label,
+              key: this.item.system.verb.key,
+              option: this.item.system.verb.option
+              // score: noun.system.finalScore
             });
           }
           break;
@@ -96,11 +141,21 @@ export class ArM5eSupernaturalEffectSheet extends ArM5eItemMagicSheet {
               score: noun.system.finalScore
             });
           }
+          if (!this.item.system.noun.valid) {
+            context.selection.nouns.unshift({
+              id: "",
+              label: this.item.system.noun.label,
+              key: this.item.system.noun.key,
+              option: this.item.system.noun.option
+              // score: noun.system.finalScore
+            });
+          }
           break;
         case "ability":
           const ability = owner.getAbility(c.key, c.option);
-          if (ability) {
-            if (c.art === "verb") {
+
+          if (c.art === "verb") {
+            if (ability) {
               context.selection.verbs.push({
                 id: ability._id,
                 label: `${ability.name} (${ability.system.finalScore})`,
@@ -108,8 +163,18 @@ export class ArM5eSupernaturalEffectSheet extends ArM5eItemMagicSheet {
                 specialty: ability.system.specialty,
                 key: c.key
               });
-            } // Noun
-            else if (c.art === "noun") {
+            } else if (!this.item.system.verb.valid) {
+              context.selection.verbs.unshift({
+                id: "",
+                label: this.item.system.verb.label,
+                key: this.item.system.verb.key,
+                option: this.item.system.verb.option
+                // score: noun.system.finalScore
+              });
+            }
+          } // Noun
+          else if (c.art === "noun") {
+            if (ability) {
               context.selection.nouns.push({
                 id: ability._id,
                 label: `${ability.name} (${ability.system.finalScore})`,
@@ -117,19 +182,43 @@ export class ArM5eSupernaturalEffectSheet extends ArM5eItemMagicSheet {
                 specialty: ability.system.specialty,
                 key: c.key
               });
-            } else {
+            } else if (!this.item.system.noun.valid) {
+              context.selection.nouns.unshift({
+                id: "",
+                label: this.item.system.noun.label,
+                key: this.item.system.noun.key,
+                option: this.item.system.noun.option
+                // score: noun.system.finalScore
+              });
+            }
+          } else {
+            if (ability) {
               context.ui.bonusAb = true;
               context.system.bonusAbility.label = `${ability.name} (${ability.system.finalScore})`;
               context.system.bonusAbility.score = ability.system.finalScore;
               context.system.bonusAbility.specialty = ability.system.speciality;
             }
+            // else if (!this.item.system.noun.valid) {
+            //   context.selection.nouns.unshift({
+            //     id: "",
+            //     label: this.item.system.noun.label,
+            //     key: this.item.system.noun.key,
+            //     option: this.item.system.noun.option
+            //     // score: noun.system.finalScore
+            //   });
+            // }
           }
+
           break;
         case "mod":
           context.modifier = c.value;
         case "mult":
           context.multiplier = c.value;
       }
+    }
+    if (!this.item.system.valid) {
+      context.system.invalidMsg =
+        "Pick valid values or change the template definition.<br/>" + context.system.invalidMsg;
     }
     // if (context.system.characteristic) {
     //   context.ui.char = true;

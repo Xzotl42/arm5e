@@ -1,5 +1,5 @@
 {{log "magicSystem templates" system.magicSystem.templates }}
-{{#each system.magicSystem.templates as |template id|}}
+{{#each system.magicSystem.templates as |template tid|}}
   <div class="flexrow backSection margintop18">
     <ol class="items-list">
       <li class="item flexrow item-header">
@@ -9,20 +9,21 @@
         </div>
         <div class="item-controls">
           <a class="item-control supernatural-create" title='{{localize "arm5e.hints.create" item=template.name}}'
-            data-type="supernaturalEffect" data-template="{{id}}"> <i
+            data-type="supernaturalEffect" data-template="{{tid}}"> <i
               class="fas fa-plus"></i>{{localize "arm5e.sheet.action.Create"}}</a>
         </div>
       </li>
       {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
-      {{log "supernaturalEffectsTemplates ID" ../system.supernaturalEffectsTemplates }}
-      {{#each (lookup ../system.supernaturalEffectsTemplates id) as |item id|}}
+      {{#each (lookup ../system.supernaturalEffectsTemplates tid) as |item id|}}
+        {{log "THIS " this }}
+        {{log "template "  @root.system.magicSystem.templates tid }}
         <li class="item item-value flexrow macro-ready" data-name="{{item.name}}" data-item-id="{{item._id}}">
 
           <div class="item-image item-control item-edit"><img src="{{item.img}}" title="{{item.name}}" /></div>
           <div class="flexrow flex-center">
             {{#if item.system.valid}}
               <span class="flexrow item-title width4 rollable" data-roll="supernatural" data-id="{{item._id}}"
-                name="item.name">
+                name="item.name" data-die-type="{{lookup (lookup @root.system.magicSystem.templates tid) 'rollType'}}">
                 {{item.name}} ({{item.system.level}})
               </span>
             {{else}}

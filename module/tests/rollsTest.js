@@ -179,7 +179,7 @@ export function registerRollTesting(quench) {
             let dataset = { roll: "option", name: "Dead", option1: 1, txtoption1: "score" };
             actor.rollInfo.init(dataset, actor);
             let roll = await stressDie(actor, "char", 0, null, 10);
-            // log(false, roll);
+            log(false, roll);
             assert.ok(roll);
             if (roll.botched) {
               assert.equal(roll.total, 0, "botched");

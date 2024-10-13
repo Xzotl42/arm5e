@@ -115,13 +115,44 @@ export class SupernaturalEffectSchema extends SpellSchema {
       this.orphan = true;
       this.valid = false;
       this.castingTotal = { value: 0, hint: "" };
+      if (this.verb.active) {
+        if (CONFIG.ARM5E.LOCALIZED_ABILITIES[this.verb.key].option) {
+          this.verb.label = game.i18n.format(
+            CONFIG.ARM5E.LOCALIZED_ABILITIES[this.verb.key].mnemonic,
+            { option: this.verb.option }
+          );
+        } else {
+          this.verb.label = CONFIG.ARM5E.LOCALIZED_ABILITIES[this.verb.key].label;
+        }
+      }
+      if (this.noun.active) {
+        if (CONFIG.ARM5E.LOCALIZED_ABILITIES[this.noun.key].option) {
+          this.noun.label = game.i18n.format(
+            CONFIG.ARM5E.LOCALIZED_ABILITIES[this.noun.key].mnemonic,
+            { option: this.noun.option }
+          );
+        } else {
+          this.noun.label = CONFIG.ARM5E.LOCALIZED_ABILITIES[this.noun.key].label;
+        }
+      }
+
+      if (this.bonusAbility.active) {
+        if (CONFIG.ARM5E.LOCALIZED_ABILITIES[this.bonusAbility.key].option) {
+          this.bonusAbility.label = game.i18n.format(
+            CONFIG.ARM5E.LOCALIZED_ABILITIES[this.bonusAbility.key].mnemonic,
+            { option: this.bonusAbility.option }
+          );
+        } else {
+          this.bonusAbility.label = CONFIG.ARM5E.LOCALIZED_ABILITIES[this.bonusAbility.key].label;
+        }
+      }
       return;
     }
     if (template?.char.length) {
       this.characteristic = template.char[0].characteristic;
     }
     this.realm = owner.system.magicSystem.realm;
-
+    this.verb.active = false;
     if (template.verbs.length) {
       this.verb.active = true;
       let found = false;
@@ -152,16 +183,25 @@ export class SupernaturalEffectSchema extends SpellSchema {
           this.verb.label = ability.name;
           this.verb.specialty = ability.system.speciality;
           this.verb.score = ability.system.finalScore;
+          this.verb.valid = true;
           break;
+        } else if (this.verb.key === undefined) {
+          // there was no verb previously in the template
+          this.verb.key = item.key;
+          this.verb.option = item.option;
+          this.verb.label = item.label;
         }
       }
       if (!found) {
-        this.invalidMsg += "Verb attribute not found &#10";
-        this.verb.label = `Unknown (${this.verb.key} ${this.verb.option})`;
+        this.invalidMsg += "Verb attribute not found<br/>";
+        this.verb.label = `Unknown  ${this.verb.label} (${this.verb.key} ${this.verb.option})`;
         this.verb.score = 0;
+        this.verb.valid = false;
+        this.valid = false;
       }
     }
     this.realm = template.realm;
+    this.noun.active = false;
     if (template.nouns.length) {
       this.noun.active = true;
       let found = false;
@@ -191,18 +231,27 @@ export class SupernaturalEffectSchema extends SpellSchema {
           this.noun.label = ability.name;
           this.noun.specialty = ability.system.speciality;
           this.noun.score = ability.system.finalScore;
+          this.noun.valid = true;
           break;
+        } else if (this.noun.key === undefined) {
+          // there was no noun previously in the template
+          this.noun.key = item.key;
+          this.noun.option = item.option;
+          this.noun.label = item.label;
+          this.noun.valid = false;
         }
       }
       if (!found) {
         this.valid = false;
-        this.invalidMsg += "Noun attribute not found &#10";
-        this.noun.label = `Unknown (${this.noun.key} ${this.noun.option})`;
+        this.invalidMsg += "Noun attribute not found<br/>";
+        this.noun.label = `Unknown ${this.noun.label}  (${this.noun.key} ${this.noun.option})`;
         this.noun.score = 0;
+        this.valid = false;
       }
     }
     this.other = { total: 0 };
 
+    this.other.active = false;
     if (template.others.length) {
       this.other.active = true;
       let found = false;
@@ -212,10 +261,10 @@ export class SupernaturalEffectSchema extends SpellSchema {
           this.modifier.label = item.label;
           this.modifier.value = item.value;
           this.other.total += item.value;
-        } else if (item.type === "ability") {
         }
       }
     }
+    this.bonusAbility.active = false;
     if (template.bonusAbility.active) {
       let found = false;
       this.bonusAbility.active = true;
@@ -230,12 +279,19 @@ export class SupernaturalEffectSchema extends SpellSchema {
         this.bonusAbility.specialty = ability.system.speciality;
         this.bonusAbility.score = ability.system.finalScore;
         this.other.total += ability.system.finalScore;
+        this.bonusAbility.valid = true;
+      } else if (this.bonusAbility.key == undefined) {
+        this.bonusAbility.key = template.bonusAbility.key;
+        this.bonusAbility.option = template.bonusAbility.option;
+        this.bonusAbility.label = template.bonusAbility.label;
+        this.bonusAbility.valid = true;
       }
       if (!found) {
         this.valid = false;
-        this.invalidMsg = "Bonus ability attribute not found";
+        this.invalidMsg = "Bonus ability attribute not found<br/>";
         this.bonusAbility.label = `Unknown (${this.bonusAbility.key} ${this.bonusAbility.option})`;
         this.bonusAbility.score = 0;
+        this.bonusAbility.valid = false;
       }
     }
 

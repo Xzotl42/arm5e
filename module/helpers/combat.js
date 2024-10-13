@@ -55,9 +55,6 @@ export class QuickCombat extends FormApplication {
       closeOnSubmit: false
     });
   }
-  async _render(force, options = {}) {
-    // Parent class rendering workflow
-    await super._render(force, options);
 
   async _render(force, options = {}) {
     // Parent class rendering workflow

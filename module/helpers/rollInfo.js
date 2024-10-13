@@ -154,10 +154,12 @@ export class ArM5eRollInfo {
           this.ability.key = effect.system.bonusAbility.key;
           this.ability.option = effect.system.bonusAbility.option;
           this.ability.speciality = effect.system.bonusAbility.specialty;
+          this.ability.specApply = effect.system.bonusAbility.specApply;
           this.ability.score = effect.system.bonusAbility.score;
 
           const template = actorSystemData.magicSystem.templates[effect.system.template];
           this.useFatigue = template.useFatigue;
+          this.dieType = template.rollType;
         }
         this.initPenetrationVariables();
         break;
@@ -205,7 +207,7 @@ export class ArM5eRollInfo {
             this.magic.technique.score = parseInt(
               actorSystemData.arts.techniques[dataset.technique].finalScore
             );
-            this.magic.tech.deficiency =
+            this.magic.technique.deficiency =
               actorSystemData.arts.techniques[dataset.technique].deficient;
           }
 

@@ -213,16 +213,23 @@ export class ArM5eItemSheet extends ItemSheet {
       itemData.type == "book"
     ) {
       if (itemData.type == "ability") {
+        if (["altTechnique", "altForm"].includes(itemData.system.category)) {
+          itemData.system.altArt = true;
+        }
         context.abilityKeysList = foundry.utils.deepClone(CONFIG.ARM5E.LOCALIZED_ABILITIES);
         delete context.abilityKeysList.technique;
         delete context.abilityKeysList.altTechnique;
         delete context.abilityKeysList.form;
         delete context.abilityKeysList.altForm;
+        context.canBeAccelerated = false;
+        if (
+          itemData.system.altArt ||
+          ["arcane", "supernaturalCat", "mystery"].includes(itemData.system.category)
+        ) {
+          context.canBeAccelerated = true;
+        }
       } else {
         context.abilityKeysList = CONFIG.ARM5E.LOCALIZED_ABILITIES;
-      }
-      if (["altTechnique", "altForm"].includes(itemData.system.category)) {
-        itemData.system.altArt = true;
       }
     }
     context.isOwned = this.item.isOwned;

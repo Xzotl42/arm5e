@@ -3,10 +3,17 @@
 ### Features & changes
 
 - New active effects
-  - custom magic system
-    - alternate Arts
+  - Enable new magic system.
+- hedge/holy magic system
+  - alternate Arts
+  - template for casting
 - new checkbox design
 - [technical] Moved abilities localization in "i18nInit" Hook
+- Supernatural, arcane and mystery abilities can be accelerated.
+
+### Bug fixes
+
+- Comprendia reference dialog has been fixed
 
 ## 2.3.0.12, Quendalon, raised by the Fae BF4
 

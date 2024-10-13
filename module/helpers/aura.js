@@ -148,7 +148,8 @@ export default class Aura {
     if (!this.scene) {
       this.scene = game.scenes.get(this.sceneId);
     }
-    let currentAura = this.scene?.getFlag("arm5e", "aura") ?? this.constructor.defaultAura;
+    let currentAura =
+      this.scene?.getFlag("arm5e", "aura") ?? foundry.utils.deepClone(Aura.defaultAura);
     currentAura.values[realm] = value;
     currentAura.nightModifier[realm] = nightMod;
     await this.scene.setFlag("arm5e", "aura", currentAura);

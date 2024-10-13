@@ -1,7 +1,10 @@
 <div class="template-item-box flex01 flexrow">
   <div id="template-content" class="flexcol">
     <label class="template-item-label">{{localize "arm5e.sheet.verb"}}</label>
-    <select name="system.magicSystem.templates.{{this.id}}.components.{{this.compIdx}}.option">
+    <select
+      name="system.magicSystem.templates.{{this.id}}.components.{{this.compIdx}}.option"
+      class="template-select"
+    >
       {{selectOptions this.selection selected=this.option}}
     </select>
     <div id="top-right-icon">

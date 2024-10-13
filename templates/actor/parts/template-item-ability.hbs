@@ -3,11 +3,11 @@
     <label class="template-item-label">{{localize "arm5e.sheet.ability"}}</label>
     <select
       data-type="String"
-      class="item-ability-key"
-      style="max-width: 140px;"
+      class="item-ability-key template-select"
       data-id="{{id}}"
       data-index="{{compIdx}}"
     >
+      {{log "this.selection: " this.extendedKey}}
       {{selectOptions
         this.selection
         selected=this.extendedKey

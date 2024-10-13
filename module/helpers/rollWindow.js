@@ -10,6 +10,7 @@ import { ArM5eItem } from "../item/item.js";
 
 // below is a bitmap
 const ROLL_MODES = {
+  NONE: 0, // can be used with dataset to customize dynamically
   STRESS: 1,
   SIMPLE: 2,
   NO_BOTCH: 4,
@@ -120,7 +121,7 @@ const DEFAULT_ROLL_PROPERTIES = {
   },
   SUPERNATURAL: {
     VAL: "supernatural",
-    MODE: ROLL_MODES.STRESS_OR_SIMPLE,
+    MODE: ROLL_MODES.NONE, // use dataset.dieType
     MODIFIERS: 7,
     TITLE: "arm5e.dialog.title.rolldie",
     CALLBACK: castSupernaturalEffect
@@ -306,7 +307,10 @@ function getDialogData(dataset, html, actor) {
   }
 
   const title = getRollTypeProperties(dataset.roll).TITLE;
-  if (getRollTypeProperties(dataset.roll).MODE & ROLL_MODES.STRESS) {
+  if (
+    getRollTypeProperties(dataset.roll).MODE & ROLL_MODES.STRESS ||
+    ROLL_MODES[dataset.dieType] & ROLL_MODES.STRESS
+  ) {
     if (getRollTypeProperties(dataset.roll).MODE & ROLL_MODES.NO_BOTCH) {
       mode = 4; // No botches
     }
@@ -321,7 +325,10 @@ function getDialogData(dataset, html, actor) {
     if (altAction) {
       btns.alt = altBtn;
     }
-    if (getRollTypeProperties(dataset.roll).MODE & ROLL_MODES.SIMPLE) {
+    if (
+      getRollTypeProperties(dataset.roll).MODE & ROLL_MODES.SIMPLE ||
+      ROLL_MODES[dataset.dieType] & ROLL_MODES.SIMPLE
+    ) {
       btns.no = {
         icon: "<i class='fas fa-check'></i>",
         label: game.i18n.localize("arm5e.dialog.button.simpledie"),
@@ -339,7 +346,10 @@ function getDialogData(dataset, html, actor) {
         }
       };
     }
-  } else {
+  } else if (
+    getRollTypeProperties(dataset.roll).MODE & ROLL_MODES.SIMPLE ||
+    ROLL_MODES[dataset.dieType] & ROLL_MODES.SIMPLE
+  ) {
     // Simple die only
     btns.yes = {
       icon: "<i class='fas fa-check'></i>",
@@ -358,6 +368,21 @@ function getDialogData(dataset, html, actor) {
       callback: async (html) => {
         await actor.rollInfo.reset();
       }
+    };
+  } else {
+    //no roll
+    btns.yes = {
+      icon: "<i class='fas fa-check'></i>",
+      label: game.i18n.localize("arm5e.dialog.powerUse"),
+      callback: async (html) => {
+        actor = getFormData(html, actor);
+        await noRoll(actor, 1, null);
+      }
+    };
+    btns.no = {
+      icon: "<i class='fas fa-ban'></i>",
+      label: game.i18n.localize("arm5e.dialog.button.cancel"),
+      callback: null
     };
   }
   return {
@@ -490,13 +515,13 @@ function addListenersDialog(html) {
     let update = await PickRequisites(newSpell.system, dataset.flavor);
     await newSpell.updateSource(update);
     let techData = newSpell._getTechniqueData(actor.system);
-    actor.rollInfo.magic.techniqueLabel = techData[0];
-    actor.rollInfo.magic.techniqueScore = techData[1];
-    actor.rollInfo.magic.techDeficiency = techData[2];
+    actor.rollInfo.magic.technique.label = techData[0];
+    actor.rollInfo.magic.technique.score = techData[1];
+    actor.rollInfo.magic.technique.deficiency = techData[2];
     let formData = newSpell._getFormData(actor.system);
-    actor.rollInfo.magic.formLabel = formData[0];
-    actor.rollInfo.magic.formScore = formData[1];
-    actor.rollInfo.magic.formDeficiency = formData[2];
+    actor.rollInfo.magic.form.label = formData[0];
+    actor.rollInfo.magic.form.score = formData[1];
+    actor.rollInfo.magic.form.deficiency = formData[2];
   });
 
   html.find(".voice-and-gestures").change(async (event) => {
@@ -660,28 +685,28 @@ export function getFormData(html, actor) {
 
   find = html.find(".SelectedTechnique");
   if (find.length > 0) {
-    actor.rollInfo.magic.technique = find[0].value;
-    actor.rollInfo.magic.techniqueLabel = ARM5E.magic.techniques[find[0].value].label;
-    actor.rollInfo.magic.techniqueScore = parseInt(
+    actor.rollInfo.magic.technique.value = find[0].value;
+    actor.rollInfo.magic.technique.label = ARM5E.magic.techniques[find[0].value].label;
+    actor.rollInfo.magic.technique.score = parseInt(
       actor.system.arts.techniques[find[0].value].finalScore
     );
 
     if (actor.system.arts.techniques[find[0].value].deficient) {
-      actor.rollInfo.magic.techDeficiency = true;
+      actor.rollInfo.magic.technique.deficiency = true;
     } else {
-      actor.rollInfo.magic.techDeficiency = false;
+      actor.rollInfo.magic.technique.deficiency = false;
     }
   }
 
   find = html.find(".SelectedForm");
   if (find.length > 0) {
-    actor.rollInfo.magic.form = find[0].value;
-    actor.rollInfo.magic.formLabel = ARM5E.magic.forms[find[0].value].label;
-    actor.rollInfo.magic.formScore = parseInt(actor.system.arts.forms[find[0].value].finalScore);
+    actor.rollInfo.magic.form.value = find[0].value;
+    actor.rollInfo.magic.form.label = ARM5E.magic.forms[find[0].value].label;
+    actor.rollInfo.magic.form.score = parseInt(actor.system.arts.forms[find[0].value].finalScore);
     if (actor.system.arts.forms[find[0].value].deficient) {
-      actor.rollInfo.magic.formDeficiency = true;
+      actor.rollInfo.magic.form.deficiency = true;
     } else {
-      actor.rollInfo.magic.formDeficiency = false;
+      actor.rollInfo.magic.form.deficiency = false;
     }
   }
 
