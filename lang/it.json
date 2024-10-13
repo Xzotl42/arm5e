@@ -1193,7 +1193,7 @@
   "arm5e.hints.design": "Progetta {item}",
   "arm5e.hints.read": "Leggi {item}",
 
-  "arm5e.sheet.label.details": "Dettagli",
+  "arm5e.sheet.details": "Dettagli",
 
   "arm5e.config.sourcebookFilter": "Filtro libro fonte",
 

@@ -9,6 +9,13 @@ This package is intended to enable Ars Magica play using Foundry VTT. In order t
 **Important**: the system has a mandatory module dependency which contains the compendia of the system.
 [Manifest link]<https://github.com/Xzotl42/arm5e-compendia/releases/latest/download/module.json>
 
+### Support this project
+
+If you like what I do and want to show support, you can buy me a coffee here:
+[![Ko-fi](https://img.shields.io/badge/Ko--fi-xzotl-00B9FE?logo=kofi)](https://ko-fi.com/xzotl)
+
+Big thanks to those who do!
+
 ![Magus sheet](./website/img/Magus_sheet.webp)
 
 ![Companion sheet](./website/img/Companion_sheet.webp)
@@ -32,8 +39,6 @@ Thanks to various contributors at https://game-icons.net for some default icons
 ![Release 2.0.2.9 Download Count (V10)](https://img.shields.io/github/downloads/Xzotl42/arm5e/v2.0.2.9/arm5e.zip)
 
 ![Supported Foundry Versions](https://img.shields.io/endpoint?url=https://foundryshields.com/version?url=https://github.com/Xzotl42/arm5e/releases/latest/download/system.json)
-
-[![Ko-fi](https://img.shields.io/badge/Ko--fi-xzotl-00B9FE?logo=kofi)](https://ko-fi.com/xzotl)
 
 ## Versión Española
 

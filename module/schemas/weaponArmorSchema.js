@@ -9,7 +9,6 @@ import {
 } from "./commonSchemas.js";
 import { EnchantmentExtension, ItemState } from "./enchantmentSchema.js";
 const fields = foundry.data.fields;
-export const possibleCosts = Object.keys(ARM5E.item.costs);
 export class ArmorSchema extends foundry.abstract.DataModel {
   // TODO remove in V11
   static _enableV10Validation = true;

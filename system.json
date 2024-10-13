@@ -2,7 +2,7 @@
   "id": "arm5e",
   "title": "Ars Magica 5th Edition",
   "description": "Ars Magica 5e for Foundry VTT, mandatory arm5e-compendia module at (https://github.com/Xzotl42/arm5e-compendia/releases/latest/download/module.json)",
-  "version": "2.3.0.12",
+  "version": "2.3.1.0",
   "compatibility": {
     "minimum": "10.290",
     "verified": "12.331"
@@ -39,6 +39,58 @@
   "flags": {
     "hotReload": {
       "extensions": ["css", "json"]
+    }
+  },
+  "documentTypes": {
+    "Actor": {
+      "player": {},
+      "npc": {},
+      "laboratory": {},
+      "covenant": {},
+      "magicCodex": {},
+      "beast": {}
+    },
+    "Item": {
+      "weapon": {},
+      "armor": {},
+      "spell": {},
+      "vis": {},
+      "item": {},
+      "book": {},
+      "virtue": {},
+      "flaw": {},
+      "ability": {},
+      "abilityFamiliar": {},
+      "diaryEntry": {},
+      "power": {},
+      "powerFamiliar": {},
+      "speciality": {},
+      "distinctive": {},
+      "sanctumRoom": {},
+      "magicItem": {},
+      "reputation": {},
+      "inhabitant": {},
+      "habitantMagi": {},
+      "habitantCompanion": {},
+      "habitantSpecialists": {},
+      "habitantHabitants": {},
+      "habitantHorses": {},
+      "habitantLivestock": {},
+      "possessionsCovenant": {},
+      "visSourcesCovenant": {},
+      "visStockCovenant": {},
+      "magicalEffect": {},
+      "baseEffect": {},
+      "calendarCovenant": {},
+      "incomingSource": {},
+      "laboratoryText": {},
+      "enchantment": {},
+      "labCovenant": {},
+      "mundaneBook": {},
+      "personality": {},
+      "personalityTrait": {},
+      "wound": {},
+      "art": {}
     }
   },
 

@@ -212,7 +212,25 @@ export class ArM5eItemSheet extends ItemSheet {
       itemData.type == "diaryEntry" ||
       itemData.type == "book"
     ) {
-      context.abilityKeysList = CONFIG.ARM5E.LOCALIZED_ABILITIES;
+      if (itemData.type == "ability") {
+        if (["altTechnique", "altForm"].includes(itemData.system.category)) {
+          itemData.system.altArt = true;
+        }
+        context.abilityKeysList = foundry.utils.deepClone(CONFIG.ARM5E.LOCALIZED_ABILITIES);
+        delete context.abilityKeysList.technique;
+        delete context.abilityKeysList.altTechnique;
+        delete context.abilityKeysList.form;
+        delete context.abilityKeysList.altForm;
+        context.canBeAccelerated = false;
+        if (
+          itemData.system.altArt ||
+          ["arcane", "supernaturalCat", "mystery"].includes(itemData.system.category)
+        ) {
+          context.canBeAccelerated = true;
+        }
+      } else {
+        context.abilityKeysList = CONFIG.ARM5E.LOCALIZED_ABILITIES;
+      }
     }
     context.isOwned = this.item.isOwned;
     if (context.isOwned) {
@@ -380,8 +398,8 @@ export class ArM5eItemSheet extends ItemSheet {
     if (!this.options.editable) return;
 
     // data-id and data-attr needed
-    html.find(".increase-score").click(async () => await this.item.system._increaseScore());
-    html.find(".decrease-score").click(async () => await this.item.system._decreaseScore());
+    html.find(".increase-score").click(async () => await this.item.system.increaseScore());
+    html.find(".decrease-score").click(async () => await this.item.system.decreaseScore());
 
     html.find(".harvest").click(async () => {
       await this.item.system.harvest();

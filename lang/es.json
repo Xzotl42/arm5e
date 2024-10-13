@@ -1143,7 +1143,7 @@
   "arm5e.hints.design": "Diseñar {item}",
   "arm5e.hints.read": "Leer {item}",
 
-  "arm5e.sheet.label.details": "Detalles",
+  "arm5e.sheet.details": "Detalles",
   "arm5e.config.sourcebookFilter": "Filtro por manuales",
 
   "arm5e.generic.yes": "Sí",

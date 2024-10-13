@@ -1462,7 +1462,7 @@
   "arm5e.hints.createLabText": "Criar rascunho de texto de lab.",
   "arm5e.hints.useMagicItem": "Ativar o efeito \"{name}\"",
 
-  "arm5e.sheet.label.details": "Detalhes",
+  "arm5e.sheet.details": "Detalhes",
 
   "arm5e.config.sourcebookFilter": "Filtro de livros",
   "arm5e.config.compendiaRef": "Referência de compêndio",

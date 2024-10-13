@@ -1,0 +1,111 @@
+<div class="flexrow backSection margintop18">
+  <div class="flexrow resource">
+    <div class="flexcol resource">
+      <div class="resource flexrow flex-group-left">
+        <div class="resource flex01">
+          <label for="system.magicSystem.templates.{{id}}.name"
+            class="header-label">{{localize "Template name"}}</label>
+
+          <input type="text" class="template-name" name="system.magicSystem.templates.{{id}}.name" data-dtype="String"
+            value="{{name}}" style="min-width: 250px;" data-id="{{id}}">
+
+        </div>
+        <div class="resource flex01">
+          <label for="system.magicSystem.templates.{{id}}.targetLevel"
+            class="header-label">{{localize "Target type"}}</label>
+          <select name="system.magicSystem.templates.{{id}}.targetLevel" disabled>
+            {{selectOptions selection.targetType selected=targetType}}
+          </select>
+        </div>
+        <div class="resource flex01">
+          <label for="system.magicSystem.templates.{{id}}.rollType"
+            class="header-label">{{localize "Roll type"}}</label>
+          <select name="system.magicSystem.templates.{{id}}.rollType">
+            {{selectOptions selection.rollType selected=rollType labelAttr="label" nameAttr="value" valueAttr="value" }}
+          </select>
+        </div>
+        <div class="resource flexrow">
+          <label for="system.magicSystem.templates.{{id}}.useFatigue"
+            class="header-label flex02">{{localize "Use fatigue"}}</label>
+          <input type="checkbox" name="system.magicSystem.templates.{{id}}.useFatigue" {{checked useFatigue}}>
+        </div>
+        <div class="resource flex0">
+          <a class="template-control" data-action="delete" data-id="{{id}}" data-name="{{name}}"
+            title="Delete template"><i class="icon-Icon_Delete_Hand_Gesture"></i></a>
+        </div>
+      </div>
+      <div class="resource flexrow">
+        <div class="flexcol">
+          <label class="template-label">{{localize "arm5e.sheet.characteristic"}}</label>
+          <button class="template-item" data-action="create" data-type="char" data-id="{{id}}"
+            {{buttons.char}}>{{localize "arm5e.sheet.characteristic"}}</button>
+          <span style="
+            padding: 3px;
+            font-size: 9pt;
+            margin: 4px;
+            "></span>
+        </div>
+        <div class=" flexcol">
+          <label class="template-label">{{localize "arm5e.sheet.verb"}}</label>
+          <button class="template-item" data-action="create" data-type="verb" data-id="{{id}}"
+            {{buttons.verb}}>{{localize "arm5e.sheet.verb"}}</button>
+          <button class="template-item" data-action="create" data-type="ability" data-id="{{id}}"
+            data-art="verb">{{localize "arm5e.sheet.ability"}}</button>
+        </div>
+        <div class="flexcol">
+          <label class="template-label">{{localize "arm5e.sheet.noun"}}</label>
+          <button class="template-item" data-action="create" data-type="noun" data-id="{{id}}"
+            {{buttons.noun}}>{{localize "arm5e.sheet.noun"}}</button>
+          <button class="template-item" data-action="create" data-type="ability" data-id="{{id}}"
+            data-art="noun">{{localize "arm5e.sheet.ability"}}</button>
+        </div>
+        <div class="flexcol">
+          <label class="template-label">{{localize "arm5e.generic.other"}}</label>
+          <button class="template-item" data-action="create" data-type="mod" data-id="{{id}}"
+            {{buttons.mod}}>{{localize "arm5e.generic.modifier"}}</button>
+          <button class="template-item" data-action="create" data-type="ability" data-id="{{id}}"
+            {{buttons.bonusAb}}>{{localize "Bonus ability"}}</button>
+          <button class="template-item" data-action="create" data-type="mult" data-id="{{id}}"
+            {{buttons.mult}}>{{localize "arm5e.generic.multiplier"}}</button>
+        </div>
+      </div>
+      <div class="resource flexrow">
+        <div class="flexcol">
+          {{#each char as |component idx| }}
+            <div class="resource flexrow">
+              {{> (lookup . "partial" ) compIdx=component.compIdx id=../id}}
+            </div>
+          {{/each}}
+        </div>
+        <div class="flexcol">
+          {{#each verbs as |component idx| }}
+            <div class="resource flexrow">
+              {{> (lookup . "partial" ) compIdx=component.compIdx id=../id}}
+            </div>
+          {{/each}}
+        </div>
+        <div class="flexcol">
+          {{#each nouns as |component idx| }}
+            <div class="resource flexrow">
+              {{> (lookup . "partial" ) compIdx=component.compIdx id=../id}}
+            </div>
+          {{/each}}
+        </div>
+        <div class="flexcol">
+          {{#if bonusAbility.active}}
+            {{#with bonusAbility}}
+              {{log "with " this}}
+              {{> (lookup . "partial" ) compIdx=compIdx id=../id}}
+            {{/with}}
+          {{/if}}
+          {{#each others as |component idx| }}
+            <div class="resource flexrow">
+              {{> (lookup . "partial" ) compIdx=component.compIdx id=../id}}
+            </div>
+          {{/each}}
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

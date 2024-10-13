@@ -20,6 +20,7 @@ import { ArM5eRollInfo } from "../helpers/rollInfo.js";
 import { compareDiaryEntries, isInThePast } from "../tools/time.js";
 import Aura from "../helpers/aura.js";
 import { canBeEnchanted } from "../helpers/magic.js";
+import { ArM5eMagicSystem } from "./subsheets/magic-system.js";
 
 /**
  * Extend the base Actor entity by defining a custom roll data structure which is ideal for the Simple system.
@@ -45,7 +46,7 @@ export class ArM5ePCActor extends Actor {
     if (!this.flags.arm5e) {
       this.flags.arm5e = { filters: {} };
     }
-    // add properties used for active effects:
+    // Add properties used for active effects:
 
     if (["player", "npc", "laboratory"].includes(this.type)) {
       this.system.covenant.document = game.actors.get(this.system.covenant.actorId);
@@ -130,19 +131,19 @@ export class ArM5ePCActor extends Actor {
       this.system.aesthetics.max = 999;
       this.system.auraBonus = 0;
 
-      // create data keys for lab specialty
+      // Create data keys for lab specialty
       this.system.specialty = {};
       for (let key of Object.keys(CONFIG.ARM5E.magic.arts)) {
         this.system.specialty[key] = { bonus: 0 };
       }
 
-      this.system.specialty["experimentation"] = { bonus: 0 };
-      this.system.specialty["familiar"] = { bonus: 0 };
-      this.system.specialty["items"] = { bonus: 0 };
-      this.system.specialty["longevityRituals"] = { bonus: 0 };
-      this.system.specialty["spells"] = { bonus: 0 };
-      this.system.specialty["texts"] = { bonus: 0 };
-      this.system.specialty["visExtraction"] = { bonus: 0 };
+      this.system.specialty.experimentation = { bonus: 0 };
+      this.system.specialty.familiar = { bonus: 0 };
+      this.system.specialty.items = { bonus: 0 };
+      this.system.specialty.longevityRituals = { bonus: 0 };
+      this.system.specialty.spells = { bonus: 0 };
+      this.system.specialty.texts = { bonus: 0 };
+      this.system.specialty.visExtraction = { bonus: 0 };
 
       this.system.owner.document = game.actors.get(this.system.owner.actorId);
       if (this.system.owner.document) {
@@ -188,16 +189,14 @@ export class ArM5ePCActor extends Actor {
     };
 
     // // CHARACTER FEATURES
-    // if (this.system.features == undefined) {
-    //   this.system.features = { hedgeTradition: "" };
-    // } else {
-    //   this.system.features.hedgeTradition = "";
-    // }
+    if (this.system.features == undefined) {
+      this.system.features = { magicSystem: false };
+    }
 
     this.system.bonuses = {};
 
     if (this._isMagus()) {
-      // hack, if the active effect for magus is not setup
+      // Hack, if the active effect for magus is not setup
       this.system.realms.magic.aligned = true;
 
       for (let key of Object.keys(this.system.arts.techniques)) {
@@ -246,9 +245,9 @@ export class ArM5ePCActor extends Actor {
       if (item.type == "ability") {
         let abilityKey = item.system?.key || "";
         if (abilityKey != "") {
-          // log(false, `Ability key: ${abilityKey}`);
+          // Log(false, `Ability key: ${abilityKey}`);
           if (CONFIG.ARM5E.ALL_ABILITIES[abilityKey]?.option || false) {
-            abilityKey += "_" + item.system.option;
+            abilityKey += `_${item.system.option}`;
           }
           this.system.bonuses.skills[abilityKey] = {};
           this.system.bonuses.skills[abilityKey].bonus = 0;
@@ -371,6 +370,15 @@ export class ArM5ePCActor extends Actor {
       ability: 0
     };
 
+    if (this.system.features.magicSystem) {
+      try {
+        ArM5eMagicSystem.prepareData(this);
+      } catch (err) {
+        err.message = `Failed loading alternate magic system : ${err.message}`;
+        console.error(err);
+      }
+    }
+
     system.characTotal = 0;
     for (let c of Object.values(system.characteristics)) {
       if (c.value > 0) {
@@ -380,7 +388,7 @@ export class ArM5ePCActor extends Actor {
       }
     }
 
-    // fatigue management
+    // Fatigue management
     if (system.fatigue) {
       system.fatigueTotal = 0;
       let lvl = 0;
@@ -422,27 +430,33 @@ export class ArM5ePCActor extends Actor {
       };
     }
 
-    //abilities
+    // Abilities
     const temp = {
       _id: "",
       name: "N/A",
       value: 0
     };
-    abilitiesSelect["a0"] = temp;
+    abilitiesSelect.a0 = temp;
     for (const [key, item] of this.items.entries()) {
       if (item.type === "ability") {
         let computedKey = item.system.key;
         if (item.system.option != "") {
-          computedKey += "_" + item.system.option;
+          computedKey += `_${item.system.option}`;
         }
         item.system.xpCoeff = this._getAbilityXpCoeff(item.system.key, item.system.option);
         item.system.xpBonus = this._getAbilityXpBonus(item.system.key, item.system.option);
-        item.system.derivedScore = ArM5ePCActor.getAbilityScoreFromXp(
-          Math.round((item.system.xp + item.system.xpBonus) * item.system.xpCoeff)
-        );
-        item.system.xpNextLevel = Math.round(
-          ArM5ePCActor.getAbilityXp(item.system.derivedScore + 1) / item.system.xpCoeff
-        );
+        item.system.derivedScore = item.system.accelerated
+          ? ArM5ePCActor.getArtScore(
+              Math.round((item.system.xp + item.system.xpBonus) * item.system.xpCoeff)
+            )
+          : ArM5ePCActor.getAbilityScoreFromXp(
+              Math.round((item.system.xp + item.system.xpBonus) * item.system.xpCoeff)
+            );
+        item.system.xpNextLevel = item.system.accelerated
+          ? Math.round(ArM5ePCActor.getArtXp(item.system.derivedScore + 1) / item.system.xpCoeff)
+          : Math.round(
+              ArM5ePCActor.getAbilityXp(item.system.derivedScore + 1) / item.system.xpCoeff
+            );
         item.system.remainingXp = item.system.xp + item.system.xpBonus;
 
         if (
@@ -454,16 +468,20 @@ export class ArM5ePCActor extends Actor {
         } else {
           item.system.finalScore = item.system.derivedScore;
         }
-
-        abilities.push(item);
-
+        if (item.system.category == "altTechnique") {
+          system.magicSystem.verbs.push(item);
+        } else if (item.system.category == "altForm") {
+          system.magicSystem.nouns.push(item);
+        } else {
+          abilities.push(item);
+        }
         const temp = {
           id: item._id,
           name: item.name,
           value: item.system.finalScore
         };
-        //abilitiesSelect.push(temp);
-        abilitiesSelect["a" + key] = temp;
+        // AbilitiesSelect.push(temp);
+        abilitiesSelect[`a${key}`] = temp;
 
         totalXPAbilities = parseInt(totalXPAbilities) + item.system.xp;
 
@@ -487,7 +505,7 @@ export class ArM5ePCActor extends Actor {
               system.laboratory.abilitiesSelected.penetration.value = item.system.finalScore;
             }
           } else {
-            // legacy code, to be removed in the future
+            // Legacy code, to be removed in the future
             if (item._id == system.laboratory.abilitiesSelected.finesse.abilityID) {
               system.laboratory.abilitiesSelected.finesse.value = item.system.finalScore;
             } else if (item._id == system.laboratory.abilitiesSelected.awareness.abilityID) {
@@ -507,19 +525,6 @@ export class ArM5ePCActor extends Actor {
             }
           }
         }
-      } else if (item.type == "spell") {
-        item.system.xpCoeff = this.system.bonuses.arts.masteryXpCoeff;
-        item.system.xpBonus = this.system.bonuses.arts.masteryXpMod;
-        item.system.derivedScore = ArM5ePCActor.getAbilityScoreFromXp(
-          Math.round((item.system.xp + item.system.xpBonus) * item.system.xpCoeff)
-        );
-
-        item.system.xpNextLevel = Math.round(
-          ArM5ePCActor.getAbilityXp(item.system.derivedScore + 1) / item.system.xpCoeff
-        );
-        item.system.remainingXp = item.system.xp + item.system.xpBonus;
-
-        item.system.finalScore = item.system.derivedScore;
       }
     }
 
@@ -550,7 +555,7 @@ export class ArM5ePCActor extends Actor {
       if (system.laboratory === undefined) {
         system.laboratory = {};
       }
-      // calculate magic totals
+      // Calculate magic totals
       system.laboratory.fastCastingSpeed.value =
         system.characteristics.qik.value + system.laboratory.abilitiesSelected.finesse.value;
       system.laboratory.determiningEffect.value =
@@ -563,7 +568,7 @@ export class ArM5ePCActor extends Actor {
       system.laboratory.multipleCasting.value =
         system.characteristics.int.value + system.laboratory.abilitiesSelected.finesse.value;
       system.laboratory.basicLabTotal.value =
-        system.characteristics.int.value + system.laboratory.abilitiesSelected.magicTheory.value; // aura pending
+        system.characteristics.int.value + system.laboratory.abilitiesSelected.magicTheory.value; // Aura pending
 
       if (system.apprentice) {
         if (system.apprentice.magicTheory > 0) {
@@ -582,7 +587,7 @@ export class ArM5ePCActor extends Actor {
           Math.round(technique.xp * technique.xpCoeff)
         );
         technique.finalScore = technique.derivedScore + technique.bonus;
-        // start from scratch to avoid rounding errors
+        // Start from scratch to avoid rounding errors
         technique.xpNextLevel = Math.round(
           ArM5ePCActor.getArtXp(technique.derivedScore + 1) / technique.xpCoeff
         );
@@ -611,6 +616,11 @@ export class ArM5ePCActor extends Actor {
       item.img = item.img || DEFAULT_TOKEN;
       item._index = key;
 
+      // TODO move code specific to type below in their respective datamodel schema.
+      if (item.system.prepareOwnerData instanceof Function) {
+        item.system.prepareOwnerData();
+      }
+
       if (item.type === "weapon" || item.type === "enchantedWeapon") {
         if (item.system.equipped == true) {
           combat.load = parseInt(combat.load) + parseInt(item.system.load);
@@ -627,7 +637,7 @@ export class ArM5ePCActor extends Actor {
               combat.ability = parseInt(combat.ability) + 1;
             }
           } else {
-            for (var a = 0; a < abilities.length; a++) {
+            for (let a = 0; a < abilities.length; a++) {
               if (abilities[a]._id == item.system.ability) {
                 let hab = abilities[a].system.finalScore;
                 if (item.system.weaponExpert) {
@@ -689,7 +699,7 @@ export class ArM5ePCActor extends Actor {
               laboratoryTexts.push(topic);
               break;
             default:
-              error(false, "Unknown topic category" + topic.category);
+              error(false, `Unknown topic category${topic.category}`);
           }
         }
         physicalBooks.push(item);
@@ -747,6 +757,12 @@ export class ArM5ePCActor extends Actor {
         reputations.push(item);
       } else if (item.type === "wound") {
         system.wounds[item.system.gravity].push(item);
+      } else if (item.type === "supernaturalEffect") {
+        if (system.supernaturalEffectsTemplates[item.system.template]) {
+          system.supernaturalEffectsTemplates[item.system.template].push(item);
+        } else {
+          system.supernaturalEffectsTemplates["orphans"].push(item);
+        }
       }
     }
 
@@ -759,7 +775,7 @@ export class ArM5ePCActor extends Actor {
     system.personalities.sort((a, b) => (a.sort || 0) - (b.sort || 0));
     reputations.sort((a, b) => (a.sort || 0) - (b.sort || 0));
     vis.sort((a, b) => (a.sort || 0) - (b.sort || 0));
-    // combat
+    // Combat
 
     combat.overload = ArM5ePCActor.getArtScore(combat.load);
 
@@ -780,7 +796,7 @@ export class ArM5ePCActor extends Actor {
       system.con.score = 0;
       system.con.points = 0;
     }
-    //warping & decrepitude
+    // Warping & decrepitude
     if ((this.type == "npc" && this.system.charType.value != "entity") || this.type == "player") {
       system.warping.finalScore = ArM5ePCActor.getAbilityScoreFromXp(system.warping.points);
       system.warping.experienceNextLevel =
@@ -820,7 +836,7 @@ export class ArM5ePCActor extends Actor {
       system.armor = armor;
     }
     if (system.spells) {
-      // system.spells = spells;
+      // System.spells = spells;
       system.spells = spells.sort(compareSpells);
     }
     if (system.magicalEffects) {
@@ -866,10 +882,10 @@ export class ArM5ePCActor extends Actor {
 
     system.reputations = reputations;
 
-    // links with other actors
+    // Links with other actors
 
     if (system?.charType?.value == "magusNPC" || system?.charType?.value == "magus") {
-      // check whether the character is linked to an existing lab
+      // Check whether the character is linked to an existing lab
       this.system.sanctum.document = game.actors.get(this.system.sanctum.actorId);
       if (this.system.sanctum.document) {
         this.system.sanctum.value = this.system.sanctum.document.name;
@@ -883,7 +899,7 @@ export class ArM5ePCActor extends Actor {
   }
 
   _prepareMagicCodexData() {
-    this.img = CONFIG.ARM5E_DEFAULT_ICONS["magicCodex"];
+    this.img = CONFIG.ARM5E_DEFAULT_ICONS.magicCodex;
     const system = this.system;
     let baseEffects = [];
     let magicEffects = [];
@@ -910,7 +926,7 @@ export class ArM5ePCActor extends Actor {
   }
 
   getRollData() {
-    // let rollData = super.getRollData();
+    // Let rollData = super.getRollData();
     // rollData.config = {
     //   character: {},
     //   magic: {}
@@ -1008,7 +1024,7 @@ export class ArM5ePCActor extends Actor {
               laboratoryTexts.push(topic);
               break;
             default:
-              error(false, "Unknown topic category" + topic.category);
+              error(false, `Unknown topic category${topic.category}`);
           }
         }
         physicalBooks.push(item);
@@ -1075,7 +1091,7 @@ export class ArM5ePCActor extends Actor {
     system.totalVirtues = totalVirtues;
     system.totalFlaws = totalFlaws;
 
-    // var baseSafetyEffect = this.effects.find((e) => e.getFlag("arm5e", "baseSafetyEffect"));
+    // Var baseSafetyEffect = this.effects.find((e) => e.getFlag("arm5e", "baseSafetyEffect"));
     // if (baseSafetyEffect != null && baseSafetyEffect.changes[0].value != String(baseSafety)) {
     //   let changes = foundry.utils.duplicate(baseSafetyEffect.changes);
     //   changes[0].value = String(baseSafety);
@@ -1257,7 +1273,7 @@ export class ArM5ePCActor extends Actor {
               laboratoryTexts.push(topic);
               break;
             default:
-              error(false, "Unknown topic category" + topic.category);
+              error(false, `Unknown topic category${topic.category}`);
           }
         }
         physicalBooks.push(item);
@@ -1328,7 +1344,7 @@ export class ArM5ePCActor extends Actor {
       system.finances.averageEquipMaintenance * system.census.turbula;
     system.yearlyExpenses.weapons.amount += Math.ceil(system.finances.weaponsPoints / 320);
 
-    // const bookSpecCnt = system.inhabitants.specialists.reduce((bookSpecialistCnt,current) => { if (current.system.category) })
+    // Const bookSpecCnt = system.inhabitants.specialists.reduce((bookSpecialistCnt,current) => { if (current.system.category) })
 
     system.yearlyExpenses.writingMaterials.amount +=
       system.census.magi +
@@ -1462,11 +1478,11 @@ export class ArM5ePCActor extends Actor {
         activeEffects,
         "covenantCostSavingMagic"
       ).length;
-    // savings from magic
+    // Savings from magic
     const magicLocalized = slugify(game.i18n.localize("arm5e.sheet.magicLabel"));
-    // savings from mundane effects
+    // Savings from mundane effects
     const otherLocalized = slugify(game.i18n.localize("arm5e.generic.other"));
-    // savings from laborers
+    // Savings from laborers
     // get slugify version of localized "laborer"
     const laborerLocalized = slugify(game.i18n.localize("arm5e.sheet.laborers"));
     craftSavings.provisions.crafts[laborerLocalized] = {
@@ -1478,7 +1494,7 @@ export class ArM5ePCActor extends Actor {
     system.yearlySavings.craftsmen.amount = 0;
 
     for (let [category, v] of Object.entries(craftSavings)) {
-      system.yearlyExpenses[category].savingsDetails = craftSavings[category].details + "<ul>";
+      system.yearlyExpenses[category].savingsDetails = `${craftSavings[category].details}<ul>`;
       if (system.yearlyExpenses[category].magicMod) {
         craftSavings[category].crafts[magicLocalized] = {
           val: system.yearlyExpenses[category].magicMod,
@@ -1510,7 +1526,7 @@ export class ArM5ePCActor extends Actor {
           save.max ? save.max.toFixed(1) : craftSavings[category].max.toFixed(1)
         })</li>`;
       }
-      system.yearlyExpenses[category].savingsDetails += `</ul>`;
+      system.yearlyExpenses[category].savingsDetails += "</ul>";
       system.yearlyExpenses[category].craftSavings = Math.round(
         Math.min(
           system.yearlyExpenses[category].amount,
@@ -1570,7 +1586,7 @@ export class ArM5ePCActor extends Actor {
     system.armor = armor;
 
     let flag = this.getFlag("arm5e", "sorting", "laboratoryTexts");
-    if (flag && flag["laboratoryTexts"] == true) {
+    if (flag && flag.laboratoryTexts == true) {
       system.laboratoryTexts = laboratoryTexts.sort(compareLabTexts);
     } else {
       system.laboratoryTexts = laboratoryTexts;
@@ -1602,53 +1618,54 @@ export class ArM5ePCActor extends Actor {
       return 0;
     }
     if (CONFIG.ARM5E.ALL_ABILITIES[abilityKey].selection === "disabled") {
-      return 0; // raise exception instead?
+      return 0; // Raise exception instead?
     }
     if (CONFIG.ARM5E.ALL_ABILITIES[abilityKey].option || false) {
-      abilityKey += "_" + option;
+      abilityKey += `_${option}`;
     }
     if (this.system.bonuses.skills[abilityKey] == undefined) {
-      // ability not yet added to bonuses
+      // Ability not yet added to bonuses
       return 0;
     }
 
     return this.system.bonuses.skills[abilityKey].xpMod || 0;
   }
-  // get the XP coefficient of a given ability if any
+
+  // Get the XP coefficient of a given ability if any
   _getAbilityXpCoeff(abilityKey = "", option = "") {
     if (abilityKey === "" || CONFIG.ARM5E.ALL_ABILITIES[abilityKey] == undefined) {
       return 1.0;
     }
     if (CONFIG.ARM5E.ALL_ABILITIES[abilityKey].selection === "disabled") {
-      return 1.0; // raise exception instead?
+      return 1.0; // Raise exception instead?
     }
     if (CONFIG.ARM5E.ALL_ABILITIES[abilityKey].option || false) {
-      abilityKey += "_" + option;
+      abilityKey += `_${option}`;
     }
     if (this.system.bonuses.skills[abilityKey] == undefined) {
-      // ability not yet added to bonuses
+      // Ability not yet added to bonuses
       return 1.0;
     }
 
     return this.system.bonuses.skills[abilityKey].xpCoeff || 1.0;
   }
 
-  // get the Xps needed for an ability/decrepitude/warping score
+  // Get the Xps needed for an ability/decrepitude/warping score
   static getAbilityXp(score) {
     return ArM5ePCActor.getArtXp(score) * 5;
   }
 
-  // get the score given an amount of xp
+  // Get the score given an amount of xp
   static getAbilityScoreFromXp(xp) {
     return ArM5ePCActor.getArtScore(Math.floor(xp / 5));
   }
 
-  // get the Xps needed for an art score
+  // Get the Xps needed for an art score
   static getArtXp(score) {
     return (score * (score + 1)) / 2;
   }
 
-  // get the score given an amount of xp
+  // Get the score given an amount of xp
   static getArtScore(xp) {
     let res = 0;
     while (xp > res) {
@@ -1699,6 +1716,7 @@ export class ArM5ePCActor extends Actor {
     }
     return 0;
   }
+
   getArtScore(artKey) {
     if (!this._isCharacter()) {
       return null;
@@ -1734,7 +1752,7 @@ export class ArM5ePCActor extends Actor {
     }
 
     if (wound && overflow > 0) {
-      // fatigue overflow
+      // Fatigue overflow
       let wType;
       switch (overflow) {
         case 1:
@@ -1770,13 +1788,14 @@ export class ArM5ePCActor extends Actor {
           trend: 0,
           bonus: 0,
           nextRoll: 0,
-          description: `Fatigue loss overflow`
+          description: "Fatigue loss overflow"
         }
       };
       await this.createEmbeddedDocuments("Item", [woundData]);
     }
     await this.update(updateData, {});
   }
+
   async addActiveEffect(name, type, subtype, value, option = null, icon) {
     if (Object.keys(ACTIVE_EFFECTS_TYPES).includes(type)) {
       if (Object.keys(ACTIVE_EFFECTS_TYPES[type].subtypes).includes(subtype)) {
@@ -1818,10 +1837,9 @@ export class ArM5ePCActor extends Actor {
     } else {
       log(false, "Unknown type");
     }
-    return;
   }
 
-  // async removeActiveEffect(type, subtype) {
+  // Async removeActiveEffect(type, subtype) {
   //   if (Object.keys(ACTIVE_EFFECTS_TYPES).includes(type)) {
   //     if (Object.keys(ACTIVE_EFFECTS_TYPES[type].subtypes).includes(subtype)) {
   //       const toDelete = Object.values(this.effects).filter(e => )
@@ -1858,7 +1876,7 @@ export class ArM5ePCActor extends Actor {
           trend: 0,
           bonus: 0,
           nextRoll: 0,
-          description: ``
+          description: ""
         }
       };
       wounds.push(woundData);
@@ -1922,7 +1940,7 @@ export class ArM5ePCActor extends Actor {
     await this.update(updateData, {});
   }
 
-  // set the proper default icon just before creation
+  // Set the proper default icon just before creation
   async _preCreate(data, options, userId) {
     await super._preCreate(data, options, userId);
     let toUpdate = false;
@@ -1941,7 +1959,7 @@ export class ArM5ePCActor extends Actor {
       }
     }
 
-    // if (this.type == "laboratory") {
+    // If (this.type == "laboratory") {
     //   let effectsData = this.effects.contents;
     //   var baseSafetyEffect = this.effects.find((e) => e.getFlag("arm5e", "baseSafetyEffect"));
     //   if (!baseSafetyEffect) {
@@ -2007,7 +2025,7 @@ export class ArM5ePCActor extends Actor {
         updateData["system.decrepitude.points"] = this.system.decrepitude.points + 1;
         result.decrepitude = 1;
         result.charac[char1] = { aging: 1 };
-        // number of Aging Points greater than the absolute value of the Characteristic
+        // Number of Aging Points greater than the absolute value of the Characteristic
         if (
           Math.abs(this.system.characteristics[char1].value) <
           this.system.characteristics[char1].aging + 1
@@ -2017,7 +2035,7 @@ export class ArM5ePCActor extends Actor {
           updateData[`system.characteristics.${char1}.aging`] = 0;
           result.charac[char1].score = -1;
         } else {
-          // aging points still lesser or equal than absolute value of characteristic score.
+          // Aging points still lesser or equal than absolute value of characteristic score.
           updateData[`system.characteristics.${char1}.aging`] =
             this.system.characteristics[char1].aging + 1;
         }
@@ -2058,7 +2076,7 @@ export class ArM5ePCActor extends Actor {
 
         break;
       default:
-        //crisis
+        // Crisis
         result.crisis = true;
         updateData["system.apparent.value"] = this.system.apparent.value + 1;
         updateData["system.decrepitude.points"] =
@@ -2102,7 +2120,7 @@ export class ArM5ePCActor extends Actor {
     return result;
   }
 
-  // migrate this particular actor and its items
+  // Migrate this particular actor and its items
   async migrate() {
     try {
       ui.notifications.info(`Migrating actor ${this.name}.`, {
@@ -2294,7 +2312,7 @@ export class ArM5ePCActor extends Actor {
         }
       }
     }
-    // return Object.fromEntries(activitiesMap.entries());
+    // Return Object.fromEntries(activitiesMap.entries());
     return Array.from(
       new Map(
         [...activitiesMap.entries()].sort(function (a, b) {
@@ -2325,7 +2343,7 @@ export class ArM5ePCActor extends Actor {
     return this._getWoundPenalty(this.system.wounds);
   }
 
-  // same as above but with temporary wounds
+  // Same as above but with temporary wounds
 
   _getWoundPenalty(wounds) {
     let woundsTotal = 0;

@@ -1,0 +1,176 @@
+<form class="sheet-content flexcol" autocomplete="off">
+  <header class="sheet-header ">
+    <div class="flexcol">
+      <div class="flexrow">
+        <img class="item-img-medium" src="{{item.img}}" data-edit="img" title="{{item.name}}" />
+        <div class="">
+          <h1 class="charname" style="font-size: 24pt; font-family: blackmoor">
+            <div class="flexrow">{{localize "TYPES.Item.supernaturalEffect"}}
+            </div>
+          </h1>
+          <h1 class="charname">
+            <div class="flexrow"><input name="name" type="text" title="{{item.name}}" value="{{item.name}}"
+                placeholder="Name" />
+              {{#if (and item.isOwned system.valid)}}
+                <div class="flex0 padding10 "><a class="rollable" data-roll="supernatural" data-id="{{item._id}}"
+                    data-name="{{item.name}}" data-die-type="{{dieType}}"
+                    title='{{localize "arm5e.dialog.button.roll"}}'><img src="systems/arm5e/assets/dice.png"
+                      style="border: 0px; height:30px; min-height:30px; min-width: 30px;"></a>
+                </div>
+              {{/if}}
+            </div>
+          </h1>
+          {{#if locked}}
+            <i class="icon-Icon_Locked"></i>
+          {{/if}}
+        </div>
+      </div>
+      <div class="header-fields">
+        <div class="flexcol">
+          <div class="flexrow">
+
+            {{#if system.verb.active}}
+              <div class="resource flexcol flex-center">
+                <label for="system.verb.value" class="header-label">{{localize "arm5e.sheet.verb"}}</label>
+                {{#if system.verb.valid}}
+                  <div class="resource flexcol flex-center">
+                    <select {{noSelect}} class="verb-change" data-dtype="String">
+                      {{selectOptions selection.verbs selected=system.verb.id labelAttr="label" valueAttr="id" nameAttr="id"}}
+                    </select>
+                    {{#if system.verb.specialty}}
+                      <div class="resource flexrow">
+                        <input class="resource" type="text" readonly title="{{system.verb.specialty}}"
+                          value="{{system.verb.specialty}}" style="margin: 3px;" />
+                        <input class="resource" name="system.verb.specApply" type="checkbox" {{checked
+                          system.verb.specApply}} />
+                      </div>
+                    {{/if}}
+                  </div>
+                {{else}}
+                  <div class="resource flexcol flex-center">
+                    <div class="resource flexrow">
+                      <select {{noSelect}} class="verb-change" data-dtype="String">
+                        {{selectOptions selection.verbs selected=system.verb.id labelAttr="label" valueAttr="id" nameAttr="id"}}
+                      </select>
+                    </div>
+                    <div class="resource flexrow">
+                      <input class="resource" type="text" readonly title="{{system.verb.label}}"
+                        value="{{system.verb.label}}" />
+                    </div>
+                  </div>
+                {{/if}}
+              </div>
+            {{/if}}
+            {{#if system.noun.active}}
+              <div class="resource flexcol flex-center">
+                <label for="system.noun.value" class="header-label">{{localize "arm5e.sheet.noun"}}</label>
+                {{#if system.noun.valid}}
+                  <div class="resource flexcol flex-center">
+                    <select {{noSelect}} class="noun-change" data-dtype="String">
+                      {{selectOptions selection.nouns selected=system.noun.id labelAttr="label" valueAttr="id" nameAttr="id"}}
+                    </select>
+                    {{#if system.noun.specialty}}
+                      <div class="resource flexrow">
+                        <input class="resource" type="text" readonly value="{{system.noun.specialty}}"
+                          style="margin: 3px;" />
+                        <input class="resource" name="system.noun.specApply" type="checkbox" {{checked
+                          system.noun.specApply}} />
+                      </div>
+                    {{/if}}
+                  </div>
+                {{else}}
+                  <div class="resource flexcol flex-center">
+                    <div class="resource flexrow">
+                      <select {{noSelect}} class="noun-change" data-dtype="String">
+                        {{selectOptions selection.nouns selected=system.noun.id labelAttr="label" valueAttr="id" nameAttr="id"}}
+                      </select>
+                    </div>
+                    <div class="resource flexrow">
+                      <input class="resource" type="text" readonly title="{{system.noun.label}}"
+                        value="{{system.noun.label}}" />
+                    </div>
+                  </div>
+                {{/if}}
+              </div>
+            {{/if}}
+
+            {{#if system.bonusAbility.active}}
+              <div class="resource flexcol flex-center">
+                <label class="header-label">{{localize "Bonus ability"}}</label>
+                {{#if system.bonusAbility.valid}}
+                  <div class="resource flexcol flex-center">
+                    <input class="resource" type="text" readonly title="{{system.bonusAbility.label}}"
+                      value="{{system.bonusAbility.label}}" data-dtype="String" />
+                    {{#if system.bonusAbility.specialty}}
+                      <div class="resource flexrow">
+                        <input class="resource" type="text" readonly title="{{system.bonusAbility.specialty}}"
+                          value="{{system.bonusAbility.specialty}}" style="margin: 3px;" />
+                        <input class="resource" name="system.bonusAbility.specApply" type="checkbox" {{checked
+                          system.bonusAbility.specApply}} />
+                      </div>
+                    {{/if}}
+                  </div>
+                {{else}}
+                  <div class="resource flexcol flex-center">
+                    <div class="resource flexrow">
+                      <input class="resource" type="text" readonly title="{{system.bonusAbility.label}}"
+                        value="{{system.bonusAbility.label}}" />
+                    </div>
+                  </div>
+                {{/if}}
+              </div>
+            {{/if}}
+          </div>
+          <div class="flexrow">
+            {{#if system.modifier.active}}
+              <div class="resource flexcol flex-center">
+                <label class="header-label">{{system.modifier.label}}</label>
+                <input class="resource-focus-slim" type="number" readonly value="{{system.modifier.value}}"
+                  data-dtype="Number" />
+              </div>
+            {{/if}}
+            <div class="resource flexcol flex-center">
+              <label class="header-label">{{localize "arm5e.sheet.level"}}</label>
+              <input class="resource-focus summary" type="number" {{noEdit}} name="system.level"
+                value="{{system.level}}" data-dtype="Number" style="max-width: 60px;" />
+            </div>
+          </div>
+
+        </div>
+        {{#unless system.valid}}
+          <div class="resource flexcol flex-center">
+            <label class="header-label warning" style="padding: 10px;">Invalid: {{{system.invalidMsg}}}</label>
+          </div>
+        {{/unless}}
+      </div>
+    </div>
+  </header>
+  {{!-- Sheet Tab Navigation --}}
+  <nav class="arm5eTabs sheet-tabs tabs" data-group="primary">
+    <a class="item posRelative" data-tab="description">
+      <div class="navItem-right-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
+      <div class="navItem-left-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
+      {{localize "arm5e.sheet.description"}}
+    </a>
+    {{#if false}}
+      <a class="item posRelative" data-tab="attributes">
+        <div class="navItem-right-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
+        <div class="navItem-left-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
+        {{localize "arm5e.sheet.attributes"}}
+      </a>
+    {{/if}}
+  </nav>
+  {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+  {{!-- Sheet Body --}}
+  <section class="sheet-body">
+    {{!-- Description Tab --}}
+    <div class="tab" data-group="primary" data-tab="description">
+      <div style="height: 235px">
+        {{editor enrichedDescription target="system.description" button=true owner=owner engine="prosemirror" editable=editable}}
+      </div>
+      {{#if metagame.view }}
+        {{> "systems/arm5e/templates/generic/source.html" }}
+      {{/if}}
+    </div>
+  </section>
+</form>

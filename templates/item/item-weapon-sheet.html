@@ -16,12 +16,12 @@
           {{/if}}
           <div class="grid grid-2col">
             {{#if system.canEquip}}
-              <div class="resource">
+              <div class="resource flexrow">
                 <label class="header-label">{{localize "arm5e.sheet.equipped"}}</label>
                 <input type="checkbox" name="system.equipped" class="toggle" data-item-id="{{item.id}}"
                   data-attr="equipped" {{checked system.equipped}} />
               </div>
-              <div class="resource">
+              <div class="resource flexrow">
                 <label class="header-label">{{localize "arm5e.sheet.weaponExpert"}}</label>
                 <input type="checkbox" name="system.weaponExpert" {{checked system.weaponExpert}} />
               </div>
@@ -92,7 +92,7 @@
           <input type="number" name="system.quantity" value="{{system.quantity}}" class="modifier resource-focus"
             data-dtype="Number" />
         </div>
-        <div class="resource flex0" style="min-width: 100px;">
+        <div class="resource flexrow" style="min-width: 100px;">
           <label class="checkbox-label">{{localize "arm5e.sheet.horse"}}</label>
           <input type="checkbox" name="system.horse" {{checked system.horse}} />
         </div>

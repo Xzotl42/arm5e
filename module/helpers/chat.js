@@ -411,7 +411,7 @@ async function chatContestOfPower({
   const content = `<h4 class="dice-total">${flavorForPlayersResult}</h4>`;
   ChatMessage.create({
     content,
-    flavor: title + putInFoldableLinkWithAnimation("arm5e.sheet.label.details", flavorForPlayers),
+    flavor: title + putInFoldableLinkWithAnimation("arm5e.sheet.details", flavorForPlayers),
     speaker: ChatMessage.getSpeaker({
       actorCaster
     }),
@@ -535,7 +535,7 @@ async function chatContestOfMagic({
   const content = `<h4 class="dice-total">${flavorForPlayersResult}</h4>`;
   ChatMessage.create({
     content,
-    flavor: title + putInFoldableLinkWithAnimation("arm5e.sheet.label.details", flavorForPlayers),
+    flavor: title + putInFoldableLinkWithAnimation("arm5e.sheet.details", flavorForPlayers),
     speaker: ChatMessage.getSpeaker({
       actorCaster
     })
@@ -551,7 +551,7 @@ async function privateMessage(content, actor, title, flavor, type = "") {
 
   let messageData = {
     content: content,
-    flavor: title + putInFoldableLinkWithAnimation("arm5e.sheet.label.details", flavor),
+    flavor: title + putInFoldableLinkWithAnimation("arm5e.sheet.details", flavor),
     speaker: ChatMessage.getSpeaker({
       actor
     }),
