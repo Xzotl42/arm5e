@@ -1,6 +1,11 @@
 import { ARM5E } from "../config.js";
 import { log } from "../tools.js";
 
+/**
+ *
+ * @param key
+ * @param option
+ */
 export async function getAbilityFromCompendium(key, option = "") {
   const ref = game.settings.get(ARM5E.SYSTEM_ID, "compendiaRef");
 
@@ -14,6 +19,12 @@ export async function getAbilityFromCompendium(key, option = "") {
   return res;
 }
 
+/**
+ *
+ * @param moduleRef
+ * @param key
+ * @param option
+ */
 async function getAbilityInternal(moduleRef, key, option = "") {
   let abilitiesPack = game.packs.get(`${moduleRef}.abilities`);
 
@@ -27,13 +38,13 @@ async function getAbilityInternal(moduleRef, key, option = "") {
     let genericAb = await fromUuid(res.uuid);
     return genericAb.toObject();
   } else if (option !== "" && CONFIG.ARM5E.ALL_ABILITIES[key].option) {
-    // try to get without specified the option:
+    // Try to get without specified the option:
     let optionDefault = game.i18n.localize(CONFIG.ARM5E.ALL_ABILITIES[key].optionDefault);
 
     res = abilitiesPack.index.find((i) => i.system.key == key && i.system.option == optionDefault);
     if (res) {
       let genericAb = await fromUuid(res.uuid);
-      // update the option
+      // Update the option
       genericAb = genericAb.toObject();
       genericAb.system.option = option;
       return genericAb;
@@ -42,6 +53,11 @@ async function getAbilityInternal(moduleRef, key, option = "") {
   return null;
 }
 
+/**
+ *
+ * @param compendium
+ * @param indexkey
+ */
 export async function getItemFromCompendium(compendium, indexkey) {
   const ref = game.settings.get(ARM5E.SYSTEM_ID, "compendiaRef");
 
@@ -55,6 +71,12 @@ export async function getItemFromCompendium(compendium, indexkey) {
   return res;
 }
 
+/**
+ *
+ * @param moduleRef
+ * @param compendium
+ * @param indexkey
+ */
 async function getItemInternal(moduleRef, compendium, indexkey) {
   let pack = game.packs.get(`${moduleRef}.${compendium}`);
 

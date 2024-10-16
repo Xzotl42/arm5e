@@ -1,3 +1,20 @@
+## 2.3.1.1 Quendalon, lost in the Forest
+
+### Features & changes
+
+- New active effects
+  - Enable new magic system.
+- hedge/holy magic system
+  - alternate Arts
+  - template for casting
+- new checkbox design
+- [technical] Moved abilities localization in "i18nInit" Hook
+- Supernatural, arcane and mystery abilities can be accelerated.
+
+### Bug fixes
+
+- Comprendia reference dialog has been fixed
+
 ## 2.3.0.12, Quendalon, raised by the Fae BF4
 
 ### Compatibility

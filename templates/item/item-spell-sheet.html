@@ -115,7 +115,7 @@
               <input type="text" {{noEdit}} name="system.bonusDesc" value="{{system.bonusDesc}}" data-dtype="String" />
             </div>
           </div>
-          <div class="flexrow">
+          <div class="resource flexrow">
             <div class="flexrow">
               <label class="header-label flex0">{{localize "arm5e.sheet.mastery"}}
                 <input type="number" class="modifier flex01" name="" value="{{system.finalScore}}" data-dtype="Number"
@@ -144,13 +144,17 @@
           <input type="number" name="system.baseLevel" size="4" value="{{system.baseLevel}}"
             class="resource-focus modifier" data-dtype="Number" />
         </div>
-        <div class="resource">
-          <label class="header-label">{{localize "arm5e.sheet.general"}}</label>
-          <input type="checkbox" {{noSelect}} name="system.general" size="4" {{checked system.general}} />
+        <div class="resource flexrow">
+          <div class="flexcol">
+            <label class="header-label">{{localize "arm5e.sheet.general"}}</label>
+            <input type="checkbox" {{noSelect}} name="system.general" size="4" {{checked system.general}} />
+          </div>
           {{#if system.general}}
-            <label class="header-label">{{localize "arm5e.spell.effect.levelOffset"}}</label>
-            <input type="number" name="system.levelOffset" value="{{system.levelOffset}}" class="resource-focus"
-              data-dtype="Number" style="max-width: 40px;" />
+            <div class="flexrow">
+              <label class="header-label">{{localize "arm5e.spell.effect.levelOffset"}}</label>
+              <input type="number" name="system.levelOffset" value="{{system.levelOffset}}" class="resource-focus"
+                data-dtype="Number" style="max-width: 40px;" />
+            </div>
           {{/if}}
         </div>
       </div>

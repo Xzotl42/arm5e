@@ -10,12 +10,12 @@
     </div>
     {{> "systems/arm5e/templates/actor/parts/actor-voice-and-gestures.html" }}
     <div class="flexrow flex-group-center">
-      <select name="system.roll.technique" data-dtype="String" class="SelectedTechnique">
-        {{selectOptions selection.techniques selected=system.roll.magic.technique}}
+      <select name="system.roll.magic.technique.value" data-dtype="String" class="SelectedTechnique">
+        {{selectOptions selection.techniques selected=system.roll.magic.technique.value}}
       </select>
       <label class="resource-label">+</label>
-      <select name="system.roll.form" data-dtype="String" class="SelectedForm">
-        {{selectOptions selection.forms selected=system.roll.magic.form}}
+      <select name="system.roll.magic.form.value" data-dtype="String" class="SelectedForm">
+        {{selectOptions selection.forms selected=system.roll.magic.form.value}}
       </select>
     </div>
 

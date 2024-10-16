@@ -114,11 +114,11 @@
           {{localize "arm5e.sheet.laboratory"}}
         </a>
       {{/if}}
-      {{#if system.features.hedgeTradition}}
-        <a class="item posRelative" data-tab="arts">
+      {{#if system.features.magicSystem}}
+        <a class="item posRelative" data-tab="tradition">
           <div class="navItem-right-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
           <div class="navItem-left-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
-          {{system.features.hedgeTradition}}
+          {{system.magicSystem.name}}
         </a>
       {{/if}}
       <a class="item posRelative" data-tab="inventory">
@@ -199,7 +199,31 @@
           </div>
         </section>
       </div>
+      <div class="tab tradition" data-group="primary" data-tab="tradition">
+        {{!-- Sheet Tab Navigation --}}
+        <nav class="arm5eSubTabs tradition-tabs tabs" data-group="tradition-secondary">
+          <a class="item posRelative" data-tab="tradition-subtab" data-group="tradition-secondary">
+            <div class="navItem-right-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
+            <div class="navItem-left-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
+            {{system.magicSystem.effects}}
+          </a>
+          <a class="item posRelative" data-tab="tradition-config" data-group="tradition-secondary">
+            <div class="navItem-right-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
+            <div class="navItem-left-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
+            {{localize "arm5e.generic.config"}}
+          </a>
+        </nav>
+        {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+        <section class="tradition-body">
+          <div class="tab" data-group="tradition-secondary" data-tab="tradition-subtab">
+            {{> "systems/arm5e/templates/actor/parts/actor-magicSystem.html" }}
+          </div>
+          <div class="tab" data-group="tradition-secondary" data-tab="tradition-config">
+            {{> "systems/arm5e/templates/actor/parts/actor-magicSystem-cfg.html" }}
+          </div>
+        </section>
 
+      </div>
       {{#if (eq system.charType.value "magus")}} {{!-- Arts Tab --}}
         <div class="tab arts" data-group="primary" data-tab="arts">
           {{!-- Sheet Tab Navigation --}}

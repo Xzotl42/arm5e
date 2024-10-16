@@ -29,7 +29,7 @@ export class CompendiaRefConfig extends FormApplication {
         );
       })
       .map((e) => {
-        return { name: e.title, id: e.id, enabled: false };
+        return { label: e.title, id: e.id };
       });
     // if the module was disabled, reset to arm5e-compendia
     if (context.arsModules.find((e) => e.id === context.referenceModule) == undefined) {

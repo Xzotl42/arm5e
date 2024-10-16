@@ -112,7 +112,6 @@ export class QuickVitals extends FormApplication {
   constructor(data, options) {
     super(data, options);
 
-    // this.object.actor.apps[this.appId] = this;
     Hooks.on("closeApplication", (app, html) => this.onClose(app));
   }
   /** @override */
@@ -212,7 +211,7 @@ export async function combatDamage(selector, actor) {
   const messageDamage = `<h4 class="dice-total">${damage}</h4>`;
   ChatMessage.create({
     content: messageDamage,
-    flavor: title + putInFoldableLinkWithAnimation("arm5e.sheet.label.details", details),
+    flavor: title + putInFoldableLinkWithAnimation("arm5e.sheet.details", details),
     speaker: ChatMessage.getSpeaker({
       actor
     })
@@ -237,7 +236,7 @@ export async function nonCombatDamage(selector, actor) {
   const messageDamage = `<h4 class="dice-total">${damage}</h4>`;
   ChatMessage.create({
     content: messageDamage,
-    flavor: title + putInFoldableLinkWithAnimation("arm5e.sheet.label.details", details),
+    flavor: title + putInFoldableLinkWithAnimation("arm5e.sheet.details", details),
     speaker: ChatMessage.getSpeaker({
       actor
     })

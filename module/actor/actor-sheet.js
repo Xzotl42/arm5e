@@ -51,6 +51,7 @@ import { Sanatorium } from "../tools/sanatorium.js";
 import { MedicalHistory } from "../tools/med-history.js";
 import { ArM5eActorProfiles } from "./subsheets/actor-profiles.js";
 import { stressDie } from "../dice.js";
+import { ArM5eMagicSystem } from "./subsheets/magic-system.js";
 
 export class ArM5eActorSheet extends ActorSheet {
   constructor(object, options) {
@@ -758,6 +759,13 @@ export class ArM5eActorSheet extends ActorSheet {
     );
     this._prepareCharacterItems(context);
 
+    if (context.system.features?.magicSystem) {
+      if (!this.magicSystem) {
+        this.magicSystem = new ArM5eMagicSystem(this.actor);
+      }
+      this.magicSystem.getData(context);
+    }
+
     return context;
   }
 
@@ -1000,6 +1008,10 @@ export class ArM5eActorSheet extends ActorSheet {
       updateArray.push(updateData);
       await Actor.updateDocuments(updateArray);
     });
+
+    if (this.magicSystem) {
+      this.magicSystem.activateListeners(html);
+    }
 
     html.find(".actor-profile").click(this.actorProfiles.addProfile.bind(this));
 
@@ -1436,9 +1448,9 @@ export class ArM5eActorSheet extends ActorSheet {
    * @private
    */
   async _onItemCreate(event) {
-    event.preventDefault();
-    event.stopPropagation();
     const dataset = getDataset(event);
+    if (event.stopPropagation) event.stopPropagation();
+
     let newItem = await this._itemCreate(dataset);
     newItem[0].sheet.render(true);
     return newItem;
@@ -1993,6 +2005,13 @@ export class ArM5eActorSheet extends ActorSheet {
       );
     }
   }
+
+  async _updateObject(event, formData) {
+    if (this.magicSystem) {
+      formData = await this.magicSystem._updateObject(event, formData);
+    }
+    return await super._updateObject(event, formData);
+  }
 }
 
 export async function setWounds(soakData, actor) {
@@ -2039,7 +2058,7 @@ export async function setWounds(soakData, actor) {
   const details = ` ${messageDamage}<br/> ${messageStamina}<br/> ${messageProt}<br/> ${messageBonus}${messageModifier}<b>${messageTotal}</b>`;
   ChatMessage.create({
     content: `<h4 class="dice-total">${messageWound}</h4>`,
-    flavor: title + putInFoldableLinkWithAnimation("arm5e.sheet.label.details", details),
+    flavor: title + putInFoldableLinkWithAnimation("arm5e.sheet.details", details),
     speaker: ChatMessage.getSpeaker({
       actor
     })

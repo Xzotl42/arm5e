@@ -138,6 +138,19 @@
           "effects": "Warping effects"
         }
       },
+      "magicSystem": {
+        "magicSystem": {
+          "name": "Order of Hermes",
+          "adjective": "hermetic",
+          "practitioner": "Magus",
+          "realm": "magic",
+          "effects": "Spells",
+          "laboratory": "Sanctum",
+          "techniques": [],
+          "forms": [],
+          "templates": []
+        }
+      },
       "fatigue": {
         "fatigueTotal": 0,
         "fatigueCurrent": 0,
@@ -505,7 +518,18 @@
       }
     },
     "player": {
-      "templates": ["base", "npcbase", "fatigue", "arts", "familiar", "laboratoryPC", "apprentice"],
+      "templates": [
+        "base",
+        "npcbase",
+        "fatigue",
+        "arts",
+        "familiar",
+        "laboratoryPC",
+        "apprentice",
+        "magicSystem"
+      ],
+      "features": { "magicSystem": false },
+      "magicSystem": null,
       "charType": {
         "value": "magus",
         "label": "Char. Type"
@@ -874,7 +898,9 @@
       "mundaneBook",
       "personality",
       "personalityTrait",
-      "wound"
+      "wound",
+      "art",
+      "supernaturalEffect"
     ],
     "templates": {
       "base": {

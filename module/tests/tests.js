@@ -5,6 +5,7 @@ import { log, sleep } from "../tools.js";
 import { nextDate } from "../tools/time.js";
 import { registerAbilityScoresTesting } from "./abilityScoreTesting.js";
 import { registerActorLinkTesting } from "./actorLinkTesting.js";
+import { registerDEBUGTest } from "./DEBUGTest.js";
 import { registerAdventuringTesting } from "./diaryAdventuringTest.js";
 import { registerApprenticeshipTesting } from "./diaryCharCreationTest.js";
 import { registerExposureTesting } from "./diaryExposureTest.js";
@@ -30,6 +31,7 @@ import {
 import { registerDiaryTesting } from "./testSchedule.js";
 
 export function registerTestSuites(quench) {
+  registerDEBUGTest(quench);
   // registerRecoveryTesting(quench);
   registerLabActivityTesting(quench);
   registerActorLinkTesting(quench);

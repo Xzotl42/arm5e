@@ -49,6 +49,18 @@ export const ArM5ePreloadHandlebarsTemplates = async function () {
     "systems/arm5e/templates/actor/parts/topicFilter.hbs",
     "systems/arm5e/templates/actor/parts/timeFilter.hbs",
 
+    "systems/arm5e/templates/actor/parts/actor-magicSystem.html",
+    "systems/arm5e/templates/actor/parts/actor-magicSystem-cfg.html",
+    "systems/arm5e/templates/actor/parts/actor-magicSystem-template.html",
+
+    "systems/arm5e/templates/actor/parts/template-item-char.hbs",
+
+    "systems/arm5e/templates/actor/parts/template-item-ability.hbs",
+    "systems/arm5e/templates/actor/parts/template-item-tech.hbs",
+    "systems/arm5e/templates/actor/parts/template-item-form.hbs",
+    "systems/arm5e/templates/actor/parts/template-item-mod.hbs",
+    "systems/arm5e/templates/actor/parts/template-item-mult.hbs",
+
     // Item Sheet Partials
     "systems/arm5e/templates/item/parts/spell-design.html",
     "systems/arm5e/templates/item/parts/spell-design-V2.html",
@@ -71,6 +83,7 @@ export const ArM5ePreloadHandlebarsTemplates = async function () {
     // Item sheets
     "systems/arm5e/templates/item/item-ability-sheet.html",
     "systems/arm5e/templates/item/item-abilityFamiliar-sheet.html",
+    "systems/arm5e/templates/item/item-art-sheet.html",
     "systems/arm5e/templates/item/item-armor-sheet.html",
     "systems/arm5e/templates/item/item-baseEffect-sheet.html",
     "systems/arm5e/templates/item/item-book-sheet.html",
@@ -100,6 +113,7 @@ export const ArM5ePreloadHandlebarsTemplates = async function () {
     "systems/arm5e/templates/item/item-sanctumRoom-sheet.html",
     "systems/arm5e/templates/item/item-speciality-sheet.html",
     "systems/arm5e/templates/item/item-spell-sheet.html",
+    "systems/arm5e/templates/item/item-supernaturalEffect-sheet.html",
     "systems/arm5e/templates/item/item-virtue-sheet.html",
     "systems/arm5e/templates/item/item-vis-sheet.html",
     "systems/arm5e/templates/item/item-visSourcesCovenant-sheet.html",

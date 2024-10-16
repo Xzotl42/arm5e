@@ -776,19 +776,19 @@ export default {
       }
     }
   },
-  // characterFeatures: {
-  //   category: "character",
-  //   type: "characterFeatures",
-  //   mnemonic: "Character features",
-  //   subtypes: {
-  //     hedgeTradition: {
-  //       mnemonic: "Hedge magic tradition",
-  //       key: "system.features.hedgeTradition",
-  //       mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-  //       default: "Hedge Magic"
-  //     }
-  //   }
-  // },
+  characterFeatures: {
+    category: "character",
+    type: "characterFeatures",
+    mnemonic: "Character features",
+    subtypes: {
+      magicSystem: {
+        mnemonic: "arm5e.feature.magicSystem",
+        key: "system.features.magicSystem",
+        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+        default: true
+      }
+    }
+  },
   bonusGeneralAbility: {
     category: "abilities",
     type: "bonusGeneralAbility",
@@ -1215,6 +1215,27 @@ export default {
         key: "system.bonuses.skills.wildernessSense.bonus",
         mode: 2,
         default: 2
+      }
+    }
+  },
+  bonusAlternateArt: {
+    category: "abilities",
+    type: "bonusAlternateArt",
+    mnemonic: "arm5e.sheet.activeEffect.types.AlternateArtBonus",
+    subtypes: {
+      technique: {
+        mnemonic: "arm5e.skill.generic.technique",
+        key: "system.bonuses.skills.technique_#OPTION#.bonus",
+        mode: 2,
+        default: 2,
+        option: "techniqueName"
+      },
+      form: {
+        mnemonic: "arm5e.skill.generic.form",
+        key: "system.bonuses.skills.form_#OPTION#.bonus",
+        mode: 2,
+        default: 2,
+        option: "formName"
       }
     }
   },
@@ -1714,6 +1735,28 @@ export default {
       }
     }
   },
+  affinityAlternateArt: {
+    category: "abilities",
+    type: "affinityAlternateArt",
+    mnemonic: "arm5e.sheet.activeEffect.types.affinityAlternateArt",
+    subtypes: {
+      technique: {
+        mnemonic: "arm5e.skill.technique.generic",
+        key: "system.bonuses.skills.technique_#OPTION#.xpCoeff",
+        mode: 1,
+        default: 1.5,
+        option: "techniqueName"
+      },
+      form: {
+        mnemonic: "arm5e.skill.form.generic",
+        key: "system.bonuses.skills.form_#OPTION#.xpCoeff",
+        mode: 1,
+        default: 1.5,
+        option: "formName"
+      }
+    }
+  },
+
   labActivity: {
     category: "magic",
     type: "laboratory",

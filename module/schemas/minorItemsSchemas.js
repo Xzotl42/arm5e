@@ -222,7 +222,7 @@ export class ReputationSchema extends foundry.abstract.DataModel {
     };
   }
 
-  async _increaseScore() {
+  async increaseScore() {
     let oldXp = this.xp;
     let newXp = Math.round(((this.score + 1) * (this.score + 2) * 5) / 2);
 
@@ -238,7 +238,7 @@ export class ReputationSchema extends foundry.abstract.DataModel {
     console.log(`Added ${delta} xps from ${oldXp} to ${newXp}`);
   }
 
-  async _decreaseScore() {
+  async decreaseScore() {
     if (this.score != 0) {
       let oldXp = this.xp;
       let newXp = Math.round(((this.score - 1) * this.score * 5) / 2);
@@ -291,7 +291,7 @@ export class PersonalityTraitSchema extends foundry.abstract.DataModel {
     };
   }
 
-  async _increaseScore() {
+  async increaseScore() {
     let oldXp = this.xp;
     let newXp = 5;
     if (this.score > 0) {
@@ -311,7 +311,7 @@ export class PersonalityTraitSchema extends foundry.abstract.DataModel {
     console.log(`Added ${delta} xps from ${oldXp} to ${newXp}`);
   }
 
-  async _decreaseScore() {
+  async decreaseScore() {
     let oldXp = this.xp;
     let newXp = -5;
     if (this.score > 0) {
