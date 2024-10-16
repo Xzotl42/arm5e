@@ -4,7 +4,7 @@ This is a Foundry VTT system for Ars Magica 5th Edition.
 
 This package is intended to enable Ars Magica play using Foundry VTT.
 
-# Legalese stuff
+## Legalese stuff
 
 - Based on the material for Ars Magica, ©1993–2024, licensed by Trident, Inc. d/b/a Atlas Games®, under [Creative Commons Attribution-ShareAlike 4.0 International license 4.0](https://creativecommons.org/licenses/by-sa/4.0/) ("CC-BY-SA 4.0")"
 
