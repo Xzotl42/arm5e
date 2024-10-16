@@ -2,19 +2,35 @@
 
 This is a Foundry VTT system for Ars Magica 5th Edition.
 
-This package is intended to enable Ars Magica play using Foundry VTT. In order to play, official Ars Magica materials are still required. Official material for Ars Magica 5th edition is published by and may be purchased from Atlas Games (https://atlas-games.com).
+This package is intended to enable Ars Magica play using Foundry VTT.
+
+# Legalese stuff
+
+- Based on the material for Ars Magica, ©1993–2024, licensed by Trident, Inc. d/b/a Atlas Games®, under [Creative Commons Attribution-ShareAlike 4.0 International license 4.0](https://creativecommons.org/licenses/by-sa/4.0/) ("CC-BY-SA 4.0")"
+
+- Ars Magica Open License Logo ©2024 Trident, Inc. The Ars Magica Open License Logo, Ars Magica, and Mythic Europe are trademarks of Trident, Inc., and are used with permission.
+
+- Order of Hermes, Tremere, Doissetep, and Grimgroth are trademarks of Paradox Interactive AB and are used with permission.
+
+- The use and inclusion of the logo, icon and art elements, as well as the use of terms, has been expressly authorized in written form by Holocubierta Ediciones, S.L. (https://www.holocubierta.com/), the licensee of the game Ars Magica 5th Edition for its publication in Spanish.
+
+- Versión Española : La utilización e inclusión del logo, iconos y elementos artísticos, así como el uso de terminología, ha sido autorizado expresamente y por escrito por Holocubierta Ediciones, S.L. (https://www.holocubierta.com), licenciataria del juego Ars Magica 5ª Edición para su publicación en castellano.
+
+Even if most of the line is under the open license above, the images and layout are not, you can still get physical soft-cover sourcebooks at the [Atlas Games website](https://atlas-games.com).
+
+## Support this project
+
+If you like what I do and want to show support, you can buy me a coffee here:
+[![Ko-fi](https://img.shields.io/badge/Ko--fi-xzotl-00B9FE?logo=kofi)](https://ko-fi.com/xzotl)
+
+Big thanks to those who do!
 
 [Join our Discord server!](https://discord.gg/DdDetc9SYP).
 
 **Important**: the system has a mandatory module dependency which contains the compendia of the system.
 [Manifest link]<https://github.com/Xzotl42/arm5e-compendia/releases/latest/download/module.json>
 
-### Support this project
-
-If you like what I do and want to show support, you can buy me a coffee here:
-[![Ko-fi](https://img.shields.io/badge/Ko--fi-xzotl-00B9FE?logo=kofi)](https://ko-fi.com/xzotl)
-
-Big thanks to those who do!
+## Screenshots
 
 ![Magus sheet](./website/img/Magus_sheet.webp)
 
@@ -22,15 +38,15 @@ Big thanks to those who do!
 
 ![Spell sheet](./website/img/Spell_sheet.webp)
 
-Ars Magica content is copyright Trident, Inc d/b/a Atlas Games. Ars Magica, Mythic Europe, and Covenants are trademarks of Trident, Inc. Order of Hermes and Tremere are trademarks of White Wolf, Inc. USED WITH PERMISSION.
-
-The use and inclusion of the logo, icon and art elements, as well as the use of terms, has been expressly authorized in written form by Holocubierta Ediciones, S.L. (https://www.holocubierta.com/), the licensee of the game Ars Magica 5th Edition for its publication in Spanish.
+## Credits
 
 This Foundry VTT system project was based on the [Boilerplate System](https://gitlab.com/asacolips-projects/foundry-mods/boilerplate) by Asacolips.
 
 Official Foundry VTT System Listing: https://foundryvtt.com/packages/arm5e/
 
 Thanks to various contributors at https://game-icons.net for some default icons
+
+### Stats
 
 ![Latest Release Download Count](https://img.shields.io/github/downloads/Xzotl42/arm5e/latest/arm5e.zip)
 
@@ -39,10 +55,6 @@ Thanks to various contributors at https://game-icons.net for some default icons
 ![Release 2.0.2.9 Download Count (V10)](https://img.shields.io/github/downloads/Xzotl42/arm5e/v2.0.2.9/arm5e.zip)
 
 ![Supported Foundry Versions](https://img.shields.io/endpoint?url=https://foundryshields.com/version?url=https://github.com/Xzotl42/arm5e/releases/latest/download/system.json)
-
-## Versión Española
-
-La utilización e inclusión del logo, iconos y elementos artísticos, así como el uso de terminología, ha sido autorizado expresamente y por escrito por Holocubierta Ediciones, S.L. (https://www.holocubierta.com), licenciataria del juego Ars Magica 5ª Edición para su publicación en castellano.
 
 ## Installation of the development version
 
