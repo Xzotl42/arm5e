@@ -786,6 +786,12 @@ export default {
         key: "system.features.magicSystem",
         mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
         default: true
+        // },
+        // powers: {
+        //   mnemonic: "arm5e.feature.powers",
+        //   key: "system.features.powers",
+        //   mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+        //   default: true
       }
     }
   },

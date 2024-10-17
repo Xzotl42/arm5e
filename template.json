@@ -528,7 +528,7 @@
         "apprentice",
         "magicSystem"
       ],
-      "features": { "magicSystem": false },
+      "features": { "magicSystem": false, "powers": false },
       "magicSystem": null,
       "charType": {
         "value": "magus",

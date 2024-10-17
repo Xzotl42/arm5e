@@ -190,7 +190,7 @@ export class ArM5ePCActor extends Actor {
 
     // // CHARACTER FEATURES
     if (this.system.features == undefined) {
-      this.system.features = { magicSystem: false };
+      this.system.features = { magicSystem: false, powers: false };
     }
 
     this.system.bonuses = {};
@@ -377,6 +377,11 @@ export class ArM5ePCActor extends Actor {
         err.message = `Failed loading alternate magic system : ${err.message}`;
         console.error(err);
       }
+    }
+
+    if (this.system.charType.value === "entity") {
+      this.system.features.powers = true;
+      this.system.features.hasMight = true;
     }
 
     system.characTotal = 0;
@@ -876,9 +881,7 @@ export class ArM5ePCActor extends Actor {
       system.familiar.powersFam = powersFamiliar;
     }
 
-    if (system.powers) {
-      system.powers = powers;
-    }
+    system.powers = powers;
 
     system.reputations = reputations;
 

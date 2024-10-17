@@ -473,7 +473,11 @@ async function usePower(dataset, actor) {
           label: game.i18n.localize("arm5e.dialog.powerUse"),
           callback: async (html) => {
             actor = getFormData(html, actor);
-            await noRoll(actor, 1, changeMight);
+            if (actor.system.features.hasMight) {
+              await noRoll(actor, 1, changeMight);
+            } else {
+              await noRoll(actor, 1, actor.loseFatigueLevel);
+            }
           }
         },
         no: {
