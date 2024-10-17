@@ -92,6 +92,7 @@
   "TYPES.Item.enchantment": "Encantamento",
   "TYPES.Item.mundaneBook": "Livro mundano (obsoleto)",
   "TYPES.Item.wound": "Ferimento",
+  "TYPES.Item.supernaturalEffect": "Efeito sobrenatural",
 
   "arm5e.sheet.labTexts": "Textos de laboratório",
 
@@ -170,6 +171,16 @@
   "arm5e.sheet.form": "Forma",
   "arm5e.sheet.fo": "Fo",
   "arm5e.sheet.formRequisite": "Requisito de Forma",
+
+  "arm5e.sheet.magicSystem": "Sistema de Magia",
+  "arm5e.sheet.verbs": "Verbos",
+  "arm5e.sheet.verb": "Verbo",
+  "arm5e.sheet.verbRequisite": "Requisito do Verbo",
+
+  "arm5e.sheet.nouns": "Substantivos",
+  "arm5e.sheet.noun": "Substantivo",
+  "arm5e.sheet.nounRequisite": "Requisito de Substantivo",
+
   "arm5e.sheet.Requisites": "Requisitos",
   "arm5e.sheet.labText.raw": "Bruto",
   "arm5e.sheet.spells": "Magias",
@@ -349,6 +360,7 @@
   "arm5e.sheet.apprenticeshipYears": "Aprendizado",
   "arm5e.sheet.birthName": "Nome de Batismo",
   "arm5e.sheet.name": "Nome",
+  "arm5e.sheet.label": "Rótulo",
   "arm5e.sheet.specie": "Espécie",
   "arm5e.sheet.birthplace": "Lugar de Origem",
   "arm5e.sheet.nationality": "Raça/Nacionalidade",
@@ -428,6 +440,8 @@
   "arm5e.skill.category.arcane": "Arcana",
   "arm5e.skill.category.supernatural": "Sobrenatural",
   "arm5e.skill.category.mystery": "Mistério",
+  "arm5e.skill.category.technique": "Técnica alternativa",
+  "arm5e.skill.category.form": "Forma alternativa",
 
   "arm5e.skill.general.animalHandling": "Cuidar de Animais",
   "arm5e.skill.general.areaLore": "Conhecer ({option})",
@@ -503,6 +517,9 @@
   "arm5e.skill.mystery.verditiusMagic": "Encantamento Verditius",
   "arm5e.skill.mystery.cult": "Conhecimento ({option})",
 
+  "arm5e.skill.technique.generic": "Técnica ({option}) ",
+  "arm5e.skill.form.generic": "Forma ({option}) ",
+
   "arm5e.skill.options.area": "Nome da região",
   "arm5e.skill.options.knowledge": "Tópico",
   "arm5e.skill.options.craft": "Nome do ofício",
@@ -516,6 +533,9 @@
 
   "arm5e.skill.options.mysteryCult": "Nome do culto",
   "arm5e.skill.options.law": "Fórum legal",
+
+  "arm5e.skill.options.technique": "Nome da Técnica",
+  "arm5e.skill.options.form": "Nome da Forma",
 
   "arm5e.sheet.ageModifier": "Modificador de Idade",
   "arm5e.sheet.longevityRitual": "Ritual de Longevidade",
@@ -1187,11 +1207,14 @@
   "arm5e.sheet.activeEffect.types.martialAbilitiesBonus": "Bônus p/ Hab. Marciais",
   "arm5e.sheet.activeEffect.types.mysteryAbilitiesBonus": "Bônusp/ Hab. Mistério",
   "arm5e.sheet.activeEffect.types.supernaturalAbilitiesBonus": "Bônus p/ Hab.Sobrenaturais",
+  "arm5e.sheet.activeEffect.types.AlternateArtBonus": "Bônus p/ Artes Alternativas",
   "arm5e.sheet.activeEffect.types.academicAbilitiesAffinity": "Afinidade c/ Hab. Acadêmicas (Exp)",
   "arm5e.sheet.activeEffect.types.arcaneAbilitiesAffinity": "Afinidade c/ Hab. Arcanas (Exp)",
   "arm5e.sheet.activeEffect.types.generalAbilitiesAffinity": "Afinidade c/ Hab. Gerais (Exp)",
   "arm5e.sheet.activeEffect.types.martialAbilitiesAffinity": "Afinidade c/ Hab. Marciais (Exp)",
   "arm5e.sheet.activeEffect.types.mysteryAbilitiesAffinity": "Afinidade c/ Hab. de Mistério (Exp)",
+  "arm5e.sheet.activeEffect.types.affinityAlternateArt": "Afinidade c/ Artes Alternativas (Exp)",
+
   "arm5e.sheet.activeEffect.types.supernaturalAbilitiesAffinity": "Afinidade c/ Hab. Sobrenaturais (Exp)",
   "arm5e.sheet.activeEffect.types.supernaturalAbilitiesXPBonus": "Bônus EXP de Hab. Sobrenaturais",
   "arm5e.sheet.activeEffect.types.laboratoryAttr": "Características de Laboratório",
@@ -1552,6 +1575,8 @@
 
   "arm5e.rolltables.experimentation": "",
 
+  "arm5e.feature.magicSystem": "Sistema de magia alternativa - EXPERIMENTAL",
+
   "arm5e.generic.yes": "Sim",
   "arm5e.generic.no": "Não",
   "arm5e.generic.always": "Sempre",
@@ -1568,6 +1593,8 @@
   "arm5e.generic.info": "Informação",
   "arm5e.generic.base": "Base",
   "arm5e.generic.multipliers": "Multiplicadores",
+  "arm5e.generic.multiplier": "Multiplicador",
+  "arm5e.generic.modifier": "Modificador",
   "arm5e.generic.other": "Outro",
   "arm5e.generic.unknown": "Desconhecido",
   "arm5e.generic.current": "Atual",
@@ -1581,5 +1608,10 @@
   "arm5e.generic.params": "Paramêtros",
   "arm5e.generic.total": "Total",
   "arm5e.generic.needed": "Necessário(s)",
-  "arm5e.generic.numberOf": "Número de {thing}"
+  "arm5e.generic.numberOf": "Número de {thing}",
+  "arm5e.generic.config": "Configuração",
+  "arm5e.generic.template": "Modelo",
+  "arm5e.generic.templates": "Modelos",
+  "arm5e.generic.orphans": "Orfãos",
+  "arm5e.generic.invalid": "Inválido"
 }
