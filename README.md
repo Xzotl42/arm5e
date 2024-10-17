@@ -16,7 +16,7 @@ This package is intended to enable Ars Magica play using Foundry VTT.
 
 - Versión Española : La utilización e inclusión del logo, iconos y elementos artísticos, así como el uso de terminología, ha sido autorizado expresamente y por escrito por Holocubierta Ediciones, S.L. (https://www.holocubierta.com), licenciataria del juego Ars Magica 5ª Edición para su publicación en castellano.
 
-Even if most of the line is under the open license above you can still get physical soft-cover sourcebooks at the [Atlas Games website](https://atlas-games.com).
+Even if most of the line is under the open license above, the images and layout are not, you can still get physical soft-cover sourcebooks at the [Atlas Games website](https://atlas-games.com).
 
 ## Support this project
 
@@ -38,15 +38,15 @@ Big thanks to those who do!
 
 ![Spell sheet](./website/img/Spell_sheet.webp)
 
-Ars Magica content is copyright Trident, Inc d/b/a Atlas Games. Ars Magica, Mythic Europe, and Covenants are trademarks of Trident, Inc. Order of Hermes and Tremere are trademarks of White Wolf, Inc. USED WITH PERMISSION.
-
-The use and inclusion of the logo, icon and art elements, as well as the use of terms, has been expressly authorized in written form by Holocubierta Ediciones, S.L. (https://www.holocubierta.com/), the licensee of the game Ars Magica 5th Edition for its publication in Spanish.
+## Credits
 
 This Foundry VTT system project was based on the [Boilerplate System](https://gitlab.com/asacolips-projects/foundry-mods/boilerplate) by Asacolips.
 
 Official Foundry VTT System Listing: https://foundryvtt.com/packages/arm5e/
 
 Thanks to various contributors at https://game-icons.net for some default icons
+
+### Stats
 
 ![Latest Release Download Count](https://img.shields.io/github/downloads/Xzotl42/arm5e/latest/arm5e.zip)
 
@@ -55,10 +55,6 @@ Thanks to various contributors at https://game-icons.net for some default icons
 ![Release 2.0.2.9 Download Count (V10)](https://img.shields.io/github/downloads/Xzotl42/arm5e/v2.0.2.9/arm5e.zip)
 
 ![Supported Foundry Versions](https://img.shields.io/endpoint?url=https://foundryshields.com/version?url=https://github.com/Xzotl42/arm5e/releases/latest/download/system.json)
-
-## Versión Española
-
-La utilización e inclusión del logo, iconos y elementos artísticos, así como el uso de terminología, ha sido autorizado expresamente y por escrito por Holocubierta Ediciones, S.L. (https://www.holocubierta.com), licenciataria del juego Ars Magica 5ª Edición para su publicación en castellano.
 
 ## Installation of the development version
 
