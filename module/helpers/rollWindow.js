@@ -1,5 +1,4 @@
 import { ARM5E } from "../config.js";
-
 import { simpleDie, stressDie, noRoll, changeMight, useItemCharge } from "../dice.js";
 import { PickRequisites, checkTargetAndCalculateResistance, noFatigue } from "./magic.js";
 import { chatFailedCasting } from "./chat.js";
@@ -7,15 +6,17 @@ import { ArM5ePCActor } from "../actor/actor.js";
 import { setAgingEffects, agingCrisis } from "./long-term-activities.js";
 import { exertSelf } from "./combat.js";
 import { getDataset, log } from "../tools.js";
+import { ArM5eItem } from "../item/item.js";
 
 // below is a bitmap
 const ROLL_MODES = {
+  NONE: 0, // can be used with dataset to customize dynamically
   STRESS: 1,
   SIMPLE: 2,
   NO_BOTCH: 4,
-  NO_CONF: 8, // no confidence use
-  UNCONSCIOUS: 16, // can roll unconscious
-  PRIVATE: 32, // roll is private between the GM and player
+  NO_CONF: 8, // No confidence use
+  UNCONSCIOUS: 16, // Can roll unconscious
+  PRIVATE: 32, // Roll is private between the GM and player
   // common combos
   STRESS_OR_SIMPLE: 3
 };
@@ -36,7 +37,7 @@ const DEFAULT_ROLL_PROPERTIES = {
   ABILITY: {
     VAL: "ability",
     MODE: ROLL_MODES.STRESS_OR_SIMPLE,
-    MODIFIERS: 5, // impacted by aura, if realm of the ability <> mundane
+    MODIFIERS: 5, // Impacted by aura, if realm of the ability <> mundane
     TITLE: "arm5e.dialog.title.rolldie"
   },
   // COMBAT: {
@@ -117,10 +118,17 @@ const DEFAULT_ROLL_PROPERTIES = {
     MODIFIERS: 0,
     TITLE: "arm5e.aging.crisis.label",
     CALLBACK: agingCrisis
+  },
+  SUPERNATURAL: {
+    VAL: "supernatural",
+    MODE: ROLL_MODES.NONE, // use dataset.dieType
+    MODIFIERS: 7,
+    TITLE: "arm5e.dialog.title.rolldie",
+    CALLBACK: castSupernaturalEffect
   }
 };
 
-// experimental, allow simple die for everything
+// Experimental, allow simple die for everything
 const ALTERNATE_ROLL_PROPERTIES = {
   OPTION: {
     MODE: ROLL_MODES.SIMPLE,
@@ -170,17 +178,30 @@ const ALTERNATE_ROLL_PROPERTIES = {
 };
 
 const ROLL_PROPERTIES = DEFAULT_ROLL_PROPERTIES;
-//const ROLL_PROPERTIES = ALTERNATE_ROLL_PROPERTIES;
+// Const ROLL_PROPERTIES = ALTERNATE_ROLL_PROPERTIES;
 
+/**
+ *
+ * @param type
+ */
 function getRollTypeProperties(type) {
   return ROLL_PROPERTIES[type.toUpperCase()] ?? ROLL_PROPERTIES.OPTION;
 }
 
+/**
+ *
+ * @param dataset
+ * @param actor
+ */
 function prepareRollVariables(dataset, actor) {
   actor.rollInfo.init(dataset, actor);
-  // log(false, `Roll data: ${JSON.stringify(actor.rollInfo)}`);
+  // Log(false, `Roll data: ${JSON.stringify(actor.rollInfo)}`);
 }
 
+/**
+ *
+ * @param dataset
+ */
 function chooseTemplate(dataset) {
   if (
     [
@@ -196,23 +217,31 @@ function chooseTemplate(dataset) {
     return "systems/arm5e/templates/roll/roll-characteristic.html";
   }
   if (dataset.roll == ROLL_PROPERTIES.SPONT.VAL) {
-    //spontaneous magic
+    // Spontaneous magic
     return "systems/arm5e/templates/roll/roll-magic.html";
   }
   if ([ROLL_PROPERTIES.MAGIC.VAL, ROLL_PROPERTIES.SPELL.VAL].includes(dataset.roll)) {
     return "systems/arm5e/templates/roll/roll-spell.html";
   }
+  if (dataset.roll == ROLL_PROPERTIES.SUPERNATURAL.VAL) {
+    return "systems/arm5e/templates/roll/roll-supernatural.html";
+  }
   if (dataset.roll == ROLL_PROPERTIES.AGING.VAL) {
-    //aging roll
+    // Aging roll
     return "systems/arm5e/templates/roll/roll-aging.html";
   }
   if (dataset.roll == ROLL_PROPERTIES.CRISIS.VAL) {
-    //aging crisis roll
+    // Aging crisis roll
     return "systems/arm5e/templates/roll/roll-aging-crisis.html";
   }
   return "";
 }
 
+/**
+ *
+ * @param dataset
+ * @param actor
+ */
 function updateCharacteristicDependingOnRoll(dataset, actor) {
   if (
     [ROLL_PROPERTIES.SPONT.VAL, ROLL_PROPERTIES.MAGIC.VAL, ROLL_PROPERTIES.SPELL.VAL].includes(
@@ -223,6 +252,11 @@ function updateCharacteristicDependingOnRoll(dataset, actor) {
   }
 }
 
+/**
+ *
+ * @param actor
+ * @param callback
+ */
 function getDebugButtonsIfNeeded(actor, callback) {
   if (!game.modules.get("_dev-mode")?.api?.getPackageDebugValue(ARM5E.SYSTEM_ID)) return {};
   return {
@@ -243,6 +277,12 @@ function getDebugButtonsIfNeeded(actor, callback) {
   };
 }
 
+/**
+ *
+ * @param dataset
+ * @param html
+ * @param actor
+ */
 function getDialogData(dataset, html, actor) {
   const callback = getRollTypeProperties(dataset.roll).CALLBACK;
 
@@ -267,9 +307,12 @@ function getDialogData(dataset, html, actor) {
   }
 
   const title = getRollTypeProperties(dataset.roll).TITLE;
-  if (getRollTypeProperties(dataset.roll).MODE & ROLL_MODES.STRESS) {
+  if (
+    getRollTypeProperties(dataset.roll).MODE & ROLL_MODES.STRESS ||
+    ROLL_MODES[dataset.dieType] & ROLL_MODES.STRESS
+  ) {
     if (getRollTypeProperties(dataset.roll).MODE & ROLL_MODES.NO_BOTCH) {
-      mode = 4; // no botches
+      mode = 4; // No botches
     }
     btns.yes = {
       icon: "<i class='fas fa-check'></i>",
@@ -282,7 +325,10 @@ function getDialogData(dataset, html, actor) {
     if (altAction) {
       btns.alt = altBtn;
     }
-    if (getRollTypeProperties(dataset.roll).MODE & ROLL_MODES.SIMPLE) {
+    if (
+      getRollTypeProperties(dataset.roll).MODE & ROLL_MODES.SIMPLE ||
+      ROLL_MODES[dataset.dieType] & ROLL_MODES.SIMPLE
+    ) {
       btns.no = {
         icon: "<i class='fas fa-check'></i>",
         label: game.i18n.localize("arm5e.dialog.button.simpledie"),
@@ -300,7 +346,10 @@ function getDialogData(dataset, html, actor) {
         }
       };
     }
-  } else {
+  } else if (
+    getRollTypeProperties(dataset.roll).MODE & ROLL_MODES.SIMPLE ||
+    ROLL_MODES[dataset.dieType] & ROLL_MODES.SIMPLE
+  ) {
     // Simple die only
     btns.yes = {
       icon: "<i class='fas fa-check'></i>",
@@ -320,6 +369,21 @@ function getDialogData(dataset, html, actor) {
         await actor.rollInfo.reset();
       }
     };
+  } else {
+    //no roll
+    btns.yes = {
+      icon: "<i class='fas fa-check'></i>",
+      label: game.i18n.localize("arm5e.dialog.powerUse"),
+      callback: async (html) => {
+        actor = getFormData(html, actor);
+        await noRoll(actor, 1, null);
+      }
+    };
+    btns.no = {
+      icon: "<i class='fas fa-ban'></i>",
+      label: game.i18n.localize("arm5e.dialog.button.cancel"),
+      callback: null
+    };
   }
   return {
     title: game.i18n.localize(title),
@@ -332,6 +396,11 @@ function getDialogData(dataset, html, actor) {
   };
 }
 
+/**
+ *
+ * @param dataset
+ * @param item
+ */
 async function useMagicItem(dataset, item) {
   if (item.system.enchantments.charges == 0) {
     ui.notifications.warn(game.i18n.localize("arm5e.notification.noChargesLeft"));
@@ -376,6 +445,11 @@ async function useMagicItem(dataset, item) {
   dialog.render(true);
 }
 
+/**
+ *
+ * @param dataset
+ * @param actor
+ */
 async function usePower(dataset, actor) {
   if (Number(dataset.cost > actor.system.might.points)) {
     ui.notifications.warn(game.i18n.localize("arm5e.notification.noMightPoints"));
@@ -418,6 +492,10 @@ async function usePower(dataset, actor) {
   );
   dialog.render(true);
 }
+/**
+ *
+ * @param html
+ */
 function addListenersDialog(html) {
   html.find(".clickable").click((ev) => {
     $(ev.currentTarget).next().toggleClass("hide");
@@ -432,18 +510,18 @@ function addListenersDialog(html) {
     const dataset = getDataset(e);
     const actor = game.actors.get(dataset.actorid);
     const item = actor.items.get(dataset.itemid);
-    // create a tmp Item in memory
+    // Create a tmp Item in memory
     let newSpell = new ArM5eItem(item.toObject(), { temporary: true });
     let update = await PickRequisites(newSpell.system, dataset.flavor);
     await newSpell.updateSource(update);
     let techData = newSpell._getTechniqueData(actor.system);
-    actor.rollInfo.magic.techniqueLabel = techData[0];
-    actor.rollInfo.magic.techniqueScore = techData[1];
-    actor.rollInfo.magic.techDeficiency = techData[2];
+    actor.rollInfo.magic.technique.label = techData[0];
+    actor.rollInfo.magic.technique.score = techData[1];
+    actor.rollInfo.magic.technique.deficiency = techData[2];
     let formData = newSpell._getFormData(actor.system);
-    actor.rollInfo.magic.formLabel = formData[0];
-    actor.rollInfo.magic.formScore = formData[1];
-    actor.rollInfo.magic.formDeficiency = formData[2];
+    actor.rollInfo.magic.form.label = formData[0];
+    actor.rollInfo.magic.form.score = formData[1];
+    actor.rollInfo.magic.form.deficiency = formData[2];
   });
 
   html.find(".voice-and-gestures").change(async (event) => {
@@ -454,6 +532,12 @@ function addListenersDialog(html) {
   });
 }
 
+/**
+ *
+ * @param dataset
+ * @param template
+ * @param actor
+ */
 async function renderRollTemplate(dataset, template, actor) {
   if (!template) {
     return;
@@ -478,8 +562,14 @@ async function renderRollTemplate(dataset, template, actor) {
   return dialog;
 }
 
+/**
+ *
+ * @param actorCaster
+ * @param roll
+ * @param message
+ */
 async function castSpell(actorCaster, roll, message) {
-  // first check that the spell succeeds
+  // First check that the spell succeeds
   const levelOfSpell = actorCaster.rollInfo.magic.level;
   const totalOfSpell = Math.round(roll._total);
 
@@ -494,7 +584,7 @@ async function castSpell(actorCaster, roll, message) {
       if (actorCaster.rollInfo.magic.ritual) {
         fatigue = Math.max(Math.ceil((levelOfSpell - totalOfSpell) / 5), 1);
       }
-      // lose fatigue levels
+      // Lose fatigue levels
       await actorCaster.loseFatigueLevel(fatigue);
       if (totalOfSpell < levelOfSpell - 10) {
         await chatFailedCasting(actorCaster, roll, message, fatigue);
@@ -517,10 +607,42 @@ async function castSpell(actorCaster, roll, message) {
       return false;
     }
   }
-  // then do contest of magic
+  // Then do contest of magic
   await checkTargetAndCalculateResistance(actorCaster, roll, message);
 }
 
+/**
+ *
+ * @param actorCaster
+ * @param roll
+ * @param message
+ */
+async function castSupernaturalEffect(actorCaster, roll, message) {
+  // First check that the spell succeeds
+  const levelOfSpell = actorCaster.rollInfo.magic.level;
+  const totalOfSpell = Math.round(roll._total);
+
+  if (roll.botches > 0) {
+    await actorCaster.update({
+      "system.warping.points": actorCaster.system.warping.points + roll.botches
+    });
+  }
+
+  log(false, `Casting total: ${totalOfSpell}`);
+  // Magic effect
+  if (totalOfSpell < levelOfSpell) {
+    await chatFailedCasting(actorCaster, roll, message, 0);
+    return false;
+  }
+  // Then do contest of magic
+  await checkTargetAndCalculateResistance(actorCaster, roll, message);
+}
+
+/**
+ *
+ * @param html
+ * @param actor
+ */
 export function getFormData(html, actor) {
   let find = html.find(".SelectedCharacteristic");
   if (find.length > 0) {
@@ -536,7 +658,7 @@ export function getFormData(html, actor) {
         modifier: actor.rollInfo.modifier
       };
       actor.rollInfo.init(dataset, actor);
-      // actor.rollInfo.ability.score = 0;
+      // Actor.rollInfo.ability.score = 0;
       // actor.rollInfo.ability.name = "";
       // actor.rollInfo.type = "char";
     } else {
@@ -549,7 +671,7 @@ export function getFormData(html, actor) {
       };
       actor.rollInfo.init(dataset, actor);
 
-      // const ability = actor.items.get(find[0].value);
+      // Const ability = actor.items.get(find[0].value);
       // actor.rollInfo.ability.score = ability.system.finalScore;
       // actor.rollInfo.ability.name = ability.name;
       // actor.rollInfo.type = "ability";
@@ -563,28 +685,28 @@ export function getFormData(html, actor) {
 
   find = html.find(".SelectedTechnique");
   if (find.length > 0) {
-    actor.rollInfo.magic.technique = find[0].value;
-    actor.rollInfo.magic.techniqueLabel = ARM5E.magic.techniques[find[0].value].label;
-    actor.rollInfo.magic.techniqueScore = parseInt(
+    actor.rollInfo.magic.technique.value = find[0].value;
+    actor.rollInfo.magic.technique.label = ARM5E.magic.techniques[find[0].value].label;
+    actor.rollInfo.magic.technique.score = parseInt(
       actor.system.arts.techniques[find[0].value].finalScore
     );
 
     if (actor.system.arts.techniques[find[0].value].deficient) {
-      actor.rollInfo.magic.techDeficiency = true;
+      actor.rollInfo.magic.technique.deficiency = true;
     } else {
-      actor.rollInfo.magic.techDeficiency = false;
+      actor.rollInfo.magic.technique.deficiency = false;
     }
   }
 
   find = html.find(".SelectedForm");
   if (find.length > 0) {
-    actor.rollInfo.magic.form = find[0].value;
-    actor.rollInfo.magic.formLabel = ARM5E.magic.forms[find[0].value].label;
-    actor.rollInfo.magic.formScore = parseInt(actor.system.arts.forms[find[0].value].finalScore);
+    actor.rollInfo.magic.form.value = find[0].value;
+    actor.rollInfo.magic.form.label = ARM5E.magic.forms[find[0].value].label;
+    actor.rollInfo.magic.form.score = parseInt(actor.system.arts.forms[find[0].value].finalScore);
     if (actor.system.arts.forms[find[0].value].deficient) {
-      actor.rollInfo.magic.formDeficiency = true;
+      actor.rollInfo.magic.form.deficiency = true;
     } else {
-      actor.rollInfo.magic.formDeficiency = false;
+      actor.rollInfo.magic.form.deficiency = false;
     }
   }
 
@@ -601,7 +723,7 @@ export function getFormData(html, actor) {
   find = html.find(".SelectedModifier");
   if (find.length > 0) {
     actor.rollInfo.modifier = Number(find[0].value) ?? 0;
-    // negative modifier
+    // Negative modifier
     if ([ROLL_PROPERTIES.CRISIS.VAL].includes(actor.rollInfo.type)) {
       actor.rollInfo.modifier = -actor.rollInfo.modifier;
     }

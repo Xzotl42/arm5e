@@ -5,7 +5,6 @@
     <img class="item-small-img" src="{{ data.ui.img }}" />
     <h1 class="effect-title">{{ data.ui.name }}</h1>
   </header>
-  {{log "THIS: " this}}
   <!-- Effect Configuration Tabs -->
   <nav class="arm5eTabs sheet-tabs tabs">
     <a class="item" data-tab="details" style="font-size: 16pt; padding: 0px;"><i class="icon-Icon_Details"></i>
@@ -77,7 +76,6 @@
                 </select>
               </div>
               <div class="subtype">
-                {{log "subtypes:" @root.subtypes}}
                 <select class="effect-subtype" data-index="{{i}}">
                   {{selectOptions (lookup @root.subtypes i) selected=(lookup ../selectedSubtypes i) labelAttr="mnemonic" localize=true
                     nameAttr="name" valueAttr="name"}}

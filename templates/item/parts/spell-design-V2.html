@@ -61,18 +61,20 @@
     <div class="flexrow flex01">
 
       <div class="resource">
-        <label class="header-label">{{localize "arm5e.spell.effect.description"}}</label>
-        <input type="text" name="{{prefix}}system.baseEffectDescription"
-          value="{{spelldata.system.baseEffectDescription}}" title="{{spelldata.system.baseEffectDescription}}"
-          data-dtype="String" {{edition.spellField}} />
-      </div>
-      {{#if spelldata.system.general}}
-        <div class="resource flex-group-center" style="max-width: 100px;">
-          <label class="header-label">{{localize "arm5e.spell.effect.levelOffset"}}</label>
-          <input type="number" name="{{prefix}}system.levelOffset" value="{{spelldata.system.levelOffset}}"
-            class="resource-focus" data-dtype="Number" style="max-width: 50px;" {{edition.spellField}} />
+        <div class="">
+          <label class="header-label">{{localize "arm5e.spell.effect.description"}}</label>
+          <input type="text" name="{{prefix}}system.baseEffectDescription"
+            value="{{spelldata.system.baseEffectDescription}}" title="{{spelldata.system.baseEffectDescription}}"
+            data-dtype="String" {{edition.spellField}} />
         </div>
-      {{/if}}
+        {{#if spelldata.system.general}}
+          <div class="flex-group-center" style="max-width: 100px;">
+            <label class="header-label">{{localize "arm5e.spell.effect.levelOffset"}}</label>
+            <input type="number" name="{{prefix}}system.levelOffset" value="{{spelldata.system.levelOffset}}"
+              class="resource-focus" data-dtype="Number" style="max-width: 50px;" {{edition.spellField}} />
+          </div>
+        {{/if}}
+      </div>
     </div>
     <div class="flexrow flex02">
       <div class="resource flex-group-center">

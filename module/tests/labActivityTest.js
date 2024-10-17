@@ -26,6 +26,7 @@ export function registerLabActivityTesting(quench) {
         lab.sheet.render(true);
         // link magus and lab
         await magus.sheet._onDropActor(null, { uuid: lab.uuid });
+        ArsLayer.clearAura(true);
       });
 
       describe("LabActivity activity change", function () {
@@ -69,10 +70,12 @@ export function registerLabActivityTesting(quench) {
 
       after(async function () {
         if (magus) {
+          await magus.sheet.close();
           await magus.delete();
         }
 
         if (lab) {
+          await lab.sheet.close();
           await lab.delete();
         }
       });

@@ -517,7 +517,7 @@
   "arm5e.sheet.inflationSumary": "aumenta annualmente",
   "arm5e.sheet.laboratoriesSumary": "1 soldo per 10 pt Laboratori (20% per maestranza)",
   "arm5e.sheet.provisionsSumary": "5 soldi per 10 pt Inhabitants (50% + 20% per maestranza)",
-  "arm5e.sheet.titlesSumary": "debiti e tasse",
+  "arm5e.sheet.tithesSumary": "debiti e tasse",
   "arm5e.sheet.wagesSumary": "2 soldi per 10 pt Abitanti",
   "arm5e.sheet.weaponsSumary": "1 soldo per 320 punti di Armi e Armature (50% per maestranza)",
   "arm5e.sheet.writingMaterialsSumary": "1 soldo per Magus e specialista scrivano (50% per maestranza)",
@@ -1193,7 +1193,7 @@
   "arm5e.hints.design": "Progetta {item}",
   "arm5e.hints.read": "Leggi {item}",
 
-  "arm5e.sheet.label.details": "Dettagli",
+  "arm5e.sheet.details": "Dettagli",
 
   "arm5e.config.sourcebookFilter": "Filtro libro fonte",
 

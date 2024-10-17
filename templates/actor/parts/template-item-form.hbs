@@ -1,0 +1,20 @@
+<div class="template-item-box flexrow flex0">
+  <div id="template-content">
+    <label class="template-item-label">{{localize "arm5e.sheet.noun"}}</label>
+    <select
+      name="system.magicSystem.templates.{{this.id}}.components.{{this.compIdx}}.option"
+      class="template-select"
+    >
+      {{selectOptions this.selection selected=this.option}}
+    </select>
+    <div id="top-right-icon">
+      <a
+        class="template-item"
+        data-action="delete"
+        data-id="{{id}}"
+        data-index="{{compIdx}}"
+        title="Delete component"
+      ><i class="icon-SmallIcon_Delete_Hand_Gesture"></i></a>
+    </div>
+  </div>
+</div>

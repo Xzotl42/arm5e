@@ -1,3 +1,50 @@
+## 2.3.1.1 Quendalon, lost in the Forest
+
+### Features & changes
+
+- New active effects
+  - Enable new magic system.
+- hedge/holy magic system
+  - alternate Arts
+  - template for casting
+- new checkbox design
+- [technical] Moved abilities localization in "i18nInit" Hook
+- Supernatural, arcane and mystery abilities can be accelerated.
+
+### Bug fixes
+
+- Comprendia reference dialog has been fixed
+
+## 2.3.0.12, Quendalon, raised by the Fae BF4
+
+### Compatibility
+
+- Verified for V12.331
+
+### Features & changes
+
+- Updated French version
+- Some cosmetic improvements for chat stress dice
+
+### Bug fixes
+
+- Fix requisites editing on roll
+- Applied activities can no longer have their type changed.
+- Fixed bug in sanatorium V12 when changing the data.
+- Virtues and flaws are working again on beast sheet
+- Vis source attributes are visible again
+- Quick dialogs (Vitals, Combat, Magic) are now updating when the linked character changes (V12 only)
+- [V12] Changed actor links mechanics since appId of a sheet is only defined on render (instead of constructor).
+- Covenant laborers were wrongly considered servants
+- Covenant teamsters were not considered workers.
+- It is possible again to go to previous topic of a book in scriptorium
+- Missing spell warning is now properly formated in scriptorium
+- Multitopic book reading was not working after a change to the dialog data (reader, date, ...)
+- There is no longer an error when you try to read an ability book you are too skilled for.
+- Stress die in chat
+  - Proper number of botch dice rolled
+  - Exploding rolls are computed properly
+
 ## 2.3.0.10, Quendalon, raised by the Fae BF3
 
 ### Bug fixes

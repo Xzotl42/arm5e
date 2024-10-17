@@ -2,6 +2,11 @@ import { ARM5E } from "./config.js";
 
 import { DEFAULT_WOUND, SIZES_AND_WOUNDS } from "./constants/wounds.js";
 
+/**
+ *
+ * @param force
+ * @param {...any} args
+ */
 export function log(force, ...args) {
   try {
     const isDebugging = game.modules.get("_dev-mode")?.api?.getPackageDebugValue(ARM5E.SYSTEM_ID);
@@ -14,10 +19,19 @@ export function log(force, ...args) {
   }
 }
 
+/**
+ *
+ * @param str
+ */
 export function debug(str) {
-  log(false, "DEBUG: " + str);
+  log(false, `DEBUG: ${str}`);
 }
 
+/**
+ *
+ * @param force
+ * @param {...any} args
+ */
 export function error(force, ...args) {
   try {
     const isDebugging = game.modules.get("_dev-mode")?.api?.getPackageDebugValue(ARM5E.SYSTEM_ID);
@@ -30,10 +44,18 @@ export function error(force, ...args) {
   }
 }
 
+/**
+ *
+ * @param ms
+ */
 export async function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+/**
+ *
+ * @param uuid
+ */
 export function getUuidInfo(uuid) {
   const info = {
     uuid: uuid,
@@ -62,47 +84,75 @@ export function getUuidInfo(uuid) {
   return info;
 }
 
+/**
+ *
+ * @param pack
+ * @param id
+ */
 export async function getDocumentFromCompendium(pack, id) {
   let compendium = game.packs.get(pack);
-  // const documents = await compendium.getDocuments();
+  // Const documents = await compendium.getDocuments();
   let doc = compendium.getDocument(id);
   return doc;
 }
 
+/**
+ *
+ * @param str
+ */
 export function slugify(str) {
   return String(str)
     .normalize("NFKD")
-    .replace(/[\u0300-\u036f]/g, "") // remove all accents.
+    .replace(/[\u0300-\u036f]/g, "") // Remove all accents.
     .trim()
     .toLowerCase()
-    .replace(/[^a-z0-9 -]/g, "") // remove non-alphanumeric characters
-    .replace(/\s+/g, "-") // replace spaces with hyphens
-    .replace(/-+/g, "-"); // remove consecutive hyphens
+    .replace(/[^a-z0-9 -]/g, "") // Remove non-alphanumeric characters
+    .replace(/\s+/g, "-") // Replace spaces with hyphens
+    .replace(/-+/g, "-"); // Remove consecutive hyphens
 }
 
+/**
+ *
+ * @param e1
+ * @param e2
+ */
 export function compareBaseEffects(e1, e2) {
   if (e1.system.form.value < e2.system.form.value) {
     return -1;
   } else if (e1.system.form.value > e2.system.form.value) {
     return 1;
+  } else if (e1.system.technique.value < e2.system.technique.value) {
+    return -1;
+  } else if (e1.system.technique.value > e2.system.technique.value) {
+    return 1;
+  } else if (e1.system.baseLevel < e2.system.baseLevel) {
+    return -1;
+  } else if (e1.system.baseLevel > e2.system.baseLevel) {
+    return 1;
   } else {
-    if (e1.system.technique.value < e2.system.technique.value) {
-      return -1;
-    } else if (e1.system.technique.value > e2.system.technique.value) {
-      return 1;
-    } else {
-      if (e1.system.baseLevel < e2.system.baseLevel) {
-        return -1;
-      } else if (e1.system.baseLevel > e2.system.baseLevel) {
-        return 1;
-      } else {
-        return e1.name.localeCompare(e2.name);
-      }
-    }
+    return e1.name.localeCompare(e2.name);
   }
 }
 
-// export function compareAbilities(a1, a2) {
+export function getAbilityStats(key, option) {
+  const ability = CONFIG.ARM5E.LOCALIZED_ABILITIES[key];
+
+  if (ability === undefined || ability.disabled) {
+    return null;
+  }
+  let extKey = key;
+  if (ability.option) {
+    extKey = `${key}_${option}`;
+  }
+  return {
+    key: key,
+    extendedKey: extKey,
+    option: option,
+    label: ability.label
+  };
+}
+
+// Export function compareAbilities(a1, a2) {
 //   const keys = Object.keys(CONFIG.ARM5E.LOCALIZED_ABILITIES);
 //   if (keys.indexOf(a1.system.category) < keys.indexOf(a2.system.category)) {
 //     return -1;
@@ -121,6 +171,11 @@ export function compareBaseEffects(e1, e2) {
 
 const topicOrder = { art: 0, ability: 1, mastery: 2, labText: 3 };
 
+/**
+ *
+ * @param b1
+ * @param b2
+ */
 export function compareTopics(b1, b2) {
   // Topic
   if (topicOrder[b1.category] < topicOrder[b2.category]) {
@@ -128,7 +183,7 @@ export function compareTopics(b1, b2) {
   } else if (topicOrder[b1.category] > topicOrder[b2.category]) {
     return 1;
   }
-  // book type
+  // Book type
   if (b1.type < b2.type) {
     return -1;
   } else if (b1.type > b2.type) {
@@ -152,7 +207,7 @@ export function compareTopics(b1, b2) {
       return 1;
     }
   }
-  // level
+  // Level
   if (b1.type === "Summa") {
     if (b1.level < b2.level) {
       return 1;
@@ -171,6 +226,11 @@ export function compareTopics(b1, b2) {
     return 0;
   }
 }
+/**
+ *
+ * @param b1
+ * @param b2
+ */
 export function compareBooks(b1, b2) {
   // Topic
   if (topicOrder[b1.system.topic.category] < topicOrder[b2.system.topic.category]) {
@@ -178,7 +238,7 @@ export function compareBooks(b1, b2) {
   } else if (topicOrder[b1.system.topic.category] > topicOrder[b2.system.topic.category]) {
     return 1;
   }
-  // book type
+  // Book type
   if (b1.system.type < b2.system.type) {
     return -1;
   } else if (b1.system.type > b2.system.type) {
@@ -202,7 +262,7 @@ export function compareBooks(b1, b2) {
       return 1;
     }
   }
-  // level
+  // Level
   if (b1.system.type === "Summa") {
     if (b1.system.level < b2.system.level) {
       return 1;
@@ -218,68 +278,75 @@ export function compareBooks(b1, b2) {
   return b1.name.localeCompare(b2.name);
 }
 
+/**
+ *
+ * @param e1
+ * @param e2
+ */
 export function compareMagicalEffects(e1, e2) {
   if (e1.system.form.value < e2.system.form.value) {
     return -1;
   } else if (e1.system.form.value > e2.system.form.value) {
     return 1;
+  } else if (e1.system.technique.value < e2.system.technique.value) {
+    return -1;
+  } else if (e1.system.technique.value > e2.system.technique.value) {
+    return 1;
+  } else if (e1.system.level < e2.system.level) {
+    return -1;
+  } else if (e1.system.level > e2.system.level) {
+    return 1;
   } else {
-    if (e1.system.technique.value < e2.system.technique.value) {
-      return -1;
-    } else if (e1.system.technique.value > e2.system.technique.value) {
-      return 1;
-    } else {
-      if (e1.system.level < e2.system.level) {
-        return -1;
-      } else if (e1.system.level > e2.system.level) {
-        return 1;
-      } else {
-        return e1.name.localeCompare(e2.name);
-      }
-    }
+    return e1.name.localeCompare(e2.name);
   }
 }
 
+/**
+ *
+ * @param e1
+ * @param e2
+ */
 export function compareSpells(e1, e2) {
   if (e1.system.form.value < e2.system.form.value) {
     return -1;
   } else if (e1.system.form.value > e2.system.form.value) {
     return 1;
+  } else if (e1.system.technique.value < e2.system.technique.value) {
+    return -1;
+  } else if (e1.system.technique.value > e2.system.technique.value) {
+    return 1;
+  } else if (e1.system.level < e2.system.level) {
+    return -1;
+  } else if (e1.system.level > e2.system.level) {
+    return 1;
   } else {
-    if (e1.system.technique.value < e2.system.technique.value) {
-      return -1;
-    } else if (e1.system.technique.value > e2.system.technique.value) {
-      return 1;
-    } else {
-      if (e1.system.level < e2.system.level) {
-        return -1;
-      } else if (e1.system.level > e2.system.level) {
-        return 1;
-      } else {
-        return e1.name.localeCompare(e2.name);
-      }
-    }
+    return e1.name.localeCompare(e2.name);
   }
 }
 
+/**
+ *
+ * @param filters
+ * @param inputArray
+ */
 export function hermeticFilter(filters, inputArray) {
-  // for books with empty labtext topics
+  // For books with empty labtext topics
   inputArray = inputArray.filter((e) => e.system !== null);
-  if (filters.formFilter != "") {
+  if (filters.formFilter !== "") {
     inputArray = inputArray.filter((e) => e.system.form.value === filters.formFilter);
   }
-  if (filters.techniqueFilter != "") {
+  if (filters.techniqueFilter !== "") {
     inputArray = inputArray.filter((e) => e.system.technique.value === filters.techniqueFilter);
   }
   if (
-    filters.levelFilter != 0 &&
-    filters.levelFilter != null &&
-    filters.levelFilter != "" &&
-    filters.levelFilter != "0"
+    filters.levelFilter !== 0 &&
+    filters.levelFilter !== null &&
+    filters.levelFilter !== "" &&
+    filters.levelFilter !== "0"
   ) {
-    if (filters.levelOperator == 0) {
+    if (filters.levelOperator === 0) {
       inputArray = inputArray.filter((e) => e.system.level === parseInt(filters.levelFilter));
-    } else if (filters.levelOperator == -1) {
+    } else if (filters.levelOperator === -1) {
       inputArray = inputArray.filter((e) => e.system.level <= parseInt(filters.levelFilter));
     } else {
       inputArray = inputArray.filter((e) => e.system.level >= parseInt(filters.levelFilter));
@@ -288,24 +355,30 @@ export function hermeticFilter(filters, inputArray) {
   return inputArray;
 }
 
+/**
+ *
+ * @param filters
+ * @param inputArray
+ * @param typeField
+ */
 export function topicFilter(filters, inputArray, typeField) {
-  if (filters.typeFilter != "") {
+  if (filters.typeFilter !== "") {
     inputArray = inputArray.filter((e) => e.type === filters.typeFilter);
   }
-  if (filters.topicFilter != "") {
+  if (filters.topicFilter !== "") {
     inputArray = inputArray.filter((e) => e[typeField] === filters.topicFilter);
   }
   if (
-    filters.levelFilter != 0 &&
-    filters.levelFilter != null &&
-    filters.levelFilter != "" &&
-    filters.levelFilter != "0"
+    filters.levelFilter !== 0 &&
+    filters.levelFilter !== null &&
+    filters.levelFilter !== "" &&
+    filters.levelFilter !== "0"
   ) {
-    if (filters.levelOperator == 0) {
+    if (filters.levelOperator === 0) {
       inputArray = inputArray.filter(
         (e) => e.type === "Tractatus" || e.level === parseInt(filters.levelFilter)
       );
-    } else if (filters.levelOperator == -1) {
+    } else if (filters.levelOperator === -1) {
       inputArray = inputArray.filter(
         (e) => e.type === "Tractatus" || e.level <= parseInt(filters.levelFilter)
       );
@@ -316,14 +389,14 @@ export function topicFilter(filters, inputArray, typeField) {
     }
   }
   if (
-    filters.qualityFilter != 0 &&
-    filters.qualityFilter != null &&
-    filters.qualityFilter != "" &&
-    filters.qualityFilter != "0"
+    filters.qualityFilter !== 0 &&
+    filters.qualityFilter !== null &&
+    filters.qualityFilter !== "" &&
+    filters.qualityFilter !== "0"
   ) {
-    if (filters.qualityOperator == 0) {
+    if (filters.qualityOperator === 0) {
       inputArray = inputArray.filter((e) => e.quality === parseInt(filters.qualityFilter));
-    } else if (filters.qualityOperator == -1) {
+    } else if (filters.qualityOperator === -1) {
       inputArray = inputArray.filter((e) => e.quality <= parseInt(filters.qualityFilter));
     } else {
       inputArray = inputArray.filter((e) => e.quality >= parseInt(filters.qualityFilter));
@@ -332,22 +405,27 @@ export function topicFilter(filters, inputArray, typeField) {
   return inputArray;
 }
 
+/**
+ *
+ * @param filters
+ * @param inputArray
+ */
 export function hermeticTopicFilter(filters, inputArray) {
-  if (filters.formFilter != "") {
+  if (filters.formFilter !== "") {
     inputArray = inputArray.filter((e) => e.spellForm === filters.formFilter);
   }
-  if (filters.techniqueFilter != "") {
+  if (filters.techniqueFilter !== "") {
     inputArray = inputArray.filter((e) => e.spellTech === filters.techniqueFilter);
   }
   if (
-    filters.qualityFilter != 0 &&
-    filters.qualityFilter != null &&
-    filters.qualityFilter != "" &&
-    filters.qualityFilter != "0"
+    filters.qualityFilter !== 0 &&
+    filters.qualityFilter !== null &&
+    filters.qualityFilter !== "" &&
+    filters.qualityFilter !== "0"
   ) {
-    if (filters.qualityOperator == 0) {
+    if (filters.qualityOperator === 0) {
       inputArray = inputArray.filter((e) => e.quality === parseInt(filters.qualityFilter));
-    } else if (filters.qualityOperator == -1) {
+    } else if (filters.qualityOperator === -1) {
       inputArray = inputArray.filter((e) => e.quality <= parseInt(filters.qualityFilter));
     } else {
       inputArray = inputArray.filter((e) => e.quality >= parseInt(filters.qualityFilter));
@@ -355,24 +433,29 @@ export function hermeticTopicFilter(filters, inputArray) {
   }
   return inputArray;
 }
+/**
+ *
+ * @param filters
+ * @param inputArray
+ */
 export function diaryEntryFilter(filters, inputArray) {
-  if (filters.typeFilter != "") {
+  if (filters.typeFilter !== "") {
     inputArray = inputArray.filter((e) => e.system.activity === filters.typeFilter);
   }
   for (let a of inputArray) {
     if (
-      filters.minYearFilter != 0 &&
-      filters.minYearFilter != null &&
-      filters.minYearFilter != "" &&
-      filters.minYearFilter != "0"
+      filters.minYearFilter !== 0 &&
+      filters.minYearFilter !== null &&
+      filters.minYearFilter !== "" &&
+      filters.minYearFilter !== "0"
     ) {
       a.system.dates = a.system.dates.filter((e) => e.year >= parseInt(filters.minYearFilter));
     }
     if (
-      filters.maxYearFilter != 0 &&
-      filters.maxYearFilter != null &&
-      filters.maxYearFilter != "" &&
-      filters.maxYearFilter != "0"
+      filters.maxYearFilter !== 0 &&
+      filters.maxYearFilter !== null &&
+      filters.maxYearFilter !== "" &&
+      filters.maxYearFilter !== "0"
     ) {
       a.system.dates = a.system.dates.filter((e) => e.year <= parseInt(filters.maxYearFilter));
     }
@@ -380,12 +463,17 @@ export function diaryEntryFilter(filters, inputArray) {
   return inputArray;
 }
 
+/**
+ *
+ * @param e1
+ * @param e2
+ */
 export function compareLabTexts(e1, e2) {
-  // for book topics without lab texts yet
-  if (e1.system == null) {
+  // For book topics without lab texts yet
+  if (e1.system === null) {
     return 1;
   }
-  if (e2.system == null) {
+  if (e2.system === null) {
     return -1;
   }
   if (e1.system.type < e2.system.type) {
@@ -397,8 +485,13 @@ export function compareLabTexts(e1, e2) {
   }
 }
 
+/**
+ *
+ * @param game
+ * @param key
+ */
 export function getLastMessageByHeader(game, key) {
-  const searchString = game.i18n.localize(key).toLowerCase() + " </h2>";
+  const searchString = `${game.i18n.localize(key).toLowerCase()} </h2>`;
   const messages = game.messages.filter((msg) => {
     const flavor = (msg?.flavor || "").toLowerCase();
     return flavor.indexOf(searchString) > -1;
@@ -407,12 +500,17 @@ export function getLastMessageByHeader(game, key) {
   return false;
 }
 
+/**
+ *
+ * @param damage
+ * @param size
+ */
 export function calculateWound(damage, size) {
   if (damage <= 0) {
     return "";
   }
   const typeOfWoundsBySize = getWoundType(size);
-  //SIZES_AND_WOUNDS[size.toString()];
+  // SIZES_AND_WOUNDS[size.toString()];
   if (typeOfWoundsBySize === undefined) return false;
   const wounds = Object.keys(typeOfWoundsBySize);
 
@@ -425,16 +523,24 @@ export function calculateWound(damage, size) {
   return typeOfWound;
 }
 
+/**
+ *
+ * @param obj
+ */
 export function getDataset(obj) {
   if (obj.preventDefault) {
     obj.preventDefault();
     const element = obj.currentTarget;
-    return element.dataset;
+    return { ...element.dataset };
   }
   return obj;
 }
 
 // No limitation to size
+/**
+ *
+ * @param size
+ */
 function getWoundType(size) {
   if (size <= -4) {
     return {
@@ -453,11 +559,11 @@ function getWoundType(size) {
   result[1 + 3 * increment] = "incap";
   result[1 + 4 * increment] = "dead";
 
-  //console.log(result);
+  // Console.log(result);
   return result;
 }
 
-// convert a field value into a number
+// Convert a field value into a number
 export const convertToNumber = function (value, fallback = 0) {
   if (value === undefined || value === "" || value === null) {
     return fallback;
@@ -467,16 +573,17 @@ export const convertToNumber = function (value, fallback = 0) {
     } else {
       return fallback;
     }
+  } else if (Number.isInteger(value)) {
+    return value;
   } else {
-    if (Number.isInteger(value)) {
-      return value;
-    } else {
-      return fallback;
-    }
+    return fallback;
   }
 };
 
 // Internal function to generate Active Effects types from the ability list
+/**
+ *
+ */
 export function generateActiveEffectFromAbilities() {
   let activeEffects = {
     bonusGeneralAbility: {
@@ -552,9 +659,9 @@ export function generateActiveEffectFromAbilities() {
       subtypes: {}
     }
   };
-  // debugger;
+  // Debugger;
   for (const [aKey, ability] of Object.entries(CONFIG.ARM5E.ALL_ABILITIES)) {
-    // console.log(ability);
+    // Console.log(ability);
     if (ability.selection === "disabled") continue;
     let computedKey;
     let afinityComputedKey;
@@ -662,6 +769,10 @@ export function generateActiveEffectFromAbilities() {
   debugger;
 }
 
+/**
+ *
+ * @param compendiumName
+ */
 export function getSystemCompendium(compendiumName) {
   let pack = game.packs.filter(
     (p) => p.metadata.packageName === "arm5e" && p.metadata.name === compendiumName
@@ -670,6 +781,12 @@ export function getSystemCompendium(compendiumName) {
   return undefined;
 }
 
+/**
+ *
+ * @param label
+ * @param content
+ * @param startHidden
+ */
 export function putInFoldableLink(label, content, startHidden = true) {
   let hidden = "";
   if (startHidden) {
@@ -680,6 +797,12 @@ export function putInFoldableLink(label, content, startHidden = true) {
   )}</p></div><div class="${hidden} details">${content}</div>`;
 }
 
+/**
+ *
+ * @param label
+ * @param content
+ * @param startHidden
+ */
 export function putInFoldableLinkWithAnimation(label, content, startHidden = true) {
   let hidden = "";
   if (startHidden) {
@@ -690,26 +813,30 @@ export function putInFoldableLinkWithAnimation(label, content, startHidden = tru
   )}</p></div><div class="${hidden} details">${content}</div>`;
 }
 
+/**
+ *
+ * @param num
+ */
 export function integerToRomanNumeral(num) {
   if (typeof num !== "number") return false;
 
   let lookup = {
-      M: 1000,
-      CM: 900,
-      D: 500,
-      CD: 400,
-      C: 100,
-      XC: 90,
-      L: 50,
-      XL: 40,
-      X: 10,
-      IX: 9,
-      V: 5,
-      IV: 4,
-      I: 1
-    },
-    roman = "",
-    i;
+    M: 1000,
+    CM: 900,
+    D: 500,
+    CD: 400,
+    C: 100,
+    XC: 90,
+    L: 50,
+    XL: 40,
+    X: 10,
+    IX: 9,
+    V: 5,
+    IV: 4,
+    I: 1
+  };
+  let roman = "";
+  let i;
   for (i in lookup) {
     while (num >= lookup[i]) {
       roman += i;

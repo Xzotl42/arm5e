@@ -6,7 +6,8 @@ const TYPE_OF_DATASET = {
   MAGIC: "magic",
   POWER: "power",
   SPONT: "spont",
-  WEAPON: "weapon"
+  WEAPON: "weapon",
+  SUPERNATURAL: "supernatural"
 };
 
 //TODO
@@ -82,13 +83,24 @@ function getDatasetForPower(item) {
   };
 }
 
+function getDatasetForSupernatural(item) {
+  if (item?.type !== TYPE_OF_DATASET.SUPERNATURAL) return {};
+  return {
+    roll: TYPE_OF_DATASET.SUPERNATURAL,
+    id: item._id,
+    name: item.name,
+    img: item.img
+  };
+}
+
 function prepareDatasetByTypeOfItem(item) {
   return {
     ...getDatasetForAbility(item),
     ...getDatasetForWeapon(item),
     ...getDatasetForSpell(item),
     ...getDatasetForMagic(item),
-    ...getDatasetForPower(item)
+    ...getDatasetForPower(item),
+    ...getDatasetForSupernatural(item)
   };
 }
 

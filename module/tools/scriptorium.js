@@ -11,14 +11,23 @@ import { compareTopics, debug, getDataset, log } from "../tools.js";
 
 export class ScriptoriumObject {
   seasons = CONFIG.ARM5E.seasons;
+
   abilityKeysList = CONFIG.ARM5E.LOCALIZED_ABILITIES;
+
   arts = CONFIG.ARM5E.magic.arts;
+
   techs = CONFIG.ARM5E.magic.techniques;
+
   forms = CONFIG.ARM5E.magic.forms;
+
   bookTopics = CONFIG.ARM5E.books.categories;
+
   bookTypes = CONFIG.ARM5E.books.types;
+
   year = game.settings.get("arm5e", "currentDate").year;
+
   season = game.settings.get("arm5e", "currentDate").season;
+
   copying = {
     scribe: { id: null },
     books: [
@@ -86,6 +95,7 @@ export class ScriptoriumObject {
       }
     }
   };
+
   writing = {
     writer: { id: null },
     book: {
@@ -117,6 +127,7 @@ export class ScriptoriumObject {
       }
     }
   };
+
   labTexts = [];
 }
 
@@ -125,6 +136,7 @@ export class Scriptorium extends FormApplication {
     super(data, options);
     // Hooks.on("closeApplication", (app, html) => this.onClose(app));
   }
+
   /** @override */
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
@@ -158,7 +170,7 @@ export class Scriptorium extends FormApplication {
   }
 
   onClose(app) {
-    // if (app.object.reading.book.uuid != null) {
+    // If (app.object.reading.book.uuid != null) {
     //   fromUuidSync(app.object.reading.book.uuid).apps[app.appId] = undefined;
     // }
     if (app.object.reading.reader.id != null) {
@@ -170,7 +182,7 @@ export class Scriptorium extends FormApplication {
   async _onDrop(event) {
     const dropData = TextEditor.getDragEventData(event);
     if (dropData.type == "Item") {
-      // if (this.item.system.activity === "teaching" || this.item.system.activity === "training") {
+      // If (this.item.system.activity === "teaching" || this.item.system.activity === "training") {
 
       if (event.currentTarget.dataset.drop === "book") {
         const book = await Item.implementation.fromDropData(dropData);
@@ -220,8 +232,8 @@ export class Scriptorium extends FormApplication {
 
   getUserCache() {
     let usercache = JSON.parse(sessionStorage.getItem(`usercache-${game.user.id}`));
-    if (usercache[`scriptorium`] == undefined) {
-      usercache[`scriptorium`] = {
+    if (usercache.scriptorium == undefined) {
+      usercache.scriptorium = {
         sections: {
           visibility: {
             scriptorium: {}
@@ -231,7 +243,7 @@ export class Scriptorium extends FormApplication {
     }
 
     sessionStorage.setItem(`usercache-${game.user.id}`, JSON.stringify(usercache));
-    return usercache[`scriptorium`];
+    return usercache.scriptorium;
   }
 
   async getData(options = {}) {
@@ -262,7 +274,7 @@ export class Scriptorium extends FormApplication {
 
     let maxLevel = 99;
     const topicIndex = Number(context.reading.book.system.topicIndex);
-    // for convenience
+    // For convenience
 
     context.topicIndex = Number(topicIndex);
     const currentTopic = context.reading.book.system.topics[context.topicIndex];
@@ -273,7 +285,7 @@ export class Scriptorium extends FormApplication {
     context.reading.book.currentTopic = currentTopic;
     context.currentTopicNumber = context.topicIndex + 1 ?? 1;
     context.topicNum = context.reading.book.system.topics.length ?? 1;
-    // new topic => writing
+    // New topic => writing
 
     context.newTopicIndex = context.writing.book.system.topics.length - 1;
     const newTopic = context.writing.book.system.topics[context.newTopicIndex];
@@ -283,14 +295,14 @@ export class Scriptorium extends FormApplication {
       labText: game.i18n.localize("ITEM.TypeLaboratorytext")
     };
 
-    // copied topic
+    // Copied topic
     for (const book of context.copying.books) {
       const copyingTopicIndex = book.system.topicIndex;
       book.currentTopicToCopyNumber = copyingTopicIndex + 1 ?? 1;
       book.copyTopicNum = book.system.topics.length ?? 1;
       book.currentTopic = book.system.topics[copyingTopicIndex];
     }
-    // context.copyingTopicIndex = context.copying.currentTopic;
+    // Context.copyingTopicIndex = context.copying.currentTopic;
 
     // READING SECTION
 
@@ -302,7 +314,7 @@ export class Scriptorium extends FormApplication {
       }
       let reader = game.actors.get(context.reading.reader.id);
       context.reading.reader.name = reader.name;
-      // get known languages
+      // Get known languages
       context.reading.reader.languages = reader.system.abilities
         .filter((e) => {
           return (
@@ -314,7 +326,7 @@ export class Scriptorium extends FormApplication {
           return { id: lang.id, name: lang.name, score: lang.system.finalScore };
         });
 
-      // always get spell list to have at least one spell selected
+      // Always get spell list to have at least one spell selected
       context.reading.reader.spells = reader.system.spells
         .filter((s) => {
           return (
@@ -359,7 +371,7 @@ export class Scriptorium extends FormApplication {
               });
             }
           }
-          // reader.system.abilities.map((a) => {
+          // Reader.system.abilities.map((a) => {
           //   return {
           //     id: a.id,
           //     key: a.system.key,
@@ -377,7 +389,7 @@ export class Scriptorium extends FormApplication {
           // });
 
           let filteredAbilities = availableAbilities.filter((a) => a.system.finalScore < maxLevel);
-          // does the reader has the book topic ability?
+          // Does the reader has the book topic ability?
           let ability = availableAbilities.find((a) => {
             return (
               a.system.key === currentTopic.key &&
@@ -386,7 +398,7 @@ export class Scriptorium extends FormApplication {
           });
 
           if (ability) {
-            // is the reader low skilled enough?
+            // Is the reader low skilled enough?
             if (filteredAbilities.find((a) => a._id == ability._id)) {
               context.reading.reader.ability = ability._id;
               context.reading.reader.abilities = [ability];
@@ -398,7 +410,7 @@ export class Scriptorium extends FormApplication {
               context.ui.reading.error = true;
             }
           } else {
-            // check if the ability is not found because of the option field
+            // Check if the ability is not found because of the option field
             filteredAbilities = filteredAbilities.filter((a) => a.system.key == currentTopic.key);
             if (filteredAbilities.length > 0) {
               if (filteredAbilities.length > 1) {
@@ -408,11 +420,11 @@ export class Scriptorium extends FormApplication {
                   })
                 );
               }
-              // if (!context.reading.reader.ability) {
+              // If (!context.reading.reader.ability) {
               //   context.reading.reader.ability = filteredAbilities[0]._id.length ??
               // }
               context.reading.reader.abilities = filteredAbilities;
-              // filteredAbilities[0].name = game.i18n.format(
+              // FilteredAbilities[0].name = game.i18n.format(
               //   CONFIG.ARM5E.LOCALIZED_ABILITIES[currentTopic.key].mnemonic,
               //   { option: currentTopic.option }
               // );
@@ -425,13 +437,13 @@ export class Scriptorium extends FormApplication {
               );
               context.ui.reading.error = true;
             }
-            // else {
+            // Else {
             //   context.ui.editItem = "disabled";
             //   context.ui.warning = "arm5e.scriptorium.msg.missingItem";
             //   context.ui.warningParam = game.i18n.localize("arm5e.sheet.ability");
             //   context.error = true;
             // }
-            //context.error = true;
+            // context.error = true;
           }
 
           break;
@@ -442,9 +454,11 @@ export class Scriptorium extends FormApplication {
         case "mastery": {
           if (context.reading.reader.spells.length === 0) {
             context.ui.editItem = "disabled";
-            context.ui.reading.warning.push(game.i18n.format("arm5e.scriptorium.msg.missingItem"), {
-              item: game.i18n.localize("arm5e.sheet.spell")
-            });
+            context.ui.reading.warning.push(
+              game.i18n.format("arm5e.scriptorium.msg.missingItem", {
+                item: game.i18n.localize("arm5e.sheet.spell")
+              })
+            );
             context.ui.reading.error = true;
           } else {
             if (!context.reading.reader.spell) {
@@ -460,17 +474,17 @@ export class Scriptorium extends FormApplication {
           break;
         }
         default:
-          context.ui.warning.push("Error");
+          context.ui.reading.warning.push("Error");
           context.ui.reading.error = true;
           break;
       }
       this.checkReading(context, reader);
-      // log(false, `Scriptorium reading data: ${JSON.stringify(context.reading)}`);
+      // Log(false, `Scriptorium reading data: ${JSON.stringify(context.reading)}`);
     }
 
-    ////////////////
+    // //////////////
     // WRITING section
-    ///////////////
+    // /////////////
     if (context.writing.writer?.id) {
       if (newTopic.type === "Summa" || newTopic.level) {
         maxLevel = newTopic.level;
@@ -495,7 +509,7 @@ export class Scriptorium extends FormApplication {
         context.ui.writing.disableType = "disabled";
       }
       context.writing.writer.name = writer.name;
-      // get known languages
+      // Get known languages
       context.writing.writer.languages = writer.system.abilities
         .filter((e) => {
           return (
@@ -537,7 +551,7 @@ export class Scriptorium extends FormApplication {
         context.writing.writer.writingScore = 0;
       }
 
-      // always get spell list to have at least one spell selected
+      // Always get spell list to have at least one spell selected
       context.writing.writer.filteredSpells = writer.system.spells
         .filter((s) => {
           return s.system.finalScore >= 2;
@@ -591,7 +605,7 @@ export class Scriptorium extends FormApplication {
               work = context.writing.book.system.topics[context.newTopicIndex].level * 5;
             }
           }
-          // log(false, `writer.ability: ${context.writing.writer.ability}`);
+          // Log(false, `writer.ability: ${context.writing.writer.ability}`);
           break;
         }
         case "art": {
@@ -666,10 +680,10 @@ export class Scriptorium extends FormApplication {
           break;
         }
       }
-      // quality bonus cannot be higher than twice the original bonus
+      // Quality bonus cannot be higher than twice the original bonus
       context.writing.book.system.topics[context.newTopicIndex].quality = Math.min(
-        2 * (writer.system.characteristics["com"].value + 6 + context.writing.writer.writingBonus),
-        writer.system.characteristics["com"].value +
+        2 * (writer.system.characteristics.com.value + 6 + context.writing.writer.writingBonus),
+        writer.system.characteristics.com.value +
           6 +
           context.writing.writer.writingBonus +
           qualityBonus
@@ -681,7 +695,7 @@ export class Scriptorium extends FormApplication {
         context.writing.writer.duration = Math.ceil(work / context.writing.writer.writingScore);
       }
       this.checkWriting(context, writer);
-      // log(false, `Scriptorium writing data: ${JSON.stringify(context.writing)}`);
+      // Log(false, `Scriptorium writing data: ${JSON.stringify(context.writing)}`);
     } else {
       context.ui.writing.error = true;
     }
@@ -691,12 +705,12 @@ export class Scriptorium extends FormApplication {
     if (context.copying.scribe?.id) {
       context.ui.canEditScribe = "readonly";
       context.ui.disabledScribe = "disabled";
-      // if (copyTopic.category == "mastery") {
+      // If (copyTopic.category == "mastery") {
       context.ui.copying.disableType = "disabled";
       // }
       let scribe = game.actors.get(context.copying.scribe.id);
       context.copying.scribe.name = scribe.name;
-      // get known languages
+      // Get known languages
       context.copying.scribe.languages = scribe.system.abilities
         .filter((e) => {
           return (
@@ -736,7 +750,7 @@ export class Scriptorium extends FormApplication {
           break;
         }
         case "Tractatus":
-          // get the duration to copy everything
+          // Get the duration to copy everything
           if (context.copying.quickCopy) {
             context.copying.scribe.writingScore = 3;
             context.copying.scribe.writingScoreLabel = "3 Tractati per season";
@@ -778,7 +792,7 @@ export class Scriptorium extends FormApplication {
 
       this.checkCopying(context, scribe);
 
-      // log(false, `Scriptorium copying data: ${JSON.stringify(context.copying)}`);
+      // Log(false, `Scriptorium copying data: ${JSON.stringify(context.copying)}`);
     } else {
       context.ui.copying.error = true;
     }
@@ -795,7 +809,7 @@ export class Scriptorium extends FormApplication {
       context.ui.copying.createPossible = "";
     }
 
-    // log(false, `Scriptorium ui: ${JSON.stringify(context.ui)}`);
+    // Log(false, `Scriptorium ui: ${JSON.stringify(context.ui)}`);
     return context;
   }
 
@@ -828,7 +842,9 @@ export class Scriptorium extends FormApplication {
     html.find(".section-handle").click(this._handle_section.bind(this));
 
     html.find(".next-topic").click(async (event) => this._changeCurrentTopic("reading", event, 1));
-    html.find(".previous-topic").click(async (event) => this._changeCurrentTopic("reading", -1));
+    html
+      .find(".previous-topic")
+      .click(async (event) => this._changeCurrentTopic("reading", event, -1));
     html.find(".next-topicToCopy").click(async (event) => this._changeTopic("copying", event, 1));
     html
       .find(".previous-topicToCopy")
@@ -861,7 +877,7 @@ export class Scriptorium extends FormApplication {
     const index = Number(dataset.index);
     this.object.copying.books.splice(bookIndex, 1);
     this.render(true);
-    // await this.submit({
+    // Await this.submit({
     //   preventClose: true,
     //   updateData: { "copying.books": books }
     // });
@@ -875,7 +891,7 @@ export class Scriptorium extends FormApplication {
       newIndex > this.object[activity].books[bookIndex].system.topics.length - 1 ||
       newIndex < 0
     ) {
-      // no effect
+      // No effect
       return;
     }
     const books = structuredClone(this.object[activity].books);
@@ -891,10 +907,10 @@ export class Scriptorium extends FormApplication {
     event.preventDefault();
     const newIndex = Number(getDataset(event).index) + offset;
     if (newIndex > this.object[activity].book.system.topics.length - 1 || newIndex < 0) {
-      // no effect
+      // No effect
       return;
     }
-    // let updateData = ;
+    // Let updateData = ;
     // updateData["reading.book.system.topicIndex"] = newIndex;
     const str = `${activity}.book.system.topicIndex`;
     await this.submit({
@@ -902,11 +918,12 @@ export class Scriptorium extends FormApplication {
       updateData: { [str]: newIndex }
     });
   }
+
   async _handle_section(ev) {
     const dataset = getDataset(ev);
     log(false, `DEBUG section: ${dataset.section}, category: ${dataset.category}`);
     let usercache = JSON.parse(sessionStorage.getItem(`usercache-${game.user.id}`));
-    let scope = usercache["scriptorium"].sections.visibility[dataset.category];
+    let scope = usercache.scriptorium.sections.visibility[dataset.category];
     let classes = document.getElementById(`${dataset.category}-${dataset.section}`).classList;
     if (scope) {
       if (classes.contains("hide")) {
@@ -918,7 +935,7 @@ export class Scriptorium extends FormApplication {
       }
       sessionStorage.setItem(`usercache-${game.user.id}`, JSON.stringify(usercache));
     }
-    // log(false, `DEBUG Flags: ${JSON.stringify(this.item.flags.arm5e.ui.sections.visibility)}`);
+    // Log(false, `DEBUG Flags: ${JSON.stringify(this.item.flags.arm5e.ui.sections.visibility)}`);
     classes.toggle("hide");
   }
 
@@ -929,9 +946,9 @@ export class Scriptorium extends FormApplication {
     const writerData = objectData.writing.writer;
     const book = foundry.utils.deepClone(objectData.writing.book);
     const dataset = event.currentTarget.dataset;
-    // create a safe copy of the topics
+    // Create a safe copy of the topics
     const bookTopics = book.system.topics;
-    // remove the placeholder topic
+    // Remove the placeholder topic
     let [topicTemplate] = bookTopics.splice(dataset.index, 1);
     const labTexts = objectData.labTexts;
 
@@ -939,7 +956,7 @@ export class Scriptorium extends FormApplication {
       title: book.name
     });
 
-    // add a new topic for each lab text
+    // Add a new topic for each lab text
     let topics = [];
     let description = "<ul>";
     for (const e of labTexts) {
@@ -1121,15 +1138,14 @@ export class Scriptorium extends FormApplication {
           folio.system.topics.push(topic);
         }
         folio.system.description = BookSchema.getTableOfContentsSynthetic(folio.system);
-        achievementsIndex[`labTextFolio`] = folio;
+        achievementsIndex.labTextFolio = folio;
       }
     }
 
     // Update descriptions:
-    let diaryDesc =
-      game.i18n.format("arm5e.scriptorium.msg.diaryDescCopying", {
-        name: scribe.name
-      }) + "<ul>";
+    let diaryDesc = `${game.i18n.format("arm5e.scriptorium.msg.diaryDescCopying", {
+      name: scribe.name
+    })}<ul>`;
     for (const book of books) {
       diaryDesc += `<li>${book.name}</li>`;
       book.system.description = BookSchema.getTableOfContentsSynthetic(book.system);
@@ -1260,6 +1276,7 @@ export class Scriptorium extends FormApplication {
     let entry = await writer.createEmbeddedDocuments("Item", entryData, {});
     entry[0].sheet.render(true);
   }
+
   async _createReadingDiaryEntry(event) {
     const objectData = foundry.utils.expandObject(this.object);
     const reader = game.actors.get(objectData.reading.reader.id);
@@ -1318,7 +1335,7 @@ export class Scriptorium extends FormApplication {
             let ab = reader.system.abilities.find((a) => {
               return a._id === dataset.abilityId;
             });
-            entryData[0].system.cappedGain = topic.cappedGain; //this.checkAbilityOverload(objectData, reader, ab);
+            entryData[0].system.cappedGain = topic.cappedGain; // This.checkAbilityOverload(objectData, reader, ab);
           } else {
             entryData[0].system.cappedGain = false;
           }
@@ -1345,7 +1362,7 @@ export class Scriptorium extends FormApplication {
         if (topic.type == "Summa") {
           let art = reader.getArtStats(topic.art);
           objectData.ui = {};
-          entryData[0].system.cappedGain = topic.cappedGain; // this.checkArtOverload(objectData, reader, art);
+          entryData[0].system.cappedGain = topic.cappedGain; // This.checkArtOverload(objectData, reader, art);
           // if (entryData[0].system.cappedGain) {
           //   quality = topic.quality;
           // }
@@ -1440,6 +1457,7 @@ export class Scriptorium extends FormApplication {
       updateData: updatedData
     });
   }
+
   async _resetWriteBook(event) {
     const objectData = foundry.utils.expandObject(this.object);
     const index = objectData.writing.book.system.topics.length - 1;
@@ -1457,6 +1475,7 @@ export class Scriptorium extends FormApplication {
       updateData: updatedData
     });
   }
+
   async _changeSeason(event) {
     await this.submit({
       preventClose: true,
@@ -1478,12 +1497,12 @@ export class Scriptorium extends FormApplication {
     }
     let index = book.getFlag("arm5e", "currentBookTopic") ?? 0;
     book.system.topicIndex = index;
-    // book.apps[this.appId] = this;
+    // Book.apps[this.appId] = this;
 
     await this.submit({
       preventClose: true,
       updateData: {
-        ["reading.book"]: { name: book.name, id: book.id, uuid: book.uuid, system: book.system }
+        "reading.book": { name: book.name, id: book.id, uuid: book.uuid, system: book.system }
       }
     });
   }
@@ -1496,14 +1515,14 @@ export class Scriptorium extends FormApplication {
     const newTopicIndex = book.system.topics.length;
     let newTopic =
       this.object.writing.book.system.topics[this.object.writing.book.system.topics.length - 1];
-    // book.apps[this.appId] = this;
+    // Book.apps[this.appId] = this;
     book.system.topics.push(newTopic);
     book.system.topicIndex = book.system.topics.length - 1;
 
     await this.submit({
       preventClose: true,
       updateData: {
-        ["writing.book"]: { name: book.name, id: book.id, uuid: book.uuid, system: book.system }
+        "writing.book": { name: book.name, id: book.id, uuid: book.uuid, system: book.system }
       }
     });
   }
@@ -1554,8 +1573,8 @@ export class Scriptorium extends FormApplication {
     await this.submit({
       preventClose: true,
       updateData: {
-        ["copying.topicType"]: topicType,
-        ["copying.books"]: books
+        "copying.topicType": topicType,
+        "copying.books": books
       }
     });
   }
@@ -1577,7 +1596,7 @@ export class Scriptorium extends FormApplication {
     await this.submit({
       preventClose: true,
       updateData: {
-        ["labTexts"]: labtexts
+        labTexts: labtexts
       }
     });
   }
@@ -1600,14 +1619,14 @@ export class Scriptorium extends FormApplication {
         true
       )}`,
       level: text.system.level,
-      img: CONFIG.ARM5E_DEFAULT_ICONS["laboratoryText"],
+      img: CONFIG.ARM5E_DEFAULT_ICONS.laboratoryText,
       system: text.system
     });
     await this.submit({
       preventClose: true,
       updateData: {
-        ["copying.labTexts"]: labtexts,
-        ["copying.topicType"]: "labText"
+        "copying.labTexts": labtexts,
+        "copying.topicType": "labText"
       }
     });
   }
@@ -1620,10 +1639,11 @@ export class Scriptorium extends FormApplication {
     await this.submit({
       preventClose: true,
       updateData: {
-        ["labTexts"]: labtexts
+        labTexts: labtexts
       }
     });
   }
+
   async _removeLabTextCopy(event) {
     const dataset = getDataset(event);
 
@@ -1632,7 +1652,7 @@ export class Scriptorium extends FormApplication {
     await this.submit({
       preventClose: true,
       updateData: {
-        ["copying.labTexts"]: labtexts
+        "copying.labTexts": labtexts
       }
     });
   }
@@ -1672,6 +1692,7 @@ export class Scriptorium extends FormApplication {
       updateData: { writing: writingData }
     });
   }
+
   async _setScribe(scribe) {
     if (!scribe.isOwner) {
       ui.notifications.info(game.i18n.localize("arm5e.scriptorium.msg.actorNotAuthorized"));
@@ -1709,11 +1730,17 @@ export class Scriptorium extends FormApplication {
   async _updateObject(event, formData) {
     const expanded = foundry.utils.expandObject(formData);
 
+    if (expanded.reading?.book?.system?.topics) {
+      const topics = this.object.reading.book.system.topics;
+      foundry.utils.mergeObject(topics, expanded.reading.book.system.topics);
+      delete expanded.reading.book.system.topics;
+    }
     if (expanded.writing?.book?.system?.topics) {
       const topics = this.object.writing.book.system.topics;
       foundry.utils.mergeObject(topics, expanded.writing.book.system.topics);
       delete expanded.writing.book.system.topics;
     }
+
     if (expanded.copying?.books) {
       const bookIndexes = Object.keys(expanded.copying.books);
       for (const index of bookIndexes) {
@@ -1732,7 +1759,7 @@ export class Scriptorium extends FormApplication {
 
     foundry.utils.mergeObject(this.object, expanded, { recursive: true });
     this.render();
-    // if (formData.season) {
+    // If (formData.season) {
     //   this.object.season = formData.season;
     // }
     // if (formData.year) {
@@ -1745,8 +1772,6 @@ export class Scriptorium extends FormApplication {
     // this.object = foundry.utils.expandObject(this.object);
     // // log(false, `Scriptorium object: ${JSON.stringify(this.object)}`);
     // this.render();
-
-    return;
   }
 
   async _changeBookTopic(event) {
@@ -1764,7 +1789,7 @@ export class Scriptorium extends FormApplication {
       topicData.category = "ability";
       topicData.labText = null;
     } else if (chosenTopic === "art") {
-      // missing data, reset to default
+      // Missing data, reset to default
       topicData.art = "cr";
       topicData.key = null;
       topicData.option = "";
@@ -1788,25 +1813,25 @@ export class Scriptorium extends FormApplication {
       topicData.name = null;
       topicData.option = "";
       topicData.category = "labText";
-      //TODO
+      // TODO
     }
     await this.submit({
       preventClose: true,
       updateData: { [`${activity}.book.system.topics.${index}`]: topicData }
     });
-    // log(false, `Book topic: ${item.system.topic}`);
+    // Log(false, `Book topic: ${item.system.topic}`);
   }
 
   checkWriting(context, writer) {
     const bookData = context.writing.book;
     const topic = context.writing.book.system.topics[context.newTopicIndex];
-    // is the character able to  read?
+    // Is the character able to  read?
     let writingSkill = writer.getAbilityStats("artesLib");
     if (writingSkill.score == 0) {
       context.ui.writing.warning.push(game.i18n.localize("arm5e.scriptorium.msg.illiterate"));
       context.ui.writing.error = true;
     }
-    // know any language at proper level?
+    // Know any language at proper level?
     if (context.writing.writer.languages.length == 0) {
       context.ui.writing.warning.push(game.i18n.localize("arm5e.scriptorium.msg.noLanguage"));
       context.ui.writing.error = true;
@@ -1884,7 +1909,7 @@ export class Scriptorium extends FormApplication {
   }
 
   checkCopying(context, scribe) {
-    // is the character able to  read?
+    // Is the character able to  read?
     let readingSkill = scribe.getAbilityStats("artesLib");
     if (readingSkill.score == 0) {
       context.ui.copying.warning.push(game.i18n.localize("arm5e.scriptorium.msg.illiterate"));
@@ -1917,7 +1942,7 @@ export class Scriptorium extends FormApplication {
                 "arm5e.scriptorium.msg.unfamiliarTopic2"
               )} (${game.i18n.localize(
                 CONFIG.ARM5E.LOCALIZED_ABILITIES[currentTopic.key].mnemonic
-              )}${currentTopic.option === "" ? "" : " : " + currentTopic.option})`
+              )}${currentTopic.option === "" ? "" : ` : ${currentTopic.option}`})`
             );
           }
           const ab = scribe.system.abilities.find((a) => {
@@ -1951,13 +1976,13 @@ export class Scriptorium extends FormApplication {
   checkReading(context, reader) {
     const bookData = context.reading.book;
     const currentTopic = context.reading.book.system.topics[context.topicIndex];
-    // is the character able to  read?
+    // Is the character able to  read?
     let readingSkill = reader.getAbilityStats("artesLib");
     if (readingSkill.score == 0) {
       context.ui.reading.warning.push(game.i18n.localize("arm5e.scriptorium.msg.illiterate"));
       context.ui.reading.error = true;
     }
-    // know any language at proper level?
+    // Know any language at proper level?
     if (context.reading.reader.languages.length == 0) {
       context.ui.reading.warning.push(game.i18n.localize("arm5e.scriptorium.msg.noLanguage"));
       context.error = true;
@@ -2070,7 +2095,7 @@ export class Scriptorium extends FormApplication {
   }
 
   checkArtOverload(context, reader, artStat) {
-    // let artStat = reader.getArtStats();
+    // Let artStat = reader.getArtStats();
     const coeff = artStat.xpCoeff;
     const currentTopic = context.reading.book.system.topics[context.reading.book.system.topicIndex];
     let newXp = currentTopic.quality + reader.system.bonuses.activities.reading + artStat.xp;
@@ -2126,7 +2151,7 @@ export class Scriptorium extends FormApplication {
         return d.flags == 8 && d.data.topic?.type == "Tractatus";
       });
     });
-    // externalId is an array!
+    // ExternalId is an array!
     return tractati.map((e) => {
       return {
         title: e.system.externalIds[0].data.title,
@@ -2143,7 +2168,7 @@ export class Scriptorium extends FormApplication {
         return d.flags == 8 && d.data.topic?.type == "Tractatus";
       });
     });
-    // externalId is an array!
+    // ExternalId is an array!
     return tractati.map((e) => {
       return {
         title: e.system.externalIds[0].data.title,

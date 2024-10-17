@@ -1,0 +1,92 @@
+{{log "magicSystem templates" system.magicSystem.templates }}
+{{#each system.magicSystem.templates as |template tid|}}
+  <div class="flexrow backSection margintop18">
+    <ol class="items-list">
+      <li class="item flexrow item-header">
+        <div class="item-image"></div>
+        <div>
+          <span class="item-name spell-list">{{template.name}}</span><span>
+        </div>
+        <div class="item-controls">
+          <a class="item-control supernatural-create" title='{{localize "arm5e.hints.create" item=template.name}}'
+            data-type="supernaturalEffect" data-template="{{tid}}"> <i
+              class="fas fa-plus"></i>{{localize "arm5e.sheet.action.Create"}}</a>
+        </div>
+      </li>
+      {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+      {{#each (lookup ../system.supernaturalEffectsTemplates tid) as |item id|}}
+        {{log "THIS " this }}
+        {{log "template "  @root.system.magicSystem.templates tid }}
+        <li class="item item-value flexrow macro-ready" data-name="{{item.name}}" data-item-id="{{item._id}}">
+
+          <div class="item-image item-control item-edit"><img src="{{item.img}}" title="{{item.name}}" /></div>
+          <div class="flexrow flex-center">
+            {{#if item.system.valid}}
+              <span class="flexrow item-title width4 rollable" data-roll="supernatural" data-id="{{item._id}}"
+                name="item.name" data-die-type="{{lookup (lookup @root.system.magicSystem.templates tid) 'rollType'}}">
+                {{item.name}} ({{item.system.level}})
+              </span>
+            {{else}}
+              <span class="flexrow item-title width4" name="item.name">
+                {{item.name}} ({{item.system.level}}) -- <b class="warning">{{localize "arm5e.generic.invalid"}}!</b> --
+              </span>
+            {{/if}}
+            <label title="{{{item.system.castingTotal.hint}}}"><span
+                class="bold">{{localize "arm5e.sheet.castingTotal"}}:</span>
+              {{item.system.castingTotal.value}}</label>
+          </div>
+          <div class="item-controls">
+            <a class="item-control item-edit"
+              title='{{localize "arm5e.hints.edit" item=(localize "arm5e.sheet.spell")}}'><i
+                class="icon-Icon_Edit"></i></a>
+            <a class="item-control item-delete"
+              title='{{localize "arm5e.hints.delete" item=(localize "arm5e.sheet.spell")}}'><i
+                class="icon-Icon_Delete_Hand_Gesture"></i></a>
+          </div>
+        </li>
+      {{/each}}
+
+    </ol>
+  </div>
+{{/each}}
+{{#if system.supernaturalEffectsTemplates.orphans }}
+  <div class="flexrow backSection margintop18">
+    <ol class="items-list">
+      <li class="item flexrow item-header">
+        <div class="item-image"></div>
+        <div>
+          <span class="item-name spell-list">{{localize "arm5e.generic.orphans"}}</span><span>
+        </div>
+      </li>
+      {{#each system.supernaturalEffectsTemplates.orphans as |item id|}}
+        <li class="item item-value flexrow macro-ready" data-name="{{item.name}}" data-item-id="{{item._id}}">
+
+          <div class="item-image item-control item-edit"><img src="{{item.img}}" title="{{item.name}}" /></div>
+          <div class="flexrow flex-center">
+            {{#if item.system.valid}}
+              <span class="flexrow item-title width4 rollable" data-roll="supernatural" data-id="{{item._id}}"
+                name="item.name">
+                {{item.name}} ({{item.system.level}})
+              </span>
+            {{else}}
+              <span class="flexrow item-title width4" name="item.name">
+                {{item.name}} ({{item.system.level}}) -- <b class="warning">{{localize "arm5e.generic.invalid"}}!</b> --
+              </span>
+            {{/if}}
+            <label title="{{{item.system.castingTotal.hint}}}"><span
+                class="bold">{{localize "arm5e.sheet.castingTotal"}}:</span>
+              {{item.system.castingTotal.value}}</label>
+          </div>
+          <div class="item-controls">
+            <a class="item-control item-edit"
+              title='{{localize "arm5e.hints.edit" item=(localize "arm5e.sheet.spell")}}'><i
+                class="icon-Icon_Edit"></i></a>
+            <a class="item-control item-delete"
+              title='{{localize "arm5e.hints.delete" item=(localize "arm5e.sheet.spell")}}'><i
+                class="icon-Icon_Delete_Hand_Gesture"></i></a>
+          </div>
+        </li>
+      {{/each}}
+    </ol>
+  </div>
+{{/if}}

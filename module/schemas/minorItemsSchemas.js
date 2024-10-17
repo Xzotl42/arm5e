@@ -13,13 +13,13 @@ import {
 import { EnchantmentExtension, ItemState } from "./enchantmentSchema.js";
 const fields = foundry.data.fields;
 
-export const possibleReputationTypes = Object.keys(ARM5E.reputations);
+// export const possibleReputationTypes = Object.keys(ARM5E.reputations);
 
-const virtueFlawTypes = Object.keys(ARM5E.virtueFlawTypes.character)
-  .concat(Object.keys(ARM5E.virtueFlawTypes.laboratory))
-  .concat(Object.keys(ARM5E.virtueFlawTypes.covenant))
-  .concat("Special")
-  .concat("other");
+// const virtueFlawTypes = Object.keys(ARM5E.virtueFlawTypes.character)
+//   .concat(Object.keys(ARM5E.virtueFlawTypes.laboratory))
+//   .concat(Object.keys(ARM5E.virtueFlawTypes.covenant))
+//   .concat("Special")
+//   .concat("other");
 export class VirtueFlawSchema extends foundry.abstract.DataModel {
   // TODO remove in V11
   static _enableV10Validation = true;
@@ -31,7 +31,11 @@ export class VirtueFlawSchema extends foundry.abstract.DataModel {
         required: false,
         blank: false,
         initial: "general",
-        choices: virtueFlawTypes
+        choices: Object.keys(ARM5E.virtueFlawTypes.character)
+          .concat(Object.keys(ARM5E.virtueFlawTypes.laboratory))
+          .concat(Object.keys(ARM5E.virtueFlawTypes.covenant))
+          .concat("Special")
+          .concat("other")
       }),
       impact: new fields.SchemaField(
         {
@@ -116,6 +120,11 @@ export class VirtueFlawSchema extends foundry.abstract.DataModel {
     }
 
     // special cases
+    const virtueFlawTypes = Object.keys(ARM5E.virtueFlawTypes.character)
+      .concat(Object.keys(ARM5E.virtueFlawTypes.laboratory))
+      .concat(Object.keys(ARM5E.virtueFlawTypes.covenant))
+      .concat("Special")
+      .concat("other");
     if (itemData.system.type === "Social Status") {
       updateData["system.type"] = "social";
     } else if (!virtueFlawTypes.includes(itemData.system.type)) {
@@ -208,12 +217,12 @@ export class ReputationSchema extends foundry.abstract.DataModel {
         required: false,
         blank: false,
         initial: "local",
-        choices: possibleReputationTypes
+        choices: Object.keys(ARM5E.reputations)
       })
     };
   }
 
-  async _increaseScore() {
+  async increaseScore() {
     let oldXp = this.xp;
     let newXp = Math.round(((this.score + 1) * (this.score + 2) * 5) / 2);
 
@@ -229,7 +238,7 @@ export class ReputationSchema extends foundry.abstract.DataModel {
     console.log(`Added ${delta} xps from ${oldXp} to ${newXp}`);
   }
 
-  async _decreaseScore() {
+  async decreaseScore() {
     if (this.score != 0) {
       let oldXp = this.xp;
       let newXp = Math.round(((this.score - 1) * this.score * 5) / 2);
@@ -282,7 +291,7 @@ export class PersonalityTraitSchema extends foundry.abstract.DataModel {
     };
   }
 
-  async _increaseScore() {
+  async increaseScore() {
     let oldXp = this.xp;
     let newXp = 5;
     if (this.score > 0) {
@@ -302,7 +311,7 @@ export class PersonalityTraitSchema extends foundry.abstract.DataModel {
     console.log(`Added ${delta} xps from ${oldXp} to ${newXp}`);
   }
 
-  async _decreaseScore() {
+  async decreaseScore() {
     let oldXp = this.xp;
     let newXp = -5;
     if (this.score > 0) {

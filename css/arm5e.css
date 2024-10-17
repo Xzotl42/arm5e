@@ -348,6 +348,10 @@ a.content-link i.fa-book-open {
   --color-shadow-primary: rgb(200, 0, 0);
 }
 
+.arm5e .warning {
+  color: rgb(200, 0, 0);
+}
+
 h4.window-title {
   font-family: Blackmoor;
   font-size: 20px;
@@ -397,6 +401,15 @@ h4.window-title {
 .arm5e.button.ui {
   font-family: "blackmoor";
   padding: 5px;
+}
+
+button.template-item {
+  padding: 3px;
+  text-align: center;
+  font-size: 9pt;
+  margin: 4px;
+  border-radius: 5px;
+  line-height: normal;
 }
 
 .arm5e .item-control {
@@ -1308,6 +1321,17 @@ input[type="time"] {
   margin-bottom: 16px;
   object-fit: contain;
 }
+
+.arm5e .sheet-header .item-img-medium {
+  -webkit-box-flex: 0;
+  -ms-flex: 0 0 100px;
+  flex: 0 0 100px;
+  height: 100px;
+  margin-right: 16px;
+  margin-bottom: 16px;
+  object-fit: contain;
+}
+
 .arm5e .sheet-header .item-small-img {
   -webkit-box-flex: 0;
   -ms-flex: 0 0 64px;
@@ -1606,7 +1630,7 @@ div[class*="foldable-section"] {
   text-transform: uppercase;
 }
 
-.arm5e .checkbox-label {
+.checkbox-label {
   padding-top: 7px;
   height: auto;
 }
@@ -1727,6 +1751,12 @@ input[type="number"].resource-focus-slim {
 input[type="text"].resource-focus {
   max-width: 70px;
   text-align: center;
+}
+
+input[type="text"].resource-focus-wide {
+  width: 100%;
+  text-align: center;
+  font-size: 9pt;
 }
 
 input[type="number"].resource-focus.summary {
@@ -1908,6 +1938,14 @@ img.art-icon {
   -webkit-box-flex: 0;
   -ms-flex: 0 0 24px;
   flex: 0 0 45px;
+  margin-right: 5px;
+  object-fit: contain;
+}
+
+.arm5e .items-list .item .item-image-tiny {
+  -webkit-box-flex: 0;
+  -ms-flex: 0 0 24px;
+  flex: 0 0 30px;
   margin-right: 5px;
   object-fit: contain;
 }
@@ -2235,6 +2273,134 @@ h3.covenant-tooltip {
   visibility: visible;
   opacity: 1;
   transition: opacity 500ms;
+}
+
+.template-item-box {
+  min-width: 160px;
+  padding: 6px 8px;
+  background: rgba(188, 179, 155, 0.9);
+  font-family: bookAntiquaBold;
+  font-size: var(--font-size-16);
+  line-height: var(--font-size-16);
+  color: rgb(0 0 0 / 90%);
+  border-width: 0px 1px 1px 0px;
+  border-radius: 3px;
+  box-shadow: 3px 3px 3px rgb(0 0 0 / 28%);
+  height: fit-content;
+}
+
+#template-content {
+  position: relative;
+  margin-top: 12px;
+}
+
+#top-right-icon {
+  position: absolute;
+  top: -15px;
+  right: -8px;
+}
+
+.template-label {
+  text-align: center;
+  padding-bottom: 5px;
+  margin-bottom: 5px;
+  border-style: solid;
+  border-width: 0px 1px 1px 0px;
+}
+
+select.template-select {
+  max-width: 140px;
+}
+
+input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  font-size: 2rem;
+
+  border-radius: 0;
+  flex: 0 0 20px;
+  border: 1px solid black;
+}
+
+input[type="checkbox"]::before {
+  content: "";
+  width: 1rem;
+  height: 1rem;
+  padding: 1px;
+  clip-path: polygon(0 20%, 0 60%, 29% 100%, 100% 29%, 100% 1%, 35% 61%);
+  /* clip-path: polygon(
+    20% 0%,
+    0% 20%,
+    30% 50%,
+    0% 80%,
+    20% 100%,
+    50% 70%,
+    80% 100%,
+    100% 80%,
+    70% 50%,
+    100% 20%,
+    80% 0%,
+    50% 30%
+  ); */
+  transform: scale(0);
+  background-color: rgb(112, 15, 15);
+}
+
+input[type="checkbox"]:checked::before {
+  transform: scale(1);
+}
+
+.arm5e input[type="checkbox"].tiny-checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  font-size: 2rem;
+  /* padding: 0.1rem; */
+  border-radius: 0;
+  flex: 0 0 10px;
+  width: 10px;
+  height: 10px;
+  margin-top: 3px;
+  border: 1px solid black;
+  flex-wrap: wrap;
+}
+
+.arm5e input[type="checkbox"].tiny-checkbox::before {
+  content: "";
+  width: 1rem;
+  height: 1rem;
+  clip-path: polygon(0 20%, 0 60%, 29% 100%, 100% 29%, 100% 1%, 35% 61%);
+  /* clip-path: polygon(
+    20% 0%,
+    0% 20%,
+    30% 50%,
+    0% 80%,
+    20% 100%,
+    50% 70%,
+    80% 100%,
+    100% 80%,
+    70% 50%,
+    100% 20%,
+    80% 0%,
+    50% 30%
+  ); */
+  transform: scale(0);
+  background-color: rgb(112, 15, 15);
+}
+
+input[type="checkbox"].tiny-checkbox:checked::before {
+  transform: scale(1);
+}
+/* dice stuff */
+li.roll.stressdieinternal.d10.exploded.min,
+li.roll.stressdie.d10.exploded.min {
+  color: #065d12;
+  filter: sepia(0.5) hue-rotate(60deg);
 }
 
 /* .content {

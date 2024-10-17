@@ -60,6 +60,14 @@
               <input name="system.covenant.name" class="covenant-link" type="text" value="{{system.covenant.value}}"
                 data-dtype="String" style="margin-left: 8px" />
             </h2>
+            <div style="padding-top: 10px; padding-left: 3px; max-width:15px;">
+              {{#if (eq system.covenant.linked true)}}
+                <a class="flexrow0 actor-link" title="Linked to covenant" data-actorid="{{system.covenant.actorId}}"><i
+                    class="fas fa-link fa-sm"></i></a>
+              {{else}}
+                <a class="flexrow0" title="Not linked to covenant"><i class="fas fa-unlink fa-sm"></i></a>
+              {{/if}}
+            </div>
           {{/if}} {{#if (eq system.charType.value "magusNPC")}}
             <span class="covenantname flexrow" style="padding-top: 4px">
               <label for="system.house.value" class="bold flex0"
@@ -142,6 +150,13 @@
           {{localize "arm5e.sheet.laboratory"}}
         </a>
       {{/if}}
+      {{#if system.features.magicSystem}}
+        <a class="item posRelative" data-tab="tradition">
+          <div class="navItem-right-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
+          <div class="navItem-left-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
+          {{system.magicSystem.name}}
+        </a>
+      {{/if}}
       <a class="item posRelative" data-tab="inventory">
         <div class="navItem-right-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
         <div class="navItem-left-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
@@ -167,7 +182,7 @@
     </nav>
 
     {{!-- Sheet Body --}}
-    <section class="sheet-body">
+    <section class="sheet-body" style="min-height: 245px;">
       {{!-- Description Tab --}}
       <div class="tab description" data-group="primary" data-tab="description">
         <nav class="arm5eSubTabs desc-tabs tabs" data-group="desc-secondary">
@@ -252,7 +267,35 @@
             </div>
           </section>
         </div>
-      {{/if}} {{!-- Inventory Tab --}}
+      {{/if}}
+
+      <div class="tab tradition" data-group="primary" data-tab="tradition">
+        {{!-- Sheet Tab Navigation --}}
+        <nav class="arm5eSubTabs tradition-tabs tabs" data-group="tradition-secondary">
+          <a class="item posRelative" data-tab="tradition-subtab" data-group="tradition-secondary">
+            <div class="navItem-right-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
+            <div class="navItem-left-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
+            {{system.magicSystem.effects}}
+          </a>
+          <a class="item posRelative" data-tab="tradition-config" data-group="tradition-secondary">
+            <div class="navItem-right-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
+            <div class="navItem-left-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
+            {{localize "arm5e.generic.config"}}
+          </a>
+        </nav>
+        {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+        <section class="tradition-body">
+          <div class="tab" data-group="tradition-secondary" data-tab="tradition-subtab">
+            {{> "systems/arm5e/templates/actor/parts/actor-magicSystem.html" }}
+          </div>
+          <div class="tab" data-group="tradition-secondary" data-tab="tradition-config">
+            {{> "systems/arm5e/templates/actor/parts/actor-magicSystem-cfg.html" }}
+          </div>
+        </section>
+
+      </div>
+
+      {{!-- Inventory Tab --}}
       <div class="tab inventory" data-group="primary" data-tab="inventory">
         <nav class="arm5eSubTabs inventory-tabs tabs" data-group="inventory-secondary">
           <a class="item posRelative" data-tab="inventory" data-group="inventory-secondary">
