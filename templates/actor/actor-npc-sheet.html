@@ -132,13 +132,14 @@
         <div class="navItem-left-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
         {{localize "arm5e.sheet.abilities"}}
       </a>
-      {{#if (eq system.charType.value "entity")}}
-        <a class="item posRelative" data-tab="arts">
+      {{#if system.features.powers }}
+        <a class="item posRelative" data-tab="powers">
           <div class="navItem-right-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
           <div class="navItem-left-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
           {{localize "arm5e.sheet.powers"}}
         </a>
-      {{/if}} {{#if (eq system.charType.value "magusNPC")}}
+      {{/if}}
+      {{#if (eq system.charType.value "magusNPC")}}
         <a class="item posRelative" data-tab="arts">
           <div class="navItem-right-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
           <div class="navItem-left-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
@@ -235,11 +236,12 @@
           </div>
         </section>
       </div>
-      {{#if (eq system.charType.value "entity")}} {{!-- Arts Tab --}}
-        <div class="tab arts" data-group="primary" data-tab="arts">
-          {{> "systems/arm5e/templates/actor/parts/actor-arts.html" }}
+      {{#if system.features.powers }} {{!-- Arts Tab --}}
+        <div class="tab arts" data-group="primary" data-tab="powers">
+          {{> "systems/arm5e/templates/actor/parts/actor-powers.html" }}
         </div>
-      {{/if}} {{#if (eq system.charType.value "magusNPC")}} {{!-- Arts Tab --}}
+      {{/if}}
+      {{#if (eq system.charType.value "magusNPC")}} {{!-- Arts Tab --}}
         <div class="tab arts" data-group="primary" data-tab="arts">
           {{> "systems/arm5e/templates/actor/parts/actor-arts.html" }}
         </div>

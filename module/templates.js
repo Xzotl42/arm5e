@@ -20,6 +20,7 @@ export const ArM5ePreloadHandlebarsTemplates = async function () {
     "systems/arm5e/templates/actor/parts/actor-castingTotals.html",
     "systems/arm5e/templates/actor/parts/actor-voice-and-gestures.html",
     "systems/arm5e/templates/actor/parts/actor-diary.html",
+    "systems/arm5e/templates/actor/parts/actor-powers.html",
 
     "systems/arm5e/templates/actor/parts/actor-profiles.html",
     "systems/arm5e/templates/actor/parts/actor-magic-attributes.html",

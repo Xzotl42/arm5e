@@ -1574,7 +1574,8 @@
 
   "arm5e.rolltables.experimentation": "",
 
-  "arm5e.feature.magicSystem": "Alternate magic system - EXPERIMENTAL",
+  "arm5e.feature.magicSystem": "Alternate magic system - ALPHA",
+  "arm5e.feature.powers": "Powers",
 
   "arm5e.generic.yes": "Yes",
   "arm5e.generic.no": "No",

@@ -31,6 +31,16 @@ export class ArM5eNPCActorSheet extends ArM5eActorSheet {
           initial: "desc"
         },
         {
+          navSelector: ".powers-tabs",
+          contentSelector: ".powers-body",
+          initial: "powers"
+        },
+        {
+          navSelector: ".arts-tabs",
+          contentSelector: ".arts-body",
+          initial: "arts-subtab"
+        },
+        {
           navSelector: ".tradition-tabs",
           contentSelector: ".tradition-body",
           initial: "tradition-subtab"
