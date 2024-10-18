@@ -2,6 +2,7 @@
 
 ### Features & changes
 
+- Updated pt-BR version
 - Preparation for the open license release
   - New field for Items to indicate review status
   - Review status added to the index of arm5e-compendia compendia for quick queries
@@ -9,10 +10,10 @@
   - Updated readme file for legal aspects of the Open License
 - New active effects
   - Enable new magic system.
-- hedge/holy magic system
+- Hedge/holy magic system
   - alternate Arts
   - template for casting
-- new checkbox design
+- New checkbox design
 - [technical] Moved abilities localization in "i18nInit" Hook
 - Supernatural, arcane and mystery abilities can be accelerated.
 
