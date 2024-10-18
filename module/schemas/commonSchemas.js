@@ -94,7 +94,14 @@ export const itemBase = () => {
       min: 0,
       step: 1
     }),
-    indexKey: new fields.StringField({ required: false, blank: true, initial: "" })
+    indexKey: new fields.StringField({ required: false, blank: true, initial: "" }),
+    review_status: new fields.StringField({
+      required: false,
+      blank: true,
+      initial: "toReview",
+      choices: Object.keys(CONFIG.ARM5E.generic.reviewStatus)
+    }),
+    reviewer: new fields.StringField({ required: false, blank: true, initial: "" })
   };
 };
 

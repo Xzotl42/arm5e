@@ -1111,6 +1111,7 @@
 
   "arm5e.packs.abilities.name": "Abilities",
 
+  "arm5e.sheet.source.ArM5Def": "Ars Definitive Edition",
   "arm5e.sheet.source.ArM5": "Core Book",
   "arm5e.sheet.source.RoP:D": "RoP: The Divine",
   "arm5e.sheet.source.RoP:I": "RoP: The Infernal",
@@ -1574,7 +1575,7 @@
 
   "arm5e.rolltables.experimentation": "",
 
-  "arm5e.feature.magicSystem": "Alternate magic system - ALPHA",
+  "arm5e.feature.magicSystem": "Alternate magic system - EXPERIMENTAL",
   "arm5e.feature.powers": "Powers",
 
   "arm5e.generic.yes": "Yes",

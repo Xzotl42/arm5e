@@ -1,7 +1,12 @@
-## 2.3.1.1 Quendalon, lost in the Forest
+## 2.3.2.0, Quendalon, lost in the forest
 
 ### Features & changes
 
+- Preparation for the open license release
+  - New field for Items to indicate review status
+  - Review status added to the index of arm5e-compendia compendia for quick queries
+  - New Open License logo
+  - Updated readme file for legal aspects of the Open License
 - New active effects
   - Enable new magic system.
 - hedge/holy magic system

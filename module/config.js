@@ -3021,9 +3021,34 @@ ARM5E.lab.enchantment.enchantableTypes = {
 };
 
 ARM5E.generic = {};
+
+// temporary
+ARM5E.generic.reviewStatus = {
+  none: {
+    label: "None/To do"
+  },
+  toReview: {
+    label: "To review"
+  },
+  reviewed: {
+    label: "Reviewed"
+  },
+  needAE: {
+    label: "Need active effect"
+  },
+  definitiveReady: {
+    label: "Ready for 5th Definitive edition"
+  }
+};
+
 ARM5E.generic.sourcesTypes = {
   custom: {
     label: "arm5e.sheet.source.custom",
+    value: true,
+    edit: "disabled"
+  },
+  ArM5Def: {
+    label: "arm5e.sheet.source.ArM5Def",
     value: true,
     edit: "disabled"
   },

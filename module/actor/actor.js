@@ -379,7 +379,7 @@ export class ArM5ePCActor extends Actor {
       }
     }
 
-    if (this.system.charType.value === "entity") {
+    if (this.system.charType?.value === "entity") {
       this.system.features.powers = true;
       this.system.features.hasMight = true;
     }
