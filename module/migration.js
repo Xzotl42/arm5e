@@ -351,6 +351,7 @@ export const migrateActorData = async function (actorDoc, actorItems) {
     if (!actor?.flags?.arm5e) {
       updateData["flags.arm5e"] = {};
     } else if (actor?.flags.arm5e.filters) {
+      // remove legacy filters
       updateData["flags.arm5e.-=filters"] = null;
     }
 
@@ -402,6 +403,10 @@ export const migrateActorData = async function (actorDoc, actorItems) {
     }
 
     if (["player", "npc", "beast"].includes(actor.type)) {
+      if (actor.system.charType && actor.system.charType.value === undefined) {
+        updateData["system.charType"] = { value: actor.system.charType };
+      }
+
       if (actor.system.mightsFam) {
         updateData["system.powersFam"] = actor.system.mightsFam;
         updateData["system.-=mightsFam"] = null;

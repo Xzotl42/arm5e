@@ -2,7 +2,7 @@
   "id": "arm5e",
   "title": "Ars Magica 5th Edition",
   "description": "Ars Magica 5e for Foundry VTT, mandatory arm5e-compendia module at (https://github.com/Xzotl42/arm5e-compendia/releases/latest/download/module.json)",
-  "version": "2.3.1.1",
+  "version": "2.3.2.0",
   "compatibility": {
     "minimum": "10.290",
     "verified": "12.331"
@@ -14,7 +14,7 @@
         "type": "module",
         "manifest": "https://github.com/Xzotl42/arm5e-compendia/releases/latest/download/module.json",
         "compatibility": {
-          "minimum": "0.3.3"
+          "minimum": "0.9.0"
         }
       }
     ]
@@ -166,8 +166,8 @@
   "media": [
     {
       "type": "setup",
-      "url": "systems/arm5e/assets/thumbnails/ArM5logo.webp",
-      "thumbnail": "systems/arm5e/assets/thumbnails/ArM5logo.webp"
+      "url": "systems/arm5e/assets/thumbnails/arm5openlicenselogo.webp",
+      "thumbnail": "systems/arm5e/assets/thumbnails/arm5openlicenselogo.webp"
     }
   ],
   "gridDistance": 5,
