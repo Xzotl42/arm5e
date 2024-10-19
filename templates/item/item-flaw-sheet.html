@@ -17,9 +17,15 @@
               {{selectOptions config.impacts selected=system.impact.value labelAttr="label" localize=true }}
             </select>
           </div>
-          <div class="resource">
-            <label for="system.hidden" class="label-light checkbox">{{localize "arm5e.generic.hidden"}}</label>
-            <input type="checkbox" name="system.hidden" {{checked system.hidden}}>
+          <div class="flexrow">
+            <div class="resource">
+              <label for="system.hidden" class="label-light checkbox">{{localize "arm5e.generic.hidden"}}</label>
+              <input type="checkbox" name="system.hidden" {{checked system.hidden}}>
+            </div>
+            <div class="resource">
+              <label for="system.tainted" class="label-light checkbox">{{localize "arm5e.sheet.tainted"}}</label>
+              <input type="checkbox" name="system.tainted" {{checked system.tainted}}>
+            </div>
           </div>
         </div>
       </div>

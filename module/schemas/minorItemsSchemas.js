@@ -48,7 +48,8 @@ export class VirtueFlawSchema extends foundry.abstract.DataModel {
         },
         { required: false, blank: false, initial: { value: "free" } }
       ),
-      hidden: boolOption(false)
+      hidden: boolOption(false),
+      tainted: boolOption(false)
     };
   }
 

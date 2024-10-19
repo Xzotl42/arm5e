@@ -234,9 +234,6 @@ ARM5E.virtueFlawTypes.character = {
   supernatural: {
     label: "arm5e.sheet.supernatural"
   },
-  social: {
-    label: "arm5e.sheet.socialStatus"
-  },
   general: {
     label: "arm5e.sheet.general"
   },
@@ -252,8 +249,35 @@ ARM5E.virtueFlawTypes.character = {
   heroic: {
     label: "arm5e.sheet.heroic"
   },
-  tainted: {
-    label: "arm5e.sheet.tainted"
+  social: {
+    label: "arm5e.sheet.socialStatus"
+  },
+  socialWestern: {
+    label: "arm5e.sheet.socialStatusWestern"
+  },
+  socialEastern: {
+    label: "arm5e.sheet.socialStatusEastern"
+  },
+  socialJewish: {
+    label: "arm5e.sheet.socialStatusJewish"
+  },
+  socialIslamic: {
+    label: "arm5e.sheet.socialStatusIslamic"
+  },
+  socialHibernia: {
+    label: "arm5e.sheet.socialStatusHibernia"
+  },
+  socialIberia: {
+    label: "arm5e.sheet.socialStatusIberia"
+  },
+  socialNorthAfrica: {
+    label: "arm5e.sheet.socialStatusNorthAfrica"
+  },
+  socialPersia: {
+    label: "arm5e.sheet.socialStatusPersia"
+  },
+  socialProvencal: {
+    label: "arm5e.sheet.socialStatusProvencal"
   }
 };
 
@@ -3102,7 +3126,6 @@ ARM5E.generic.sourcesTypes = {
   Ch: {
     label: "arm5e.sheet.source.Ch"
   },
-
   "C&G": {
     label: "arm5e.sheet.source.C&G"
   },

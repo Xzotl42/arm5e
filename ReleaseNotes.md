@@ -1,10 +1,23 @@
+## 2.3.2.2, Quendalon, still lost in the forest
+
+### Features & changes
+
+- Added social status subcategories
+- Removed tainted category of virtues and flaws.
+- Added a new "Tainted" flag to Virtues and Flaws
+
+### Bug fixes
+
+- Fix sourcebooks filters duplicates
+- Sourcebooks filters were not applied properly on new worlds
+
 ## 2.3.2.1, Quendalon, still lost in the forest
 
 ### Features & changes
 
 - Improved metadata section
   - Better UI
-  - Added metadata to actors and item which were missing it.
+  - Added metadata to actors and items which were missing it.
 
 ### Bug fixes
 

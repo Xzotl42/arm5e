@@ -190,7 +190,7 @@ export function registerSettings() {
   let filters = {
     custom: ARM5E.generic.sourcesTypes.custom,
     ArM5: ARM5E.generic.sourcesTypes.ArM5,
-    ArM5: ARM5E.generic.sourcesTypes.ArM5Def
+    ArM5Def: ARM5E.generic.sourcesTypes.ArM5Def
   };
 
   game.settings.register(ARM5E.SYSTEM_ID, "sourcebookFilter", {
