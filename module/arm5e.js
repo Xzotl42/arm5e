@@ -27,7 +27,7 @@ import { ArsLayer, addArsButtons } from "./ui/ars-layer.js";
 import { migration } from "./migration.js";
 import { log } from "./tools.js";
 
-import { registerSettings } from "./settings.js";
+import { migrateSettings, registerSettings } from "./settings.js";
 import { registerTestSuites } from "./tests/tests.js";
 import { ArsRoll, StressDie, StressDieInternal } from "./helpers/stressdie.js";
 import { UserguideTour } from "./tours/userguide-tour.js";
@@ -242,6 +242,7 @@ Hooks.once("init", async function () {
 });
 
 Hooks.once("ready", async function () {
+  await migrateSettings();
   // Check that the arm5e-compendia module is at least the minimum version
   const req = game.system.relationships.requires.find((e) => e.id == CONFIG.ARM5E.REF_MODULE_ID);
   if (req) {

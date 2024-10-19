@@ -1,3 +1,4 @@
+import { log } from "./tools.js";
 import { CompendiaRefConfig } from "./ui/compendiaRefConfig.js";
 import { SourcebookFilterConfig } from "./ui/sourcebookFilterConfig.js";
 
@@ -237,4 +238,16 @@ export function registerSettings() {
     type: Boolean,
     default: true
   });
+}
+
+export async function migrateSettings() {
+  const ARM5E = CONFIG.ARM5E;
+  let sourcebookFilter = game.settings.get(ARM5E.SYSTEM_ID, "sourcebookFilter");
+  if (sourcebookFilter["custom"].display == undefined) {
+    await game.settings.set(ARM5E.SYSTEM_ID, "sourcebookFilter", {
+      custom: ARM5E.generic.sourcesTypes.custom,
+      ArM5: ARM5E.generic.sourcesTypes.ArM5,
+      ArM5Def: ARM5E.generic.sourcesTypes.ArM5Def
+    });
+  }
 }
