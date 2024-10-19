@@ -3044,17 +3044,17 @@ ARM5E.generic.reviewStatus = {
 ARM5E.generic.sourcesTypes = {
   custom: {
     label: "arm5e.sheet.source.custom",
-    value: true,
+    display: true,
     edit: "disabled"
   },
   ArM5Def: {
     label: "arm5e.sheet.source.ArM5Def",
-    value: true,
+    display: true,
     edit: "disabled"
   },
   ArM5: {
     label: "arm5e.sheet.source.ArM5",
-    value: true,
+    display: true,
     edit: "disabled"
   },
   Cov: {

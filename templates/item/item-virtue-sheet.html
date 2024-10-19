@@ -48,7 +48,10 @@
       <div style="height: inherit">
         {{editor enrichedDescription target="system.description" button=true owner=owner engine="prosemirror" editable=editable}}
       </div>
-      {{#if metagame.view }} {{> "systems/arm5e/templates/generic/source.html" }} {{/if}}
+      {{#if metagame.view }}
+        {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+        {{> "systems/arm5e/templates/generic/source.html" }}
+      {{/if}}
     </div>
     {{!-- Effects Tab --}}
     <div class="tab effects" data-group="primary" data-tab="effects" style="overflow-y: scroll">

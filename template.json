@@ -7,7 +7,13 @@
         "virtues": [],
         "flaws": [],
         "diaryEntries": [],
-        "resource": { "fatigue": { "value": 0, "max": 5 } }
+        "resource": { "fatigue": { "value": 0, "max": 5 } },
+        "description": "",
+        "source": "custom",
+        "page": 0,
+        "indexKey": "",
+        "review_status": "toReview",
+        "reviewer": ""
       },
       "npcbase": {
         "age": {
@@ -906,7 +912,10 @@
       "base": {
         "description": "",
         "source": "custom",
-        "page": 0
+        "page": 0,
+        "indexKey": "",
+        "review_status": "toReview",
+        "reviewer": ""
       },
       "magicalEffectAttributes": {
         "technique": {

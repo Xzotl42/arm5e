@@ -25,7 +25,7 @@ export class SourcebookFilterConfig extends FormApplication {
         return [
           e[0],
           {
-            value: e[1].value === undefined ? false : e[1].value, // true by default
+            display: e[1].display === undefined ? false : e[1].display, // true by default
             label: e[1].label,
             edit: e[1].edit ? "disabled" : ""
           }
@@ -65,6 +65,7 @@ export class SourcebookFilterConfig extends FormApplication {
     // Homebrew and Corebook always true
     filters["custom"] = { value: true };
     filters["ArM5"] = { value: true };
+    filters["ArM5Def"] = { value: true };
 
     await game.settings.set(CONFIG.ARM5E.SYSTEM_ID, "sourcebookFilter", filters);
     ui.notifications.info("Settings updated", { localize: true });

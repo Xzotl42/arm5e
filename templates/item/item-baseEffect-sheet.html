@@ -46,7 +46,11 @@
     {{!-- Description Tab --}}
     <div class="tab" data-group="primary" data-tab="description">
       {{editor system.baseEffectDescription target="system.baseEffectDescription" button=true owner=owner
-      editable=editable}} {{#if metagame.view }} {{> "systems/arm5e/templates/generic/source.html" }} {{/if}}
+      editable=editable}}
+      {{#if metagame.view }}
+        {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+        {{> "systems/arm5e/templates/generic/source.html" }}
+      {{/if}}
     </div>
   </section>
 </form>

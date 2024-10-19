@@ -9,7 +9,7 @@
         {{#each sourcebooks as |book key|}}
             <li class="permission form-group">
                 <label class="index">{{ localize book.label }}</label>
-                <input type="checkbox" name="{{key}}" {{checked book.value}} {{book.edit}} />
+                <input type="checkbox" name="{{key}}" {{checked book.display}} {{book.edit}} />
             </li>
         {{/each}}
     </ul>
