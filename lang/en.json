@@ -388,7 +388,17 @@
   "arm5e.sheet.option.none": "None",
 
   "arm5e.sheet.hermetic": "Hermetic",
-  "arm5e.sheet.socialStatus": "Social Status",
+  "arm5e.sheet.socialStatus": "Social Status (all cultures)",
+  "arm5e.sheet.socialStatusWestern": "Social Status (Western Christendom)",
+  "arm5e.sheet.socialStatusEastern": "Social Status (Eastern Christendom)",
+  "arm5e.sheet.socialStatusJewish": "Social Status (Jewish)",
+  "arm5e.sheet.socialStatusIslamic": "Social Status (Islamic)",
+  "arm5e.sheet.socialStatusHibernia": "Social Status (Hibernia)",
+  "arm5e.sheet.socialStatusNorthAfrica": "Social Status (North Africa)",
+  "arm5e.sheet.socialStatusIberia": "Social Status (Iberia)",
+  "arm5e.sheet.socialStatusPersia": "Social Status (Persia)",
+  "arm5e.sheet.socialStatusProvencal": "Social Status (Provencal)",
+
   "arm5e.sheet.supernatural": "Supernatural",
   "arm5e.sheet.personalityFlaw": "Personality",
   "arm5e.sheet.general": "General",

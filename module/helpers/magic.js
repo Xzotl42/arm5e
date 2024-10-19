@@ -14,7 +14,7 @@ const VOICE_AND_GESTURES_ICONS = {
 export async function GetFilteredAspects() {
   const filterBooks = Object.fromEntries(
     Object.entries(await game.settings.get(CONFIG.ARM5E.SYSTEM_ID, "sourcebookFilter")).filter(
-      ([key, f]) => f.value === true
+      ([key, f]) => f.display === true
     )
   );
   const filteredAspects = Object.entries(CONFIG.ARM5E.ASPECTS).filter(([key, val]) => {
@@ -37,7 +37,7 @@ export async function GetFilteredAspects() {
 export async function GetFilteredMagicalAttributes(data) {
   const filterBooks = Object.fromEntries(
     Object.entries(await game.settings.get(CONFIG.ARM5E.SYSTEM_ID, "sourcebookFilter")).filter(
-      ([key, f]) => f.value === true
+      ([key, f]) => f.display === true
     )
   );
   // Filter to only the values configured in settings
