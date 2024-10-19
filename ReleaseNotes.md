@@ -1,3 +1,15 @@
+## 2.3.2.1, Quendalon, still lost in the forest
+
+### Features & changes
+
+- Improved metadata section
+  - Better UI
+  - Added metadata to actors and item which were missing it.
+
+### Bug fixes
+
+- [V12] Fixed problem where it was impossible to select Definitive Edition or Homebrew in the source
+
 ## 2.3.2.0, Quendalon, lost in the forest
 
 ### Features & changes

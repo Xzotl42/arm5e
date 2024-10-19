@@ -220,6 +220,11 @@ export class ArM5eActorSheet extends ActorSheet {
       option: false,
       selection: "disabled"
     };
+    context.isGM = game.user.isGM;
+    context.metagame = {
+      view: game.settings.get("arm5e", "metagame"),
+      edit: context.isGM ? "" : "readonly"
+    };
     if (this.actor.system.description) {
       context.enrichedDescription = await TextEditor.enrichHTML(this.actor.system.description, {
         // Whether to show secret blocks in the finished html
@@ -747,7 +752,6 @@ export class ArM5eActorSheet extends ActorSheet {
       context.system.filteredLaboratoryTexts =
         context.system.filteredLaboratoryTexts.sort(compareLabTexts);
     }
-    context.isGM = game.user.isGM;
 
     context.devMode = game.modules.get("_dev-mode")?.api?.getPackageDebugValue(ARM5E.SYSTEM_ID);
     // Add roll data for TinyMCE editors.

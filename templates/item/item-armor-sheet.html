@@ -98,12 +98,8 @@
     {{/if}}
 
     {{#if metagame.view }}
-      <div class="resource flexrow">
-        <label class="header-label">{{localize "arm5e.sheet.indexKey"}}</label>
-        <input type="text" name="system.indexKey" value="{{system.indexKey}}" data-dtype="String"
-          style="font-size: 10px; border:none; color:grey" {{metagame.edit}} />
-      </div>
-
+      {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+      {{> "systems/arm5e/templates/generic/source.html" }}
     {{/if}}
   </section>
 </form>

@@ -252,6 +252,10 @@
         {{> "systems/arm5e/templates/generic/active-effects.html"  mode="actor" filter="laboratory"}}
       </div>
     </section>
+    {{#if metagame.view }}
+      {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+      {{> "systems/arm5e/templates/generic/source.html" }}
+    {{/if}}
   </form>
   <div class="footer-background">
     <img src="systems/arm5e/assets/Lab/footer.png" />

@@ -71,7 +71,7 @@ export class ArsRoll extends Roll {
   // }
 }
 
-export class StressDie extends Die {
+export class StressDie extends foundry.dice.terms.Die {
   constructor(termData = {}) {
     termData.faces = 10;
     super(termData);
@@ -171,7 +171,7 @@ export class StressDie extends Die {
   //     return roll;
   //   }
 }
-export class StressDieInternal extends Die {
+export class StressDieInternal extends foundry.dice.terms.Die {
   constructor(termData = {}) {
     termData.faces = 10;
     super(termData);

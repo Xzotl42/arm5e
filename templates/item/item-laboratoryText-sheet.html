@@ -64,7 +64,10 @@
     {{/if}}
 
     <div>
-      {{#if metagame.view }} {{> "systems/arm5e/templates/generic/source.html" }} {{/if}}
+      {{#if metagame.view }}
+        {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+        {{> "systems/arm5e/templates/generic/source.html" }}
+      {{/if}}
     </div>
   </section>
 </form>
