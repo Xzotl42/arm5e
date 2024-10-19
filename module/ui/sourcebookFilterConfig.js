@@ -58,14 +58,14 @@ export class SourcebookFilterConfig extends FormApplication {
 
     for (let [k, v] of Object.entries(filters)) {
       filters[k] = {
-        value: v
+        display: v
       };
     }
 
     // Homebrew and Corebook always true
-    filters["custom"] = { value: true };
-    filters["ArM5"] = { value: true };
-    filters["ArM5Def"] = { value: true };
+    filters["custom"] = { display: true };
+    filters["ArM5"] = { display: true };
+    filters["ArM5Def"] = { display: true };
 
     await game.settings.set(CONFIG.ARM5E.SYSTEM_ID, "sourcebookFilter", filters);
     ui.notifications.info("Settings updated", { localize: true });

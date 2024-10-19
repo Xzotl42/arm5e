@@ -1,5 +1,11 @@
 ## 2.3.2.2, Quendalon, still lost in the forest
 
+### Bug fixes
+
+- Fix critical bug with spell parameters filters
+
+## 2.3.2.2, Quendalon, still lost in the forest
+
 ### Features & changes
 
 - Added social status subcategories
