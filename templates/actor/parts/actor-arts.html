@@ -131,14 +131,15 @@
             {{item.name}} ( {{item.TechReq}} {{item.FormReq }} - {{item.system.level}})
             {{#if (eq item.system.ritual true )}} , {{localize "arm5e.sheet.ritual"}} {{/if}}
           </span>
-          <label><span class="bold">{{localize "arm5e.sheet.range"}}:</span>
+          <label class="label-light"><span class="bold">{{localize "arm5e.sheet.range"}}:</span>
             {{#with (lookup @root.config.magic.ranges item.system.range.value)~}} {{localize label~}} {{/with}}
           </label>
-          <label><span class="bold">{{localize "arm5e.sheet.duration"}}:</span> {{#with (lookup @root.config.magic.durations
+          <label class="label-light"><span class="bold">{{localize "arm5e.sheet.duration"}}:</span> {{#with (lookup @root.config.magic.durations
           item.system.duration.value)~}} {{localize label~}} {{/with}}</label>
-          <label><span class="bold">{{localize "arm5e.sheet.target"}}:</span> {{#with (lookup @root.config.magic.targets
+          <label class="label-light"><span class="bold">{{localize "arm5e.sheet.target"}}:</span> {{#with (lookup @root.config.magic.targets
           item.system.target.value)~}} {{localize label~}} {{/with}}</label>
-          <label><span class="bold">{{localize "arm5e.sheet.castingTotal"}}:</span> {{item.system.castingTotal}}</label>
+          <label class="label-light"><span class="bold">{{localize "arm5e.sheet.castingTotal"}}:</span>
+            {{item.system.castingTotal}}</label>
         </div>
         <div class="item-controls">
           <a class="item-control item-edit"
@@ -180,14 +181,15 @@
             {{item.name}} ( {{item.TechReq}} {{item.FormReq }} - {{item.system.level}})
             {{#if (eq item.system.ritual true )}} , {{localize "arm5e.sheet.ritual"}} {{/if}}
           </span>
-          <label><span class="bold">{{localize "arm5e.sheet.range"}}:</span>
+          <label class="label-light"><span class="bold">{{localize "arm5e.sheet.range"}}:</span>
             {{#with (lookup @root.config.magic.ranges item.system.range.value)~}} {{localize label~}} {{/with}}
           </label>
-          <label><span class="bold">{{localize "arm5e.sheet.duration"}}:</span> {{#with (lookup @root.config.magic.durations
+          <label class="label-light"><span class="bold">{{localize "arm5e.sheet.duration"}}:</span> {{#with (lookup @root.config.magic.durations
           item.system.duration.value)~}} {{localize label~}} {{/with}}</label>
-          <label><span class="bold">{{localize "arm5e.sheet.target"}}:</span> {{#with (lookup @root.config.magic.targets
+          <label class="label-light"><span class="bold">{{localize "arm5e.sheet.target"}}:</span> {{#with (lookup @root.config.magic.targets
           item.system.target.value)~}} {{localize label~}} {{/with}}</label>
-          <label><span class="bold">{{localize "arm5e.sheet.castingTotal"}}:</span> {{item.system.castingTotal}}</label>
+          <label class="label-light"><span class="bold">{{localize "arm5e.sheet.castingTotal"}}:</span>
+            {{item.system.castingTotal}}</label>
         </div>
         <div class="item-controls">
           <a class="item-control item-edit"

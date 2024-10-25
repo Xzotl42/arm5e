@@ -29,7 +29,7 @@ import { log } from "./tools.js";
 
 import { migrateSettings, registerSettings } from "./settings.js";
 import { registerTestSuites } from "./tests/tests.js";
-import { ArsRoll, StressDie, StressDieInternal } from "./helpers/stressdie.js";
+import { AlternateStressDie, ArsRoll, StressDie, StressDieInternal } from "./helpers/stressdie.js";
 import { UserguideTour } from "./tours/userguide-tour.js";
 
 import {
@@ -129,10 +129,12 @@ Hooks.once("init", async function () {
   // Experimental
   CONFIG.Dice.types.push(StressDie);
   CONFIG.Dice.types.push(StressDieInternal);
+  CONFIG.Dice.types.push(AlternateStressDie);
   CONFIG.Dice.ArsRoll = ArsRoll;
   // CONFIG.Dice.types.push(StressDieNoBotchInternal);
   CONFIG.Dice.terms[StressDie.DENOMINATION] = StressDie;
   CONFIG.Dice.terms[StressDieInternal.DENOMINATION] = StressDieInternal;
+  CONFIG.Dice.terms[AlternateStressDie.DENOMINATION] = AlternateStressDie;
   CONFIG.Dice.rolls[0] = ArsRoll;
   //CONFIG.Dice.rolls.push(ArsRoll);
 

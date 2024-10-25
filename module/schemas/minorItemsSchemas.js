@@ -36,6 +36,7 @@ export class VirtueFlawSchema extends foundry.abstract.DataModel {
           .concat(Object.keys(ARM5E.virtueFlawTypes.covenant))
           .concat("Special")
           .concat("other")
+          .concat("tainted")
       }),
       impact: new fields.SchemaField(
         {
@@ -61,6 +62,9 @@ export class VirtueFlawSchema extends foundry.abstract.DataModel {
   }
 
   static getIcon(item, newValue = null) {
+    // if (item.system.tainted) {
+    //   return "systems/arm5e/assets/icons/VF/tainted.svg";
+    // }
     if (newValue != null) {
       if (item.type == "virtue") {
         let type = newValue == "general" ? "generalVirtue" : newValue;
@@ -107,11 +111,16 @@ export class VirtueFlawSchema extends foundry.abstract.DataModel {
     if (typeof itemData.system.page !== "number") {
       updateData["system.page"] = convertToNumber(itemData.system.page, 0);
     }
-    if (itemData.system.type === "") {
+
+    if (itemData.system.type === "tainted") {
+      updateData["system.type"] = "general";
+      updateData["system.tainted"] = true;
+    } else if (itemData.system.type === "") {
       updateData["system.type"] = "general";
     } else if (itemData.system.type.value !== undefined) {
       updateData["system.type"] = itemData.system.type.value;
     }
+
     if (itemData.system.description == null) {
       updateData["system.description"] = "";
     }

@@ -1602,6 +1602,7 @@ div[class*="foldable-section"] {
   height: 100%;
   min-height: 200px;
   overflow-y: auto;
+  padding: 5px;
 }
 
 .arm5e .sheet-body .editor.prosemirror,
@@ -1609,6 +1610,7 @@ div[class*="foldable-section"] {
   height: 100%;
   min-height: 200px;
   overflow-y: auto;
+  padding: 5px;
 }
 
 .arm5e .diary-body {
@@ -1842,6 +1844,14 @@ img.art-icon {
   padding: 0;
   overflow-y: auto;
   /* min-height: 200px; */
+}
+
+.arm5e .effects-list {
+  list-style: none;
+  margin: 7px 0;
+  padding: 0;
+  overflow-y: auto;
+  min-height: 216px;
 }
 
 .filter-item {

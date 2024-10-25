@@ -697,7 +697,7 @@ ARM5E.SUPERNATURAL_ABILITIES = {
     category: "supernaturalCat"
   },
   enchantingMusic: {
-    mnemonic: "arm5e.skill.supernatural.enchantingMusic",
+    mnemonic: "arm5e.skill.supernatural.enchantingMusic", // enchanting ability now
     option: false,
     category: "supernaturalCat"
   },

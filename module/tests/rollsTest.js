@@ -52,6 +52,8 @@ export function registerRollTesting(quench) {
           await magusToken.update({ actorLink: true });
           aura = new Aura(canvas.scene.id);
           await aura.set("faeric", 6);
+        } else {
+          aura = new Aura(0);
         }
       });
 
@@ -408,7 +410,7 @@ export function registerRollTesting(quench) {
               magus.system.characteristics.sta.value +
               magus.system.penalties.wounds.total +
               magus.system.fatigueTotal +
-              3;
+              aura.modifier;
             assert.equal(roll.modifier(), tot);
           } catch (err) {
             console.error(`Error: ${err}`);
@@ -441,7 +443,7 @@ export function registerRollTesting(quench) {
               magus.system.penalties.wounds.total +
               magus.system.fatigueTotal +
               1 +
-              3;
+              aura.modifier;
             assert.equal(roll.modifier(), tot);
           } catch (err) {
             console.error(`Error: ${err}`);
@@ -472,7 +474,7 @@ export function registerRollTesting(quench) {
               magus.system.penalties.wounds.total +
               magus.system.fatigueTotal +
               2 +
-              3;
+              aura.modifier;
             assert.equal(roll.modifier(), tot);
           } catch (err) {
             console.error(`Error: ${err}`);
@@ -503,7 +505,7 @@ export function registerRollTesting(quench) {
               magus.system.characteristics.sta.value +
               magus.system.penalties.wounds.total +
               magus.system.fatigueTotal +
-              3;
+              aura.modifier;
             assert.equal(roll.modifier(), tot);
           } catch (err) {
             console.error(`Error: ${err}`);
@@ -536,7 +538,7 @@ export function registerRollTesting(quench) {
               magus.system.characteristics.sta.value +
               magus.system.penalties.wounds.total +
               magus.system.fatigueTotal +
-              3;
+              aura.modifier;
             assert.equal(roll.modifier(), tot);
           } catch (err) {
             console.error(`Error: ${err}`);
@@ -571,7 +573,7 @@ export function registerRollTesting(quench) {
               magus.system.fatigueTotal +
               Sp1.system.finalScore +
               Sp1.system.bonus +
-              3;
+              aura.modifier;
             assert.equal(roll.modifier(), tot);
           } catch (err) {
             console.error(`Error: ${err}`);
@@ -606,7 +608,7 @@ export function registerRollTesting(quench) {
               magus.system.fatigueTotal +
               Sp2.system.finalScore +
               Sp2.system.bonus +
-              3;
+              aura.modifier;
             assert.equal(roll.modifier(), tot);
           } catch (err) {
             console.error(`Error: ${err}`);
@@ -645,7 +647,7 @@ export function registerRollTesting(quench) {
               magus.system.fatigueTotal +
               Sp2.system.finalScore +
               Sp2.system.bonus +
-              3;
+              aura.modifier;
             assert.equal(roll.modifier(), tot);
           } catch (err) {
             console.error(`Error: ${err}`);
@@ -678,7 +680,7 @@ export function registerRollTesting(quench) {
               magus.system.fatigueTotal +
               Sp3.system.finalScore +
               Sp3.system.bonus +
-              3;
+              aura.modifier;
             assert.equal(roll.modifier(), tot);
           } catch (err) {
             console.error(`Error: ${err}`);

@@ -205,3 +205,105 @@ export class StressDieInternal extends foundry.dice.terms.Die {
     }, 0);
   }
 }
+
+export class AlternateStressDie extends foundry.dice.terms.Die {
+  constructor(termData = {}) {
+    termData.faces = 10;
+    super(termData);
+    if (typeof this.faces !== "number") {
+      throw new Error("A StressDie term must have a numeric number of faces.");
+    }
+    this.botchCheck = false;
+  }
+
+  // whether we are botch checking
+  botchCheck;
+
+  /** @inheritdoc */
+  static DENOMINATION = "a";
+
+  async evaluate() {
+    this.options.botchDice = this.number;
+    this.number = 1;
+    this.modifiers = ["x=10"];
+
+    await super.evaluate();
+    if (this.results[0].result === 1) {
+      // this.results[0].result = 0;
+      this.number = this.options.botchDice + 1;
+      this._evaluated = false;
+      this.modifiers = ["cf=1"];
+      this.botchCheck = true;
+      await super.evaluate();
+      return this;
+    }
+
+    return this;
+  }
+
+  get total() {
+    if (!this._evaluated) return null;
+    if (this.botchCheck) return super.total - 1;
+    const res = this.results.reduce((t, r, i, a) => {
+      // log(false, `DBG: total.reduce res=${r.result}, i=${i} * t=${t} ; ${r.active}) `);
+      if (!r.active) {
+        return t;
+      }
+      if (i === 0 && r.result === 1) {
+        return 0;
+      }
+      if (i === 0 && r.result === 10) {
+        return 10;
+      }
+      if (i === 0 && r.result !== 10 && r.result !== 1) return r.result;
+      if (r.result === 10) return t + 10;
+      return t + r.result;
+    }, 0);
+    log(false, `DBG: total=${res}`);
+    return res;
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Render the tooltip HTML for a Roll instance
+   * @returns {object}      The data object used to render the default tooltip template for this DiceTerm
+   */
+  getTooltipData() {
+    log(false, "GetTooltipdata");
+    return super.getTooltipData();
+  }
+
+  /** @inheritdoc */
+  //   static MODIFIERS = {};
+
+  /** @inheritdoc */
+  //   static REGEXP = new RegExp(
+  //     `^([0-9]+)?sd([A-z]|[0-9]+)${DiceTerm.MODIFIERS_REGEXP_STRING}?${DiceTerm.FLAVOR_REGEXP_STRING}?$`
+  //   );
+
+  /** @inheritdoc */
+  //   get total() {
+  //     return super.total();
+  //   }
+
+  //   roll({ minimize = false, maximize = false } = {}) {
+  //     const roll = { result: 1, active: true };
+  //     let res = 0;
+  //     if (minimize) res = 1;
+  //     else if (maximize) res = this.faces;
+  //     else res = Math.ceil(CONFIG.Dice.randomUniform() * this.faces);
+
+  //     if (res == 0) {
+  //       roll.result = 0;
+  //     } else {
+  //       while (res === 1) {
+  //         roll.result *= 2;
+  //         res = Math.ceil(CONFIG.Dice.randomUniform() * this.faces);
+  //       }
+  //       roll.result *= res;
+  //     }
+
+  //     return roll;
+  //   }
+}

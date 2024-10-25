@@ -1,4 +1,17 @@
-## 2.3.2.2, Quendalon, still lost in the forest
+## 2.3.2.4, Quendalon, still lost in the forest
+
+### Features & changes
+
+- New alternate stress die roll (/r Xda , where X is the number of botch dice).
+  - Configurable in the settings
+- A few cosmetics changes left an right.
+
+### Bug fixes
+
+- It is now possible to roll for magic without any active scene
+- Fix for the migration of tainted virtues and flaws.
+
+## 2.3.2.3, Quendalon, still lost in the forest
 
 ### Bug fixes
 
