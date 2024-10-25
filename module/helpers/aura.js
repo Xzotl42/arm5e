@@ -136,7 +136,11 @@ export default class Aura {
     else {
       scene = canvas?.scene;
     }
-    return new this(scene._id);
+    if (scene) {
+      return new this(scene._id);
+    } else {
+      return new this(0);
+    }
   }
 
   // Utility function for tests, it works incrementaly

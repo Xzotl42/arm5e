@@ -4,7 +4,7 @@ import { log, putInFoldableLink, putInFoldableLinkWithAnimation, sleep } from ".
 import { ARM5E } from "./config.js";
 import { showRollResults } from "./helpers/chat.js";
 import { ArsRoll } from "./helpers/stressdie.js";
-let mult = 1;
+let iterations = 1;
 
 /**
  * Description
@@ -14,7 +14,7 @@ let mult = 1;
  * @returns {any}
  */
 async function simpleDie(actor, type = "OPTION", callBack) {
-  mult = 1;
+  iterations = 1;
   // actor = getFormData(html, actor);
   actor = await getRollFormula(actor);
   const rollInfo = actor.rollInfo;
@@ -74,8 +74,8 @@ async function simpleDie(actor, type = "OPTION", callBack) {
 
 // modes bitmask:
 // 0 => standard
-// 1 => force a one
-// 2 => force a zero
+// 1 => force a one/explosion
+// 2 => force a zero/bothc check
 // 4 => Aging roll
 // 8 => non-interactive
 // 16 => no confidence
@@ -90,20 +90,29 @@ async function simpleDie(actor, type = "OPTION", callBack) {
  * @returns {any}
  */
 async function stressDie(actor, type = "OPTION", modes = 0, callBack = undefined, botchNum = -1) {
-  mult = 1;
+  iterations = 1;
   actor = await getRollFormula(actor);
   const rollInfo = actor.rollInfo;
   let rollOptions = {
     minimize: false,
     maximize: false,
-    prompt: true
+    prompt: true,
+    alternateStressDie: game.settings.get(CONFIG.ARM5E.SYSTEM_ID, "alternateStressDie")
   };
   if (modes & 1) {
-    rollOptions.minimize = true;
-    ui.notifications.info(`${actor.name} used DEV mode to roll a 1`);
+    if (rollOptions.alternateStressDie) {
+      rollOptions.maximize = true;
+    } else {
+      rollOptions.minimize = true;
+    }
+    ui.notifications.info(`${actor.name} used DEV mode to explode the roll`);
   } else if (modes & 2) {
-    rollOptions.maximize = true;
-    ui.notifications.info(`${actor.name} used DEV mode to roll a 0`);
+    if (rollOptions.alternateStressDie) {
+      rollOptions.minimize = true;
+    } else {
+      rollOptions.maximize = true;
+    }
+    ui.notifications.info(`${actor.name} used DEV mode to check for botch`);
   }
   if (modes & 4) {
     botchNum = 0;
@@ -129,11 +138,11 @@ async function stressDie(actor, type = "OPTION", modes = 0, callBack = undefined
   let dieRoll = await explodingRoll(actor, rollOptions, botchNum);
 
   let botchCheck = 0;
-  if (mult > 1) {
+  if (iterations > 1) {
     flavorTxt = `<h2 class="dice-msg">${game.i18n.localize(
       "arm5e.messages.die.exploding"
     )}</h3><br/>`;
-  } else if (mult === 0) {
+  } else if (iterations === 0) {
     if (dieRoll.botches === 0) {
       if (modes && 4) {
         flavorTxt = `<p>${game.i18n.localize("arm5e.dialog.button.stressdieNoBotch")}:</p>`;
@@ -634,11 +643,17 @@ function newLineSub(msg) {
   return msg;
 }
 
-async function CheckBotch(botchDice, offset) {
-  let rollCommand = String(botchDice).concat("d10cf=10");
+async function CheckBotch(botchDice, roll) {
+  let opt = roll.options;
+  let rollCommand = String(botchDice);
+  if (opt.alternateStressDie) {
+    rollCommand += "d10cf=1";
+  } else {
+    rollCommand += "d10cf=10";
+  }
   const botchRoll = new ArsRoll(rollCommand);
   await botchRoll.roll();
-  botchRoll.offset = offset;
+  botchRoll.offset = roll.offset;
   botchRoll.botches = botchRoll.total;
   botchRoll.botchDice = botchDice;
   return botchRoll;
@@ -649,21 +664,26 @@ async function explodingRoll(actorData, rollOptions = {}, botchNum = -1) {
   let dieRoll;
   dieRoll = await createRoll(
     actorData.rollInfo.formula,
-    mult,
+    iterations,
     actorData.rollInfo.magic.divide,
     rollOptions
   );
 
   //
   // explode mode
-
+  const explodingScore = rollOptions.alternateStressDie ? 10 : 1;
+  const botchCheckScore = rollOptions.alternateStressDie ? 1 : 0;
   let diceResult = dieRoll.dice[0].results[0].result;
   log(false, `Dice result: ${diceResult}`);
-  if (diceResult === 1) {
+  if (diceResult === explodingScore) {
     if (game.modules.get("dice-so-nice")?.active) {
       game.dice3d.showForRoll(dieRoll, game.user, true); //, whisper, blind, chatMessageID, speaker)
     }
-    mult *= 2;
+    if (rollOptions.alternateStressDie) {
+      iterations++;
+    } else {
+      iterations *= 2;
+    }
     rollOptions.noBotch = true;
     rollOptions.minimize = false;
     rollOptions.maximize = false;
@@ -672,9 +692,19 @@ async function explodingRoll(actorData, rollOptions = {}, botchNum = -1) {
       rollOptions.prompt &&
       (funRolls == "EVERYONE" || (funRolls == "PLAYERS_ONLY" && actorData.hasPlayerOwner));
     if (withDialog) {
-      let dialogData = {
-        msg: game.i18n.localize("arm5e.dialog.roll.exploding.multiplier") + " : " + mult
-      };
+      let dialogData;
+      if (rollOptions.alternateStressDie) {
+        dialogData = {
+          msg:
+            game.i18n.localize("arm5e.dialog.roll.exploding.modifier") +
+            " : " +
+            (iterations - 1) * 10
+        };
+      } else {
+        dialogData = {
+          msg: game.i18n.localize("arm5e.dialog.roll.exploding.multiplier") + " : " + iterations
+        };
+      }
       const html = await renderTemplate(
         "systems/arm5e/templates/generic/explodingRoll.html",
         dialogData
@@ -709,8 +739,8 @@ async function explodingRoll(actorData, rollOptions = {}, botchNum = -1) {
       dieRoll = await explodingRoll(actorData, rollOptions);
     }
   } else {
-    if (mult === 1 && diceResult === 0) {
-      mult *= 0;
+    if (iterations === 1 && diceResult === botchCheckScore) {
+      iterations = 0;
       if (game.modules.get("dice-so-nice")?.active) {
         game.dice3d.showForRoll(dieRoll); //, user, synchronize, whisper, blind, chatMessageID, speaker)
       }
@@ -735,7 +765,7 @@ async function explodingRoll(actorData, rollOptions = {}, botchNum = -1) {
                   label: game.i18n.localize("arm5e.dialog.button.rollbotch"),
                   callback: async (html) => {
                     botchNum = html.find("#botchDice").val();
-                    botchRoll = await CheckBotch(botchNum, dieRoll.offset);
+                    botchRoll = await CheckBotch(botchNum, dieRoll);
                     resolve();
                   }
                 },
@@ -763,7 +793,7 @@ async function explodingRoll(actorData, rollOptions = {}, botchNum = -1) {
           ).render(true);
         });
       } else {
-        botchRoll = await CheckBotch(botchNum, dieRoll.offset);
+        botchRoll = await CheckBotch(botchNum, dieRoll);
       }
       if (botchRoll) {
         if (botchRoll.botches == 0) {
@@ -780,22 +810,26 @@ async function explodingRoll(actorData, rollOptions = {}, botchNum = -1) {
   return dieRoll;
 }
 
-export async function createRoll(rollFormula, mult, divide, options = {}) {
+export async function createRoll(rollFormula, multiplier, divide, options = {}) {
   let rollInit;
-  if (options.noBotch) {
+  if (options.noBotch || options.alternateStressDie) {
     rollInit = `1d10 + ${rollFormula}`;
   } else {
     rollInit = `1di10 + ${rollFormula}`;
   }
-  if (Number.parseInt(mult) > 1) {
-    rollInit = `${mult} * ${rollInit}`;
+  if (Number.parseInt(multiplier) > 1) {
+    if (options.alternateStressDie) {
+      rollInit = `${rollInit} + ${(multiplier - 1) * 10}`;
+    } else {
+      rollInit = `${multiplier} * ${rollInit}`;
+    }
   }
   if (Number.parseInt(divide) > 1) {
     rollInit = `( ${rollInit} ) / ${divide}`;
   }
   let output_roll = new ArsRoll(rollInit, {}, options);
   output_roll.offset = rollFormula;
-  output_roll.multiplier = mult;
+  output_roll.multiplier = multiplier;
   output_roll.diviser = divide;
   output_roll.data = {};
   //output_roll.roll({ options });

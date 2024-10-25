@@ -451,7 +451,7 @@ async function useMagicItem(dataset, item) {
  * @param actor
  */
 async function usePower(dataset, actor) {
-  if (Number(dataset.cost > actor.system.might.points)) {
+  if (Number(dataset.cost) > actor.system.might.points) {
     ui.notifications.warn(game.i18n.localize("arm5e.notification.noMightPoints"));
     return;
   }

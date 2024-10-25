@@ -238,6 +238,15 @@ export function registerSettings() {
     type: Boolean,
     default: true
   });
+
+  game.settings.register(ARM5E.SYSTEM_ID, "alternateStressDie", {
+    name: "Use an alternate stress die",
+    hint: "Instead of exploding on 1 and checking for botch on 10, it is the opposite. When exploding, add +10 to the roll instead of doubling.",
+    scope: "world",
+    config: true,
+    type: Boolean,
+    default: false
+  });
 }
 
 export async function migrateSettings() {

@@ -61,37 +61,33 @@ export function registerDEBUGTest(quench) {
       });
 
       describe("DEBUG Magic rolls", function () {
-        it(`Lab total Perdo Animal`, async function () {
+        it("Raw spontaneous", async function () {
+          await magus.changeWound(3, "light");
+          let type = "spont";
           try {
-            await lab.sheet._resetPlanning("inventSpell");
-            const labData = lab.getFlag("arm5e", "planning");
-            labData.data.system.technique.value = "pe";
-            labData.data.system.form.value = "an";
-            const data = await lab.sheet.getData();
-            log(false, `PeAn : ${data.planning.labTotal.score}`);
-            assert.equal(
-              data.planning.labTotal.score,
-              magus.system.labTotals["an"]["pe"].total,
-              `Lab total PeAn`
-            );
-          } catch (err) {
-            console.error(`Error: ${err}`);
-            assert.ok(false);
-          }
-        });
-        it(`Lab total Creo Animal`, async function () {
-          try {
-            await lab.sheet._resetPlanning("inventSpell");
-            const labData = lab.getFlag("arm5e", "planning");
-            labData.data.system.technique.value = "cr";
-            labData.data.system.form.value = "an";
-            const data = await lab.sheet.getData();
-            log(false, `CrAn : ${data.planning.labTotal.score}`);
-            assert.equal(
-              data.planning.labTotal.score,
-              magus.system.labTotals["an"]["cr"].total,
-              `Lab total CrAn`
-            );
+            let dataset = {
+              roll: type,
+              name: "Spontaneous",
+              bonusActiveEffects: magus.system.bonuses.arts.spellcasting, // tmp
+              technique: "mu",
+              form: "co",
+              usefatigue: true
+            };
+            magus.rollInfo.init(dataset, magus);
+            let roll = await stressDie(magus, type, 0, undefined, 10);
+            log(false, roll);
+            assert.ok(roll);
+            if (roll.botches) {
+              assert.equal(roll.total, 0, "botched");
+              return;
+            }
+            let tot =
+              magus.system.arts.techniques.mu.finalScore +
+              magus.system.arts.forms.co.finalScore +
+              magus.system.characteristics.sta.value +
+              magus.system.penalties.wounds.total +
+              magus.system.fatigueTotal;
+            assert.equal(roll.modifier(), tot);
           } catch (err) {
             console.error(`Error: ${err}`);
             assert.ok(false);
