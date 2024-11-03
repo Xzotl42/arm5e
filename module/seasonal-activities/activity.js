@@ -615,7 +615,8 @@ export class MinorEnchantment extends LabActivity {
    * @param {any} planning
    * @returns {any}
    */
-  prepareData(planning) {
+  prepareData(context) {
+    const planning = context.planning;
     const receptacleEnchants = planning.data.receptacle.system.enchantments;
     if (receptacleEnchants.aspects.length == 0) {
       log(false, "DEBUG prepareData: WARNING ASPECTS length = 0");
@@ -638,7 +639,7 @@ export class MinorEnchantment extends LabActivity {
       ARM5E.lab.enchantment.sizeMultiplier[receptacleEnchants.capacities[0].sizeMultiplier].mult;
     planning.enchantPrefix = `${planning.namePrefix}enchantment.`;
 
-    return planning;
+    return context;
   }
 
   validation(input) {
@@ -773,15 +774,15 @@ export class ChargedItem extends MinorEnchantment {
     }
   }
 
-  prepareData(planning) {
-    planning = super.prepareData(planning);
-
+  prepareData(context) {
+    context = super.prepareData(context);
+    const planning = context.planning;
     planning.data.receptacle.system.enchantments.originalCharges = Math.max(
       1,
       Math.ceil((planning.labTotal.score - planning.data.enchantment.system.level) / 5)
     );
 
-    return planning;
+    return context;
   }
 
   // TODO rework
@@ -878,7 +879,8 @@ export class InvestigationActivity extends LabActivity {
     }`;
   }
 
-  prepareData(planning) {
+  prepareData(context) {
+    const planning = context.planning;
     if (planning.data.receptacle) {
       const enchantExt = planning.data.receptacle.system.enchantments;
       planning.visibleEffects = enchantExt.effects
@@ -909,7 +911,7 @@ export class InvestigationActivity extends LabActivity {
     } else {
       planning.visibleEffects = [];
     }
-    return planning;
+    return context;
   }
 
   async getDefaultData() {

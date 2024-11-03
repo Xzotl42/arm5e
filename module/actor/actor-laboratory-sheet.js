@@ -280,7 +280,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
     context.planning.activityBonus = context.planning.activity.ownerActivityMod;
     context.planning.labSpecTotal = context.planning.activity.labActivitySpec(this.actor);
     context.planning.labTotal = { score: labTot.score, label: labTot.label };
-    context.planning.activity.prepareData(context.planning);
+    context.planning.activity.prepareData(context);
 
     context.hasVisCost = context.planning.activity.hasVisCost;
 
@@ -797,12 +797,6 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
           });
         } else {
           return false;
-        }
-      } else if (item.isOwned && item.system.hasQuantity) {
-        if (!event.shiftKey) {
-          if (this.isItemDropAllowed(item)) {
-            return this._handleTransfer(item);
-          }
         }
       } else {
         const res = await super._onDrop(event);

@@ -764,6 +764,7 @@ img.clickable:hover {
   font-family: "bookAntiquaBold";
 }
 
+.pickAmount.arm5eChooser,
 .arm5eChooser.aging,
 .arm5eChooser.vis-study,
 .set-option .arm5eChooser,
@@ -1158,6 +1159,10 @@ input[type="time"] {
   padding-right: 32px;
   font-family: "bookAntiquaBold";
   font-size: 9pt;
+}
+
+.arm5e .editor-content {
+  font-family: "bookAntiqua";
 }
 
 .arm5e .mainPlayer {

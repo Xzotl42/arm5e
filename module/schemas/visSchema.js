@@ -79,8 +79,15 @@ export class VisSchema extends foundry.abstract.DataModel {
     return updateData;
   }
 
-  hasQuantity() {
-    return { name: "quantity", qty: this.quantity };
+  getQuantity() {
+    return this.quantity;
+  }
+
+  resourceName(qty) {
+    return game.i18n.format("arm5e.activity.tracking.resource.vis", {
+      num: qty,
+      art: CONFIG.ARM5E.magic.arts[this.art].label
+    });
   }
 
   async studyVis(item) {
@@ -140,7 +147,7 @@ export class VisSchema extends foundry.abstract.DataModel {
     ).render(true);
   }
 
-  async createDiaryEntry(actor) {
+  async createDiaryEntryToStudyVis(actor) {
     let currentDate = game.settings.get("arm5e", "currentDate");
     const entryData = [
       {
@@ -224,6 +231,20 @@ export class VisSourceSchema extends foundry.abstract.DataModel {
     };
   }
 
+  resourceName(qty) {
+    return game.i18n.format("arm5e.activity.tracking.resource.vis", {
+      num: qty,
+      art: CONFIG.ARM5E.magic.arts[this.art].label
+    });
+  }
+
+  resourceTaken(name, from) {
+    return game.i18n.format("arm5e.activity.tracking.from.visSource", {
+      resource: name,
+      fromActor: from
+    });
+  }
+
   async harvest() {
     if (!this.parent.isOwned) {
       return;
@@ -270,6 +291,11 @@ export class VisSourceSchema extends foundry.abstract.DataModel {
           description: desc
         }
       };
+      await this.parent.createResourceTrackingDiaryEntry(
+        this.parent.name,
+        this.parent.actor,
+        this.pawns
+      );
       return await this.parent.actor.createEmbeddedDocuments("Item", [vis]);
     }
 

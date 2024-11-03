@@ -402,7 +402,8 @@ ARM5E.reputations = {
   local: { label: "arm5e.sheet.reputationType.local" },
   ecclesiastic: { label: "arm5e.sheet.reputationType.ecclesiastic" },
   hermetic: { label: "arm5e.sheet.reputationType.hermetic" },
-  persona: { label: "arm5e.sheet.reputationType.persona" }
+  persona: { label: "arm5e.sheet.reputationType.persona" },
+  academic: { label: "arm5e.sheet.reputationType.academic" }
 };
 
 ARM5E.ABILITIES_CATEGORIES = {
@@ -2255,12 +2256,27 @@ ARM5E.item.costs = {
   }
 };
 
+ARM5E.item.resources = ["vis"];
+
 ARM5E.activities = {};
 
 ARM5E.activities.generic = {
   none: {
     label: "arm5e.activity.diary",
     display: { tab: false, progress: false },
+    source: { default: 0, readonly: true },
+    maxXp: 0,
+    bonusOptions: null,
+    validation: null,
+    secondaryFilter: null,
+    scheduling: {
+      duplicate: true,
+      conflict: false
+    }
+  },
+  resource: {
+    label: "arm5e.activity.resource",
+    display: { tab: false, progress: false, attribute: "hidden" },
     source: { default: 0, readonly: true },
     maxXp: 0,
     bonusOptions: null,

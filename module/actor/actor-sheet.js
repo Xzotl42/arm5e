@@ -15,7 +15,8 @@ import {
   compareLabTexts,
   topicFilter,
   hermeticTopicFilter,
-  diaryEntryFilter
+  diaryEntryFilter,
+  getUuidInfo
 } from "../tools.js";
 import ArM5eActiveEffect from "../helpers/active-effects.js";
 import {
@@ -1127,7 +1128,7 @@ export class ArM5eActorSheet extends ActorSheet {
       const li = $(ev.currentTarget).parents(".item");
       const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
       if (!this.actor._isMagus()) return;
-      const entry = await item.system.createDiaryEntry(this.actor);
+      const entry = await item.system.createDiaryEntryToStudyVis(this.actor);
       entry.sheet.render(true);
     });
 
@@ -1764,13 +1765,13 @@ export class ArM5eActorSheet extends ActorSheet {
       <p>${game.i18n.localize("arm5e.dialog.confirmTransfer-info")}</p></div`,
       { async: true }
     );
-    let quantity = item.system.hasQuantity();
+    let quantity = item.system.getQuantity();
 
     let confirmed = false;
     var chosenAmount = 1;
-    if (quantity.qty == 0) return false;
-    if (quantity.qty == 1) {
-      confirmed = await this.getConfirmation(
+    if (quantity == 0) return false;
+    if (quantity == 1) {
+      confirmed = await getConfirmation(
         item.name,
         game.i18n.format("arm5e.dialog.confirmTransfer-question", {
           name: item.name
@@ -1782,12 +1783,13 @@ export class ArM5eActorSheet extends ActorSheet {
       let dialogData = {
         fieldname: item.name,
         prompt: game.i18n.format("arm5e.dialog.confirmTransfer-amount", {
-          max: quantity.qty
+          max: quantity
         }),
         help: game.i18n.localize("arm5e.dialog.confirmTransfer-info"),
         value: 1,
         min: 1,
-        max: quantity.qty
+        max: quantity,
+        cssClass: "pickAmount"
       };
       const template = await renderTemplate(
         "systems/arm5e/templates/generic/numberInput.html",
@@ -1836,21 +1838,21 @@ export class ArM5eActorSheet extends ActorSheet {
       let res = [];
       let modified = [];
       let newItemData = item.toObject();
-      if (chosenAmount == quantity.qty) {
+      if (chosenAmount == quantity) {
         res = await this.actor.createEmbeddedDocuments("Item", [newItemData]);
         let deleted = await originActor.deleteEmbeddedDocuments("Item", [item._id]);
       } else {
-        newItemData.system[quantity.name] = chosenAmount;
+        newItemData.system["quantity"] = chosenAmount;
         res = await this.actor.createEmbeddedDocuments("Item", [newItemData]);
         let itemUpdate = {
           _id: item._id,
-          system: { [quantity.name]: quantity.qty - chosenAmount }
+          system: { ["quantity"]: quantity - chosenAmount }
         };
         // item.system[quantity.name] = quantity.qty - chosenAmount;
         modified = await originActor.updateEmbeddedDocuments("Item", [itemUpdate]);
       }
       originActor.sheet.render(false);
-
+      await item.createResourceTrackingDiaryEntry(originActor, this.actor, chosenAmount);
       return res;
     } else {
       return false;
@@ -1858,6 +1860,41 @@ export class ArM5eActorSheet extends ActorSheet {
   }
 
   //  Overloaded core functions (TODO: review at each Foundry update)
+
+  async _onDropItem(event, data) {
+    const info = getUuidInfo(data.uuid);
+    const item = await fromUuid(data.uuid);
+    const type = item.type;
+    if (this.actor.uuid !== item.parent?.uuid) {
+      if (info.ownerType === "Actor") {
+        if (info.type === "Item" && item.system.getQuantity) {
+          if (!event.shiftKey) {
+            if (this.isItemDropAllowed(item)) {
+              return await this._handleTransfer(item);
+            }
+          }
+        }
+      } else {
+        if (info.type === "Item" && item.system.getQuantity) {
+          if (this.isItemDropAllowed(item)) {
+            let quantity = item.system.getQuantity();
+            if (quantity != 0) {
+              await item.createResourceTrackingDiaryEntry(null, this.actor, quantity);
+            }
+          }
+        }
+      }
+    }
+    // // transform input into labText
+    // if (type == "spell" || type == "magicalEffect" || type == "enchantment") {
+    //   log(false, "Valid drop");
+    //   // create a labText data:
+    //   return await super._onDropItemCreate(effectToLabText(foundry.utils.deepClone(item)));
+    // }
+    // // }
+    const res = await super._onDropItem(event, data);
+    return res;
+  }
 
   /**
    * Handle the final creation of dropped Item data on the Actor.

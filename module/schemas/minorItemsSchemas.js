@@ -200,8 +200,8 @@ export class ItemSchema extends foundry.abstract.DataModel {
     return updateData;
   }
 
-  hasQuantity() {
-    return { name: "quantity", qty: this.quantity };
+  getQuantity() {
+    return this.quantity;
   }
 
   sanitize() {

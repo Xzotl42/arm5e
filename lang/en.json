@@ -155,6 +155,7 @@
   "arm5e.sheet.reputationType.hermetic": "Hermetic",
   "arm5e.sheet.reputationType.persona": "Persona",
   "arm5e.sheet.reputationType.ecclesiastic": "Ecclesiastical",
+  "arm5e.sheet.reputationType.academic": "Academic",
   "arm5e.sheet.experience": "Experience",
   "arm5e.sheet.experienceNext": "Next level",
   "arm5e.sheet.experienceShort": "Xp",
@@ -1346,6 +1347,7 @@
   "arm5e.activity.activity": "Activity",
   "arm5e.activity.label": "Seasonal activities",
   "arm5e.activity.diary": "Diary",
+  "arm5e.activity.resource": "Ressource tracking",
   "arm5e.activity.adventuring": "Adventuring",
   "arm5e.activity.exposure": "Exposure",
   "arm5e.activity.practice": "Practice",
@@ -1368,6 +1370,15 @@
   "arm5e.activity.minorEnchantment": "Lesser enchantment",
   "arm5e.activity.chargedItem": "Charged item",
   "arm5e.activity.investigateItem": "Item investigation",
+
+  "arm5e.activity.tracking.addition": "{resource} added to inventory.",
+  "arm5e.activity.tracking.removal": "{resource} removed from inventory.",
+  "arm5e.activity.tracking.from.generic": "{toActor} has received {resource} from {fromActor}.",
+  "arm5e.activity.tracking.to.generic": "{fromActor} has given {resource} to {toActor}.",
+
+  "arm5e.activity.tracking.resource.vis": "{num} pawn(s) of {art} Vis",
+  "arm5e.activity.tracking.from.vis": "{resource} harvested from {fromActor}.",
+  "arm5e.activity.tracking.from.visSource": "{resource} harvested from {fromActor}.",
 
   "arm5e.activity.pawnsNeeded": "Pawns of Vis needed",
 
@@ -1442,6 +1453,7 @@
   "arm5e.astrolab.setWorldDate": "Set world date",
   "arm5e.astrolab.updateActors": "Update actors",
   "arm5e.astrolab.restAll": "Rest everyone",
+  "arm5e.astrolab.trackResources": "Track resources",
 
   "arm5e.scriptorium.index": "Index",
 

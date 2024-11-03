@@ -87,9 +87,9 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
     const actType = context.system.activity;
     context.firstSeason = context.system.dates[0];
     context.lastSeason = context.system.dates[context.system.dates.length - 1];
-    if (context.system.duration > 1) {
-      // context.ui.editDate = "disabled";
-    }
+    // if (context.system.duration > 1) {
+    //   // context.ui.editDate = "disabled";
+    // }
 
     context.ui.editDuration = "readonly";
     context.selection.activities = {};
@@ -98,10 +98,14 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
         context.selection.activities[k] = v.label;
       }
     }
+
     // if not possible to create it from the sheet disable the selector
     if (!Object.keys(context.selection.activities).includes(actType)) {
       context.activityState = "disabled";
     }
+
+    // add the current activity
+    context.selection.activities[actType] = CONFIG.ARM5E.activities.generic[actType].label;
 
     if (this.actor == null || this.actor.type == "covenant" || this.actor.type == "laboratory") {
       context.ui.showTab = false;
@@ -117,7 +121,7 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
     }
 
     // legacy diary or just a simple recounting of events
-    if (actType == "none" || actType == "recovery") {
+    if (actType == "none" || actType == "recovery" || actType == "resource") {
       context.ui.showTab = false;
       return context;
     }
@@ -1002,13 +1006,23 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
     let achievementsIndexes = [];
     for (const achievement of this.item.system.achievements) {
       // if an id exists update it
+      let item;
       if (achievement._id) {
-        let [item] = await this.actor.updateEmbeddedDocuments("Item", [achievement], {});
+        [item] = await this.actor.updateEmbeddedDocuments("Item", [achievement], {});
       } else {
-        let [item] = await this.actor.createEmbeddedDocuments("Item", [achievement], {});
+        [item] = await this.actor.createEmbeddedDocuments("Item", [achievement], {});
 
         // fill the id of the item created for rollback
         achievementsIndexes.push(item._id);
+      }
+      if (item.isAResource()) {
+        let [track] = await item.createResourceTrackingDiaryEntry(
+          null,
+          this.actor,
+          item.system.quantity,
+          this.item.system.dates[0]
+        );
+        achievementsIndexes.push(track._id);
       }
     }
 
@@ -1029,6 +1043,15 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
                   { "system.quantity": item.system.quantity - dependency.data.amount },
                   { parent: actor }
                 );
+                if (item.isAResource()) {
+                  let [track] = await item.createResourceTrackingDiaryEntry(
+                    actor,
+                    null,
+                    dependency.data.amount,
+                    this.item.system.dates[0]
+                  );
+                  achievementsIndexes.push(track._id);
+                }
               }
             }
           }
@@ -1315,10 +1338,11 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
           if (game.actors.has(dependency.actorId)) {
             let actor = game.actors.get(dependency.actorId);
             if (actor.items.has(dependency.itemId)) {
-              if (dependency.flags == 0)
+              if (dependency.flags == 0) {
+                let item = new ArM5eItem(r, { temporary: true });
                 // delete
                 await actor.deleteEmbeddedDocuments("Item", [dependency.itemId], {});
-              else if (dependency.flags == 1) {
+              } else if (dependency.flags == 1) {
                 // resource update
                 let item = actor.items.get(dependency.itemId);
                 await item.update(
