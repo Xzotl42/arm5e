@@ -404,6 +404,8 @@ export function registerRollTesting(quench) {
               assert.equal(roll.total, 0, "botched");
               return;
             }
+            const aura = Aura.fromActor(magus);
+            aura.computeMaxAuraModifier(magus.system.realms);
             let tot =
               magus.system.arts.techniques.mu.finalScore +
               magus.system.arts.forms.co.finalScore +
@@ -436,6 +438,8 @@ export function registerRollTesting(quench) {
               assert.equal(roll.total, 0, "botched");
               return;
             }
+            const aura = Aura.fromActor(magus);
+            aura.computeMaxAuraModifier(magus.system.realms);
             let tot =
               magus.system.arts.techniques.pe.finalScore +
               magus.system.arts.forms.co.finalScore +
@@ -467,6 +471,8 @@ export function registerRollTesting(quench) {
               assert.equal(roll.total, 0, "botched");
               return;
             }
+            const aura = Aura.fromActor(magus);
+            aura.computeMaxAuraModifier(magus.system.realms);
             let tot =
               magus.system.arts.techniques.cr.finalScore +
               magus.system.arts.forms.ig.finalScore +
@@ -499,6 +505,8 @@ export function registerRollTesting(quench) {
               assert.equal(roll.total, 0, "botched");
               return;
             }
+            const aura = Aura.fromActor(magus);
+            aura.computeMaxAuraModifier(magus.system.realms);
             let tot =
               // magus.system.arts.techniques.cr.finalScore +
               // magus.system.arts.forms.ig.finalScore +
@@ -531,7 +539,8 @@ export function registerRollTesting(quench) {
               assert.equal(roll.total, 0, "botched");
               return;
             }
-            // assert.equal(ME3.system.applyFocus, magus.rollInfo.magic.focus);
+            const aura = Aura.fromActor(magus);
+            aura.computeMaxAuraModifier(magus.system.realms);
             let tot =
               magus.system.arts.techniques.mu.finalScore +
               magus.system.arts.forms.an.finalScore * 2 +
@@ -562,7 +571,8 @@ export function registerRollTesting(quench) {
               assert.equal(roll.total, 0, "botched");
               return;
             }
-
+            const aura = Aura.fromActor(magus);
+            aura.computeMaxAuraModifier(magus.system.realms);
             // assert.equal(Sp1.system.masteryScore, magus.rollInfo.magic.mastery);
             // assert.equal(Sp1.system.bonus, magus.rollInfo.magic.bonus);
             let tot =
@@ -597,7 +607,8 @@ export function registerRollTesting(quench) {
               assert.equal(roll.total, 0, "botched");
               return;
             }
-
+            const aura = Aura.fromActor(magus);
+            aura.computeMaxAuraModifier(magus.system.realms);
             // assert.equal(Sp1.system.masteryScore, magus.rollInfo.magic.mastery);
             // assert.equal(Sp1.system.bonus, magus.rollInfo.magic.bonus);
             let tot =
@@ -636,7 +647,8 @@ export function registerRollTesting(quench) {
               assert.equal(roll.total, 0, "botched");
               return;
             }
-
+            const aura = Aura.fromActor(magus);
+            aura.computeMaxAuraModifier(magus.system.realms);
             // assert.equal(Sp1.system.masteryScore, magus.rollInfo.magic.mastery);
             // assert.equal(Sp1.system.bonus, magus.rollInfo.magic.bonus);
             let tot =
@@ -671,7 +683,8 @@ export function registerRollTesting(quench) {
               assert.equal(roll.total, 0, "botched");
               return;
             }
-
+            const aura = Aura.fromActor(magus);
+            aura.computeMaxAuraModifier(magus.system.realms);
             let tot =
               magus.system.arts.techniques.mu.finalScore +
               magus.system.arts.forms.vi.finalScore +

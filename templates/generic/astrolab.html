@@ -39,8 +39,7 @@
               <i class="fas fa-calendar simple-calendar-icon"></i>
             </div>
           {{else}}
-            <button class="astrolab button set-date" data-year="{{year}}" data-season="{{season}}"
-              style="font-size:16pt">
+            <button class="astrolab button set-date" style="font-size:16pt">
               {{localize "arm5e.astrolab.setWorldDate"}}
             </button>
           {{/if}}
@@ -49,6 +48,10 @@
           </button>
         </div>
       </div>
+    </div>
+    <div>
+      <label>{{localize "arm5e.astrolab.trackResources"}}</label>
+      <input class="trackRes" type="checkbox" name="trackRes" data-dtype="Boolean" {{checked trackRes}}>
     </div>
   </div>
 

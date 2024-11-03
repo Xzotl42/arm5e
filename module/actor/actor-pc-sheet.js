@@ -142,16 +142,6 @@ export class ArM5ePCActorSheet extends ArM5eActorSheet {
   async _onDropItem(event, data) {
     const info = getUuidInfo(data.uuid);
     const item = await fromUuid(data.uuid);
-    if (this.actor.uuid !== item.parent?.uuid) {
-      if (info.ownerType === "Actor" && info.type === "Item" && item.system.hasQuantity) {
-        if (!event.shiftKey) {
-          if (this.isItemDropAllowed(item)) {
-            return this._handleTransfer(item);
-          }
-        }
-      }
-    }
-
     // transform input into labText
     if (item.type == "ability") {
       if (this.actor.hasSkill(item.system.key)) {

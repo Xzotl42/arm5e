@@ -153,6 +153,15 @@ export function registerSettings() {
     default: { year: 1220, season: "spring", date: "", month: 2, day: 20 }
   });
 
+  game.settings.register(ARM5E.SYSTEM_ID, "trackResources", {
+    name: "Track resources",
+    hint: "Create a diary entry whenever resources are added or removed from an Actor sheet (to disable during actor creation). This setting is also available in the Astrolabium",
+    scope: "world",
+    config: true,
+    type: Boolean,
+    default: true
+  });
+
   game.settings.register(ARM5E.SYSTEM_ID, "enforceSchedule", {
     name: "Enforce schedule constraints",
     hint: "Whether to prevent users to schedule or apply seasonal activities due to constraints put in the system",

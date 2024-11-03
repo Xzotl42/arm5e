@@ -1,3 +1,19 @@
+## 2.3.2.5, Quendalon, lost in the forest for a month
+
+### Features & changes
+
+- Tracking of resources (vis) among Actors
+  - New activity : Resource tracking
+  - New setting to enable the tracking
+- New "Academic" category for reputations
+
+### Bug fixes
+
+- It is possible to use core Foundry active effects on tokens again.
+- Fix weird bug for setting current date.
+- [V11] Fix problem with unknown workspace for Die types
+- Typos in some sourcebooks names
+
 ## 2.3.2.4, Quendalon, still lost in the forest
 
 ### Features & changes

@@ -502,4 +502,135 @@ export class ArM5eItem extends Item {
       flavor: label
     });
   }
+
+  isAResource() {
+    return CONFIG.ARM5E.item.resources.includes(this.type);
+  }
+
+  async createResourceTrackingDiaryEntry(fromActor, toActor, quantity = 1, date = null) {
+    if (!game.settings.get("arm5e", "trackResources")) return [];
+
+    let currentDate = game.settings.get("arm5e", "currentDate");
+    if (date) {
+      currentDate.year = date.year;
+      currentDate.season = date.season;
+    }
+    const entries = [];
+    if (!this.isAResource()) {
+      log(false, "Nothing to track");
+    }
+    let resourceName = this.system.resourceName
+      ? this.system.resourceName(quantity)
+      : `${quantity} ${this.name}`;
+    if (fromActor instanceof Actor) {
+      let entryName = game.i18n.format("arm5e.activity.tracking.removal", {
+        resource: resourceName
+      });
+      let description;
+      let toName = toActor instanceof Actor ? toActor.name : toActor;
+      if (toActor) {
+        description = this.system.resourceTaken
+          ? this.system.resourceTaken(resourceName, toName)
+          : game.i18n.format("arm5e.activity.tracking.to.generic", {
+              toActor: toName,
+              fromActor: fromActor.name,
+              resource: resourceName
+            });
+      } else {
+        description = entryName;
+      }
+
+      const fromEntryData = [
+        {
+          name: entryName,
+          type: "diaryEntry",
+          img: CONFIG.ACTIVITIES_DEFAULT_ICONS["resourceOutput"],
+          system: {
+            description: description,
+            done: true,
+            rollDone: false,
+            cappedGain: false,
+            dates: [
+              { season: currentDate.season, date: "", year: currentDate.year, applied: true }
+            ],
+            sourceQuality: 0,
+            activity: "resource",
+            progress: {
+              abilities: [],
+              arts: [],
+              spells: [],
+              newSpells: []
+            },
+            optionKey: "standard",
+            duration: 1,
+            externalIds: [
+              {
+                actorId: fromActor.id,
+                itemId: this._id,
+                flags: 1
+              }
+            ]
+          }
+        }
+      ];
+      const tmp = await fromActor.createEmbeddedDocuments("Item", fromEntryData, {});
+      entries.push(...tmp);
+    }
+
+    if (toActor instanceof Actor) {
+      let entryName = game.i18n.format("arm5e.activity.tracking.addition", {
+        resource: resourceName
+      });
+      let description;
+      let fromName = fromActor instanceof Actor ? fromActor.name : fromActor;
+      if (fromActor) {
+        description = this.system.resourceTaken
+          ? this.system.resourceTaken(resourceName, fromName)
+          : game.i18n.format("arm5e.activity.tracking.from.generic", {
+              toActor: toActor.name,
+              fromActor: fromName,
+              resource: resourceName
+            });
+      } else {
+        description = entryName;
+      }
+      const toEntryData = [
+        {
+          name: entryName,
+          type: "diaryEntry",
+          img: CONFIG.ACTIVITIES_DEFAULT_ICONS["resourceInput"],
+          system: {
+            description: description,
+            done: true,
+            rollDone: false,
+            cappedGain: false,
+            dates: [
+              { season: currentDate.season, date: "", year: currentDate.year, applied: true }
+            ],
+            sourceQuality: 0,
+            activity: "resource",
+            progress: {
+              abilities: [],
+              arts: [],
+              spells: [],
+              newSpells: []
+            },
+            optionKey: "standard",
+            duration: 1,
+            externalIds: [
+              {
+                actorId: toActor.id,
+                itemId: this._id,
+                flags: 1
+              }
+            ]
+          }
+        }
+      ];
+      const tmp = await toActor.createEmbeddedDocuments("Item", toEntryData, {});
+      entries.push(...tmp);
+    }
+
+    return entries;
+  }
 }

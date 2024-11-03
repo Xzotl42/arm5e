@@ -18,19 +18,20 @@ export default class ArM5eActiveEffect extends ActiveEffect {
   }
 
   prepareDerivedData() {
+    super.prepareDerivedData();
     // In V10, if the effect is from an Item (virtue, etc) and is owned, prevent edition
     this.noEdit =
       !game.user.isTrusted ||
       (CONFIG.ISV10 &&
-        ((this.parent.documentName === "Item" && this.parent.isOwned == true) ||
-          (this.parent.documentName === "Actor" && this.origin?.includes("Item")))) ||
+        ((this.parent?.documentName === "Item" && this.parent?.isOwned == true) ||
+          (this.parent?.documentName === "Actor" && this.origin?.includes("Item")))) ||
       this.getFlag("arm5e", "noEdit");
     this.noDelete =
       // (CONFIG.ISV10 && this.noEdit) ||
-      (this.parent.documentName === "Item" && this.parent.isOwned == true) ||
-      (this.parent.documentName === "Actor" && this.origin?.includes("Item"));
+      (this.parent?.documentName === "Item" && this.parent?.isOwned == true) ||
+      (this.parent?.documentName === "Actor" && this.origin?.includes("Item"));
 
-    this.isHidden = this.flags.arm5e.hidden && !game.user.isGM;
+    this.isHidden = this.flags.arm5e?.hidden && !game.user.isGM;
   }
 
   async getSource() {
@@ -136,7 +137,7 @@ export default class ArM5eActiveEffect extends ActiveEffect {
 
     // Iterate over active effects, classifying them into categories
     for (let e of effects) {
-      const isHidden = e.flags.arm5e.hidden;
+      const isHidden = e.flags.arm5e?.hidden ?? false;
       if (CONFIG.ISV10) {
         e._getSourceName(); // Trigger a lookup for the source name
         e.name = e.label;

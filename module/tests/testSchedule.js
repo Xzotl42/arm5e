@@ -15,7 +15,35 @@ import { DiaryEntrySchema } from "../schemas/diarySchema.js";
 const results = {
   none: {
     none: false,
+    resource: false,
     adventuring: false,
+    exposure: false,
+    practice: false,
+    training: false,
+    teaching: false,
+    hermeticApp: false,
+    childhood: false,
+    laterLife: false,
+    laterLifeMagi: false,
+    reading: false,
+    writing: false,
+    learnSpell: false,
+    inventSpell: false,
+    visExtraction: false,
+    lab: false,
+    aging: false,
+    visStudy: false,
+    recovery: false,
+    longevityRitual: false,
+    minorEnchantment: false,
+    chargedItem: false,
+    investigateItem: false,
+    copying: false
+  },
+  resource: {
+    none: false,
+    adventuring: false,
+    resource: false,
     exposure: false,
     practice: false,
     training: false,
@@ -42,6 +70,7 @@ const results = {
   adventuring: {
     none: false,
     adventuring: false,
+    resource: false,
     exposure: false,
     practice: false,
     training: false,
@@ -68,6 +97,7 @@ const results = {
   exposure: {
     none: false,
     adventuring: false,
+    resource: false,
     exposure: true,
     practice: false,
     training: false,
@@ -94,6 +124,7 @@ const results = {
   practice: {
     none: false,
     adventuring: false,
+    resource: false,
     exposure: false,
     practice: true,
     training: true,
@@ -120,6 +151,7 @@ const results = {
   training: {
     none: false,
     adventuring: false,
+    resource: false,
     exposure: false,
     practice: true,
     training: true,
@@ -146,6 +178,7 @@ const results = {
   teaching: {
     none: false,
     adventuring: false,
+    resource: false,
     exposure: false,
     practice: true,
     training: true,
@@ -172,6 +205,7 @@ const results = {
   hermeticApp: {
     none: false,
     adventuring: false,
+    resource: false,
     exposure: false,
     practice: true,
     training: true,
@@ -198,6 +232,7 @@ const results = {
   childhood: {
     none: false,
     adventuring: false,
+    resource: false,
     exposure: false,
     practice: true,
     training: true,
@@ -224,6 +259,7 @@ const results = {
   laterLife: {
     none: false,
     adventuring: false,
+    resource: false,
     exposure: false,
     practice: true,
     training: true,
@@ -250,6 +286,7 @@ const results = {
   laterLifeMagi: {
     none: false,
     adventuring: false,
+    resource: false,
     exposure: false,
     practice: true,
     training: true,
@@ -276,6 +313,7 @@ const results = {
   reading: {
     none: false,
     adventuring: false,
+    resource: false,
     exposure: false,
     practice: true,
     training: true,
@@ -302,6 +340,7 @@ const results = {
   writing: {
     none: false,
     adventuring: false,
+    resource: false,
     exposure: false,
     practice: true,
     training: true,
@@ -328,6 +367,7 @@ const results = {
   learnSpell: {
     none: false,
     adventuring: false,
+    resource: false,
     exposure: false,
     practice: true,
     training: true,
@@ -354,6 +394,7 @@ const results = {
   inventSpell: {
     none: false,
     adventuring: false,
+    resource: false,
     exposure: false,
     practice: true,
     training: true,
@@ -380,6 +421,7 @@ const results = {
   visExtraction: {
     none: false,
     adventuring: false,
+    resource: false,
     exposure: false,
     practice: true,
     training: true,
@@ -406,6 +448,7 @@ const results = {
   lab: {
     none: false,
     adventuring: false,
+    resource: false,
     exposure: false,
     practice: true,
     training: true,
@@ -432,6 +475,7 @@ const results = {
   aging: {
     none: false,
     adventuring: false,
+    resource: false,
     exposure: false,
     practice: false,
     training: false,
@@ -458,6 +502,7 @@ const results = {
   visStudy: {
     none: false,
     adventuring: false,
+    resource: false,
     exposure: false,
     practice: true,
     training: true,
@@ -484,6 +529,7 @@ const results = {
   recovery: {
     none: false,
     adventuring: false,
+    resource: false,
     exposure: false,
     practice: false,
     training: false,
@@ -510,6 +556,7 @@ const results = {
   longevityRitual: {
     none: false,
     adventuring: false,
+    resource: false,
     exposure: false,
     practice: true,
     training: true,
@@ -536,6 +583,7 @@ const results = {
   minorEnchantment: {
     none: false,
     adventuring: false,
+    resource: false,
     exposure: false,
     practice: true,
     training: true,
@@ -562,6 +610,7 @@ const results = {
   chargedItem: {
     none: false,
     adventuring: false,
+    resource: false,
     exposure: false,
     practice: true,
     training: true,
@@ -588,6 +637,7 @@ const results = {
   investigateItem: {
     none: false,
     adventuring: false,
+    resource: false,
     exposure: false,
     practice: true,
     training: true,
@@ -614,6 +664,7 @@ const results = {
   copying: {
     none: false,
     adventuring: false,
+    resource: false,
     exposure: false,
     practice: true,
     training: true,
