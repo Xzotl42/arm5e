@@ -1,4 +1,4 @@
-## 2.3.2.5, Quendalon, lost in the forest for a month
+## 2.3.2.6, Quendalon, lost in the forest for a month
 
 ### Features & changes
 
@@ -6,6 +6,7 @@
   - New activity : Resource tracking
   - New setting to enable the tracking
 - New "Academic" category for reputations
+- Added the whole system property to the rollData object ("raw").
 
 ### Bug fixes
 

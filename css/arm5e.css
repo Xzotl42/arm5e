@@ -803,6 +803,13 @@ img.clickable:hover {
   color: rgb(135 38 22 / 100%);
 }
 
+.item-summary {
+  font-family: "bookAntiqua";
+  padding: 6px;
+  border-bottom: solid;
+  border-bottom-color: #bebcb8;
+  border-bottom-width: 1px;
+}
 .arm5e .sanatorium .progressbar {
   width: 400px;
   height: 16px;
