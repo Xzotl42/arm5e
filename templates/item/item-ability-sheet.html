@@ -99,9 +99,8 @@
           <input type="text" name="system.option" data-dtype="String" value="" readonly style="width: 150px" />
         {{/if}}
       </div>
-      <div class="tab editor" data-group="primary" data-tab="description" style="height:70%;">
+      <div class="tab editor" data-group="primary" data-tab="description">
         {{editor enrichedDescription target="system.description" button=true owner=owner engine="prosemirror" editable=editable}}
-
       </div>
       {{#if metagame.view }}
         {{> "systems/arm5e/templates/generic/metalic-bar.html" }}

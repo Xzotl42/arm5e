@@ -1,3 +1,14 @@
+## 2.3.2.7, Quendalon, lost in the forest the whole winter
+
+### Features & changes
+
+- New add button instead of create wherever appropriate in character sheet will open the corresponding compendium.
+- New icons for the new DE abilities
+- Theology has become a generic ability
+- Abilities icons color lightened a bit to be seen on a black background.
+
+### Bug fixes
+
 ## 2.3.2.6, Quendalon, lost in the forest for a month
 
 ### Features & changes

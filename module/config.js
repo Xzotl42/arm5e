@@ -595,8 +595,10 @@ ARM5E.ACADEMIC_ABILITIES = {
   },
   theology: {
     mnemonic: "arm5e.skill.academic.theology",
-    option: false,
-    category: "academic"
+    option: true,
+    category: "academic",
+    optionPlaceholder: "arm5e.skill.options.theology",
+    optionDefault: "religion"
   },
   academicAbility: {
     mnemonic: "arm5e.skill.academic.generic",
