@@ -158,7 +158,11 @@ export async function migration(originalVersion) {
 
     // [DEV] Uncomment below to migrate system compendiums
     // for (let p of game.packs) {
-    //   if (p.metadata.packageName !== CONFIG.ARM5E.SYSTEM_ID && p.metadata.packageName !== CONFIG.ARM5E.REF_MODULE_ID) continue;
+    //   if (
+    //     p.metadata.packageName !== CONFIG.ARM5E.SYSTEM_ID &&
+    //     p.metadata.packageName !== CONFIG.ARM5E.REF_MODULE_ID
+    //   )
+    //     continue;
     //   if (!["Actor", "Item", "Scene"].includes(p.documentName)) continue;
     //   await migrateCompendium(p);
     // }

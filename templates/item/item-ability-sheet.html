@@ -3,8 +3,8 @@
     <img class="item-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" />
     <div class="header-fields">
       <h1 class="charname">
-        <div class="flexrow"><input name="name" type="text" title="{{item.name}}" value="{{item.name}}"
-            placeholder="Name" />
+        <div class="flexrow"><input class="item-name" name="name" type="text" title="{{item.name}}"
+            value="{{item.name}}" placeholder="Name" />
           {{#if item.isOwned}}
             {{#unless system.altArt}}
               <div class="flex0 padding10 "><a class="rollable" data-roll="ability" data-ability="{{item._id}}"
@@ -89,19 +89,27 @@
             {{selectOptions abilityKeysList selected=system.key labelAttr="label"}}
           </select>
         {{/unless}}
-        {{#if (lookup (lookup config.ALL_ABILITIES system.key) "option")}}
-          <label for="system.option" class="header-label">{{localize "arm5e.sheet.skill.abilityOption"}}</label>
-          <input type="text" class="ability-option" name="system.option" value="{{system.option}}"
-            style="width: 150px" />
+        {{#if ui.hasOption}}
+          <label for="system.option"
+            class="header-label padding2">{{localize "arm5e.sheet.skill.abilityOption"}}</label>
+          <input type="text" class="ability-option" name="system.option" value="{{system.option}}" style="width: 150px"
+            {{ui.optionLocked}} />
+          <div style="padding-top: 3px; padding-left: 3px; max-width:15px;">
+            {{#if system.optionLinked}}
+              <a class="flexrow0 option-link" title="Linked to name" data-actorid="{{system.covenant.actorId}}"><i
+                  class="fas fa-link fa-sm"></i></a>
+            {{else}}
+              <a class="flexrow0 option-link" title="Free form"><i class="fas fa-unlink fa-sm"></i></a>
+            {{/if}}
+          </div>
         {{else}}
           <label for="system.option" class="header-label"
             style="color: gray">{{localize "arm5e.sheet.skill.abilityOption"}}</label>
           <input type="text" name="system.option" data-dtype="String" value="" readonly style="width: 150px" />
         {{/if}}
       </div>
-      <div class="tab editor" data-group="primary" data-tab="description" style="height:70%;">
+      <div class="tab editor" data-group="primary" data-tab="description">
         {{editor enrichedDescription target="system.description" button=true owner=owner engine="prosemirror" editable=editable}}
-
       </div>
       {{#if metagame.view }}
         {{> "systems/arm5e/templates/generic/metalic-bar.html" }}

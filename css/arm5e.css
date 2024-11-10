@@ -1616,7 +1616,9 @@ div[class*="foldable-section"] {
   overflow-y: auto;
   padding: 5px;
 }
-
+.description-editor {
+  min-height: 200px;
+}
 .arm5e .sheet-body .editor.prosemirror,
 .arm5e .sheet-body .tab .editor.prosemirror {
   height: 100%;
@@ -1991,6 +1993,14 @@ img.art-icon {
 
 .arm5e .items-list {
   margin: 0;
+}
+
+.arm5e .items-list .item-controls.header {
+  -webkit-box-flex: 0;
+  -ms-flex: 0 0 140px;
+  flex: 0 0 140px;
+  text-align: right;
+  margin-right: 8px;
 }
 
 .arm5e .items-list .item-controls {

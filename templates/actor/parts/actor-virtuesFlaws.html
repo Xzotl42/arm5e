@@ -12,8 +12,8 @@
           <span> ( {{system.totalVirtues }} {{localize "arm5e.sheet.pointsShort"}} )</span>
         </div>
         <div class="item-controls">
-          <a class="item-control item-create" title="Add virtue" data-type="virtue"><i
-              class="fas fa-plus"></i>{{localize "arm5e.sheet.action.Create"}}</a>
+          <a class="item-control item-add" title='{{localize "arm5e.hints.add" item=(localize "arm5e.sheet.virtues")}}'
+            data-compendium="virtues"><i class="fas fa-plus"></i>{{localize "arm5e.sheet.action.Add"}}</a>
         </div>
       </li>
       {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
@@ -48,8 +48,8 @@
           <span> ( {{ system.totalFlaws }} {{localize "arm5e.sheet.pointsShort"}} )</span>
         </div>
         <div class="item-controls">
-          <a class="item-control item-create" title="Add flaw" data-type="flaw"><i
-              class="fas fa-plus"></i>{{localize "arm5e.sheet.action.Create"}}</a>
+          <a class="item-control item-add" title=' {{localize "arm5e.hints.add" item=(localize "arm5e.sheet.flaws" )}}'
+            data-compendium="flaws"><i class="fas fa-plus"></i>{{localize "arm5e.sheet.action.Add"}}</a>
         </div>
       </li>
       {{> "systems/arm5e/templates/generic/metalic-bar.html" }}

@@ -124,6 +124,7 @@
   "arm5e.sheet.diary": "Diary",
   "arm5e.sheet.whereabouts": "Whereabouts",
   "arm5e.sheet.action.Create": "Create",
+  "arm5e.sheet.action.Add": "Add",
   "arm5e.sheet.action.Edit": "Edit",
   "arm5e.sheet.action.Delete": "Delete",
   "arm5e.sheet.action.Filter": "Filter",
@@ -495,7 +496,7 @@
   "arm5e.skill.academic.deadLanguage": "Dead language ({option})",
   "arm5e.skill.academic.medicine": "Medicine",
   "arm5e.skill.academic.philosophy": "Philosophiae",
-  "arm5e.skill.academic.theology": "Theology",
+  "arm5e.skill.academic.theology": "Theology ({option})",
   "arm5e.skill.academic.generic": "Academic ability ({option})",
 
   "arm5e.skill.arcane.hermeticCode": "Code of Hermes",
@@ -544,6 +545,7 @@
 
   "arm5e.skill.options.mysteryCult": "Cult's name",
   "arm5e.skill.options.law": "Legal forum",
+  "arm5e.skill.options.theology": "Religion",
 
   "arm5e.skill.options.technique": "Technique's name",
   "arm5e.skill.options.form": "Form's name",
@@ -1557,6 +1559,7 @@
   "arm5e.book.labText.enchantment": "the enchantment \"{enchantment}\"",
 
   "arm5e.hints.create": "Create {item}",
+  "arm5e.hints.add": "Add {item}",
   "arm5e.hints.edit": "Edit {item}",
   "arm5e.hints.delete": "Delete {item}",
   "arm5e.hints.design": "Design {item}",

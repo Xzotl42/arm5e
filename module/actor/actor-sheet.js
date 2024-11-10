@@ -1145,8 +1145,11 @@ export class ArM5eActorSheet extends ActorSheet {
     // Render the linked actor sheet for viewing/editing prior to the editable check.
     html.find(".actor-link").click(this._onActorRender.bind(this));
 
-    // Add Inventory Item
+    // create Inventory Item
     html.find(".item-create").click(this._onItemCreate.bind(this));
+
+    // Add Inventory Item
+    html.find(".item-add").click(this._onItemAdd.bind(this));
 
     // Update Inventory Item
     html.find(".item-edit").click(async (ev) => {
@@ -1445,6 +1448,15 @@ export class ArM5eActorSheet extends ActorSheet {
     const id = header.dataset.actorid;
     const actor = game.actors.get(id);
     actor.sheet.render(true, { focus: true });
+  }
+
+  async _onItemAdd(event) {
+    const dataset = getDataset(event);
+    if (event.stopPropagation) event.stopPropagation();
+    const moduleRef = game.settings.get(ARM5E.SYSTEM_ID, "compendiaRef");
+    const collection = game.packs.get(`${moduleRef}.${dataset.compendium}`);
+    new Compendium({ collection }).render(true);
+    return;
   }
 
   /**

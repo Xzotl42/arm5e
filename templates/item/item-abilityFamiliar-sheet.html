@@ -33,7 +33,9 @@
   <section class="sheet-body">
     {{!-- Description Tab --}}
     <div class="tab" data-group="primary" data-tab="description">
-      {{editor enrichedDescription target="system.description" button=true owner=owner engine="prosemirror" editable=editable}}
+      <div>
+        {{editor enrichedDescription target="system.description" button=true owner=owner engine="prosemirror" editable=editable}}
+      </div>
       {{#if metagame.view }}
         {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
         {{> "systems/arm5e/templates/generic/source.html" }}
