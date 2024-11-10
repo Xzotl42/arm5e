@@ -22,6 +22,7 @@ export class AbilitySchema extends foundry.abstract.DataModel {
       //   choices: Object.keys(ARM5E.ABILITIES_CATEGORIES)
       // }),
       option: new fields.StringField({ required: false, blank: true, initial: "" }),
+      optionLinked: boolOption(true),
       realm: RealmField()
     };
   }
@@ -38,6 +39,12 @@ export class AbilitySchema extends foundry.abstract.DataModel {
         );
       }
     }
+  }
+
+  static migrateData(data) {
+    if (data.optionLinked === undefined) data.optionLinked = false;
+
+    return data;
   }
 
   static getDefault(itemData) {
@@ -141,6 +148,7 @@ export class AbilitySchema extends foundry.abstract.DataModel {
     if (itemData.system.xp === null) {
       updateData["system.xp"] = 0;
     }
+
     // clean-up TODO: remove
     if (itemData.system.puissant) updateData["system.-=puissant"] = null;
     if (itemData.system.affinity) updateData["system.-=affinity"] = null;

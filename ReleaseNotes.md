@@ -6,6 +6,7 @@
 - New icons for the new DE abilities
 - Theology has become a generic ability
 - Abilities icons color lightened a bit to be seen on a black background.
+- New flag to match option field of abilities items with the name.
 
 ### Bug fixes
 

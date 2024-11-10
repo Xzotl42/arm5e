@@ -228,6 +228,10 @@ export class ArM5eItemSheet extends ItemSheet {
         ) {
           context.canBeAccelerated = true;
         }
+        if (CONFIG.ARM5E.ALL_ABILITIES[context.system.key].option) {
+          context.ui.hasOption = true;
+          context.ui.optionLocked = context.system.optionLinked ? "readonly" : "";
+        }
       } else {
         context.abilityKeysList = CONFIG.ARM5E.LOCALIZED_ABILITIES;
       }
@@ -408,7 +412,10 @@ export class ArM5eItemSheet extends ItemSheet {
     html
       .find(".default-characteristic")
       .change((event) => this._onSelectDefaultCharacteristic(this.item, event));
+    html.find(".item-name").change((event) => this._onNameChange(this.item, event));
     html.find(".ability-option").change((event) => this._cleanUpOption(this.item, event));
+    html.find(".option-link").click(this._optionLinkChange.bind(this));
+
     html
       .find(".category-change")
       .change((event) => this._changeInhabitantCategory(this.item, event));
@@ -508,7 +515,23 @@ export class ArM5eItemSheet extends ItemSheet {
     );
     return false;
   }
+  async _onNameChange(item, event) {
+    if (event.currentTarget.value === "") return;
 
+    if (this.item.system.optionLinked) {
+      const newName = event.currentTarget.value;
+      const newValue = event.currentTarget.value.replace(/[^a-zA-Z0-9]/gi, "");
+      await this.item.update(
+        {
+          name: newName,
+          system: {
+            option: newValue
+          }
+        },
+        {}
+      );
+    }
+  }
   async _cleanUpOption(item, event) {
     event.preventDefault();
     if (event.currentTarget.value == "") {
@@ -521,6 +544,18 @@ export class ArM5eItemSheet extends ItemSheet {
       {
         system: {
           option: event.currentTarget.value
+        }
+      },
+      {}
+    );
+  }
+
+  async _optionLinkChange(event) {
+    event.preventDefault();
+    await this.item.update(
+      {
+        system: {
+          optionLinked: !this.item.system.optionLinked
         }
       },
       {}
