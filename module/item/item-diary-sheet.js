@@ -1017,7 +1017,7 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
       }
       if (item.isAResource()) {
         let [track] = await item.createResourceTrackingDiaryEntry(
-          null,
+          this.item.name,
           this.actor,
           item.system.quantity,
           this.item.system.dates[0]
@@ -1046,7 +1046,7 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
                 if (item.isAResource()) {
                   let [track] = await item.createResourceTrackingDiaryEntry(
                     actor,
-                    null,
+                    this.item.name,
                     dependency.data.amount,
                     this.item.system.dates[0]
                   );

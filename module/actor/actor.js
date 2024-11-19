@@ -2115,7 +2115,7 @@ export class ArM5ePCActor extends Actor {
       updateData["system.lastCrisis"] = { year: agingData.year, season: agingData.season };
     }
 
-    if (this.system.laboratory.longevityRitual.modifier && naturalAging) {
+    if (this.system.bonuses.traits.aging && naturalAging) {
       updateData["system.warping.points"] =
         this.system.warping.points + CONFIG.ARM5E.activities.aging.warping.impact;
     }

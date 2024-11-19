@@ -1,5 +1,6 @@
 import { ArM5ePCActor } from "../actor/actor.js";
 import ACTIVE_EFFECTS_TYPES from "../constants/activeEffectsTypes.js";
+import { ArM5eItem } from "../item/item.js";
 // import { ArM5eItem } from "../item/item.js";
 import { log } from "../tools.js";
 /**
@@ -30,15 +31,15 @@ export default class ArM5eActiveEffect extends ActiveEffect {
       // (CONFIG.ISV10 && this.noEdit) ||
       (this.parent?.documentName === "Item" && this.parent?.isOwned == true) ||
       (this.parent?.documentName === "Actor" && this.origin?.includes("Item"));
+    if (!this.origin && this.target instanceof ArM5ePCActor && this.parent instanceof ArM5eItem) {
+      this.origin = this.parent.uuid;
+    }
 
     this.isHidden = this.flags.arm5e?.hidden && !game.user.isGM;
   }
 
   async getSource() {
-    if (
-      this.target instanceof dnd5e.documents.ArM5ePCActor &&
-      this.parent instanceof dnd5e.documents.ArM5eItem
-    ) {
+    if (this.target instanceof ArM5ePCActor && this.parent instanceof ArM5eItem) {
       return this.parent;
     }
     return fromUuid(this.origin);
@@ -76,7 +77,7 @@ export default class ArM5eActiveEffect extends ActiveEffect {
       case "create":
         const data = {
           origin: owner.uuid,
-          "duration.rounds": li.dataset.effectType === "temporary" ? 1 : undefined,
+          "duration.turns": li.dataset.effectType === "temporary" ? 999 : undefined, // TODO change when spell effects are there
           disabled: li.dataset.effectType === "inactive",
           tint: "#000000",
           changes: [],

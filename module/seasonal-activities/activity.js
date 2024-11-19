@@ -43,6 +43,10 @@ class BookActivity extends ProgressActivity {
   }
 }
 
+///////////////////////
+// LAB ACTIVITY
+////////////////////////
+
 export class LabActivity extends Activity {
   constructor(labUuid, actorUuid, type) {
     super(actorUuid, type);
@@ -116,8 +120,8 @@ export class LabActivity extends Activity {
     return null;
   }
 
-  prepareData(input) {
-    return input;
+  async prepareData(context) {
+    return context;
   }
 
   get activitySheet() {
@@ -128,10 +132,31 @@ export class LabActivity extends Activity {
     return { mod: 0, label: "" };
   }
 
+  // true if using more vis is a valid option
+  get moreVisPossible() {
+    return false;
+  }
+
+  visUsed(data) {
+    if (!this.hasVisCost) return 0;
+    let sum = Object.values(data.magus).reduce(
+      (accumulator, currentValue) => accumulator + (Number(currentValue.used) ?? 0),
+      0
+    );
+    sum = Object.values(data.lab).reduce(
+      (accumulator, currentValue) => accumulator + (Number(currentValue.used) ?? 0),
+      sum
+    );
+    return sum;
+  }
+
+  lastLabTotalAdjustment(context) {
+    return 0;
+  }
+
   validateVisCost(data) {
     const result = { valid: true, message: "" };
     if (!this.hasVisCost) return result;
-
     let available = Object.values(data.magus).reduce(
       (accumulator, currentValue) => accumulator + currentValue.amount,
       0
@@ -143,18 +168,17 @@ export class LabActivity extends Activity {
     if (available < data.amount) {
       result.message = game.i18n.localize("arm5e.activity.msg.noEnoughVis");
       result.valid = false;
+      return result;
     }
-    let sum = Object.values(data.magus).reduce(
-      (accumulator, currentValue) => accumulator + (Number(currentValue.used) ?? 0),
-      0
-    );
-    sum = Object.values(data.lab).reduce(
-      (accumulator, currentValue) => accumulator + (Number(currentValue.used) ?? 0),
-      sum
-    );
-    if (sum != data.amount) {
+
+    if (data.used < data.amount) {
       result.message = game.i18n.localize("arm5e.activity.msg.wrongVisAmount");
       result.valid = false;
+    } else if (data.used > data.amount) {
+      if (!this.moreVisPossible) {
+        result.message = game.i18n.localize("arm5e.activity.msg.wrongVisAmount");
+        result.valid = false;
+      }
     }
     return result;
   }
@@ -275,7 +299,11 @@ export class LabActivity extends Activity {
   }
 }
 
-// Blank acivity for labs without owner
+///////////////////////
+// NO ACTIVITY
+////////////////////////
+
+// Blank activity for labs without owner
 export class NoLabActivity extends LabActivity {
   constructor(labUuid) {
     super(labUuid, null, "none");
@@ -283,6 +311,10 @@ export class NoLabActivity extends LabActivity {
     this.ownerActivityMod = 0;
   }
 }
+
+///////////////////////
+// SPELL LEARNING/INVENTING
+////////////////////////
 
 export class SpellActivity extends LabActivity {
   constructor(labUuid, actorUuid, type) {
@@ -381,13 +413,20 @@ export class SpellActivity extends LabActivity {
   }
 }
 
+///////////////////////
+// LONGEVITY RITUAL
+////////////////////////
+
 export class LongevityRitualActivity extends LabActivity {
-  constructor(lab, actor, target) {
+  constructor(lab, actor) {
     super(lab, actor, "longevityRitual");
-    this.target = target ?? actor;
   }
 
   get hasVisCost() {
+    return true;
+  }
+  // true if using more vis is a valid option
+  get moreVisPossible() {
     return true;
   }
 
@@ -397,6 +436,26 @@ export class LongevityRitualActivity extends LabActivity {
 
   get title() {
     return game.i18n.localize("arm5e.activity.longevityRitual");
+  }
+
+  get activitySheet() {
+    return "systems/arm5e/templates/lab-activities/longevity-ritual.html";
+  }
+  async getDefaultData() {
+    return {
+      subject: {
+        self: true,
+        magical: true,
+        age: 35
+      }
+    };
+  }
+  async prepareData(context) {
+    if (context.planning.data.subject.self) {
+      context.ui.subjectName = "readonly";
+      context.ui.subjectMagical = "disabled";
+    }
+    return context;
   }
 
   labActivitySpec(lab) {
@@ -410,9 +469,29 @@ export class LongevityRitualActivity extends LabActivity {
 
   validation(input) {
     let isValid = true;
-    let msg = game.i18n.format("arm5e.lab.planning.msg.longevityBonus", {
-      bonus: Math.ceil(input.labTotal.score / 5)
-    });
+    let msg = "";
+    if (input.data.subject.self) {
+      input.data.agingModifier = Math.floor(input.labTotal.score / 5);
+      msg = game.i18n.format("arm5e.lab.planning.msg.longevityBonus", {
+        bonus: input.data.agingModifier
+      });
+    } else {
+      if (!input.data.subject.magical) {
+        input.data.agingModifier = Math.floor(input.labTotal.score / 10);
+        msg = game.i18n.format("arm5e.lab.planning.msg.longevityBonus", {
+          bonus: input.data.agingModifier
+        });
+      } else {
+        input.data.agingModifier = Math.floor(input.labTotal.score / 5);
+        msg = game.i18n.format("arm5e.lab.planning.msg.longevityBonus", {
+          bonus: input.data.agingModifier
+        });
+      }
+      if (input.labTotal.score < 30) {
+        isValid = false;
+        msg = game.i18n.format("arm5e.lab.planning.msg.labTotalTooLow");
+      }
+    }
 
     return {
       valid: isValid,
@@ -422,16 +501,118 @@ export class LongevityRitualActivity extends LabActivity {
     };
   }
 
-  getVisCost(input) {
+  async getVisCost(input) {
+    let age = 35;
+    if (input.data.subject.self) {
+      const actor = await fromUuid(this.actorUuid);
+      age = actor.system.age.value;
+    } else {
+      age = input.data.target.age ?? 35;
+      input.data.subject.age = age;
+    }
     return {
-      amount: Math.ceil(input.labTotal.score / 10),
+      amount: Math.ceil(age / 10),
       technique: "cr",
       form: "co"
     };
   }
 
+  lastLabTotalAdjustment(context) {
+    const mod = context.planning.data.visCost.used - context.planning.data.visCost.amount;
+    if (mod > 0) {
+      context.planning.labTotal.score += mod;
+      context.planning.labTotal.label += `+ ${game.i18n.localize(
+        "arm5e.lab.bonus.moreVisUsed"
+      )} (${mod}) &#10`;
+    }
+  }
+
+  getDiaryName(planning) {
+    let name = game.i18n.localize("arm5e.lab.self");
+    if (!planning.data.subject.self) {
+      name = planning.data.subject.name;
+    }
+    return game.i18n.format("arm5e.lab.activity.title.longevityRitual", { name: name });
+  }
+
+  getDiaryDescription(planning) {
+    return `${this.getDiaryName(planning)} : ${planning.label}<br/>${game.i18n.localize(
+      "arm5e.sheet.labTotal"
+    )}: <b>${planning.labTotal.score}</b> <br/>
+     ${planning.labTotal.label}`;
+  }
+
+  async activityAchievement(input) {
+    const actor = await fromUuid(this.actorUuid);
+
+    const achievement = {
+      name: this.getDiaryName(input),
+      type: "item",
+      img: CONFIG.ACTIVITIES_DEFAULT_ICONS.longevityRitual,
+      system: { description: this.getDiaryDescription(input), quantity: 1 },
+      effects: [
+        {
+          duration: {
+            startTime: null,
+            seconds: null,
+            combat: null,
+            rounds: null,
+            turns: 999,
+            startRound: null,
+            startTurn: null
+          },
+          disabled: false,
+          tint: "#000000",
+          changes: [
+            {
+              mode: 2,
+              key: "system.bonuses.traits.aging",
+              value: `${input.data.agingModifier}`,
+              priority: null
+            }
+          ],
+          flags: {
+            arm5e: {
+              type: ["vitals"],
+              subtype: ["aging"],
+              option: [null]
+            }
+          },
+          name: "Longevity ritual",
+          _id: foundry.utils.randomID(),
+          description: "",
+          transfer: true,
+          statuses: [],
+          img: CONFIG.ACTIVITIES_DEFAULT_ICONS.longevityRitual
+        }
+      ],
+      _id: null
+    };
+
+    // const effect = input.data.enchantment;
+    // effect.receptacleId = item.system.enchantments.capacities[0].id;
+    // const enchantments = {
+    //   author: actor.name,
+    //   year: input.date.year,
+    //   season: input.date.season,
+    //   bonuses: [],
+    //   state: "lesser",
+    //   aspects: item.system.enchantments.aspects,
+    //   capacities: item.system.enchantments.capacities,
+    //   effects: [effect]
+    // };
+
+    // achievement.system.enchantments = enchantments;
+    achievement.system.state = "inert";
+    return achievement;
+  }
+
   async application() {}
 }
+
+///////////////////////
+// VIS EXTRACTION
+////////////////////////
 
 export class VisExtractionActivity extends LabActivity {
   constructor(lab, actor) {
@@ -503,6 +684,10 @@ export class VisExtractionActivity extends LabActivity {
 
   async application() {}
 }
+
+///////////////////////
+// MINOR ENCHANTMENT
+////////////////////////
 
 export class MinorEnchantment extends LabActivity {
   constructor(lab, actor) {
@@ -615,7 +800,7 @@ export class MinorEnchantment extends LabActivity {
    * @param {any} planning
    * @returns {any}
    */
-  prepareData(context) {
+  async prepareData(context) {
     const planning = context.planning;
     const receptacleEnchants = planning.data.receptacle.system.enchantments;
     if (receptacleEnchants.aspects.length == 0) {
@@ -671,7 +856,7 @@ export class MinorEnchantment extends LabActivity {
     }
   }
 
-  getVisCost(input) {
+  async getVisCost(input) {
     return {
       amount: Math.ceil(input.data.enchantment.system.level / 10),
       technique: input.data.enchantment.system.technique.value,
@@ -774,7 +959,7 @@ export class ChargedItem extends MinorEnchantment {
     }
   }
 
-  prepareData(context) {
+  async prepareData(context) {
     context = super.prepareData(context);
     const planning = context.planning;
     planning.data.receptacle.system.enchantments.originalCharges = Math.max(
@@ -879,7 +1064,7 @@ export class InvestigationActivity extends LabActivity {
     }`;
   }
 
-  prepareData(context) {
+  async prepareData(context) {
     const planning = context.planning;
     if (planning.data.receptacle) {
       const enchantExt = planning.data.receptacle.system.enchantments;

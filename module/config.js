@@ -2835,15 +2835,15 @@ ARM5E.activities.lab = {
   //     spellCombobox: "disabled"
   //   }
   // },
-  // longevityRitual: {
-  //   label: "arm5e.lab.activity.longevityRitual",
-  //   enabled: "disabled",
-  //   edition: {
-  //     aura: "",
-  //     spellField: "readonly",
-  //     spellCombobox: "disabled"
-  //   }
-  // },
+  longevityRitual: {
+    label: "arm5e.lab.activity.longevityRitual",
+    enabled: "",
+    edition: {
+      aura: "",
+      spellField: "readonly",
+      spellCombobox: "disabled"
+    }
+  },
   chargedItem: {
     label: "arm5e.lab.activity.chargedEnchantment",
     enabled: "",
