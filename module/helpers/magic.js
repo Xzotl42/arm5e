@@ -454,6 +454,13 @@ export function GetEffectAttributesLabel(item) {
   return label;
 }
 
+export function GetRawLabTotalLabel(technique, form, level = null) {
+  let res = CONFIG.ARM5E.magic.techniques[technique]["short"];
+  res += ` ${CONFIG.ARM5E.magic.forms[form]["short"]}`;
+  if (level) res += ` - ${level}`;
+  return res;
+}
+
 /**
  *
  * @param item

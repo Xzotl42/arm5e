@@ -246,8 +246,7 @@ export class ArM5eRollInfo {
 
         this.setGenericField(
           game.i18n.localize("arm5e.sheet.longevityModifier"),
-          actorSystemData.laboratory.longevityRitual.modifier +
-            actorSystemData.bonuses.traits.aging,
+          actorSystemData.bonuses.traits.aging,
           3,
           "-"
         );

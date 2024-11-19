@@ -1202,6 +1202,11 @@ input[type="time"] {
   background-size: contain;
 }
 
+.arm5e .mainItem {
+  background-repeat: repeat-y;
+  background-size: contain;
+  font-family: "bookAntiquaBold";
+}
 /* 
 .arm5e .mainItem .sheet-body {
   height: auto;
@@ -2259,17 +2264,6 @@ img.art-icon {
 
 .arm5e .fontSize8 {
   font-size: 8pt;
-}
-
-.arm5e .mainItem {
-  background-repeat: repeat-y;
-  background-size: 100%;
-  font-family: "bookAntiquaBold";
-  display: flex;
-  /* padding-left: 34px;
-  padding-right: 34px; */
-  font-size: 9pt;
-  /* max-width: 800px; */
 }
 
 #tooltip.covenant-tooltip,

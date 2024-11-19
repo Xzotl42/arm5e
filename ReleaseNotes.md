@@ -1,4 +1,4 @@
-## 2.3.2.7, Quendalon, lost in the forest the whole winter
+## 2.3.2.8, Quendalon, lost in the forest the whole winter
 
 ### Features & changes
 
@@ -7,8 +7,12 @@
 - Theology has become a generic ability
 - Abilities icons color lightened a bit to be seen on a black background.
 - New flag to match option field of abilities items with the name.
+- New longevity ritual activity
 
 ### Bug fixes
+
+- Setting a non-magus as the owner of a lab will no longer prevent its opening.
+- Lab activity should not reset to a simple data object in some rare cases
 
 ## 2.3.2.6, Quendalon, lost in the forest for a month
 

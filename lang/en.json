@@ -918,6 +918,8 @@
   "arm5e.lab.planning.msg.tooMuchVis": "{num} pawns is more than twice the Magic theory's score",
   "arm5e.lab.planning.msg.draftLabText": "This laboratory text is still in draft form, unless you are the author, it cannot be used until translated.",
   "arm5e.lab.planning.msg.dropItemToInvestigate": "Drop an item to investigate",
+  "arm5e.lab.planning.msg.labTotalTooLow": "Lab total is too low to craft a longevity ritual for another.",
+
   "arm5e.lab.planning.investigation.diaryTitle": "Investigation of \"{name}\"",
   "arm5e.lab.planning.investigation.rolled": "Rolled {total} (die + {labTotal})",
   "arm5e.lab.planning.investigation.nothingFound.": "Nothing else found.",
@@ -1016,7 +1018,13 @@
   "arm5e.lab.bonus.aspects": "Shapes and materials bonus",
   "arm5e.lab.bonus.aspectsVerditius": "Philosophiae (Verditius)",
   "arm5e.lab.bonus.aspectsMax": "maximum Magic Theory",
+  "arm5e.lab.bonus.moreVisUsed": "Additional Vis used",
 
+  "arm5e.lab.activity.title.longevityRitual": "Longevity ritual for {name}",
+  "arm5e.lab.ritualSubject": "Ritual's subject",
+
+  "arm5e.lab.otherSubject": "Other subject",
+  "arm5e.lab.self": "Self",
   "arm5e.lab.option.oneCharge": "One charge per item",
 
   "arm5e.lab.specialty.experimentation": "Experimentation",

@@ -27,8 +27,9 @@
         }}
       </select>
     </div>
-    {{> (lookup . "activitySheet") }}
+
     {{#unless (eq planning.type "none")}}
+      {{> (lookup . "activitySheet") }}
       <div class="flexrow flex01">
         <div class="flexcol" style="margin-top: 10px; margin-right: 10px;">
           <div class="padding4 flexrow flex-group-left">
