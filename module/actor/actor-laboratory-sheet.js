@@ -633,7 +633,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
     ];
 
     let sourceQuality = 0;
-
+    const externalIds = [];
     switch (planning.type) {
       case "inventSpell":
       case "learnSpell":
@@ -703,7 +703,8 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
       }
     ];
     let log = await this.actor.createEmbeddedDocuments("Item", labLog, {});
-    entryData[0].system.externalIds = [{ actorId: this.actor._id, itemId: log[0]._id, flags: 2 }];
+    externalIds.push({ actorId: this.actor._id, itemId: log[0]._id, flags: 2 });
+    entryData[0].system.externalIds = externalIds;
 
     let entry = await owner.createEmbeddedDocuments("Item", entryData, {});
     switch (planning.type) {

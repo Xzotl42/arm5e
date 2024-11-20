@@ -268,4 +268,26 @@ export async function migrateSettings() {
       ArM5Def: ARM5E.generic.sourcesTypes.ArM5Def
     });
   }
+  // ensure that the time setting is setting properly
+
+  if (!game.modules.get("foundryvtt-simple-calendar")?.active) {
+    let currentDate = game.settings.get("arm5e", "currentDate");
+    let toUpdate = false;
+    if (currentDate === undefined) {
+      currentDate = { year: 1220, season: "spring", date: "", month: 2, day: 20 };
+      toUpdate = true;
+    } else {
+      if (currentDate.year == undefined) {
+        currentDate.year = 1220;
+        toUpdate = true;
+      }
+      if (!Object.keys(CONFIG.ARM5E.seasons).includes(currentDate.season)) {
+        currentDate.season = "spring";
+        toUpdate = true;
+      }
+    }
+    if (toUpdate) {
+      await game.settings.set("arm5e", "currentDate", currentDate);
+    }
+  }
 }
