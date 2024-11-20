@@ -138,31 +138,6 @@ Hooks.once("init", async function () {
   CONFIG.Dice.rolls[0] = ArsRoll;
   //CONFIG.Dice.rolls.push(ArsRoll);
 
-  // // CONFIG.Dice.terms[StressDieNoBotchInternal.DENOMINATION] = StressDieNoBotchInternal;
-  // // instrumenting roll for testing
-  // Roll.prototype.botches = 0;
-  // Roll.prototype.diviser = 1;
-  // Roll.prototype.multiplier = 1;
-  // Roll.prototype.offset = 0;
-  // Roll.prototype.modifier = function () {
-  //   if (!this.result) {
-  //     return 0;
-  //   }
-  //   if (this.botches > 0) {
-  //     return 0;
-  //   }
-  //   if (this.dice.length != 1) {
-  //     log(false, "ERROR: wrong number of dice");
-  //     return 0;
-  //   }
-
-  //   log(
-  //     false,
-  //     `DBG: Roll total ${this.total} * ${this.diviser} - (${this.dice[0].total} * ${this.multiplier}) `
-  //   );
-  //   return this.total * this.diviser - this.dice[0].total * this.multiplier;
-  // };
-
   // UI customization
   CONFIG.ui.actors = ArM5eActorsDirectory;
   CONFIG.Item.sidebarIcon = "icon-Icon_magic-chest";

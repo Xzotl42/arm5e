@@ -1,4 +1,4 @@
-## 2.3.2.8, Quendalon, lost in the forest the whole winter
+## 2.3.2.9, Quendalon, lost in the forest the whole winter
 
 ### Features & changes
 
@@ -13,6 +13,7 @@
 
 - Setting a non-magus as the owner of a lab will no longer prevent its opening.
 - Lab activity should not reset to a simple data object in some rare cases
+- Ensure that the current date is set properly at start up or set it to spring 1220.
 
 ## 2.3.2.6, Quendalon, lost in the forest for a month
 
