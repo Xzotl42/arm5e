@@ -13,7 +13,8 @@
         "page": 0,
         "indexKey": "",
         "review_status": "toReview",
-        "reviewer": ""
+        "reviewer": "",
+        "creationMode": true
       },
       "npcbase": {
         "age": {
