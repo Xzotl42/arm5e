@@ -164,10 +164,13 @@ export class ArM5ePCActor extends Actor {
       return;
     }
     const datetime = (context.datetime = game.settings.get("arm5e", "currentDate"));
-    this.system.age.value = this.system.description?.born?.value
-      ? Number(datetime.year) - this.system.description.born.value
-      : 20;
-
+    if (this.system.creationMode) {
+      this.system.description.born.value = Number(datetime.year) - this.system.age.value;
+    } else {
+      this.system.age.value = this.system.description?.born?.value
+        ? Number(datetime.year) - this.system.description.born.value
+        : 20;
+    }
     this.system.wounds = {
       healthy: [],
       light: [],

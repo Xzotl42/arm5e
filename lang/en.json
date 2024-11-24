@@ -1578,6 +1578,7 @@
   "arm5e.hints.useMagicItem": "Trigger the effect \"{name}\"",
 
   "arm5e.sheet.details": "Details",
+  "arm5e.sheet.edition.creationMode": "Creation mode",
 
   "arm5e.config.sourcebookFilter": "Sourcebooks filter",
   "arm5e.config.compendiaRef": "Compendia reference",

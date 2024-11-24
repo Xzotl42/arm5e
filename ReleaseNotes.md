@@ -1,4 +1,4 @@
-## 2.3.2.9, Quendalon, lost in the forest the whole winter
+## 2.3.2.10, Quendalon, lost in the forest the whole winter
 
 ### Features & changes
 
@@ -8,6 +8,8 @@
 - Abilities icons color lightened a bit to be seen on a black background.
 - New flag to match option field of abilities items with the name.
 - New longevity ritual activity
+- New creation mode.
+- Raised the minimum module version, you get a warning if you don't update it too.
 
 ### Bug fixes
 

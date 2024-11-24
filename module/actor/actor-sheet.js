@@ -208,6 +208,14 @@ export class ArM5eActorSheet extends ActorSheet {
 
     const actorData = context.actor;
     context.ui = this.getUserCache();
+
+    if (context.actor.system.creationMode) {
+      context.ui.creationMode = { edit: "" };
+      context.ui.storyMode = { edit: "readonly" };
+    } else {
+      context.ui.creationMode = { edit: "readonly" };
+      context.ui.storyMode = { edit: "" };
+    }
     context.rollData = this.actor.getRollData();
     // Add the actor's data to context.system for easier access, as well as flags.
     context.system = actorData.system;

@@ -1763,8 +1763,8 @@ input[type="number"].resource-focus {
   text-align: center;
 }
 
-input[type="text"].resource-focus-slim,
-input[type="number"].resource-focus-slim {
+input[type="text"].resource-focus.slim,
+input[type="number"].resource-focus.slim {
   max-width: 50px;
   text-align: center;
 }
@@ -1774,7 +1774,7 @@ input[type="text"].resource-focus {
   text-align: center;
 }
 
-input[type="text"].resource-focus-wide {
+input[type="text"].resource-focus.wide {
   width: 100%;
   text-align: center;
   font-size: 9pt;
