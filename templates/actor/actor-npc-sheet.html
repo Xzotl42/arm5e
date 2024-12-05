@@ -92,7 +92,7 @@
             <label for="system.age.value" class="smallTitle">{{localize "arm5e.sheet.age"}}</label>
             <div class="resource-content flexrow flex-center flex-between margintop6">
               <input type="number" name="system.age.value" value="{{numberFormat system.age.value decimals=0 }}"
-                data-dtype="Number" class="resource-focus" readonly />
+                data-dtype="Number" {{ui.creationMode.edit}} class="resource-focus" />
               <span> ( </span>
               <input type="number" name="system.apparent.value"
                 value="{{numberFormat system.apparent.value decimals=0 }}" data-dtype="Number" class="resource-focus" />

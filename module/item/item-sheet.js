@@ -1,4 +1,4 @@
-import { getDataset, log } from "../tools.js";
+import { getDataset, log, slugify } from "../tools.js";
 import ArM5eActiveEffect from "../helpers/active-effects.js";
 import { ARM5E_DEFAULT_ICONS, getConfirmation } from "../constants/ui.js";
 import { ArM5eActorSheet } from "../actor/actor-sheet.js";
@@ -17,7 +17,7 @@ export class ArM5eItemSheet extends ItemSheet {
     return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["arm5e", "sheet", "item"],
       width: 650,
-      height: 750,
+      height: 752,
       // resizable: false,
       // dragDrop: [{dragSelector: ".item-list .item", dropSelector: null}],
       tabs: [
@@ -267,7 +267,7 @@ export class ArM5eItemSheet extends ItemSheet {
       } else {
         context.system.effectCreation = true;
       }
-    } else if (itemData.type == "virtue" || itemData.type == "flaw") {
+    } else if (["virtue", "flaw", "quality", "inferiority"].includes(itemData.type)) {
       if (context.isOwned) {
         context.system.effectCreation = CONFIG.ISV10 ? false : true;
         switch (context.item.parent.type) {
@@ -421,6 +421,7 @@ export class ArM5eItemSheet extends ItemSheet {
       .change((event) => this._changeInhabitantCategory(this.item, event));
     html.find(".change-abilitykey").change((event) => this._changeAbilitykey(this.item, event));
     html.find(".change-VFType").change((event) => this._changeVFType(this.item, event));
+    html.find(".indexkey-edit").change((event) => this._slugifyIndexKey(event));
 
     // Active Effect management
     html
@@ -487,7 +488,41 @@ export class ArM5eItemSheet extends ItemSheet {
         await this.actor.createEmbeddedDocuments("Item", [effectData]);
       }
     });
+
+    html.find(".weapon-ability").change((event) => this._changeWeaponAbility(event));
   }
+
+  async _changeWeaponAbility(event) {
+    event.preventDefault();
+    let ab = this.actor.items.get(event.currentTarget.value);
+    await this.item.update(
+      {
+        system: {
+          ability: {
+            id: event.currentTarget.value,
+            key: ab.system.key,
+            option: ab.system.option
+          }
+        }
+      },
+      {}
+    );
+  }
+
+  async _slugifyIndexKey(event) {
+    event.preventDefault();
+    const newValue = slugify(event.currentTarget.value);
+    event.currentTarget.value = newValue;
+    await this.item.update(
+      {
+        system: {
+          indexKey: newValue
+        }
+      },
+      {}
+    );
+  }
+
   async _changeAbilitykey(item, event) {
     event.preventDefault();
     await this.item._updateIcon("system.key", event.target.value);
@@ -520,7 +555,7 @@ export class ArM5eItemSheet extends ItemSheet {
 
     if (this.item.system.optionLinked) {
       const newName = event.currentTarget.value;
-      const newValue = event.currentTarget.value.replace(/[^a-zA-Z0-9]/gi, "");
+      const newValue = slugify(event.currentTarget.value); //.replace(/[^a-zA-Z0-9]/gi, "");
       await this.item.update(
         {
           name: newName,
@@ -538,7 +573,7 @@ export class ArM5eItemSheet extends ItemSheet {
       event.currentTarget.value = "optionName";
     } else {
       // remove any non alphanumeric character
-      event.currentTarget.value = event.currentTarget.value.replace(/[^a-zA-Z0-9]/gi, "");
+      event.currentTarget.value = slugify(event.currentTarget.value); //.replace(/[^a-zA-Z0-9]/gi, "");
     }
     await this.item.update(
       {

@@ -1,3 +1,24 @@
+## 2.3.2.11, Quendalon, lost in the forest since half a year
+
+### Features & changes
+
+- Put biography higher in description tab.
+- New Qualities and Inferiorities Item's types
+- New Active Effects
+  - Cunning bonus
+  - Characteristic upgrade
+  - Ability upgrade (limited list)
+- Weapons keep the ability used, even when they change hands.
+- [technical] Automatic slugification of indexKey
+
+### Bug fixes
+
+- Creation mode is now working for NPC and Beasts.
+- Character '-' is now allowed in ability option key
+- Artes liberales and phylosophya were not taken into account in the casting total of the character's list of spells
+- Magic items use works again.
+- Bonus XP is also possible for Heartbeast skill
+
 ## 2.3.2.10, Quendalon, lost in the forest the whole winter
 
 ### Features & changes

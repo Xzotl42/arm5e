@@ -94,7 +94,6 @@
         <div class="flexcol">
           {{#if bonusAbility.active}}
             {{#with bonusAbility}}
-              {{log "with " this}}
               {{> (lookup . "partial" ) compIdx=compIdx id=../id}}
             {{/with}}
           {{/if}}

@@ -21,6 +21,8 @@
   "ITEM.TypeHook": "Hook",
   "ITEM.TypeVirtue": "Virtue",
   "ITEM.TypeFlaw": "Flaw",
+  "ITEM.TypeQuality": "Quality",
+  "ITEM.TypeInferiority": "Inferiority",
   "ITEM.TypeAbility": "Ability",
   "ITEM.TypeAbilityfamiliar": "Ability Familiar",
   "ITEM.TypeDiaryentry": "DiaryEntry (Internal)",
@@ -93,6 +95,8 @@
   "TYPES.Item.mundaneBook": "Mundane book (deprecated)",
   "TYPES.Item.wound": "Wound",
   "TYPES.Item.supernaturalEffect": "Supernatural effect",
+  "TYPES.Item.quality": "Quality",
+  "TYPES.Item.inferiority": "Inferiority",
 
   "arm5e.sheet.labTexts": "Laboratory texts",
 
@@ -1221,6 +1225,7 @@
   "arm5e.sheet.activeEffect.types.vitals": "Vitals",
   "arm5e.sheet.activeEffect.types.nullEffect": "Null effect",
   "arm5e.sheet.activeEffect.types.characteristics": "Characteristics",
+  "arm5e.sheet.activeEffect.types.characteristicBoost": "Characteristic's boost",
   "arm5e.sheet.activeEffect.types.fatigue": "Fatigue",
   "arm5e.sheet.activeEffect.types.wounds": "Wounds",
   "arm5e.sheet.activeEffect.types.formResistance": "Natural resistance",
@@ -1247,6 +1252,7 @@
   "arm5e.sheet.activeEffect.types.optional": "Optional bonus",
   "arm5e.sheet.activeEffect.types.spellmastery": "Spell mastery",
   "arm5e.sheet.activeEffect.types.roll.optional": "Optional roll bonus",
+  "arm5e.sheet.activeEffect.types.qualityAbilityBoost": "Quality - Ability boost",
 
   "arm5e.sheet.activeEffect.subtypes.none": "None",
   "arm5e.sheet.activeEffect.subtypes.fatigueTotal": "Fatigue total",

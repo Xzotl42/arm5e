@@ -650,6 +650,73 @@ export default {
         key: "system.characteristics.qik.value",
         mode: CONST.ACTIVE_EFFECT_MODES.ADD,
         default: 0
+      },
+      cun: {
+        mnemonic: "arm5e.sheet.cunning",
+        key: "system.characteristics.cun.value",
+        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        default: 0
+      }
+    }
+  },
+  characteristicBoost: {
+    category: "traits",
+    type: "characteristics",
+    mnemonic: "arm5e.sheet.activeEffect.types.characteristicBoost",
+    subtypes: {
+      int: {
+        mnemonic: "arm5e.sheet.intelligence",
+        key: "system.characteristics.int.upgrade",
+        mode: CONST.ACTIVE_EFFECT_MODES.UPGRADE,
+        default: 0
+      },
+      per: {
+        mnemonic: "arm5e.sheet.perception",
+        key: "system.characteristics.per.upgrade",
+        mode: CONST.ACTIVE_EFFECT_MODES.UPGRADE,
+        default: 0
+      },
+      str: {
+        mnemonic: "arm5e.sheet.strength",
+        key: "system.characteristics.str.upgrade",
+        mode: CONST.ACTIVE_EFFECT_MODES.UPGRADE,
+        default: 0
+      },
+      sta: {
+        mnemonic: "arm5e.sheet.stamina",
+        key: "system.characteristics.sta.upgrade",
+        mode: CONST.ACTIVE_EFFECT_MODES.UPGRADE,
+        default: 0
+      },
+      pre: {
+        mnemonic: "arm5e.sheet.presence",
+        key: "system.characteristics.pre.upgrade",
+        mode: CONST.ACTIVE_EFFECT_MODES.UPGRADE,
+        default: 0
+      },
+      com: {
+        mnemonic: "arm5e.sheet.communication",
+        key: "system.characteristics.com.upgrade",
+        mode: CONST.ACTIVE_EFFECT_MODES.UPGRADE,
+        default: 0
+      },
+      dex: {
+        mnemonic: "arm5e.sheet.dexterity",
+        key: "system.characteristics.dex.upgrade",
+        mode: CONST.ACTIVE_EFFECT_MODES.UPGRADE,
+        default: 0
+      },
+      qik: {
+        mnemonic: "arm5e.sheet.quickness",
+        key: "system.characteristics.qik.upgrade",
+        mode: CONST.ACTIVE_EFFECT_MODES.UPGRADE,
+        default: 0
+      },
+      cun: {
+        mnemonic: "arm5e.sheet.cunning",
+        key: "system.characteristics.cun.upgrade",
+        mode: CONST.ACTIVE_EFFECT_MODES.UPGRADE,
+        default: 0
       }
     }
   },
@@ -1315,6 +1382,88 @@ export default {
         mnemonic: "arm5e.skill.supernatural.wildernessSense",
         key: "system.bonuses.skills.wildernessSense.xpMod",
         mode: 2,
+        default: 5
+      },
+      heartbeast: {
+        mnemonic: "arm5e.skill.mystery.heartbeast",
+        key: "system.bonuses.skills.heartbeast.xpMod",
+        mode: 2,
+        default: 5
+      }
+    }
+  },
+  // xpBonusMysticalAbility: {
+  //   category: "abilities",
+  //   type: "xpBonusMysticalAbility",
+  //   mnemonic: "arm5e.sheet.activeEffect.types.supernaturalAbilitiesXPBonus",
+  //   subtypes: {
+  //     heartbeast: {
+  //       mnemonic: "arm5e.skill.mystical.heartbeast",
+  //       key: "system.bonuses.skills.heartbeast.xpMod",
+  //       mode: 2,
+  //       default: 5
+  //     },
+
+  //   }
+  // },
+
+  qualityAbilityBoost: {
+    category: "abilities",
+    type: "qualityAbilityBoost",
+    mnemonic: "arm5e.sheet.activeEffect.types.qualityAbilityBoost",
+    subtypes: {
+      athletics: {
+        mnemonic: "arm5e.skill.general.athletics",
+        key: "system.bonuses.skills.athletics.upgrade",
+        mode: CONST.ACTIVE_EFFECT_MODES.UPGRADE,
+        default: 5
+      },
+      awareness: {
+        mnemonic: "arm5e.skill.general.awareness",
+        key: "system.bonuses.skills.awareness.upgrade",
+        mode: CONST.ACTIVE_EFFECT_MODES.UPGRADE,
+        default: 5
+      },
+      brawl: {
+        mnemonic: "arm5e.skill.general.brawl",
+        key: "system.bonuses.skills.brawl.upgrade",
+        mode: CONST.ACTIVE_EFFECT_MODES.UPGRADE,
+        default: 5
+      },
+      hunt: {
+        mnemonic: "arm5e.skill.general.hunt",
+        key: "system.bonuses.skills.hunt.upgrade",
+        mode: CONST.ACTIVE_EFFECT_MODES.UPGRADE,
+        default: 5
+      },
+      leadership: {
+        mnemonic: "arm5e.skill.general.leadership",
+        key: "system.bonuses.skills.leadership.upgrade",
+        mode: CONST.ACTIVE_EFFECT_MODES.UPGRADE,
+        default: 5
+      },
+      music: {
+        mnemonic: "arm5e.skill.general.music",
+        key: "system.bonuses.skills.music.upgrade",
+        mode: CONST.ACTIVE_EFFECT_MODES.UPGRADE,
+        default: 3
+      },
+      stealth: {
+        mnemonic: "arm5e.skill.general.stealth",
+        key: "system.bonuses.skills.stealth.upgrade",
+        mode: CONST.ACTIVE_EFFECT_MODES.UPGRADE,
+        default: 5
+      },
+      survival: {
+        mnemonic: "arm5e.skill.general.survival",
+        key: "system.bonuses.skills.survival.upgrade",
+        mode: CONST.ACTIVE_EFFECT_MODES.UPGRADE,
+        default: 5
+      },
+      swim: {
+        mnemonic: "arm5e.skill.general.swim",
+        key: "system.bonuses.skills.swim.upgrade",
+        mode: CONST.ACTIVE_EFFECT_MODES.UPGRADE,
         default: 5
       }
     }

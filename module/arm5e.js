@@ -44,6 +44,7 @@ import { DiaryEntrySchema } from "./schemas/diarySchema.js";
 import {
   ItemSchema,
   PersonalityTraitSchema,
+  QualityInferioritySchema,
   ReputationSchema,
   SanctumSchema,
   VirtueFlawSchema
@@ -535,6 +536,8 @@ function setDatamodels() {
   CONFIG.ARM5E.ItemDataModels.ability = AbilitySchema;
   CONFIG.ARM5E.ItemDataModels.virtue = VirtueFlawSchema;
   CONFIG.ARM5E.ItemDataModels.flaw = VirtueFlawSchema;
+  CONFIG.ARM5E.ItemDataModels.quality = QualityInferioritySchema;
+  CONFIG.ARM5E.ItemDataModels.inferiority = QualityInferioritySchema;
   CONFIG.ARM5E.ItemDataModels.item = ItemSchema;
   CONFIG.ARM5E.ItemDataModels.vis = VisSchema;
   CONFIG.ARM5E.ItemDataModels.visSourcesCovenant = VisSourceSchema;
@@ -625,6 +628,8 @@ function registerSheets() {
         "item",
         "virtue",
         "flaw",
+        "quality",
+        "inferiority",
         "ability",
         "abilityFamiliar",
         "power",

@@ -83,6 +83,11 @@ export class ArM5eNPCActorSheet extends ArM5eActorSheet {
 
     // Prepare items.
     this._prepareCharacterItems(context);
+
+    if (context.system.charType === "entity") {
+      context.ui.qualities = { display: true };
+    }
+
     log(false, "Npc-sheet getData");
     log(false, context);
 
@@ -134,6 +139,8 @@ export class ArM5eNPCActorSheet extends ArM5eActorSheet {
       case "personalityTrait":
       case "reputation":
       case "magicalEffect":
+      case "quality":
+      case "inferiority":
         return true;
       default:
         return false;

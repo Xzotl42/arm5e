@@ -171,6 +171,10 @@ export class ArM5ePCActor extends Actor {
         ? Number(datetime.year) - this.system.description.born.value
         : 20;
     }
+
+    for (let [k, c] of Object.entries(this.system.characteristics)) {
+      this.system.characteristics[k].upgrade = -99;
+    }
     this.system.wounds = {
       healthy: [],
       light: [],
@@ -256,6 +260,7 @@ export class ArM5ePCActor extends Actor {
           this.system.bonuses.skills[abilityKey].bonus = 0;
           this.system.bonuses.skills[abilityKey].xpMod = 0;
           this.system.bonuses.skills[abilityKey].xpCoeff = 1.0;
+          this.system.bonuses.skills[abilityKey].upgrade = 0;
         }
       }
     }
@@ -341,6 +346,9 @@ export class ArM5ePCActor extends Actor {
     let physicalBooks = [];
     let virtues = [];
     let flaws = [];
+
+    system.qualities = [];
+    system.inferiorities = [];
     let abilities = [];
     let abilitiesSelect = {};
     let diaryEntries = [];
@@ -359,6 +367,8 @@ export class ArM5ePCActor extends Actor {
     let totalXPArts = 0;
     let totalVirtues = 0;
     let totalFlaws = 0;
+    system.totalQualities = 0;
+    system.totalInferiorities = 0;
     let totalXPSpells = 0;
     let totalXPMasteries = 0;
 
@@ -394,6 +404,7 @@ export class ArM5ePCActor extends Actor {
       } else {
         system.characTotal -= (Math.abs(c.value) * (Math.abs(c.value) + 1)) / 2;
       }
+      c.value = Math.max(c.upgrade, c.value);
     }
 
     // Fatigue management
@@ -453,6 +464,7 @@ export class ArM5ePCActor extends Actor {
         }
         item.system.xpCoeff = this._getAbilityXpCoeff(item.system.key, item.system.option);
         item.system.xpBonus = this._getAbilityXpBonus(item.system.key, item.system.option);
+        item.system.upgrade = this._getAbilityUpgrade(item.system.key, item.system.option);
         item.system.derivedScore = item.system.accelerated
           ? ArM5ePCActor.getArtScore(
               Math.round((item.system.xp + item.system.xpBonus) * item.system.xpCoeff)
@@ -471,10 +483,12 @@ export class ArM5ePCActor extends Actor {
           system.bonuses.skills[computedKey] != undefined &&
           system.bonuses.skills[computedKey].bonus != 0
         ) {
-          item.system.finalScore =
-            item.system.derivedScore + parseInt(system.bonuses.skills[computedKey].bonus);
+          item.system.finalScore = Math.max(
+            item.system.upgrade,
+            item.system.derivedScore + parseInt(system.bonuses.skills[computedKey].bonus)
+          );
         } else {
-          item.system.finalScore = item.system.derivedScore;
+          item.system.finalScore = Math.max(item.system.upgrade, item.system.derivedScore);
         }
         if (item.system.category == "altTechnique") {
           system.magicSystem.verbs.push(item);
@@ -629,45 +643,39 @@ export class ArM5ePCActor extends Actor {
         item.system.prepareOwnerData();
       }
 
-      if (item.type === "weapon" || item.type === "enchantedWeapon") {
+      if (item.type === "weapon") {
         if (item.system.equipped == true) {
-          combat.load = parseInt(combat.load) + parseInt(item.system.load);
-          combat.init = parseInt(combat.init) + parseInt(item.system.init);
-          combat.atk = parseInt(combat.atk) + parseInt(item.system.atk);
-          combat.dfn = parseInt(combat.dfn) + parseInt(item.system.dfn);
-          combat.dam = parseInt(combat.dam) + parseInt(item.system.dam);
+          combat.load += item.system.load;
+          combat.init += item.system.init;
+          combat.atk += item.system.atk;
+          combat.dfn += item.system.dfn;
+          combat.dam += item.system.dam;
           combat.img = item.img;
           combat.name = item.name;
           combat.itemId = item.id;
-
-          if (item.system.ability == "") {
+          const ab = this.getAbility(item.system.ability.key, item.system.ability.option);
+          combat.ability = 0;
+          if (ab) {
+            combat.ability += ab.system.finalScore;
             if (item.system.weaponExpert) {
-              combat.ability = parseInt(combat.ability) + 1;
+              combat.ability++;
             }
-          } else {
-            for (let a = 0; a < abilities.length; a++) {
-              if (abilities[a]._id == item.system.ability) {
-                let hab = abilities[a].system.finalScore;
-                if (item.system.weaponExpert) {
-                  hab = parseInt(hab) + 1;
-                }
-                if (item.system.horse) {
-                  if (hab > 3) {
-                    hab = 3;
-                  }
-                }
-                combat.ability = parseInt(combat.ability) + parseInt(hab);
+            if (item.system.horse) {
+              const ride = this.getAbilityStats("ride");
+              if (ride.score > 3) {
+                ride.score = 3;
               }
+              combat.ability += ride.score;
             }
+            item.system.ability.id = ab._id;
           }
         }
-
         item.system.abilities = abilitiesSelect;
         weapons.push(item);
-      } else if (item.type === "armor" || item.type === "enchantedArmor") {
+      } else if (item.type === "armor") {
         if (item.system.equipped == true) {
-          combat.load = parseInt(combat.load) + parseInt(item.system.load);
-          combat.prot = parseInt(combat.prot) + parseInt(item.system.prot);
+          combat.load += item.system.load;
+          combat.prot += item.system.prot;
         }
         armor.push(item);
       } else if (item.type === "spell") {
@@ -735,6 +743,16 @@ export class ArM5ePCActor extends Actor {
           totalFlaws =
             parseInt(totalFlaws) + parseInt(ARM5E.impacts[item.system.impact.value].cost);
         }
+      } else if (item.type === "quality") {
+        system.qualities.push(item);
+        if (ARM5E.impacts[item.system.impact.value]) {
+          system.totalQualities += parseInt(ARM5E.impacts[item.system.impact.value].cost);
+        }
+      } else if (item.type === "inferiorities") {
+        system.inferiorities.push(item);
+        if (ARM5E.impacts[item.system.impact.value]) {
+          system.totalInferiorities += parseInt(ARM5E.impacts[item.system.impact.value].cost);
+        }
       } else if (item.type === "diaryEntry") {
         if (!item.system.done) {
           pendingXps += item.system.sourceQuality;
@@ -777,6 +795,9 @@ export class ArM5ePCActor extends Actor {
     items.sort((a, b) => (a.sort || 0) - (b.sort || 0));
     virtues.sort((a, b) => (a.sort || 0) - (b.sort || 0));
     flaws.sort((a, b) => (a.sort || 0) - (b.sort || 0));
+    system.qualities.sort((a, b) => (a.sort || 0) - (b.sort || 0));
+    system.inferiorities.sort((a, b) => (a.sort || 0) - (b.sort || 0));
+
     weapons.sort((a, b) => (a.sort || 0) - (b.sort || 0));
     armor.sort((a, b) => (a.sort || 0) - (b.sort || 0));
     powers.sort((a, b) => (a.sort || 0) - (b.sort || 0));
@@ -831,6 +852,7 @@ export class ArM5ePCActor extends Actor {
     system.totalXPArts = totalXPArts;
     system.totalVirtues = totalVirtues;
     system.totalFlaws = totalFlaws;
+
     system.totalXPSpells = totalXPSpells;
     system.totalXPMasteries = totalXPMasteries;
     system.pendingXps = pendingXps;
@@ -1654,6 +1676,25 @@ export class ArM5ePCActor extends Actor {
     }
 
     return this.system.bonuses.skills[abilityKey].xpCoeff || 1.0;
+  }
+
+  // Get the upgrade value of a given ability if any
+  _getAbilityUpgrade(abilityKey = "", option = "") {
+    if (abilityKey === "" || CONFIG.ARM5E.ALL_ABILITIES[abilityKey] == undefined) {
+      return 0;
+    }
+    if (CONFIG.ARM5E.ALL_ABILITIES[abilityKey].selection === "disabled") {
+      return 0; // Raise exception instead?
+    }
+    if (CONFIG.ARM5E.ALL_ABILITIES[abilityKey].option || false) {
+      abilityKey += `_${option}`;
+    }
+    if (this.system.bonuses.skills[abilityKey] == undefined) {
+      // Ability not yet added to bonuses
+      return 0;
+    }
+
+    return this.system.bonuses.skills[abilityKey].upgrade || 0;
   }
 
   // Get the Xps needed for an ability/decrepitude/warping score

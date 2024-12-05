@@ -33,8 +33,9 @@
           <div class="resource flex-group-center backSection">
             <label for="system.age.value" class="smallTitle marginbot6">{{localize "arm5e.sheet.age"}}</label>
             <div class="resource-content flexrow flex-center flex-between margintop6">
-              <input type="text" name="system.age.value" value="{{system.age.value}}" readonly data-dtype="Number"
-                style="flex: 0.6; margin-left: 8px; margin-right: 24px" class="resource-focus slim" />
+              <input type="text" name="system.age.value" value="{{system.age.value}}" {{ui.creationMode.edit}}
+                data-dtype="Number" style="flex: 0.6; margin-left: 8px; margin-right: 24px"
+                class="resource-focus slim" />
             </div>
           </div>
 
@@ -142,7 +143,8 @@
             {{> "systems/arm5e/templates/actor/parts/actor-abilities.html" }}
           </div>
           <div class="tab" data-group="abilities-secondary" data-tab="vandf">
-            {{> "systems/arm5e/templates/actor/parts/actor-virtuesFlaws.html" bonuses="arm5e.sheet.qualities" penalties="arm5e.sheet.inferiorities"  }}
+            {{> "systems/arm5e/templates/actor/parts/actor-virtuesFlaws.html" bonuses="arm5e.sheet.virtues" penalties="arm5e.sheet.flaws"}}
+
           </div>
         </section>
       </div>
