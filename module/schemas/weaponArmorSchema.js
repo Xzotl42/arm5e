@@ -4,6 +4,7 @@ import {
   boolOption,
   CostField,
   itemBase,
+  NullableDocumentIdField,
   NullableEmbeddedDataField,
   XpField
 } from "./commonSchemas.js";
@@ -184,7 +185,19 @@ export class WeaponSchema extends foundry.abstract.DataModel {
       weaponExpert: boolOption(false, true),
       equipped: boolOption(false, true),
       horse: boolOption(false, true),
-      ability: new fields.StringField({ required: false, blank: true, initial: "brawl" }),
+      ability: new fields.SchemaField(
+        {
+          key: new fields.StringField({ required: false, blank: true, initial: "brawl" }),
+          option: new fields.StringField({
+            required: false,
+            nullable: true,
+            blank: true,
+            initial: ""
+          }),
+          id: new NullableDocumentIdField()
+        },
+        { required: false, initial: { key: "brawl", option: "", id: null } }
+      ),
       state: ItemState(),
       enchantments: new NullableEmbeddedDataField(EnchantmentExtension, {
         nullable: true,
@@ -198,6 +211,9 @@ export class WeaponSchema extends foundry.abstract.DataModel {
     //   log(false, `Weapon cost: ${JSON.stringify(data.cost)}`);
     //   data.cost = data.cost.value;
     // }
+    if (data.ability instanceof String) {
+      data.ability = { key: "", option: null, id: data.ability };
+    }
     return data;
   }
 

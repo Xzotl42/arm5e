@@ -62,9 +62,6 @@ export class VirtueFlawSchema extends foundry.abstract.DataModel {
   }
 
   static getIcon(item, newValue = null) {
-    // if (item.system.tainted) {
-    //   return "systems/arm5e/assets/icons/VF/tainted.svg";
-    // }
     if (newValue != null) {
       if (item.type == "virtue") {
         let type = newValue == "general" ? "generalVirtue" : newValue;
@@ -140,6 +137,86 @@ export class VirtueFlawSchema extends foundry.abstract.DataModel {
     } else if (!virtueFlawTypes.includes(itemData.system.type)) {
       updateData["system.type"] = "general";
     }
+
+    return updateData;
+  }
+}
+
+export class QualityInferioritySchema extends foundry.abstract.DataModel {
+  // TODO remove in V11
+  static _enableV10Validation = true;
+
+  static defineSchema() {
+    return {
+      ...itemBase(),
+      type: new fields.StringField({
+        required: false,
+        blank: false,
+        initial: "mundane",
+        choices: ARM5E.realmsExt
+      }),
+      impact: new fields.SchemaField(
+        {
+          value: new fields.StringField({
+            required: false,
+            blank: false,
+            initial: "free",
+            choices: Object.keys(ARM5E.impacts).concat("Special")
+          })
+        },
+        { required: false, blank: false, initial: { value: "free" } }
+      ),
+      hidden: boolOption(false),
+      tainted: boolOption(false)
+    };
+  }
+
+  get cost() {
+    if (this.impact == "Special") {
+      return 0;
+    }
+    return CONFIG.ARM5E.impacts[this.impact].cost;
+  }
+
+  static getIcon(item, newValue = null) {
+    if (newValue != null) {
+      if (item.type == "quality") {
+        let type = newValue == "mundane" ? "generalVirtue" : newValue;
+        return VIRTUESFLAWS_DEFAULT_ICONS.MONO[type] ?? CONFIG.ARM5E_DEFAULT_ICONS["virtue"];
+      } else {
+        let type = newValue == "mundane" ? "generalFlaw" : newValue;
+        return VIRTUESFLAWS_DEFAULT_ICONS.MONO[type] ?? CONFIG.ARM5E_DEFAULT_ICONS["flaw"];
+      }
+    } else {
+      if (item.type == "quality") {
+        let type = item.system.type == "mundane" ? "generalVirtue" : item.system.type;
+        return VIRTUESFLAWS_DEFAULT_ICONS.MONO[type] ?? CONFIG.ARM5E_DEFAULT_ICONS["virtue"];
+      } else {
+        let type = item.system.type == "mundane" ? "generalFlaw" : item.system.type;
+        return VIRTUESFLAWS_DEFAULT_ICONS.MONO[type] ?? CONFIG.ARM5E_DEFAULT_ICONS["flaw"];
+      }
+    }
+  }
+
+  static getDefault(itemData) {
+    let res = itemData;
+    if (itemData.system) {
+      if (itemData.system.type == undefined) {
+        res.system.type = "mundane";
+      }
+    } else {
+      res = { system: { type: "mundane" } };
+    }
+    return res;
+  }
+
+  // static migrateData(data) {
+
+  //   return data;
+  // }
+
+  static migrate(itemData) {
+    const updateData = {};
 
     return updateData;
   }

@@ -51,6 +51,7 @@ export class ArM5eBeastActorSheet extends ArM5eActorSheet {
     // Prepare items.
     this._prepareCharacterItems(context);
     //}
+    context.ui.qualities = { display: true };
     log(false, "Beast-sheet getData");
     log(false, context);
 
@@ -86,6 +87,8 @@ export class ArM5eBeastActorSheet extends ArM5eActorSheet {
           default:
             return true;
         }
+      case "quality":
+      case "inferiority":
       case "weapon":
       case "armor":
       case "spell":

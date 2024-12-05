@@ -296,8 +296,14 @@ export class ArM5eItem extends Item {
     } else {
       res += tech + form;
     }
+    // Mastery
     if (this.system.finalScore) {
       res += this.system.finalScore;
+    }
+
+    if (this.system.ritual) {
+      res += owner.system.laboratory.abilitiesSelected.artesLib.value;
+      res += owner.system.laboratory.abilitiesSelected.philosophy.value;
     }
     if (deficientTech && deficientForm) {
       deficiencyDivider = 4;

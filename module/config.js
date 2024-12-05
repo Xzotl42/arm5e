@@ -314,6 +314,15 @@ ARM5E.virtueFlawTypes.covenant = {
   }
 };
 
+ARM5E.qualityTypes = {
+  mundane: {
+    label: "arm5e.sheet.realm.mundane"
+  },
+  magic: {
+    label: "arm5e.sheet.realm.magic"
+  }
+};
+
 ARM5E.character.fatigueLevels = {
   fresh: {
     label: "arm5e.sheet.fresh",
@@ -403,7 +412,8 @@ ARM5E.reputations = {
   ecclesiastic: { label: "arm5e.sheet.reputationType.ecclesiastic" },
   hermetic: { label: "arm5e.sheet.reputationType.hermetic" },
   persona: { label: "arm5e.sheet.reputationType.persona" },
-  academic: { label: "arm5e.sheet.reputationType.academic" }
+  academic: { label: "arm5e.sheet.reputationType.academic" },
+  infernal: { label: "arm5e.sheet.reputationType.infernal" }
 };
 
 ARM5E.ABILITIES_CATEGORIES = {

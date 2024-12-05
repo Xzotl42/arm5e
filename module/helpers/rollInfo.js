@@ -4,7 +4,7 @@ import { ArM5ePCActor } from "../actor/actor.js";
 import { log } from "../tools.js";
 import { getRollTypeProperties, ROLL_MODIFIERS, ROLL_PROPERTIES } from "./rollWindow.js";
 import Aura from "./aura.js";
-import { computeLevel } from "./magic.js";
+import { computeLevel, spellFormLabel, spellTechniqueLabel } from "./magic.js";
 
 export class ArM5eRollInfo {
   constructor(actor) {
@@ -93,8 +93,8 @@ export class ArM5eRollInfo {
           const item = this._actor.items.get(dataset.id);
           const effect = item.system.enchantments.effects[dataset.index];
           this.label += ` : ${effect.name}`;
-          this.label += ` (${spelltechnique.label(effect.system, true)}`;
-          this.label += `${spellform.label(effect.system, true)}`;
+          this.label += ` (${spellTechniqueLabel(effect.system, true)}`;
+          this.label += `${spellFormLabel(effect.system, true)}`;
           this.label += ` ${computeLevel(effect.system, "enchantment")} )`;
           this.penetration.total = effect.system.penetration;
           this.item.frequency = effect.system.effectfrequency;

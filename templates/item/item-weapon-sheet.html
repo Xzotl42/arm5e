@@ -8,8 +8,8 @@
           {{#if system.canEquip}}
             <div class="resource flexcol flexrow">
               <label for="system.ability" class="header-label">{{localize "arm5e.sheet.ability"}} </label>
-              <select name="system.ability" data-type="String" class="ability-key">
-                {{selectOptions system.abilities selected=system.ability labelAttr="name" 
+              <select name="system.ability" data-type="String" class="weapon-ability ability-key">
+                {{selectOptions system.abilities selected=system.ability.id labelAttr="name" 
                 valueAttr="id" nameAttr="id"}}
               </select>
             </div>

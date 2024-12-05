@@ -397,7 +397,6 @@ export function spellTechniqueLabel(item, short = false) {
     label = label.substring(0, label.length - 1);
     label += ")";
   }
-
   return label;
 }
 
@@ -418,7 +417,6 @@ export function spellFormLabel(item, short = false) {
     label = label.substring(0, label.length - 1);
     label += ")";
   }
-
   return label;
 }
 

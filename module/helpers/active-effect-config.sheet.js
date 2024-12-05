@@ -1,6 +1,6 @@
 import { ARM5E } from "../config.js";
 
-import { log, error } from "../tools.js";
+import { log, error, slugify } from "../tools.js";
 
 import ACTIVE_EFFECTS_TYPES from "../constants/activeEffectsTypes.js";
 
@@ -339,7 +339,7 @@ export class ArM5eActiveEffectConfig extends ActiveEffectConfig {
       ).render(true);
     });
     // remove any non alphanumeric character
-    chosenOption = chosenOption.replace(/[^a-zA-Z0-9]/gi, "");
+    chosenOption = slugify(chosenOption); //.replace(/[^a-zA-Z0-9]/gi, "");
     if (chosenOption == "") {
       chosenOption = ACTIVE_EFFECTS_TYPES[type].subtypes[subtype].default;
     }

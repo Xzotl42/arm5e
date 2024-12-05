@@ -840,6 +840,24 @@ export class ArM5eActorSheet extends ActorSheet {
         }
       }
 
+      for (let q of actorData.system.qualities ?? []) {
+        if (q.effects.size > 0) {
+          q.system.ui = { style: 'style="font-style:italic"' };
+        }
+        if (!q.system.hidden || actorData.isGM) {
+          q.system.visible = true;
+        }
+      }
+
+      for (let inf of actorData.system.inferiorities ?? []) {
+        if (inf.effects.size > 0) {
+          inf.system.ui = { style: 'style="font-style:italic"' };
+        }
+        if (!inf.system.hidden || actorData.isGM) {
+          inf.system.visible = true;
+        }
+      }
+
       for (let mastery of actorData.system.masteryTopics) {
         mastery.spellLabel = `${mastery.spellName} (${
           CONFIG.ARM5E.magic.arts[mastery.spellTech].short
@@ -853,9 +871,9 @@ export class ArM5eActorSheet extends ActorSheet {
         spell.FormReq = spellFormLabel(spell.system);
         spell.masteryHint =
           spell.system.finalScore > 0
-            ? `<i title="${game.i18n.localize("arm5e.spell.masteryHint")} ${
+            ? `<i title="${game.i18n.localize("arm5e.spell.masteryHint")}  ${
                 spell.system.finalScore
-              }" class="icon-Icon_Effects-small"></i>`
+              } - ${spell.system.masteryAbilities}" class="icon-Icon_Effects-small"></i>`
             : "";
       }
 
@@ -1315,6 +1333,22 @@ export class ArM5eActorSheet extends ActorSheet {
     html.find(".migrate").click((event) => this.actor.migrate());
 
     html.find(".plan-reading").click(async (ev) => this._readBook(ev));
+
+    html.find(".indexkey-edit").change((event) => this._slugifyIndexKey(event));
+  }
+
+  async _slugifyIndexKey(event) {
+    event.preventDefault();
+    const newValue = slugify(event.currentTarget.value);
+    event.currentTarget.value = newValue;
+    await this.actor.update(
+      {
+        system: {
+          indexKey: newValue
+        }
+      },
+      {}
+    );
   }
 
   async _readBook(ev) {
