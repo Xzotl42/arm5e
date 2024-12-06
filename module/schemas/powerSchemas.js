@@ -36,6 +36,13 @@ export class PowerSchema extends foundry.abstract.DataModel {
     return {
       ...itemBase(),
       form: hermeticForm(),
+      init: new fields.NumberField({
+        required: false,
+        nullable: false,
+        integer: true,
+        initial: 0,
+        step: 1
+      }),
       cost: new fields.NumberField({
         required: false,
         nullable: false,
