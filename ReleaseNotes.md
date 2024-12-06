@@ -1,4 +1,4 @@
-## 2.3.2.11, Quendalon, lost in the forest since half a year
+## 2.3.2.12, Quendalon, lost in the forest since half a year
 
 ### Features & changes
 
@@ -9,6 +9,7 @@
   - Characteristic upgrade
   - Ability upgrade (limited list)
 - Weapons keep the ability used, even when they change hands.
+- Added initiative to powers
 - [technical] Automatic slugification of indexKey
 
 ### Bug fixes
