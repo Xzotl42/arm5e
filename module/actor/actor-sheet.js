@@ -47,11 +47,17 @@ import {
 import { quickMagic, spellFormLabel, spellTechniqueLabel } from "../helpers/magic.js";
 import { UI, getConfirmation } from "../constants/ui.js";
 import { Schedule } from "../tools/schedule.js";
-import { createAgingDiaryEntry } from "../helpers/long-term-activities.js";
+import {
+  createAgingDiaryEntry,
+  createTwilightDiaryEntry,
+  resetTwilight,
+  TWILIGHT_STAGES,
+  TwilightEpisode,
+  twilightRoll
+} from "../helpers/long-term-activities.js";
 import { Sanatorium } from "../tools/sanatorium.js";
 import { MedicalHistory } from "../tools/med-history.js";
 import { ArM5eActorProfiles } from "./subsheets/actor-profiles.js";
-import { stressDie } from "../dice.js";
 import { ArM5eMagicSystem } from "./subsheets/magic-system.js";
 
 export class ArM5eActorSheet extends ActorSheet {
@@ -234,6 +240,11 @@ export class ArM5eActorSheet extends ActorSheet {
       view: game.settings.get("arm5e", "metagame"),
       edit: context.isGM ? "" : "readonly"
     };
+
+    if (this.actor._isCharacter()) {
+      context.characList = Object.keys(context.system.characCfg);
+    }
+
     if (this.actor.system.description) {
       context.enrichedDescription = await TextEditor.enrichHTML(this.actor.system.description, {
         // Whether to show secret blocks in the finished html
@@ -273,6 +284,7 @@ export class ArM5eActorSheet extends ActorSheet {
         context.system.artsTopics,
         "art"
       );
+
       // context.system.filteredArtsTopics = context.system.artsTopics;
       if (artsFilters.expanded) {
         context.ui.artsFilterVisibility = "";
@@ -336,7 +348,13 @@ export class ArM5eActorSheet extends ActorSheet {
     context.system.isCharacter = this.actor._isCharacter();
     if (context.system.isCharacter) {
       if (context.system.charType?.value === "entity") {
+        let cnt = Object.entries(context.system.realms).filter((e) => e[1].aligned == true);
         let value = Object.entries(context.system.realms).find((e) => e[1].aligned == true);
+        if (cnt.length > 1) {
+          ui.notifications.warn(
+            game.i18n.localize("arm5e.notification.entityWithMultipleRealmAlignments")
+          );
+        }
         context.system.realm = value ? value[0] : "mundane";
       }
       for (let [key, v] of Object.entries(context.system.vitals)) {
@@ -647,13 +665,13 @@ export class ArM5eActorSheet extends ActorSheet {
 
       context.combat = computeCombatStats(this.actor);
 
-      for (let [key, charac] of Object.entries(context.system.characteristics)) {
-        let shadowWidth = 2 * charac.aging;
-        charac.ui = {
-          style: 'style="box-shadow: 0 0 ' + shadowWidth + 'px black"',
-          title: `${charac.aging} ` + game.i18n.localize("arm5e.sheet.agingPts")
-        };
-        // log(false, `${key} has ${charac.aging} points`);
+      if (this.actor._isMagus()) {
+        if (!this.twilight) {
+          this.twilight = new TwilightEpisode(this.actor);
+        }
+        context.system.twilight.tooltip = TwilightEpisode.getTooltip(
+          this.actor.system.twilight.stage
+        );
       }
     }
 
@@ -923,6 +941,91 @@ export class ArM5eActorSheet extends ActorSheet {
     html.find(".recovery-start").click(async (ev) => {
       let input = getDataset(ev);
       await Sanatorium.createDialog(this.actor);
+    });
+
+    html.find(".twilight-episode").click(async (ev) => {
+      let input = getDataset(ev);
+      if (ev.shiftKey && game.user.isGM) {
+        const question = game.i18n.localize("arm5e.twilight.reset");
+        let confirm = await getConfirmation(
+          game.i18n.localize("arm5e.twilight.episode"),
+          question,
+          ArM5eActorSheet.getFlavor(this.actor.type)
+        );
+
+        if (confirm) {
+          await resetTwilight(this.actor);
+        }
+        return;
+      }
+      switch (this.actor.system.twilight.stage) {
+        case TWILIGHT_STAGES.NONE:
+        case TWILIGHT_STAGES.PENDING_STRENGTH:
+          if (game.user.isGM) {
+            input.roll = "twilight_strength";
+            await twilightRoll(this.actor, input);
+          } else {
+            ui.notifications.info(game.i18n.localize("arm5e.twilight.notification.GMOnly"));
+            return;
+          }
+          break;
+        case TWILIGHT_STAGES.PENDING_CONTROL:
+          if (!this.actor.system.twilight.control) {
+            const question = game.i18n.localize("arm5e.twilight.embraceTwilight");
+            let confirm = await getConfirmation(
+              game.i18n.localize("arm5e.twilight.episode"),
+              question,
+              ArM5eActorSheet.getFlavor(this.actor.type),
+              " ",
+              null,
+              "arm5e.twilight.embrace",
+              "arm5e.twilight.avoid"
+            );
+            if (confirm) {
+              await this.actor.update({
+                "system.twilight.stage": TWILIGHT_STAGES.PENDING_COMPLEXITY,
+                "system.twilight.control": true
+              });
+              return;
+            }
+          }
+          input.roll = "twilight_control";
+          input.botchNumber = this.actor.system.twilight.pointsGained + 1;
+          await twilightRoll(this.actor, input);
+          break;
+        case TWILIGHT_STAGES.PENDING_COMPLEXITY:
+          if (game.user.isGM) {
+            input.roll = "twilight_complexity";
+            input.botchNumber = this.actor.system.twilight.pointsGained + 1;
+            await twilightRoll(this.actor, input);
+          } else {
+            ui.notifications.info(game.i18n.localize("arm5e.twilight.notification.GMOnly"), {
+              permanent: false
+            });
+            return;
+          }
+          break;
+        case TWILIGHT_STAGES.PENDING_UNDERSTANDING:
+          input.applied = false;
+          input.done = false;
+          input.rollDone = false;
+          const [diary] = await createTwilightDiaryEntry(this.actor, input);
+          diary.sheet.render(true);
+          await this.actor.update({
+            "system.twilight.stage": TWILIGHT_STAGES.PENDING_UNDERSTANDING2
+          });
+          break;
+        case TWILIGHT_STAGES.PENDING_UNDERSTANDING2: // diary already created
+          ui.notifications.info(
+            game.i18n.localize("arm5e.twilight.notification.continueWithDiary"),
+            {
+              permanent: false
+            }
+          );
+          // input.roll = "twilight_understanding";
+          // await twilightRoll(this.actor, input);
+          break;
+      }
     });
 
     html.find(".schedule-aging").click(async (ev) => {
@@ -1739,6 +1842,21 @@ export class ArM5eActorSheet extends ActorSheet {
         });
         return false;
       }
+      if (
+        ![
+          "twilight_control",
+          "twilight_strength",
+          "twilight_complexity",
+          "twilight_understanding"
+        ].includes(dataset.roll)
+      ) {
+        if (this.actor.system.twilight.stage > 1) {
+          ui.notifications.info(game.i18n.localize("arm5e.notification.pendingTwilight"), {
+            permanent: true
+          });
+          return false;
+        }
+      }
     }
 
     prepareRollVariables(dataset, this.actor);
@@ -2105,10 +2223,12 @@ export class ArM5eActorSheet extends ActorSheet {
     if (this.magicSystem) {
       formData = await this.magicSystem._updateObject(event, formData);
     }
+    if (this.twilight) {
+      formData = await this.twilight._updateObject(event, formData);
+    }
     return await super._updateObject(event, formData);
   }
 }
-
 export async function setWounds(soakData, actor) {
   const size = actor?.system?.vitals?.siz?.value || 0;
   const typeOfWound = calculateWound(soakData.damageToApply, size);
@@ -2120,7 +2240,8 @@ export async function setWounds(soakData, actor) {
   }
   // here toggle dead status if applicable
 
-  const title = '<h2 class="ars-chat-title">' + game.i18n.localize("arm5e.sheet.soak") + "</h2>";
+  const title =
+    '<h2 class="ars-chat-title chat-icon">' + game.i18n.localize("arm5e.sheet.soak") + "</h2>";
   const messageDamage = `${game.i18n.localize("arm5e.sheet.damage")} (${soakData.damage})`;
   const messageStamina = `${game.i18n.localize("arm5e.sheet.stamina")} (${soakData.stamina})`;
   let messageBonus = "";

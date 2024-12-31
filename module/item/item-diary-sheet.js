@@ -363,7 +363,7 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
     if (hasTeacher && context.system.teacherLinked) {
       availableAbilities = [];
       context.teacherAbilities = teacher.system.abilities.filter((e) => {
-        return e.system.finalScore >= 2;
+        return e.system.derivedScore >= 2;
       });
       // filter on abilities which have a score higher than the student
       let idx = 0;
@@ -373,7 +373,7 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
         );
 
         if (sa != undefined) {
-          if (sa.system.finalScore < ta.system.finalScore) {
+          if (sa.system.derivedScore < ta.system.derivedScore) {
             availableAbilities.push({
               _id: sa._id,
               secondaryId: false,
@@ -381,7 +381,8 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
               system: {
                 key: sa.system.key,
                 xp: sa.system.xp,
-                finalScore: sa.system.finalScore,
+                score: sa.system.derivedScore,
+                bonus: this.actor.system.bonuses.skills[sa.system.getComputedKey()].bonus,
                 option: sa.system.option,
                 category: sa.system.category
               }
@@ -395,7 +396,8 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
             system: {
               key: ta.system.key,
               xp: 0,
-              finalScore: 0,
+              score: 0,
+              bonus: 0,
               option: ta.system.option,
               category: ta.system.category
             }
@@ -409,11 +411,13 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
         let found = availableAbilities.findIndex(
           (e) => e.system.key == a.system.key && e.system.option == a.system.option
         );
+        const bonus = this.actor.system.bonuses.skills[a.system.getComputedKey()].bonus;
         if (found >= 0) {
           availableAbilities[found]._id = a._id;
           availableAbilities[found].system.xp = a.system.xp;
           availableAbilities[found].secondaryId = false;
-          availableAbilities[found].system.finalScore = a.system.finalScore;
+          availableAbilities[found].system.bonus = bonus;
+          availableAbilities[found].system.score = a.system.derivedScore;
           availableAbilities[found].secondaryId = false;
         } else {
           availableAbilities.push({
@@ -423,7 +427,8 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
             system: {
               key: a.system.key,
               xp: a.system.xp,
-              finalScore: a.system.finalScore,
+              score: a.system.derivedScore,
+              bonus: bonus,
               option: a.system.option,
               category: a.system.category
             }
@@ -433,7 +438,7 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
       // filter on unlinked teacher score
       if (hasTeacher) {
         availableAbilities = availableAbilities.filter((e) => {
-          return e.system.finalScore < context.system.teacher.score;
+          return e.system.score < context.system.teacher.score;
         });
       }
     }
@@ -450,8 +455,9 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
           let teacherAbility = context.teacherAbilities.find((e) => {
             return e.system.key === ability.system.key && e.system.option === ability.system.option;
           });
-          if (teacherAbility) teacherScore = teacherAbility.system.finalScore;
-          else {
+          if (teacherAbility) {
+            teacherScore = teacherAbility.system.derivedScore;
+          } else {
             teacherScore = 10;
           }
         }
@@ -462,7 +468,9 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
         context.selection.abilityCategories[ability.system.category] =
           CONFIG.ARM5E.LOCALIZED_ABILITIES[ability.system.category].label;
       }
-
+      const abilityScoreLabel = ability.system.bonus
+        ? `${ability.system.score} + ${ability.system.bonus}`
+        : `${ability.system.score}`;
       let tmp = {
         id: ability._id,
         secondaryId: ability.secondaryId,
@@ -470,10 +478,10 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
         name: ability.name,
         key: ability.system.key,
         currentXp: ability.system.xp,
-        score: ability.secondaryId ? 0 : ability.system.finalScore,
+        score: ability.secondaryId ? 0 : ability.system.score,
         option: game.i18n.localize(ability.system.option),
         teacherScore: teacherScore,
-        label: `${ability.name} (${ability.secondaryId ? 0 : ability.system.finalScore})`
+        label: `${ability.name} (${ability.secondaryId ? 0 : abilityScoreLabel})`
       };
       if (firstAb) {
         let filteredList = Object.values(context.system.progress.abilities).filter((e) => {
@@ -502,14 +510,19 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
         let teacherAbility = context.teacherAbilities.find((e) => {
           return e.system.key === a.key && e.system.option === a.option;
         });
-        if (teacherAbility) a.teacherScore = teacherAbility.system.finalScore;
-        else a.teacherscore = 10;
+        if (teacherAbility) {
+          a.teacherScore = teacherAbility.system.derivedScore;
+        } else a.teacherscore = 100;
       }
 
+      const computedKey = a.option != "" ? `${a.key}_${a.option}` : a.key;
+      const abilityBonus = this.actor.system.bonuses.skills[computedKey]?.bonus ?? 0;
+      const abilityScoreLabel = abilityBonus ? `${a.score} + ${abilityBonus}` : `${a.score}`;
       if (context.system.ownedAbilities[a.category] == undefined) {
         context.system.ownedAbilities[a.category] = [];
         context.selection.abilityCategories[a.category] =
           CONFIG.ARM5E.LOCALIZED_ABILITIES[a.category].label;
+
         context.system.ownedAbilities[a.category].push({
           id: a.id,
           category: a.category,
@@ -519,7 +532,7 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
           currentXp: a.xp,
           option: a.option,
           teacherScore: a.teacherScore,
-          label: `${a.name} (${a.score})`
+          label: `${a.name} (${abilityScoreLabel})`
         });
       } else {
         let idx = context.system.ownedAbilities[a.category].findIndex((e) => {
@@ -535,7 +548,7 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
             currentXp: a.xp,
             option: a.option,
             teacherScore: a.teacherScore,
-            label: `${a.name} (${a.score})`
+            label: `${a.name} (${abilityScoreLabel})`
           });
         } else {
           context.system.ownedAbilities[a.category][idx].secondaryId = a.secondaryId;
@@ -558,11 +571,11 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
           let teacherTechniques = Object.entries(teacher.system.arts.techniques)
             .filter((e) => {
               if (context.system.done) {
-                return e[1].finalScore >= 5;
+                return e[1].derivedScore >= 5;
               } else {
                 return (
-                  e[1].finalScore >= 5 &&
-                  e[1].finalScore > this.actor.system.arts.techniques[e[0]].finalScore
+                  e[1].derivedScore >= 5 &&
+                  e[1].derivedScore > this.actor.system.arts.techniques[e[0]].derivedScore
                 );
               }
             })
@@ -570,19 +583,19 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
               return {
                 key: e[0],
                 label: CONFIG.ARM5E.magic.arts[e[0]].label,
-                score: this.actor.system.arts.techniques[e[0]].finalScore,
-                teacherScore: e[1].finalScore
+                score: this.actor.system.arts.techniques[e[0]].derivedScore,
+                teacherScore: e[1].derivedScore
               };
             });
 
           let teacherForms = Object.entries(teacher.system.arts.forms)
             .filter((e) => {
               if (context.system.done) {
-                return e[1].finalScore >= 5;
+                return e[1].derivedScore >= 5;
               } else {
                 return (
-                  e[1].finalScore >= 5 &&
-                  e[1].finalScore > this.actor.system.arts.forms[e[0]].finalScore
+                  e[1].derivedScore >= 5 &&
+                  e[1].derivedScore > this.actor.system.arts.forms[e[0]].derivedScore
                 );
               }
             })
@@ -590,8 +603,8 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
               return {
                 key: e[0],
                 label: CONFIG.ARM5E.magic.arts[e[0]].label,
-                score: this.actor.system.arts.forms[e[0]].finalScore,
-                teacherScore: e[1].finalScore
+                score: this.actor.system.arts.forms[e[0]].derivedScore,
+                teacherScore: e[1].derivedScore
               };
             });
 
@@ -609,7 +622,7 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
               return {
                 key: e[0],
                 label: CONFIG.ARM5E.magic.arts[e[0]].label,
-                score: this.actor.system.arts.techniques[e[0]].finalScore,
+                score: this.actor.system.arts.techniques[e[0]].derivedScore,
                 teacherScore: teacherScore
               };
             });
@@ -618,7 +631,7 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
               return {
                 key: e[0],
                 label: CONFIG.ARM5E.magic.arts[e[0]].label,
-                score: this.actor.system.arts.forms[e[0]].finalScore,
+                score: this.actor.system.arts.forms[e[0]].derivedScore,
                 teacherScore: teacherScore
               };
             });
@@ -634,7 +647,7 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
           ...Object.entries(this.actor.system.arts.techniques).map((e) => {
             return {
               key: e[0],
-              score: e[1].finalScore,
+              score: e[1].derivedScore,
               label: CONFIG.ARM5E.magic.arts[e[0]].label,
               teacherScore: 0
             };
@@ -642,7 +655,7 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
           ...Object.entries(this.actor.system.arts.forms).map((e) => {
             return {
               key: e[0],
-              score: e[1].finalScore,
+              score: e[1].derivedScore,
               label: CONFIG.ARM5E.magic.arts[e[0]].label,
               teacherScore: 0
             };
@@ -674,8 +687,8 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
         if (context.system.teacher.id === null) {
           a.teacherScore = context.system.teacher.score ?? 0;
         } else {
-          let teacherArt = teacher.getArtStats(a.key).finalScore;
-          a.teacherScore = teacherArt;
+          let teacherArt = teacher.getArtStats(a.key);
+          a.teacherScore = teacherArt.derivedScore;
         }
       }
     }
@@ -1324,6 +1337,7 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
       // }
       case "recovery":
       case "itemInvestigation":
+      case "twilight":
         // delete the diary entry
         await this.actor.deleteEmbeddedDocuments("Item", [this.item.id], {});
         return;
@@ -1600,7 +1614,10 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
                 tScore = button.dataset.teacherscore;
               } else {
                 let teacher = game.actors.get(this.item.system.teacher.id);
-                tScore = teacher.getAbilityStats(newAb.system.key, newAb.system.option).score;
+                tScore = teacher.getAbilityStatsForActivity(
+                  newAb.system.key,
+                  newAb.system.option
+                ).score;
               }
             }
 

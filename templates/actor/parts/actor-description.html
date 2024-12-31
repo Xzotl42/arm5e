@@ -166,6 +166,12 @@
 {{#if system.isCharacter}}
   <div class="flexcol grid grid-2col">
     <div class="flex-group-left padding12 backSection">
+      {{#if system.isMagus}}
+        <a class="twilight-episode clickable" title="{{system.twilight.tooltip}}" data-year="{{datetime.year}}"
+          data-season="{{datetime.season}}" style="font-size: 16pt;">
+          <img src="systems/arm5e/assets/icons/Icon_Warping.png" style="width:25px; border:none;"></i>
+        </a>
+      {{/if}}
       <label class="smallTitle">
         {{localize "arm5e.sheet.warping"}}
       </label>

@@ -30,9 +30,13 @@ export class ArM5eRollInfo {
       this.img = dataset.img;
     }
 
-    let rollProperties = getRollTypeProperties(this.type);
+    if (dataset.botchNumber) {
+      this.botchNumber = dataset.botchNumber;
+    }
 
-    if (rollProperties.MODE & ROLL_MODIFIERS.PHYSICAL) {
+    this.rollProperties = getRollTypeProperties(this.type);
+
+    if (this.rollProperties.MODE & ROLL_MODIFIERS.PHYSICAL) {
       this.physicalCondition = true;
     } else {
       this.physicalCondition = false;
@@ -43,7 +47,7 @@ export class ArM5eRollInfo {
     }
 
     this.prepareRollFields(dataset);
-    if (rollProperties.MODIFIERS & ROLL_MODIFIERS.ENCUMBRANCE) {
+    if (this.rollProperties.MODIFIERS & ROLL_MODIFIERS.ENCUMBRANCE) {
       this.setGenericField(
         game.i18n.localize("arm5e.sheet.encumbrance"),
         actorSystemData.combat.overload,
@@ -221,6 +225,74 @@ export class ArM5eRollInfo {
         }
 
         break;
+      case ROLL_PROPERTIES.TWILIGHT_CONTROL.VAL:
+        this.characteristic = "sta";
+        this.environment.year = parseInt(dataset.year);
+        this.environment.season = dataset.season;
+        this.environment.seasonLabel = ARM5E.seasons[dataset.season].label;
+        this.label = `${game.i18n.localize("arm5e.twilight.control.roll")}`;
+        this.twilight = {
+          concentration: this._actor.getAbilityStats("concentration")
+        };
+        this.setGenericField(
+          game.i18n.localize("arm5e.skill.general.concentration"),
+          this.twilight.concentration.score,
+          1,
+          "+"
+        );
+        this.setGenericField(
+          game.i18n.localize("arm5e.twilight.vimModifier"),
+          Math.ceil(this._actor.system.arts.forms.vi.finalScore / 5),
+          2,
+          "+"
+        );
+        break;
+      case ROLL_PROPERTIES.TWILIGHT_STRENGTH.VAL:
+        this.environment.aura = Aura.fromActor(this._actor);
+        this.environment.aura.modifier = this.environment.aura.level;
+        this.label = `${game.i18n.localize("arm5e.twilight.strength")}`;
+        this.twilight = {
+          warpingPts: parseInt(dataset.warpingPts ?? 2),
+          enigma: this._actor.getAbilityStats("enigma")
+        };
+        this.setGenericField(
+          game.i18n.localize("arm5e.sheet.warping"),
+          dataset.warpingPts ?? 2,
+          1,
+          "+"
+        );
+        this.setGenericField(
+          game.i18n.localize("arm5e.skill.mystery.enigma"),
+          this.twilight.enigma.score,
+          2,
+          "+"
+        );
+        // this.setGenericField(game.i18n.localize("arm5e.sheet.levelAura"), aura.level, 3, "+");
+
+        break;
+      case ROLL_PROPERTIES.TWILIGHT_COMPLEXITY.VAL:
+        this.label = `${game.i18n.localize("arm5e.twilight.complexity")}`;
+
+        this.setGenericField(
+          game.i18n.localize("arm5e.twilight.warpingScore"),
+          this._actor.system.warping.finalScore ?? 0,
+          1,
+          "+"
+        );
+        break;
+
+      case ROLL_PROPERTIES.TWILIGHT_UNDERSTANDING.VAL:
+        this.label = `${game.i18n.localize("arm5e.twilight.comprehension.roll")}`;
+        this.twilight = {
+          enigma: this._actor.getAbilityStats("enigma")
+        };
+        this.setGenericField(
+          game.i18n.localize("arm5e.skill.mystery.enigma"),
+          this.twilight.enigma.score,
+          1,
+          "+"
+        );
+        break;
       case ROLL_PROPERTIES.AGING.VAL:
         this.environment.year = parseInt(dataset.year);
         this.environment.season = dataset.season;
@@ -327,25 +399,15 @@ export class ArM5eRollInfo {
   }
 
   addSelectObjects() {
-    if (this._actor.type === "beast") {
-      this.selection.characteristics = Object.fromEntries(
-        Object.entries(this._actor.system.characteristics).map(([k, v]) => {
-          return [
-            k,
-            `${game.i18n.localize(CONFIG.ARM5E.beast.characteristics[k].label)} (${v.value})`
-          ];
-        })
-      );
-    } else {
-      this.selection.characteristics = Object.fromEntries(
-        Object.entries(this._actor.system.characteristics).map(([k, v]) => {
-          return [
-            k,
-            `${game.i18n.localize(CONFIG.ARM5E.character.characteristics[k].label)} (${v.value})`
-          ];
-        })
-      );
-    }
+    this.selection.characteristics = Object.fromEntries(
+      Object.entries(this._actor.system.characCfg).map(([k, v]) => {
+        return [
+          k,
+          `${game.i18n.localize(v.label)} (${this._actor.system.characteristics[k].value})`
+        ];
+      })
+    );
+
     this.selection.abilities = {
       None: game.i18n.localize("arm5e.sheet.activeEffect.subtypes.none"),
       ...Object.fromEntries(
@@ -515,11 +577,19 @@ export class ArM5eRollInfo {
       divide: 1,
       level: 0
     };
-
+    this.rollProperties = {};
     this.power = {
       cost: 0,
       penetrationPenalty: 0,
       form: ""
+    };
+
+    this.twilight = {
+      warpingPts: 0,
+      concentration: { score: 0, spec: "" },
+      enigma: { score: 0, spec: "" },
+      strength: 0,
+      complexity: 0
     };
 
     this.item = {};
@@ -565,6 +635,7 @@ export class ArM5eRollInfo {
     // Roll window title
     this.name = "";
     this.flavor = "";
+
     // Arbitrary bonus
     this.modifier = 0;
     this.useFatigue = false;
@@ -573,6 +644,8 @@ export class ArM5eRollInfo {
     this.secondaryScore = 0;
     // Optional data used in the callback
     this.additionalData = {};
+
+    this.botchNumber = -1;
   }
 
   getAuraModifier() {
@@ -580,8 +653,9 @@ export class ArM5eRollInfo {
       this.type == "ability" &&
       this.ability.category == "supernaturalCat" &&
       this.ability.realm != "mundane";
+    const noRollWithAura = ["power", "item"].includes(this.type);
     const auraApply =
-      superNatAbility || ["spell", "magic", "spont", "power", "supernatural"].includes(this.type);
+      superNatAbility || noRollWithAura || this.rollProperties.MODIFIERS & ROLL_MODIFIERS.AURA;
     if (auraApply) {
       this.environment.aura = Aura.fromActor(this._actor);
       if (this.type === "supernatural") {

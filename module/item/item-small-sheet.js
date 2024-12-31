@@ -10,7 +10,7 @@ export class ArM5eSmallSheet extends ArM5eItemSheetNoDesc {
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["arm5e", "sheet", "item"],
-      width: 400,
+      width: 405,
       height: 602
     });
   }

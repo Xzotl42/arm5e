@@ -163,7 +163,7 @@ export class ArM5ePCActor extends Actor {
     if (this.type != "player" && this.type != "npc" && this.type != "beast") {
       return;
     }
-    const datetime = (context.datetime = game.settings.get("arm5e", "currentDate"));
+    const datetime = game.settings.get("arm5e", "currentDate");
     if (this.system.creationMode) {
       this.system.description.born.value = Number(datetime.year) - this.system.age.value;
     } else {
@@ -244,7 +244,10 @@ export class ArM5ePCActor extends Actor {
       spontDivider: 2,
       spontDividerNoFatigue: 5,
       masteryXpCoeff: 1.0,
-      masteryXpMod: 0
+      masteryXpMod: 0,
+      warpingThreshold: 2,
+      spellFatigueThreshold: 0,
+      ritualFatigueCancelled: 0
     };
 
     this.system.bonuses.skills = {};
@@ -397,6 +400,13 @@ export class ArM5ePCActor extends Actor {
       this.system.features.hasMight = true;
     }
 
+    this.system.characCfg = foundry.utils.deepClone(CONFIG.ARM5E.character.characteristics);
+    if ((this.system.intelligent && this.type === "beast") || this.type !== "beast") {
+      delete this.system.characCfg.cun;
+    } else {
+      delete this.system.characCfg.int;
+    }
+
     system.characTotal = 0;
     for (let c of Object.values(system.characteristics)) {
       if (c.value > 0) {
@@ -458,10 +468,7 @@ export class ArM5ePCActor extends Actor {
     abilitiesSelect.a0 = temp;
     for (const [key, item] of this.items.entries()) {
       if (item.type === "ability") {
-        let computedKey = item.system.key;
-        if (item.system.option != "") {
-          computedKey += `_${item.system.option}`;
-        }
+        let computedKey = item.system.getComputedKey();
         item.system.xpCoeff = this._getAbilityXpCoeff(item.system.key, item.system.option);
         item.system.xpBonus = this._getAbilityXpBonus(item.system.key, item.system.option);
         item.system.upgrade = this._getAbilityUpgrade(item.system.key, item.system.option);
@@ -1782,7 +1789,7 @@ export class ArM5ePCActor extends Actor {
   }
 
   async _changeFatigueLevel(num, wound = true) {
-    if (!this._isCharacter() || (num < 0 && this.system.fatigueCurrent == 0)) {
+    if (!this._isCharacter() || (num <= 0 && this.system.fatigueCurrent == 0)) {
       return;
     }
     let updateData = {};
@@ -1800,38 +1807,38 @@ export class ArM5ePCActor extends Actor {
 
     if (wound && overflow > 0) {
       // Fatigue overflow
-      let wType;
+      let woundType;
       switch (overflow) {
         case 1:
-          woundType = light;
+          woundType = "light";
           break;
         case 2:
-          woundType = medium;
+          woundType = "medium";
           break;
         case 3:
-          woundType = heavy;
+          woundType = "heavy";
           break;
         case 4:
-          woundType = incap;
+          woundType = "incap";
           break;
         default:
-          woundType = dead;
+          woundType = "dead";
           break;
       }
       const datetime = game.settings.get("arm5e", "currentDate");
       let woundData = {
-        name: `${game.i18n.localize(`arm5e.sheet.${wtype}`)} ${game.i18n.localize(
+        name: `${game.i18n.localize(`arm5e.sheet.${woundType}`)} ${game.i18n.localize(
           "arm5e.sheet.wound.label"
         )}`,
         type: "wound",
         system: {
           inflictedDate: {
             year: datetime.year,
-            season: datetime.year
+            season: datetime.season
           },
           healedDate: { year: null, season: "spring" },
-          gravity: wtype,
-          originalGravity: wtype,
+          gravity: woundType,
+          originalGravity: woundType,
           trend: 0,
           bonus: 0,
           nextRoll: 0,
@@ -2226,6 +2233,21 @@ export class ArM5ePCActor extends Actor {
     return { score: 0, speciality: "" };
   }
 
+  getAbilityStatsForActivity(key, option = "") {
+    const ability = this.system.abilities.find(
+      (e) => e.system.key == key && e.system.option == option
+    );
+    if (ability) {
+      return {
+        score:
+          ability.system.finalScore -
+          this.system.bonuses.skills[ability.system.getComputedKey()].bonus,
+        speciality: ability.system.speciality
+      };
+    }
+    return { score: 0, speciality: "" };
+  }
+
   getSimilarSpell(level, technique, form) {
     return this.system.spells.find(
       (e) =>
@@ -2248,7 +2270,7 @@ export class ArM5ePCActor extends Actor {
     return { score: 0, xp: 0, xpCoeff: 1, xpBonus: 0 };
   }
 
-  getArtStats(key) {
+  getArtStats(key, forActivity = false) {
     let artType = "forms";
     if (Object.keys(CONFIG.ARM5E.magic.techniques).includes(key)) {
       artType = "techniques";

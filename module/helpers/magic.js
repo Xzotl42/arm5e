@@ -655,37 +655,49 @@ async function checkTargetAndCalculateResistance(actorCaster, roll, message) {
   }
   switch (actorCaster.rollInfo.type) {
     case "power":
-      actorsTargeted.forEach(async (actorTarget) => {
+      for (let actorTarget of actorsTargeted) {
         const successOfPower = calculateSuccessOfPower({
           actorTarget,
           actorCaster,
           roll,
           spell: message
         });
-        await chatContestOfPower({ actorCaster, actorTarget, ...successOfPower });
-      });
+        await chatContestOfPower(message, {
+          actorCaster,
+          actorTarget,
+          ...successOfPower
+        });
+      }
       break;
     case "item":
-      actorsTargeted.forEach(async (actorTarget) => {
+      for (let actorTarget of actorsTargeted) {
         const successOfPower = calculateSuccessOfMagicItem({
           actorTarget,
           actorCaster,
           roll,
           spell: message
         });
-        await chatContestOfPower({ actorCaster, actorTarget, ...successOfPower });
-      });
+        await chatContestOfPower(message, {
+          actorCaster,
+          actorTarget,
+          ...successOfPower
+        });
+      }
       break;
     default:
-      actorsTargeted.forEach(async (actorTarget) => {
+      for (let actorTarget of actorsTargeted) {
         const successOfMagic = calculateSuccessOfMagic({
           actorTarget,
           actorCaster,
           roll,
           spell: message
         });
-        await chatContestOfMagic({ actorCaster, actorTarget, ...successOfMagic });
-      });
+        await chatContestOfMagic(message, {
+          actorCaster,
+          actorTarget,
+          ...successOfMagic
+        });
+      }
   }
 }
 
@@ -749,7 +761,7 @@ function calculateResistance(actor, form) {
   // TODO, do a better job for player aligned to a realm
   if (actor._hasMight()) {
     let aura = Aura.fromActor(actor);
-    auraMod = aura.computeMaxAuraModifierFor(actor.system.realms);
+    auraMod = aura.computeMaxAuraModifier(actor.system.realms);
     magicResistance += parseInt(auraMod);
   }
 

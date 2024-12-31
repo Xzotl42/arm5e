@@ -161,8 +161,9 @@ export class ArM5eNPCActorSheet extends ArM5eActorSheet {
       if (currentRealm != "mundane") {
         updateData[`system.realms.${currentRealm}.aligned`] = false;
       }
+      updateData["system.realm"] = chosenRealm;
 
-      this.submit({ preventClose: true, updateData: updateData });
+      await this.submit({ preventClose: true, updateData: updateData });
     });
   }
 

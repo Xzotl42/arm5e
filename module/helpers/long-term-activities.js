@@ -2,6 +2,8 @@ import { getDataset, log } from "../tools.js";
 import { ArM5ePCActor } from "../actor/actor.js";
 import { InvestigationRoll } from "../tools/investigationRoll.js";
 import { getAbilityFromCompendium } from "../tools/compendia.js";
+import { ArsRoll } from "./stressdie.js";
+import { DiaryEntrySchema } from "../schemas/diarySchema.js";
 
 export async function setAgingEffects(actor, roll, message) {
   let rtCompendium = game.packs.get("arm5e.rolltables");
@@ -83,7 +85,9 @@ export async function agingCrisis(actor, roll, message) {
   let res = crisisTable.getResultsForRoll(roll.total)[0].text;
 
   const title =
-    '<h2 class="ars-chat-title">' + game.i18n.localize("arm5e.aging.crisis.summary") + "</h2>";
+    '<h2 class="ars-chat-title chat-icon">' +
+    game.i18n.localize("arm5e.aging.crisis.summary") +
+    "</h2>";
 
   // log(false, `Crisis result expanded: ${msg}`);
   ChatMessage.create({
@@ -166,6 +170,258 @@ export async function createAgingDiaryEntry(actor, input) {
     }
   };
   return await actor.createEmbeddedDocuments("Item", [diaryEntry], {});
+}
+////////////
+// TWILIGHT
+///////////
+
+export const TWILIGHT_STAGES = {
+  NONE: 0,
+  PENDING_STRENGTH: 1,
+  PENDING_CONTROL: 2,
+  PENDING_COMPLEXITY: 3,
+  PENDING_UNDERSTANDING: 4,
+  PENDING_UNDERSTANDING2: 5 // diary created
+};
+export class TwilightEpisode {
+  constructor(actor) {
+    this.actor = actor;
+    this.strength = actor.system.twilight.strength;
+    this.complexity = actor.system.twilight.complexity;
+    this.warpingPts = actor.system.twilight.warpingPts;
+    this.stage = actor.system.twilight.stage;
+  }
+  static getTechnicalDescription(pts, duration) {
+    let desc = `<ul><li>${game.i18n.localize("arm5e.twilight.warpingPoints")} : ${pts}</li>`;
+    desc += `<li>${game.i18n.format("arm5e.twilight.diary.duration", {
+      duration: duration
+    })}</li></ul>`;
+    // desc += `<li></li>`;
+
+    return desc;
+  }
+  static async getDuration(score) {
+    const durations = [
+      "arm5e.twilight.durations.moments",
+      "arm5e.twilight.durations.diameter",
+      "arm5e.twilight.durations.hours",
+      "arm5e.twilight.durations.sun",
+      "arm5e.twilight.durations.day",
+      "arm5e.twilight.durations.moon",
+      "arm5e.twilight.durations.season",
+      "arm5e.twilight.durations.year",
+      "arm5e.twilight.durations.sevenYears",
+      "arm5e.twilight.durations.decades",
+      "arm5e.twilight.durations.eternal"
+    ];
+    if (score < 0) {
+      return game.i18n.localize(durations[0]);
+    }
+    if (score === 9) {
+      let roll = new ArsRoll("0di", {}, {});
+      await roll.evaluate();
+      return game.i18n.format("arm5e.twilight.durations.decades", { num: 7 + roll.total });
+    }
+
+    return game.i18n.localize(durations[score]);
+  }
+
+  static getTooltip(stage) {
+    const tooltips = [
+      "arm5e.twilight.episode",
+      "arm5e.twilight.tooltips.pendingStrength",
+      "arm5e.twilight.tooltips.pendingControl",
+      "arm5e.twilight.tooltips.pendingComplexity",
+      "arm5e.twilight.tooltips.pendingUnderstanding",
+      "arm5e.twilight.tooltips.pendingUnderstanding2"
+    ];
+    return game.i18n.localize(tooltips[stage]);
+  }
+
+  async _updateObject(event, formData) {
+    return formData;
+  }
+}
+export async function createTwilightDiaryEntry(actor, input) {
+  let diaryEntry = {
+    name: game.i18n.localize("arm5e.twilight.episode"),
+    img: "systems/arm5e/assets/icons/Icon_Warping.png",
+    type: "diaryEntry",
+    system: {
+      dates: [{ year: input.year, season: input.season, applied: input.applied ?? false }],
+      activity: "twilight",
+      description: input.description ?? "",
+      duration: 1,
+      done: input.done ?? false,
+      rollDone: input.rollDone ?? false
+    }
+  };
+  return await actor.createEmbeddedDocuments("Item", [diaryEntry], {});
+}
+
+export async function twilightUnderstandingRoll(item) {
+  const input = {
+    roll: "twilight_understanding",
+    moredata: { diaryId: item._id },
+    botchNumber: item.actor.system.twilight.pointsGained + 1
+  };
+  await item.actor.sheet._onRoll(input);
+}
+
+export async function twilightRoll(actor, data) {
+  await actor.sheet._onRoll(data);
+}
+
+export async function applyTwilightStrength(actor, roll, message) {
+  const updateData = {};
+  updateData["system.twilight.year"] = actor.rollInfo.environment.year;
+  updateData["system.twilight.season"] = actor.rollInfo.environment.season;
+  updateData["system.twilight.strength"] = roll.total;
+  updateData["system.twilight.pointsGained"] = actor.rollInfo.twilight.warpingPts;
+  updateData["system.twilight.stage"] = TWILIGHT_STAGES.PENDING_CONTROL;
+  await actor.update(updateData, {});
+}
+
+export async function applyTwilightComplexity(actor, roll, message) {
+  const updateData = {};
+  let complexity = roll.total;
+  if (roll.botches) {
+    complexity = 0;
+  }
+  updateData["system.twilight.complexity"] = complexity;
+  updateData["system.twilight.stage"] = TWILIGHT_STAGES.PENDING_UNDERSTANDING;
+  await actor.update(updateData, {});
+}
+
+export async function twilightControl(actor, roll, message) {
+  const updateData = {};
+
+  const msgUpdate = {};
+  if (roll.botches) {
+    // botch => impossible to understand, direct diary entry:
+    const dur = await TwilightEpisode.getDuration(actor.system.warping.finalScore);
+    const input = {
+      year: actor.rollInfo.environment.year,
+      season: actor.rollInfo.environment.season,
+      applied: true,
+      done: true,
+      rollDone: true,
+      description:
+        game.i18n.format("arm5e.twilight.diary.botchedControl", {
+          name: actor.name,
+          str: actor.system.twilight.strength
+        }) +
+        "<br/>" +
+        TwilightEpisode.getTechnicalDescription(actor.system.twilight.pointsGained, dur)
+    };
+    const [diary] = await createTwilightDiaryEntry(actor, input);
+    msgUpdate["flavor"] = message.flavor + game.i18n.localize("arm5e.twilight.chat.botchedControl");
+    await message.update(msgUpdate);
+    await resetTwilight(actor, roll, message);
+    diary.sheet.render(true);
+    return;
+  } else if (roll.total >= actor.system.twilight.strength) {
+    const input = {
+      year: actor.rollInfo.environment.year,
+      season: actor.rollInfo.environment.season,
+      applied: true,
+      done: true,
+      rollDone: true,
+      description: game.i18n.format("arm5e.twilight.diary.successControl", {
+        name: actor.name,
+        str: actor.system.twilight.strength
+      })
+    };
+    await createTwilightDiaryEntry(actor, input);
+    msgUpdate["flavor"] =
+      message.flavor + `<h2>${game.i18n.localize("arm5e.twilight.chat.successControl")}</h2>`;
+    await message.update(msgUpdate);
+    await resetTwilight(actor, roll, message);
+    return;
+  } else {
+    updateData["system.twilight.year"] = actor.rollInfo.environment.year;
+    updateData["system.twilight.season"] = actor.rollInfo.environment.season;
+    updateData["system.twilight.strength"] = roll.total;
+    updateData["system.twilight.control"] = false;
+    updateData["system.twilight.pointsGained"] = actor.rollInfo.twilight.warpingPts;
+    updateData["system.twilight.stage"] = TWILIGHT_STAGES.PENDING_COMPLEXITY;
+    msgUpdate["flavor"] =
+      message.flavor + `<h2>${game.i18n.localize("arm5e.twilight.chat.failedControl")}</h2>`;
+    await message.update(msgUpdate);
+  }
+  await actor.update(updateData, {});
+}
+export async function twilightUnderstanding(actor, roll, message) {
+  const msgUpdate = {};
+  const diaryUpdate = {};
+  diaryUpdate["system.applied"] = true;
+  diaryUpdate["system.done"] = true;
+  diaryUpdate["system.rollDone"] = true;
+  let diary = actor.items.get(actor.rollInfo.additionalData.diaryId);
+
+  const controlDesc = actor.system.twilight.control
+    ? game.i18n.format("arm5e.twilight.diary.embraced", {
+        name: actor.name
+      })
+    : game.i18n.format("arm5e.twilight.diary.failedControl", {
+        name: actor.name,
+        str: actor.system.twilight.strength
+      });
+  if (roll.botches) {
+    // botch => impossible to understand
+    const duration = await TwilightEpisode.getDuration(
+      actor.system.warping.finalScore + roll.botches
+    );
+    diaryUpdate["system.duration"] = 1;
+
+    diaryUpdate["system.description"] = `${item.system.description}`;
+
+    msgUpdate["flavor"] =
+      message.flavor + game.i18n.localize("arm5e.twilight.chat.botchedUnderstanding");
+  } else if (roll.total >= actor.system.twilight.complexity) {
+    let delta =
+      roll.total - actor.rollInfo.twilight.enigma.score - actor.system.twilight.complexity;
+    let warpingScoreMod = delta < 0 ? 0 : delta;
+    const dur = await TwilightEpisode.getDuration(
+      actor.system.warping.finalScore - warpingScoreMod
+    );
+    diaryUpdate["system.description"] = `${diary.system.description} <br/>${controlDesc}. 
+      ${game.i18n.format("arm5e.twilight.diary.successUnderstanding", {
+        name: actor.name,
+        complexity: actor.system.twilight.complexity
+      })} <br/>
+      ${TwilightEpisode.getTechnicalDescription(actor.system.twilight.pointsGained, dur)}`;
+    msgUpdate["flavor"] =
+      message.flavor + `<h2>${game.i18n.localize("arm5e.twilight.chat.successUnderstanding")}</h2>`;
+  } else {
+    const dur = await TwilightEpisode.getDuration(actor.system.warping.finalScore);
+    diaryUpdate["system.description"] = `${diary.system.description} <br/>${controlDesc}. 
+      ${game.i18n.format("arm5e.twilight.diary.failedUnderstanding", {
+        name: actor.name,
+        complexity: actor.system.twilight.complexity
+      })} 
+      <br/>
+      ${TwilightEpisode.getTechnicalDescription(actor.system.twilight.pointsGained, dur)}`;
+
+    msgUpdate["flavor"] =
+      message.flavor + `<h2>${game.i18n.localize("arm5e.twilight.chat.failedUnderstanding")}</h2>`;
+  }
+  await message.update(msgUpdate);
+  await diary.update(diaryUpdate);
+  await resetTwilight(actor, roll, message);
+  diary.sheet.render(true);
+}
+
+export async function resetTwilight(actor, roll, message) {
+  const updateData = {};
+  updateData["system.twilight.year"] = null;
+  updateData["system.twilight.season"] = null;
+  updateData["system.twilight.control"] = null;
+  updateData["system.twilight.strength"] = 0;
+  updateData["system.twilight.complexity"] = 0;
+  updateData["system.twilight.pointsGained"] = 0;
+  updateData["system.twilight.stage"] = TWILIGHT_STAGES.NONE;
+  await actor.update(updateData, {});
 }
 
 // ********************

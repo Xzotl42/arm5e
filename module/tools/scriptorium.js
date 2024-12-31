@@ -351,11 +351,12 @@ export class Scriptorium extends FormApplication {
             let found = availableAbilities.findIndex(
               (e) => e.system.key == a.system.key && e.system.option == a.system.option
             );
+            const computedKey = a.system.getComputedKey();
             if (found >= 0) {
               availableAbilities[found]._id = a._id;
               availableAbilities[found].system.xp = a.system.xp;
               availableAbilities[found].secondaryId = false;
-              availableAbilities[found].system.finalScore = a.system.finalScore;
+              availableAbilities[found].system.score = a.system.derivedScore;
             } else {
               availableAbilities.push({
                 _id: a._id,
@@ -364,7 +365,7 @@ export class Scriptorium extends FormApplication {
                 system: {
                   key: a.system.key,
                   xp: a.system.xp,
-                  finalScore: a.system.finalScore,
+                  score: a.system.derivedScore,
                   option: a.system.option,
                   category: a.system.category
                 }
@@ -388,7 +389,7 @@ export class Scriptorium extends FormApplication {
           //   };
           // });
 
-          let filteredAbilities = availableAbilities.filter((a) => a.system.finalScore < maxLevel);
+          let filteredAbilities = availableAbilities.filter((a) => a.system.score < maxLevel);
           // Does the reader has the book topic ability?
           let ability = availableAbilities.find((a) => {
             return (
@@ -569,13 +570,17 @@ export class Scriptorium extends FormApplication {
       switch (newTopic.category) {
         case "ability": {
           context.writing.filteredAbilities = writer.system.abilities
-            .filter((e) => e.system.finalScore >= 2)
+            .filter((e) => e.system.derivedScore >= 2)
             .map((s) => {
+              const scoreBonus = writer.system.bonuses.skills[s.system.getComputedKey()].bonus;
+              const scoreLabel = scoreBonus
+                ? `${s.system.derivedScore} + ${scoreBonus}`
+                : `${s.system.derivedScore}`;
               return {
                 id: s._id,
                 name: s.name,
                 system: s.system,
-                label: `${s.name} (${s.system.finalScore})`
+                label: `${s.name} (${scoreLabel})`
               };
             });
           //
@@ -587,7 +592,7 @@ export class Scriptorium extends FormApplication {
 
             let ab = writer.items.get(context.writing.writer.ability);
             context.writing.book.system.topics[context.newTopicIndex].maxLevel = Math.round(
-              ab.system.finalScore / 2
+              ab.system.derivedScore / 2
             );
 
             context.writing.book.system.topics[context.newTopicIndex].key = ab.system.key;
@@ -604,6 +609,11 @@ export class Scriptorium extends FormApplication {
               );
               work = context.writing.book.system.topics[context.newTopicIndex].level * 5;
             }
+          } else {
+            context.ui.reading.warning.push(
+              game.i18n.localize("arm5e.scriptorium.writer.nothingToWrite")
+            );
+            context.ui.reading.error = true;
           }
           // Log(false, `writer.ability: ${context.writing.writer.ability}`);
           break;
@@ -611,29 +621,35 @@ export class Scriptorium extends FormApplication {
         case "art": {
           let tech = Object.entries(writer.system.arts.techniques)
             .map((e) => {
+              const scoreLabel = e[1].bonus
+                ? `${e[1].derivedScore} + ${e[1].bonus}`
+                : `${e[1].derivedScore}`;
               return {
                 id: e[0],
-                finalScore: e[1].finalScore,
-                label: `${e[1].label} (${e[1].finalScore})`
+                score: e[1].derivedScore,
+                label: `${e[1].label} (${scoreLabel})`
               };
             })
-            .filter((e) => e.finalScore >= 5);
+            .filter((e) => e.score >= 5);
           let forms = Object.entries(writer.system.arts.forms)
             .map((e) => {
+              const scoreLabel = e[1].bonus
+                ? `${e[1].derivedScore} + ${e[1].bonus}`
+                : `${e[1].derivedScore}`;
               return {
                 id: e[0],
-                finalScore: e[1].finalScore,
-                label: `${e[1].label} (${e[1].finalScore})`
+                score: e[1].derivedScore,
+                label: `${e[1].label} (${scoreLabel})`
               };
             })
-            .filter((e) => e.finalScore >= 5);
+            .filter((e) => e.score >= 5);
           context.writing.filteredArts = tech.concat(forms);
           if (context.writing.filteredArts.length) {
             if (!context.writing.writer.art) {
               context.writing.writer.art = context.writing.filteredArts[0].id;
             }
             context.writing.book.system.topics[context.newTopicIndex].maxLevel = Math.round(
-              writer.getArtScore(context.writing.writer.art).finalScore / 2
+              writer.getArtScore(context.writing.writer.art).derivedScore / 2
             );
             if (newTopic.type === "Summa") {
               qualityBonus =
@@ -2014,13 +2030,13 @@ export class Scriptorium extends FormApplication {
         let ab = reader.system.abilities.find((a) => {
           return a._id === context.reading.reader.ability;
         });
-        if (supernatural && (!ab || ab.system.finalScore == 0)) {
+        if (supernatural && (!ab || ab.system.derivedScore == 0)) {
           context.ui.reading.warning.push(
             game.i18n.localize("arm5e.scriptorium.msg.missingSupernatural")
           );
           context.ui.reading.error = true;
         } else if (currentTopic.type === "Summa") {
-          if (ab?.system.finalscore >= currentTopic.level) {
+          if (ab?.system.derivedScore >= currentTopic.level) {
             context.ui.reading.warning.push(game.i18n.localize("arm5e.scriptorium.msg.tooSkilled"));
             context.ui.reading.error = true;
           } else if (ab) {
@@ -2050,7 +2066,7 @@ export class Scriptorium extends FormApplication {
         }
         if (currentTopic.type === "Summa") {
           let art = reader.getArtStats(currentTopic.art);
-          if (art.finalscore >= currentTopic.level) {
+          if (art.derivedScore >= currentTopic.level) {
             context.ui.reading.warning.push(game.i18n.localize("arm5e.scriptorium.msg.tooSkilled"));
             context.ui.reading.error = true;
           } else {

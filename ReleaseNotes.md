@@ -1,3 +1,26 @@
+## 2.3.2.13, Quendalon, lost in the forest for a year
+
+### Features & changes
+
+- Added more detailed description for base individual of a Form (@scribes)
+- Bonus to abilities and arts score are no longer taken into account for learning, teaching and writing.
+- New active effects:
+  - Intelligent (for beasts)
+  - Override the number of warping points needed to trigger a twilight
+  - No fatigue when short on casting total (Mythic blood)
+  - No fatigue on ritual casting if successful (Mythic blood)
+- Spell casting, powers and magic items use chat messages are now merged when possible (failure,magic contest)
+- Twilight episode's management
+
+### Bug fixes
+
+- Fixed another bug with character sheet date
+- Changing the realm of an entity will work all the time.
+- Rituals consume a fatigue level, even if succeful.
+- A wound is properly created in case of ritual major failure
+- Artes liberales and philosophy labels are again displayed properly when casting rituals.
+- Aura modifier of actor with Might no longer raises an error.
+
 ## 2.3.2.12, Quendalon, lost in the forest since half a year
 
 ### Features & changes
