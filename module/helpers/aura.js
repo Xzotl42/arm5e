@@ -35,6 +35,11 @@ export default class Aura {
     );
   }
 
+  // return the dominant aura level.
+  get level() {
+    return this.auraValueFor(this.dominantRealm);
+  }
+
   /**
    * Takes an alignment number of a power and computes how the current aura will modify
    * that power being used. e.g. how much a faerie power is penalized in a divine aura

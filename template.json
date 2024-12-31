@@ -75,6 +75,15 @@
             "aging": 0
           }
         },
+        "twilight": {
+          "stage": 0,
+          "pointsGained": 0,
+          "strength": 0,
+          "complexity": 0,
+          "control": null,
+          "year": null,
+          "season": null
+        },
         "description": {
           "born": {
             "value": 1200
@@ -533,7 +542,8 @@
         "familiar",
         "laboratoryPC",
         "apprentice",
-        "magicSystem"
+        "magicSystem",
+        "twilight"
       ],
       "features": { "magicSystem": false, "powers": false },
       "magicSystem": null,
@@ -573,7 +583,16 @@
       }
     },
     "npc": {
-      "templates": ["base", "npcbase", "familiar", "laboratoryPC", "fatigue", "arts", "apprentice"],
+      "templates": [
+        "base",
+        "npcbase",
+        "familiar",
+        "laboratoryPC",
+        "fatigue",
+        "arts",
+        "apprentice",
+        "twilight"
+      ],
       "charType": {
         "value": "mundane",
         "label": "Char. Type"
@@ -812,6 +831,9 @@
         "value": 20
       },
       "characteristics": {
+        "int": {
+          "value": 0
+        },
         "cun": {
           "value": 0
         },

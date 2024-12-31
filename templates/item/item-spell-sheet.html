@@ -180,6 +180,12 @@
             class="resource-focus" data-dtype="Number" style="max-width: 70px;" />
         </div>
       </div>
+      <div class="resource flex-group-center">
+        <label class="header-label"><b>{{localize "arm5e.spell.targets.baseSize.label" }}: </b></label>
+        {{#with (lookup config.magic.forms system.form.value)}}
+          <label class="label-light">{{localize baseSize}}</label>
+        {{/with}}
+      </div>
     </div>
     {{!-- Description Tab --}}
     <div class="tab" data-group="primary" data-tab="description">

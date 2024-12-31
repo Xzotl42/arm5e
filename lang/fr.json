@@ -997,7 +997,7 @@
   "arm5e.lab.visCosts.vimOnly": "Coût en vis : {amount} pions de vis Vim",
   "arm5e.lab.visCosts.magusStock": "Stock de vis du mage",
   "arm5e.lab.visCosts.labStock": "Stock de vis du laboratoire",
-  
+
   "arm5e.covenant.wages.none": "Aucun salaire",
   "arm5e.covenant.wages.low": "La moitié du salaire normal",
   "arm5e.covenant.wages.normal": "Salaire normal",
@@ -1010,12 +1010,12 @@
   "arm5e.covenant.specialist.turbCaptain": "Capitaine de turbula",
   "arm5e.covenant.specialist.books": "Profession liés aux livres",
   "arm5e.covenant.specialist.other": "Autre",
-  
+
   "arm5e.covenant.equipment.low": "peu couteux",
   "arm5e.covenant.equipment.standard": "Standard",
   "arm5e.covenant.equipment.standardPlus": "Standard avec une pièce d'équipement cher",
   "arm5e.covenant.equipment.any": "Tout ce dont ils ont besoin",
-  
+
   "arm5e.sheet.bonus.activeEffects": "Bonus d'Effets Actifs",
   "arm5e.sheet.action.rest": "Repos",
   "arm5e.sheet.action.reset": "Remise à zéro",
@@ -1167,7 +1167,7 @@
   "arm5e.sheet.skill.abilityOption": "Compétence optionnelle",
   "arm5e.sheet.skill.abilityNoKey": "Compétence personnelle (ancienne)",
 
-   "arm5e.sheet.activeEffect.new": "Nouvel effet",
+  "arm5e.sheet.activeEffect.new": "Nouvel effet",
   "arm5e.sheet.activeEffect.section.temporary": "Effets temporaires",
   "arm5e.sheet.activeEffect.section.passive": "Effets passifs",
   "arm5e.sheet.activeEffect.section.inactive": "Effets inactifs",
@@ -1234,7 +1234,7 @@
 
   "arm5e.sheet.activeEffect.changeValue": "Valeur de l'Effet",
   "arm5e.sheet.activeEffect.type.spellcasting": "Lancement de Sorts",
-  
+
   "arm5e.sheet.activeEffect.type.covenantBuildPoint": "Points de construction de l'alliance",
   "arm5e.sheet.activeEffect.subtypes.library": "Bibliothèque",
   "arm5e.sheet.activeEffect.subtypes.labText": "Textes de laboratoire",
@@ -1547,8 +1547,8 @@
   "arm5e.rolltables.experimentation.extrordinaryResults.modifiedEffect": "Effet modifié.",
   "arm5e.rolltables.experimentation.extrordinaryResults.rollTwice": "Faites deux jets de plus sur cette table.",
   "arm5e.rolltables.experimentation.extrordinaryResults.disaster": "Désastre.",
-  
-   "arm5e.rolltables.experimentation": "",
+
+  "arm5e.rolltables.experimentation": "",
 
   "arm5e.generic.yes": "Oui",
   "arm5e.generic.no": "Non",

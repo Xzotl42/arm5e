@@ -803,12 +803,17 @@ export function putInFoldableLink(label, content, startHidden = true) {
  * @param content
  * @param startHidden
  */
-export function putInFoldableLinkWithAnimation(label, content, startHidden = true) {
+export function putInFoldableLinkWithAnimation(
+  label,
+  content,
+  startHidden = true,
+  classes = "clickable"
+) {
   let hidden = "";
   if (startHidden) {
     hidden = "hide";
   }
-  return `<div class="arm5e clickable toggleCollapse"><p style="text-align:center">${game.i18n.localize(
+  return `<div class="arm5e ${classes} toggleCollapse"><p style="text-align:center">${game.i18n.localize(
     label
   )}</p></div><div class="${hidden} details">${content}</div>`;
 }

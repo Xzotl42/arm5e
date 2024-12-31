@@ -12,7 +12,8 @@ import {
   validAging,
   visStudy,
   investigate,
-  validWriting
+  validWriting,
+  twilightUnderstandingRoll
 } from "./helpers/long-term-activities.js";
 
 export const ARM5E = {};
@@ -58,45 +59,10 @@ ARM5E.character.characteristics = {
     label: "arm5e.sheet.intelligence",
     short: "arm5e.sheet.int"
   },
-  per: {
-    label: "arm5e.sheet.perception",
-    short: "arm5e.sheet.per"
-  },
-  str: {
-    label: "arm5e.sheet.strength",
-    short: "arm5e.sheet.str"
-  },
-  sta: {
-    label: "arm5e.sheet.stamina",
-    short: "arm5e.sheet.sta"
-  },
-  pre: {
-    label: "arm5e.sheet.presence",
-    short: "arm5e.sheet.pre"
-  },
-  com: {
-    label: "arm5e.sheet.communication",
-    short: "arm5e.sheet.com"
-  },
-  dex: {
-    label: "arm5e.sheet.dexterity",
-    short: "arm5e.sheet.dex"
-  },
-  qik: {
-    label: "arm5e.sheet.quickness",
-    short: "arm5e.sheet.qik"
-  }
-};
-ARM5E.beast = {};
-ARM5E.beast.characteristics = {
   cun: {
     label: "arm5e.sheet.cunning",
     short: "arm5e.sheet.cun"
   },
-  int: {
-    label: "arm5e.sheet.intelligence",
-    short: "arm5e.sheet.int"
-  },
   per: {
     label: "arm5e.sheet.perception",
     short: "arm5e.sheet.per"
@@ -126,6 +92,45 @@ ARM5E.beast.characteristics = {
     short: "arm5e.sheet.qik"
   }
 };
+// ARM5E.beast = {};
+// ARM5E.beast.characteristics = {
+//   cun: {
+//     label: "arm5e.sheet.cunning",
+//     short: "arm5e.sheet.cun"
+//   },
+//   int: {
+//     label: "arm5e.sheet.intelligence",
+//     short: "arm5e.sheet.int"
+//   },
+//   per: {
+//     label: "arm5e.sheet.perception",
+//     short: "arm5e.sheet.per"
+//   },
+//   str: {
+//     label: "arm5e.sheet.strength",
+//     short: "arm5e.sheet.str"
+//   },
+//   sta: {
+//     label: "arm5e.sheet.stamina",
+//     short: "arm5e.sheet.sta"
+//   },
+//   pre: {
+//     label: "arm5e.sheet.presence",
+//     short: "arm5e.sheet.pre"
+//   },
+//   com: {
+//     label: "arm5e.sheet.communication",
+//     short: "arm5e.sheet.com"
+//   },
+//   dex: {
+//     label: "arm5e.sheet.dexterity",
+//     short: "arm5e.sheet.dex"
+//   },
+//   qik: {
+//     label: "arm5e.sheet.quickness",
+//     short: "arm5e.sheet.qik"
+//   }
+// };
 
 // Adding/Changing/removing houses
 
@@ -944,7 +949,7 @@ export function enrichAbilities(translatedList) {
       system: {
         key: key,
         xp: 0,
-        finalScore: 0,
+        score: 0,
         option: val.option ? val.optionDefault : "",
         category: val.category
       }
@@ -2659,6 +2664,27 @@ ARM5E.activities.generic = {
       conflict: false
     }
   },
+  twilight: {
+    label: "arm5e.sheet.twilight",
+    display: {
+      tab: true,
+      progress: false,
+      abilities: false,
+      arts: false,
+      masteries: false,
+      spells: false,
+      attribute: "hidden"
+    },
+    source: { default: 0, readonly: true },
+    maxXp: 0,
+    bonusOptions: null,
+    secondaryFilter: null,
+    roll: { label: "arm5e.twilight.episode", action: twilightUnderstandingRoll },
+    scheduling: {
+      duplicate: true,
+      conflict: false
+    }
+  },
   visStudy: {
     label: "arm5e.activity.visStudy",
     display: {
@@ -2930,6 +2956,20 @@ ARM5E.activities.aging = {
   crisis: { desc: "arm5e.aging.roll.crisis", impact: 42 },
   warping: { impact: 1 }
 };
+
+ARM5E.activities.twilight = {};
+ARM5E.activities.twilight.durations = [
+  "arm5e.twilight.durations.diameter",
+  "arm5e.twilight.durations.hours",
+  "arm5e.twilight.durations.sun",
+  "arm5e.twilight.durations.day",
+  "arm5e.twilight.durations.moon",
+  "arm5e.twilight.durations.season",
+  "arm5e.twilight.durations.year",
+  "arm5e.twilight.durations.sevenYears",
+  "arm5e.twilight.durations.decades",
+  "arm5e.twilight.durations.eternal"
+];
 
 ARM5E.lab = {};
 

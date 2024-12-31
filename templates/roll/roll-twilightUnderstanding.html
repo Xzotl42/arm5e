@@ -1,0 +1,43 @@
+<form class="{{cssClass}} arm5eRoll" autocomplete="off">
+  {{> "systems/arm5e/templates/roll/parts/roll-header.html" header="Twilight_rolls"}}
+
+  <div class="roll-options">
+    <div class="flexrow flex-group-center">
+      <label class="resource-label">{{localize "arm5e.twilight.comprehension.roll" }}</label>
+    </div>
+    <div class="flexrow flex-group-center">
+      <label class="resource-label">{{localize "arm5e.sheet.intelligence" }} ({{ system.characteristics.int.value
+        }})</label>
+    </div>
+
+    <div class="flexrow flex-group-center">
+      <label class="resource-label">+</label>
+    </div>
+    <div class="flexrow flex-group-center">
+      <label class="resource-label">{{ lookup system.roll.generic.txtOption 0 }} ({{lookup system.roll.generic.option 0
+        }})</label>
+    </div>
+
+    <div class="flexrow flex-group-center">
+      <label class="resource-label">+</label>
+    </div>
+    <div class="flexrow flex-group-center">
+      <label class="resource-label flex03">{{localize "arm5e.sheet.modifier"}}</label>
+      <input type="Number" name="system.roll.modifier" value="{{system.roll.modifier}}" data-dtype="Number"
+        class="SelectedModifier resource-focus" />
+    </div>
+
+    <div class="flexrow flex-group-center">
+      <label class="resource-label"><img src="systems/arm5e/assets/ballSilver.png" title="Penetration" width="24"
+          height="24" style="border :0px" /></label>
+    </div>
+    <div class="flexrow flex-group-center">
+      <label class="resource-label">{{localize "arm5e.generic.versus"}}</label>
+    </div>
+
+    <div class="flexrow flex-group-center">
+      <label class="resource-label" style="font-size: 16pt;">{{ system.twilight.complexity}}</label>
+    </div>
+  </div>
+  {{> "systems/arm5e/templates/roll/parts/roll-footer.html" footer="Twilight_rolls" }}
+</form>

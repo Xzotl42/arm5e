@@ -269,8 +269,8 @@ export class DiaryEntrySchema extends foundry.abstract.DataModel {
     };
   }
 
-  static buildSchedule(duration, year, season, date = "") {
-    let tmpDate = { season: season, year: year, date: date, applied: false };
+  static buildSchedule(duration, year, season, date = "", applied = false) {
+    let tmpDate = { season: season, year: year, date: date, applied: applied };
     let schedule = [tmpDate];
     for (let ii = 1; ii < duration; ii++) {
       tmpDate = nextDate(tmpDate.season, tmpDate.year);
@@ -278,7 +278,7 @@ export class DiaryEntrySchema extends foundry.abstract.DataModel {
         season: tmpDate.season,
         date: "",
         year: tmpDate.year,
-        applied: false
+        applied: applied
       });
     }
     return schedule;

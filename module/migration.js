@@ -1,5 +1,6 @@
 import { ArM5ePCActor } from "./actor/actor.js";
 import { ARM5E } from "./config.js";
+import { TWILIGHT_STAGES } from "./helpers/long-term-activities.js";
 import { computeLevel } from "./helpers/magic.js";
 import { convertToNumber, error, log } from "./tools.js";
 
@@ -409,6 +410,18 @@ export const migrateActorData = async function (actorDoc, actorItems) {
     if (["player", "npc", "beast"].includes(actor.type)) {
       if (actor.system.charType && actor.system.charType.value === undefined) {
         updateData["system.charType"] = { value: actor.system.charType };
+      }
+
+      if (actor.type === "beast") {
+        if (!actor.system.characteristics.int) {
+          // if (actor.system.characteristics.int) {
+          // delete actor.system.characteristics.int;
+
+          // let newChars = Object.entries(actor.system.characteristics);
+          // newChars.unshift(["int"]);
+          // const tmp = Object.fromEntries(newChars);
+          updateData["system.characteristics.int"] = { value: 0, aging: 0 };
+        }
       }
 
       if (actor.system.mightsFam) {
@@ -903,6 +916,17 @@ export const migrateActorData = async function (actorDoc, actorItems) {
       if (currentFatigue > 0 && actor.system.fatigueCurrent == 0) {
         updateData["system.fatigueCurrent"] = currentFatigue;
       }
+    }
+
+    if (!actor.system.twilight) {
+      updateData["twilight"] = {
+        stage: TWILIGHT_STAGES.NONE,
+        pointsGained: 0,
+        strength: 0,
+        complexity: 0,
+        year: null,
+        season: null
+      };
     }
   }
 

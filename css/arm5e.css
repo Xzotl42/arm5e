@@ -452,6 +452,24 @@ img.clickable:hover {
   cursor: pointer;
 }
 
+/* TEMPORARY, to be removed */
+
+.nav-arrow.clickable2:hover,
+.clickable2:hover,
+.clickable2:focus {
+  color: #000;
+  text-shadow: 0 0 10px rgb(200, 0, 0);
+  cursor: pointer;
+}
+
+img.clickable2:hover {
+  color: #000;
+  box-shadow: 0 0 10px rgb(200, 0, 0);
+  cursor: pointer;
+}
+
+/* END TEMP */
+
 .book-topic:hover,
 .design:hover,
 .design:focus {

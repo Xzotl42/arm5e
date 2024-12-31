@@ -69,6 +69,7 @@ import { CovenantSchema } from "./schemas/covenantSchema.js";
 import { ArM5eCovenantInhabitantSheet } from "./item/item-inhabitantCovenant.js";
 import { ArM5eSupernaturalEffectSheet } from "./item/item-supernaturalEffect-sheet.js";
 import { SupernaturalEffectSchema } from "./schemas/supernaturalEffectSchema.js";
+import { Arm5eSocketHandler } from "./helpers/socket-messages.js";
 // Import { ArtSchema } from "./schemas/artSchema.js";
 
 Hooks.once("i18nInit", async function () {
@@ -100,6 +101,10 @@ Hooks.once("init", async function () {
     : CONFIG.Actor.dataModels;
 
   CONFIG.SC = { SEASONS: SimpleCalendarSeasons };
+
+  // Disabled for now
+  // const mySystem = game.systems.get("arm5e"); //
+  // myPackage.socketHandler = new Arm5eSocketHandler();
 
   registerSettings();
 

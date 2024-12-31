@@ -25,6 +25,15 @@
                     class="icon-Icon_Aging_crisis"></i></a>
               </div>
             {{/if}}
+            {{#if system.twilight.stage}}
+              <div class="flex01" style="padding: 5px;">
+                <a class="twilight-episode clickable" data-year="{{datetime.year}}" data-season="{{datetime.season}}"
+                  data-target="{{system.twilight.strength}}" title="{{system.twilight.tooltip}}">
+                  <img src="systems/arm5e/assets/icons/Icon_Warping.png"
+                    style="width:36px;height:36px; border:none;"></i>
+                </a>
+              </div>
+            {{/if}}
             {{#if devMode}}
               <div class="flex0 padding10" style="width:24px"><a class="migrate" title="Migrate actor"><i
                     class="fas fa-arrow-up"></i></a></div>
@@ -97,7 +106,7 @@
           {{/if}}
         </div>
 
-        {{> "systems/arm5e/templates/actor/parts/actor-characteristics.html" charCfg=@root.config.character.characteristics}}
+        {{> "systems/arm5e/templates/actor/parts/actor-characteristics.html" charac=characList}}
       </div>
     </header>
 

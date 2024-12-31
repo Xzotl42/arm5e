@@ -23,7 +23,7 @@
       <div class="flexrow flex-group-center">
         <label class="resource-label" name="might" value="{{aura}}">{{localize "arm5e.sheet.aura" }} </label>
         <input type="number" name="system.roll.aura" value="{{system.roll.aura}}" data-dtype="Number"
-          class="SelectedAura" />
+          class="SelectedAura resource-focus" />
       </div>
     {{/unless}}
     <div class="flexrow flex-group-center">
@@ -31,7 +31,8 @@
     </div>
     <div class="flexrow flex-group-center">
       <label class="resource-label">{{localize "arm5e.sheet.modifier" }}</label>
-      <input type="number" name="modifier" value="{{modifier}}" data-dtype="Number" class="SelectedModifier" />
+      <input type="number" name="modifier" value="{{modifier}}" data-dtype="Number"
+        class="SelectedModifier resource-focus" />
     </div>
     <div class="flexrow flex-group-center">
       <label class="resource-label">+</label>

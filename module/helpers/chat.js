@@ -61,12 +61,40 @@ export function addChatListeners(message, html, data) {
   const originatorOrGM = game.users.get(game.userId).isGM || actor?.isOwner;
   // Hide the details if you are not the GM or owner
 
+  // let msg = html.find(".chat-message");
+  // var details = html[0].getElementsByClassName("clickable");
   if (originatorOrGM) {
+    // var onClick = function (e) {
+    //   var attribute = this.getAttribute("data-myattribute");
+    //   alert(attribute);
+    // };
+
+    // Array.from(details).forEach((d) => {
+    //   d.click((ev) => {
+    //     $(ev.currentTarget).next().toggleClass("hide");
+    //   });
+    // });
+    // details.each((e) => {
+    //   e.click((ev) => {
+    //     $(ev.currentTarget).next().toggleClass("hide");
+    //   });
+    // });
+    // for (let ii = 0; ii < details.length; ++ii) {
+    //   details[ii].click(() => {
+    //     $(this.currentTarget).next().toggleClass("hide");
+    //   });
+    // }
+
+    // TEMPORARY until chat rework
     html.find(".clickable").click((ev) => {
+      $(ev.currentTarget).next().toggleClass("hide");
+    });
+    html.find(".clickable2").click((ev) => {
       $(ev.currentTarget).next().toggleClass("hide");
     });
   } else {
     html.find(".clickable").remove();
+    html.find(".clickable2").remove();
   }
   // legacy chat messages, ignore them
   if (data.message.flags.arm5e === undefined) {
@@ -132,7 +160,7 @@ export function addChatListeners(message, html, data) {
 
   let img = data.message.flags.arm5e?.roll?.img;
   if (img) {
-    const chatTitle = html.find(".ars-chat-title");
+    const chatTitle = html.find(".chat-icon");
     const newTitle = $(
       `<div class="moreInfo item-image"><img src="${img}" data-id="${data.message.flags.arm5e?.roll?.id}"width="30" height="30"></div>`
     );
@@ -314,29 +342,29 @@ async function chatFailedCasting(actorCaster, roll, message, fatigue) {
   if (showDataOfNPC) {
     flavorForPlayers = flavorForGM;
   }
-  ChatMessage.create({
-    content: "",
-    flavor: flavorForPlayers,
-    speaker: ChatMessage.getSpeaker({
-      actorCaster
-    })
-  });
+
+  await message.update({ flavor: message.flavor + flavorForPlayers });
+  // ChatMessage.create({
+  //   content: "",
+  //   flavor: flavorForPlayers,
+  //   speaker: ChatMessage.getSpeaker({
+  //     actorCaster
+  //   })
+  // });
   // if (flavorForPlayers !== flavorForGM) {
   //   privateMessage("", actorCaster, flavorForGM);
   // }
 }
 
-async function chatContestOfPower({
-  actorCaster,
-  actorTarget,
-  penetrationTotal,
-  magicResistance,
-  total,
-  form
-}) {
+async function chatContestOfPower(
+  message,
+  { actorCaster, actorTarget, penetrationTotal, magicResistance, total, form }
+) {
   const title =
-    '<h2 class="ars-chat-title">' + game.i18n.localize("arm5e.sheet.contestOfMagic") + "</h2>";
-  const messageTotalOfSpell = `${game.i18n.localize("arm5e.sheet.powers")} (${penetrationTotal})`;
+    '<h3 class="ars-chat-title">' + game.i18n.localize("arm5e.sheet.contestOfMagic") + "</h3>";
+  const messageTotalOfSpell = `${game.i18n.localize(
+    "arm5e.sheet.totalPenetration"
+  )} (${penetrationTotal})`;
   const messageMight = magicResistance?.might
     ? `${game.i18n.localize("arm5e.sheet.might")}: (${magicResistance.might})`
     : "";
@@ -408,34 +436,46 @@ async function chatContestOfPower({
   const flavorForGM = `${flavorTotalSpell}${flavorTotalMagicResistance}`;
   const flavorForPlayers = `${flavorForPlayersTotalSpell}${flavorForPlayersTotalMagicResistance}`;
 
-  const content = `<h4 class="dice-total">${flavorForPlayersResult}</h4>`;
-  ChatMessage.create({
-    content,
-    flavor: title + putInFoldableLinkWithAnimation("arm5e.sheet.details", flavorForPlayers),
-    speaker: ChatMessage.getSpeaker({
-      actorCaster
-    }),
-    flags: {
-      arm5e: {
-        actorType: actorCaster.type // for if the actor is deleted
-      }
-    }
+  // const content = `<h4 class="dice-total">${flavorForPlayersResult}</h4>`;
+  message = await message.update({
+    // content: content,
+    flavor:
+      message.flavor +
+      title +
+      flavorForPlayersResult +
+      (flavorForPlayers == ""
+        ? ""
+        : putInFoldableLinkWithAnimation(
+            "arm5e.sheet.details",
+            flavorForPlayers,
+            true,
+            "clickable2"
+          )),
+    "flags.arm5e.actorType": actorCaster.type // for if the actor is deleted
   });
+  // ChatMessage.create({
+  //   content,
+  //   flavor: title + putInFoldableLinkWithAnimation("arm5e.sheet.details", flavorForPlayers),
+  //   speaker: ChatMessage.getSpeaker({
+  //     actorCaster
+  //   }),
+  // flags: {
+  //   arm5e: {
+  //     actorType: actorCaster.type // for if the actor is deleted
+  //   }
+  //   }
+  // });
   if (flavorForPlayers !== flavorForGM) {
-    privateMessage(content, actorCaster, title, flavorForGM, "power");
+    privateMessage(messageTotalWithName, actorCaster, title, flavorForGM, "power");
   }
 }
 
-async function chatContestOfMagic({
-  actorCaster,
-  actorTarget,
-  penetration,
-  magicResistance,
-  total,
-  form
-}) {
+async function chatContestOfMagic(
+  message,
+  { actorCaster, actorTarget, penetration, magicResistance, total, form }
+) {
   const title =
-    '<h2 class="ars-chat-title">' + game.i18n.localize("arm5e.sheet.contestOfMagic") + "</h2>";
+    '<h3 class="ars-chat-title">' + game.i18n.localize("arm5e.sheet.contestOfMagic") + "</h3>";
   const messageTotalOfSpell = `${game.i18n.localize("arm5e.sheet.spellTotal")} (${
     penetration.totalOfSpell
   })`;
@@ -532,17 +572,36 @@ async function chatContestOfMagic({
   const flavorForGM = `${flavorTotalSpell}${flavorTotalPenetration}${flavorTotalMagicResistance}`;
   const flavorForPlayers = `${flavorForPlayersTotalSpell}${flavorForPlayersTotalPenetration}${flavorForPlayersTotalMagicResistance}`;
 
-  const content = `<h4 class="dice-total">${flavorForPlayersResult}</h4>`;
-  ChatMessage.create({
-    content,
-    flavor: title + putInFoldableLinkWithAnimation("arm5e.sheet.details", flavorForPlayers),
-    speaker: ChatMessage.getSpeaker({
-      actorCaster
-    })
+  // const content = `<h4 class="dice-total">${flavorForPlayersResult}</h4>`;
+
+  message = await message.update({
+    // content: content,
+    flavor:
+      message.flavor +
+      title +
+      flavorForPlayersResult +
+      (flavorForPlayers == ""
+        ? ""
+        : putInFoldableLinkWithAnimation(
+            "arm5e.sheet.details",
+            flavorForPlayers,
+            true,
+            "clickable2"
+          )),
+    "flags.arm5e.actorType": actorCaster.type // for if the actor is deleted
   });
+
+  // ChatMessage.create({
+  //   content,
+  //   flavor: title + putInFoldableLinkWithAnimation("arm5e.sheet.details", flavorForPlayers),
+  //   speaker: ChatMessage.getSpeaker({
+  //     actorCaster
+  //   })
+  // });
   if (flavorForPlayers !== flavorForGM) {
     privateMessage(messageTotalWithName, actorCaster, title, flavorForGM, "magic");
   }
+  return message;
 }
 async function privateMessage(content, actor, title, flavor, type = "") {
   // only roll messages can be hidden from roller
@@ -550,8 +609,8 @@ async function privateMessage(content, actor, title, flavor, type = "") {
   // let roll = new Roll("0");
 
   let messageData = {
-    content: content,
-    flavor: title + putInFoldableLinkWithAnimation("arm5e.sheet.details", flavor),
+    content: "",
+    flavor: title + content + putInFoldableLinkWithAnimation("arm5e.sheet.details", flavor),
     speaker: ChatMessage.getSpeaker({
       actor
     }),

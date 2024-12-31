@@ -59,6 +59,10 @@ export class AbilitySchema extends foundry.abstract.DataModel {
     return res;
   }
 
+  getComputedKey() {
+    return this.option != "" ? `${this.key}_${this.option}` : this.key;
+  }
+
   isAlternateArt() {
     return ["altTechnique", "altForm"].includes(this.category);
   }

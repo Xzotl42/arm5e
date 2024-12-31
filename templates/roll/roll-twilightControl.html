@@ -1,0 +1,59 @@
+<form class="{{cssClass}} arm5eRoll" autocomplete="off">
+  {{> "systems/arm5e/templates/roll/parts/roll-header.html" header="Twilight_rolls"}}
+
+  <div class="roll-options">
+    <div class="flexrow flex-group-center">
+      <label class="resource-label">{{localize "arm5e.twilight.control.question" }}</label>
+    </div>
+    <div class="flexrow flex-group-center">
+      <label class="resource-label">{{localize "arm5e.sheet.stamina" }} ({{ system.characteristics.sta.value }})</label>
+    </div>
+    <div class="flexrow flex-group-center">
+      <label class="resource-label">+</label>
+    </div>
+    <div class="flexrow flex-group-center">
+      <label class="resource-label flex03">{{localize "arm5e.sheet.modifier"}}</label>
+      <input type="Number" name="system.roll.modifier" value="{{system.roll.modifier}}" data-dtype="Number"
+        class="SelectedModifier resource-focus" />
+    </div>
+    <div class="flexrow flex-group-center">
+      <label class="resource-label">+</label>
+    </div>
+    <div class="flexrow flex-group-center">
+      <label class="resource-label">{{ lookup system.roll.generic.txtOption 0 }} ({{lookup system.roll.generic.option 0
+        }})</label>
+    </div>
+    {{#unless (eq (lookup system.roll.generic.txtOption 1) "")}}
+      <div class="flexrow flex-group-center">
+        <label class="resource-label">+</label>
+      </div>
+      <div class="flexrow flex-group-center">
+        <label class="resource-label">{{ lookup system.roll.generic.txtOption 1 }} ({{lookup system.roll.generic.option
+          1
+          }})</label>
+      </div>
+    {{/unless}}
+    {{#unless (eq (lookup system.roll.generic.txtOption 2) "")}}
+      <div class="flexrow flex-group-center">
+        <label class="resource-label">+</label>
+      </div>
+      <div class="flexrow flex-group-center">
+        <label class="resource-label">{{ lookup system.roll.generic.txtOption 2 }} ({{lookup system.roll.generic.option
+          2
+          }})</label>
+      </div>
+    {{/unless}}
+    <div class="flexrow flex-group-center">
+      <label class="resource-label"><img src="systems/arm5e/assets/ballSilver.png" title="Penetration" width="24"
+          height="24" style="border :0px" /></label>
+    </div>
+    <div class="flexrow flex-group-center">
+      <label class="resource-label">{{localize "arm5e.generic.versus"}}</label>
+    </div>
+
+    <div class="flexrow flex-group-center">
+      <label class="resource-label" style="font-size: 16pt;">{{ system.twilight.strength}}</label>
+    </div>
+  </div>
+  {{> "systems/arm5e/templates/roll/parts/roll-footer.html" footer="Twilight_rolls" }}
+</form>

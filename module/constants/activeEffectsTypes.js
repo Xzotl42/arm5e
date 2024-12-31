@@ -64,6 +64,24 @@ export default {
         key: "system.stances.gestures.motionless",
         mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
         default: -2
+      },
+      warpingThreshold: {
+        mnemonic: "arm5e.twilight.warpingThreshold",
+        key: "system.bonuses.arts.warpingThreshold",
+        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+        default: 2
+      },
+      spellFatigueThreshold: {
+        mnemonic: "arm5e.sheet.activeEffect.subtypes.spellFatigueThreshold",
+        key: "system.bonuses.arts.spellFatigueThreshold",
+        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+        default: 10
+      },
+      ritualFatigueCancelled: {
+        mnemonic: "arm5e.sheet.activeEffect.subtypes.ritualFatigueCancelled",
+        key: "system.bonuses.arts.ritualFatigueCancelled",
+        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+        default: 0
       }
       // spontDivider: {
       //   mnemonic: "arm5e.sheet.activeEffect.subtypes.spontDivider",
@@ -853,12 +871,19 @@ export default {
         key: "system.features.magicSystem",
         mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
         default: true
-        // },
-        // powers: {
-        //   mnemonic: "arm5e.feature.powers",
-        //   key: "system.features.powers",
-        //   mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-        //   default: true
+      },
+      // },
+      // powers: {
+      //   mnemonic: "arm5e.feature.powers",
+      //   key: "system.features.powers",
+      //   mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+      //   default: true
+
+      inteligentBeast: {
+        mnemonic: "arm5e.feature.inteligentBeast",
+        key: "system.intelligent",
+        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+        default: true
       }
     }
   },

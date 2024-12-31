@@ -5,15 +5,17 @@
   <div class="characteristics grid grid-4col" style="gap: 8px;
 margin-top: -10px;">
 
-    {{#each system.characteristics as |characteristic key|}}
+    {{#each charac as | key|}}
       <div class="characteristic flexrow flex-group-center">
-        {{#with (lookup ../charCfg key)}}
+        {{#with (lookup ../config.character.characteristics key)}}
           <label for="system.characteristics.{{key}}.value" class="resource-label rollable-aging" data-roll="char"
             data-characteristic="{{key}}">{{localize short}}</label>
         {{/with}}
-        <input type="text" name="system.characteristics.{{key}}.value" class="resource-focus agingPoints"
-          value="{{numberFormat characteristic.value decimals=0 sign=true}}" data-dtype="Number"
-          {{{characteristic.ui.style}}} title="{{characteristic.ui.title}}" />
+        {{#with (lookup ../system.characteristics key)}}
+          <input type="text" name="system.characteristics.{{key}}.value" class="resource-focus agingPoints"
+            value="{{numberFormat value decimals=0 sign=true}}" data-dtype="Number" {{{characteristic.ui.style}}}
+            title="{{ui.title}}" />
+        {{/with}}
       </div>
     {{/each}}
   </div>

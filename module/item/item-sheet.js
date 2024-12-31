@@ -232,6 +232,8 @@ export class ArM5eItemSheet extends ItemSheet {
           context.ui.hasOption = true;
           context.ui.optionLocked = context.system.optionLinked ? "readonly" : "";
         }
+
+        // context.selection.characteristics
       } else {
         context.abilityKeysList = CONFIG.ARM5E.LOCALIZED_ABILITIES;
       }

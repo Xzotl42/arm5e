@@ -1,7 +1,5 @@
 import { ArM5eActorSheet } from "../actor/actor-sheet.js";
 import { getConfirmation } from "../constants/ui.js";
-import { stressDie } from "../dice.js";
-import { GroupSchedule } from "./group-schedule.js";
 import { compareDates, nextDate } from "./time.js";
 
 export class MedicalHistory extends FormApplication {

@@ -27,7 +27,7 @@ async function simpleDie(actor, type = "OPTION", callBack) {
   if ((getRollTypeProperties(type).MODE & ROLL_MODES.NO_CONF) != 0) {
     conf = 0;
   }
-  let chatTitle = '<h2 class="ars-chat-title">' + rollInfo.label + "</h2>";
+  let chatTitle = '<h2 class="ars-chat-title chat-icon">' + rollInfo.label + "</h2>";
   let formula = "1D10+" + rollInfo.formula;
   if (rollInfo.magic.divide > 1) {
     formula = "(1D10+" + rollInfo.formula + ")/" + rollInfo.magic.divide;
@@ -134,7 +134,7 @@ async function stressDie(actor, type = "OPTION", modes = 0, callBack = undefined
   let flavorTxt = rollInfo.flavor.length ? `<p>${rollInfo.flavor}</p>` : "";
   flavorTxt += `<p>${game.i18n.localize("arm5e.dialog.button.stressdie")}:</p>`;
   let details = putInFoldableLinkWithAnimation("arm5e.sheet.details", flavorTxt + rollInfo.details);
-  let chatTitle = `<h2 class="ars-chat-title">${rollInfo.label} </h2>`;
+  let chatTitle = `<h2 class="ars-chat-title chat-icon">${rollInfo.label} </h2>`;
   let dieRoll = await explodingRoll(actor, rollOptions, botchNum);
 
   let botchCheck = 0;
@@ -287,9 +287,7 @@ async function getRollFormula(actor) {
         msg = newLine(msg);
         msg += game.i18n.localize("arm5e.sheet.mastery") + ` (${rollInfo.magic.masteryScore})`;
       }
-    }
-
-    if (rollInfo.type == "supernatural") {
+    } else if (rollInfo.type == "supernatural") {
       let valueTech = 0;
       let valueForm = 0;
       valueTech = parseInt(rollInfo.magic.technique.score);
@@ -394,14 +392,17 @@ async function getRollFormula(actor) {
       //   msg = newLine(msg);
       //   msg += game.i18n.localize("arm5e.sheet.mastery") + ` (${rollInfo.magic.masteryScore})`;
       // }
-    }
-
-    if (rollInfo.type == "power") {
+    } else if (rollInfo.type == "power") {
       msg += game.i18n.format("arm5e.sheet.powerCost", {
         might: actorSystemData.might.value,
         cost: rollInfo.power.cost
       });
       total += actorSystemData.might.value - 5 * rollInfo.power.cost;
+    } else if (rollInfo.type == "twilight_strength") {
+      msg += `${game.i18n.localize("arm5e.twilight.warpingPoints")} (${
+        rollInfo.twilight.warpingPts
+      })`;
+      total += rollInfo.twilight.warpingPts;
     }
 
     if (rollInfo.characteristic != "") {
@@ -435,7 +436,7 @@ async function getRollFormula(actor) {
       total = parseInt(total) + parseInt(value);
       msg = newLine(msg);
       msg += "Aura";
-      msg += " (" + value + ")<br/>"; // Remove if not visible? Players can still do math...
+      msg += " (" + value + ")"; // Remove if not visible? Players can still do math...
     }
 
     if (rollInfo.magic.ritual === true) {
@@ -459,7 +460,7 @@ async function getRollFormula(actor) {
     }
     if (rollInfo.modifier != 0) {
       value = rollInfo.modifier;
-      total = parseInt(total) + parseInt(value);
+      total += value;
       msg = newLine(msg);
       msg += game.i18n.localize("arm5e.sheet.modifier");
       msg += " (" + value + ")";
@@ -845,7 +846,7 @@ async function noRoll(actor, mode, callback, roll) {
   //console.log(actorData);
   let details = putInFoldableLinkWithAnimation("arm5e.sheet.details", rollInfo.details);
 
-  let chatTitle = '<h2 class="ars-chat-title">' + rollInfo.label + "</h2>";
+  let chatTitle = '<h2 class="ars-chat-title chat-icon">' + rollInfo.label + "</h2>";
 
   const flags = {
     arm5e: {
@@ -887,6 +888,7 @@ async function noRoll(actor, mode, callback, roll) {
   }
   actor.rollInfo.reset();
 }
+
 async function changeMight(actor, roll, message) {
   await actor.changeMight(-actor.rollInfo.power.cost);
 }

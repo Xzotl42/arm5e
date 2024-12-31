@@ -276,7 +276,15 @@ export const ABILITIES_DEFAULT_ICONS = {
   }
 };
 
-export async function getConfirmation(title, question, flavor = "Neutral", info1, info2) {
+export async function getConfirmation(
+  title,
+  question,
+  flavor = "Neutral",
+  info1,
+  info2,
+  yesLabel = "arm5e.dialog.button.yes",
+  noLabel = "arm5e.dialog.button.no"
+) {
   const dialogData = {
     question: question,
     flavor: flavor,
@@ -295,12 +303,12 @@ export async function getConfirmation(title, question, flavor = "Neutral", info1
         buttons: {
           yes: {
             icon: "<i class='fas fa-check'></i>",
-            label: game.i18n.localize("arm5e.dialog.button.yes"),
+            label: game.i18n.localize(yesLabel),
             callback: () => resolve(true)
           },
           no: {
             icon: "<i class='fas fa-times'></i>",
-            label: game.i18n.localize("arm5e.dialog.button.no"),
+            label: game.i18n.localize(noLabel),
             callback: () => resolve(false)
           }
         },

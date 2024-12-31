@@ -195,7 +195,8 @@ export async function quickVitals(tokenName, actor) {
 }
 
 export async function combatDamage(selector, actor) {
-  const title = '<h2 class="ars-chat-title">' + game.i18n.localize("arm5e.sheet.damage") + " </h2>";
+  const title =
+    '<h2 class="ars-chat-title chat-icon">' + game.i18n.localize("arm5e.sheet.damage") + " </h2>";
   let damage = parseInt(selector.find('input[name$="modifier"]').val());
   const messageModifier = `${game.i18n.localize("arm5e.sheet.modifier")} (${damage})`;
   let details = "";
@@ -220,7 +221,8 @@ export async function combatDamage(selector, actor) {
 
 // WIP
 export async function nonCombatDamage(selector, actor) {
-  const title = '<h2 class="ars-chat-title">' + game.i18n.localize("arm5e.sheet.damage") + " </h2>";
+  const title =
+    '<h2 class="ars-chat-title chat-icon">' + game.i18n.localize("arm5e.sheet.damage") + " </h2>";
   let damage = parseInt(selector.find('input[name$="modifier"]').val());
   const messageModifier = `${game.i18n.localize("arm5e.sheet.modifier")} (${damage})`;
   let details = "";

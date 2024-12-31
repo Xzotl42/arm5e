@@ -72,10 +72,10 @@
         <input type="checkbox" {{noSelect}} name="system.applyFocus" {{checked system.applyFocus}} />
       </div>
     {{/if}} {{/if}}
-  <div class="resource flex-group-center">
-    <label class="header-label"><b>{{localize "arm5e.spell.targets.baseSize.label" }}: </b></label>
-    {{#with (lookup config.magic.forms system.form.value)}}
-      <label class="header-label">{{localize baseSize}}</label>
-    {{/with}}
-  </div>
+</div>
+<div class="resource flex-group-center">
+  <label class="header-label"><b>{{localize "arm5e.spell.targets.baseSize.label" }}: </b></label>
+  {{#with (lookup config.magic.forms system.form.value)}}
+    <label class="label-light">{{localize baseSize}}</label>
+  {{/with}}
 </div>
