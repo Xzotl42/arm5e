@@ -277,6 +277,7 @@ export async function applyTwilightStrength(actor, roll, message) {
   updateData["system.twilight.year"] = actor.rollInfo.environment.year;
   updateData["system.twilight.season"] = actor.rollInfo.environment.season;
   updateData["system.twilight.strength"] = roll.total;
+  updateData["system.twilight.enigmaSpec"] = actor.rollInfo.twilight.enigma.specApply;
   updateData["system.twilight.pointsGained"] = actor.rollInfo.twilight.warpingPts;
   updateData["system.twilight.stage"] = TWILIGHT_STAGES.PENDING_CONTROL;
   await actor.update(updateData, {});
@@ -381,6 +382,7 @@ export async function twilightUnderstanding(actor, roll, message) {
   } else if (roll.total >= actor.system.twilight.complexity) {
     let delta =
       roll.total - actor.rollInfo.twilight.enigma.score - actor.system.twilight.complexity;
+    if (actor.system.twilight.enigmaSpec) delta++;
     let warpingScoreMod = delta < 0 ? 0 : delta;
     const dur = await TwilightEpisode.getDuration(
       actor.system.warping.finalScore - warpingScoreMod
@@ -420,6 +422,8 @@ export async function resetTwilight(actor, roll, message) {
   updateData["system.twilight.strength"] = 0;
   updateData["system.twilight.complexity"] = 0;
   updateData["system.twilight.pointsGained"] = 0;
+  updateData["system.twilight.enigmaSpec"] = false;
+  updateData["system.twilight.concentrationSpec"] = false;
   updateData["system.twilight.stage"] = TWILIGHT_STAGES.NONE;
   await actor.update(updateData, {});
 }

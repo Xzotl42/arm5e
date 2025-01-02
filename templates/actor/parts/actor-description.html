@@ -166,15 +166,24 @@
 {{#if system.isCharacter}}
   <div class="flexcol grid grid-2col">
     <div class="flex-group-left padding12 backSection">
-      {{#if system.isMagus}}
-        <a class="twilight-episode clickable" title="{{system.twilight.tooltip}}" data-year="{{datetime.year}}"
-          data-season="{{datetime.season}}" style="font-size: 16pt;">
-          <img src="systems/arm5e/assets/icons/Icon_Warping.png" style="width:25px; border:none;"></i>
-        </a>
-      {{/if}}
-      <label class="smallTitle">
-        {{localize "arm5e.sheet.warping"}}
-      </label>
+      <div class="flexrow marginbot6 margintop6">
+        {{#if system.isMagus}}
+          <div class="flex01">
+            <a class="twilight-episode clickable" title="{{system.twilight.tooltip}}" data-year="{{datetime.year}}"
+              data-season="{{datetime.season}}" style="font-size: 16pt;">
+              <img class="twilight-icon" src="systems/arm5e/assets/icons/Icon_Warping.png"
+                style="width:25px; border:none;"></i>
+              <div class="twilight-icon"
+                style="position: relative; top: -30px;left: 9px; font-size: 12pt; font-weight: bold">
+                {{system.twilight.stage}}
+              </div>
+            </a>
+          </div>
+        {{/if}}
+        <label class="smallTitle">
+          {{localize "arm5e.sheet.warping"}}
+        </label>
+      </div>
       <div class="flexrow marginbot6 margintop6">
         <label for="system.warping.finalScore" class="bold">{{localize "arm5e.sheet.score"}}</label>
         <span class="marginbot6" style="margin-right: 24px"><input type="number" name="system.warping.finalScore"

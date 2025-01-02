@@ -58,10 +58,9 @@
     <div class="flexrow flex-group-center">
       <label class="resource-label">+</label>
     </div>
-    <div class="flexrow flex-group-center">
-      <label class="header-label flex05 ">{{localize "arm5e.spell.applyFocus" }}</label>
-      <input type="checkbox" name="system.applyFocus" {{checked system.roll.magic.focus}}
-        class="SelectedFocus flex01" />
+    <div class="resource flexrow flex-group-center">
+      <label class="header-label" style="flex: 0.6;">{{localize "arm5e.spell.applyFocus" }}</label>
+      <input type="checkbox" name="system.applyFocus" {{checked system.roll.focus}} class="SelectedFocus" />
     </div>
 
     {{#if (eq system.roll.magic.ritual true)}}

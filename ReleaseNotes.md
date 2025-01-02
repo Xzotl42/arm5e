@@ -1,4 +1,4 @@
-## 2.3.2.13, Quendalon, lost in the forest for a year
+## 2.3.2.14, Quendalon, lost in the forest for a year
 
 ### Features & changes
 
@@ -20,6 +20,7 @@
 - A wound is properly created in case of ritual major failure
 - Artes liberales and philosophy labels are again displayed properly when casting rituals.
 - Aura modifier of actor with Might no longer raises an error.
+- Roll that were supposed to not be impacted by physical condition (wounds, fatigue) sometime were
 
 ## 2.3.2.12, Quendalon, lost in the forest since half a year
 

@@ -6,7 +6,8 @@
       <label class="resource-label">{{localize "arm5e.twilight.strength" }}</label>
     </div>
     <div class="flexrow flex-group-center">
-      <label class="resource-label">{{localize "arm5e.sheet.stamina" }} ({{ system.characteristics.sta.value }})</label>
+      <label class="resource-label">{{ lookup system.roll.generic.txtOption 0 }} ({{lookup system.roll.generic.option 0
+        }})</label>
     </div>
     <div class="flexrow flex-group-center">
       <label class="resource-label">+</label>
@@ -20,20 +21,10 @@
       <label class="resource-label">+</label>
     </div>
     <div class="flexrow flex-group-center">
-      <label class="resource-label">{{ lookup system.roll.generic.txtOption 0 }} ({{lookup system.roll.generic.option 0
+      <label class="resource-label">{{ lookup system.roll.generic.txtOption 1 }} ({{lookup system.roll.generic.option 1
         }})</label>
     </div>
-    {{#unless (eq (lookup system.roll.generic.txtOption 1) "")}}
-      <div class="flexrow flex-group-center">
-        <label class="resource-label">+</label>
-      </div>
-      <div class="flexrow flex-group-center">
-        <label class="resource-label">{{ lookup system.roll.generic.txtOption 1 }} ({{lookup system.roll.generic.option
-          1
-          }})</label>
-      </div>
-    {{/unless}}
-    {{#unless (eq (lookup system.roll.generic.txtOption 2) "")}}
+    {{#if system.roll.twilight.enigma.score}}
       <div class="flexrow flex-group-center">
         <label class="resource-label">+</label>
       </div>
@@ -42,7 +33,22 @@
           2
           }})</label>
       </div>
-    {{/unless}}
+      <div class="flexrow flex-group-center">
+        <label class="resource-label">{{localize "arm5e.sheet.speciality"}} ({{
+          system.roll.twilight.enigma.speciality}})</label>
+        <input type="checkbox" class="enigmaSpeciality" name="system.roll.twilight.enigma.specApply" {{checked
+          system.roll.twilight.enigma.specApply}} />
+      </div>
+    {{/if}}
+    <div class="flexrow flex-group-center">
+      <label class="resource-label">+</label>
+    </div>
+    <div class=" flexrow flex-group-center">
+      <label class="resource-label flex03 " style="padding-right: 10px;">{{localize "arm5e.sheet.levelAura"}} </label>
+      <input type="number" name="system.roll.environment.aura.modifier"
+        value="{{system.roll.environment.aura.modifier}}" data-dtype="Number"
+        class="SelectedAura flex02 resource-focus" />
+    </div>
   </div>
   {{> "systems/arm5e/templates/roll/parts/roll-footer.html" footer="Twilight_rolls" }}
 </form>
