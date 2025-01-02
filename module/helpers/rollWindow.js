@@ -135,8 +135,7 @@ const ROLL_PROPERTIES = {
     MODE: 61, // STRESS + NO_BOTCH + NO_CONF + UNCONSCIOUS + PRIVATE
     MODIFIERS: 0,
     TITLE: "arm5e.twilight.episode",
-    CALLBACK: applyTwilightStrength,
-    CANCEL_CALLBACK: resetTwilight
+    CALLBACK: applyTwilightStrength
   },
   TWILIGHT_COMPLEXITY: {
     VAL: "twilight_complexity",
@@ -148,7 +147,7 @@ const ROLL_PROPERTIES = {
   TWILIGHT_UNDERSTANDING: {
     VAL: "twilight_understanding",
     MODE: 25, // STRESS  + NO_CONF + UNCONSCIOUS
-    MODIFIERS: 0,
+    MODIFIERS: 1,
     TITLE: "arm5e.twilight.episode",
     CALLBACK: twilightUnderstanding
   },
@@ -718,6 +717,11 @@ export function getFormData(html, actor) {
   find = html.find(".abilitySpeciality");
   if (find.length > 0) {
     actor.rollInfo.ability.specApply = find[0].checked;
+  }
+
+  find = html.find(".enigmaSpeciality");
+  if (find.length > 0) {
+    actor.rollInfo.twilight.enigma.specApply = find[0].checked;
   }
 
   find = html.find(".SelectedTechnique");

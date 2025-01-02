@@ -36,7 +36,7 @@ export class ArM5eRollInfo {
 
     this.rollProperties = getRollTypeProperties(this.type);
 
-    if (this.rollProperties.MODE & ROLL_MODIFIERS.PHYSICAL) {
+    if (this.rollProperties.MODIFIERS & ROLL_MODIFIERS.PHYSICAL) {
       this.physicalCondition = true;
     } else {
       this.physicalCondition = false;
@@ -251,23 +251,29 @@ export class ArM5eRollInfo {
         this.environment.aura = Aura.fromActor(this._actor);
         this.environment.aura.modifier = this.environment.aura.level;
         this.label = `${game.i18n.localize("arm5e.twilight.strength")}`;
+        this.setGenericField(
+          game.i18n.localize("arm5e.twilight.warpingScore"),
+          this._actor.system.warping.finalScore ?? 0,
+          1,
+          "+"
+        );
         this.twilight = {
           warpingPts: parseInt(dataset.warpingPts ?? 2),
           enigma: this._actor.getAbilityStats("enigma")
         };
+        this.twilight.enigma.specApply = false;
         this.setGenericField(
-          game.i18n.localize("arm5e.sheet.warping"),
+          game.i18n.localize("arm5e.twilight.warpingPoints"),
           dataset.warpingPts ?? 2,
-          1,
+          2,
           "+"
         );
         this.setGenericField(
           game.i18n.localize("arm5e.skill.mystery.enigma"),
           this.twilight.enigma.score,
-          2,
+          3,
           "+"
         );
-        // this.setGenericField(game.i18n.localize("arm5e.sheet.levelAura"), aura.level, 3, "+");
 
         break;
       case ROLL_PROPERTIES.TWILIGHT_COMPLEXITY.VAL:
@@ -282,8 +288,10 @@ export class ArM5eRollInfo {
         break;
 
       case ROLL_PROPERTIES.TWILIGHT_UNDERSTANDING.VAL:
+        this.characteristic = "int";
         this.label = `${game.i18n.localize("arm5e.twilight.comprehension.roll")}`;
         this.twilight = {
+          warpingPts: parseInt(dataset.warpingPts ?? 2),
           enigma: this._actor.getAbilityStats("enigma")
         };
         this.setGenericField(
@@ -587,7 +595,7 @@ export class ArM5eRollInfo {
     this.twilight = {
       warpingPts: 0,
       concentration: { score: 0, spec: "" },
-      enigma: { score: 0, spec: "" },
+      enigma: { score: 0, spec: "", specApply: false },
       strength: 0,
       complexity: 0
     };

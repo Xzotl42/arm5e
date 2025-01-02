@@ -483,8 +483,13 @@ async function getRollFormula(actor) {
     }
     if (rollInfo.hasGenericField(1)) {
       total += rollInfo.getGenericFieldValue(1);
-      // msg = newLine(msg);
       msg += rollInfo.getGenericFieldDetails(1);
+      if (rollInfo.type == ROLL_PROPERTIES.TWILIGHT_UNDERSTANDING.VAL) {
+        if (actorSystemData.twilight.enigmaSpec) {
+          total++;
+          msg += ` (+1 ${rollInfo.twilight.enigma.speciality}) <br/>`;
+        }
+      }
     }
     if (rollInfo.hasGenericField(2)) {
       // msg = newLine(msg);
@@ -506,8 +511,13 @@ async function getRollFormula(actor) {
     }
     if (rollInfo.hasGenericField(3)) {
       total += rollInfo.getGenericFieldValue(3);
-      // msg = newLine(msg);
       msg += rollInfo.getGenericFieldDetails(3);
+      if (rollInfo.type == ROLL_PROPERTIES.TWILIGHT_STRENGTH.VAL) {
+        if (rollInfo.twilight.enigma.specApply) {
+          total++;
+          msg += ` (+1 ${rollInfo.twilight.enigma.speciality}) <br/>`;
+        }
+      }
     }
     if (rollInfo.hasGenericField(4)) {
       total += rollInfo.getGenericFieldValue(4);

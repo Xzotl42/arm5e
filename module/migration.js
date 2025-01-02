@@ -918,12 +918,14 @@ export const migrateActorData = async function (actorDoc, actorItems) {
       }
     }
 
-    if (!actor.system.twilight) {
+    if (!actor.system.twilight && actor.type !== "beast") {
       updateData["twilight"] = {
         stage: TWILIGHT_STAGES.NONE,
         pointsGained: 0,
         strength: 0,
         complexity: 0,
+        enigmaSpec: false,
+        concentrationSpec: false,
         year: null,
         season: null
       };

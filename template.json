@@ -80,6 +80,8 @@
           "pointsGained": 0,
           "strength": 0,
           "complexity": 0,
+          "enigmaSpec": false,
+          "concentrationSpec": false,
           "control": null,
           "year": null,
           "season": null

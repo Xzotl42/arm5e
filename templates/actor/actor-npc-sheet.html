@@ -28,10 +28,15 @@
             {{#if system.twilight.stage}}
               <div class="flex01" style="padding: 5px;">
                 <a class="twilight-episode clickable" data-year="{{datetime.year}}" data-season="{{datetime.season}}"
-                  data-target="{{system.twilight.strength}}" title="{{system.twilight.tooltip}}">
+                  data-target="{{system.twilight.strength}}" title="{{system.twilight.tooltip}}" style="display: block;
+                height: fit-content; width: fit-content;">
                   <img src="systems/arm5e/assets/icons/Icon_Warping.png"
                     style="width:36px;height:36px; border:none;"></i>
                 </a>
+                <div class="twilight-icon"
+                  style="position: relative; top: -38px;left: 14px; font-size: 15pt; font-weight: bold">
+                  {{system.twilight.stage}}
+                </div>
               </div>
             {{/if}}
             {{#if devMode}}
