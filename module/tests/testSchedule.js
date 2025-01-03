@@ -38,7 +38,8 @@ const results = {
     minorEnchantment: false,
     chargedItem: false,
     investigateItem: false,
-    copying: false
+    copying: false,
+    twilight: false
   },
   resource: {
     none: false,
@@ -65,7 +66,8 @@ const results = {
     minorEnchantment: false,
     chargedItem: false,
     investigateItem: false,
-    copying: false
+    copying: false,
+    twilight: false
   },
   adventuring: {
     none: false,
@@ -92,7 +94,8 @@ const results = {
     minorEnchantment: false,
     chargedItem: false,
     investigateItem: false,
-    copying: false
+    copying: false,
+    twilight: false
   },
   exposure: {
     none: false,
@@ -119,7 +122,8 @@ const results = {
     minorEnchantment: false,
     chargedItem: false,
     investigateItem: false,
-    copying: false
+    copying: false,
+    twilight: false
   },
   practice: {
     none: false,
@@ -146,7 +150,8 @@ const results = {
     minorEnchantment: true,
     chargedItem: true,
     investigateItem: true,
-    copying: true
+    copying: true,
+    twilight: false
   },
   training: {
     none: false,
@@ -173,7 +178,8 @@ const results = {
     minorEnchantment: true,
     chargedItem: true,
     investigateItem: true,
-    copying: true
+    copying: true,
+    twilight: false
   },
   teaching: {
     none: false,
@@ -200,7 +206,8 @@ const results = {
     minorEnchantment: true,
     chargedItem: true,
     investigateItem: true,
-    copying: true
+    copying: true,
+    twilight: false
   },
   hermeticApp: {
     none: false,
@@ -227,7 +234,8 @@ const results = {
     minorEnchantment: true,
     chargedItem: true,
     investigateItem: true,
-    copying: true
+    copying: true,
+    twilight: false
   },
   childhood: {
     none: false,
@@ -254,7 +262,8 @@ const results = {
     minorEnchantment: true,
     chargedItem: true,
     investigateItem: true,
-    copying: true
+    copying: true,
+    twilight: false
   },
   laterLife: {
     none: false,
@@ -281,7 +290,8 @@ const results = {
     minorEnchantment: true,
     chargedItem: true,
     investigateItem: true,
-    copying: true
+    copying: true,
+    twilight: false
   },
   laterLifeMagi: {
     none: false,
@@ -308,7 +318,8 @@ const results = {
     minorEnchantment: true,
     chargedItem: true,
     investigateItem: true,
-    copying: true
+    copying: true,
+    twilight: false
   },
   reading: {
     none: false,
@@ -335,7 +346,8 @@ const results = {
     minorEnchantment: true,
     chargedItem: true,
     investigateItem: true,
-    copying: true
+    copying: true,
+    twilight: false
   },
   writing: {
     none: false,
@@ -362,7 +374,8 @@ const results = {
     minorEnchantment: true,
     chargedItem: true,
     investigateItem: true,
-    copying: true
+    copying: true,
+    twilight: false
   },
   learnSpell: {
     none: false,
@@ -389,7 +402,8 @@ const results = {
     minorEnchantment: true,
     chargedItem: true,
     investigateItem: true,
-    copying: true
+    copying: true,
+    twilight: false
   },
   inventSpell: {
     none: false,
@@ -416,7 +430,8 @@ const results = {
     minorEnchantment: true,
     chargedItem: true,
     investigateItem: true,
-    copying: true
+    copying: true,
+    twilight: false
   },
   visExtraction: {
     none: false,
@@ -443,7 +458,8 @@ const results = {
     minorEnchantment: true,
     chargedItem: true,
     investigateItem: true,
-    copying: true
+    copying: true,
+    twilight: false
   },
   lab: {
     none: false,
@@ -470,7 +486,8 @@ const results = {
     minorEnchantment: true,
     chargedItem: true,
     investigateItem: true,
-    copying: true
+    copying: true,
+    twilight: false
   },
   aging: {
     none: false,
@@ -497,7 +514,8 @@ const results = {
     minorEnchantment: false,
     chargedItem: false,
     investigateItem: false,
-    copying: false
+    copying: false,
+    twilight: false
   },
   visStudy: {
     none: false,
@@ -524,7 +542,8 @@ const results = {
     minorEnchantment: true,
     chargedItem: true,
     investigateItem: true,
-    copying: true
+    copying: true,
+    twilight: false
   },
   recovery: {
     none: false,
@@ -551,7 +570,8 @@ const results = {
     minorEnchantment: false,
     chargedItem: false,
     investigateItem: false,
-    copying: false
+    copying: false,
+    twilight: false
   },
   longevityRitual: {
     none: false,
@@ -578,7 +598,8 @@ const results = {
     minorEnchantment: true,
     chargedItem: true,
     investigateItem: true,
-    copying: true
+    copying: true,
+    twilight: false
   },
   minorEnchantment: {
     none: false,
@@ -605,7 +626,8 @@ const results = {
     minorEnchantment: true,
     chargedItem: true,
     investigateItem: true,
-    copying: true
+    copying: true,
+    twilight: false
   },
   chargedItem: {
     none: false,
@@ -632,7 +654,8 @@ const results = {
     minorEnchantment: true,
     chargedItem: true,
     investigateItem: true,
-    copying: true
+    copying: true,
+    twilight: false
   },
   investigateItem: {
     none: false,
@@ -659,7 +682,8 @@ const results = {
     minorEnchantment: true,
     chargedItem: true,
     investigateItem: true,
-    copying: true
+    copying: true,
+    twilight: false
   },
   copying: {
     none: false,
@@ -686,7 +710,36 @@ const results = {
     minorEnchantment: true,
     chargedItem: true,
     investigateItem: true,
-    copying: true
+    copying: true,
+    twilight: false
+  },
+  twilight: {
+    none: false,
+    adventuring: false,
+    resource: false,
+    exposure: false,
+    practice: false,
+    training: false,
+    teaching: false,
+    hermeticApp: false,
+    childhood: false,
+    laterLife: false,
+    laterLifeMagi: false,
+    reading: false,
+    writing: false,
+    learnSpell: false,
+    inventSpell: false,
+    visExtraction: false,
+    lab: false,
+    aging: false,
+    visStudy: false,
+    recovery: false,
+    longevityRitual: false,
+    minorEnchantment: false,
+    chargedItem: false,
+    investigateItem: false,
+    copying: false,
+    twilight: false
   }
 };
 export function registerDiaryTesting(quench) {

@@ -375,7 +375,7 @@ export async function twilightUnderstanding(actor, roll, message) {
     );
     diaryUpdate["system.duration"] = 1;
 
-    diaryUpdate["system.description"] = `${item.system.description}`;
+    diaryUpdate["system.description"] = `${diary.system.description}`;
 
     msgUpdate["flavor"] =
       message.flavor + game.i18n.localize("arm5e.twilight.chat.botchedUnderstanding");

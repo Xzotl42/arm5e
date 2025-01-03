@@ -15,57 +15,53 @@
               style="padding-top: 4px; padding-left: 24px">{{localize "arm5e.sheet.saga"}}</label>
             <input name="system.saga" type="text" value="{{system.saga}}" data-dtype="String" style="flex: 0 0 120px" />
           </span>
-          <span class="covenantname flexrow" style="padding-top: 4px">
-            <label for="system.narrator" class="header-label"
-              style="padding-top: 4px; padding-left: 24px">{{localize "arm5e.sheet.narrator"}}</label>
-            <input name="system.narrator" type="text" value="{{system.narrator}}" data-dtype="String"
-              style="flex: 0 0 100px" />
-          </span>
-        </div>
-
-        <div class="resources flexrow flex-between">
           <span class="covenantname flexrow">
             <label for="system.tribunal" class="header-label"
               style="padding-top: 4px; padding-left: 24px">{{localize "arm5e.sheet.tribunal"}}</label>
             <input name="system.tribunal" type="text" value="{{system.tribunal}}" data-dtype="String"
               style="flex: 0 0 120px" />
           </span>
+        </div>
+        <div class="resources flexrow flex-between">
           <span class="covenantname flexrow" style="padding-top: 4px">
-            <label for="system.aegisCovenant" class="header-label"
-              style="padding-top: 4px; padding-left: 24px">{{localize "arm5e.sheet.aegisCovenant"}}</label>
-            <input name="system.aegisCovenant" type="number" value="{{system.aegisCovenant}}" data-dtype="Number"
+            <label for="system.narrator" class="header-label"
+              style="padding-top: 4px; padding-left: 24px">{{localize "arm5e.sheet.narrator"}}</label>
+            <input name="system.narrator" type="text" value="{{system.narrator}}" data-dtype="String"
               style="flex: 0 0 100px" />
           </span>
-        </div>
-
-        <div class="resources flexrow flex-between">
           <span class="covenantname flexrow">
             <label for="system.sagaType" class="header-label"
               style="padding-top: 4px; padding-left: 24px">{{localize "arm5e.sheet.sagaType"}}</label>
             <input name="system.sagaType" type="text" value="{{system.sagaType}}" data-dtype="String"
               style="flex: 0 0 120px" />
           </span>
+        </div>
+        <div class="resources flexrow flex-between">
           <span class="covenantname flexrow" style="padding-top: 4px">
             <label for="system.foundationYear" class="header-label"
               style="padding-top: 4px; padding-left: 24px">{{localize "arm5e.sheet.foundationYear"}}</label>
             <input class="flex08" name="system.foundationYear" type="number" value="{{system.foundationYear}}"
-              data-dtype="Number" style="flex: 0 0 100px" />
+              data-dtype="Number" style="text-align: center;flex: 0 0 65px" />
           </span>
-        </div>
-
-        <div class="resources flexrow flex-between">
           <span class="covenantname flexrow" style="padding-top: 4px">
             <label for="system.datetime.year" class="header-label"
               style="padding-top: 4px; padding-left: 24px">{{localize "arm5e.sheet.currentYear"}}</label>
             <input class="flex08" name="year" type="number" value="{{datetime.year}}" readonly data-dtype="Number"
-              style="flex: 0 0 120px" />
+              style="flex: 0 0 65px; text-align: center;" />
+          </span>
+        </div>
+        <div class="resources flexrow flex-between">
+          <span class="covenantname flexrow" style="padding-top: 4px">
+            <label for="system.aegisCovenant" class="header-label"
+              style="padding-top: 4px; padding-left: 24px">{{localize "arm5e.sheet.aegisCovenant"}}</label>
+            <input name="system.aegisCovenant" type="number" value="{{system.aegisCovenant}}" data-dtype="Number"
+              style="text-align: center;flex: 0 0 65px" />
           </span>
           <span class="covenantname flexrow" style="padding-top: 4px">
-            <label for="system.season" class="header-label"
-              style="padding-top: 4px; padding-left: 24px">{{localize "arm5e.sheet.season"}}</label>
-            <select name="system.season" class="select-season" data-type="String" style="flex: 0 0 100px">
-              {{selectOptions config.seasons selected=system.season labelAttr="label" localize=true}}
-            </select>
+            <label for="system.aegisPenetration" class="header-label"
+              style="padding-top: 4px; padding-left: 24px">{{localize "arm5e.sheet.aegisPenetration"}}</label>
+            <input class="flex04 resource-focus" name="system.aegisPenetration" type="number"
+              value="{{system.aegisPenetration}}" data-dtype="Number" style="flex: 0 0 65px" />
           </span>
         </div>
 
@@ -87,16 +83,17 @@
         <div class="resources flexrow flex-between">
           <span class="covenantname flexrow" style="padding-top: 4px">
             <label for="system.scene.id" class="header-label" style="padding-top: 4px; padding-left: 24px">Scene</label>
-            <select name="system.scene.id" data-type="String" style="flex: 0 0 60px" {{#unless
+            <select name="system.scene.id" data-type="String" style="flex: 0 0 65px" {{#unless
               (isGM)}}disabled{{/unless}}>
               {{selectOptions scenes selected=system.scene.id labelAttr="name" nameAttr="id" valueAttr="id" blank=""}}
             </select>
           </span>
           <span class="covenantname flexrow" style="padding-top: 4px">
-            <label for="system.levelsRegio" class="header-label"
-              style="padding-top: 4px; padding-left: 24px">{{localize "arm5e.sheet.levelsRegio"}}</label>
-            <input class="flex04 resource-focus" name="system.levelsRegio" type="number" value="{{system.levelsRegio}}"
-              data-dtype="Number" style="flex: 0 0 40px" />
+            <label for="system.season" class="header-label"
+              style="padding-top: 4px; padding-left: 24px">{{localize "arm5e.sheet.season"}}</label>
+            <select name="system.season" class="select-season" data-type="String" style="flex: 0 0 65px">
+              {{selectOptions config.seasons selected=system.season labelAttr="label" localize=true}}
+            </select>
           </span>
         </div>
       </div>

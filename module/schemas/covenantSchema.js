@@ -88,8 +88,8 @@ export class CovenantSchema extends foundry.abstract.DataModel {
         initial: 1200,
         step: 1
       }),
-      levelsRegio: basicIntegerField(),
-      aegisCovenant: basicIntegerField(),
+      levelsRegio: basicIntegerField(), // DEPRECATED
+      // aegisCovenant: basicIntegerField(),
       modifiersLife: new fields.SchemaField({
         magi: basicIntegerField(1),
         mundane: basicIntegerField(0, -10)
