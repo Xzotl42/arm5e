@@ -5,7 +5,7 @@ export class AuraConfig extends FormApplication {
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["arm5e-dialog", "sheet", "aura-config", "dialog"],
-      title: "Aura Config",
+      title: game.i18n.localize("arm5e.sheet.auraCfg"),
       template: "systems/arm5e/templates/generic/aura-config.html",
       width: "320",
       height: "475"

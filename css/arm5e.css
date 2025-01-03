@@ -780,6 +780,7 @@ img.clickable2:hover {
   background-repeat: repeat-y;
   background-size: contain;
   font-family: "bookAntiquaBold";
+  overflow: hidden;
 }
 
 .pickAmount.arm5eChooser,
@@ -1185,9 +1186,13 @@ input[type="time"] {
   font-family: "bookAntiquaBold";
   font-size: 9pt;
 }
-
 .arm5e .editor-content {
   font-family: "bookAntiqua";
+  /* height: fit-content; */
+}
+.arm5e .editor-container .editor-content {
+  /* font-family: "bookAntiqua"; */
+  height: fit-content;
 }
 
 .arm5e .mainPlayer {
@@ -1634,7 +1639,7 @@ div[class*="foldable-section"] {
 
 .arm5e .sheet-body .editor,
 .arm5e .sheet-body .tab .editor {
-  height: 100%;
+  height: fit-content;
   min-height: 200px;
   overflow-y: auto;
   padding: 5px;
@@ -1644,7 +1649,7 @@ div[class*="foldable-section"] {
 }
 .arm5e .sheet-body .editor.prosemirror,
 .arm5e .sheet-body .tab .editor.prosemirror {
-  height: 100%;
+  height: fit-content;
   min-height: 200px;
   overflow-y: auto;
   padding: 5px;

@@ -170,13 +170,15 @@
         {{#if system.isMagus}}
           <div class="flex01">
             <a class="twilight-episode clickable" title="{{system.twilight.tooltip}}" data-year="{{datetime.year}}"
-              data-season="{{datetime.season}}" style="font-size: 16pt;">
+              data-season="{{datetime.season}}" style="font-size: 16pt; ">
               <img class="twilight-icon" src="systems/arm5e/assets/icons/Icon_Warping.png"
-                style="width:25px; border:none;"></i>
-              <div class="twilight-icon"
-                style="position: relative; top: -30px;left: 9px; font-size: 12pt; font-weight: bold">
-                {{system.twilight.stage}}
-              </div>
+                style="width:25px; border:none; "></i>
+              {{#if system.twilight.stage}}
+                <div class="twilight-icon"
+                  style="position: relative; top: -30px;left: 9px; font-size: 12pt; font-weight: bold; pointer-events: none;">
+                  {{system.twilight.stage}}
+                </div>
+              {{/if}}
             </a>
           </div>
         {{/if}}
@@ -198,7 +200,7 @@
       <div class="flexrow">
         <label for="system.warping.effects" class="bold">{{localize "arm5e.sheet.effects"}}</label>
       </div>
-      <div class="flex-group-left marginbot6">
+      <div class="flex-group-left">
         {{editor enrichedWarping target="system.warping.effects" button=true owner=owner engine="prosemirror" editable=editable}}
       </div>
     </div>
