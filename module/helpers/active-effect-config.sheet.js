@@ -46,29 +46,13 @@ export class ArM5eActiveEffectConfig extends ActiveEffectConfig {
     } else {
       context.types = ACTIVE_EFFECTS_TYPES;
     }
-    // backward compatibility with V10
-    if (CONFIG.ISV10) {
-      context.data.ui = {
-        nameAttr: "label",
-        name: context.data.label,
-        imgAttr: "icon",
-        img: context.data.icon
-      };
-    } else if (CONFIG.ISV12) {
-      context.data.ui = {
-        nameAttr: "name",
-        name: context.data.name,
-        img: context.data.img,
-        imgAttr: "img"
-      };
-    } else {
-      context.data.ui = {
-        nameAttr: "name",
-        name: context.data.name,
-        imgAttr: "icon",
-        img: context.data.icon
-      };
-    }
+
+    context.data.ui = {
+      nameAttr: "name",
+      name: context.data.name,
+      img: context.data.img,
+      imgAttr: "img"
+    };
 
     // first effect created, add null effect type and subtype (still needed?)
     context.selectedTypes = this.object.getFlag("arm5e", "type");

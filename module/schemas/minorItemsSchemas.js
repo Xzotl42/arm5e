@@ -247,7 +247,7 @@ export class ItemSchema extends foundry.abstract.DataModel {
       state: ItemState(),
       enchantments: new NullableEmbeddedDataField(EnchantmentExtension, {
         nullable: true,
-        initial: CONFIG.ISV10 ? new EnchantmentExtension() : null
+        initial: null
       })
     };
   }
@@ -260,18 +260,9 @@ export class ItemSchema extends foundry.abstract.DataModel {
       updateData["system.weight"] = 0;
     }
 
-    if (CONFIG.ISV10) {
-      if (itemData.system.state != "inert") {
-        const updateExt = EnchantmentExtension.migrate(itemData);
-        foundry.utils.mergeObject(updateData, updateExt);
-      } else {
-        updateData["system.enchantments"] = new EnchantmentExtension();
-      }
-    } else {
-      if (itemData.system.enchantments != null) {
-        const updateExt = EnchantmentExtension.migrate(itemData);
-        foundry.utils.mergeObject(updateData, updateExt);
-      }
+    if (itemData.system.enchantments != null) {
+      const updateExt = EnchantmentExtension.migrate(itemData);
+      foundry.utils.mergeObject(updateData, updateExt);
     }
 
     return updateData;

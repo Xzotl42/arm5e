@@ -493,7 +493,7 @@ export class Scriptorium extends FormApplication {
       context.ui.canEditWriter = "readonly";
       context.ui.disabledWriter = "disabled";
       let writer = game.actors.get(context.writing.writer.id);
-      const activeEffects = CONFIG.ISV10 ? writer.effects : writer.appliedEffects;
+      const activeEffects = writer.appliedEffects;
       context.writing.writer.writingBonus = 0;
       const writingEffects = ArM5eActiveEffect.findAllActiveEffectsWithTypeAndSubtypeFiltered(
         activeEffects,

@@ -21,14 +21,8 @@ export default class ArM5eActiveEffect extends ActiveEffect {
   prepareDerivedData() {
     super.prepareDerivedData();
     // In V10, if the effect is from an Item (virtue, etc) and is owned, prevent edition
-    this.noEdit =
-      !game.user.isTrusted ||
-      (CONFIG.ISV10 &&
-        ((this.parent?.documentName === "Item" && this.parent?.isOwned == true) ||
-          (this.parent?.documentName === "Actor" && this.origin?.includes("Item")))) ||
-      this.getFlag("arm5e", "noEdit");
+    this.noEdit = !game.user.isTrusted || this.getFlag("arm5e", "noEdit");
     this.noDelete =
-      // (CONFIG.ISV10 && this.noEdit) ||
       (this.parent?.documentName === "Item" && this.parent?.isOwned == true) ||
       (this.parent?.documentName === "Actor" && this.origin?.includes("Item"));
     if (!this.origin && this.target instanceof ArM5ePCActor && this.parent instanceof ArM5eItem) {
@@ -66,12 +60,7 @@ export default class ArM5eActiveEffect extends ActiveEffect {
     event.preventDefault();
     const a = event.currentTarget;
     const li = a.closest("li");
-    let effect;
-    if (CONFIG.ISV10) {
-      effect = li.dataset.effectId ? owner.effects.get(li.dataset.effectId) : null;
-    } else {
-      effect = await fromUuid(li.dataset.effectId);
-    }
+    let effect = await fromUuid(li.dataset.effectId);
 
     switch (a.dataset.action) {
       case "create":
@@ -89,17 +78,10 @@ export default class ArM5eActiveEffect extends ActiveEffect {
             }
           }
         };
-        if (CONFIG.ISV10) {
-          data.label = game.i18n.localize("arm5e.sheet.activeEffect.new");
-          data.icon = "icons/svg/aura.svg";
-        } else if (CONFIG.ISV12) {
-          data.name = game.i18n.localize("arm5e.sheet.activeEffect.new");
-          data.img = "icons/svg/aura.svg";
-        } else {
-          data.name = game.i18n.localize("arm5e.sheet.activeEffect.new");
-          // V11
-          data.icon = "icons/svg/aura.svg";
-        }
+
+        data.name = game.i18n.localize("arm5e.sheet.activeEffect.new");
+        data.img = "icons/svg/aura.svg";
+
         return await owner.createEmbeddedDocuments("ActiveEffect", [data]);
       case "edit":
         effect.sheet.setFilter(li.dataset.filter);
@@ -139,15 +121,7 @@ export default class ArM5eActiveEffect extends ActiveEffect {
     // Iterate over active effects, classifying them into categories
     for (let e of effects) {
       const isHidden = e.flags.arm5e?.hidden ?? false;
-      if (CONFIG.ISV10) {
-        e._getSourceName(); // Trigger a lookup for the source name
-        e.name = e.label;
-        e.img = e.icon;
-        e.UUID = e._id;
-        // } else if (CONFIG.ISV12) {
-      } else {
-        e.UUID = e.uuid;
-      }
+      e.UUID = e.uuid;
       if (isHidden) {
         e.displayName = `${e.name} (${game.i18n.localize("arm5e.generic.hidden")})`;
       } else {
@@ -172,7 +146,6 @@ export default class ArM5eActiveEffect extends ActiveEffect {
   static findAllActiveEffectsWithType(effects, type) {
     const activeEffects = [];
     for (let e of effects) {
-      if (CONFIG.ISV10) e._getSourceName(); // Trigger a lookup for the source name
       if (!e.disabled && e?.getFlag("arm5e", "type")?.includes(type)) {
         activeEffects.push(e);
       }
@@ -184,7 +157,6 @@ export default class ArM5eActiveEffect extends ActiveEffect {
     const activeEffects = [];
     let filtered = effects.filter((e) => !e.disabled && e.getFlag("arm5e", "type").includes(type));
     for (let e of filtered) {
-      if (CONFIG.ISV10) e._getSourceName(); // Trigger a lookup for the source name
       let idx = 0;
       let filteredChanges = [];
       for (let ch of e.changes) {
@@ -212,7 +184,6 @@ export default class ArM5eActiveEffect extends ActiveEffect {
       );
     });
     for (let e of filtered) {
-      if (CONFIG.ISV10) e._getSourceName(); // Trigger a lookup for the source name
       let idx = 0;
       let filteredChanges = [];
       for (let ch of e.changes) {
@@ -232,7 +203,6 @@ export default class ArM5eActiveEffect extends ActiveEffect {
   static findAllActiveEffectsWithSubtype(effects, subtype) {
     let res = [];
     for (let e of effects) {
-      if (CONFIG.ISV10) e._getSourceName(); // Trigger a lookup for the source name
       if (!e.disabled && e?.getFlag("arm5e", "subtype")?.includes(subtype)) {
         res.push(e);
       }
@@ -247,7 +217,6 @@ export default class ArM5eActiveEffect extends ActiveEffect {
     );
 
     for (let e of filtered) {
-      if (CONFIG.ISV10) e._getSourceName(); // Trigger a lookup for the source name
       let idx = 0;
       let filteredChanges = [];
       for (let ch of e.changes) {

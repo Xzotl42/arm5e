@@ -1,7 +1,6 @@
 The following Items are available for creation.
 
-  
-**Reminder**: You can create folder of Items in the sidebar or in a Compendium to be then dragged and dropped on an Actor (eg: Magus package, Grog package). Easy way to add a bunch of abilities, virtues and flaws to a character at creation. 
+**Reminder**: You can create folder of Items in the sidebar or in a Compendium to be then dragged and dropped on an Actor (eg: Magus package, Grog package). Easy way to add a bunch of abilities, virtues and flaws to a character at creation.
 
 **Game metadata:** Since the description cannot be made available for copyright reasons, most Item types available in the system Compendium are provided with the name of the sourcebook they are coming from and the page they can be found (English edition). Their display is managed by a setting (see [[Introduction#Settings|Settings]])
 
@@ -9,9 +8,8 @@ A some of Item's types don't make sense for some Actor types (eg:Ability on a Co
 
 ## Abilities
 
-Beside the name, speciality and description, the following fields are available. A * indicates this field is only visible when it is owned.
+Beside the name, speciality and description, the following fields are available. A \* indicates this field is only visible when it is owned.
 
-  
 **Name:** A note of the name: it can be whatever you want, in the language you want. The system doesn't care about it. (see Ability key below).
 
 **Score**: it can either be adjusted using the plus and minus signs or by directly inputting the experience amount.
@@ -20,16 +18,12 @@ Beside the name, speciality and description, the following fields are available.
 
 **Ability key:** This is an **important** information for the system. It allows it to know which ability it is independently of its name. This permits the system to do a lot of things:
 
--   Check if a character has a specific ability and its score
-    
--   Automatically use an ability's score to implement some rules or compute some value (eg: Parma Magica, penetration).
-    
--   Know which ability to progress during a long term activity
-    
--   And more as the system evolves
-    
+- Check if a character has a specific ability and its score
+- Automatically use an ability's score to implement some rules or compute some value (eg: Parma Magica, penetration).
+- Know which ability to progress during a long term activity
+- And more as the system evolves
 
-**In short, if you don't configure it properly, some features won't work.**  
+**In short, if you don't configure it properly, some features won't work.**
 
 **Ability option:** This field is greyed out most of the time, except for generic abilities. See below
 
@@ -41,32 +35,17 @@ Abilities modified by an active effect have a coloured halo
 
 Puissant ability
 
-  
-
-  
-
 Affinity with ability
-
-  
-
-  
 
 Affinity with ability and puissant ability
 
-  
-
 ### Generic abilities
 
--   Area lore, Organization lore, Languages (Dead or not), Craft, Profession, Mystery cult lore and supernatural power are generic abilities. They require an additional parameter to be recognized by the system, because there could be any number of them. Otherwise, it wouldn't be possible to differentiate them.
-    
--   Each generic ability with a different Ability option is totally independent of the others. It has its own speciality an default characteristic on rolls.
-    
--   Generic abilities in Compendia should already have their option set (eg: Dead language (Latin) has "Latin" in its ability option).
-    
--   The ability option is particularly useful when you want to add an affinity or puissant ability virtue. If you have multiple instance of an ability (eg: leatherwork and glassblowing, both craft abilities), using the option will allow to pick the correct one.
-    
--   **Important**: only alphanumeric characters are allowed for an ability option. The system will automatically remove other characters. Use CamelCase if you want to put multiple words.
-    
+- Area lore, Organization lore, Languages (Dead or not), Craft, Profession, Mystery cult lore and supernatural power are generic abilities. They require an additional parameter to be recognized by the system, because there could be any number of them. Otherwise, it wouldn't be possible to differentiate them.
+- Each generic ability with a different Ability option is totally independent of the others. It has its own speciality an default characteristic on rolls.
+- Generic abilities in Compendia should already have their option set (eg: Dead language (Latin) has "Latin" in its ability option).
+- The ability option is particularly useful when you want to add an affinity or puissant ability virtue. If you have multiple instance of an ability (eg: leatherwork and glassblowing, both craft abilities), using the option will allow to pick the correct one.
+- **Important**: only alphanumeric characters are allowed for an ability option. The system will automatically remove other characters. Use CamelCase if you want to put multiple words.
 
 ## Virtues and Flaws
 
@@ -136,7 +115,6 @@ See **Spells** below for more details about the fields
 Enchantments can be created from a magical effect or a spell using the [[Actors#Codex Hermeticum (violet)|Codex]].  
 There is an additional tab with new attributes specific to enchanting.
 
-  
 **Dev notes**: Enchanting as an activity is not fully implemented in the system (only lesser enchantments)
 
 ## Diary entry
@@ -147,36 +125,31 @@ This item can be used as a standard diary for the character but also to create [
 
 ## Books
 
-  
 Table of contents: Once you have finished defining all the topics of your book, you can generate the table of contents automatically by clicking the icon below the title (it will not erase anything in the description but append to it).
 
 There two versions that can be generated:
 
--   a concise one with just one click (1st one in the image below)
-    
--   a verbose one by shift-click (2nd one in the image below)
-    
-    ![A book](systems/arm5e/assets/userguide/book1.webp)
-    
--   A book can have multiple topics of different types, you can browse them using the arrows, adding one more with the + icon, delete the current one with the Perdo hand gesture.
-    
--   The last icon will open a [[Canvas menu#The Scriptorium|Scriptorium]] with all the book fields preset. If the book is owned, it will also preset the reader.
-    
-    (For lab texts, the book needs to be in the inventory of the character or its sanctum
-    
-    ![](systems/arm5e/assets/userguide/book2.webp)
-    
--   Topic: You can select whether the book is about an Art, an ability, a spell mastery or a laboratory text
-    
+- a concise one with just one click (1st one in the image below)
+- a verbose one by shift-click (2nd one in the image below)
 
--   See [[#Generic abilities]] for more explanations about the ability option field
-    
+  ![A book](systems/arm5e/assets/userguide/book1.webp)
+
+- A book can have multiple topics of different types, you can browse them using the arrows, adding one more with the + icon, delete the current one with the Perdo hand gesture.
+- The last icon will open a [[Canvas menu#The Scriptorium|Scriptorium]] with all the book fields preset. If the book is owned, it will also preset the reader.
+
+  (For lab texts, the book needs to be in the inventory of the character or its sanctum
+
+  ![](systems/arm5e/assets/userguide/book2.webp)
+
+- Topic: You can select whether the book is about an Art, an ability, a spell mastery or a laboratory text
+
+- See [[#Generic abilities]] for more explanations about the ability option field
 
 ## Physical items
 
-A physical item is something that exists in game as opposed to a virtue Item for example 
+A physical item is something that exists in game as opposed to a virtue Item for example
 (books, weapons, armors, vis,...).
-When you drag and drop a physical item from an actor sheet to another, it will transfer it instead of creating a copy. If there more than one exemplar (ie: quantity field), it will ask how many should be moved. 
+When you drag and drop a physical item from an actor sheet to another, it will transfer it instead of creating a copy. If there more than one exemplar (ie: quantity field), it will ask how many should be moved.
 It is possible to copy instead by pressing the SHIFT key (DevNote: due to a Foundry VTT limitation planned to be fixed in V12, you will have to press SHIFT after starting to drag the item)
 
 ### Weapon
@@ -188,7 +161,6 @@ It is possible to copy instead by pressing the SHIFT key (DevNote: due to a Foun
 ### Enchanted items
 
 Some physical items are enchantable (items, weapons, armor,...), to access the enchantment attributes, click on the golden book in the sheet. Clicking again will destroy them, after confirmation.
-
 
 ## Others
 

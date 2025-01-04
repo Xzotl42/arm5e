@@ -423,10 +423,7 @@ export class ArM5eItemEnchantmentSheet {
     });
 
     html.find(".appraise").click(async () => {
-      if (
-        this.item.system.enchantments == null ||
-        (this.item.system.state === "inert" && CONFIG.ISV10)
-      ) {
+      if (this.item.system.enchantments == null || this.item.system.state === "inert") {
         const updateData = {};
         updateData["system.state"] = "appraised";
         updateData["system.enchantments"] = new EnchantmentExtension();
@@ -441,11 +438,7 @@ export class ArM5eItemEnchantmentSheet {
         if (confirm) {
           const updateData = {};
           updateData["system.state"] = "inert";
-          if (CONFIG.ISV10) {
-            updateData["system.enchantments"] = new EnchantmentExtension();
-          } else {
-            updateData["system.enchantments"] = null;
-          }
+          updateData["system.enchantments"] = null;
           await this.item.update(updateData);
         }
       }

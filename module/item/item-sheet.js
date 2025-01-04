@@ -154,26 +154,17 @@ export class ArM5eItemSheet extends ItemSheet {
     context.selection = {};
     // Add the item's data to context.system for easier access, as well as flags.
     context.system = itemData.system;
-    if (CONFIG.ISV10) {
-      if (this.enchantPossible && context.system.state != "inert") {
-        await this.enchantSheet.getData(context);
-      } else {
-        context.stateEdit = "disabled";
-      }
+
+    if (this.enchantPossible && context.system.enchantments != null) {
+      await this.enchantSheet.getData(context);
     } else {
-      if (this.enchantPossible && context.system.enchantments != null) {
-        await this.enchantSheet.getData(context);
-      } else {
-        context.stateEdit = "disabled";
-      }
+      context.stateEdit = "disabled";
     }
 
     if (this.item.system.description) {
       context.enrichedDescription = await TextEditor.enrichHTML(this.item.system.description, {
         // Whether to show secret blocks in the finished html
         secrets: this.document.isOwner,
-        // Necessary in v11, can be removed in v12
-        async: true,
         // Data to fill in for inline rolls
         rollData: context.rollData,
         // Relative UUID resolution
@@ -185,8 +176,6 @@ export class ArM5eItemSheet extends ItemSheet {
       context.enrichedForm = await TextEditor.enrichHTML(this.item.system.form, {
         // Whether to show secret blocks in the finished html
         secrets: this.document.isOwner,
-        // Necessary in v11, can be removed in v12
-        async: true,
         // Data to fill in for inline rolls
         rollData: context.rollData,
         // Relative UUID resolution
@@ -263,15 +252,9 @@ export class ArM5eItemSheet extends ItemSheet {
           break;
       }
     }
-    if (["weapon", "armor", "book", "item", "inhabitant", "labCovenant"].includes(itemData.type)) {
+    context.system.effectCreation = true;
+    if (["virtue", "flaw", "quality", "inferiority"].includes(itemData.type)) {
       if (context.isOwned) {
-        context.system.effectCreation = CONFIG.ISV10 ? false : true;
-      } else {
-        context.system.effectCreation = true;
-      }
-    } else if (["virtue", "flaw", "quality", "inferiority"].includes(itemData.type)) {
-      if (context.isOwned) {
-        context.system.effectCreation = CONFIG.ISV10 ? false : true;
         switch (context.item.parent.type) {
           case "laboratory":
             context.config.virtueFlawTypes.available = {
@@ -295,7 +278,6 @@ export class ArM5eItemSheet extends ItemSheet {
             break;
         }
       } else {
-        context.system.effectCreation = true;
         context.config.virtueFlawTypes.available = {
           ...context.config.virtueFlawTypes.character,
           ...context.config.virtueFlawTypes.laboratory,
@@ -347,14 +329,8 @@ export class ArM5eItemSheet extends ItemSheet {
 
   async _updateObject(event, formData) {
     if (this.item.system.enchantments) {
-      if (CONFIG.ISV10) {
-        if (this.enchantPossible && this.item.system.state != "inert") {
-          formData = await this.enchantSheet._updateObject(event, formData);
-        }
-      } else {
-        if (this.enchantPossible && this.item.system.enchantments != null) {
-          formData = await this.enchantSheet._updateObject(event, formData);
-        }
+      if (this.enchantPossible && this.item.system.enchantments != null) {
+        formData = await this.enchantSheet._updateObject(event, formData);
       }
     }
     return await super._updateObject(event, formData);

@@ -1507,7 +1507,7 @@ export class ArM5ePCActor extends Actor {
       }
     }
 
-    const activeEffects = CONFIG.ISV10 ? this.effects : this.appliedEffects;
+    const activeEffects = this.appliedEffects;
     system.yearlySavings.magicItems.quantity =
       ArM5eActiveEffect.findAllActiveEffectsWithTypeFiltered(
         activeEffects,
@@ -1876,13 +1876,8 @@ export class ArM5ePCActor extends Actor {
           ],
           tint: "#000000"
         };
-        if (CONFIG.ISV10) {
-          activeEffectData.label = name;
-          activeEffectData.icon = icon ?? "icons/svg/aura.svg";
-        } else {
-          activeEffectData.name = name;
-          activeEffectData.img = icon ?? "icons/svg/aura.svg";
-        }
+        activeEffectData.name = name;
+        activeEffectData.img = icon ?? "icons/svg/aura.svg";
 
         return await this.createEmbeddedDocuments("ActiveEffect", [activeEffectData]);
       } else {
@@ -2039,13 +2034,9 @@ export class ArM5ePCActor extends Actor {
     //         }
     //       }
     //     };
-    //     if (CONFIG.ISV10) {
-    //       effect.label = game.i18n.localize("arm5e.sheet.baseSafety");
-    //       effect.icon = "icons/svg/aura.svg";
-    //     } else {
+    //
     //       effect.name = game.i18n.localize("arm5e.sheet.baseSafety");
     //       effect.img = "icons/svg/aura.svg";
-    //     }
     //     effectsData.push(effect);
     //     // const res = await this.effects.update(effectsData);
     //     data.effects = effectsData;

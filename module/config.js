@@ -961,9 +961,6 @@ export function enrichAbilities(translatedList) {
 function translateAndSort(abilityList) {
   for (let [key, value] of Object.entries(abilityList)) {
     let translation;
-    // if (value.disabled && CONFIG.ISV11) {
-    //   continue;
-    // }
     if (value.option) {
       abilityList[key].extendedKey = `${key}_${value.optionDefault}`;
       translation = game.i18n.format(value.mnemonic, {
@@ -3106,10 +3103,10 @@ ARM5E.lab.enchantment.effectUses = {
 };
 
 ARM5E.lab.enchantment.enchantableTypes = {
-  item: CONFIG.ISV10 ? "ITEM.TypeItem" : "TYPES.Item.item",
-  weapon: CONFIG.ISV10 ? "ITEM.TypeWeapon" : "TYPES.Item.weapon",
-  armor: CONFIG.ISV10 ? "ITEM.TypeArmor" : "TYPES.Item.armor",
-  book: CONFIG.ISV10 ? "ITEM.TypeBook" : "TYPES.Item.book"
+  item: "TYPES.Item.item",
+  weapon: "TYPES.Item.weapon",
+  armor: "TYPES.Item.armor",
+  book: "TYPES.Item.book"
 };
 
 ARM5E.generic = {};

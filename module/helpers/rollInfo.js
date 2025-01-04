@@ -455,7 +455,7 @@ export class ArM5eRollInfo {
     } else if ("spell" == type) {
       type = "formulaicMagic";
     }
-    const activeEffects = CONFIG.ISV10 ? this._actor.effects : this._actor.appliedEffects;
+    const activeEffects = this._actor.appliedEffects;
     let activeEffectsByType = ArM5eActiveEffect.findAllActiveEffectsWithTypeAndSubtypeFiltered(
       activeEffects,
       "optionalRollBonus",
@@ -469,8 +469,7 @@ export class ArM5eRollInfo {
       for (let ch of effect.changes) {
         total += Number(ch.value);
       }
-      const name = CONFIG.ISV10 ? effect.label : effect.name;
-      res.push({ name: name, key: effect.changes[0].key, bonus: total, active: false });
+      res.push({ name: effect.name, key: effect.changes[0].key, bonus: total, active: false });
     }
     return res;
   }
@@ -685,14 +684,14 @@ export class ArM5eRollInfo {
   getSpellcastingModifiers() {
     this.bonuses += this._actor.system.bonuses.arts.spellcasting;
     // Log(false, `Bonus spellcasting: ${this._actor.system.bonuses.arts.spellcasting}`);
-    const activeEffects = CONFIG.ISV10 ? this._actor.effects : this._actor.appliedEffects;
+    const activeEffects = this._actor.appliedEffects;
     let activeEffectsByType = ArM5eActiveEffect.findAllActiveEffectsWithType(
       activeEffects,
       "spellcasting"
     );
     this.activeEffects.concat(
       activeEffectsByType.map((activeEffect) => {
-        const label = CONFIG.ISV10 ? activeEffect.label : activeEffect.name;
+        const label = activeEffect.name;
         let value = 0;
 
         activeEffect.changes

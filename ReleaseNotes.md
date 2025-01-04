@@ -1,3 +1,11 @@
+## 2.4.0.0, Radislav am Polanach
+
+### Features & changes
+
+### Bug fixes
+
+- Fix problem with power migration.
+
 ## 2.3.2.16, Quendalon, lost in the forest for a year
 
 ### Features & changes

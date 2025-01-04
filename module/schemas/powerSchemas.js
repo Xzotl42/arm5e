@@ -45,7 +45,7 @@ export class PowerSchema extends foundry.abstract.DataModel {
   }
 
   static migrate(itemData) {
-    const updateData = migrateMagicalItem(itemData);
+    const updateData = {};
 
     if (typeof itemData.system.page !== "number") {
       updateData["system.page"] = convertToNumber(itemData.system.page, 0);

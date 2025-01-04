@@ -99,7 +99,7 @@ export class BookSchema extends foundry.abstract.DataModel {
       state: ItemState(),
       enchantments: new NullableEmbeddedDataField(EnchantmentExtension, {
         nullable: true,
-        initial: CONFIG.ISV10 ? new EnchantmentExtension() : null
+        initial: null
       }),
       cost: CostField("priceless"),
       quantity: new fields.NumberField({

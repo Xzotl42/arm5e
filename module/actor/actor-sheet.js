@@ -249,8 +249,6 @@ export class ArM5eActorSheet extends ActorSheet {
       context.enrichedDescription = await TextEditor.enrichHTML(this.actor.system.description, {
         // Whether to show secret blocks in the finished html
         secrets: this.document.isOwner,
-        // Necessary in v11, can be removed in v12
-        async: true,
         // Data to fill in for inline rolls
         rollData: context.rollData,
         // Relative UUID resolution
@@ -786,7 +784,7 @@ export class ArM5eActorSheet extends ActorSheet {
 
     // Prepare active effects
     context.effects = ArM5eActiveEffect.prepareActiveEffectCategories(
-      CONFIG.ISV10 ? this.actor.effects : Array.from(this.actor.allApplicableEffects())
+      Array.from(this.actor.allApplicableEffects())
     );
     this._prepareCharacterItems(context);
 
@@ -1290,12 +1288,7 @@ export class ArM5eActorSheet extends ActorSheet {
 
     html.find(".effect-edit").click(async (ev) => {
       const li = $(ev.currentTarget).parents(".item");
-      let effect;
-      if (CONFIG.ISV10) {
-        effect = this.actor.effects.get(li.data("effectId"));
-      } else {
-        effect = await fromUuid(li.data("effectId"));
-      }
+      let effect = await fromUuid(li.data("effectId"));
       // const item = this.actor.items.get(li.data("itemId"))
       effect.sheet.render(true, { focus: true });
     });
@@ -2153,8 +2146,6 @@ export class ArM5eActorSheet extends ActorSheet {
       context.enrichedBiography = await TextEditor.enrichHTML(this.actor.system.biography, {
         // Whether to show secret blocks in the finished html
         secrets: this.document.isOwner,
-        // Necessary in v11, can be removed in v12
-        async: true,
         // Data to fill in for inline rolls
         rollData: context.rollData,
         // Relative UUID resolution
@@ -2165,8 +2156,6 @@ export class ArM5eActorSheet extends ActorSheet {
       context.enrichedSigil = await TextEditor.enrichHTML(this.actor.system.sigil.value, {
         // Whether to show secret blocks in the finished html
         secrets: this.document.isOwner,
-        // Necessary in v11, can be removed in v12
-        async: true,
         // Data to fill in for inline rolls
         rollData: context.rollData,
         // Relative UUID resolution
@@ -2178,8 +2167,6 @@ export class ArM5eActorSheet extends ActorSheet {
       context.enrichedWarping = await TextEditor.enrichHTML(this.actor.system.warping.effects, {
         // Whether to show secret blocks in the finished html
         secrets: this.document.isOwner,
-        // Necessary in v11, can be removed in v12
-        async: true,
         // Data to fill in for inline rolls
         rollData: context.rollData,
         // Relative UUID resolution
@@ -2193,8 +2180,6 @@ export class ArM5eActorSheet extends ActorSheet {
         {
           // Whether to show secret blocks in the finished html
           secrets: this.document.isOwner,
-          // Necessary in v11, can be removed in v12
-          async: true,
           // Data to fill in for inline rolls
           rollData: context.rollData,
           // Relative UUID resolution
@@ -2208,8 +2193,6 @@ export class ArM5eActorSheet extends ActorSheet {
         {
           // Whether to show secret blocks in the finished html
           secrets: this.document.isOwner,
-          // Necessary in v11, can be removed in v12
-          async: true,
           // Data to fill in for inline rolls
           rollData: context.rollData,
           // Relative UUID resolution

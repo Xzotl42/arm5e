@@ -2,9 +2,9 @@
   "id": "arm5e",
   "title": "Ars Magica 5th Edition",
   "description": "Ars Magica 5e for Foundry VTT, mandatory arm5e-compendia module at (https://github.com/Xzotl42/arm5e-compendia/releases/latest/download/module.json)",
-  "version": "2.3.2.16",
+  "version": "2.4.0.0",
   "compatibility": {
-    "minimum": "10.290",
+    "minimum": "12.331",
     "verified": "12.331"
   },
   "relationships": {
@@ -92,7 +92,8 @@
       "personality": {},
       "personalityTrait": {},
       "wound": {},
-      "art": {}
+      "art": {},
+      "supernaturalEffect": {}
     }
   },
 

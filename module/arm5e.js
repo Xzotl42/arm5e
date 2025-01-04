@@ -88,18 +88,10 @@ Hooks.once("init", async function () {
     rollItemMacro
   };
 
-  // Flags to manage backward compatibility
-  CONFIG.ISV10 = foundry.utils.isNewerVersion(11, game.version);
-  CONFIG.ISV11 = foundry.utils.isNewerVersion(12, game.release.generation);
-  CONFIG.ISV12 = game.release.generation >= 12;
   // Add system metadata
   CONFIG.ARM5E = ARM5E;
-  CONFIG.ARM5E.ItemDataModels = CONFIG.ISV10
-    ? CONFIG.Item.systemDataModels
-    : CONFIG.Item.dataModels;
-  CONFIG.ARM5E.ActorDataModels = CONFIG.ISV10
-    ? CONFIG.Actor.systemDataModels
-    : CONFIG.Actor.dataModels;
+  CONFIG.ARM5E.ItemDataModels = CONFIG.Item.dataModels;
+  CONFIG.ARM5E.ActorDataModels = CONFIG.Actor.dataModels;
 
   CONFIG.SC = { SEASONS: SimpleCalendarSeasons };
 
@@ -639,7 +631,6 @@ function registerSheets() {
         "inferiority",
         "ability",
         "abilityFamiliar",
-
         // "might",
         "powerFamiliar",
         // "mightFamiliar",

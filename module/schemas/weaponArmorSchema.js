@@ -45,7 +45,7 @@ export class ArmorSchema extends foundry.abstract.DataModel {
       state: ItemState(),
       enchantments: new NullableEmbeddedDataField(EnchantmentExtension, {
         nullable: true,
-        initial: CONFIG.ISV10 ? new EnchantmentExtension() : null
+        initial: null
       })
     };
   }
@@ -86,23 +86,13 @@ export class ArmorSchema extends foundry.abstract.DataModel {
 
   static migrate(itemData) {
     let update = {};
-
     update["system.-=weight"] = null;
     update["system.load"] = itemData.system.load;
-    if (CONFIG.ISV10) {
-      if (itemData.system.state != "inert") {
-        const updateData = EnchantmentExtension.migrate(itemData);
-        foundry.utils.mergeObject(update, updateData);
-      } else {
-        update["system.enchantments"] = new EnchantmentExtension();
-      }
-    } else {
-      if (itemData.system.enchantments != null) {
-        const updateData = EnchantmentExtension.migrate(itemData);
-        foundry.utils.mergeObject(update, updateData);
-      }
-    }
 
+    if (itemData.system.enchantments != null) {
+      const updateData = EnchantmentExtension.migrate(itemData);
+      foundry.utils.mergeObject(update, updateData);
+    }
     return update;
   }
 
@@ -201,7 +191,7 @@ export class WeaponSchema extends foundry.abstract.DataModel {
       state: ItemState(),
       enchantments: new NullableEmbeddedDataField(EnchantmentExtension, {
         nullable: true,
-        initial: CONFIG.ISV10 ? new EnchantmentExtension() : null
+        initial: null
       })
     };
   }
@@ -260,18 +250,9 @@ export class WeaponSchema extends foundry.abstract.DataModel {
       update["system.load"] = convertToNumber(itemData.system.load, 0);
     }
 
-    if (CONFIG.ISV10) {
-      if (itemData.system.state != "inert") {
-        const updateData = EnchantmentExtension.migrate(itemData);
-        foundry.utils.mergeObject(update, updateData);
-      } else {
-        update["system.enchantments"] = new EnchantmentExtension();
-      }
-    } else {
-      if (itemData.system.enchantments != null) {
-        const updateData = EnchantmentExtension.migrate(itemData);
-        foundry.utils.mergeObject(update, updateData);
-      }
+    if (itemData.system.enchantments != null) {
+      const updateData = EnchantmentExtension.migrate(itemData);
+      foundry.utils.mergeObject(update, updateData);
     }
 
     return update;
