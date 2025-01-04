@@ -4,33 +4,35 @@
     <div class="header-fields">
       <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="name" /></h1>
       <div class="resource flexrow">
+
+        <div class="resource flexcol">
+          <label for="system.cost" class="header-label">{{localize "arm5e.sheet.cost"}}</label>
+          <input name="system.cost" type="text" value="{{system.cost}}" placeholder="0" class="resource-focus" />
+        </div>
+        <div class="resource flexcol">
+          <label for="system.init" class="header-label">{{localize "arm5e.sheet.initiative"}}</label>
+          <input name="system.init" type="text" value="{{system.init}}" placeholder="0" class="resource-focus" />
+        </div>
         <div class="resource flexcol">
           <label for="system.form" class="header-label">{{localize "arm5e.sheet.form"}}</label>
           <select name="system.form" data-type="String">
             {{selectOptions config.magic.forms selected=system.form labelAttr="label"}}
           </select>
         </div>
-        <div class="resource flexcol">
-          <label for="system.cost" class="header-label">{{localize "arm5e.sheet.cost"}}</label>
-          <input name="system.cost" type="text" value="{{system.cost}}" placeholder="0" class="resource-focus" />
-        </div>
       </div>
-      {{#unless this.system.features.hasMight}}
+      {{#unless ownerHasMight}}
         <div class="resource flexrow">
-          <div style="padding-top: 15px; padding-left: 5px;">
+          <div class="resource flexcol">
             <label for="system.cost" class="header-label">{{localize "arm5e.sheet.realm.label"}}</label>
-            <select class="change-realm" name="" data-type="String" data-realm="{{system.realm}}">
-              {{selectOptions config.realmsExt selected=system.realm labelAttr="label" localize=true}}
+            <select name="system.realm" data-type="String">
+              {{selectOptions config.realmsExt selected=system.realm labelAttr="label" localize=true }}
             </select>
           </div>
+
           <div class="resource flexcol">
             <label for="system.penetration" class="header-label">{{localize "arm5e.sheet.penetration"}}</label>
             <input name="system.penetration" type="text" value="{{system.penetration}}" placeholder="0"
               class="resource-focus" />
-          </div>
-          <div class="resource flexcol">
-            <label for="system.init" class="header-label">{{localize "arm5e.sheet.initiative"}}</label>
-            <input name="system.init" type="text" value="{{system.init}}" placeholder="0" class="resource-focus" />
           </div>
         </div>
       {{/unless}}

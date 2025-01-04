@@ -46,7 +46,7 @@ const ROLL_PROPERTIES = {
   ABILITY: {
     VAL: "ability",
     MODE: ROLL_MODES.STRESS_OR_SIMPLE,
-    MODIFIERS: 5, // Impacted by aura, if realm of the ability <> mundane
+    MODIFIERS: 1,
     TITLE: "arm5e.dialog.title.rolldie"
   },
   // COMBAT: {

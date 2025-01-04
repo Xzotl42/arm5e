@@ -70,6 +70,7 @@ import { ArM5eCovenantInhabitantSheet } from "./item/item-inhabitantCovenant.js"
 import { ArM5eSupernaturalEffectSheet } from "./item/item-supernaturalEffect-sheet.js";
 import { SupernaturalEffectSchema } from "./schemas/supernaturalEffectSchema.js";
 import { Arm5eSocketHandler } from "./helpers/socket-messages.js";
+import { PowerSchema } from "./schemas/powerSchemas.js";
 // Import { ArtSchema } from "./schemas/artSchema.js";
 
 Hooks.once("i18nInit", async function () {
@@ -562,6 +563,7 @@ function setDatamodels() {
   CONFIG.ARM5E.ItemDataModels.book = BookSchema;
   CONFIG.ARM5E.ItemDataModels.diaryEntry = DiaryEntrySchema;
   CONFIG.ARM5E.ItemDataModels.supernaturalEffect = SupernaturalEffectSchema;
+  CONFIG.ARM5E.ItemDataModels.power = PowerSchema;
   // Actors
   CONFIG.ARM5E.ActorDataModels.laboratory = LabSchema;
   CONFIG.ARM5E.ActorDataModels.magicCodex = CodexSchema;
@@ -637,7 +639,7 @@ function registerSheets() {
         "inferiority",
         "ability",
         "abilityFamiliar",
-        "power",
+
         // "might",
         "powerFamiliar",
         // "mightFamiliar",
@@ -681,7 +683,15 @@ function registerSheets() {
     });
 
     Items.registerSheet("arm5e", ArM5eItemMagicSheet, {
-      types: ["magicalEffect", "enchantment", "spell", "baseEffect", "laboratoryText", "magicItem"],
+      types: [
+        "magicalEffect",
+        "enchantment",
+        "spell",
+        "baseEffect",
+        "laboratoryText",
+        "magicItem",
+        "power"
+      ],
       makeDefault: true
     });
 
