@@ -49,6 +49,12 @@ export class ArM5eItemMagicSheet extends ArM5eItemSheet {
       context.locked = true;
     }
 
+    if (this.item.isOwned && this.item.actor._isCharacter()) {
+      if (this.item.type === "power") {
+        context.ownerHasMight = this.item.actor._hasMight();
+      }
+    }
+
     // If settings were too restrictive, allow existing Items to keep their value.
     switch (this.item.type) {
       case "laboratoryText":

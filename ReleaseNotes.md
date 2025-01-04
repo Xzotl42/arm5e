@@ -1,4 +1,4 @@
-## 2.3.2.15, Quendalon, lost in the forest for a year
+## 2.3.2.16, Quendalon, lost in the forest for a year
 
 ### Features & changes
 
@@ -11,6 +11,7 @@
   - No fatigue on ritual casting if successful (Mythic blood)
 - Spell casting, powers and magic items use chat messages are now merged when possible (failure,magic contest)
 - Twilight episode's management
+-
 
 ### Bug fixes
 
@@ -22,6 +23,11 @@
 - Aura modifier of actor with Might no longer raises an error.
 - Rolls that were supposed to not be impacted by physical condition (wounds, fatigue) sometime were
 - Removed unused scrollbar that was causing flickering on mouse hover in some dialogs
+
+### V10 datamodels migration (almost done)
+
+- New data models activated
+  - Powers
 
 ## 2.3.2.12, Quendalon, lost in the forest since half a year
 
