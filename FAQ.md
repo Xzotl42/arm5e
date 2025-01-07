@@ -35,7 +35,8 @@ Note: I put invalid in double quotes, because it may simply due to a planned cha
 
 ### Why are the description of the abilities, virtues, flaws and spells empty?
 
-For copyright reasons, we aren't able to include this content in the system. However, the sourcebook and page are provided if you want to include them in your world/compendium.
+**Update**: Since the crowdfunding on Backerkit in November 2024, the whole game content in under Open License. Most of the corebook content has been added to the arm5e-compendia module.
+~~For copyright reasons, we aren't able to include this content in the system. However, the sourcebook and page are provided if you want to include them in your world/compendium.~~
 For spells, we recommend you to download the Grand Grimoire of Hermetic spells (https://atlas-games.com/atlas-cms/resources/downloads/arm5-grand-grimoire-of-hermetic-spells.pdf)
 
 ## Modules
