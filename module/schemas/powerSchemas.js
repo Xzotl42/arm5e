@@ -47,8 +47,17 @@ export class PowerSchema extends foundry.abstract.DataModel {
 
   static migrateData(data) {
     if (isNaN(data.cost)) {
-      data.description += `<h3>Migration note:</h3><p>Cost is now strictly a number, previous value:"${data.cost}", new value: 1`;
+      data.description += `<h3>Migration note:</h3><p>Cost is now strictly a number, previous value:"${data.cost}", new value: 1</p>`;
       data.cost = 1;
+    }
+    if (isNaN(data.init)) {
+      data.description += `<h3>Migration note:</h3><p>Init is now strictly a number, previous value:"${data.init}", new value: 0`;
+      data.init = 0;
+    }
+
+    if (isNaN(data.penetration)) {
+      data.description += `<h3>Migration note:</h3><p>penetration is now strictly a number, previous value:"${data.penetration}", new value: 0`;
+      data.penetration = 0;
     }
     return data;
   }
