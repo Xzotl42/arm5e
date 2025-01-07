@@ -205,7 +205,7 @@ export class StressDieInternal extends foundry.dice.terms.Die {
   }
 }
 
-export class AlternateStressDie extends Die {
+export class AlternateStressDie extends foundry.dice.terms.Die {
   constructor(termData = {}) {
     termData.faces = 10;
     super(termData);

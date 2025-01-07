@@ -12,10 +12,7 @@ import {
 import { EnchantmentExtension, ItemState } from "./enchantmentSchema.js";
 import { LabTextSchema } from "./magicSchemas.js";
 const fields = foundry.data.fields;
-export class BookSchema extends foundry.abstract.DataModel {
-  // TODO remove in V11
-  static _enableV10Validation = true;
-
+export class BookSchema extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     return {
       ...itemBase(),

@@ -1,3 +1,18 @@
+## 2.4.0.0, Radislav am Polanach
+
+### Compatibility change
+
+- Foundry VTT V12+ only
+
+### Features & changes
+
+- [Technical] Switch to V12
+  - Use of TypeDataModel instead of DataModel for Document types
+  - Removed of V10 only code.
+  - Removed V12 deprecation warnings
+
+### Bug fixes
+
 ## 2.3.2.17, Quendalon, back from the wood with weird eyes
 
 ### Features & changes

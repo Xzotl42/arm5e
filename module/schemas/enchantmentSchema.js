@@ -20,9 +20,7 @@ const fields = foundry.data.fields;
 
 // Schema field added to enchanted devices
 
-export class EnchantmentExtension extends foundry.abstract.DataModel {
-  // TODO remove in V11
-  static _enableV10Validation = true;
+export class EnchantmentExtension extends foundry.abstract.TypeDataModel {
   constructor(fields, options = { nullable: true }) {
     super(fields, options);
   }
@@ -200,8 +198,7 @@ export class EnchantmentExtension extends foundry.abstract.DataModel {
   }
 }
 
-export class EnchantmentSchema extends foundry.abstract.DataModel {
-  static _enableV10Validation = true;
+export class EnchantmentSchema extends foundry.abstract.TypeDataModel {
   constructor(fields, options = { nullable: true }) {
     super(fields, options);
   }

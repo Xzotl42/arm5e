@@ -6,10 +6,7 @@ import { hermeticForm, itemBase, RealmField } from "./commonSchemas.js";
 
 const fields = foundry.data.fields;
 
-export class PowerSchema extends foundry.abstract.DataModel {
-  // TODO remove in V11
-  static _enableV10Validation = true;
-
+export class PowerSchema extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     return {
       ...itemBase(),

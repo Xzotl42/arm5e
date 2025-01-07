@@ -15,10 +15,7 @@ import { ItemSchema } from "./minorItemsSchemas.js";
 import { ArmorSchema, WeaponSchema } from "./weaponArmorSchema.js";
 const fields = foundry.data.fields;
 
-export class DiaryEntrySchema extends foundry.abstract.DataModel {
-  // TODO remove in V11
-  static _enableV10Validation = true;
-
+export class DiaryEntrySchema extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     return {
       description: new fields.StringField({ required: false, blank: true, initial: "" }),

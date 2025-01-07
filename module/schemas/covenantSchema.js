@@ -57,10 +57,7 @@ const SavingField = () =>
     notes: basicTextField()
   });
 
-export class CovenantSchema extends foundry.abstract.DataModel {
-  // TODO remove in V11
-  static _enableV10Validation = true;
-
+export class CovenantSchema extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     return {
       ...actorBase(),

@@ -4,10 +4,7 @@ import { convertToNumber, log } from "../tools.js";
 import { Scriptorium } from "../tools/scriptorium.js";
 import { itemBase } from "./commonSchemas.js";
 const fields = foundry.data.fields;
-export class InhabitantSchema extends foundry.abstract.DataModel {
-  // TODO remove in V11
-  static _enableV10Validation = true;
-
+export class InhabitantSchema extends foundry.abstract.TypeDataModel {
   //   "habitantMagi",
   //   "habitantCompanion",
   //   "habitantSpecialists",

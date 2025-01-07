@@ -222,10 +222,7 @@ const migrateMagicalItem = (itemData) => {
   return updateData;
 };
 
-export class BaseEffectSchema extends foundry.abstract.DataModel {
-  // TODO remove in V11
-  static _enableV10Validation = true;
-
+export class BaseEffectSchema extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     return {
       ...itemBase(),
@@ -249,10 +246,7 @@ export class BaseEffectSchema extends foundry.abstract.DataModel {
   }
 }
 
-export class MagicalEffectSchema extends foundry.abstract.DataModel {
-  // TODO remove in V11
-  static _enableV10Validation = true;
-
+export class MagicalEffectSchema extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     return {
       ...itemBase(),
@@ -278,10 +272,7 @@ export class MagicalEffectSchema extends foundry.abstract.DataModel {
   }
 }
 
-export class SpellSchema extends foundry.abstract.DataModel {
-  // TODO remove in V11
-  static _enableV10Validation = true;
-
+export class SpellSchema extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     return {
       ...itemBase(),
@@ -414,10 +405,7 @@ export class SpellSchema extends foundry.abstract.DataModel {
   }
 }
 
-export class LabTextSchema extends foundry.abstract.DataModel {
-  // TODO remove in V11
-  static _enableV10Validation = true;
-
+export class LabTextSchema extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     return {
       ...itemBase(),

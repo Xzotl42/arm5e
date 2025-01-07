@@ -13,10 +13,7 @@ import {
 } from "./commonSchemas.js";
 const fields = foundry.data.fields;
 
-export class VisSchema extends foundry.abstract.DataModel {
-  // TODO remove in V11
-  static _enableV10Validation = true;
-
+export class VisSchema extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     return {
       ...itemBase(),
@@ -185,10 +182,7 @@ export class VisSchema extends foundry.abstract.DataModel {
   }
 }
 
-export class VisSourceSchema extends foundry.abstract.DataModel {
-  // TODO remove in V11
-  static _enableV10Validation = true;
-
+export class VisSourceSchema extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     return {
       ...itemBase(),

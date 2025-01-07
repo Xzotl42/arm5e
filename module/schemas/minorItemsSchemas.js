@@ -20,10 +20,7 @@ const fields = foundry.data.fields;
 //   .concat(Object.keys(ARM5E.virtueFlawTypes.covenant))
 //   .concat("Special")
 //   .concat("other");
-export class VirtueFlawSchema extends foundry.abstract.DataModel {
-  // TODO remove in V11
-  static _enableV10Validation = true;
-
+export class VirtueFlawSchema extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     return {
       ...itemBase(),
@@ -142,10 +139,7 @@ export class VirtueFlawSchema extends foundry.abstract.DataModel {
   }
 }
 
-export class QualityInferioritySchema extends foundry.abstract.DataModel {
-  // TODO remove in V11
-  static _enableV10Validation = true;
-
+export class QualityInferioritySchema extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     return {
       ...itemBase(),
@@ -222,9 +216,7 @@ export class QualityInferioritySchema extends foundry.abstract.DataModel {
   }
 }
 
-export class ItemSchema extends foundry.abstract.DataModel {
-  // TODO remove in V11
-  static _enableV10Validation = true;
+export class ItemSchema extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     return {
       ...itemBase(),
@@ -283,10 +275,7 @@ export class ItemSchema extends foundry.abstract.DataModel {
     return data;
   }
 }
-export class ReputationSchema extends foundry.abstract.DataModel {
-  // TODO remove in V11
-  static _enableV10Validation = true;
-
+export class ReputationSchema extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     return {
       ...itemBase(),
@@ -352,10 +341,7 @@ export class ReputationSchema extends foundry.abstract.DataModel {
   }
 }
 
-export class PersonalityTraitSchema extends foundry.abstract.DataModel {
-  // TODO remove in V11
-  static _enableV10Validation = true;
-
+export class PersonalityTraitSchema extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     return {
       ...itemBase(),
@@ -445,10 +431,7 @@ export class PersonalityTraitSchema extends foundry.abstract.DataModel {
   }
 }
 
-export class SanctumSchema extends foundry.abstract.DataModel {
-  // TODO remove in V11
-  static _enableV10Validation = true;
-
+export class SanctumSchema extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     return {
       ...itemBase(),
@@ -530,11 +513,10 @@ export class SanctumSchema extends foundry.abstract.DataModel {
   }
 }
 
+// TEMPLATE for Document types
+// export class MyTypeSchema extends foundry.abstract.TypeDataModel {
 // TEMPLATE
 export class MySchema extends foundry.abstract.DataModel {
-  // TODO remove in V11
-  static _enableV10Validation = true;
-
   static defineSchema() {
     return { ...itemBase() };
   }

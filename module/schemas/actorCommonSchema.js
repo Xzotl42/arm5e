@@ -27,10 +27,7 @@ export const actorBase = () => {
   };
 };
 
-export class CodexSchema extends foundry.abstract.DataModel {
-  // TODO remove in V11
-  static _enableV10Validation = true;
-
+export class CodexSchema extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     return {};
   }

@@ -11,9 +11,6 @@ const fields = foundry.data.fields;
 
 // WORK IN PROGRESS (for when characters are migrated to datamodel)
 export class MagicSystemSchema extends foundry.abstract.DataModel {
-  // TODO remove in V11
-  static _enableV10Validation = true;
-
   static defineSchema() {
     return {
       ...itemBase(),
