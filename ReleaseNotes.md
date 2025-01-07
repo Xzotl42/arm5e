@@ -1,10 +1,15 @@
-## 2.4.0.0, Radislav am Polanach
+## 2.3.2.17, Quendalon, back from the wood with weird eyes
 
 ### Features & changes
 
+- Powers can change their cost or form on use
+- Powers inherit the Form of the creature using them by default.
+
 ### Bug fixes
 
-- Fix problem with power migration.
+- Fix power migration error.
+- Ability-option migration no longer remove dashes
+- Generic abilities without an ability option get a new randomly generated one.
 
 ## 2.3.2.16, Quendalon, lost in the forest for a year
 

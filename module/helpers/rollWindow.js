@@ -461,9 +461,10 @@ async function usePower(dataset, actor) {
   }
 
   prepareRollVariables(dataset, actor);
-  log(false, `Roll variables: ${JSON.stringify(actor.system.roll)}`);
+  // log(false, `Roll variables: ${JSON.stringify(actor.system.roll)}`);
   let template = "systems/arm5e/templates/actor/parts/actor-powerUse.html";
   actor.system.roll = actor.rollInfo;
+  actor.config = { magic: CONFIG.ARM5E.magic };
   const renderedTemplate = await renderTemplate(template, actor);
 
   const dialog = new Dialog(
@@ -537,6 +538,28 @@ function addListenersDialog(html) {
     const actor = game.actors.get(dataset.actorid);
     const name = $(event.target).attr("effect");
     await actor.selectVoiceAndGestures(name, $(event.target).val());
+  });
+
+  html.find(".change-cost").change(async (event) => {
+    const dataset = getDataset(event);
+    const val = event.target.value;
+    const actor = game.actors.get(dataset.id);
+    actor.system.roll.power.cost = Number(val);
+    actor.system.roll.power.penetrationPenalty = Number(val) * 5;
+    const e = html[0].getElementsByClassName(actor._id + "-level")[0];
+    e.innerHTML = `5 * ${val} points cost (${actor.system.roll.power.penetrationPenalty})`;
+  });
+
+  html.find(".change-form").change(async (event) => {
+    const dataset = getDataset(event);
+    const val = event.target.value;
+    const actor = game.actors.get(dataset.id);
+    actor.system.roll.power.form = val;
+    actor.system.roll.label = actor.system.roll.label.replace(
+      /\((.+)\)/i,
+      `(${CONFIG.ARM5E.magic.arts[val].short})`
+    );
+    // ;
   });
 }
 

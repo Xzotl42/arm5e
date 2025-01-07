@@ -208,9 +208,17 @@ export class AbilitySchema extends foundry.abstract.DataModel {
     }
     if (itemData.system.option != undefined && itemData.system.option != "") {
       // keep only alphanum chars
-      let regex = /[^a-zA-Z0-9]/gi;
+      let regex = /[^a-zA-Z0-9-]/gi;
       if (itemData.system.option.match(regex) != null)
         updateData["system.option"] = itemData.system.option.replace(regex, "");
+    } else {
+      // generic ability without any ability option
+      if (
+        CONFIG.ARM5E.ALL_ABILITIES[itemData.system.key] &&
+        CONFIG.ARM5E.ALL_ABILITIES[itemData.system.key].option
+      ) {
+        updateData["system.option"] = foundry.utils.randomID();
+      }
     }
 
     if (itemData.system.description == null) {

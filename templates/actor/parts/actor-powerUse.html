@@ -2,6 +2,18 @@
   {{> "systems/arm5e/templates/roll/parts/roll-header.html" header="Confirmation" }}
   <div class="roll-options">
     <div class="flexrow flex-group-center">
+      <label class="resource-label">{{localize "arm5e.sheet.form" }}</label>
+      <select class="change-form" name="system.roll.power.form" data-type="String" data-id="{{_id}}">
+        {{selectOptions config.magic.forms selected=system.roll.power.form labelAttr="label" localize=true}}
+      </select>
+      <label class="resource-label " name="might" value="{{might}}">{{localize "arm5e.sheet.cost" }}</label>
+      <input type="number" class="change-cost resource-focus" value="{{system.roll.power.cost}}" data-id="{{_id}}">
+    </div>
+    <div class="flexrow flex-group-center">
+      <label class="resource-label"><img src="systems/arm5e/assets/ballSilver.png" width="20" height="20"
+          style="border :0px" /></label>
+    </div>
+    <div class="flexrow flex-group-center">
       <label class="resource-label" name="might" value="{{might}}">{{localize "arm5e.sheet.might" }} ({{ numberFormat
         system.might.value decimals=0
         sign=true }})</label>
@@ -11,7 +23,8 @@
       <label class="resource-label">-</label>
     </div>
     <div class="flexrow flex-group-center">
-      <label class="resource-label" name="cost" value="{{cost}}">5 * {{system.roll.power.cost}} points cost ({{
+      <label id="{{system.roll.label}}" class="{{_id}}-level resource-label">5 *
+        {{system.roll.power.cost}} points cost ({{
         numberFormat
         system.roll.power.penetrationPenalty decimals=0 sign=true }})</label>
     </div>

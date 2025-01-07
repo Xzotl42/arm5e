@@ -112,12 +112,21 @@ export class ArM5eRollInfo {
       case "power": // No roll here
         if (dataset.id) {
           let power = this._actor.items.get(dataset.id);
-          this.label += ` (${ARM5E.magic.arts[power.system.form].short})`;
+          if (power.system.form === "inherit") {
+            if (this._actor._hasMight()) {
+              this.power.form = this._actor.system.might.form;
+            } else {
+              this.power.form = "an";
+            }
+          } else {
+            this.power.form = power.system.form;
+          }
+
+          this.label += ` (${ARM5E.magic.arts[this.power.form].short})`;
           if (this.img === "") this.img = power.img;
           this.itemId = power.id;
           this.power.cost = Number(power.system.cost);
           this.power.penetrationPenalty = this.power.cost * 5;
-          this.power.form = power.system.form;
         }
         this.initPenetrationVariables();
         break;
