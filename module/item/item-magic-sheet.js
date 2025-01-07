@@ -94,6 +94,16 @@ export class ArM5eItemMagicSheet extends ArM5eItemSheet {
         }
 
         break;
+      case "power":
+        if (this.item.isOwned && this.item.actor._hasMight()) {
+          context.selection.forms = {
+            inherit: { label: game.i18n.localize("arm5e.generic.inherit") },
+            ...CONFIG.ARM5E.magic.forms
+          };
+        } else {
+          context.selection.forms = CONFIG.ARM5E.magic.forms;
+        }
+        break;
       default:
         break;
     }

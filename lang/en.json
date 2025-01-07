@@ -1718,5 +1718,6 @@
   "arm5e.generic.templates": "Templates",
   "arm5e.generic.orphans": "Orphans",
   "arm5e.generic.invalid": "Invalid",
-  "arm5e.generic.versus": "Versus"
+  "arm5e.generic.versus": "Versus",
+  "arm5e.generic.inherit": "Inherit"
 }
