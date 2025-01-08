@@ -1,3 +1,11 @@
+# Release notes
+
+## 2.3.2.18, Quendalon, Fae only
+
+### Bug fixes
+
+- Empty ability option will be ignored and restored to original value instead of "OptionName".
+
 ## 2.3.2.17, Quendalon, back from the wood with weird eyes
 
 ### Features & changes
