@@ -571,8 +571,10 @@ export class ArM5eItemSheet extends ItemSheet {
   }
   async _cleanUpOption(item, event) {
     event.preventDefault();
+
     if (event.currentTarget.value == "") {
-      event.currentTarget.value = "optionName";
+      event.currentTarget.value = item.system.option;
+      return;
     } else {
       // remove any non alphanumeric character
       event.currentTarget.value = slugify(event.currentTarget.value); //.replace(/[^a-zA-Z0-9]/gi, "");
