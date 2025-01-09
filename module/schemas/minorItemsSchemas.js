@@ -2,14 +2,7 @@
 import { ARM5E } from "../config.js";
 import { VIRTUESFLAWS_DEFAULT_ICONS } from "../constants/ui.js";
 import { convertToNumber, log } from "../tools.js";
-import {
-  boolOption,
-  convertToInteger,
-  CostField,
-  itemBase,
-  NullableEmbeddedDataField,
-  XpField
-} from "./commonSchemas.js";
+import { boolOption, convertToInteger, CostField, itemBase, XpField } from "./commonSchemas.js";
 import { EnchantmentExtension, ItemState } from "./enchantmentSchema.js";
 const fields = foundry.data.fields;
 
@@ -237,7 +230,7 @@ export class ItemSchema extends foundry.abstract.TypeDataModel {
       cost: CostField("standard"),
       carried: boolOption(false, true),
       state: ItemState(),
-      enchantments: new NullableEmbeddedDataField(EnchantmentExtension, {
+      enchantments: new fields.EmbeddedDataField(EnchantmentExtension, {
         nullable: true,
         initial: null
       })

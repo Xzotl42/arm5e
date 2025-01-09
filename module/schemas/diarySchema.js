@@ -10,7 +10,7 @@ import {
   SeasonField,
   XpField
 } from "./commonSchemas.js";
-import { SpellSchema, baseLevel } from "./magicSchemas.js";
+import { SpellParamsSchema, baseLevel } from "./magicSchemas.js";
 import { ItemSchema } from "./minorItemsSchemas.js";
 import { ArmorSchema, WeaponSchema } from "./weaponArmorSchema.js";
 const fields = foundry.data.fields;
@@ -252,7 +252,7 @@ export class DiaryEntrySchema extends foundry.abstract.TypeDataModel {
                 initial: ""
               }),
               level: baseLevel(),
-              spellData: new fields.EmbeddedDataField(SpellSchema)
+              spellData: new fields.EmbeddedDataField(SpellParamsSchema)
             }),
             { required: false, initial: [] }
           )

@@ -15,12 +15,12 @@ import {
   TechniquesForms,
   XpField
 } from "./commonSchemas.js";
-import { baseLevel } from "./magicSchemas.js";
+import { baseLevel, MagicalEffectSchema } from "./magicSchemas.js";
 const fields = foundry.data.fields;
 
 // Schema field added to enchanted devices
 
-export class EnchantmentExtension extends foundry.abstract.TypeDataModel {
+export class EnchantmentExtension extends foundry.abstract.DataModel {
   constructor(fields, options = { nullable: true }) {
     super(fields, options);
   }
@@ -198,10 +198,13 @@ export class EnchantmentExtension extends foundry.abstract.TypeDataModel {
   }
 }
 
-export class EnchantmentSchema extends foundry.abstract.TypeDataModel {
-  constructor(fields, options = { nullable: true }) {
-    super(fields, options);
+export class EnchantmentSchema extends foundry.abstract.DataModel {
+  static defineSchema() {
+    return EnchantmentEffectSchema.defineSchema();
   }
+}
+
+export class EnchantmentEffectSchema extends MagicalEffectSchema {
   static defineSchema() {
     return {
       ...itemBase(),
@@ -220,7 +223,7 @@ export class EnchantmentSchema extends foundry.abstract.TypeDataModel {
   }
 
   sanitize() {
-    return EnchantmentSchema.sanitizeData(this.toObject());
+    return EnchantmentEffectSchema.sanitizeData(this.toObject());
   }
 
   static sanitizeData(data) {

@@ -10,10 +10,12 @@
   - Use of TypeDataModel instead of DataModel for Document types
   - Removed of V10 only code.
   - Removed V12 deprecation warnings
+- [Technical] data preparation clean-up
 
 ### Bug fixes
 
 - Empty ability option will be ignored and restored to original value instead of "OptionName".
+
 ## 2.3.2.17, Quendalon, back from the wood with weird eyes
 
 ### Features & changes

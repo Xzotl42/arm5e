@@ -257,7 +257,9 @@ export class MagicalEffectSchema extends foundry.abstract.TypeDataModel {
       applyFocus: boolOption(false, true)
     };
   }
-
+  prepareOwnerData() {
+    this.castingTotal = this._computeCastingTotal(this.parent.actor, { char: "sta" });
+  }
   static migrate(itemData) {
     const updateData = migrateMagicalItem(itemData);
 
@@ -270,17 +272,90 @@ export class MagicalEffectSchema extends foundry.abstract.TypeDataModel {
 
     return updateData;
   }
+  _computeCastingTotal(owner, options = {}) {
+    if (owner.type != "player" && owner.type != "npc") {
+      return 0;
+    }
+    let res = owner.system.characteristics[options.char].value;
+    let tech = 1000;
+    let form = 1000;
+    let deficiencyDivider = 1;
+    let deficientTech = false;
+    let deficientForm = false;
+    let techReq = Object.entries(this["technique-req"]).filter((r) => r[1] === true);
+    let formReq = Object.entries(this["form-req"]).filter((r) => r[1] === true);
+    if (owner.system.arts.techniques[this.technique.value].deficient) {
+      deficientTech = true;
+    }
+    if (owner.system.arts.forms[this.form.value].deficient) {
+      deficientForm = true;
+    }
+    if (techReq.length > 0) {
+      techReq.forEach((key) => {
+        if (owner.system.arts.techniques[key[0]].deficient) {
+          deficientTech = true;
+        }
+        tech = Math.min(tech, owner.system.arts.techniques[key[0]].finalScore);
+      });
+
+      tech = Math.min(owner.system.arts.techniques[this.technique.value].finalScore, tech);
+    } else {
+      tech = owner.system.arts.techniques[this.technique.value].finalScore;
+    }
+    if (formReq.length > 0) {
+      formReq.forEach((key) => {
+        if (owner.system.arts.forms[key[0]].deficient) {
+          deficientForm = true;
+        }
+        form = Math.min(tech, owner.system.arts.forms[key[0]].finalScore);
+      });
+      form = Math.min(owner.system.arts.forms[this.form.value].finalScore, form);
+    } else {
+      form = owner.system.arts.forms[this.form.value].finalScore;
+    }
+    if (this.applyFocus || options.focus) {
+      res += tech + form + Math.min(tech, form);
+    } else {
+      res += tech + form;
+    }
+    // Mastery
+    if (this.finalScore) {
+      res += this.finalScore;
+    }
+
+    if (this.ritual) {
+      res += owner.system.laboratory.abilitiesSelected.artesLib.value;
+      res += owner.system.laboratory.abilitiesSelected.philosophy.value;
+    }
+    if (deficientTech && deficientForm) {
+      deficiencyDivider = 4;
+    } else if (deficientTech || deficientForm) {
+      deficiencyDivider = 2;
+    }
+
+    // log(false, `Casting total: ${res}`)
+    return Math.round(res / deficiencyDivider);
+  }
 }
 
-export class SpellSchema extends foundry.abstract.TypeDataModel {
+export class SpellParamsSchema extends foundry.abstract.DataModel {
+  static defineSchema() {
+    return SpellSchema.defineSchema();
+  }
+
+  static migrateData(data) {
+    return SpellSchema.migrateData(data);
+  }
+
+  static migrate(itemData) {
+    return SpellSchema.migrate(itemData);
+  }
+}
+
+export class SpellSchema extends MagicalEffectSchema {
   static defineSchema() {
     return {
-      ...itemBase(),
-      ...TechniquesForms(),
-      ...SpellAttributes(),
-      baseLevel: baseLevel(),
-      baseEffectDescription: baseDescription(),
-      applyFocus: boolOption(false, true),
+      ...super.defineSchema(),
       ritual: boolOption(),
       bonus: ModifierField(),
       bonusDesc: baseDescription(),
@@ -296,8 +371,6 @@ export class SpellSchema extends foundry.abstract.TypeDataModel {
    * @returns void
    */
   prepareOwnerData() {
-    if (!this.parent.isOwned) return;
-
     const owner = this.parent.actor;
 
     this.xpCoeff = owner.system.bonuses.arts.masteryXpCoeff;
@@ -310,6 +383,7 @@ export class SpellSchema extends foundry.abstract.TypeDataModel {
     this.remainingXp = this.xp + this.xpBonus;
 
     this.finalScore = this.derivedScore;
+    this.castingTotal = this._computeCastingTotal(this.parent.actor, { char: "sta" });
   }
 
   static getIcon(item, newValue = null) {
@@ -402,6 +476,15 @@ export class SpellSchema extends foundry.abstract.TypeDataModel {
     }
 
     return updateData;
+  }
+}
+export class LabTextTopicSchema extends foundry.abstract.DataModel {
+  static defineSchema() {
+    return LabTextSchema.defineSchema();
+  }
+
+  static migrate(itemData) {
+    return LabTextSchema.migrate(itemData);
   }
 }
 

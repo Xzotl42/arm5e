@@ -6,11 +6,10 @@ import {
   hermeticForm,
   hermeticTechnique,
   itemBase,
-  NullableEmbeddedDataField,
   authorship
 } from "./commonSchemas.js";
 import { EnchantmentExtension, ItemState } from "./enchantmentSchema.js";
-import { LabTextSchema } from "./magicSchemas.js";
+import { LabTextTopicSchema } from "./magicSchemas.js";
 const fields = foundry.data.fields;
 export class BookSchema extends foundry.abstract.TypeDataModel {
   static defineSchema() {
@@ -58,7 +57,7 @@ export class BookSchema extends foundry.abstract.TypeDataModel {
           spellName: new fields.StringField({ required: false, nullable: true, initial: null }), // TODO merge in "name"
           spellTech: hermeticTechnique(),
           spellForm: hermeticForm(),
-          labtext: new NullableEmbeddedDataField(LabTextSchema, {
+          labtext: new fields.EmbeddedDataField(LabTextTopicSchema, {
             required: false,
             nullable: true,
             initial: null
@@ -94,7 +93,7 @@ export class BookSchema extends foundry.abstract.TypeDataModel {
         }
       ),
       state: ItemState(),
-      enchantments: new NullableEmbeddedDataField(EnchantmentExtension, {
+      enchantments: new fields.EmbeddedDataField(EnchantmentExtension, {
         nullable: true,
         initial: null
       }),
@@ -144,7 +143,7 @@ export class BookSchema extends foundry.abstract.TypeDataModel {
     data.topics = data.topics instanceof Array ? data.topics : Object.values(data.topics);
     for (const topic of data.topics) {
       if (topic.category === "labText") {
-        topic.labtext = LabTextSchema.sanitizeData(topic.labtext);
+        topic.labtext = LabTextTopicSchema.sanitizeData(topic.labtext);
       }
     }
     if (data.enchantments) {

@@ -63,7 +63,7 @@ import { InhabitantSchema } from "./schemas/inhabitantSchema.js";
 import { SimpleCalendarSeasons, seasonOrder, seasonOrderInv } from "./tools/time.js";
 import { WoundSchema } from "./schemas/woundSchema.js";
 import { ArM5eSmallSheet } from "./item/item-small-sheet.js";
-import { EnchantmentSchema } from "./schemas/enchantmentSchema.js";
+import { EnchantmentEffectSchema } from "./schemas/enchantmentSchema.js";
 import { magicalAttributesHelper } from "./helpers/magic.js";
 import { CovenantSchema } from "./schemas/covenantSchema.js";
 import { ArM5eCovenantInhabitantSheet } from "./item/item-inhabitantCovenant.js";
@@ -551,7 +551,7 @@ function setDatamodels() {
   CONFIG.ARM5E.ItemDataModels.wound = WoundSchema;
   CONFIG.ARM5E.ItemDataModels.labCovenant = SanctumSchema;
 
-  CONFIG.ARM5E.ItemDataModels.enchantment = EnchantmentSchema;
+  CONFIG.ARM5E.ItemDataModels.enchantment = EnchantmentEffectSchema;
   CONFIG.ARM5E.ItemDataModels.book = BookSchema;
   CONFIG.ARM5E.ItemDataModels.diaryEntry = DiaryEntrySchema;
   CONFIG.ARM5E.ItemDataModels.supernaturalEffect = SupernaturalEffectSchema;

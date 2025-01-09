@@ -335,47 +335,45 @@ export class ArM5ePCActor extends Actor {
   _prepareCharacterData() {
     const system = this.system;
     log(false, `Preparing Actor ${this.name} data`);
-    // Initialize containers.
-    let weapons = [];
-    let armor = [];
-    let spells = [];
-    let magicalEffects = [];
-    let vis = [];
-    let items = [];
-    let artsTopics = [];
-    let mundaneTopics = [];
-    let masteryTopics = [];
-    let laboratoryTexts = [];
-    let physicalBooks = [];
-    let virtues = [];
-    let flaws = [];
+    // Initialize collections.
+    system.weapons = [];
+    system.armor = [];
+    system.vis = [];
+    system.items = [];
+    system.artsTopics = [];
+    system.mundaneTopics = [];
+    system.masteryTopics = [];
+    system.laboratoryTexts = [];
+    system.physicalBooks = [];
+    system.virtues = [];
+    system.flaws = [];
+    system.reputations = [];
+    system.personalities = [];
+    system.abilities = [];
+    system.diaryEntries = [];
+
+    system.familiar = { abilities: [], powers: [] };
+    system.spells = [];
+    system.magicalEffects = [];
 
     system.qualities = [];
     system.inferiorities = [];
-    let abilities = [];
-    let abilitiesSelect = {};
-    let diaryEntries = [];
-    let abilitiesFamiliar = [];
-    let powersFamiliar = [];
-    let pendingXps = 0;
 
-    let soak = system.characteristics.sta.value + system.bonuses.traits.soak;
+    system.powers = [];
 
-    let powers = [];
+    system.totalXPAbilities = 0;
+    system.totalXPArts = 0;
+    system.totalVirtues = 0;
+    system.totalFlaws = 0;
+    system.pendingXps = 0;
 
-    let reputations = [];
-    system.personalities = [];
-
-    let totalXPAbilities = 0;
-    let totalXPArts = 0;
-    let totalVirtues = 0;
-    let totalFlaws = 0;
     system.totalQualities = 0;
     system.totalInferiorities = 0;
-    let totalXPSpells = 0;
-    let totalXPMasteries = 0;
+    system.totalXPSpells = 0;
+    system.totalXPMasteries = 0;
 
-    let combat = {
+    let soak = system.characteristics.sta.value + system.bonuses.traits.soak;
+    system.combat = {
       load: 0,
       overload: 0,
       init: 0,
@@ -459,128 +457,209 @@ export class ArM5ePCActor extends Actor {
       };
     }
 
-    // Abilities
-    const temp = {
-      _id: "",
-      name: "N/A",
-      value: 0
-    };
-    abilitiesSelect.a0 = temp;
     for (const [key, item] of this.items.entries()) {
-      if (item.type === "ability") {
-        let computedKey = item.system.getComputedKey();
-        item.system.xpCoeff = this._getAbilityXpCoeff(item.system.key, item.system.option);
-        item.system.xpBonus = this._getAbilityXpBonus(item.system.key, item.system.option);
-        item.system.upgrade = this._getAbilityUpgrade(item.system.key, item.system.option);
-        item.system.derivedScore = item.system.accelerated
-          ? ArM5ePCActor.getArtScore(
-              Math.round((item.system.xp + item.system.xpBonus) * item.system.xpCoeff)
-            )
-          : ArM5ePCActor.getAbilityScoreFromXp(
-              Math.round((item.system.xp + item.system.xpBonus) * item.system.xpCoeff)
-            );
-        item.system.xpNextLevel = item.system.accelerated
-          ? Math.round(ArM5ePCActor.getArtXp(item.system.derivedScore + 1) / item.system.xpCoeff)
-          : Math.round(
-              ArM5ePCActor.getAbilityXp(item.system.derivedScore + 1) / item.system.xpCoeff
-            );
-        item.system.remainingXp = item.system.xp + item.system.xpBonus;
-
-        if (
-          system.bonuses.skills[computedKey] != undefined &&
-          system.bonuses.skills[computedKey].bonus != 0
-        ) {
-          item.system.finalScore = Math.max(
-            item.system.upgrade,
-            item.system.derivedScore + parseInt(system.bonuses.skills[computedKey].bonus)
-          );
-        } else {
-          item.system.finalScore = Math.max(item.system.upgrade, item.system.derivedScore);
-        }
-        if (item.system.category == "altTechnique") {
-          system.magicSystem.verbs.push(item);
-        } else if (item.system.category == "altForm") {
-          system.magicSystem.nouns.push(item);
-        } else {
-          abilities.push(item);
-        }
-        const temp = {
-          id: item._id,
-          name: item.name,
-          value: item.system.finalScore
-        };
-        // AbilitiesSelect.push(temp);
-        abilitiesSelect[`a${key}`] = temp;
-
-        totalXPAbilities = parseInt(totalXPAbilities) + item.system.xp;
-
-        if (this._isMagus() && system.laboratory && system.laboratory.abilitiesSelected) {
-          if (item.system.key != "") {
-            if (item.system.key == "finesse") {
-              system.laboratory.abilitiesSelected.finesse.value = item.system.finalScore;
-            } else if (item.system.key == "awareness") {
-              system.laboratory.abilitiesSelected.awareness.value = item.system.finalScore;
-            } else if (item.system.key == "concentration") {
-              system.laboratory.abilitiesSelected.concentration.value = item.system.finalScore;
-            } else if (item.system.key == "artesLib") {
-              system.laboratory.abilitiesSelected.artesLib.value = item.system.finalScore;
-            } else if (item.system.key == "magicTheory") {
-              system.laboratory.abilitiesSelected.magicTheory.value = item.system.finalScore;
-            } else if (item.system.key == "parma") {
-              system.laboratory.abilitiesSelected.parma.value = item.system.finalScore;
-            } else if (item.system.key == "philosophy") {
-              system.laboratory.abilitiesSelected.philosophy.value = item.system.finalScore;
-            } else if (item.system.key == "penetration") {
-              system.laboratory.abilitiesSelected.penetration.value = item.system.finalScore;
-            }
+      // move code specific to type below in their respective datamodel schema.
+      if (item.system.prepareOwnerData instanceof Function) {
+        item.system.prepareOwnerData();
+      }
+      item.img = item.img || DEFAULT_TOKEN;
+      // distribute items in their respective collection
+      switch (item.type) {
+        case "ability":
+          if (item.system.category == "altTechnique") {
+            system.magicSystem.verbs.push(item);
+          } else if (item.system.category == "altForm") {
+            system.magicSystem.nouns.push(item);
           } else {
-            // Legacy code, to be removed in the future
-            if (item._id == system.laboratory.abilitiesSelected.finesse.abilityID) {
-              system.laboratory.abilitiesSelected.finesse.value = item.system.finalScore;
-            } else if (item._id == system.laboratory.abilitiesSelected.awareness.abilityID) {
-              system.laboratory.abilitiesSelected.awareness.value = item.system.finalScore;
-            } else if (item._id == system.laboratory.abilitiesSelected.concentration.abilityID) {
-              system.laboratory.abilitiesSelected.concentration.value = item.system.finalScore;
-            } else if (item._id == system.laboratory.abilitiesSelected.artesLib.abilityID) {
-              system.laboratory.abilitiesSelected.artesLib.value = item.system.finalScore;
-            } else if (item._id == system.laboratory.abilitiesSelected.philosophy.abilityID) {
-              system.laboratory.abilitiesSelected.philosophy.value = item.system.finalScore;
-            } else if (item._id == system.laboratory.abilitiesSelected.parma.abilityID) {
-              system.laboratory.abilitiesSelected.parma.value = item.system.finalScore;
-            } else if (item._id == system.laboratory.abilitiesSelected.magicTheory.abilityID) {
-              system.laboratory.abilitiesSelected.magicTheory.value = item.system.finalScore;
-            } else if (item._id == system.laboratory.abilitiesSelected?.penetration?.abilityID) {
-              system.laboratory.abilitiesSelected.penetration.value = item.system.finalScore;
+            if (this._isMagus()) {
+              if (item.system.key == "finesse") {
+                system.laboratory.abilitiesSelected.finesse.value = item.system.finalScore;
+              } else if (item.system.key == "awareness") {
+                system.laboratory.abilitiesSelected.awareness.value = item.system.finalScore;
+              } else if (item.system.key == "concentration") {
+                system.laboratory.abilitiesSelected.concentration.value = item.system.finalScore;
+              } else if (item.system.key == "artesLib") {
+                system.laboratory.abilitiesSelected.artesLib.value = item.system.finalScore;
+              } else if (item.system.key == "magicTheory") {
+                system.laboratory.abilitiesSelected.magicTheory.value = item.system.finalScore;
+              } else if (item.system.key == "parma") {
+                system.laboratory.abilitiesSelected.parma.value = item.system.finalScore;
+              } else if (item.system.key == "philosophy") {
+                system.laboratory.abilitiesSelected.philosophy.value = item.system.finalScore;
+              } else if (item.system.key == "penetration") {
+                system.laboratory.abilitiesSelected.penetration = item.system.finalScore;
+              }
+            }
+
+            system.totalXPAbilities += item.system.xp;
+            system.abilities.push(item);
+          }
+          break;
+        case "abilityFamiliar":
+          system.familiar.abilities.push(item);
+          break;
+        case "armor":
+          system.armor.push(item);
+          break;
+        case "book":
+          let idx = 0;
+          for (let topic of item.system.topics) {
+            topic.id = item.id;
+            topic.img = item.img;
+            topic.index = idx++;
+            topic.book = `${item.name} (${integerToRomanNumeral(idx)})`;
+            switch (topic.category) {
+              case "ability":
+                system.mundaneTopics.push(topic);
+                break;
+              case "art":
+                system.artsTopics.push(topic);
+                break;
+              case "mastery":
+                system.masteryTopics.push(topic);
+                break;
+              case "labText":
+                topic.system = topic.labtext;
+                if (topic.labtext != null) {
+                  topic.name = `${topic.book}: ${topic.labtextTitle}`;
+                }
+                system.laboratoryTexts.push(topic);
+                break;
+              default:
+                error(false, `Unknown topic category${topic.category}`);
             }
           }
-        }
+          system.physicalBooks.push(item);
+          break;
+        case "diaryEntry":
+          if (!item.system.done) {
+            system.pendingXps += item.system.sourceQuality;
+          }
+          system.diaryEntries.push(item);
+          break;
+        case "flaw":
+          if (ARM5E.impacts[item.system.impact.value]) {
+            system.totalFlaws += ARM5E.impacts[item.system.impact.value].cost;
+          }
+          system.flaws.push(item);
+          break;
+        case "inferiority":
+          if (ARM5E.impacts[item.system.impact.value]) {
+            system.totalInferiorities += ARM5E.impacts[item.system.impact.value].cost;
+          }
+          system.inferiorities.push(item);
+          break;
+        case "item":
+          system.items.push(item);
+          break;
+        case "laboratoryText":
+          let topic = {
+            id: item.id,
+            img: item.img,
+            index: 0,
+            book: "",
+            category: "labText",
+            name: item.name,
+            system: item.system
+          };
+          system.laboratoryTexts.push(topic);
+          break;
+        case "magicalEffect":
+          system.magicalEffects.push(item);
+          break;
+        case "personalityTrait":
+          system.personalities.push(item);
+          break;
+        case "power":
+          system.powers.push(item);
+          break;
+        case "powerFamiliar":
+          system.familiar.powers.push(item);
+          break;
+        case "quality":
+          if (ARM5E.impacts[item.system.impact.value]) {
+            system.totalQualities += ARM5E.impacts[item.system.impact.value].cost;
+          }
+          system.qualities.push(item);
+          break;
+        case "reputation":
+          system.reputations.push(item);
+          break;
+        case "spell":
+          system.totalXPSpells += item.system.level;
+          system.totalXPMasteries += item.system.xp;
+          system.spells.push(item);
+          break;
+        case "supernaturalEffect":
+          if (system.supernaturalEffectsTemplates[item.system.template]) {
+            system.supernaturalEffectsTemplates[item.system.template].push(item);
+          } else {
+            system.supernaturalEffectsTemplates["orphans"].push(item);
+          }
+          break;
+        case "virtue":
+          if (ARM5E.impacts[item.system.impact.value]) {
+            system.totalVirtues += ARM5E.impacts[item.system.impact.value].cost;
+          }
+          system.virtues.push(item);
+          break;
+        case "vis":
+          system.vis.push(item);
+          break;
+        case "weapon":
+          system.weapons.push(item);
+          break;
+        case "wound":
+          system.wounds[item.system.gravity].push(item);
+          break;
+        default:
+          console.error(`Unknown Item type : "${item.type}", skipping...`);
+          continue;
+      }
+
+      if (item.type === "ability") {
       }
     }
 
-    if (system.abilities) {
-      system.abilities = abilities.sort(function (e1, e2) {
-        return e1.name.localeCompare(e2.name);
-      });
-    }
+    // SORTING
+
+    system.abilities.sort(function (e1, e2) {
+      return e1.name.localeCompare(e2.name);
+    });
+    system.armor.sort((a, b) => (a.sort || 0) - (b.sort || 0));
+    system.artsTopics.sort(compareTopics);
+    system.diaryEntries.sort(compareDiaryEntries);
+    system.flaws.sort((a, b) => (a.sort || 0) - (b.sort || 0));
+    system.inferiorities.sort((a, b) => (a.sort || 0) - (b.sort || 0));
+    system.items.sort((a, b) => (a.sort || 0) - (b.sort || 0));
+    system.laboratoryTexts.sort(compareTopics);
+    system.magicalEffects.sort(compareMagicalEffects);
+    system.masteryTopics.sort(compareTopics);
+    system.mundaneTopics.sort(compareTopics);
+    system.personalities.sort((a, b) => (a.sort || 0) - (b.sort || 0));
+    system.physicalBooks.sort((a, b) => (a.sort || 0) - (b.sort || 0));
+    system.powers.sort((a, b) => (a.sort || 0) - (b.sort || 0));
+    system.qualities.sort((a, b) => (a.sort || 0) - (b.sort || 0));
+    system.reputations.sort((a, b) => (a.sort || 0) - (b.sort || 0));
+    system.spells.sort(compareSpells);
+    system.virtues.sort((a, b) => (a.sort || 0) - (b.sort || 0));
+    system.vis.sort((a, b) => (a.sort || 0) - (b.sort || 0));
+    system.weapons.sort((a, b) => (a.sort || 0) - (b.sort || 0));
 
     if (this._isMagus()) {
       soak += this.system?.familiar?.cordFam?.bronze ?? 0;
 
       /*
-            "fastCastingSpeed":{"value": 0, "calc": "Qik + Finesse + stress die" },
-            "determiningEffect":{"value": 0, "calc": "Per + Awareness + die VS 15-magnitude" },
-            "targeting":{"value": 0, "calc": "Per + Finesse + die" },
-            "concentration":{"value": 0, "calc": "Sta + Concentration + die" },
-            "magicResistance":{"value": 0, "calc": "Parma * 5 + Form" },
-            "multipleCasting":{"value": 0, "calc": "Int + Finesse + stress die - no of spells VS 9" },
-            "basicLabTotal":{"value": 0, "calc": "Int + Magic theory + Aura (+ Technique + Form)" },
-            "visLimit":{"value": 0, "calc": "Magic theory * 2" }
-            */
+      "fastCastingSpeed":{"value": 0, "calc": "Qik + Finesse + stress die" },
+      "determiningEffect":{"value": 0, "calc": "Per + Awareness + die VS 15-magnitude" },
+      "targeting":{"value": 0, "calc": "Per + Finesse + die" },
+      "concentration":{"value": 0, "calc": "Sta + Concentration + die" },
+      "magicResistance":{"value": 0, "calc": "Parma * 5 + Form" },
+      "multipleCasting":{"value": 0, "calc": "Int + Finesse + stress die - no of spells VS 9" },
+      "basicLabTotal":{"value": 0, "calc": "Int + Magic theory + Aura (+ Technique + Form)" },
+      "visLimit":{"value": 0, "calc": "Magic theory * 2" }
+      */
 
-      // compute the spellcasting bonus:
-      // (this.system.stances.voice[system.stances.voiceStance] || 0) +
-      // (this.system.stances.gestures[system.stances.gesturesStance] || 0);
-      // log(false, `Bonus spellcasting: ${this.system.bonuses.arts.spellcasting}`);
       if (system.laboratory === undefined) {
         system.laboratory = {};
       }
@@ -622,7 +701,7 @@ export class ArM5ePCActor extends Actor {
         );
 
         // Calculate the next level experience needed
-        totalXPArts = parseInt(totalXPArts) + technique.xp;
+        system.totalXPArts += technique.xp;
       }
 
       const parmaStats = this.getAbilityStats("parma");
@@ -637,194 +716,61 @@ export class ArM5ePCActor extends Actor {
           form.magicResistance += 5;
         }
 
-        totalXPArts = parseInt(totalXPArts) + form.xp;
+        system.totalXPArts += form.xp;
       }
     }
 
-    for (let [key, item] of this.items.entries()) {
-      item.img = item.img || DEFAULT_TOKEN;
-      item._index = key;
-
-      // TODO move code specific to type below in their respective datamodel schema.
-      if (item.system.prepareOwnerData instanceof Function) {
-        item.system.prepareOwnerData();
-      }
-
-      if (item.type === "weapon") {
-        if (item.system.equipped == true) {
-          combat.load += item.system.load;
-          combat.init += item.system.init;
-          combat.atk += item.system.atk;
-          combat.dfn += item.system.dfn;
-          combat.dam += item.system.dam;
-          combat.img = item.img;
-          combat.name = item.name;
-          combat.itemId = item.id;
-          const ab = this.getAbility(item.system.ability.key, item.system.ability.option);
-          combat.ability = 0;
-          if (ab) {
-            combat.ability += ab.system.finalScore;
-            if (item.system.weaponExpert) {
-              combat.ability++;
-            }
-            if (item.system.horse) {
-              const ride = this.getAbilityStats("ride");
-              if (ride.score > 3) {
-                ride.score = 3;
-              }
-              combat.ability += ride.score;
-            }
-            item.system.ability.id = ab._id;
-          }
-        }
-        item.system.abilities = abilitiesSelect;
-        weapons.push(item);
-      } else if (item.type === "armor") {
-        if (item.system.equipped == true) {
-          combat.load += item.system.load;
-          combat.prot += item.system.prot;
-        }
-        armor.push(item);
-      } else if (item.type === "spell") {
-        item.system.castingTotal = item._computeCastingTotal(this, { char: "sta" });
-        spells.push(item);
-        totalXPSpells = parseInt(totalXPSpells) + parseInt(item.system.level);
-        totalXPMasteries = totalXPMasteries + item.system.xp;
-      } else if (item.type === "magicalEffect") {
-        item.system.castingTotal = item._computeCastingTotal(this, { char: "sta" });
-        magicalEffects.push(item);
-      } else if (item.type === "vis") {
-        vis.push(item);
-      } else if (item.type === "item" || item.type == "enchantedItem") {
-        items.push(item);
-      } else if (item.type === "book") {
-        let idx = 0;
-        for (let topic of item.system.topics) {
-          topic.id = item.id;
-          topic.img = item.img;
-          topic.index = idx++;
-          topic.book = `${item.name} (${integerToRomanNumeral(idx)})`;
-          switch (topic.category) {
-            case "ability":
-              mundaneTopics.push(topic);
-              break;
-            case "art":
-              artsTopics.push(topic);
-              break;
-            case "mastery":
-              masteryTopics.push(topic);
-              break;
-            case "labText":
-              topic.system = topic.labtext;
-              if (topic.labtext != null) {
-                topic.name = `${topic.book}: ${topic.labtextTitle}`;
-              }
-              laboratoryTexts.push(topic);
-              break;
-            default:
-              error(false, `Unknown topic category${topic.category}`);
-          }
-        }
-        physicalBooks.push(item);
-      } else if (item.type === "laboratoryText") {
-        let topic = {
-          id: item.id,
-          img: item.img,
-          index: 0,
-          book: "",
-          category: "labText",
-          name: item.name,
-          system: item.system
-        };
-
-        laboratoryTexts.push(topic);
-      } else if (item.type === "virtue") {
-        virtues.push(item);
-        if (ARM5E.impacts[item.system.impact.value]) {
-          totalVirtues =
-            parseInt(totalVirtues) + parseInt(ARM5E.impacts[item.system.impact.value].cost);
-        }
-      } else if (item.type === "flaw") {
-        flaws.push(item);
-        if (ARM5E.impacts[item.system.impact.value]) {
-          totalFlaws =
-            parseInt(totalFlaws) + parseInt(ARM5E.impacts[item.system.impact.value].cost);
-        }
-      } else if (item.type === "quality") {
-        system.qualities.push(item);
-        if (ARM5E.impacts[item.system.impact.value]) {
-          system.totalQualities += parseInt(ARM5E.impacts[item.system.impact.value].cost);
-        }
-      } else if (item.type === "inferiorities") {
-        system.inferiorities.push(item);
-        if (ARM5E.impacts[item.system.impact.value]) {
-          system.totalInferiorities += parseInt(ARM5E.impacts[item.system.impact.value].cost);
-        }
-      } else if (item.type === "diaryEntry") {
-        if (!item.system.done) {
-          pendingXps += item.system.sourceQuality;
-          //    +
-          //   item.system.progress.abilities.reduce((previous, current, i) => {
-          //     return previous + current.xp;
-          //   }, 0) +
-          //   item.system.progress.arts.reduce((previous, current, i) => {
-          //     return previous + current.xp;
-          //   }, 0);
-          // item.system.progress.spells.reduce((previous, current, i) => {
-          //   return previous + current.xp;
-          // }, 0);
-          // item.system.progress.newSpells.reduce((previous, current, i) => {
-          //   return previous + current.xp;
-          // }, 0);
-        }
-        diaryEntries.push(item);
-      } else if (item.type === "abilityFamiliar") {
-        abilitiesFamiliar.push(item);
-      } else if (item.type === "mightFamiliar" || item.type === "powerFamiliar") {
-        powersFamiliar.push(item);
-      } else if (item.type === "might" || item.type === "power") {
-        powers.push(item);
-      } else if (item.type === "personalityTrait") {
-        system.personalities.push(item);
-      } else if (item.type === "reputation") {
-        reputations.push(item);
-      } else if (item.type === "wound") {
-        system.wounds[item.system.gravity].push(item);
-      } else if (item.type === "supernaturalEffect") {
-        if (system.supernaturalEffectsTemplates[item.system.template]) {
-          system.supernaturalEffectsTemplates[item.system.template].push(item);
-        } else {
-          system.supernaturalEffectsTemplates["orphans"].push(item);
-        }
-      }
-    }
-
-    items.sort((a, b) => (a.sort || 0) - (b.sort || 0));
-    virtues.sort((a, b) => (a.sort || 0) - (b.sort || 0));
-    flaws.sort((a, b) => (a.sort || 0) - (b.sort || 0));
-    system.qualities.sort((a, b) => (a.sort || 0) - (b.sort || 0));
-    system.inferiorities.sort((a, b) => (a.sort || 0) - (b.sort || 0));
-
-    weapons.sort((a, b) => (a.sort || 0) - (b.sort || 0));
-    armor.sort((a, b) => (a.sort || 0) - (b.sort || 0));
-    powers.sort((a, b) => (a.sort || 0) - (b.sort || 0));
-    system.personalities.sort((a, b) => (a.sort || 0) - (b.sort || 0));
-    reputations.sort((a, b) => (a.sort || 0) - (b.sort || 0));
-    vis.sort((a, b) => (a.sort || 0) - (b.sort || 0));
+    ///////////////////////
     // Combat
+    ///////////////////////
+    for (let weapon of system.weapons) {
+      if (weapon.system.equipped == true) {
+        system.combat.load += weapon.system.load;
+        system.combat.init += weapon.system.init;
+        system.combat.atk += weapon.system.atk;
+        system.combat.dfn += weapon.system.dfn;
+        system.combat.dam += weapon.system.dam;
+        system.combat.img = weapon.img;
+        system.combat.name = weapon.name;
+        system.combat.itemId = weapon.id;
+        const ab = this.getAbility(weapon.system.ability.key, weapon.system.ability.option);
+        system.combat.ability = 0;
+        if (ab) {
+          system.combat.ability += ab.system.finalScore;
+          if (weapon.system.weaponExpert) {
+            system.combat.ability++;
+          }
+          if (weapon.system.horse) {
+            const ride = this.getAbilityStats("ride");
+            if (ride.score > 3) {
+              ride.score = 3;
+            }
+            system.combat.ability += ride.score;
+          }
+          weapon.system.ability.id = ab._id;
+        }
+      }
+    }
 
-    combat.overload = ArM5ePCActor.getArtScore(combat.load);
+    for (let armor of system.armor) {
+      if (armor.system.equipped == true) {
+        system.combat.load += armor.system.load;
+        system.combat.prot += armor.system.prot;
+      }
+    }
 
-    if (combat.prot) {
-      soak += combat.prot;
+    system.combat.overload = ArM5ePCActor.getArtScore(system.combat.load);
+
+    if (system.combat.prot) {
+      soak += system.combat.prot;
     }
 
     if (system.characteristics) {
       if (system.characteristics.str.value > 0) {
-        combat.overload = parseInt(combat.overload) - parseInt(system.characteristics.str.value);
+        system.combat.overload = system.combat.overload - system.characteristics.str.value;
       }
-      if (combat.overload < 0) {
-        combat.overload = 0;
+      if (system.combat.overload < 0) {
+        system.combat.overload = 0;
       }
     }
 
@@ -854,68 +800,12 @@ export class ArM5ePCActor extends Actor {
         system.decrepitude.points;
     }
     system.penalties.wounds.total = this.getWoundPenalty();
-    // Assign and return
-    system.totalXPAbilities = totalXPAbilities;
-    system.totalXPArts = totalXPArts;
-    system.totalVirtues = totalVirtues;
-    system.totalFlaws = totalFlaws;
-
-    system.totalXPSpells = totalXPSpells;
-    system.totalXPMasteries = totalXPMasteries;
-    system.pendingXps = pendingXps;
-
-    if (system.weapons) {
-      system.weapons = weapons;
-      // TODO: check why putting in there?
-      system.combat = combat;
-    }
-    if (system.armor) {
-      system.armor = armor;
-    }
-    if (system.spells) {
-      // System.spells = spells;
-      system.spells = spells.sort(compareSpells);
-    }
-    if (system.magicalEffects) {
-      system.magicalEffects = magicalEffects.sort(compareMagicalEffects);
-    }
 
     if (system.vitals.soa) {
       system.vitals.soa.value = soak;
     }
 
-    system.vitals.enc.value = combat.overload;
-
-    if (system.vis) {
-      system.vis = vis;
-    }
-    if (system.items) {
-      system.items = items;
-    }
-    system.artsTopics = artsTopics.sort(compareTopics);
-    system.mundaneTopics = mundaneTopics.sort(compareTopics);
-    system.masteryTopics = masteryTopics.sort(compareTopics);
-    system.laboratoryTexts = laboratoryTexts.sort(compareTopics);
-    system.physicalBooks = physicalBooks.sort((a, b) => (a.sort || 0) - (b.sort || 0));
-
-    if (system.virtues) {
-      system.virtues = virtues;
-    }
-    if (system.flaws) {
-      system.flaws = flaws;
-    }
-
-    if (system.diaryEntries) {
-      system.diaryEntries = diaryEntries.sort(compareDiaryEntries);
-    }
-    if (system.familiar) {
-      system.familiar.abilitiesFam = abilitiesFamiliar;
-      system.familiar.powersFam = powersFamiliar;
-    }
-
-    system.powers = powers;
-
-    system.reputations = reputations;
+    system.vitals.enc.value = system.combat.overload;
 
     // Links with other actors
 
@@ -1177,8 +1067,6 @@ export class ArM5ePCActor extends Actor {
     let workersPts = 0;
     let servantPts = 0;
     for (let [key, item] of this.items.entries()) {
-      item.img = item.img || DEFAULT_TOKEN;
-      item._index = key;
       if (item.type === "virtue") {
         boons.push(item);
         if (ARM5E.impacts[item.system.impact.value]) {
@@ -2280,7 +2168,7 @@ export class ArM5ePCActor extends Actor {
       return;
     }
 
-    let res = spell._computeCastingTotal(spell, { char: "int", focus: options.focus });
+    let res = spell.system._computeCastingTotal(this, { char: "int", focus: options.focus });
   }
 
   async changeHermeticArt(art, amount) {

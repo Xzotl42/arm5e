@@ -10,7 +10,7 @@ import { baseLevel } from "./magicSchemas.js";
 const fields = foundry.data.fields;
 
 // WORK IN PROGRESS (for when characters are migrated to datamodel)
-export class MagicSystemSchema extends foundry.abstract.DataModel {
+export class MagicSystemSchema extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     return {
       ...itemBase(),

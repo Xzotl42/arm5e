@@ -442,7 +442,7 @@ async function getRollFormula(actor) {
     if (rollInfo.magic.ritual === true) {
       value = actorSystemData.laboratory.abilitiesSelected.artesLib.value;
       value += actorSystemData.laboratory.abilitiesSelected.philosophy.value;
-      total = parseInt(total) + parseInt(value);
+      total += value;
       msg = newLine(msg);
       msg =
         msg +

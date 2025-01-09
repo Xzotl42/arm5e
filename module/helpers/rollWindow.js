@@ -298,7 +298,7 @@ function getDialogData(dataset, html, actor) {
       icon: "<i class='fas fa-check'></i>",
       label: game.i18n.localize(btnLabel),
       callback: async (html) => {
-        actor = getFormData(html, actor);
+        getFormData(html, actor);
         if (rollAlteration) {
           rollAlteration(actor);
         }
@@ -319,7 +319,7 @@ function getDialogData(dataset, html, actor) {
         properties.ACTION_LABEL ? properties.ACTION_LABEL : "arm5e.dialog.button.stressdie"
       ),
       callback: async (html) => {
-        actor = getFormData(html, actor);
+        getFormData(html, actor);
         await stressDie(actor, dataset.roll, mode, callback, actor.rollInfo.botchNumber);
       }
     };
@@ -333,7 +333,7 @@ function getDialogData(dataset, html, actor) {
           properties.ACTION_LABEL ? properties.ACTION_LABEL : "arm5e.dialog.button.simpledie"
         ),
         callback: async (html) => {
-          actor = getFormData(html, actor);
+          getFormData(html, actor);
           await simpleDie(actor, dataset.roll, callback);
         }
       };
@@ -357,7 +357,7 @@ function getDialogData(dataset, html, actor) {
         properties.ACTION_LABEL ? properties.ACTION_LABEL : "arm5e.dialog.button.simpledie"
       ),
       callback: async (html) => {
-        actor = getFormData(html, actor);
+        getFormData(html, actor);
         await simpleDie(actor, dataset.roll, callback);
       }
     };
@@ -379,7 +379,7 @@ function getDialogData(dataset, html, actor) {
         properties.ACTION_LABEL ? properties.ACTION_LABEL : "arm5e.dialog.powerUse"
       ),
       callback: async (html) => {
-        actor = getFormData(html, actor);
+        getFormData(html, actor);
         await noRoll(actor, 1, null);
       }
     };
@@ -477,7 +477,7 @@ async function usePower(dataset, actor) {
           icon: "<i class='fas fa-check'></i>",
           label: game.i18n.localize("arm5e.dialog.powerUse"),
           callback: async (html) => {
-            actor = getFormData(html, actor);
+            getFormData(html, actor);
             if (actor.system.features.hasMight) {
               await noRoll(actor, 1, changeMight);
             } else {
@@ -544,18 +544,18 @@ function addListenersDialog(html) {
     const dataset = getDataset(event);
     const val = event.target.value;
     const actor = game.actors.get(dataset.id);
-    actor.system.roll.power.cost = Number(val);
-    actor.system.roll.power.penetrationPenalty = Number(val) * 5;
+    actor.rollInfo.power.cost = Number(val);
+    actor.rollInfo.power.penetrationPenalty = Number(val) * 5;
     const e = html[0].getElementsByClassName(actor._id + "-level")[0];
-    e.innerHTML = `5 * ${val} points cost (${actor.system.roll.power.penetrationPenalty})`;
+    e.innerHTML = `5 * ${val} points cost (${actor.rollInfo.power.penetrationPenalty})`;
   });
 
   html.find(".change-form").change(async (event) => {
     const dataset = getDataset(event);
     const val = event.target.value;
     const actor = game.actors.get(dataset.id);
-    actor.system.roll.power.form = val;
-    actor.system.roll.label = actor.system.roll.label.replace(
+    actor.rollInfo.power.form = val;
+    actor.rollInfo.label = actor.rollInfo.label.replace(
       /\((.+)\)/i,
       `(${CONFIG.ARM5E.magic.arts[val].short})`
     );

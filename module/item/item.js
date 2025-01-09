@@ -222,6 +222,7 @@ export class ArM5eItem extends Item {
       techDeficient || actorSystemData.arts.techniques[this.system.technique.value].deficient;
     return [label, tech, techDeficient];
   }
+
   _getFormData(actorSystemData) {
     if (!IsMagicalEffect(this)) return ["", 0, false];
 
@@ -249,71 +250,6 @@ export class ArM5eItem extends Item {
     return [label, form, formDeficient];
   }
 
-  _computeCastingTotal(owner, options = {}) {
-    if (owner.type != "player" && owner.type != "npc") {
-      return 0;
-    }
-    let itemData = this.system;
-    let res = owner.system.characteristics[options.char].value;
-    let tech = 1000;
-    let form = 1000;
-    let deficiencyDivider = 1;
-    let deficientTech = false;
-    let deficientForm = false;
-    let techReq = Object.entries(itemData["technique-req"]).filter((r) => r[1] === true);
-    let formReq = Object.entries(itemData["form-req"]).filter((r) => r[1] === true);
-    if (owner.system.arts.techniques[this.system.technique.value].deficient) {
-      deficientTech = true;
-    }
-    if (owner.system.arts.forms[this.system.form.value].deficient) {
-      deficientForm = true;
-    }
-    if (techReq.length > 0) {
-      techReq.forEach((key) => {
-        if (owner.system.arts.techniques[key[0]].deficient) {
-          deficientTech = true;
-        }
-        tech = Math.min(tech, owner.system.arts.techniques[key[0]].finalScore);
-      });
-
-      tech = Math.min(owner.system.arts.techniques[this.system.technique.value].finalScore, tech);
-    } else {
-      tech = owner.system.arts.techniques[this.system.technique.value].finalScore;
-    }
-    if (formReq.length > 0) {
-      formReq.forEach((key) => {
-        if (owner.system.arts.forms[key[0]].deficient) {
-          deficientForm = true;
-        }
-        form = Math.min(tech, owner.system.arts.forms[key[0]].finalScore);
-      });
-      form = Math.min(owner.system.arts.forms[this.system.form.value].finalScore, form);
-    } else {
-      form = owner.system.arts.forms[this.system.form.value].finalScore;
-    }
-    if (this.system.applyFocus || options.focus) {
-      res += tech + form + Math.min(tech, form);
-    } else {
-      res += tech + form;
-    }
-    // Mastery
-    if (this.system.finalScore) {
-      res += this.system.finalScore;
-    }
-
-    if (this.system.ritual) {
-      res += owner.system.laboratory.abilitiesSelected.artesLib.value;
-      res += owner.system.laboratory.abilitiesSelected.philosophy.value;
-    }
-    if (deficientTech && deficientForm) {
-      deficiencyDivider = 4;
-    } else if (deficientTech || deficientForm) {
-      deficiencyDivider = 2;
-    }
-
-    // log(false, `Casting total: ${res}`)
-    return Math.round(res / deficiencyDivider);
-  }
   async _preCreate(data, options, userId) {
     await super._preCreate(data, options, userId);
 

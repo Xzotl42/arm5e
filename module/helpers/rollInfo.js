@@ -339,7 +339,7 @@ export class ArM5eRollInfo {
           3,
           "-"
         );
-        if (actorSystemData.familiar && actorSystemData.familiar.cordFam.bronze > 0) {
+        if (actorSystemData.familiar && actorSystemData.familiar.cordFam?.bronze > 0) {
           this.setGenericField(
             game.i18n.localize("arm5e.aging.roll.bronze"),
             actorSystemData.familiar.cordFam.bronze,

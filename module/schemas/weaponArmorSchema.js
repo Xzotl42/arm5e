@@ -1,13 +1,6 @@
 import { ARM5E } from "../config.js";
 import { convertToNumber, log } from "../tools.js";
-import {
-  boolOption,
-  CostField,
-  itemBase,
-  NullableDocumentIdField,
-  NullableEmbeddedDataField,
-  XpField
-} from "./commonSchemas.js";
+import { boolOption, CostField, itemBase, NullableDocumentIdField } from "./commonSchemas.js";
 import { EnchantmentExtension, ItemState } from "./enchantmentSchema.js";
 const fields = foundry.data.fields;
 export class ArmorSchema extends foundry.abstract.TypeDataModel {
@@ -40,7 +33,7 @@ export class ArmorSchema extends foundry.abstract.TypeDataModel {
       full: boolOption(false, true),
       equipped: boolOption(false, true),
       state: ItemState(),
-      enchantments: new NullableEmbeddedDataField(EnchantmentExtension, {
+      enchantments: new fields.EmbeddedDataField(EnchantmentExtension, {
         nullable: true,
         initial: null
       })
@@ -183,7 +176,7 @@ export class WeaponSchema extends foundry.abstract.TypeDataModel {
         { required: false, initial: { key: "brawl", option: "", id: null } }
       ),
       state: ItemState(),
-      enchantments: new NullableEmbeddedDataField(EnchantmentExtension, {
+      enchantments: new fields.EmbeddedDataField(EnchantmentExtension, {
         nullable: true,
         initial: null
       })

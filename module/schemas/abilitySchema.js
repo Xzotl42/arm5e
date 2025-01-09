@@ -1,3 +1,4 @@
+import { ArM5ePCActor } from "../actor/actor.js";
 import { ARM5E } from "../config.js";
 import { ABILITIES_DEFAULT_ICONS } from "../constants/ui.js";
 import { log } from "../tools.js";
@@ -22,6 +23,32 @@ export class AbilitySchema extends foundry.abstract.TypeDataModel {
       optionLinked: boolOption(true),
       realm: RealmField()
     };
+  }
+
+  prepareOwnerData() {
+    let computedKey = this.getComputedKey();
+    this.xpCoeff = this.parent.actor._getAbilityXpCoeff(this.key, this.option);
+    this.xpBonus = this.parent.actor._getAbilityXpBonus(this.key, this.option);
+    this.upgrade = this.parent.actor._getAbilityUpgrade(this.key, this.option);
+    this.derivedScore = this.accelerated
+      ? ArM5ePCActor.getArtScore(Math.round((this.xp + this.xpBonus) * this.xpCoeff))
+      : ArM5ePCActor.getAbilityScoreFromXp(Math.round((this.xp + this.xpBonus) * this.xpCoeff));
+    this.xpNextLevel = this.accelerated
+      ? Math.round(ArM5ePCActor.getArtXp(this.derivedScore + 1) / this.xpCoeff)
+      : Math.round(ArM5ePCActor.getAbilityXp(this.derivedScore + 1) / this.xpCoeff);
+    this.remainingXp = this.xp + this.xpBonus;
+
+    if (
+      this.parent.actor.system.bonuses.skills[computedKey] != undefined &&
+      this.parent.actor.system.bonuses.skills[computedKey].bonus != 0
+    ) {
+      this.finalScore = Math.max(
+        this.upgrade,
+        this.derivedScore + this.parent.actor.system.bonuses.skills[computedKey].bonus
+      );
+    } else {
+      this.finalScore = Math.max(this.upgrade, this.derivedScore);
+    }
   }
 
   static getIcon(item, newValue = null) {
