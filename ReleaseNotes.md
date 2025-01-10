@@ -1,10 +1,12 @@
 # Release notes
 
-## 2.3.2.18, Quendalon, Fae only
+## 2.3.2.19, Quendalon, Fae only
 
 ### Bug fixes
 
 - Empty ability option will be ignored and restored to original value instead of "OptionName".
+- Power form and cost change is now possible on unlinked token
+- [technical] removal of some duplicate unused id attributes
 
 ## 2.3.2.17, Quendalon, back from the wood with weird eyes
 
