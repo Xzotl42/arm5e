@@ -11,6 +11,8 @@
   - Removed of V10 only code.
   - Removed V12 deprecation warnings
 - [Technical] data preparation clean-up
+- Power form and cost change is now possible on unlinked token
+- [technical] removal of some duplicate unused id attributes
 
 ### Bug fixes
 

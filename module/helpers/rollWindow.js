@@ -540,26 +540,18 @@ function addListenersDialog(html) {
     await actor.selectVoiceAndGestures(name, $(event.target).val());
   });
 
-  html.find(".change-cost").change(async (event) => {
+  html.find(".power-cost").change(async (event) => {
     const dataset = getDataset(event);
-    const val = event.target.value;
-    const actor = game.actors.get(dataset.id);
-    actor.rollInfo.power.cost = Number(val);
-    actor.rollInfo.power.penetrationPenalty = Number(val) * 5;
-    const e = html[0].getElementsByClassName(actor._id + "-level")[0];
-    e.innerHTML = `5 * ${val} points cost (${actor.rollInfo.power.penetrationPenalty})`;
+    const val = Number(event.target.value);
+    const e = html[0].getElementsByClassName("power-level")[0];
+    e.innerHTML = game.i18n.format("arm5e.sheet.powerLevel", { res: 5 * val });
   });
 
-  html.find(".change-form").change(async (event) => {
+  html.find(".power-form").change(async (event) => {
     const dataset = getDataset(event);
     const val = event.target.value;
-    const actor = game.actors.get(dataset.id);
-    actor.rollInfo.power.form = val;
-    actor.rollInfo.label = actor.rollInfo.label.replace(
-      /\((.+)\)/i,
-      `(${CONFIG.ARM5E.magic.arts[val].short})`
-    );
-    // ;
+    const e = html[0].getElementsByClassName("power-label")[0];
+    e.value = e.value.replace(/\((.+)\)/i, `(${CONFIG.ARM5E.magic.arts[val].short})`);
   });
 }
 
@@ -835,6 +827,22 @@ export function getFormData(html, actor) {
     find = html.find(".multiplierBonusSympathic");
     if (find.length > 0) {
       actor.rollInfo.penetration.multiplierBonusSympathic = Number(find[0].value) ?? 0;
+    }
+
+    find = html.find(".power-cost");
+    if (find.length > 0) {
+      actor.rollInfo.power.cost = Number(find[0].value) ?? 0;
+      actor.rollInfo.power.penetrationPenalty = actor.rollInfo.power.cost * 5;
+    }
+
+    find = html.find(".power-label");
+    if (find.length > 0) {
+      actor.rollInfo.label = find[0].value ?? actor.rollInfo.label;
+    }
+
+    find = html.find(".power-form");
+    if (find.length > 0) {
+      actor.rollInfo.power.form = find[0].value ?? actor.rollInfo.power.form;
     }
   }
   let idx = 0;
