@@ -192,12 +192,12 @@ export class ArM5eRollInfo {
           this.label += ` (${spell.system.level})`;
           if (this.img === "") this.img = spell.img;
           this.itemId = spell.id;
-          let techData = spell._getTechniqueData(this._actor.system);
+          let techData = spell.system.getTechniqueData();
           this.magic.technique.value = spell.system.technique.value;
           this.magic.technique.label = techData[0];
           this.magic.technique.score = techData[1];
           this.magic.technique.deficiency = techData[2];
-          let formData = spell._getFormData(this._actor.system);
+          let formData = spell.system.getFormData();
           this.magic.form.label = formData[0];
           this.magic.form.score = formData[1];
           this.magic.form.deficiency = formData[2];

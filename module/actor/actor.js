@@ -1503,14 +1503,14 @@ export class ArM5eActor extends Actor {
     return this._isMagus() || this._hasMight() || this.system.bonuses.magicResistance !== null;
   }
 
-  getLabTotalForEffect(spell, options = {}) {
-    if (!spell.isAnEffect()) {
-      error(false, "The item is not an effect");
-      return;
-    }
+  // getLabTotalForEffect(spell, options = {}) {
+  //   if (!spell.isAnEffect()) {
+  //     error(false, "The item is not an effect");
+  //     return;
+  //   }
 
-    let res = spell.system._computeCastingTotal(this, { char: "int", focus: options.focus });
-  }
+  //   let res = spell.system._computeCastingTotal(this, { char: "int", focus: options.focus });
+  // }
 
   async changeHermeticArt(art, amount) {
     if (!this._isMagus()) return;

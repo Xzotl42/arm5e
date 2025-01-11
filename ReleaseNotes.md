@@ -12,6 +12,7 @@
   - Removed V12 deprecation warnings
 - [Technical] Code clean-up, factorization, encapsulation
   - Actor data preparation clean-up => prepareDerivedData in Datamodel
+  - Item data preparation clean-up => prepareDerivedData in Datamodel
   - ChatMessage datamodel with sub-types for rolls,combat,spells
 - [Technical] removal of some duplicate unused id attributes
 

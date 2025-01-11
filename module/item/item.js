@@ -217,64 +217,6 @@ export class ArM5eItem extends Item {
     return false;
   }
 
-  _getTechniqueData(actorSystemData) {
-    if (!IsMagicalEffect(this)) return ["", 0, false];
-
-    let label = CONFIG.ARM5E.magic.techniques[this.system.technique.value].label;
-    let tech = 1000;
-    let techReq = Object.entries(this.system["technique-req"]).filter((r) => r[1] === true);
-    let techDeficient = false;
-    if (techReq.length > 0) {
-      label += " (";
-      techReq.forEach((key) => {
-        if (actorSystemData.arts.techniques[key[0]].deficient) {
-          techDeficient = true;
-        }
-        tech = Math.min(tech, actorSystemData.arts.techniques[key[0]].finalScore);
-        label += CONFIG.ARM5E.magic.arts[key[0]].short + " ";
-      });
-      // remove last whitespace
-      label = label.substring(0, label.length - 1);
-      label += ")";
-      tech = Math.min(
-        actorSystemData.arts.techniques[this.system.technique.value].finalScore,
-        tech
-      );
-    } else {
-      tech = actorSystemData.arts.techniques[this.system.technique.value].finalScore;
-    }
-    techDeficient =
-      techDeficient || actorSystemData.arts.techniques[this.system.technique.value].deficient;
-    return [label, tech, techDeficient];
-  }
-
-  _getFormData(actorSystemData) {
-    if (!IsMagicalEffect(this)) return ["", 0, false];
-
-    let label = CONFIG.ARM5E.magic.forms[this.system.form.value].label;
-    let form = 1000;
-    let formDeficient = false;
-    let formReq = Object.entries(this.system["form-req"]).filter((r) => r[1] === true);
-    if (formReq.length > 0) {
-      label += " (";
-      formReq.forEach((key) => {
-        if (actorSystemData.arts.forms[key[0]].deficient) {
-          formDeficient = true;
-        }
-        form = Math.min(form, actorSystemData.arts.forms[key[0]].finalScore);
-        label += CONFIG.ARM5E.magic.arts[key[0]].short + " ";
-      });
-      // remove last comma
-      label = label.substring(0, label.length - 1);
-      label += ")";
-      form = Math.min(actorSystemData.arts.forms[this.system.form.value].finalScore, form);
-    } else {
-      form = actorSystemData.arts.forms[this.system.form.value].finalScore;
-    }
-    formDeficient = formDeficient || actorSystemData.arts.forms[this.system.form.value].deficient;
-    return [label, form, formDeficient];
-  }
-
   async _preCreate(data, options, userId) {
     await super._preCreate(data, options, userId);
 

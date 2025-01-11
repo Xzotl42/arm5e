@@ -523,11 +523,11 @@ function addListenersDialog(html) {
     let newSpell = new ArM5eItem(item.toObject(), { temporary: true });
     let update = await PickRequisites(newSpell.system, dataset.flavor);
     await newSpell.updateSource(update);
-    let techData = newSpell._getTechniqueData(actor.system);
+    let techData = newSpell.system.getTechniqueData();
     actor.rollInfo.magic.technique.label = techData[0];
     actor.rollInfo.magic.technique.score = techData[1];
     actor.rollInfo.magic.technique.deficiency = techData[2];
-    let formData = newSpell._getFormData(actor.system);
+    let formData = newSpell.system.getFormData();
     actor.rollInfo.magic.form.label = formData[0];
     actor.rollInfo.magic.form.score = formData[1];
     actor.rollInfo.magic.form.deficiency = formData[2];

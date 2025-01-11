@@ -272,6 +272,62 @@ export class MagicalEffectSchema extends foundry.abstract.TypeDataModel {
 
     return updateData;
   }
+
+  getTechniqueData() {
+    if (!IsMagicalEffect(this.parent)) return ["", 0, false];
+    const actorSystemData = this.parent.actor.system;
+    let label = CONFIG.ARM5E.magic.techniques[this.technique.value].label;
+    let tech = 1000;
+    let techReq = Object.entries(this["technique-req"]).filter((r) => r[1] === true);
+    let techDeficient = false;
+    if (techReq.length > 0) {
+      label += " (";
+      techReq.forEach((key) => {
+        if (this.parent.arts.techniques[key[0]].deficient) {
+          techDeficient = true;
+        }
+        tech = Math.min(tech, this.parent.actor.arts.techniques[key[0]].finalScore);
+        label += CONFIG.ARM5E.magic.arts[key[0]].short + " ";
+      });
+      // remove last whitespace
+      label = label.substring(0, label.length - 1);
+      label += ")";
+      tech = Math.min(this.parent.actor.arts.techniques[this.technique.value].finalScore, tech);
+    } else {
+      tech = actorSystemData.arts.techniques[this.technique.value].finalScore;
+    }
+    techDeficient =
+      techDeficient || actorSystemData.arts.techniques[this.technique.value].deficient;
+    return [label, tech, techDeficient];
+  }
+
+  getFormData() {
+    if (!IsMagicalEffect(this.parent)) return ["", 0, false];
+    const actorSystemData = this.parent.actor.system;
+    let label = CONFIG.ARM5E.magic.forms[this.form.value].label;
+    let form = 1000;
+    let formDeficient = false;
+    let formReq = Object.entries(this["form-req"]).filter((r) => r[1] === true);
+    if (formReq.length > 0) {
+      label += " (";
+      formReq.forEach((key) => {
+        if (actorSystemData.arts.forms[key[0]].deficient) {
+          formDeficient = true;
+        }
+        form = Math.min(form, actorSystemData.arts.forms[key[0]].finalScore);
+        label += CONFIG.ARM5E.magic.arts[key[0]].short + " ";
+      });
+      // remove last comma
+      label = label.substring(0, label.length - 1);
+      label += ")";
+      form = Math.min(actorSystemData.arts.forms[this.form.value].finalScore, form);
+    } else {
+      form = actorSystemData.arts.forms[this.form.value].finalScore;
+    }
+    formDeficient = formDeficient || actorSystemData.arts.forms[this.form.value].deficient;
+    return [label, form, formDeficient];
+  }
+
   _computeCastingTotal(owner, options = {}) {
     if (owner.type != "player" && owner.type != "npc") {
       return 0;
