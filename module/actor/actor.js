@@ -26,7 +26,7 @@ import { ArM5eMagicSystem } from "./subsheets/magic-system.js";
  * Extend the base Actor entity by defining a custom roll data structure which is ideal for the Simple system.
  * @extends {Actor}
  */
-export class ArM5ePCActor extends Actor {
+export class ArM5eActor extends Actor {
   /**
    * Augment the basic actor data with additional dynamic system.
    **/
@@ -117,9 +117,7 @@ export class ArM5ePCActor extends Actor {
         servantsNeeded: 0,
         teamstersNeeded: 0
       };
-    }
-
-    if (this.type == "laboratory") {
+    } else if (this.type == "laboratory") {
       this.system.size.bonus = 0;
       this.system.generalQuality.bonus = 0;
       this.system.safety.bonus = 0;
@@ -314,18 +312,18 @@ export class ArM5ePCActor extends Actor {
 
   /** @override */
   prepareDerivedData() {
-    if (this.type == "magicCodex") {
-      return this._prepareMagicCodexData();
-    } else if (this.type == "covenant") {
-      return this._prepareCovenantData();
-    } else if (this.type == "laboratory") {
-      return this._prepareLabData();
-    } else if (this.type == "container") {
-      return this._prepareContainerData();
-    } else if (this.type == "base") {
-      return {};
-    } else {
-      return this._prepareCharacterData();
+    switch (this.type) {
+      case "magicCodex":
+      case "covenant":
+      case "laboratory":
+        return;
+
+      case "container":
+        return this._prepareContainerData();
+      case "base":
+        return {};
+      default:
+        return this._prepareCharacterData();
     }
   }
 
@@ -612,12 +610,6 @@ export class ArM5ePCActor extends Actor {
         case "wound":
           system.wounds[item.system.gravity].push(item);
           break;
-        default:
-          console.error(`Unknown Item type : "${item.type}", skipping...`);
-          continue;
-      }
-
-      if (item.type === "ability") {
       }
     }
 
@@ -691,13 +683,13 @@ export class ArM5ePCActor extends Actor {
       }
 
       for (let [key, technique] of Object.entries(system.arts.techniques)) {
-        technique.derivedScore = ArM5ePCActor.getArtScore(
+        technique.derivedScore = ArM5eActor.getArtScore(
           Math.round(technique.xp * technique.xpCoeff)
         );
         technique.finalScore = technique.derivedScore + technique.bonus;
         // Start from scratch to avoid rounding errors
         technique.xpNextLevel = Math.round(
-          ArM5ePCActor.getArtXp(technique.derivedScore + 1) / technique.xpCoeff
+          ArM5eActor.getArtXp(technique.derivedScore + 1) / technique.xpCoeff
         );
 
         // Calculate the next level experience needed
@@ -706,10 +698,10 @@ export class ArM5ePCActor extends Actor {
 
       const parmaStats = this.getAbilityStats("parma");
       for (let [key, form] of Object.entries(system.arts.forms)) {
-        form.derivedScore = ArM5ePCActor.getArtScore(Math.round(form.xp * form.xpCoeff));
+        form.derivedScore = ArM5eActor.getArtScore(Math.round(form.xp * form.xpCoeff));
         form.finalScore = form.derivedScore + form.bonus;
 
-        form.xpNextLevel = Math.round(ArM5ePCActor.getArtXp(form.derivedScore + 1) / form.xpCoeff);
+        form.xpNextLevel = Math.round(ArM5eActor.getArtXp(form.derivedScore + 1) / form.xpCoeff);
 
         form.magicResistance = parmaStats.score * 5 + form.finalScore;
         if (parmaStats.speciality.toUpperCase() === form.label.toUpperCase()) {
@@ -759,7 +751,7 @@ export class ArM5ePCActor extends Actor {
       }
     }
 
-    system.combat.overload = ArM5ePCActor.getArtScore(system.combat.load);
+    system.combat.overload = ArM5eActor.getArtScore(system.combat.load);
 
     if (system.combat.prot) {
       soak += system.combat.prot;
@@ -780,7 +772,7 @@ export class ArM5ePCActor extends Actor {
     }
     // Warping & decrepitude
     if ((this.type == "npc" && this.system.charType.value != "entity") || this.type == "player") {
-      system.warping.finalScore = ArM5ePCActor.getAbilityScoreFromXp(system.warping.points);
+      system.warping.finalScore = ArM5eActor.getAbilityScoreFromXp(system.warping.points);
       system.warping.experienceNextLevel =
         ((parseInt(system.warping.finalScore) + 1) *
           (parseInt(system.warping.finalScore) + 2) *
@@ -791,7 +783,7 @@ export class ArM5ePCActor extends Actor {
       if (system.decrepitude == undefined) {
         system.decrepitude = { points: 0 };
       }
-      system.decrepitude.finalScore = ArM5ePCActor.getAbilityScoreFromXp(system.decrepitude.points);
+      system.decrepitude.finalScore = ArM5eActor.getAbilityScoreFromXp(system.decrepitude.points);
       system.decrepitude.experienceNextLevel =
         ((parseInt(system.decrepitude.finalScore) + 1) *
           (parseInt(system.decrepitude.finalScore) + 2) *
@@ -850,6 +842,37 @@ export class ArM5ePCActor extends Actor {
     system.spells = spells.sort(compareSpells);
   }
 
+  /**
+   * Determine default artwork based on the provided actor data.
+   * @param {ActorData} actorData                      The source actor data.
+   * @returns {{img: string, texture: {src: string}}}  Candidate actor image and prototype token artwork.
+   */
+  static getDefaultArtwork(actorData) {
+    // a default icon exists for this type
+    if (actorData.type in CONFIG.ARM5E_DEFAULT_ICONS) {
+      let icon;
+      // getIcon method exists
+      if (CONFIG.ARM5E.ActorDataModels[actorData.type]?.getIcon) {
+        icon = CONFIG.ARM5E.ActorDataModels[actorData.type].getIcon(actorData);
+        return {
+          img: icon,
+          texture: {
+            src: icon
+          }
+        };
+      } else if (actorData.img === undefined || actorData.img === this.DEFAULT_ICON) {
+        icon = CONFIG.ARM5E_DEFAULT_ICONS[actorData.type];
+        return {
+          img: icon,
+          texture: {
+            src: icon
+          }
+        };
+      }
+    }
+    return super.getDefaultArtwork(actorData);
+  }
+
   getRollData() {
     // Let rollData = super.getRollData();
     // rollData.config = {
@@ -889,643 +912,6 @@ export class ArM5ePCActor extends Actor {
       rollData = super.getRollData();
     }
     return rollData;
-  }
-
-  _prepareLabData() {
-    const system = this.system;
-    let physicalBooks = [];
-    let artsTopics = [];
-    let mundaneTopics = [];
-    let masteryTopics = [];
-    let laboratoryTexts = [];
-    let totalVirtues = 0;
-    let totalFlaws = 0;
-    // TODO TMP
-    system.specialities_old = [];
-    system.personalities_old = [];
-    system.distinctive = [];
-    system.rooms_old = [];
-    // TODO END
-
-    system.rawVis = [];
-    system.items = [];
-    system.virtues = [];
-    system.flaws = [];
-    system.diaryEntries = [];
-    system.laboratoryTexts = [];
-
-    for (let [key, item] of this.items.entries()) {
-      // TODO TMP
-      if (item.type === "speciality") {
-        system.specialities_old.push(item);
-      } else if (item.type === "distinctive") {
-        system.distinctive.push(item);
-      } else if (item.type === "sanctumRoom") {
-        system.rooms_old.push(item);
-      } else if (item.type === "personality") {
-        system.personalities_old.push(item);
-      } else if (item.type === "book") {
-        let idx = 0;
-        for (let topic of item.system.topics) {
-          topic.id = item.id;
-          topic.img = item.img;
-          topic.index = idx++;
-          topic.book = item.name;
-          switch (topic.category) {
-            case "ability":
-              mundaneTopics.push(topic);
-              break;
-            case "art":
-              artsTopics.push(topic);
-              break;
-            case "mastery":
-              masteryTopics.push(topic);
-              break;
-            case "labText":
-              topic.system = topic.labtext;
-              if (topic.labtext != null) {
-                topic.name = `${topic.book}: ${topic.labtextTitle}`;
-              }
-              laboratoryTexts.push(topic);
-              break;
-            default:
-              error(false, `Unknown topic category${topic.category}`);
-          }
-        }
-        physicalBooks.push(item);
-      } else if (item.type === "laboratoryText") {
-        let topic = {
-          id: item.id,
-          img: item.img,
-          index: 0,
-          book: "",
-          category: "labText",
-          name: item.name,
-          system: item.system
-        };
-
-        laboratoryTexts.push(topic);
-      } else if (item.type === "vis") {
-        system.rawVis.push(item);
-      } else if (item.type === "item") {
-        system.items.push(item);
-      } else if (item.type === "virtue") {
-        system.virtues.push(item);
-        if (ARM5E.impacts[item.system.impact.value]) {
-          totalVirtues += parseInt(ARM5E.impacts[item.system.impact.value].cost);
-        }
-      } else if (item.type === "flaw") {
-        system.flaws.push(item);
-        if (ARM5E.impacts[item.system.impact.value]) {
-          totalFlaws =
-            parseInt(totalFlaws) + parseInt(ARM5E.impacts[item.system.impact.value].cost);
-        }
-      } else if (item.type === "diaryEntry") {
-        system.diaryEntries.push(item);
-      }
-    }
-    system.virtues.sort((a, b) => (a.sort || 0) - (b.sort || 0));
-    system.flaws.sort((a, b) => (a.sort || 0) - (b.sort || 0));
-    system.rawVis.sort((a, b) => (a.sort || 0) - (b.sort || 0));
-    system.items.sort((a, b) => (a.sort || 0) - (b.sort || 0));
-
-    system.physicalBooks = physicalBooks.sort((a, b) => (a.sort || 0) - (b.sort || 0));
-    system.artsTopics = artsTopics.sort(compareTopics);
-    system.mundaneTopics = mundaneTopics.sort(compareTopics);
-    system.masteryTopics = masteryTopics.sort(compareTopics);
-    system.laboratoryTexts = laboratoryTexts.sort(compareTopics);
-
-    system.size.total = system.size.value + system.size.bonus;
-    system.generalQuality.total = system.generalQuality.value + system.generalQuality.bonus;
-
-    system.health.total = system.health.value + system.health.bonus;
-    system.refinement.total = system.refinement.value + system.refinement.bonus;
-    system.upkeep.total = system.upkeep.value + system.upkeep.bonus;
-    system.warping.total = system.warping.value + system.warping.bonus;
-    system.aesthetics.total = Math.min(
-      system.aesthetics.value + system.aesthetics.bonus,
-      system.aesthetics.max
-    );
-
-    system.freeVirtues = system.size.total + system.refinement.total;
-    system.occupiedSize = Math.max(totalVirtues - totalFlaws, 0) - system.refinement.total;
-    system.baseSafety = system.refinement.total - Math.max(system.occupiedSize, 0);
-    system.safety.bonus += system.baseSafety;
-    system.safety.total = system.safety.value + system.safety.bonus;
-
-    system.totalVirtues = totalVirtues;
-    system.totalFlaws = totalFlaws;
-
-    // Var baseSafetyEffect = this.effects.find((e) => e.getFlag("arm5e", "baseSafetyEffect"));
-    // if (baseSafetyEffect != null && baseSafetyEffect.changes[0].value != String(baseSafety)) {
-    //   let changes = foundry.utils.duplicate(baseSafetyEffect.changes);
-    //   changes[0].value = String(baseSafety);
-    //   baseSafetyEffect.update({ changes });
-    // }
-  }
-
-  _prepareCovenantData() {
-    const system = this.system;
-    let reputations = [];
-    let magi = [];
-    let companion = [];
-    let specialists = [];
-    let habitants = [];
-    let turbula = [];
-    let horses = [];
-    let livestock = [];
-    let possessions = [];
-    let weapons = [];
-    let armor = [];
-    let visSources = [];
-    let vis = [];
-    let calendar = [];
-    let incomingSources = [];
-    let laboratoryTexts = [];
-    let physicalBooks = [];
-    let artsTopics = [];
-    let mundaneTopics = [];
-    let masteryTopics = [];
-    let items = [];
-    let boons = [];
-    let hooks = [];
-    let labs = [];
-    let diaryEntries = [];
-    let totalVirtues = 0;
-    let totalFlaws = 0;
-    system.scene.document = game.scenes.get(system.scene.id);
-
-    system.finances.totalIncome = 0;
-
-    let libraryPts = 0;
-    let labTextPts = 0;
-    let visPts = 0;
-    let visStock = 0;
-    let enchantmentPts = 0;
-    let specialistPts = 0;
-    let labPts = 0;
-    let workersPts = 0;
-    let servantPts = 0;
-    for (let [key, item] of this.items.entries()) {
-      if (item.type === "virtue") {
-        boons.push(item);
-        if (ARM5E.impacts[item.system.impact.value]) {
-          totalVirtues =
-            parseInt(totalVirtues) + parseInt(ARM5E.impacts[item.system.impact.value].cost);
-        }
-      } else if (item.type === "flaw") {
-        hooks.push(item);
-        if (ARM5E.impacts[item.system.impact.value]) {
-          totalFlaws =
-            parseInt(totalFlaws) + parseInt(ARM5E.impacts[item.system.impact.value].cost);
-        }
-      } else if (item.type === "diaryEntry") {
-        diaryEntries.push(item);
-      } else if (item.type === "reputation") {
-        reputations.push(item);
-      } else if (item.type === "inhabitant") {
-        item.system.points = item.system.livingCost(this.system.modifiersLife) * item.system.number;
-        system.finances.inhabitantsPoints += item.system.points;
-        switch (item.system.category) {
-          case "magi":
-            magi.push(item);
-            system.census.magi++;
-            break;
-          case "companions":
-            companion.push(item);
-            system.census.companions++;
-            break;
-          case "specialists":
-            system.census.specialists++;
-            specialistPts += item.system.buildPoints;
-            specialists.push(item);
-            break;
-          case "craftsmen":
-            system.census.craftsmen++;
-            specialists.push(item);
-            break;
-          case "turbula":
-            system.census.turbula += item.system.number;
-            turbula.push(item);
-            break;
-          case "laborers":
-            system.census.laborers += item.system.number;
-            habitants.push(item);
-            workersPts += item.system.points;
-            break;
-          case "servants":
-            system.census.servants += item.system.number;
-            habitants.push(item);
-            servantPts += item.system.points;
-            workersPts += item.system.points;
-            break;
-          case "teamsters":
-            system.census.teamsters += item.system.number;
-            habitants.push(item);
-            workersPts += item.system.points;
-            break;
-          case "dependants":
-            system.census.dependants += item.system.number;
-            habitants.push(item);
-            break;
-          case "horses":
-            system.census.horses += item.system.number;
-            horses.push(item);
-            break;
-          case "livestock":
-            system.census.livestock += item.system.number;
-            livestock.push(item);
-            break;
-        }
-      } else if (item.type === "possessionsCovenant") {
-        possessions.push(item);
-      } else if (item.type === "visSourcesCovenant") {
-        visPts += ARM5E.covenant.vis.sourceCost * item.system.pawns;
-        visSources.push(item);
-      } else if (item.type === "visStockCovenant" || item.type === "vis") {
-        visStock += item.system.quantity;
-        vis.push(item);
-      } else if (item.type === "calendarCovenant") {
-        calendar.push(item);
-      } else if (item.type === "incomingSource") {
-        system.finances.totalIncome += item.system.incoming;
-        incomingSources.push(item);
-      } else if (item.type === "laboratoryText") {
-        let topic = {
-          id: item.id,
-          img: item.img,
-          index: 0,
-          book: "",
-          category: "labText",
-          name: item.name,
-          system: item.system
-        };
-        labTextPts += item.system.buildPoints;
-        laboratoryTexts.push(topic);
-      } else if (item.type === "book") {
-        let idx = 0;
-        for (let topic of item.system.topics) {
-          topic.img = item.img;
-          topic.id = item.id;
-          topic.index = idx++;
-          topic.book = item.name;
-          switch (topic.category) {
-            case "ability":
-              libraryPts += item.system.buildPoints(topic);
-              mundaneTopics.push(topic);
-              break;
-            case "art":
-              libraryPts += item.system.buildPoints(topic);
-              artsTopics.push(topic);
-              break;
-            case "mastery":
-              libraryPts += item.system.buildPoints(topic);
-              masteryTopics.push(topic);
-              break;
-            case "labText":
-              if (topic.labtext == null) {
-                topic.system = { type: "" };
-              } else {
-                topic.system = topic.labtext;
-                labTextPts += item.system.buildPoints(topic);
-              }
-
-              if (topic.labtext != null) {
-                topic.name = `${topic.book}: ${topic.labtextTitle}`;
-              }
-              laboratoryTexts.push(topic);
-              break;
-            default:
-              error(false, `Unknown topic category${topic.category}`);
-          }
-        }
-        physicalBooks.push(item);
-      } else if (item.type === "reputation") {
-        reputations.push(item);
-      } else if (item.type === "weapon") {
-        this.system.finances.weaponsPoints += item.system.maintenance;
-        weapons.push(item);
-      } else if (item.type === "armor") {
-        this.system.finances.weaponsPoints += item.system.maintenance;
-        armor.push(item);
-      } else if (item.type === "item") {
-        items.push(item);
-      } else if (item.type === "labCovenant") {
-        system.finances.laboratoriesPoints += item.system.upkeepCost;
-        labPts += item.system.buildPoints;
-        labs.push(item);
-      }
-
-      if (canBeEnchanted(item)) {
-        if (item.system.state === "enchanted") {
-          enchantmentPts += item.system.enchantments.buildPoints * item.system.quantity;
-        }
-      }
-    }
-
-    // SORTING
-
-    possessions.sort((a, b) => (a.sort || 0) - (b.sort || 0));
-    incomingSources.sort((a, b) => (a.sort || 0) - (b.sort || 0));
-
-    weapons.sort((a, b) => (a.sort || 0) - (b.sort || 0));
-    armor.sort((a, b) => (a.sort || 0) - (b.sort || 0));
-
-    magi.sort((a, b) => (a.sort || 0) - (b.sort || 0));
-    companion.sort((a, b) => (a.sort || 0) - (b.sort || 0));
-    specialists.sort((a, b) => (a.sort || 0) - (b.sort || 0));
-    turbula.sort((a, b) => (a.sort || 0) - (b.sort || 0));
-    habitants.sort((a, b) => (a.sort || 0) - (b.sort || 0));
-    horses.sort((a, b) => (a.sort || 0) - (b.sort || 0));
-    livestock.sort((a, b) => (a.sort || 0) - (b.sort || 0));
-
-    // BUILD POINTS
-
-    system.buildPoints.laboratoryTexts.computed += labTextPts;
-    system.buildPoints.library.computed += libraryPts;
-    system.buildPoints.vis.computed += Math.ceil(visStock / ARM5E.covenant.vis.stockCost) + visPts;
-    system.buildPoints.magicItems.computed += enchantmentPts;
-    system.buildPoints.laboratories.computed += labPts;
-    system.buildPoints.money.computed += Math.ceil(system.finances.wealth / 10);
-    system.buildPoints.specialists.computed += specialistPts;
-
-    // YEARLY EXPENSES
-
-    system.yearlyExpenses.buildings.amount += Math.ceil(system.finances.inhabitantsPoints / 10);
-    system.yearlyExpenses.consumables.amount += Math.ceil(
-      (2 * system.finances.inhabitantsPoints) / 10
-    );
-    system.yearlyExpenses.laboratories.amount += Math.ceil(system.finances.laboratoriesPoints / 10);
-    system.yearlyExpenses.provisions.amount += Math.ceil(
-      (5 * system.finances.inhabitantsPoints) / 10
-    );
-    system.yearlyExpenses.wages.amount += Math.ceil((2 * system.finances.inhabitantsPoints) / 10);
-    system.yearlyExpenses.wages.factor =
-      CONFIG.ARM5E.covenant.loyalty.wages[system.loyalty.modifiers.wages].factor;
-    system.yearlyExpenses.wages.amount *= system.yearlyExpenses.wages.factor;
-    system.finances.weaponsPoints +=
-      system.finances.averageEquipMaintenance * system.census.turbula;
-    system.yearlyExpenses.weapons.amount += Math.ceil(system.finances.weaponsPoints / 320);
-
-    // Const bookSpecCnt = system.inhabitants.specialists.reduce((bookSpecialistCnt,current) => { if (current.system.category) })
-
-    system.yearlyExpenses.writingMaterials.amount +=
-      system.census.magi +
-      specialists.filter((e) => {
-        return e.system.category === "specialists" && e.system.specialistType === "books";
-      }).length;
-
-    // INHABITANTS
-
-    system.inhabitants = {};
-    system.inhabitants.magi = magi;
-    system.inhabitants.companion = companion;
-    system.inhabitants.specialists = specialists;
-    system.inhabitants.turbula = turbula;
-    system.inhabitants.habitants = habitants;
-    system.inhabitants.horses = horses;
-    system.inhabitants.livestock = livestock;
-    system.inhabitants.npcgrogs = system.npcInhabitants;
-
-    system.census.workers =
-      system.census.laborers + system.census.teamsters + system.census.servants;
-
-    system.census.inhabitants = system.census.workers + system.census.dependants;
-
-    system.census.total =
-      system.census.magi +
-      system.census.companions +
-      system.census.specialists +
-      system.census.craftsmen +
-      system.census.turbula +
-      system.census.inhabitants +
-      system.census.horses +
-      system.census.livestock +
-      system.npcInhabitants;
-
-    // adjust the inhabitant points by removing the workers'
-    let tempTotal = system.finances.inhabitantsPoints - workersPts;
-    system.census.servantsNeeded += 2 * Math.round(tempTotal / 10);
-    // Add the points for these servants to the total
-    tempTotal += servantPts;
-    system.census.teamstersNeeded = Math.round((tempTotal - 2 * system.census.laborers) / 10);
-
-    // SAVINGS :
-
-    const craftSavings = {
-      buildings: {
-        details: `<h4>${game.i18n.localize(CONFIG.ARM5E.covenant.fieldOfWork.buildings)}<h4/>`,
-        crafts: {},
-        total: 0,
-        max:
-          CONFIG.ARM5E.covenant.yearlyExpenses.buildings.maxSaving *
-          system.yearlyExpenses.buildings.amount
-      },
-      consumables: {
-        details: `<h4>${game.i18n.localize(CONFIG.ARM5E.covenant.fieldOfWork.consumables)}<h4/>`,
-        crafts: {},
-        total: 0,
-        max:
-          CONFIG.ARM5E.covenant.yearlyExpenses.consumables.maxSaving *
-          system.yearlyExpenses.consumables.amount
-      },
-      laboratories: {
-        details: `<h4>${game.i18n.localize(CONFIG.ARM5E.covenant.fieldOfWork.laboratories)}<h4/>`,
-        crafts: {},
-        total: 0,
-        max:
-          CONFIG.ARM5E.covenant.yearlyExpenses.laboratories.maxSaving *
-          system.yearlyExpenses.laboratories.amount
-      },
-      provisions: {
-        details: `<h4>${game.i18n.localize(CONFIG.ARM5E.covenant.fieldOfWork.provisions)}<h4/>`,
-        crafts: {},
-        total: 0,
-        max:
-          CONFIG.ARM5E.covenant.yearlyExpenses.provisions.maxSaving *
-          system.yearlyExpenses.provisions.amount
-      },
-      weapons: {
-        details: `<h4>${game.i18n.localize(CONFIG.ARM5E.covenant.fieldOfWork.weapons)}<h4/>`,
-        crafts: {},
-        total: 0,
-        max:
-          CONFIG.ARM5E.covenant.yearlyExpenses.weapons.maxSaving *
-          system.yearlyExpenses.weapons.amount
-      },
-      writingMaterials: {
-        details: `<h4>${game.i18n.localize(
-          CONFIG.ARM5E.covenant.fieldOfWork.writingMaterials
-        )}<h4/>`,
-        crafts: {},
-        total: 0,
-        max:
-          CONFIG.ARM5E.covenant.yearlyExpenses.writingMaterials.maxSaving *
-          system.yearlyExpenses.writingMaterials.amount
-      }
-    };
-
-    system.yearlySavings.laborers.amount = Math.min(
-      system.census.laborers,
-      system.yearlyExpenses.provisions.amount *
-        CONFIG.ARM5E.covenant.yearlyExpenses.provisions.maxSaving
-    );
-
-    for (let spe of system.inhabitants.specialists) {
-      if (spe.system.category === "specialists") {
-        if (spe.system.specialistType == "other" && spe.system.fieldOfWork != "none") {
-          let craft = slugify(spe.system.job);
-          let saves = spe.system.craftSavings;
-          if (!craftSavings[spe.system.fieldOfWork].crafts[craft]) {
-            craftSavings[spe.system.fieldOfWork].crafts[craft] = { val: saves, type: "spec" };
-          } else {
-            craftSavings[spe.system.fieldOfWork].crafts[craft].val += saves;
-          }
-          craftSavings[spe.system.fieldOfWork].total += saves;
-        }
-      } else if (spe.system.category === "craftsmen" && spe.system.fieldOfWork != "none") {
-        let craft = slugify(spe.system.job);
-        let saves = spe.system.craftSavings;
-        if (!craftSavings[spe.system.fieldOfWork].crafts[craft]) {
-          craftSavings[spe.system.fieldOfWork].crafts[craft] = { val: saves, type: "craft" };
-        } else {
-          craftSavings[spe.system.fieldOfWork].crafts[craft].val += saves;
-        }
-        craftSavings[spe.system.fieldOfWork].total += saves;
-      }
-    }
-
-    const activeEffects = this.appliedEffects;
-    system.yearlySavings.magicItems.quantity =
-      ArM5eActiveEffect.findAllActiveEffectsWithTypeFiltered(
-        activeEffects,
-        "covenantCostSavingMagic"
-      ).length;
-    // Savings from magic
-    const magicLocalized = slugify(game.i18n.localize("arm5e.sheet.magicLabel"));
-    // Savings from mundane effects
-    const otherLocalized = slugify(game.i18n.localize("arm5e.generic.other"));
-    // Savings from laborers
-    // get slugify version of localized "laborer"
-    const laborerLocalized = slugify(game.i18n.localize("arm5e.sheet.laborers"));
-    craftSavings.provisions.crafts[laborerLocalized] = {
-      val: system.census.laborers,
-      max: system.yearlyExpenses.provisions.amount / 2
-    };
-
-    system.yearlySavings.specialists.amount = 0;
-    system.yearlySavings.craftsmen.amount = 0;
-
-    for (let [category, v] of Object.entries(craftSavings)) {
-      system.yearlyExpenses[category].savingsDetails = `${craftSavings[category].details}<ul>`;
-      if (system.yearlyExpenses[category].magicMod) {
-        craftSavings[category].crafts[magicLocalized] = {
-          val: system.yearlyExpenses[category].magicMod,
-          max: system.yearlyExpenses[category].amount / 2
-        };
-      }
-
-      if (system.yearlyExpenses[category].mod) {
-        craftSavings[category].crafts[otherLocalized] = {
-          val: system.yearlyExpenses[category].mod,
-          max: system.yearlyExpenses[category].amount / 2
-        };
-      }
-
-      for (let [craft, save] of Object.entries(craftSavings[category].crafts)) {
-        const increment = Math.min(save.val, save.max ? save.max : craftSavings[category].max);
-        system.yearlyExpenses[category].craftSavings += increment;
-        if (save.type == "spec") {
-          system.yearlySavings.specialists.amount += increment;
-        } else if (save.type === "craft") {
-          system.yearlySavings.craftsmen.amount += increment;
-        }
-        if (craft == magicLocalized) {
-          system.yearlySavings.magicItems.amount += increment;
-        }
-        system.yearlyExpenses[category].savingsDetails += `<li class='label-light'>${
-          craft.charAt(0).toUpperCase() + craft.slice(1)
-        } : ${save.val.toFixed(1)} (max ${
-          save.max ? save.max.toFixed(1) : craftSavings[category].max.toFixed(1)
-        })</li>`;
-      }
-      system.yearlyExpenses[category].savingsDetails += "</ul>";
-      system.yearlyExpenses[category].craftSavings = Math.round(
-        Math.min(
-          system.yearlyExpenses[category].amount,
-          system.yearlyExpenses[category].craftSavings
-        )
-      );
-    }
-
-    system.yearlySavings.specialists.amount = Math.round(system.yearlySavings.specialists.amount);
-    system.yearlySavings.craftsmen.amount = Math.round(system.yearlySavings.craftsmen.amount);
-    system.yearlySavings.specialists.amount = Math.round(system.yearlySavings.specialists.amount);
-    system.yearlySavings.magicItems.amount = Math.round(system.yearlySavings.magicItems.amount);
-
-    system.yearlySavings.laborers.quantity = system.census.laborers;
-    system.yearlySavings.craftsmen.quantity = system.census.craftsmen;
-    system.yearlySavings.specialists.quantity = system.census.specialists;
-    // SUMARY
-    system.finances.costSavings =
-      system.yearlyExpenses.buildings.craftSavings +
-      system.yearlyExpenses.consumables.craftSavings +
-      system.yearlyExpenses.laboratories.craftSavings +
-      system.yearlyExpenses.provisions.craftSavings +
-      system.yearlyExpenses.wages.craftSavings +
-      system.yearlyExpenses.weapons.craftSavings +
-      system.yearlyExpenses.writingMaterials.craftSavings;
-
-    system.finances.baseExpenditure =
-      system.yearlyExpenses.buildings.amount +
-      system.yearlyExpenses.consumables.amount +
-      system.yearlyExpenses.laboratories.amount +
-      system.yearlyExpenses.provisions.amount +
-      system.yearlyExpenses.wages.amount +
-      system.yearlyExpenses.weapons.amount +
-      system.yearlyExpenses.writingMaterials.amount +
-      system.yearlyExpenses.tithes.amount +
-      system.yearlyExpenses.sundry.amount +
-      system.yearlyExpenses.inflation.amount;
-
-    system.finances.totalExpenditure =
-      system.finances.baseExpenditure - system.finances.costSavings;
-
-    system.reputations = reputations;
-    system.possessions = possessions;
-    system.visSources = visSources;
-    system.vis = vis;
-    system.calendar = calendar;
-    system.incomingSources = incomingSources;
-    system.physicalBooks = physicalBooks.sort((a, b) => (a.sort || 0) - (b.sort || 0));
-    system.artsTopics = artsTopics.sort(compareTopics);
-    system.mundaneTopics = mundaneTopics.sort(compareTopics);
-    system.masteryTopics = masteryTopics.sort(compareTopics);
-    system.diaryEntries = diaryEntries;
-    system.virtues = boons;
-    system.flaws = hooks;
-    system.items = items;
-    system.weapons = weapons;
-    system.armor = armor;
-
-    let flag = this.getFlag("arm5e", "sorting", "laboratoryTexts");
-    if (flag && flag.laboratoryTexts == true) {
-      system.laboratoryTexts = laboratoryTexts.sort(compareLabTexts);
-    } else {
-      system.laboratoryTexts = laboratoryTexts;
-    }
-
-    system.labs = labs;
-
-    system.labs.sort((a, b) => (a.sort || 0) - (b.sort || 0));
-    system.virtues.sort((a, b) => (a.sort || 0) - (b.sort || 0));
-    system.flaws.sort((a, b) => (a.sort || 0) - (b.sort || 0));
-    system.vis.sort((a, b) => (a.sort || 0) - (b.sort || 0));
-    system.visSources.sort((a, b) => (a.sort || 0) - (b.sort || 0));
-    system.possessions.sort((a, b) => (a.sort || 0) - (b.sort || 0));
-    system.incomingSources.sort((a, b) => (a.sort || 0) - (b.sort || 0));
-    system.reputations.sort((a, b) => (a.sort || 0) - (b.sort || 0));
-    system.items.sort((a, b) => (a.sort || 0) - (b.sort || 0));
   }
 
   _prepareContainerData() {
@@ -1594,12 +980,12 @@ export class ArM5ePCActor extends Actor {
 
   // Get the Xps needed for an ability/decrepitude/warping score
   static getAbilityXp(score) {
-    return ArM5ePCActor.getArtXp(score) * 5;
+    return ArM5eActor.getArtXp(score) * 5;
   }
 
   // Get the score given an amount of xp
   static getAbilityScoreFromXp(xp) {
-    return ArM5ePCActor.getArtScore(Math.floor(xp / 5));
+    return ArM5eActor.getArtScore(Math.floor(xp / 5));
   }
 
   // Get the Xps needed for an art score
@@ -1885,51 +1271,6 @@ export class ArM5ePCActor extends Actor {
       data = CONFIG.ARM5E.ActorDataModels[data.type].getDefault(data);
       toUpdate = true;
     }
-
-    if (CONFIG.ARM5E.ActorDataModels[data.type]?.getIcon) {
-      data.img = CONFIG.ARM5E.ActorDataModels[data.type].getIcon(data);
-      toUpdate = true;
-    } else if (data.img === undefined || data.img === "icons/svg/mystery-man.svg") {
-      if (data.type in CONFIG.ARM5E_DEFAULT_ICONS) {
-        data.img = CONFIG.ARM5E_DEFAULT_ICONS[data.type];
-        toUpdate = true;
-      }
-    }
-
-    // If (this.type == "laboratory") {
-    //   let effectsData = this.effects.contents;
-    //   var baseSafetyEffect = this.effects.find((e) => e.getFlag("arm5e", "baseSafetyEffect"));
-    //   if (!baseSafetyEffect) {
-    //     // TODO put that data structure elsewhere (during lab activities implementation)
-    //     const effect = {
-    //       origin: this.uuid,
-    //       tint: "#000000",
-    //       changes: [
-    //         {
-    //           label: "arm5e.sheet.safety",
-    //           key: "system.safety.bonus",
-    //           mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-    //           value: 0
-    //         }
-    //       ],
-    //       flags: {
-    //         arm5e: {
-    //           baseSafetyEffect: true,
-    //           noEdit: true,
-    //           type: ["laboratory"],
-    //           subtype: ["safety"],
-    //           option: [null]
-    //         }
-    //       }
-    //     };
-    //
-    //       effect.name = game.i18n.localize("arm5e.sheet.baseSafety");
-    //       effect.img = "icons/svg/aura.svg";
-    //     effectsData.push(effect);
-    //     // const res = await this.effects.update(effectsData);
-    //     data.effects = effectsData;
-    //   }
-    // }
 
     if (toUpdate) {
       this.updateSource(data);

@@ -1,4 +1,4 @@
-import { ArM5ePCActor } from "../actor/actor.js";
+import { ArM5eActor } from "../actor/actor.js";
 import ACTIVE_EFFECTS_TYPES from "../constants/activeEffectsTypes.js";
 import { ArM5eItem } from "../item/item.js";
 // import { ArM5eItem } from "../item/item.js";
@@ -25,7 +25,7 @@ export default class ArM5eActiveEffect extends ActiveEffect {
     this.noDelete =
       (this.parent?.documentName === "Item" && this.parent?.isOwned == true) ||
       (this.parent?.documentName === "Actor" && this.origin?.includes("Item"));
-    if (!this.origin && this.target instanceof ArM5ePCActor && this.parent instanceof ArM5eItem) {
+    if (!this.origin && this.target instanceof ArM5eActor && this.parent instanceof ArM5eItem) {
       this.origin = this.parent.uuid;
     }
 
@@ -33,7 +33,7 @@ export default class ArM5eActiveEffect extends ActiveEffect {
   }
 
   async getSource() {
-    if (this.target instanceof ArM5ePCActor && this.parent instanceof ArM5eItem) {
+    if (this.target instanceof ArM5eActor && this.parent instanceof ArM5eItem) {
       return this.parent;
     }
     return fromUuid(this.origin);

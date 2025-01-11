@@ -3,7 +3,7 @@ import { ArM5eActorSheet } from "./actor-sheet.js";
 import { HERMETIC_FILTER, TIME_FILTER, TOPIC_FILTER } from "../constants/userdata.js";
 import { effectToLabText, resetOwnerFields } from "../item/item-converter.js";
 import { getConfirmation } from "../constants/ui.js";
-import { ArM5ePCActor } from "./actor.js";
+import { ArM5eActor } from "./actor.js";
 
 /**
  * Extend the basic ArM5eActorSheet
@@ -147,7 +147,7 @@ export class ArM5eCovenantActorSheet extends ArM5eActorSheet {
     context.system.loyalty.points.actuals =
       context.system.loyalty.points.base + context.system.loyalty.points.modifiersTotal;
 
-    context.system.loyalty.points.prevailing = ArM5ePCActor.getAbilityScoreFromXp(
+    context.system.loyalty.points.prevailing = ArM5eActor.getAbilityScoreFromXp(
       Math.abs(context.system.loyalty.points.actuals)
     );
     if (context.system.loyalty.points.actuals < 0) {

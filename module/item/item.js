@@ -1,5 +1,5 @@
 import { getDataset, log } from "../tools.js";
-import { ArM5ePCActor } from "../actor/actor.js";
+import { ArM5eActor } from "../actor/actor.js";
 import { migrateItemData } from "../migration.js";
 import { IsMagicalEffect, computeLevel } from "../helpers/magic.js";
 import { resetOwnerFields } from "./item-converter.js";
@@ -11,6 +11,31 @@ import { ARM5E_DEFAULT_ICONS } from "../constants/ui.js";
  * @extends {Item}
  */
 export class ArM5eItem extends Item {
+  /**
+   * Determine default artwork based on the provided item data.
+   * @param {ItemData} itemData  The source item data.
+   * @returns {{img: string}}    Candidate item image.
+   */
+  static getDefaultArtwork(itemData) {
+    // a default icon exists for this type
+    if (itemData.type in CONFIG.ARM5E_DEFAULT_ICONS) {
+      let icon;
+      // getIcon method exists
+      if (CONFIG.ARM5E.ItemDataModels[itemData.type]?.getIcon) {
+        icon = CONFIG.ARM5E.ItemDataModels[itemData.type].getIcon(itemData);
+        return {
+          img: icon
+        };
+      } else if (itemData.img === undefined || itemData.img === this.DEFAULT_ICON) {
+        icon = CONFIG.ARM5E_DEFAULT_ICONS[itemData.type];
+        return {
+          img: icon
+        };
+      }
+    }
+    return super.getDefaultArtwork(itemData);
+  }
+
   /**
    * Augment the basic Item data model with additional dynamic data.
    */
@@ -74,7 +99,7 @@ export class ArM5eItem extends Item {
     }
     // compute reputation score
     if (this.type == "reputation") {
-      this.system.score = ArM5ePCActor.getAbilityScoreFromXp(this.system.xp);
+      this.system.score = ArM5eActor.getAbilityScoreFromXp(this.system.xp);
     }
     if (this.type == "personalityTrait") {
       this.system.score = PersonalityTraitSchema.getScore(this.system.xp);

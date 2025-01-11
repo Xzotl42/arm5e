@@ -1,6 +1,6 @@
 // Import Modules
 import { ARM5E, enrichAbilities, localizeAbilities, localizeCategories } from "./config.js";
-import { ArM5ePCActor } from "./actor/actor.js";
+import { ArM5eActor } from "./actor/actor.js";
 import { ArM5ePCActorSheet } from "./actor/actor-pc-sheet.js";
 import { ArM5eBeastActorSheet } from "./actor/actor-beast-sheet.js";
 import { ArM5eNPCActorSheet } from "./actor/actor-npc-sheet.js";
@@ -71,7 +71,12 @@ import { ArM5eSupernaturalEffectSheet } from "./item/item-supernaturalEffect-she
 import { SupernaturalEffectSchema } from "./schemas/supernaturalEffectSchema.js";
 import { Arm5eSocketHandler } from "./helpers/socket-messages.js";
 import { PowerSchema } from "./schemas/powerSchemas.js";
-// Import { ArtSchema } from "./schemas/artSchema.js";
+import {
+  BasicChatSchema,
+  CombatChatSchema,
+  RollChatSchema,
+  SpellChatSchema
+} from "./schemas/chatSchema.js";
 
 Hooks.once("i18nInit", async function () {
   CONFIG.ARM5E.LOCALIZED_ABILITIES = localizeAbilities();
@@ -82,7 +87,7 @@ Hooks.once("i18nInit", async function () {
 Hooks.once("init", async function () {
   game.arm5e = {
     ArsLayer,
-    ArM5ePCActor,
+    ArM5eActor,
     ArM5eItem,
     // ArtSchema,
     rollItemMacro
@@ -173,7 +178,7 @@ Hooks.once("init", async function () {
     .map((e) => e[0]);
 
   // Define custom Document classes
-  CONFIG.Actor.documentClass = ArM5ePCActor;
+  CONFIG.Actor.documentClass = ArM5eActor;
   CONFIG.Item.documentClass = ArM5eItem;
   CONFIG.ActiveEffect.documentClass = ArM5eActiveEffect;
 
@@ -561,8 +566,13 @@ function setDatamodels() {
   CONFIG.ARM5E.ActorDataModels.magicCodex = CodexSchema;
   CONFIG.ARM5E.ActorDataModels.covenant = CovenantSchema;
 
-  // Deprecated types
+  // ChatMessages
 
+  CONFIG.ChatMessage.dataModels.standard = BasicChatSchema;
+  CONFIG.ChatMessage.dataModels.roll = RollChatSchema;
+  CONFIG.ChatMessage.dataModels.combat = CombatChatSchema;
+  CONFIG.ChatMessage.dataModels.spell = SpellChatSchema;
+  // Deprecated types
   CONFIG.ARM5E.ItemDataModels.visStockCovenant = VisSchema;
 }
 

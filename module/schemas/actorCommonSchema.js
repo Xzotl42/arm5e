@@ -1,4 +1,5 @@
 import { ARM5E } from "../config.js";
+import { compareBaseEffects, compareMagicalEffects, compareSpells } from "../tools.js";
 
 import { SeasonField } from "./commonSchemas.js";
 
@@ -38,5 +39,31 @@ export class CodexSchema extends foundry.abstract.TypeDataModel {
 
   static migrate(data) {
     return {};
+  }
+
+  prepareDerivedData() {
+    this.parent.img = CONFIG.ARM5E_DEFAULT_ICONS.magicCodex;
+    this.baseEffects = [];
+    this.magicEffects = [];
+    this.spells = [];
+    this.enchantments = [];
+    for (let [key, item] of this.parent.items.entries()) {
+      if (item.type == "baseEffect") {
+        this.baseEffects.push(item);
+      }
+      if (item.type == "magicalEffect") {
+        this.magicEffects.push(item);
+      }
+      if (item.type == "spell") {
+        this.spells.push(item);
+      }
+      if (item.type == "enchantment") {
+        this.enchantments.push(item);
+      }
+    }
+    this.baseEffects.sort(compareBaseEffects);
+    this.magicEffects.sort(compareMagicalEffects);
+    this.enchantments.sort(compareMagicalEffects);
+    this.spells.sort(compareSpells);
   }
 }

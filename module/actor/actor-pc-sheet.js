@@ -1,8 +1,6 @@
 import { getUuidInfo, log } from "../tools.js";
 import { ArM5eActorSheet } from "./actor-sheet.js";
 
-import { labTextToEffect } from "../item/item-converter.js";
-
 /**
  * Extend the basic ArM5eActorSheet
  * @extends {ArM5eActorSheet}

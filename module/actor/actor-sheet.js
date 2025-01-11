@@ -2075,7 +2075,7 @@ export class ArM5eActorSheet extends ActorSheet {
       item = resetOwnerFields(item);
     }
 
-    return super._onDropItemCreate(filtered);
+    return await super._onDropItemCreate(filtered);
   }
 
   /**

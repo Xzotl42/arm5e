@@ -1,4 +1,4 @@
-import { ArM5ePCActor } from "../actor/actor.js";
+import { ArM5eActor } from "../actor/actor.js";
 import ArM5eActiveEffect from "../helpers/active-effects.js";
 import { computeLevel, spellFormLabel, spellTechniqueLabel } from "../helpers/magic.js";
 import { getTopicDescription } from "../item/item-book-sheet.js";
@@ -2115,7 +2115,7 @@ export class Scriptorium extends FormApplication {
     const coeff = artStat.xpCoeff;
     const currentTopic = context.reading.book.system.topics[context.reading.book.system.topicIndex];
     let newXp = currentTopic.quality + reader.system.bonuses.activities.reading + artStat.xp;
-    let maxXp = ArM5ePCActor.getArtXp(currentTopic.level) / coeff;
+    let maxXp = ArM5eActor.getArtXp(currentTopic.level) / coeff;
     if (newXp > maxXp) {
       let newSource = maxXp - artStat.xp;
       currentTopic.theoriticalQuality = currentTopic.quality;
@@ -2139,7 +2139,7 @@ export class Scriptorium extends FormApplication {
     const coeff = ability.system.xpCoeff;
     const currentTopic = context.reading.book.system.topics[context.reading.book.system.topicIndex];
     let newXp = currentTopic.quality + reader.system.bonuses.activities.reading + ability.system.xp;
-    let maxXp = ArM5ePCActor.getAbilityXp(currentTopic.level) / coeff;
+    let maxXp = ArM5eActor.getAbilityXp(currentTopic.level) / coeff;
     if (newXp > maxXp) {
       let newSource = maxXp - ability.system.xp;
       currentTopic.theoriticalQuality = currentTopic.quality;

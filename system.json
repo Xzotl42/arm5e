@@ -94,6 +94,12 @@
       "wound": {},
       "art": {},
       "supernaturalEffect": {}
+    },
+    "ChatMessage": {
+      "standard": {},
+      "roll": {},
+      "combat": {},
+      "spell": {}
     }
   },
 

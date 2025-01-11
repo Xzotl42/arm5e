@@ -10,12 +10,14 @@
   - Use of TypeDataModel instead of DataModel for Document types
   - Removed of V10 only code.
   - Removed V12 deprecation warnings
-- [Technical] data preparation clean-up
-- Power form and cost change is now possible on unlinked token
-- [technical] removal of some duplicate unused id attributes
+- [Technical] Code clean-up, factorization, encapsulation
+  - Actor data preparation clean-up => prepareDerivedData in Datamodel
+  - ChatMessage datamodel with sub-types for rolls,combat,spells
+- [Technical] removal of some duplicate unused id attributes
 
 ### Bug fixes
 
+- Power form and cost change is now possible on unlinked token
 - Empty ability option will be ignored and restored to original value instead of "OptionName".
 
 ## 2.3.2.17, Quendalon, back from the wood with weird eyes

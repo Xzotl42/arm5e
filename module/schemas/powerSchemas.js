@@ -1,5 +1,5 @@
 /* eslint-disable jsdoc/require-returns-type */
-import { ArM5ePCActor } from "../actor/actor.js";
+import { ArM5eActor } from "../actor/actor.js";
 import { ARM5E } from "../config.js";
 import { convertToNumber, log } from "../tools.js";
 import { hermeticForm, itemBase, RealmField } from "./commonSchemas.js";

@@ -1,4 +1,4 @@
-import { log } from "../tools.js";
+import { compareTopics, log } from "../tools.js";
 import { actorBase } from "./actorCommonSchema.js";
 import { actorLink, basicTextField } from "./commonSchemas.js";
 const fields = foundry.data.fields;
@@ -53,6 +53,127 @@ export class LabSchema extends foundry.abstract.TypeDataModel {
       rooms: basicTextField(),
       personalities: basicTextField()
     };
+  }
+
+  prepareDerivedData() {
+    this.physicalBooks = [];
+    this.artsTopics = [];
+    this.mundaneTopics = [];
+    this.masteryTopics = [];
+    this.laboratoryTexts = [];
+    this.totalVirtues = 0;
+    this.totalFlaws = 0;
+    // TODO TMP
+    this.specialities_old = [];
+    this.personalities_old = [];
+    this.distinctive = [];
+    this.rooms_old = [];
+    // TODO END
+
+    this.rawVis = [];
+    this.items = [];
+    this.virtues = [];
+    this.flaws = [];
+    this.diaryEntries = [];
+    this.laboratoryTexts = [];
+
+    for (let [key, item] of this.items.entries()) {
+      // TODO TMP
+      if (item.type === "speciality") {
+        this.specialities_old.push(item);
+      } else if (item.type === "distinctive") {
+        this.distinctive.push(item);
+      } else if (item.type === "sanctumRoom") {
+        this.rooms_old.push(item);
+      } else if (item.type === "personality") {
+        this.personalities_old.push(item);
+      } else if (item.type === "book") {
+        let idx = 0;
+        for (let topic of item.system.topics) {
+          topic.id = item.id;
+          topic.img = item.img;
+          topic.index = idx++;
+          topic.book = item.name;
+          switch (topic.category) {
+            case "ability":
+              this.mundaneTopics.push(topic);
+              break;
+            case "art":
+              this.artsTopics.push(topic);
+              break;
+            case "mastery":
+              this.masteryTopics.push(topic);
+              break;
+            case "labText":
+              topic.system = topic.labtext;
+              if (topic.labtext != null) {
+                topic.name = `${topic.book}: ${topic.labtextTitle}`;
+              }
+              this.laboratoryTexts.push(topic);
+              break;
+            default:
+              error(false, `Unknown topic category${topic.category}`);
+          }
+        }
+        this.physicalBooks.push(item);
+      } else if (item.type === "laboratoryText") {
+        let topic = {
+          id: item.id,
+          img: item.img,
+          index: 0,
+          book: "",
+          category: "labText",
+          name: item.name,
+          system: item.system
+        };
+
+        this.laboratoryTexts.push(topic);
+      } else if (item.type === "vis") {
+        this.rawVis.push(item);
+      } else if (item.type === "item") {
+        this.items.push(item);
+      } else if (item.type === "virtue") {
+        this.virtues.push(item);
+        if (ARM5E.impacts[item.system.impact.value]) {
+          this.totalVirtues += ARM5E.impacts[item.system.impact.value].cost;
+        }
+      } else if (item.type === "flaw") {
+        this.flaws.push(item);
+        if (ARM5E.impacts[item.system.impact.value]) {
+          this.totalFlaws += ARM5E.impacts[item.system.impact.value].cost;
+        }
+      } else if (item.type === "diaryEntry") {
+        this.diaryEntries.push(item);
+      }
+    }
+    this.virtues.sort((a, b) => (a.sort || 0) - (b.sort || 0));
+    this.flaws.sort((a, b) => (a.sort || 0) - (b.sort || 0));
+    this.rawVis.sort((a, b) => (a.sort || 0) - (b.sort || 0));
+    this.items.sort((a, b) => (a.sort || 0) - (b.sort || 0));
+
+    this.physicalBooks.sort((a, b) => (a.sort || 0) - (b.sort || 0));
+    this.artsTopics.sort(compareTopics);
+    this.mundaneTopics.sort(compareTopics);
+    this.masteryTopics.sort(compareTopics);
+    this.laboratoryTexts.sort(compareTopics);
+
+    this.size.total = this.size.value + this.size.bonus;
+    this.generalQuality.total = this.generalQuality.value + this.generalQuality.bonus;
+
+    this.health.total = this.health.value + this.health.bonus;
+    this.refinement.total = this.refinement.value + this.refinement.bonus;
+    this.upkeep.total = this.upkeep.value + this.upkeep.bonus;
+    this.warping.total = this.warping.value + this.warping.bonus;
+    this.aesthetics.total = Math.min(
+      this.aesthetics.value + this.aesthetics.bonus,
+      this.aesthetics.max
+    );
+
+    this.freeVirtues = this.size.total + this.refinement.total;
+    this.occupiedSize = Math.max(this.totalVirtues - this.totalFlaws, 0) - this.refinement.total;
+    this.baseSafety = this.refinement.total - Math.max(this.occupiedSize, 0);
+    this.safety.bonus += this.baseSafety;
+    this.safety.total = this.safety.value + this.safety.bonus;
   }
 
   get buildPoints() {

@@ -1,6 +1,6 @@
 import { ARM5E } from "../config.js";
 import ArM5eActiveEffect from "./active-effects.js";
-import { ArM5ePCActor } from "../actor/actor.js";
+import { ArM5eActor } from "../actor/actor.js";
 import { log } from "../tools.js";
 import { getRollTypeProperties, ROLL_MODIFIERS, ROLL_PROPERTIES } from "./rollWindow.js";
 import Aura from "./aura.js";
@@ -325,7 +325,7 @@ export class ArM5eRollInfo {
         let livingMod = 0;
         if (actorSystemData.covenant?.linked) {
           let cov = actorSystemData.covenant.document;
-          if (ArM5ePCActor.isMagus(this._actor.type, actorSystemData.charType.value)) {
+          if (ArM5eActor.isMagus(this._actor.type, actorSystemData.charType.value)) {
             livingMod = cov.system.modifiersLife.magi ?? 0;
           } else {
             livingMod = cov.system.modifiersLife.mundane ?? 0;

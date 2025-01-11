@@ -1,5 +1,5 @@
 import { getDataset, log } from "../tools.js";
-import { ArM5ePCActor } from "../actor/actor.js";
+import { ArM5eActor } from "../actor/actor.js";
 import { InvestigationRoll } from "../tools/investigationRoll.js";
 import { getAbilityFromCompendium } from "../tools/compendia.js";
 import { ArsRoll } from "./stressdie.js";
@@ -746,7 +746,7 @@ function checkIfCapped(context, teacherScore, coeff, progressItem) {
       context.system.sourceBonus +
       progressItem.system.xp) *
     coeff;
-  let teacherXp = ArM5ePCActor.getAbilityXp(teacherScore);
+  let teacherXp = ArM5eActor.getAbilityXp(teacherScore);
   // TODO check/review
   if (newXp > teacherXp) {
     let newSource = teacherXp / coeff - progressItem.system.xp; //- context.system.sourceModifier;
@@ -928,7 +928,7 @@ export function validTeaching(context, actor, item) {
     const art = actor.system.arts[artType][progressArt.key];
     // checkIfCapped(context, teacherScore, 1, spell);
     let newXp = context.system.sourceQuality + art.xp;
-    let teacherXp = ArM5ePCActor.getArtXp(teacherScore);
+    let teacherXp = ArM5eActor.getArtXp(teacherScore);
     if (newXp > teacherXp) {
       let newSource = teacherXp - art.xp;
       context.system.theoriticalSource = context.system.sourceQuality;

@@ -2,7 +2,7 @@ import { ARM5E } from "../config.js";
 import { simpleDie, stressDie, noRoll, changeMight, useItemCharge } from "../dice.js";
 import { PickRequisites, checkTargetAndCalculateResistance, noFatigue } from "./magic.js";
 import { chatFailedCasting } from "./chat.js";
-import { ArM5ePCActor } from "../actor/actor.js";
+import { ArM5eActor } from "../actor/actor.js";
 import {
   setAgingEffects,
   agingCrisis,

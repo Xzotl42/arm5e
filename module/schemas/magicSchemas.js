@@ -1,5 +1,5 @@
 /* eslint-disable jsdoc/require-returns-type */
-import { ArM5ePCActor } from "../actor/actor.js";
+import { ArM5eActor } from "../actor/actor.js";
 import { ARM5E } from "../config.js";
 import { convertToNumber, log } from "../tools.js";
 import {
@@ -375,11 +375,11 @@ export class SpellSchema extends MagicalEffectSchema {
 
     this.xpCoeff = owner.system.bonuses.arts.masteryXpCoeff;
     this.xpBonus = owner.system.bonuses.arts.masteryXpMod;
-    this.derivedScore = ArM5ePCActor.getAbilityScoreFromXp(
+    this.derivedScore = ArM5eActor.getAbilityScoreFromXp(
       Math.round((this.xp + this.xpBonus) * this.xpCoeff)
     );
 
-    this.xpNextLevel = Math.round(ArM5ePCActor.getAbilityXp(this.derivedScore + 1) / this.xpCoeff);
+    this.xpNextLevel = Math.round(ArM5eActor.getAbilityXp(this.derivedScore + 1) / this.xpCoeff);
     this.remainingXp = this.xp + this.xpBonus;
 
     this.finalScore = this.derivedScore;

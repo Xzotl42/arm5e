@@ -1,4 +1,4 @@
-import { ArM5ePCActor } from "./actor/actor.js";
+import { ArM5eActor } from "./actor/actor.js";
 import { ARM5E } from "./config.js";
 import { TWILIGHT_STAGES } from "./helpers/long-term-activities.js";
 import { computeLevel } from "./helpers/magic.js";
@@ -517,7 +517,7 @@ export const migrateActorData = async function (actorDoc, actorItems) {
           //   // updateData[`system.wounds.${wtype}.-=penalty`] = null;
           //   // updateData[`system.wounds.${wtype}.-=notes`] = null;
           // } else {
-          if (actorDoc instanceof ArM5ePCActor || actor.synthetic) {
+          if (actorDoc instanceof ArM5eActor || actor.synthetic) {
             let datetime = game.settings.get("arm5e", "currentDate");
             for (let ii = 0; ii < actor.system.wounds[wtype].number.value; ii++) {
               let woundData = {
@@ -560,7 +560,7 @@ export const migrateActorData = async function (actorDoc, actorItems) {
       // } else
       if (wounds.length > 0) {
         log(false, `${wounds.length} wound items created`);
-        if (actorDoc instanceof ArM5ePCActor) {
+        if (actorDoc instanceof ArM5eActor) {
           await actorDoc.createEmbeddedDocuments("Item", wounds);
         } else if (actor.synthetic) {
           await actorDoc.delta.createEmbeddedDocuments("Item", wounds);
@@ -574,7 +574,7 @@ export const migrateActorData = async function (actorDoc, actorItems) {
       }
 
       if (actor.system.reputation) {
-        if (actorDoc instanceof ArM5ePCActor) {
+        if (actorDoc instanceof ArM5eActor) {
           for (let rep of Object.values(actor.system.reputation)) {
             if (rep.label === "" || rep.label === null || rep.label == undefined) continue;
 
@@ -605,7 +605,7 @@ export const migrateActorData = async function (actorDoc, actorItems) {
       }
 
       if (actor.system.personality) {
-        if (actorDoc instanceof ArM5ePCActor) {
+        if (actorDoc instanceof ArM5eActor) {
           for (let pers of Object.values(actor.system.personality)) {
             if (pers.label === "" || pers.label === null || pers.label === undefined) {
               continue;
@@ -781,7 +781,7 @@ export const migrateActorData = async function (actorDoc, actorItems) {
     actor.type == "covenant"
   ) {
     let applied = actorDoc.effects;
-    if (actorDoc instanceof ArM5ePCActor) {
+    if (actorDoc instanceof ArM5eActor) {
       applied = Array.from(actorDoc.allApplicableEffects());
     } else if (actor.synthetic) {
       applied = actor.effects;
@@ -803,7 +803,7 @@ export const migrateActorData = async function (actorDoc, actorItems) {
             hasItem = actorDoc.items.some((e) => e._id === itemId);
           }
           if (itemPrefix && hasItem) {
-            if (actorDoc instanceof ArM5ePCActor || actor.synthetic) {
+            if (actorDoc instanceof ArM5eActor || actor.synthetic) {
               console.log(`DEBUG: Found duplicate effect of origin: "${e.origin}", delete it.`);
               toDelete.push(e._id);
               continue;
@@ -812,7 +812,7 @@ export const migrateActorData = async function (actorDoc, actorItems) {
         }
 
         if (isEffectObsolete(e)) {
-          if (actorDoc instanceof ArM5ePCActor || actor.synthetic) {
+          if (actorDoc instanceof ArM5eActor || actor.synthetic) {
             toDelete.push(e._id);
             continue;
           }
@@ -828,7 +828,7 @@ export const migrateActorData = async function (actorDoc, actorItems) {
       }
 
       if (toDelete.length > 0) {
-        if (actorDoc instanceof ArM5ePCActor) {
+        if (actorDoc instanceof ArM5eActor) {
           await actorDoc.deleteEmbeddedDocuments("ActiveEffect", toDelete);
         } else if (actor.synthetic) {
           await actorDoc.delta.deleteEmbeddedDocuments("ActiveEffect", toDelete);
