@@ -20,6 +20,12 @@
 
 - Power form and cost change is now possible on unlinked token
 - Empty ability option will be ignored and restored to original value instead of "OptionName".
+- Fix error on botch when casting spells
+- Adding a boon or hooks will open the correct compendium
+- Adding boons and hooks opens the correct compendium
+- Adding lab virtues and flaws opens the correct compendium
+- Added back the possibility to create new virtues and flaws for some Actor types with an unfurnished compendium.
+- Fix problem with ability rolls for actors without twilight
 
 ## 2.3.2.17, Quendalon, back from the wood with weird eyes
 

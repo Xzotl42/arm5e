@@ -8,6 +8,7 @@ export class ArsRoll extends Roll {
     this.diviser = 1;
     this.multiplier = 1;
     this.offset = 0;
+    this.botchCheck = false;
   }
 
   modifier() {
@@ -41,35 +42,17 @@ export class ArsRoll extends Roll {
    * @returns {Promise<ChatMessage|object>} A promise which resolves to the created ChatMessage document if create is
    *                                        true, or the Object of prepared chatData otherwise.
    */
-  // async toMessage(messageData = {}, { rollMode, create = true } = {}) {
-  //   log(false, "TO_MESSAGE");
-  //   super.toMessage(messageData, options);
-  // if ( rollMode === "roll" ) rollMode = undefined;
-  // rollMode ||= game.settings.get("core", "rollMode");
+  async toMessage(messageData = {}, { rollMode, create = true } = {}) {
+    const msg = await super.toMessage(messageData, { rollMode, create: false });
 
-  // // Perform the roll, if it has not yet been rolled
-  // if ( !this._evaluated ) await this.evaluate({allowInteractive: rollMode !== CONST.DICE_ROLL_MODES.BLIND});
-
-  // // Prepare chat data
-  // messageData = foundry.utils.mergeObject({
-  //   user: game.user.id,
-  //   content: String(this.total),
-  //   sound: CONFIG.sounds.dice
-  // }, messageData);
-  // messageData.rolls = [this];
-
-  // // Either create the message or just return the chat data
-  // const cls = getDocumentClass("ChatMessage");
-  // const msg = new cls(messageData);
-
-  // // Either create or return the data
-  // if ( create ) return cls.create(msg.toObject(), { rollMode });
-  // else {
-  //   msg.applyRollMode(rollMode);
-  //   return msg.toObject();
-  // }
-  // }
+    // add type and system data
+    msg.type = "roll";
+    // create the message:
+    const cls = getDocumentClass("ChatMessage");
+    return cls.create(msg, { rollMode });
+  }
 }
+
 export class StressDie extends foundry.dice.terms.Die {
   constructor(termData = {}) {
     termData.faces = 10;

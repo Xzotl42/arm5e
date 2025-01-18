@@ -19,7 +19,6 @@ import ArM5eActiveEffect from "./helpers/active-effects.js";
 import { prepareDatasetByTypeOfItem } from "./helpers/hotbar-helpers.js";
 import { ArM5ePreloadHandlebarsTemplates } from "./templates.js";
 import { ArM5eActiveEffectConfig } from "./helpers/active-effect-config.sheet.js";
-import * as Arm5eChatMessage from "./helpers/chat.js";
 
 // Experiment
 import { ArsLayer, addArsButtons } from "./ui/ars-layer.js";
@@ -75,8 +74,9 @@ import {
   BasicChatSchema,
   CombatChatSchema,
   RollChatSchema,
-  SpellChatSchema
+  MagicChatSchema
 } from "./schemas/chatSchema.js";
+import { Arm5eChatMessage } from "./helpers/chat.js";
 
 Hooks.once("i18nInit", async function () {
   CONFIG.ARM5E.LOCALIZED_ABILITIES = localizeAbilities();
@@ -181,6 +181,7 @@ Hooks.once("init", async function () {
   CONFIG.Actor.documentClass = ArM5eActor;
   CONFIG.Item.documentClass = ArM5eItem;
   CONFIG.ActiveEffect.documentClass = ArM5eActiveEffect;
+  CONFIG.ChatMessage.documentClass = Arm5eChatMessage;
 
   // Define datamodel schemas
   setDatamodels();
@@ -506,9 +507,9 @@ Hooks.on("renderDialog", (dialog, html) => {
   });
 });
 
-Hooks.on("renderChatMessage", (message, html, data) =>
-  Arm5eChatMessage.addChatListeners(message, html, data)
-);
+// Hooks.on("renderChatMessage", (message, html, data) =>
+//   Arm5eChatMessage.addChatListeners(message, html, data)
+// );
 
 Hooks.on("createChatMessage", (message, html, data) =>
   Arm5eChatMessage.enrichChatMessage(message, html, data)
@@ -571,7 +572,7 @@ function setDatamodels() {
   CONFIG.ChatMessage.dataModels.standard = BasicChatSchema;
   CONFIG.ChatMessage.dataModels.roll = RollChatSchema;
   CONFIG.ChatMessage.dataModels.combat = CombatChatSchema;
-  CONFIG.ChatMessage.dataModels.spell = SpellChatSchema;
+  CONFIG.ChatMessage.dataModels.magic = MagicChatSchema;
   // Deprecated types
   CONFIG.ARM5E.ItemDataModels.visStockCovenant = VisSchema;
 }

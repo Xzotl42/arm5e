@@ -1843,7 +1843,7 @@ export class ArM5eActorSheet extends ActorSheet {
           "twilight_understanding"
         ].includes(dataset.roll)
       ) {
-        if (this.actor.system.twilight.stage > 1) {
+        if (this.actor.system.twilight?.stage > 1) {
           ui.notifications.info(game.i18n.localize("arm5e.notification.pendingTwilight"), {
             permanent: true
           });
@@ -2223,8 +2223,6 @@ export async function setWounds(soakData, actor) {
   }
   // here toggle dead status if applicable
 
-  const title =
-    '<h2 class="ars-chat-title chat-icon">' + game.i18n.localize("arm5e.sheet.soak") + "</h2>";
   const messageDamage = `${game.i18n.localize("arm5e.sheet.damage")} (${soakData.damage})`;
   const messageStamina = `${game.i18n.localize("arm5e.sheet.stamina")} (${soakData.stamina})`;
   let messageBonus = "";
@@ -2256,8 +2254,14 @@ export async function setWounds(soakData, actor) {
 
   const details = ` ${messageDamage}<br/> ${messageStamina}<br/> ${messageProt}<br/> ${messageBonus}${messageModifier}<b>${messageTotal}</b>`;
   ChatMessage.create({
+    type: "combat",
+    system: {
+      label: game.i18n.localize("arm5e.sheet.soak"),
+      roll: {
+        details: putInFoldableLinkWithAnimation("arm5e.sheet.details", details)
+      }
+    },
     content: `<h4 class="dice-total">${messageWound}</h4>`,
-    flavor: title + putInFoldableLinkWithAnimation("arm5e.sheet.details", details),
     speaker: ChatMessage.getSpeaker({
       actor
     })

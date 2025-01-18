@@ -725,6 +725,8 @@ export class ArM5eActor extends Actor {
         system.combat.img = weapon.img;
         system.combat.name = weapon.name;
         system.combat.itemId = weapon.id;
+        system.combat.itemUuid = weapon.uuid;
+
         const ab = this.getAbility(weapon.system.ability.key, weapon.system.ability.option);
         system.combat.ability = 0;
         if (ab) {

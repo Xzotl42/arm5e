@@ -1,6 +1,7 @@
 /* eslint-disable jsdoc/require-returns-type */
 import { ArM5eActor } from "../actor/actor.js";
 import { ARM5E } from "../config.js";
+import { IsMagicalEffect } from "../helpers/magic.js";
 import { convertToNumber, log } from "../tools.js";
 import {
   authorship,
@@ -283,16 +284,16 @@ export class MagicalEffectSchema extends foundry.abstract.TypeDataModel {
     if (techReq.length > 0) {
       label += " (";
       techReq.forEach((key) => {
-        if (this.parent.arts.techniques[key[0]].deficient) {
+        if (actorSystemData.arts.techniques[key[0]].deficient) {
           techDeficient = true;
         }
-        tech = Math.min(tech, this.parent.actor.arts.techniques[key[0]].finalScore);
+        tech = Math.min(tech, actorSystemData.arts.techniques[key[0]].finalScore);
         label += CONFIG.ARM5E.magic.arts[key[0]].short + " ";
       });
       // remove last whitespace
       label = label.substring(0, label.length - 1);
       label += ")";
-      tech = Math.min(this.parent.actor.arts.techniques[this.technique.value].finalScore, tech);
+      tech = Math.min(actorSystemData.arts.techniques[this.technique.value].finalScore, tech);
     } else {
       tech = actorSystemData.arts.techniques[this.technique.value].finalScore;
     }

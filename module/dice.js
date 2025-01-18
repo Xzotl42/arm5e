@@ -2,7 +2,6 @@ import { ROLL_MODES, ROLL_PROPERTIES, getRollTypeProperties } from "./helpers/ro
 import { checkTargetAndCalculateResistance } from "./helpers/magic.js";
 import { log, putInFoldableLink, putInFoldableLinkWithAnimation, sleep } from "./tools.js";
 import { ARM5E } from "./config.js";
-import { showRollResults } from "./helpers/chat.js";
 import { ArsRoll } from "./helpers/stressdie.js";
 let iterations = 1;
 
@@ -18,16 +17,9 @@ async function simpleDie(actor, type = "OPTION", callBack) {
   // actor = getFormData(html, actor);
   actor = await getRollFormula(actor);
   const rollInfo = actor.rollInfo;
-
+  const rollProperties = getRollTypeProperties(type);
   //console.log('simple die');
   let flavorTxt = `<p>${game.i18n.localize("arm5e.dialog.button.simpledie")}:</p>`;
-  let details = putInFoldableLinkWithAnimation("arm5e.sheet.details", flavorTxt + rollInfo.details);
-  let conf = actor.system.con.score;
-
-  if ((getRollTypeProperties(type).MODE & ROLL_MODES.NO_CONF) != 0) {
-    conf = 0;
-  }
-  let chatTitle = '<h2 class="ars-chat-title chat-icon">' + rollInfo.label + "</h2>";
   let formula = "1D10+" + rollInfo.formula;
   if (rollInfo.magic.divide > 1) {
     formula = "(1D10+" + rollInfo.formula + ")/" + rollInfo.magic.divide;
@@ -37,31 +29,38 @@ async function simpleDie(actor, type = "OPTION", callBack) {
 
   let rollMode = game.settings.get("core", "rollMode");
   // let showRolls = game.settings.get("arm5e", "showRolls");
-  if (
-    getRollTypeProperties(type).MODE & ROLL_MODES.PRIVATE &&
-    rollMode != CONST.DICE_ROLL_MODES.BLIND
-  ) {
+  if (rollProperties.MODE & ROLL_MODES.PRIVATE && rollMode != CONST.DICE_ROLL_MODES.BLIND) {
     rollMode = CONST.DICE_ROLL_MODES.PRIVATE;
   }
 
-  const flags = {
-    arm5e: {
-      roll: { type: type, img: rollInfo.img, name: rollInfo.name, id: rollInfo.itemId },
-      type: "confidence",
-      confScore: conf,
-      actorType: actor.type, // for if the actor is deleted
-      secondaryScore: rollInfo.secondaryScore
+  const system = {
+    label: rollInfo.label,
+    img: actor.img,
+    confidence: {
+      allowed: (rollProperties.MODE & ROLL_MODES.NO_CONF) != 0,
+      score: actor.system.con.score
+    },
+    roll: {
+      type: type.toUpperCase(),
+      img: rollInfo.img,
+      name: rollInfo.name,
+      itemUuid: rollInfo.itemUuid,
+      secondaryScore: rollInfo.secondaryScore,
+      formula: formula,
+      details: rollInfo.details,
+      actorType: actor.type // for if the actor is deleted
     }
   };
 
   // TODO: HERE Do the callback for before message creation
   const message = await tmp.toMessage(
     {
+      flavor: flavorTxt,
       speaker: ChatMessage.getSpeaker({
         actor: actor
       }),
-      flavor: chatTitle + details,
-      flags: flags
+      system: system,
+      type: "roll"
     },
     { rollMode: rollMode }
   );
@@ -130,11 +129,8 @@ async function stressDie(actor, type = "OPTION", modes = 0, callBack = undefined
     confAllowed = 0;
   }
 
-  let formula = rollInfo.formula;
   let flavorTxt = rollInfo.flavor.length ? `<p>${rollInfo.flavor}</p>` : "";
   flavorTxt += `<p>${game.i18n.localize("arm5e.dialog.button.stressdie")}:</p>`;
-  let details = putInFoldableLinkWithAnimation("arm5e.sheet.details", flavorTxt + rollInfo.details);
-  let chatTitle = `<h2 class="ars-chat-title chat-icon">${rollInfo.label} </h2>`;
   let dieRoll = await explodingRoll(actor, rollOptions, botchNum);
 
   let botchCheck = 0;
@@ -185,24 +181,36 @@ async function stressDie(actor, type = "OPTION", modes = 0, callBack = undefined
   }
   let message;
   if (!(modes & 32)) {
+    const system = {
+      img: actor.img,
+      label: rollInfo.label,
+      confidence: {
+        allowed: confAllowed,
+        score: actor.system.con.score
+      },
+      roll: {
+        type: type.toUpperCase(),
+        img: rollInfo.img,
+        // name: rollInfo.name,
+        itemUuid: rollInfo.itemUuid,
+        secondaryScore: rollInfo.secondaryScore,
+        botchCheck: botchCheck,
+        details: rollInfo.details,
+        divide: rollInfo.magic.divide,
+        formula: rollInfo.formula,
+        actorType: actor.type // for if the actor is deleted
+      }
+    };
     message = await dieRoll.toMessage(
       {
-        flavor: chatTitle + flavorTxt + details,
+        flavor: flavorTxt,
+        // flavor: chatTitle + flavorTxt + details,
         speaker: ChatMessage.getSpeaker({
           actor: actor
         }),
         whisper: ChatMessage.getWhisperRecipients("gm"),
-        flags: {
-          arm5e: {
-            roll: { type: type, img: rollInfo.img, name: rollInfo.name, id: rollInfo.itemId },
-            type: "confidence",
-            divide: rollInfo.magic.divide,
-            actorType: actor.type, // for if the actor is deleted
-            confScore: confAllowed,
-            botchCheck: botchCheck,
-            secondaryScore: rollInfo.secondaryScore
-          }
-        }
+        system: system,
+        type: "roll"
       },
       { rollMode: rollMode }
     );
@@ -852,19 +860,7 @@ export async function createRoll(rollFormula, multiplier, divide, options = {}) 
 async function noRoll(actor, mode, callback, roll) {
   actor = await getRollFormula(actor);
   const rollInfo = actor.rollInfo;
-  //console.log('simple die');
-  //console.log(actorData);
-  let details = putInFoldableLinkWithAnimation("arm5e.sheet.details", rollInfo.details);
 
-  let chatTitle = '<h2 class="ars-chat-title chat-icon">' + rollInfo.label + "</h2>";
-
-  const flags = {
-    arm5e: {
-      roll: { type: rollInfo.type, img: rollInfo.img, name: rollInfo.name, id: rollInfo.itemId },
-      secondaryScore: rollInfo.secondaryScore,
-      actorType: actor.type // for if the actor is deleted
-    }
-  };
   let formula = `${rollInfo.formula}`;
 
   let rollMode = game.settings.get("core", "rollMode");
@@ -879,13 +875,31 @@ async function noRoll(actor, mode, callback, roll) {
     formula += ` / ${rollInfo.magic.divide}`;
   }
   const dieRoll = new ArsRoll(formula, actor.system);
+
+  const system = {
+    img: actor.img,
+    label: rollInfo.label,
+    confidence: {
+      allowed: false,
+      score: actor.system.con.score
+    },
+    roll: {
+      details: rollInfo.details,
+      type: type.toUpperCase(),
+      img: rollInfo.img,
+      // name: rollInfo.name,
+      itemUuid: rollInfo.itemUuid,
+      divide: rollInfo.magic.divide,
+      secondaryScore: rollInfo.secondaryScore,
+      actorType: actor.type // for if the actor is deleted
+    }
+  };
   dieRoll.diviser = rollInfo.magic.divide;
   let tmp = await dieRoll.roll();
   const message = await tmp.toMessage(
     {
-      content: "",
-      flavor: chatTitle + details,
-      flags: flags,
+      system: system,
+      type: "roll",
       speaker: ChatMessage.getSpeaker({
         actor
       })

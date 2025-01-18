@@ -195,8 +195,6 @@ export async function quickVitals(tokenName, actor) {
 }
 
 export async function combatDamage(selector, actor) {
-  const title =
-    '<h2 class="ars-chat-title chat-icon">' + game.i18n.localize("arm5e.sheet.damage") + " </h2>";
   let damage = parseInt(selector.find('input[name$="modifier"]').val());
   const messageModifier = `${game.i18n.localize("arm5e.sheet.modifier")} (${damage})`;
   let details = "";
@@ -211,18 +209,18 @@ export async function combatDamage(selector, actor) {
 
   const messageDamage = `<h4 class="dice-total">${damage}</h4>`;
   ChatMessage.create({
+    type: "combat",
     content: messageDamage,
     flavor: title + putInFoldableLinkWithAnimation("arm5e.sheet.details", details),
     speaker: ChatMessage.getSpeaker({
       actor
-    })
+    }),
+    system: { label: game.i18n.localize("arm5e.sheet.damage"), roll: { details: details } }
   });
 }
 
 // WIP
 export async function nonCombatDamage(selector, actor) {
-  const title =
-    '<h2 class="ars-chat-title chat-icon">' + game.i18n.localize("arm5e.sheet.damage") + " </h2>";
   let damage = parseInt(selector.find('input[name$="modifier"]').val());
   const messageModifier = `${game.i18n.localize("arm5e.sheet.modifier")} (${damage})`;
   let details = "";
@@ -237,11 +235,13 @@ export async function nonCombatDamage(selector, actor) {
 
   const messageDamage = `<h4 class="dice-total">${damage}</h4>`;
   ChatMessage.create({
+    type: "combat",
     content: messageDamage,
     flavor: title + putInFoldableLinkWithAnimation("arm5e.sheet.details", details),
     speaker: ChatMessage.getSpeaker({
       actor
-    })
+    }),
+    system: { label: game.i18n.localize("arm5e.sheet.damage"), roll: { details: details } }
   });
 }
 

@@ -84,18 +84,14 @@ export async function agingCrisis(actor, roll, message) {
   const crisisTable = docs.filter((rt) => rt.name === "Aging crisis table")[0];
   let res = crisisTable.getResultsForRoll(roll.total)[0].text;
 
-  const title =
-    '<h2 class="ars-chat-title chat-icon">' +
-    game.i18n.localize("arm5e.aging.crisis.summary") +
-    "</h2>";
-
   // log(false, `Crisis result expanded: ${msg}`);
   ChatMessage.create({
-    content: title + "<h3>" + game.i18n.localize(`arm5e.aging.crisis.${res}`) + "</h3><br/>",
+    content: "<h3>" + game.i18n.localize(`arm5e.aging.crisis.${res}`) + "</h3><br/>",
     speaker: ChatMessage.getSpeaker({
       actor: actor
     }),
-    whisper: ChatMessage.getWhisperRecipients("gm")
+    whisper: ChatMessage.getWhisperRecipients("gm"),
+    system: { label: game.i18n.localize("arm5e.aging.crisis.summary") }
   });
 
   await actor.update({ system: { pendingCrisis: false } }, {});

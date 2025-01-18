@@ -598,7 +598,7 @@ async function castSpell(actorCaster, roll, message) {
 
   if (roll.botches > 0) {
     const updateData = {};
-    if (roll.botches >= actorCaster.system.bonuses.art.warpingThreshold) {
+    if (roll.botches >= actorCaster.system.bonuses.arts.warpingThreshold) {
       // twilight pending
       updateData["system.twilight.pointsGained"] = roll.botches;
       updateData["system.twilight.stage"] = TWILIGHT_STAGES.PENDING_STRENGTH;
@@ -668,7 +668,7 @@ async function castSupernaturalEffect(actorCaster, roll, message) {
 
   if (roll.botches > 0) {
     const updateData = {};
-    if (roll.botches >= actorCaster.system.bonuses.art.warpingThreshold) {
+    if (roll.botches >= actorCaster.system.bonuses.arts.warpingThreshold) {
       // twilight pending
       updateData["system.twilight.pointsGained"] = roll.botches;
       updateData["system.twilight.stage"] = 1;

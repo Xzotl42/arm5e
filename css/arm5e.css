@@ -1986,11 +1986,14 @@ img.art-icon {
   /*border-bottom: 1px solid #BBB;*/
 }
 
-.arm5e .items-list .item .item-image {
+.arm5e .items-list .item .item-image,
+.message-header .item-image,
+.message-sender .speaker-image {
   -webkit-box-flex: 0;
   -ms-flex: 0 0 24px;
   flex: 0 0 45px;
   margin-right: 5px;
+  max-width: fit-content;
   object-fit: contain;
 }
 

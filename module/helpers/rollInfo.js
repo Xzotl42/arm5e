@@ -64,6 +64,7 @@ export class ArM5eRollInfo {
       case ROLL_PROPERTIES.DEFENSE.VAL:
         if (this.img === "") this.img = actorSystemData.combat.img;
         this.itemId = actorSystemData.combat.itemId;
+        this.itemUuid = actorSystemData.combat.itemUuid;
         this.name = actorSystemData.combat.name;
 
         break;
@@ -79,6 +80,7 @@ export class ArM5eRollInfo {
         const ab = this._actor.items.get(dataset.ability);
         if (this.img === "") this.img = ab.img;
         this.itemId = ab.id;
+        this.itemUuid = ab.uuid;
         this.name = ab.name;
         this.label = this.name;
         this.ability.id = dataset.ability;
@@ -106,6 +108,8 @@ export class ArM5eRollInfo {
           this.item.form = effect.system.form.value;
           this.item.charged = item.system.enchantments.charged;
           this.item.id = dataset.id;
+          this.itemId = effect._id;
+          this.itemUuid = effect.uuid;
         }
         break;
 
@@ -125,6 +129,7 @@ export class ArM5eRollInfo {
           this.label += ` (${ARM5E.magic.arts[this.power.form].short})`;
           if (this.img === "") this.img = power.img;
           this.itemId = power.id;
+          this.itemUuid = power.uuid;
           this.power.cost = Number(power.system.cost);
           this.power.penetrationPenalty = this.power.cost * 5;
         }
@@ -138,6 +143,7 @@ export class ArM5eRollInfo {
             this.label = effect.name;
           }
           this.itemId = effect.id;
+          this.itemUuid = effect.uuid;
           if (effect.system.characteristic) {
             this.characteristic = effect.system.characteristic;
             this.characteristicLabel =
@@ -192,6 +198,7 @@ export class ArM5eRollInfo {
           this.label += ` (${spell.system.level})`;
           if (this.img === "") this.img = spell.img;
           this.itemId = spell.id;
+          this.itemUuid = spell.uuid;
           let techData = spell.system.getTechniqueData();
           this.magic.technique.value = spell.system.technique.value;
           this.magic.technique.label = techData[0];
@@ -648,6 +655,7 @@ export class ArM5eRollInfo {
     // Added to chat message as an icon for the roll
     this.img = "";
     this.itemId = "";
+    this.itemUuid = "";
     // Roll window title
     this.name = "";
     this.flavor = "";
