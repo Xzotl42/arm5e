@@ -1850,7 +1850,7 @@ export class ArM5eActorSheet extends ActorSheet {
           "twilight_understanding"
         ].includes(dataset.roll)
       ) {
-        if (this.actor.system.twilight.stage > 1) {
+        if (this.actor.system.twilight?.stage > 1) {
           ui.notifications.info(game.i18n.localize("arm5e.notification.pendingTwilight"), {
             permanent: true
           });

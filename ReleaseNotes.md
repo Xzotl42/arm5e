@@ -1,5 +1,16 @@
 # Release notes
 
+## 2.3.2.20, Quendalon, Fae only, I mean it
+
+### Bug fixes
+
+- Fix problem with ability rolls for actors without twilight
+- Fix error on botch when casting spells
+- Adding a boon or hooks will open the correct compendium
+- Adding boons and hooks opens the correct compendium
+- Adding lab virtues and flaws opens the correct compendium
+- Added back the possibility to create new virtues and flaws for some Actor types with an unfurnished compendium.
+
 ## 2.3.2.19, Quendalon, Fae only
 
 ### Bug fixes
