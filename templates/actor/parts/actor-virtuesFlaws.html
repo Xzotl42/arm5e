@@ -15,7 +15,8 @@
               data-type="virtue"><i class="fas fa-plus"></i>{{localize "arm5e.sheet.action.Create"}}</a>
           {{/if}}
           <a class="item-control item-add" title='{{localize "arm5e.hints.add" item=(localize "arm5e.sheet.virtues")}}'
-            data-compendium="{{bonusComp}}"><i class="fas fa-plus"></i>{{localize "arm5e.sheet.action.Add"}}</a>
+            data-compendium="{{bonusComp}}" data-type="virtue"><i
+              class="fas fa-plus"></i>{{localize "arm5e.sheet.action.Add"}}</a>
         </div>
       </li>
       {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
@@ -51,8 +52,8 @@
             <a class="item-control item-create" title='{{localize "arm5e.hints.create" item=(localize bonuses)}}'
               data-type="virtue"><i class="fas fa-plus"></i>{{localize "arm5e.sheet.action.Create"}}</a>
             <a class="item-control item-add"
-              title='{{localize "arm5e.hints.add" item=(localize "arm5e.sheet.virtues")}}' data-compendium="virtues"><i
-                class="fas fa-plus"></i>{{localize "arm5e.sheet.action.Add"}}</a>
+              title='{{localize "arm5e.hints.add" item=(localize "arm5e.sheet.virtues")}}' data-type="virtue"
+              data-compendium="virtues"><i class="fas fa-plus"></i>{{localize "arm5e.sheet.action.Add"}}</a>
           </div>
         </li>
         {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
@@ -93,7 +94,8 @@
             </a>
           {{/if}}
           <a class="item-control item-add" title=' {{localize "arm5e.hints.add" item=(localize "arm5e.sheet.flaws" )}}'
-            data-compendium="{{penaltyComp}}"><i class="fas fa-plus"></i>{{localize "arm5e.sheet.action.Add"}}
+            data-compendium="{{penaltyComp}}" data-type="flaw"><i
+              class="fas fa-plus"></i>{{localize "arm5e.sheet.action.Add"}}
           </a>
         </div>
       </li>
@@ -132,8 +134,8 @@
               data-type="flaw"><i class="fas fa-plus"></i>{{localize "arm5e.sheet.action.Create"}}
             </a>
             <a class="item-control item-add"
-              title=' {{localize "arm5e.hints.add" item=(localize "arm5e.sheet.flaws" )}}' data-compendium="flaws"><i
-                class="fas fa-plus"></i>{{localize "arm5e.sheet.action.Add"}}
+              title=' {{localize "arm5e.hints.add" item=(localize "arm5e.sheet.flaws" )}}' data-type="flaw"
+              data-compendium="flaws"><i class="fas fa-plus"></i>{{localize "arm5e.sheet.action.Add"}}
             </a>
           </div>
         </li>

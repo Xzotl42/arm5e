@@ -59,6 +59,7 @@ import { Sanatorium } from "../tools/sanatorium.js";
 import { MedicalHistory } from "../tools/med-history.js";
 import { ArM5eActorProfiles } from "./subsheets/actor-profiles.js";
 import { ArM5eMagicSystem } from "./subsheets/magic-system.js";
+import { getRefCompendium } from "../tools/compendia.js";
 
 export class ArM5eActorSheet extends ActorSheet {
   constructor(object, options) {
@@ -1598,8 +1599,10 @@ export class ArM5eActorSheet extends ActorSheet {
   async _onItemAdd(event) {
     const dataset = getDataset(event);
     if (event.stopPropagation) event.stopPropagation();
-    const moduleRef = game.settings.get(ARM5E.SYSTEM_ID, "compendiaRef");
-    const collection = game.packs.get(`${moduleRef}.${dataset.compendium}`);
+    const collection = await getRefCompendium(dataset.compendium);
+    if (!collection) {
+      return await _onItemCreate(event);
+    }
     new Compendium({ collection }).render(true);
     return;
   }
