@@ -1,3 +1,4 @@
+import Aura from "../helpers/aura.js";
 import { compareTopics, log } from "../tools.js";
 import { actorBase } from "./actorCommonSchema.js";
 import { actorLink, basicTextField } from "./commonSchemas.js";
@@ -53,6 +54,44 @@ export class LabSchema extends foundry.abstract.TypeDataModel {
       rooms: basicTextField(),
       personalities: basicTextField()
     };
+  }
+
+  prepareBaseData() {
+    this.size.bonus = 0;
+    this.generalQuality.bonus = 0;
+    this.safety.bonus = 0;
+    this.health.bonus = 0;
+    this.refinement.bonus = 0;
+    this.upkeep.bonus = 0;
+    this.warping.bonus = 0;
+    this.aesthetics.bonus = 0;
+    this.aesthetics.max = 999;
+    this.auraBonus = 0;
+
+    // Create data keys for lab specialty
+    this.specialty = {};
+    for (let key of Object.keys(CONFIG.ARM5E.magic.arts)) {
+      this.specialty[key] = { bonus: 0 };
+    }
+
+    this.specialty.experimentation = { bonus: 0 };
+    this.specialty.familiar = { bonus: 0 };
+    this.specialty.items = { bonus: 0 };
+    this.specialty.longevityRituals = { bonus: 0 };
+    this.specialty.spells = { bonus: 0 };
+    this.specialty.texts = { bonus: 0 };
+    this.specialty.visExtraction = { bonus: 0 };
+
+    this.owner.document = game.actors.get(this.owner.actorId);
+    if (this.owner.document) {
+      this.owner.value = this.owner.document.name;
+      this.owner.linked = true;
+    } else {
+      this.owner.linked = false;
+    }
+
+    // Hopefully this can be reworked to use ID instead of name
+    this.aura = new Aura(this.covenant.document?.system?.scene?.id);
   }
 
   prepareDerivedData() {

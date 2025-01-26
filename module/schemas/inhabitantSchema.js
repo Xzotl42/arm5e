@@ -111,6 +111,22 @@ export class InhabitantSchema extends foundry.abstract.TypeDataModel {
     return res;
   }
 
+  prepareDerivedData() {
+    this.document = game.actors.get(this.actorId);
+    if (this.document) {
+      this.name = this.document.name;
+      this.yearBorn = this.document.system.description.born.value;
+      this.category = this.document._isMagus()
+        ? "magi"
+        : this.document._isCompanion()
+        ? "companions"
+        : this.category;
+      this.linked = true;
+    } else {
+      this.linked = false;
+    }
+  }
+
   static getIcon(item, newValue = null) {
     if (newValue != null) {
       return CONFIG.INHABITANTS_DEFAULT_ICONS[newValue];

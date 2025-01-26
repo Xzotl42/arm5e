@@ -449,7 +449,7 @@ export class ArM5eItemEnchantmentSheet {
       let update = await PickRequisites(effect.system, evt.currentTarget.dataset.flavor);
 
       if (update)
-        this.sheet.submit({
+        await this.sheet.submit({
           preventClose: true,
           updateData: { [`system.enchantments.effects.${evt.currentTarget.dataset.index}`]: update }
         });
@@ -466,7 +466,7 @@ export class ArM5eItemEnchantmentSheet {
         this.item.system.enchantments.ASPECTS[aspect].effects[effect].bonus;
       aspects[Number(dataset.index)].effects =
         this.item.system.enchantments.ASPECTS[aspect].effects;
-      this.sheet.submit({
+      await this.sheet.submit({
         preventClose: true,
         updateData: { "system.enchantments.aspects": aspects }
       });
@@ -481,7 +481,7 @@ export class ArM5eItemEnchantmentSheet {
         this.item.system.enchantments.ASPECTS[aspect].effects[effect].bonus;
       aspects[Number(dataset.index)].effects =
         this.item.system.enchantments.ASPECTS[aspect].effects;
-      this.sheet.submit({
+      await this.sheet.submit({
         preventClose: true,
         updateData: { "system.enchantments.aspects": aspects }
       });

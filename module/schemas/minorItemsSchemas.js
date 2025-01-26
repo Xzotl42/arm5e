@@ -465,6 +465,20 @@ export class SanctumSchema extends foundry.abstract.TypeDataModel {
     };
   }
 
+  prepareDerivedData() {
+    this.document = game.actors.get(this.sanctumId);
+
+    if (this.document) {
+      this.name = this.document.name;
+      this.owner = this.document.system.owner.value;
+      this.quality = this.document.system.generalQuality.total;
+      this.buildPoints = this.document.system.buildPoints;
+      this.linked = true;
+    } else {
+      this.linked = false;
+    }
+  }
+
   // static migrateData(data) {
   //   super.migrateData(data);
   //   return data;

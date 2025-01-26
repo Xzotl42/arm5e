@@ -45,6 +45,11 @@ export class RollChatSchema extends BasicChatSchema {
         score: basicIntegerField(),
         used: basicIntegerField()
       }),
+      originalFlavor: new fields.StringField({
+        required: false,
+        blank: true,
+        initial: ""
+      }),
       roll: new fields.SchemaField({
         img: new fields.FilePathField({
           categories: ["IMAGE"],
@@ -57,11 +62,7 @@ export class RollChatSchema extends BasicChatSchema {
           choices: Object.keys(ROLL_PROPERTIES),
           initial: "OPTION"
         }),
-        formula: new fields.StringField({
-          required: false,
-          blank: true,
-          initial: ""
-        }),
+        // modifier: basicIntegerField(0, -999),
         details: new fields.StringField({
           required: false,
           blank: true,
@@ -73,8 +74,9 @@ export class RollChatSchema extends BasicChatSchema {
           blank: false,
           initial: "npc"
         }),
-        secondaryScore: basicIntegerField(0, 0),
-        divide: basicIntegerField(1, 1)
+        secondaryScore: basicIntegerField(0, -999),
+        divider: basicIntegerField(1, 1),
+        difficulty: basicIntegerField(1, 0)
       })
     };
   }
@@ -115,6 +117,23 @@ export class RollChatSchema extends BasicChatSchema {
     }
   }
 
+  get formula() {
+    const formula = this.parent.rolls[0].formula;
+    if (this.confidence.used) {
+      let toAppend = this.confidence.used * 3;
+      const divider = this.roll?.divider ?? 1;
+      if (divider > 1) {
+        toAppend = `(${toAppend} / ${divider})`;
+      }
+      return formula + ` + ${toAppend}`;
+    }
+    return formula;
+  }
+
+  get botches() {
+    return this.parent.rolls[0].botches;
+  }
+
   getFlavor() {
     let img = this.roll?.img;
 
@@ -126,7 +145,7 @@ export class RollChatSchema extends BasicChatSchema {
     return `<div class="flexrow">${icon}<h2 class="ars-chat-title chat-icon">${
       this.label
     }</h2></div>
-    <div>${this.parent.flavor}</div>
+    <div>${this.originalFlavor}</div>
     ${
       this.roll.details
         ? putInFoldableLinkWithAnimation("arm5e.sheet.details", this.roll.details)
@@ -172,7 +191,7 @@ export class RollChatSchema extends BasicChatSchema {
   obfuscate(html, actor) {
     let rollFormula = html.find(".dice-formula");
     if (this.showRollFormulas(actor, this.roll.actorType ?? "npc")) {
-      rollFormula.text(this.cleanupFormula(rollFormula.text()));
+      rollFormula.text(this.cleanupFormula(this.formula));
       const partf = html.find(".part-formula");
       partf.text(this.cleanupFormula(partf.text()));
     } else {
@@ -182,19 +201,15 @@ export class RollChatSchema extends BasicChatSchema {
 
     let rollResult = html.find(".dice-total");
     if (this.showRollResults(actor, this.roll.actorType)) {
-      let rollRes = rollResult.text();
+      let rollRes =
+        (this.parent.rollTotal * this.roll.divider + (this.confidence.used ?? 0) * 3) /
+        this.roll.divider;
       if (this.roll.secondaryScore) {
-        let newValue = Math.round(this.roll.secondaryScore + Number(this.parent.rolls[0].total));
+        let newValue = Math.round(this.roll.secondaryScore + rollRes);
 
-        rollResult.text(
-          Number.isNumeric(rollRes)
-            ? Math.round(Number(rollRes)) + ` ( ${(newValue < 0 ? "" : "+") + newValue} ) `
-            : rollRes
-        );
+        rollResult.text(Math.round(rollRes) + ` ( ${(newValue < 0 ? "" : "+") + newValue} ) `);
       } else {
-        if (Number.isNumeric(rollRes)) {
-          rollResult.text(Math.round(Number(rollRes)));
-        }
+        rollResult.text(Math.round(rollRes));
       }
     } else {
       rollResult.remove();
@@ -206,20 +221,20 @@ export class RollChatSchema extends BasicChatSchema {
     // confidence has been used already => no button
     if (
       this.confidence.allowed &&
+      this.botches == 0 &&
       (this.confidence.used ?? 0) < this.confidence.score &&
       !actor._isGrog()
     ) {
       let title = game.i18n.localize("arm5e.messages.useConf");
-      let divide = this.roll.divide;
       const useConfButton = $(
-        `<button class="dice-confidence chat-button" data-divide="${divide}" data-msg-id="${this._id}" data-actor-id="${actor.id}"><i class="fas fa-user-plus" title="${title}" ></i></button>`
+        `<button class="dice-confidence chat-button" data-msg-id="${this.parent._id}" data-actor-id="${actor.id}"><i class="fas fa-user-plus" title="${title}" ></i></button>`
       );
       // Handle button clicks
       useConfButton.on("click", async (ev) => {
         ev.stopPropagation();
         const actorId = ev.currentTarget.dataset.actorId;
         const message = game.messages.get(ev.currentTarget.dataset.msgId);
-        await message.useConfidence(actorId);
+        await message.system.useConfidence(actorId);
       });
       btnContainer.append(useConfButton);
     }
@@ -227,49 +242,26 @@ export class RollChatSchema extends BasicChatSchema {
   async useConfidence(actorId) {
     const actor = game.actors.get(actorId);
 
-    if ((this.confidence.used ?? 0) < this.confidence.score) {
+    if (actor && (this.confidence.used ?? 0) < this.confidence.score) {
       if (await actor.useConfidencePoint()) {
         // add +3 * useConf to roll
-        let bonus = 3 / this.roll.divide;
 
-        // horrible code, TODO find a cleaner way.
-        let total = $(ev.currentTarget).closest(".dice-total").text();
         let usedConf = this.confidence.used + 1 || 1;
-        let flavor = this.flavor;
-        if (usedConf == 1) {
-          flavor +=
-            "--------------- <br/>" + game.i18n.localize("arm5e.dialog.button.roll") + " : ";
-          if ((this.roll.botchCheck ?? 0) == 0) {
-            flavor += this.rolls[0].dice[0].results[0].result;
-          } else {
-            flavor += 0;
-          }
-        }
-        flavor += "<br/>" + game.i18n.localize("arm5e.sheet.confidence") + " : + 3";
+        let details = this.roll.details;
+        // if (usedConf == 1) {
+        // if (this.roll.botchCheck) {
+        //   flavor += this.rolls[0].dice[0].results[0].result;
+        // } else {
+        //   flavor += 0;
+        // }
+        // }
+        details += `<br/>+ ${game.i18n.localize("arm5e.sheet.confidence")} :  (3)`;
 
-        log(false, flavor);
-        let newContent = parseFloat(total) + bonus;
-        const dieRoll = new ArsRoll(newContent.toString(10));
-        await dieRoll.evaluate();
-        let msgData = {};
-        msgData.speaker = this.speaker;
-        msgData.flavor = flavor;
-        msgData.system = this.system;
-        msgData.flags = {
-          arm5e: {
-            usedConf: usedConf,
-            confScore: this.flags.arm5e.confScore,
-            actorType: actor.type // for if the actor is deleted
-          }
-        };
-        msgData.content = newContent;
-        msgData.rolls = this.rolls;
-
-        // updateData["data.flags.arm5e.usedConf"] = 1;
-        // updateData["data.content"] = newContent;
-        dieRoll.toMessage(msgData);
-        // let msg = await ChatMessage.create(msgData);
-        this.delete();
+        let msgData = { system: { confidence: {}, roll: {} } };
+        msgData.system.confidence.used = usedConf;
+        msgData.system.roll.details = details;
+        msgData.system.roll.formula += `+ ${this.formula}`;
+        await this.parent.update(msgData);
       }
     }
   }
@@ -303,12 +295,14 @@ export class MagicChatSchema extends RollChatSchema {
   static defineSchema() {
     return {
       ...super.defineSchema(),
-      spell: new fields.SchemaField({
+      magic: new fields.SchemaField({
         caster: new fields.DocumentUUIDField(),
         targets: new fields.ArrayField(new fields.DocumentUUIDField())
       })
     };
   }
+
+  getFailedMessage() {}
 
   static migrateData(data) {}
 

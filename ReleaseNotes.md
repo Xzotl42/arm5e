@@ -11,21 +11,26 @@
   - Removed of V10 only code.
   - Removed V12 deprecation warnings
 - [Technical] Code clean-up, factorization, encapsulation
-  - Actor data preparation clean-up => prepareDerivedData in Datamodel
-  - Item data preparation clean-up => prepareDerivedData in Datamodel
-  - ChatMessage datamodel with sub-types for rolls,combat,spells
+  - Actor data preparation clean-up => prepareBaseData and prepareDerivedData in Datamodel
+  - Item data preparation clean-up => prepareBaseData and prepareDerivedData in Datamodel
+- [Technical] ChatMessage datamodel with sub-types for rolls,combat,spells
+  - Easier update, allowing recreation from scratch.
 - [Technical] removal of some duplicate unused id attributes
+- Dropping a magical effect on a lab will switch the activity to spell invention.
 
 ### Bug fixes
 
 - Power form and cost change is now possible on unlinked token
 - Empty ability option will be ignored and restored to original value instead of "OptionName".
 - Fix error on botch when casting spells
-- Adding a boon or hooks will open the correct compendium
 - Adding boons and hooks opens the correct compendium
 - Adding lab virtues and flaws opens the correct compendium
 - Added back the possibility to create new virtues and flaws for some Actor types with an unfurnished compendium.
+- Qualities and inferiorities were not displayed properly for entities
 - Fix problem with ability rolls for actors without twilight
+- Submit was not awaited for in some sheets (mostly lab sheet), this would cause a reset to previous value after edit on heavy loaded systems or higher latency games (Forge,...)
+- [technical] With datamodel inheriting from TypeDataModel instead of DataModel, the type field was ignored at creation. Adding a toObject() fixes the problem. (eg: conversion of spell into labText)
+- Failed casting message was not displayed properly for Mythic blood characters
 
 ## 2.3.2.17, Quendalon, back from the wood with weird eyes
 

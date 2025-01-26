@@ -1,5 +1,5 @@
 import { getActorsFromTargetedTokens } from "./tokens.js";
-import { chatContestOfMagic, chatContestOfPower } from "./chat.js";
+import { chatContestOfMagic, chatContestOfPower } from "./chat-message.js";
 import { log } from "../tools.js";
 import Aura from "./aura.js";
 

@@ -266,6 +266,25 @@ export class DiaryEntrySchema extends foundry.abstract.TypeDataModel {
     };
   }
 
+  prepareData() {
+    if (!this.done) {
+      for (let a of this.progress.abilities) {
+        if (a.key == "") {
+          let ability = this.parent.actor.items.get(a.id);
+          if (ability) {
+            a.key = ability.system.key;
+            a.option = ability.system.option;
+          } else {
+            log(
+              false,
+              `${this.parent.actor.name} ability doesn't exist : ${a.name} for ${this.parent.name}`
+            );
+          }
+        }
+      }
+    }
+  }
+
   static buildSchedule(duration, year, season, date = "", applied = false) {
     let tmpDate = { season: season, year: year, date: date, applied: applied };
     let schedule = [tmpDate];

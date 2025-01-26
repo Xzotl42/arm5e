@@ -431,7 +431,7 @@ export class ArM5eMagicCodexSheet extends ArM5eActorSheet {
       log(false, "Valid drop");
       // create a spell or enchantment data:
       if (item.system.type != "raw") {
-        return await super._onDropItemCreate(labTextToEffect(foundry.utils.deepClone(item)));
+        return await super._onDropItemCreate(labTextToEffect(item.toObject()));
       }
     } else if (type == "book") {
       if (data.topicIdx) {

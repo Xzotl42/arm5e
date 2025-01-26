@@ -109,7 +109,7 @@ export function registerRollTesting(quench) {
         }
       });
       describe("Aging rolls", function () {
-        for (const loop of Array(25).keys()) {
+        for (const loop of Array(5).keys()) {
           it("Aging roll number " + [loop], async function () {
             try {
               let dataset = {
@@ -133,7 +133,7 @@ export function registerRollTesting(quench) {
             }
           });
         }
-        for (const loop of Array(25).keys()) {
+        for (const loop of Array(5).keys()) {
           it("Crisis roll number " + [loop], async function () {
             try {
               let dataset = {

@@ -58,106 +58,6 @@ export class ArM5eActor extends Actor {
       }
     }
 
-    if (this.type == "covenant") {
-      this.system.buildPoints.laboratoryTexts.computed = 0;
-      this.system.buildPoints.library.computed = 0;
-      this.system.buildPoints.vis.computed = 0;
-      this.system.buildPoints.magicItems.computed = 0;
-      this.system.buildPoints.laboratories.computed = 0;
-      this.system.buildPoints.money.computed = 0;
-      this.system.buildPoints.specialists.computed = 0;
-
-      this.system.yearlyExpenses.buildings.magicMod = 0;
-      this.system.yearlyExpenses.consumables.magicMod = 0;
-      this.system.yearlyExpenses.laboratories.magicMod = 0;
-      this.system.yearlyExpenses.provisions.magicMod = 0;
-      this.system.yearlyExpenses.wages.magicMod = 0;
-      this.system.yearlyExpenses.weapons.magicMod = 0;
-      this.system.yearlyExpenses.writingMaterials.magicMod = 0;
-
-      this.system.yearlyExpenses.buildings.mod = 0;
-      this.system.yearlyExpenses.consumables.mod = 0;
-      this.system.yearlyExpenses.laboratories.mod = 0;
-      this.system.yearlyExpenses.provisions.mod = 0;
-      this.system.yearlyExpenses.wages.mod = 0;
-      this.system.yearlyExpenses.weapons.mod = 0;
-      this.system.yearlyExpenses.writingMaterials.mod = 0;
-
-      this.system.yearlyExpenses.buildings.amount = 0;
-      this.system.yearlyExpenses.consumables.amount = 0;
-      this.system.yearlyExpenses.laboratories.amount = 0;
-      this.system.yearlyExpenses.provisions.amount = 0;
-      this.system.yearlyExpenses.wages.amount = 0;
-      this.system.yearlyExpenses.weapons.amount = 0;
-      this.system.yearlyExpenses.writingMaterials.amount = 0;
-      this.system.yearlyExpenses.buildings.craftSavings = 0;
-      this.system.yearlyExpenses.consumables.craftSavings = 0;
-      this.system.yearlyExpenses.laboratories.craftSavings = 0;
-      this.system.yearlyExpenses.provisions.craftSavings = 0;
-      this.system.yearlyExpenses.wages.craftSavings = 0;
-      this.system.yearlyExpenses.weapons.craftSavings = 0;
-      this.system.yearlyExpenses.writingMaterials.craftSavings = 0;
-
-      this.system.finances.inhabitantsPoints = 0;
-      this.system.finances.laboratoriesPoints = 0;
-      this.system.finances.weaponsPoints = 0;
-
-      this.system.census = {
-        magi: 0,
-        companions: 0,
-        specialists: 0,
-        craftsmen: 0,
-        turbula: 0,
-        laborers: 0,
-        teamsters: 0,
-        servants: 0,
-        dependants: 0,
-        horses: 0,
-        livestock: 0,
-        servantsNeeded: 0,
-        teamstersNeeded: 0
-      };
-    } else if (this.type == "laboratory") {
-      this.system.size.bonus = 0;
-      this.system.generalQuality.bonus = 0;
-      this.system.safety.bonus = 0;
-      this.system.health.bonus = 0;
-      this.system.refinement.bonus = 0;
-      this.system.upkeep.bonus = 0;
-      this.system.warping.bonus = 0;
-      this.system.aesthetics.bonus = 0;
-      this.system.aesthetics.max = 999;
-      this.system.auraBonus = 0;
-
-      // Create data keys for lab specialty
-      this.system.specialty = {};
-      for (let key of Object.keys(CONFIG.ARM5E.magic.arts)) {
-        this.system.specialty[key] = { bonus: 0 };
-      }
-
-      this.system.specialty.experimentation = { bonus: 0 };
-      this.system.specialty.familiar = { bonus: 0 };
-      this.system.specialty.items = { bonus: 0 };
-      this.system.specialty.longevityRituals = { bonus: 0 };
-      this.system.specialty.spells = { bonus: 0 };
-      this.system.specialty.texts = { bonus: 0 };
-      this.system.specialty.visExtraction = { bonus: 0 };
-
-      this.system.owner.document = game.actors.get(this.system.owner.actorId);
-      if (this.system.owner.document) {
-        this.system.owner.value = this.system.owner.document.name;
-        this.system.owner.linked = true;
-      } else {
-        this.system.owner.linked = false;
-      }
-
-      // Hopefully this can be reworked to use ID instead of name
-      this.system.aura = new Aura(this.system.covenant.document?.system?.scene?.id);
-      return;
-    }
-
-    // NOT LAB or COVENANT from here
-
     if (this.type != "player" && this.type != "npc" && this.type != "beast") {
       return;
     }
@@ -854,7 +754,7 @@ export class ArM5eActor extends Actor {
     if (actorData.type in CONFIG.ARM5E_DEFAULT_ICONS) {
       let icon;
       // getIcon method exists
-      if (CONFIG.ARM5E.ActorDataModels[actorData.type]?.getIcon) {
+      if (actorData.system && CONFIG.ARM5E.ActorDataModels[actorData.type]?.getIcon) {
         icon = CONFIG.ARM5E.ActorDataModels[actorData.type].getIcon(actorData);
         return {
           img: icon,
@@ -1061,23 +961,29 @@ export class ArM5eActor extends Actor {
   // Vitals management
 
   async loseFatigueLevel(num, wound = true) {
-    await this._changeFatigueLevel(num, wound);
+    return await this._changeFatigueLevel(num, wound);
   }
 
   async _changeFatigueLevel(num, wound = true) {
+    const res = {
+      fatigueLevels: 0,
+      wound: null
+    };
     if (!this._isCharacter() || (num <= 0 && this.system.fatigueCurrent == 0)) {
-      return;
+      return res;
     }
     let updateData = {};
     let tmp = this.system.fatigueCurrent + num;
     let overflow = 0;
     if (tmp < 0) {
-      res = 0;
+      res.fatigueLevels = tmp;
       updateData["system.fatigueCurrent"] = 0;
     } else if (tmp > this.system.fatigueMaxLevel) {
+      res.fatigueLevels = this.system.fatigueMaxLevel - this.system.fatigueCurrent;
       updateData["system.fatigueCurrent"] = this.system.fatigueMaxLevel;
       overflow = tmp - this.system.fatigueMaxLevel;
     } else {
+      res.fatigueLevels = num;
       updateData["system.fatigueCurrent"] = tmp;
     }
 
@@ -1101,6 +1007,7 @@ export class ArM5eActor extends Actor {
           woundType = "dead";
           break;
       }
+
       const datetime = game.settings.get("arm5e", "currentDate");
       let woundData = {
         name: `${game.i18n.localize(`arm5e.sheet.${woundType}`)} ${game.i18n.localize(
@@ -1121,9 +1028,11 @@ export class ArM5eActor extends Actor {
           description: "Fatigue loss overflow"
         }
       };
-      await this.createEmbeddedDocuments("Item", [woundData]);
+      const [wound] = await this.createEmbeddedDocuments("Item", [woundData]);
+      res.wound = wound.uuid;
     }
     await this.update(updateData, {});
+    return res;
   }
 
   async addActiveEffect(name, type, subtype, value, option = null, icon) {

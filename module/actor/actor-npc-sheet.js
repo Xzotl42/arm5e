@@ -84,7 +84,7 @@ export class ArM5eNPCActorSheet extends ArM5eActorSheet {
     // Prepare items.
     this._prepareCharacterItems(context);
 
-    if (context.system.charType === "entity") {
+    if (context.system.charType.value === "entity") {
       context.ui.qualities = { display: true };
     }
 

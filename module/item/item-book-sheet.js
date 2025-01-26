@@ -52,9 +52,9 @@ export class ArM5eBookSheet extends ArM5eItemSheet {
             await this.item.update(updateData);
           }
         }
-        // this.submit({ preventClose: true, updateData: updateData });
+        // await this.submit({ preventClose: true, updateData: updateData });
       }
-    // this.submit({ preventClose: true, updateData: updateData });
+    // await this.submit({ preventClose: true, updateData: updateData });
     //  else if (event.currentTarget.dataset.drop === "labtext") {
   }
   /* -------------------------------------------- */
@@ -226,7 +226,7 @@ export class ArM5eBookSheet extends ArM5eItemSheet {
     topics[index] = topic;
     let updateData = {};
     updateData[`system.topics`] = topics;
-    this.submit({ preventClose: true, updateData: updateData });
+    await this.submit({ preventClose: true, updateData: updateData });
   }
 
   async _changeTopicCategory(item, event) {

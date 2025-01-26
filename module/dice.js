@@ -46,14 +46,20 @@ async function simpleDie(actor, type = "OPTION", callBack) {
       name: rollInfo.name,
       itemUuid: rollInfo.itemUuid,
       secondaryScore: rollInfo.secondaryScore,
-      formula: formula,
+      divider: rollInfo.magic.divide,
       details: rollInfo.details,
       actorType: actor.type // for if the actor is deleted
     }
   };
+  if (ArsRoll.isCombat(type)) {
+    system.combat = { attacker: actor.uuid, defenders: [] };
+  }
 
+  if (ArsRoll.isMagic(type)) {
+    system.magic = { caster: actor.uuid, targets: [] };
+  }
   // TODO: HERE Do the callback for before message creation
-  const message = await tmp.toMessage(
+  const messageData = await tmp.toMessage(
     {
       flavor: flavorTxt,
       speaker: ChatMessage.getSpeaker({
@@ -62,11 +68,12 @@ async function simpleDie(actor, type = "OPTION", callBack) {
       system: system,
       type: "roll"
     },
-    { rollMode: rollMode }
+    { rollMode: rollMode, create: false }
   );
   if (callBack) {
-    await callBack(actor, tmp, message);
+    await callBack(actor, tmp, messageData);
   }
+  ChatMessage.create(messageData);
   actor.rollInfo.reset();
   return tmp;
 }
@@ -196,11 +203,17 @@ async function stressDie(actor, type = "OPTION", modes = 0, callBack = undefined
         secondaryScore: rollInfo.secondaryScore,
         botchCheck: botchCheck,
         details: rollInfo.details,
-        divide: rollInfo.magic.divide,
-        formula: rollInfo.formula,
+        divider: rollInfo.magic.divide,
         actorType: actor.type // for if the actor is deleted
       }
     };
+    if (ArsRoll.isCombat(type)) {
+      system.combat = { attacker: actor.uuid, defenders: [] };
+    }
+
+    if (ArsRoll.isMagic(type)) {
+      system.magic = { caster: actor.uuid, targets: [] };
+    }
     message = await dieRoll.toMessage(
       {
         flavor: flavorTxt,
@@ -223,6 +236,7 @@ async function stressDie(actor, type = "OPTION", modes = 0, callBack = undefined
   if (callBack) {
     await callBack(actor, dieRoll, message, rollInfo);
   }
+
   actor.rollInfo.reset();
   return dieRoll;
 }
@@ -849,7 +863,7 @@ export async function createRoll(rollFormula, multiplier, divide, options = {}) 
   let output_roll = new ArsRoll(rollInit, {}, options);
   output_roll.offset = rollFormula;
   output_roll.multiplier = multiplier;
-  output_roll.diviser = divide;
+  output_roll.divider = divide;
   output_roll.data = {};
   //output_roll.roll({ options });
   await output_roll.evaluate(options);
@@ -875,7 +889,8 @@ async function noRoll(actor, mode, callback, roll) {
     formula += ` / ${rollInfo.magic.divide}`;
   }
   const dieRoll = new ArsRoll(formula, actor.system);
-
+  dieRoll.divider = rollInfo.magic.divide;
+  let tmp = await dieRoll.roll();
   const system = {
     img: actor.img,
     label: rollInfo.label,
@@ -885,17 +900,18 @@ async function noRoll(actor, mode, callback, roll) {
     },
     roll: {
       details: rollInfo.details,
-      type: type.toUpperCase(),
+      type: rollInfo.type.toUpperCase(),
       img: rollInfo.img,
-      // name: rollInfo.name,
       itemUuid: rollInfo.itemUuid,
-      divide: rollInfo.magic.divide,
       secondaryScore: rollInfo.secondaryScore,
+      divider: rollInfo.magic.divide,
       actorType: actor.type // for if the actor is deleted
     }
   };
-  dieRoll.diviser = rollInfo.magic.divide;
-  let tmp = await dieRoll.roll();
+  if (ArsRoll.isMagic(type)) {
+    system.magic = { caster: actor.uuid, targets: [] };
+  }
+
   const message = await tmp.toMessage(
     {
       system: system,

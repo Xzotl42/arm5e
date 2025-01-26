@@ -1,7 +1,7 @@
 import { ARM5E } from "../config.js";
 import { simpleDie, stressDie, noRoll, changeMight, useItemCharge } from "../dice.js";
 import { PickRequisites, checkTargetAndCalculateResistance, noFatigue } from "./magic.js";
-import { chatFailedCasting } from "./chat.js";
+import { chatFailedCasting } from "./chat-message.js";
 import { ArM5eActor } from "../actor/actor.js";
 import {
   setAgingEffects,
@@ -630,7 +630,7 @@ async function castSpell(actorCaster, roll, message) {
     }
     // Lose fatigue levels
     await actorCaster.loseFatigueLevel(fatigue);
-    if (delta < -10) {
+    if (delta < -actorCaster.system.bonuses.arts.spellFatigueThreshold) {
       await chatFailedCasting(actorCaster, roll, message, fatigue);
       return false;
     }

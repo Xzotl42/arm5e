@@ -109,7 +109,7 @@ export class LabActivity extends Activity {
     );
 
     item.receptacle = null;
-    return item;
+    return item.toObject();
   }
 
   get title() {

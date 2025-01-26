@@ -18,10 +18,11 @@ export class ArM5eItem extends Item {
    */
   static getDefaultArtwork(itemData) {
     // a default icon exists for this type
+
     if (itemData.type in CONFIG.ARM5E_DEFAULT_ICONS) {
       let icon;
       // getIcon method exists
-      if (CONFIG.ARM5E.ItemDataModels[itemData.type]?.getIcon) {
+      if (itemData.system && CONFIG.ARM5E.ItemDataModels[itemData.type]?.getIcon) {
         icon = CONFIG.ARM5E.ItemDataModels[itemData.type].getIcon(itemData);
         return {
           img: icon
@@ -80,22 +81,6 @@ export class ArM5eItem extends Item {
           this.system.canEquip = true;
         }
       }
-
-      if (this.type == "diaryEntry") {
-        if (!system.done) {
-          for (let a of system.progress.abilities) {
-            if (a.key == "") {
-              let ability = this.actor.items.get(a.id);
-              if (ability) {
-                a.key = ability.system.key;
-                a.option = ability.system.option;
-              } else {
-                log(false, `${this.actor.name} ability doesn't exist : ${a.name} for ${this.name}`);
-              }
-            }
-          }
-        }
-      }
     }
     // compute reputation score
     if (this.type == "reputation") {
@@ -148,32 +133,6 @@ export class ArM5eItem extends Item {
       if (this.system.recoveryTime == 0) {
         this.system.title += ` (${game.i18n.localize("arm5e.sheet.wound.fresh")})`;
         this.system.ui = { style: 'style="box-shadow: 3px 3px 3px rgb(135 38 22 / 100%);"' };
-      }
-    } else if (this.type == "inhabitant") {
-      this.system.document = game.actors.get(this.system.actorId);
-      if (this.system.document) {
-        this.name = this.system.document.name;
-        this.system.yearBorn = this.system.document.system.description.born.value;
-        this.system.category = this.system.document._isMagus()
-          ? "magi"
-          : this.system.document._isCompanion()
-          ? "companions"
-          : this.system.category;
-        this.system.linked = true;
-      } else {
-        this.system.linked = false;
-      }
-    } else if (this.type == "labCovenant") {
-      this.system.document = game.actors.get(this.system.sanctumId);
-
-      if (this.system.document) {
-        this.name = this.system.document.name;
-        this.system.owner = this.system.document.system.owner.value;
-        this.system.quality = this.system.document.system.generalQuality.total;
-        this.system.buildPoints = this.system.document.system.buildPoints;
-        this.system.linked = true;
-      } else {
-        this.system.linked = false;
       }
     }
   }
@@ -242,12 +201,10 @@ export class ArM5eItem extends Item {
   }
 
   async _updateIcon(key, value) {
-    if (this.needIconUpdate()) {
-      await this.update({
-        img: CONFIG.ARM5E.ItemDataModels[this.type].getIcon(this, value),
-        [key]: value
-      });
-    }
+    await this.update({
+      img: CONFIG.ARM5E.ItemDataModels[this.type].getIcon(this, value),
+      [key]: value
+    });
   }
 
   needIconUpdate(value) {
@@ -255,7 +212,7 @@ export class ArM5eItem extends Item {
       let currentDefIcon = CONFIG.ARM5E.ItemDataModels[this.type].getIcon(this);
       // if the current img is the default icon of the previous value, allow change
       if (
-        this.img === currentDefIcon ||
+        // this.img === currentDefIcon ||
         this.img === ARM5E_DEFAULT_ICONS.MONO[this.type] ||
         this.img === ARM5E_DEFAULT_ICONS.COLOR[this.type] ||
         this.img === "icons/svg/mystery-man.svg" ||

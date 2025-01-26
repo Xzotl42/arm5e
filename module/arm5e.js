@@ -76,7 +76,7 @@ import {
   RollChatSchema,
   MagicChatSchema
 } from "./schemas/chatSchema.js";
-import { Arm5eChatMessage } from "./helpers/chat.js";
+import { Arm5eChatMessage } from "./helpers/chat-message.js";
 
 Hooks.once("i18nInit", async function () {
   CONFIG.ARM5E.LOCALIZED_ABILITIES = localizeAbilities();

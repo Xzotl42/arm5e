@@ -198,9 +198,6 @@ export class Scriptorium extends FormApplication {
         const text = await Item.implementation.fromDropData(dropData);
         if (text.type == "laboratoryText") {
           await this._addLabText(text);
-          // } else if (text.type == "spell") {
-          //   text = effectToLabText(text);
-          //   await this._addLabText(text);
         }
       } else if (event.currentTarget.dataset.drop === "copy-book") {
         const book = await Item.implementation.fromDropData(dropData);

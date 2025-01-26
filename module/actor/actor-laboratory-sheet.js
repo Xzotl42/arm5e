@@ -431,7 +431,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
       }
     });
 
-    html.find(".lab-activity").change(async (event) => this._changeActivity(this.actor, event));
+    html.find(".lab-activity").change(async (event) => this._changeActivity(event));
     html.find(".reset-planning").click(async (event) => {
       let planning = this.actor.getFlag(ARM5E.SYSTEM_ID, "planning");
       event.preventDefault();
@@ -460,7 +460,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
         { temporary: true, render: false }
       );
       newReceptacle = newReceptacle.toObject();
-      this.submit({
+      await this.submit({
         preventClose: true,
         updateData: { "flags.arm5e.planning.data.receptacle": newReceptacle }
       });
@@ -476,7 +476,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
       aspects[Number(dataset.index)].effect = effect;
       aspects[Number(dataset.index)].bonus = CONFIG.ARM5E.ASPECTS[aspect].effects[effect].bonus;
       aspects[Number(dataset.index)].effects = CONFIG.ARM5E.ASPECTS[aspect].effects;
-      this.submit({
+      await this.submit({
         preventClose: true,
         updateData: { "flags.arm5e.planning.data.receptacle.system.enchantments.aspects": aspects }
       });
@@ -490,7 +490,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
       aspects[Number(dataset.index)].effect = effect;
       aspects[Number(dataset.index)].bonus = CONFIG.ARM5E.ASPECTS[aspect].effects[effect].bonus;
       aspects[Number(dataset.index)].effects = CONFIG.ARM5E.ASPECTS[aspect].effects;
-      this.submit({
+      await this.submit({
         preventClose: true,
         updateData: { "flags.arm5e.planning.data.receptacle.system.enchantments.aspects": aspects }
       });
@@ -540,8 +540,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
     // This.render();
   }
 
-  async _changeActivity(item, event) {
-    event.preventDefault();
+  async _changeActivity(event) {
     const activity = getDataset(event).activity;
     let chosenActivity = $(".lab-activity").find("option:selected")[0].value;
     // switch (chosenActivity) {
@@ -587,7 +586,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
       { "flags.arm5e.planning": planning },
       { diff: false, recursive: true, render: true }
     );
-    this.render(true);
+    // this.render(true);
   }
 
   _refreshValues(event) {
@@ -738,12 +737,20 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
             }
           }
           case "magicalEffect":
+            let newEffect = new ArM5eItem(item.toObject(), { temporary: true });
+            planning.type = "inventSpell";
+            planning.data = newEffect.toObject();
+            this.submit({
+              preventClose: true,
+              updateData: { "flags.arm5e.planning": planning }
+            });
+            return true;
           case "spell": {
             let newSpell = new ArM5eItem(item.toObject(), { temporary: true });
             planning.type = "learnSpell";
             let data = newSpell.toObject();
             planning.data = resetOwnerFields(data);
-            this.submit({
+            await this.submit({
               preventClose: true,
               updateData: { "flags.arm5e.planning": planning }
             });
@@ -754,7 +761,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
             planning.type = "learnSpell";
             let data = newEnchant.toObject();
             planning.data = resetOwnerFields(data);
-            this.submit({
+            await this.submit({
               preventClose: true,
               updateData: { "flags.arm5e.planning": planning }
             });
@@ -782,7 +789,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
               type: "enchantment",
               system: data.system
             };
-            this.submit({
+            await this.submit({
               preventClose: true,
               updateData: { "flags.arm5e.planning": planning }
             });
@@ -798,7 +805,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
               type: "enchantment",
               system: data.system
             };
-            this.submit({
+            await this.submit({
               preventClose: true,
               updateData: { "flags.arm5e.planning": planning }
             });
@@ -821,7 +828,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
             // type: item.type,
             // system: item.system.toObject()
           };
-          this.submit({
+          await this.submit({
             preventClose: true,
             updateData: { "flags.arm5e.planning": planning }
           });

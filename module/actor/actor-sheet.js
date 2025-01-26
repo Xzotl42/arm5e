@@ -59,6 +59,7 @@ import { Sanatorium } from "../tools/sanatorium.js";
 import { MedicalHistory } from "../tools/med-history.js";
 import { ArM5eActorProfiles } from "./subsheets/actor-profiles.js";
 import { ArM5eMagicSystem } from "./subsheets/magic-system.js";
+import { getRefCompendium } from "../tools/compendia.js";
 
 export class ArM5eActorSheet extends ActorSheet {
   constructor(object, options) {
@@ -1224,7 +1225,7 @@ export class ArM5eActorSheet extends ActorSheet {
       const dataset = getDataset(ev);
       const val = ev.target.value;
       updateUserCache(this.actor.id, dataset.category, dataset.list, "minYearFilter", val);
-      this.submit({ preventClose: true });
+      await this.submit({ preventClose: true });
       this.render();
     });
 
@@ -1233,7 +1234,7 @@ export class ArM5eActorSheet extends ActorSheet {
       const dataset = getDataset(ev);
       const val = ev.target.value;
       updateUserCache(this.actor.id, dataset.category, dataset.list, "maxYearFilter", val);
-      this.submit({ preventClose: true });
+      await this.submit({ preventClose: true });
       this.render();
     });
 
@@ -1591,10 +1592,24 @@ export class ArM5eActorSheet extends ActorSheet {
   async _onItemAdd(event) {
     const dataset = getDataset(event);
     if (event.stopPropagation) event.stopPropagation();
-    const moduleRef = game.settings.get(ARM5E.SYSTEM_ID, "compendiaRef");
-    const collection = game.packs.get(`${moduleRef}.${dataset.compendium}`);
+    const collection = await getRefCompendium(dataset.compendium);
+    if (!collection) {
+      return await _onItemCreate(event);
+    }
     new Compendium({ collection }).render(true);
     return;
+  }
+
+  convertIfNeeded(data) {
+    if (this.needConversion(data.type)) {
+      return this.convert(data);
+    } else {
+      return data;
+    }
+  }
+
+  convert(data) {
+    return data;
   }
 
   /**
@@ -1613,20 +1628,22 @@ export class ArM5eActorSheet extends ActorSheet {
 
   async _itemCreate(dataset) {
     // Get the type of item to create.
-    const type = dataset.type;
+    let data = this.convertIfNeeded(dataset);
+    const type = data.type;
     // Initialize a default name.
     let name;
-    if (dataset.name) {
-      name = dataset.name;
+    if (data.name) {
+      name = data.name;
     } else {
       name = `New ${type.capitalize()}`;
     }
+
     // Prepare the item object.
     const itemData = [
       {
         name: name,
         type: type,
-        system: foundry.utils.duplicate(dataset)
+        system: foundry.utils.duplicate(data)
       }
     ];
     // Remove the type from the dataset since it's in the itemData.type prop.

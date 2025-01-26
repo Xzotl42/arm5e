@@ -5,7 +5,7 @@ export class ArsRoll extends Roll {
   constructor(formula, data = {}, options = {}) {
     super(formula, data, options);
     this.botches = 0;
-    this.diviser = 1;
+    this.divider = 1;
     this.multiplier = 1;
     this.offset = 0;
     this.botchCheck = false;
@@ -25,9 +25,9 @@ export class ArsRoll extends Roll {
 
     log(
       false,
-      `DBG: Roll total ${this.total} * ${this.diviser} - (${this.dice[0].total} * ${this.multiplier}) `
+      `DBG: Roll total ${this.total} * ${this.divider} - (${this.dice[0].total} * ${this.multiplier}) `
     );
-    return this.total * this.diviser - this.dice[0].total * this.multiplier;
+    return this.total * this.divider - this.dice[0].total * this.multiplier;
   }
 
   /**
@@ -50,6 +50,14 @@ export class ArsRoll extends Roll {
     // create the message:
     const cls = getDocumentClass("ChatMessage");
     return cls.create(msg, { rollMode });
+  }
+
+  static isMagic(type) {
+    return ["magic", "spont", "spell", "supernatural"].includes(type);
+  }
+
+  static isCombat(type) {
+    return ["init", "attack", "defense"].includes(type);
   }
 }
 

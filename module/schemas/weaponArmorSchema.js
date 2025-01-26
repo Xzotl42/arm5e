@@ -40,6 +40,10 @@ export class ArmorSchema extends foundry.abstract.TypeDataModel {
     };
   }
 
+  prepareData() {
+    // if (!this.parent.isOwned) return;
+  }
+
   getQuantity() {
     return this.quantity;
   }

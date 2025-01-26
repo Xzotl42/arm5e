@@ -22,6 +22,9 @@ export class Arm5eChatMessage extends ChatMessage {
   /** @inheritDoc */
   async getHTML(...args) {
     if (this.system.getFlavor) {
+      if (this.system.originalFlavor === "") {
+        this.system.originalFlavor = this.flavor;
+      }
       this.flavor = this.system.getFlavor();
     }
 
@@ -102,12 +105,11 @@ export class Arm5eChatMessage extends ChatMessage {
     if (this.system.addActionButtons) {
       this.system.addActionButtons(btnContainer, actor);
     }
-
     return btnContainer;
   }
 
-  getRollTotal(index = 0) {
-    return this.rolls[index].total;
+  get rollTotal() {
+    return this.rolls[0].total;
   }
 }
 

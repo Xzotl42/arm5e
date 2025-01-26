@@ -294,6 +294,10 @@ export class ArM5eCovenantActorSheet extends ArM5eActorSheet {
     }
   }
 
+  convert(data) {
+    return effectToLabText(data);
+  }
+
   // Overloaded core functions (TODO: review at each Foundry update)
 
   /**
@@ -309,10 +313,10 @@ export class ArM5eCovenantActorSheet extends ArM5eActorSheet {
     const item = await fromUuid(data.uuid);
     const type = item.type;
     // transform input into labText
-    if (type == "spell" || type == "magicalEffect" || type == "enchantment") {
+    if (this.needConversion(item.type)) {
       log(false, "Valid drop");
       // create a labText data:
-      return await super._onDropItemCreate(effectToLabText(foundry.utils.deepClone(item)));
+      return await super._onDropItemCreate(effectToLabText(item.toObject()));
     }
     // }
     const res = await super._onDropItem(event, data);

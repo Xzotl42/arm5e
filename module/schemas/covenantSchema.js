@@ -396,6 +396,67 @@ export class CovenantSchema extends foundry.abstract.TypeDataModel {
 
   // DATA PREPARATION
 
+  prepareBaseData() {
+    this.buildPoints.laboratoryTexts.computed = 0;
+    this.buildPoints.library.computed = 0;
+    this.buildPoints.vis.computed = 0;
+    this.buildPoints.magicItems.computed = 0;
+    this.buildPoints.laboratories.computed = 0;
+    this.buildPoints.money.computed = 0;
+    this.buildPoints.specialists.computed = 0;
+
+    this.yearlyExpenses.buildings.magicMod = 0;
+    this.yearlyExpenses.consumables.magicMod = 0;
+    this.yearlyExpenses.laboratories.magicMod = 0;
+    this.yearlyExpenses.provisions.magicMod = 0;
+    this.yearlyExpenses.wages.magicMod = 0;
+    this.yearlyExpenses.weapons.magicMod = 0;
+    this.yearlyExpenses.writingMaterials.magicMod = 0;
+
+    this.yearlyExpenses.buildings.mod = 0;
+    this.yearlyExpenses.consumables.mod = 0;
+    this.yearlyExpenses.laboratories.mod = 0;
+    this.yearlyExpenses.provisions.mod = 0;
+    this.yearlyExpenses.wages.mod = 0;
+    this.yearlyExpenses.weapons.mod = 0;
+    this.yearlyExpenses.writingMaterials.mod = 0;
+
+    this.yearlyExpenses.buildings.amount = 0;
+    this.yearlyExpenses.consumables.amount = 0;
+    this.yearlyExpenses.laboratories.amount = 0;
+    this.yearlyExpenses.provisions.amount = 0;
+    this.yearlyExpenses.wages.amount = 0;
+    this.yearlyExpenses.weapons.amount = 0;
+    this.yearlyExpenses.writingMaterials.amount = 0;
+    this.yearlyExpenses.buildings.craftSavings = 0;
+    this.yearlyExpenses.consumables.craftSavings = 0;
+    this.yearlyExpenses.laboratories.craftSavings = 0;
+    this.yearlyExpenses.provisions.craftSavings = 0;
+    this.yearlyExpenses.wages.craftSavings = 0;
+    this.yearlyExpenses.weapons.craftSavings = 0;
+    this.yearlyExpenses.writingMaterials.craftSavings = 0;
+
+    this.finances.inhabitantsPoints = 0;
+    this.finances.laboratoriesPoints = 0;
+    this.finances.weaponsPoints = 0;
+
+    this.census = {
+      magi: 0,
+      companions: 0,
+      specialists: 0,
+      craftsmen: 0,
+      turbula: 0,
+      laborers: 0,
+      teamsters: 0,
+      servants: 0,
+      dependants: 0,
+      horses: 0,
+      livestock: 0,
+      servantsNeeded: 0,
+      teamstersNeeded: 0
+    };
+  }
+
   prepareDerivedData() {
     this.armor = [];
     this.artsTopics = [];
