@@ -125,8 +125,10 @@ export class GroupSchedule extends FormApplication {
     });
     // Add activity Item
     html.find(".item-create").click(async (event) => {
-      const actor = game.actors.get(event.currentTarget.dataset.actor);
-      await actor.sheet._onItemCreate(event);
+      const dataset = getDataset(event);
+      if (event.stopPropagation) event.stopPropagation();
+      let data = { type: dataset.type, dates: [{ season: dataset.season, year: dataset.year }] };
+      await this.object.actor.sheet._onItemCreate(data);
       this.render();
     });
 

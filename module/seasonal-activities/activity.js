@@ -960,7 +960,7 @@ export class ChargedItem extends MinorEnchantment {
   }
 
   async prepareData(context) {
-    context = super.prepareData(context);
+    context = await super.prepareData(context);
     const planning = context.planning;
     planning.data.receptacle.system.enchantments.originalCharges = Math.max(
       1,

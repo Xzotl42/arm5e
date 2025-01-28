@@ -1,5 +1,18 @@
 # Release notes
 
+## 2.3.2.22, Quendalon, if no Fae, out!
+
+### Features & changes
+
+- Dropping a magical effect on a lab will switch the activity to spell invention.
+
+### Bug fixes
+
+- Failed casting message was not displayed properly for Mythic blood characters
+- Submit method was not awaited for in some sheets (mostly lab sheet), this would cause a reset to previous value after edit on heavy loaded systems or higher latency games (Forge,...)
+- Fix error during "Charged Item" activity data preparation.
+- Clicking in the schedule to create a new activity will set the new diary entry to the proper date.
+
 ## 2.3.2.21, Quendalon, Fae only, I mean it
 
 ### Bug fixes

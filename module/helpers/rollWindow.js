@@ -630,7 +630,7 @@ async function castSpell(actorCaster, roll, message) {
     }
     // Lose fatigue levels
     await actorCaster.loseFatigueLevel(fatigue);
-    if (delta < -10) {
+    if (delta < -actorCaster.system.bonuses.arts.spellFatigueThreshold) {
       await chatFailedCasting(actorCaster, roll, message, fatigue);
       return false;
     }

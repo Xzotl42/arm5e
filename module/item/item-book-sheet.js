@@ -226,7 +226,8 @@ export class ArM5eBookSheet extends ArM5eItemSheet {
     topics[index] = topic;
     let updateData = {};
     updateData[`system.topics`] = topics;
-    this.submit({ preventClose: true, updateData: updateData });
+    await this.submit({ preventClose: true, updateData: updateData });
+    this.render();
   }
 
   async _changeTopicCategory(item, event) {
@@ -282,7 +283,8 @@ export class ArM5eBookSheet extends ArM5eItemSheet {
     topics[index] = topic;
     let updateData = {};
     updateData[`system.topics`] = topics;
-    this.submit({ preventClose: true, updateData: updateData });
+    await this.submit({ preventClose: true, updateData: updateData });
+    this.render();
   }
 
   async _showLabText(item, event) {
