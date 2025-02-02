@@ -68,6 +68,7 @@ export class GroupSchedule extends FormApplication {
       let actorYear = {
         id: actor._id,
         actorName: actor.name,
+        year: data.displayYear,
         seasons: {
           [CONFIG.SEASON_ORDER_INV[0]]: { selected: false, busy: false, activities: [] },
           [CONFIG.SEASON_ORDER_INV[1]]: { selected: false, busy: false, activities: [] },
@@ -125,11 +126,12 @@ export class GroupSchedule extends FormApplication {
     });
     // Add activity Item
     html.find(".item-create").click(async (event) => {
-      // const dataset = getDataset(event);
-      // if (event.stopPropagation) event.stopPropagation();
-      // let data = { type: dataset.type, dates: [{ season: dataset.season, year: dataset.year }] };
-      // await this.object.actor.sheet._onItemCreate(data);
-      // this.render();
+      const dataset = getDataset(event);
+      if (event.stopPropagation) event.stopPropagation();
+      const actor = game.actors.get(dataset.actor);
+      let data = { type: dataset.type, dates: [{ season: dataset.season, year: dataset.year }] };
+      await actor.sheet._onItemCreate(data);
+      this.render();
     });
 
     html.find(".troupeFilter").change(async (event) => {

@@ -1,5 +1,15 @@
 # Release notes
 
+## 2.3.2.24, Quendalon, more than just trees
+
+### Features & changes
+
+- Fix wrong threshold for failed casting.
+- Clicking on the dice icon of a spell sheet no longer tries to cast it spontaneously
+- Fixed techniques filter
+
+### Bug fixes
+
 ## 2.3.2.23, Quendalon, if no Fae, out!
 
 ### Features & changes
