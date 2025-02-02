@@ -77,7 +77,14 @@ export class RollChatSchema extends BasicChatSchema {
         secondaryScore: basicIntegerField(0, -999),
         divider: basicIntegerField(1, 1),
         difficulty: basicIntegerField(1, 0)
-      })
+      }),
+      impact: new fields.SchemaField(
+        {
+          fatigueLevels: basicIntegerField(0, 0),
+          wound: new fields.DocumentUUIDField()
+        },
+        { initial: { fatigueLevels: 0, wound: null } }
+      )
     };
   }
 
@@ -130,28 +137,53 @@ export class RollChatSchema extends BasicChatSchema {
     return formula;
   }
 
+  get confidenceModifier() {
+    return (this.confidence.used * 3) / this.roll?.divider ?? 1;
+  }
+
   get botches() {
     return this.parent.rolls[0].botches;
   }
 
-  getFlavor() {
+  async getFlavor() {
     let img = this.roll?.img;
-
+    let showItem = this.showRollResults(this.parent.actor, this.roll.actorType);
+    let label = this.label;
     let icon = "";
     if (img) {
+      if (!showItem) {
+        label = game.i18n.localize("arm5e.generic.unknown");
+        img = "systems/arm5e/assets/icons/QuestionMark.webp";
+      }
       icon = `<div class="moreInfo item-image" >
-        <img src="${img}" data-uuid="${this.roll.itemUuid}"width="30" height="30"></div>`;
+          <img src="${img}" data-uuid="${this.roll.itemUuid}"width="30" height="30"></div>`;
     }
-    return `<div class="flexrow">${icon}<h2 class="ars-chat-title chat-icon">${
-      this.label
-    }</h2></div>
-    <div>${this.originalFlavor}</div>
-    ${
+    let res = `<div class="flexrow">${icon}<h2 class="ars-chat-title chat-icon">${label}</h2></div>`;
+
+    res += `<div>${this.originalFlavor}</div>`;
+    if (showItem) {
+      res += await this.getImpactMessage();
+    }
+    res += `${
       this.roll.details
-        ? putInFoldableLinkWithAnimation("arm5e.sheet.details", this.roll.details)
+        ? putInFoldableLinkWithAnimation(
+            "arm5e.sheet.details",
+            this.roll.details +
+              (this.confidenceModifier
+                ? `<br/>+ ${game.i18n.localize("arm5e.sheet.confidence")} :  (${
+                    this.confidenceModifier
+                  })`
+                : "")
+          )
         : ""
     }
     `;
+
+    if (this.getFailedMessage && this.failedCasting()) {
+      res += this.getFailedMessage();
+    }
+
+    return res;
   }
 
   showRollResults(actor, type) {
@@ -239,6 +271,7 @@ export class RollChatSchema extends BasicChatSchema {
       btnContainer.append(useConfButton);
     }
   }
+
   async useConfidence(actorId) {
     const actor = game.actors.get(actorId);
 
@@ -247,7 +280,6 @@ export class RollChatSchema extends BasicChatSchema {
         // add +3 * useConf to roll
 
         let usedConf = this.confidence.used + 1 || 1;
-        let details = this.roll.details;
         // if (usedConf == 1) {
         // if (this.roll.botchCheck) {
         //   flavor += this.rolls[0].dice[0].results[0].result;
@@ -255,15 +287,34 @@ export class RollChatSchema extends BasicChatSchema {
         //   flavor += 0;
         // }
         // }
-        details += `<br/>+ ${game.i18n.localize("arm5e.sheet.confidence")} :  (3)`;
 
         let msgData = { system: { confidence: {}, roll: {} } };
         msgData.system.confidence.used = usedConf;
-        msgData.system.roll.details = details;
         msgData.system.roll.formula += `+ ${this.formula}`;
         await this.parent.update(msgData);
       }
     }
+  }
+
+  async getImpactMessage() {
+    let impactMessage = "";
+    if (this.impact.fatigueLevels > 0) {
+      impactMessage += `<br/>${game.i18n.format("arm5e.messages.fatigueLost", {
+        num: this.impact.fatigueLevels
+      })} `;
+    }
+    if (this.impact.wound) {
+      const wound = await fromUuid(this.impact.wound);
+      impactMessage += `<br/>${game.i18n.format("arm5e.messages.woundResult", {
+        typeWound: wound.system.gravity
+      })}`;
+    }
+    if (this.roll.botchCheck && this.parent.rollTotal > 0) {
+      impactMessage += `<br/>${game.i18n.format("arm5e.messages.die.warpGain", {
+        num: this.parent.rollTotal
+      })} `;
+    }
+    return impactMessage;
   }
 }
 
@@ -302,7 +353,32 @@ export class MagicChatSchema extends RollChatSchema {
     };
   }
 
-  getFailedMessage() {}
+  failedCasting() {
+    return this.parent.rollTotal + this.confidenceModifier - this.roll.difficulty < -10;
+  }
+
+  getFailedMessage() {
+    const showDataOfNPC = game.settings.get("arm5e", "showNPCMagicDetails") === "SHOW_ALL";
+    let flavorForPlayers = "";
+
+    if (showDataOfNPC || this.parent.originatorOrGM) {
+      const levelOfSpell = this.roll.difficulty;
+      const totalOfSpell = this.parent.rollTotal + this.confidenceModifier;
+      const title =
+        '<h2 class="ars-chat-title">' + game.i18n.localize("arm5e.sheet.spellFailed") + "</h2>";
+      const messageTotalOfSpell = `${game.i18n.localize(
+        "arm5e.sheet.spellTotal"
+      )} (${totalOfSpell})`;
+      const messageLevelOfSpell = `- ${game.i18n.localize(
+        "arm5e.sheet.spellLevel"
+      )} (${levelOfSpell})`;
+      const castingTotal = `= ${totalOfSpell - levelOfSpell}`;
+      let extendedMsg = ` ${messageTotalOfSpell} ${messageLevelOfSpell} ${castingTotal}`;
+      let flavorForGM = `${title}` + flavorForPlayers + extendedMsg;
+      flavorForPlayers = flavorForGM;
+    }
+    return flavorForPlayers;
+  }
 
   static migrateData(data) {}
 

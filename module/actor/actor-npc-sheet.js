@@ -164,6 +164,7 @@ export class ArM5eNPCActorSheet extends ArM5eActorSheet {
       updateData["system.realm"] = chosenRealm;
 
       await this.submit({ preventClose: true, updateData: updateData });
+      this.render();
     });
   }
 

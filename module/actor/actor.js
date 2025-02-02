@@ -976,9 +976,11 @@ export class ArM5eActor extends Actor {
     let tmp = this.system.fatigueCurrent + num;
     let overflow = 0;
     if (tmp < 0) {
+      // character cannot restore more fatigue levels than he/she has
       res.fatigueLevels = tmp;
       updateData["system.fatigueCurrent"] = 0;
     } else if (tmp > this.system.fatigueMaxLevel) {
+      // overflow to a wound
       res.fatigueLevels = this.system.fatigueMaxLevel - this.system.fatigueCurrent;
       updateData["system.fatigueCurrent"] = this.system.fatigueMaxLevel;
       overflow = tmp - this.system.fatigueMaxLevel;

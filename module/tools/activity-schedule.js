@@ -280,6 +280,7 @@ export class ActivitySchedule extends FormApplication {
       preventClose: true,
       updateData: { dates: newDates }
     });
+    this.render();
   }
 
   async _changeYear(event, offset) {
@@ -293,6 +294,7 @@ export class ActivitySchedule extends FormApplication {
       preventClose: true,
       updateData: { displayYear: newYear }
     });
+    this.render();
   }
   async _setYear(event) {
     event.preventDefault();
@@ -301,6 +303,7 @@ export class ActivitySchedule extends FormApplication {
       preventClose: true,
       updateData: { displayYear: newYear }
     });
+    this.render();
   }
 
   async _updateObject(event, formData) {
@@ -310,8 +313,6 @@ export class ActivitySchedule extends FormApplication {
     if (formData.dates) {
       this.object.dates = formData.dates;
     }
-
-    this.render();
 
     return;
   }

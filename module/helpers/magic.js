@@ -238,7 +238,7 @@ export class QuickMagic extends FormApplication {
   }
 
   onClose(app) {
-    if (this.object.actor.apps[app.appId] != undefined) {
+    if (this.object?.actor?.apps[app.appId]) {
       delete this.object.actor.apps[app.appId];
     }
   }

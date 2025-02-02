@@ -65,7 +65,7 @@ export class QuickCombat extends FormApplication {
   }
 
   onClose(app) {
-    if (this.object.actor.apps[app.appId] != undefined) {
+    if (this.object?.actor?.apps[app.appId]) {
       delete this.object.actor.apps[app.appId];
     }
   }
@@ -136,7 +136,7 @@ export class QuickVitals extends FormApplication {
   }
 
   onClose(app) {
-    if (this.object.actor.apps[app.appId] != undefined) {
+    if (this.object?.actor?.apps[app.appId] != undefined) {
       delete this.object.actor.apps[app.appId];
     }
   }

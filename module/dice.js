@@ -37,7 +37,7 @@ async function simpleDie(actor, type = "OPTION", callBack) {
     label: rollInfo.label,
     img: actor.img,
     confidence: {
-      allowed: (rollProperties.MODE & ROLL_MODES.NO_CONF) != 0,
+      allowed: (rollProperties.MODE & ROLL_MODES.NO_CONF) == 0,
       score: actor.system.con.score
     },
     roll: {
@@ -81,7 +81,7 @@ async function simpleDie(actor, type = "OPTION", callBack) {
 // modes bitmask:
 // 0 => standard
 // 1 => force a one/explosion
-// 2 => force a zero/bothc check
+// 2 => force a zero/botch check
 // 4 => Aging roll
 // 8 => non-interactive
 // 16 => no confidence
@@ -127,14 +127,12 @@ async function stressDie(actor, type = "OPTION", modes = 0, callBack = undefined
     rollOptions.prompt = false;
   }
 
-  let confAllowed = actor.system.con.score;
+  let confAllowed = actor.system.con.score > 0;
   if (modes & 16) {
     confAllowed = false;
   }
 
-  if ((getRollTypeProperties(type).MODE & ROLL_MODES.NO_CONF) != 0) {
-    confAllowed = 0;
-  }
+  confAllowed = (getRollTypeProperties(type).MODE & ROLL_MODES.NO_CONF) != 0;
 
   let flavorTxt = rollInfo.flavor.length ? `<p>${rollInfo.flavor}</p>` : "";
   flavorTxt += `<p>${game.i18n.localize("arm5e.dialog.button.stressdie")}:</p>`;
@@ -186,7 +184,7 @@ async function stressDie(actor, type = "OPTION", modes = 0, callBack = undefined
   ) {
     rollMode = CONST.DICE_ROLL_MODES.PRIVATE;
   }
-  let message;
+  let messageData;
   if (!(modes & 32)) {
     const system = {
       img: actor.img,
@@ -214,7 +212,7 @@ async function stressDie(actor, type = "OPTION", modes = 0, callBack = undefined
     if (ArsRoll.isMagic(type)) {
       system.magic = { caster: actor.uuid, targets: [] };
     }
-    message = await dieRoll.toMessage(
+    messageData = await dieRoll.toMessage(
       {
         flavor: flavorTxt,
         // flavor: chatTitle + flavorTxt + details,
@@ -225,7 +223,7 @@ async function stressDie(actor, type = "OPTION", modes = 0, callBack = undefined
         system: system,
         type: "roll"
       },
-      { rollMode: rollMode }
+      { rollMode: rollMode, create: false }
     );
   } else {
     if (game.modules.get("dice-so-nice")?.active) {
@@ -234,9 +232,9 @@ async function stressDie(actor, type = "OPTION", modes = 0, callBack = undefined
   }
 
   if (callBack) {
-    await callBack(actor, dieRoll, message, rollInfo);
+    await callBack(actor, dieRoll, messageData, rollInfo);
   }
-
+  ChatMessage.create(messageData);
   actor.rollInfo.reset();
   return dieRoll;
 }
@@ -607,7 +605,7 @@ async function getRollFormula(actor) {
     ///
     // after computing total
     ///
-    if (rollInfo.type == "spell" || rollInfo.type == "magic" || rollInfo.type == "spont") {
+    if (["spell", "magic", "spont"].includes(rollInfo.type)) {
       const multiplier =
         rollInfo.penetration.multiplierBonusArcanic +
         rollInfo.penetration.multiplierBonusSympathic +
@@ -622,9 +620,13 @@ async function getRollFormula(actor) {
         score += rollInfo.magic.masteryScore;
       }
 
+      msg += ` + <br /><b>${game.i18n.localize("arm5e.sheet.penetration")} </b> (${
+        score * multiplier
+      }) <br />`;
       if (score > 0) {
-        msg += " + <br /><b>Penetration: </b> <br />";
-        msg += "Score (" + score + ") * Multiplier (" + multiplier + ") = " + score * multiplier;
+        msg += `${game.i18n.localize("arm5e.sheet.score")} (${score}) * ${game.i18n.localize(
+          "arm5e.generic.multiplier"
+        )} (${multiplier}) =  ${score * multiplier}`;
       }
       rollInfo.penetration.total = score * multiplier;
       rollInfo.secondaryScore = score * multiplier - rollInfo.magic.level;
@@ -640,16 +642,21 @@ async function getRollFormula(actor) {
         score += 1;
       }
       rollInfo.secondaryScore = score * multiplier;
-      msg += `<br /> + <b>Penetration </b> (${score * multiplier}) :  <br />`;
-      // msg += `Might (${actorSystemData.might.value}) - 5 times cost (${rollInfo.power.cost})`;
+      msg += ` + <br /><b>${game.i18n.localize("arm5e.sheet.penetration")} </b> (${
+        score * multiplier
+      }) <br />`;
       if (score > 0) {
-        msg += " ( Score (" + score + ") * Multiplier (" + multiplier + ") )";
+        msg += `${game.i18n.localize("arm5e.sheet.score")} (${score}) * ${game.i18n.localize(
+          "arm5e.generic.multiplier"
+        )} (${multiplier}) =  ${score * multiplier}`;
       }
       rollInfo.penetration.total = rollInfo.secondaryScore;
     }
 
     if (rollInfo.type == "item") {
-      msg += `<br /> + <b>Penetration </b> (${rollInfo.penetration.total}) :  <br />`;
+      msg += `<br /> + <b>${game.i18n.localize("arm5e.sheet.penetration")} </b> (${
+        rollInfo.penetration.total
+      }) :  <br />`;
       rollInfo.secondaryScore = rollInfo.penetration.total;
     }
 
@@ -908,14 +915,16 @@ async function noRoll(actor, mode, callback, roll) {
       actorType: actor.type // for if the actor is deleted
     }
   };
-  if (ArsRoll.isMagic(type)) {
+  let msgType = "roll";
+  if (ArsRoll.isMagic(rollInfo.type)) {
     system.magic = { caster: actor.uuid, targets: [] };
+    msgType = "magic";
   }
 
   const message = await tmp.toMessage(
     {
       system: system,
-      type: "roll",
+      type: msgType,
       speaker: ChatMessage.getSpeaker({
         actor
       })
@@ -926,6 +935,7 @@ async function noRoll(actor, mode, callback, roll) {
   if (callback) {
     await callback(actor, dieRoll, message);
   }
+
   actor.rollInfo.reset();
 }
 

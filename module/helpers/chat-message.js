@@ -25,7 +25,7 @@ export class Arm5eChatMessage extends ChatMessage {
       if (this.system.originalFlavor === "") {
         this.system.originalFlavor = this.flavor;
       }
-      this.flavor = this.system.getFlavor();
+      this.flavor = await this.system.getFlavor();
     }
 
     const html = await super.getHTML();
@@ -186,8 +186,8 @@ async function chatFailedCasting(actorCaster, roll, message, fatigue) {
   if (showDataOfNPC) {
     flavorForPlayers = flavorForGM;
   }
-
-  await message.update({ flavor: message.flavor + flavorForPlayers });
+  message.flavor += flavorForPlayers;
+  // await message.update({ flavor: message.flavor + flavorForPlayers });
   // ChatMessage.create({
   //   content: "",
   //   flavor: flavorForPlayers,

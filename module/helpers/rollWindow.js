@@ -595,6 +595,8 @@ async function castSpell(actorCaster, roll, message) {
   // First check that the spell succeeds
   const levelOfSpell = actorCaster.rollInfo.magic.level;
   const totalOfSpell = Math.round(roll._total);
+  message.system.roll.difficulty = levelOfSpell;
+  message.type = "magic";
 
   if (roll.botches > 0) {
     const updateData = {};
@@ -629,9 +631,10 @@ async function castSpell(actorCaster, roll, message) {
       }
     }
     // Lose fatigue levels
-    await actorCaster.loseFatigueLevel(fatigue);
-    if (delta < -actorCaster.system.bonuses.arts.spellFatigueThreshold) {
-      await chatFailedCasting(actorCaster, roll, message, fatigue);
+    message.system.impact = await actorCaster.loseFatigueLevel(fatigue);
+
+    if (delta < -10) {
+      // await chatFailedCasting(actorCaster, roll, message, fatigue);
       return false;
     }
 
@@ -647,7 +650,7 @@ async function castSpell(actorCaster, roll, message) {
     log(false, `Casting total: ${totalOfSpell}`);
     // Magic effect
     if (totalOfSpell < levelOfSpell) {
-      await chatFailedCasting(actorCaster, roll, message, 0);
+      // await chatFailedCasting(actorCaster, roll, message, 0);
       return false;
     }
   }
@@ -665,7 +668,8 @@ async function castSupernaturalEffect(actorCaster, roll, message) {
   // First check that the spell succeeds
   const levelOfSpell = actorCaster.rollInfo.magic.level;
   const totalOfSpell = Math.round(roll._total);
-
+  message.system.roll.difficulty = levelOfSpell;
+  message.type = "magic";
   if (roll.botches > 0) {
     const updateData = {};
     if (roll.botches >= actorCaster.system.bonuses.arts.warpingThreshold) {
@@ -682,7 +686,7 @@ async function castSupernaturalEffect(actorCaster, roll, message) {
   log(false, `Casting total: ${totalOfSpell}`);
   // Magic effect
   if (totalOfSpell < levelOfSpell) {
-    await chatFailedCasting(actorCaster, roll, message, 0);
+    // await chatFailedCasting(actorCaster, roll, message, 0);
     return false;
   }
   // Then do contest of magic

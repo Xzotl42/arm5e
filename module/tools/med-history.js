@@ -32,7 +32,7 @@ export class MedicalHistory extends FormApplication {
   }
 
   onClose(app) {
-    if (app.object.patient) {
+    if (app.object?.patient) {
       delete app.object.patient.apps[app.appId];
     }
   }

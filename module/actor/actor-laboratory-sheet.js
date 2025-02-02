@@ -464,6 +464,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
         preventClose: true,
         updateData: { "flags.arm5e.planning.data.receptacle": newReceptacle }
       });
+      this.render();
     });
 
     html.find(".aspect-change").change(async (e) => {
@@ -480,6 +481,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
         preventClose: true,
         updateData: { "flags.arm5e.planning.data.receptacle.system.enchantments.aspects": aspects }
       });
+      this.render();
     });
     html.find(".effect-change").change(async (e) => {
       const dataset = getDataset(e);
@@ -494,6 +496,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
         preventClose: true,
         updateData: { "flags.arm5e.planning.data.receptacle.system.enchantments.aspects": aspects }
       });
+      this.render();
     });
 
     html.find(".owner-link").change(async (ev) => {
@@ -537,7 +540,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
       preventClose: true,
       updateData: { "flags.arm5e.planning.data.visCost": planning.data.visCost }
     });
-    // This.render();
+    this.render();
   }
 
   async _changeActivity(event) {
@@ -586,12 +589,12 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
       { "flags.arm5e.planning": planning },
       { diff: false, recursive: true, render: true }
     );
-    // this.render(true);
+    this.render();
   }
 
   _refreshValues(event) {
     event.preventDefault();
-    this.render(true);
+    this.render();
   }
 
   async _schedule() {
@@ -740,10 +743,11 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
             let newEffect = new ArM5eItem(item.toObject(), { temporary: true });
             planning.type = "inventSpell";
             planning.data = newEffect.toObject();
-            this.submit({
+            await this.submit({
               preventClose: true,
               updateData: { "flags.arm5e.planning": planning }
             });
+            this.render();
             return true;
           case "spell": {
             let newSpell = new ArM5eItem(item.toObject(), { temporary: true });
@@ -754,6 +758,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
               preventClose: true,
               updateData: { "flags.arm5e.planning": planning }
             });
+            this.render();
             return true;
           }
           case "enchantment": {
@@ -765,6 +770,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
               preventClose: true,
               updateData: { "flags.arm5e.planning": planning }
             });
+            this.render();
             return true;
           }
           default:
@@ -793,6 +799,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
               preventClose: true,
               updateData: { "flags.arm5e.planning": planning }
             });
+            this.render();
             return true;
           }
           case "enchantment": {
@@ -809,7 +816,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
               preventClose: true,
               updateData: { "flags.arm5e.planning": planning }
             });
-            // awa
+            this.render();
             return true;
           }
           case "item": {
@@ -832,6 +839,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
             preventClose: true,
             updateData: { "flags.arm5e.planning": planning }
           });
+          this.render();
         } else {
           return false;
         }

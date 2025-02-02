@@ -173,7 +173,7 @@ export class Scriptorium extends FormApplication {
     // If (app.object.reading.book.uuid != null) {
     //   fromUuidSync(app.object.reading.book.uuid).apps[app.appId] = undefined;
     // }
-    if (app.object.reading.reader.id != null) {
+    if (app.object?.reading?.reader.id != null) {
       let reader = game.actors.get(app.object.reading.reader.id);
       delete reader.apps[app.appId];
     }

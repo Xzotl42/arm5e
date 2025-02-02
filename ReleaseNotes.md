@@ -31,6 +31,10 @@
 - Submit was not awaited for in some sheets (mostly lab sheet), this would cause a reset to previous value after edit on heavy loaded systems or higher latency games (Forge,...)
 - [technical] With datamodel inheriting from TypeDataModel instead of DataModel, the type field was ignored at creation. Adding a toObject() fixes the problem. (eg: conversion of spell into labText)
 - Failed casting message was not displayed properly for Mythic blood characters
+- Fixed error with group schedule activity creation in the Astrolabium
+- Clicking on the dice icon of a spell sheet no longer tries to cast it spontaneously
+- Removed some noisy errors when closing some applications
+- Fixed techniques filter
 
 ## 2.3.2.17, Quendalon, back from the wood with weird eyes
 

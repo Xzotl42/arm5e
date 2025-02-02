@@ -24,7 +24,7 @@ export class Schedule extends FormApplication {
   }
 
   onClose(app) {
-    if (app.object.actor) {
+    if (app.object?.actor) {
       delete app.object.actor.apps[app.appId];
     }
   }
@@ -169,7 +169,10 @@ export class Schedule extends FormApplication {
 
     // Add Inventory Item
     html.find(".item-create").click(async (event) => {
-      await this.object.actor.sheet._onItemCreate(event);
+      const dataset = getDataset(event);
+      if (event.stopPropagation) event.stopPropagation();
+      let data = { type: dataset.type, dates: [{ season: dataset.season, year: dataset.year }] };
+      await this.object.actor.sheet._onItemCreate(data);
       this.render();
     });
   }

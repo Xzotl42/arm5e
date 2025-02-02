@@ -252,7 +252,7 @@ export class CovenantSchema extends foundry.abstract.TypeDataModel {
           descriptionUpdate += newComputedField(`Build points current ${k}`, v.actuals);
         }
       }
-      update["system.constructionPoints"] = null;
+      update["system.-constructionPoints"] = null;
     }
 
     if (data.system.yearExpenditure) {
@@ -268,7 +268,7 @@ export class CovenantSchema extends foundry.abstract.TypeDataModel {
           descriptionUpdate += newComputedField(`Expenditure ${k}`, v.expenditure);
         }
       }
-      update["system.yearExpenditure"] = null;
+      update["system.-yearExpenditure"] = null;
     }
 
     if (data.system.costsSavings) {
@@ -279,7 +279,7 @@ export class CovenantSchema extends foundry.abstract.TypeDataModel {
           descriptionUpdate += newComputedField(`Cost savings ${k}`, v.saving);
         }
       }
-      update["system.costsSavings"] = null;
+      update["system.-costsSavings"] = null;
     }
 
     if (data.system.loyaltyPoints) {
@@ -304,7 +304,7 @@ export class CovenantSchema extends foundry.abstract.TypeDataModel {
         );
       }
 
-      update["system.loyaltyPoints"] = null;
+      update["system.-loyaltyPoints"] = null;
     }
 
     if (data.system.loyaltyModifiers) {
@@ -339,7 +339,7 @@ export class CovenantSchema extends foundry.abstract.TypeDataModel {
         );
       }
 
-      update["system.loyaltyModifiers"] = null;
+      update["system.-loyaltyModifiers"] = null;
     }
 
     if (data.system.wealth) {
@@ -379,7 +379,11 @@ export class CovenantSchema extends foundry.abstract.TypeDataModel {
         data.system.wealth.weaponsPoints
       );
 
-      update["system.wealth"] = null;
+      update["system.-wealth"] = null;
+    }
+
+    if (data.buildPoints.labText) {
+      update["system.buildPoints.-labText"] = null;
     }
 
     if (descriptionUpdate !== "") {

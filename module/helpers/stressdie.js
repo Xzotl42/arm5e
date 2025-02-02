@@ -49,7 +49,11 @@ export class ArsRoll extends Roll {
     msg.type = "roll";
     // create the message:
     const cls = getDocumentClass("ChatMessage");
-    return cls.create(msg, { rollMode });
+    if (create) {
+      return cls.create(msg, { rollMode, create });
+    } else {
+      return msg;
+    }
   }
 
   static isMagic(type) {
