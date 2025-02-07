@@ -933,7 +933,7 @@ export class ChargedItem extends MinorEnchantment {
   validation(input) {
     let lvl = input.data.enchantment.system.level;
     let delta = input.labTotal.score - lvl;
-    if (delta < lvl) {
+    if (delta < 0) {
       return {
         valid: false,
         waste: delta,
@@ -953,7 +953,7 @@ export class ChargedItem extends MinorEnchantment {
         waste: delta,
         duration: 1,
         message: game.i18n.format("arm5e.lab.planning.msg.chargesAvailable", {
-          num: Math.ceil(delta / 5)
+          num: Math.max(Math.ceil(delta / 5), 1)
         })
       };
     }

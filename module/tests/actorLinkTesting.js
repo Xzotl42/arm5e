@@ -53,12 +53,12 @@ export function registerActorLinkTesting(quench) {
       });
 
       after(async function () {
-        if (src) {
-          await src.delete();
-        }
-        if (target) {
-          await target.delete();
-        }
+        // if (src) {
+        //   await src.delete();
+        // }
+        // if (target) {
+        //   await target.delete();
+        // }
       });
     },
     { displayName: "ARS : ActorLink testsuite" }

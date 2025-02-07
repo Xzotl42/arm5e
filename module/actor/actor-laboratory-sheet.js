@@ -729,15 +729,29 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
       if (event.currentTarget.dataset.drop === "spell") {
         event.stopPropagation();
         switch (item.type) {
-          case "laboratoryText": {
-            if (item.system.type !== "spell") {
-              break;
+          case "laboratoryText":
+            {
+              if (item.system.type == "spell") {
+                if (item.system.draft && item.system.author !== this.actor.system.owner.value) {
+                  ui.notifications.info(game.i18n.localize("arm5e.lab.planning.msg.draftLabText"));
+                  return false;
+                }
+                let labSpell = item.toObject();
+                labSpell.type = "spell";
+                let newSpell = new ArM5eItem(labSpell, { temporary: true });
+                planning.type = "learnSpell";
+                let data = newSpell.toObject();
+                planning.data = resetOwnerFields(data);
+                await this.submit({
+                  preventClose: true,
+                  updateData: { "flags.arm5e.planning": planning }
+                });
+                this.render();
+                return true;
+                break;
+              }
             }
-            if (item.system.draft && item.system.author !== this.actor.system.owner.value) {
-              ui.notifications.info(game.i18n.localize("arm5e.lab.planning.msg.draftLabText"));
-              return false;
-            }
-          }
+            break;
           case "magicalEffect":
             let newEffect = new ArM5eItem(item.toObject(), { temporary: true });
             planning.type = "inventSpell";
@@ -746,6 +760,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
               preventClose: true,
               updateData: { "flags.arm5e.planning": planning }
             });
+            this.render();
             return true;
           case "spell": {
             let newSpell = new ArM5eItem(item.toObject(), { temporary: true });
@@ -756,6 +771,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
               preventClose: true,
               updateData: { "flags.arm5e.planning": planning }
             });
+            this.render();
             return true;
           }
           case "enchantment": {

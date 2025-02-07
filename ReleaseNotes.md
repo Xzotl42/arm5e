@@ -1,5 +1,13 @@
 # Release notes
 
+## 2.3.2.25, Quendalon, more than just mushrooms
+
+### Bug fixes
+
+- Charged Item activity validation fixed
+- Spell Lab text drop on lab will set the activity to spell learning instead of spell invention.
+- [V10-V11] A line was wrongly backported from a V12 fix, breaking compatibility.
+
 ## 2.3.2.24, Quendalon, more than just trees
 
 ### Features & changes
@@ -22,7 +30,6 @@
 - Submit method was not awaited for in some sheets (mostly lab sheet), this would cause a reset to previous value after edit on heavy loaded systems or higher latency games (Forge,...)
 - Fix error during "Charged Item" activity data preparation.
 - Clicking in the schedule to create a new activity will set the new diary entry to the proper date.
-- [V11] A line was wrongly backported from a V12 fix, breaking compatibility.
 
 ## 2.3.2.21, Quendalon, Fae only, I mean it
 
