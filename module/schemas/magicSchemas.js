@@ -499,6 +499,27 @@ export class SpellSchema extends MagicalEffectSchema {
     }
   }
 
+  static fatigueCost(actor, castingTotal, difficulty, ritual = false) {
+    const delta = castingTotal - difficulty;
+    if (ritual) {
+      if (delta < 0) {
+        return Math.max(
+          1 +
+            Math.ceil((levelOfSpell - totalOfSpell) / 5) -
+            actor.system.bonuses.arts.ritualFatigueCancelled,
+          0
+        );
+      } else {
+        return Math.max(1 - actorCaster.system.bonuses.arts.ritualFatigueCancelled, 0);
+      }
+    } else {
+      if (delta < -actor.system.bonuses.arts.spellFatigueThreshold) {
+        return 1;
+      }
+    }
+    return 0;
+  }
+
   static migrateData(data) {
     return data;
   }

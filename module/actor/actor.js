@@ -967,7 +967,8 @@ export class ArM5eActor extends Actor {
   async _changeFatigueLevel(num, wound = true) {
     const res = {
       fatigueLevels: 0,
-      wound: null
+      wound: null,
+      woundGravity: null
     };
     if (!this._isCharacter() || (num <= 0 && this.system.fatigueCurrent == 0)) {
       return res;
@@ -1032,6 +1033,7 @@ export class ArM5eActor extends Actor {
       };
       const [wound] = await this.createEmbeddedDocuments("Item", [woundData]);
       res.wound = wound.uuid;
+      res.woundGravity = woundType;
     }
     await this.update(updateData, {});
     return res;
@@ -1131,8 +1133,8 @@ export class ArM5eActor extends Actor {
     }
   }
 
-  async useConfidencePoint() {
-    if (!this._isCharacter()) {
+  canUseConfidencePoint() {
+    if (!this._isCharacter() || this._isGrog()) {
       return false;
     }
 
@@ -1146,7 +1148,7 @@ export class ArM5eActor extends Actor {
       return false;
     }
     log(false, "Used confidence point");
-    await this.update({ system: { con: { points: this.system.con.points - 1 } } });
+    // await this.update({ system: { con: { points: this.system.con.points - 1 } } });
     return true;
   }
 
@@ -1158,22 +1160,26 @@ export class ArM5eActor extends Actor {
     if (!this._isCharacter()) {
       return;
     }
-    let updateData = {};
-    updateData["system.fatigueCurrent"] = 0;
-    await this.update(updateData, {});
+    await this.update(this._rest(), {});
+  }
+
+  _rest(data) {
+    return (data["system.fatigueCurrent"] = 0);
   }
 
   async loseMightPoints(num) {
+    await this.update(this._loseMightPoints(num), {});
+  }
+
+  _loseMightPoints(num) {
     if (!this._isCharacter()) {
-      return;
+      return {};
     }
     if (num > this.system.might.points) {
       ui.notifications.warn("Spending more might points than available");
-      return;
+      return {};
     }
-    let updateData = {};
-    updateData["system.might.points"] = Number(this.system.might.points) - num;
-    await this.update(updateData, {});
+    return { "system.might.points": Number(this.system.might.points) - num };
   }
 
   // Set the proper default icon just before creation

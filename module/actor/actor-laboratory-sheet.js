@@ -738,6 +738,18 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
               ui.notifications.info(game.i18n.localize("arm5e.lab.planning.msg.draftLabText"));
               return false;
             }
+            const labSpell = item.toObject();
+            labSpell.type = "spell";
+            let newSpell = new ArM5eItem(labSpell, { temporary: true });
+            planning.type = "learnSpell";
+            let data = newSpell.toObject();
+            planning.data = resetOwnerFields(data);
+            await this.submit({
+              preventClose: true,
+              updateData: { "flags.arm5e.planning": planning }
+            });
+            this.render();
+            return true;
           }
           case "magicalEffect":
             let newEffect = new ArM5eItem(item.toObject(), { temporary: true });

@@ -1,7 +1,6 @@
 import { ARM5E } from "../config.js";
 import { simpleDie, stressDie, noRoll, changeMight, useItemCharge } from "../dice.js";
 import { PickRequisites, checkTargetAndCalculateResistance, noFatigue } from "./magic.js";
-import { chatFailedCasting } from "./chat-message.js";
 import { ArM5eActor } from "../actor/actor.js";
 import {
   setAgingEffects,
@@ -16,6 +15,7 @@ import {
 import { exertSelf } from "./combat.js";
 import { getDataset, log } from "../tools.js";
 import { ArM5eItem } from "../item/item.js";
+import { MagicalEffectSchema, SpellSchema } from "../schemas/magicSchemas.js";
 
 // below is a bitmap
 const ROLL_MODES = {
@@ -86,6 +86,7 @@ const ROLL_PROPERTIES = {
     MODE: ROLL_MODES.STRESS,
     MODIFIERS: 7,
     TITLE: "arm5e.dialog.title.rolldie",
+    SCHEMA: MagicalEffectSchema,
     CALLBACK: castSpell,
     ALTER_ROLL: noFatigue,
     ALT_ACTION: noRoll,
@@ -96,6 +97,7 @@ const ROLL_PROPERTIES = {
     MODE: ROLL_MODES.STRESS,
     MODIFIERS: 7,
     TITLE: "arm5e.dialog.title.rolldie",
+    SCHEMA: MagicalEffectSchema,
     CALLBACK: castSpell,
     ALTER_ROLL: noFatigue,
     ALT_ACTION: noRoll,
@@ -110,6 +112,7 @@ const ROLL_PROPERTIES = {
   SPELL: {
     VAL: "spell",
     MODE: ROLL_MODES.STRESS_OR_SIMPLE,
+    SCHEMA: SpellSchema,
     MODIFIERS: 7,
     TITLE: "arm5e.dialog.title.rolldie",
     CALLBACK: castSpell
@@ -611,30 +614,17 @@ async function castSpell(actorCaster, roll, message) {
     await actorCaster.update(updateData);
   }
   if (actorCaster.rollInfo.type == "spell") {
-    const delta = totalOfSpell - levelOfSpell;
+    let fatigue = SpellSchema.fatigueCost(
+      actorCaster,
+      totalOfSpell,
+      levelOfSpell,
+      actorCaster.rollInfo.magic.ritual
+    );
 
-    let fatigue = 0;
-    if (actorCaster.rollInfo.magic.ritual) {
-      if (delta < 0) {
-        fatigue = Math.max(
-          1 +
-            Math.ceil((levelOfSpell - totalOfSpell) / 5) -
-            actorCaster.system.bonuses.arts.ritualFatigueCancelled,
-          0
-        );
-      } else {
-        fatigue = Math.max(1 - actorCaster.system.bonuses.arts.ritualFatigueCancelled, 0);
-      }
-    } else {
-      if (delta < -actorCaster.system.bonuses.arts.spellFatigueThreshold) {
-        fatigue = 1;
-      }
-    }
     // Lose fatigue levels
     message.system.impact = await actorCaster.loseFatigueLevel(fatigue);
-
+    const delta = totalOfSpell - levelOfSpell;
     if (delta < -10) {
-      // await chatFailedCasting(actorCaster, roll, message, fatigue);
       return false;
     }
 
@@ -650,7 +640,6 @@ async function castSpell(actorCaster, roll, message) {
     log(false, `Casting total: ${totalOfSpell}`);
     // Magic effect
     if (totalOfSpell < levelOfSpell) {
-      // await chatFailedCasting(actorCaster, roll, message, 0);
       return false;
     }
   }

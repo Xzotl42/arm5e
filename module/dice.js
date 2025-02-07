@@ -132,13 +132,13 @@ async function stressDie(actor, type = "OPTION", modes = 0, callBack = undefined
     confAllowed = false;
   }
 
-  confAllowed = (getRollTypeProperties(type).MODE & ROLL_MODES.NO_CONF) != 0;
+  confAllowed = (getRollTypeProperties(type).MODE & ROLL_MODES.NO_CONF) == 0;
 
   let flavorTxt = rollInfo.flavor.length ? `<p>${rollInfo.flavor}</p>` : "";
   flavorTxt += `<p>${game.i18n.localize("arm5e.dialog.button.stressdie")}:</p>`;
   let dieRoll = await explodingRoll(actor, rollOptions, botchNum);
 
-  let botchCheck = 0;
+  let botchCheck = false;
   if (iterations > 1) {
     flavorTxt = `<h2 class="dice-msg">${game.i18n.localize(
       "arm5e.messages.die.exploding"
@@ -174,7 +174,7 @@ async function stressDie(actor, type = "OPTION", modes = 0, callBack = undefined
       dieRoll._total = 0;
     }
 
-    botchCheck = 1;
+    botchCheck = true;
   }
 
   let rollMode = game.settings.get("core", "rollMode");
@@ -210,7 +210,7 @@ async function stressDie(actor, type = "OPTION", modes = 0, callBack = undefined
     }
 
     if (ArsRoll.isMagic(type)) {
-      system.magic = { caster: actor.uuid, targets: [] };
+      system.magic = { caster: actor.uuid, targets: [], ritual: rollInfo.magic.ritual };
     }
     messageData = await dieRoll.toMessage(
       {
@@ -907,7 +907,7 @@ async function noRoll(actor, mode, callback, roll) {
     },
     roll: {
       details: rollInfo.details,
-      type: rollInfo.type.toUpperCase(),
+      type: "OPTION",
       img: rollInfo.img,
       itemUuid: rollInfo.itemUuid,
       secondaryScore: rollInfo.secondaryScore,

@@ -25,7 +25,7 @@ export class Arm5eChatMessage extends ChatMessage {
       if (this.system.originalFlavor === "") {
         this.system.originalFlavor = this.flavor;
       }
-      this.flavor = await this.system.getFlavor();
+      this.flavor = this.system.getFlavor();
     }
 
     const html = await super.getHTML();
@@ -161,43 +161,6 @@ function getFlavorForPlayersResult({
     return messageTotalWithName;
   }
   return messageOnlyWithName;
-}
-
-async function chatFailedCasting(actorCaster, roll, message, fatigue) {
-  const levelOfSpell = actorCaster.rollInfo.magic.level;
-  const totalOfSpell = roll._total;
-  const title =
-    '<h2 class="ars-chat-title">' + game.i18n.localize("arm5e.sheet.spellFailed") + "</h2>";
-  const messageTotalOfSpell = `${game.i18n.localize("arm5e.sheet.spellTotal")} (${totalOfSpell})`;
-  const messageLevelOfSpell = `- ${game.i18n.localize("arm5e.sheet.spellLevel")} (${levelOfSpell})`;
-  const castingTotal = `= ${totalOfSpell - levelOfSpell}`;
-  let lostFatigue = "";
-  if (fatigue > 0) {
-    lostFatigue = `<br/>${game.i18n.format("arm5e.messages.fatigueLost", { num: fatigue })} `;
-  }
-  let warping = "";
-  if (roll.botches > 0) {
-    warping = `<br/>${game.i18n.format("arm5e.messages.die.warpGain", { num: roll.botches })} `;
-  }
-  const showDataOfNPC = game.settings.get("arm5e", "showNPCMagicDetails") === "SHOW_ALL";
-  let flavorForPlayers = `${title}`;
-  let extendedMsg = ` ${messageTotalOfSpell} ${messageLevelOfSpell} ${castingTotal}${lostFatigue}${warping}`;
-  let flavorForGM = flavorForPlayers + extendedMsg;
-  if (showDataOfNPC) {
-    flavorForPlayers = flavorForGM;
-  }
-  message.flavor += flavorForPlayers;
-  // await message.update({ flavor: message.flavor + flavorForPlayers });
-  // ChatMessage.create({
-  //   content: "",
-  //   flavor: flavorForPlayers,
-  //   speaker: ChatMessage.getSpeaker({
-  //     actorCaster
-  //   })
-  // });
-  // if (flavorForPlayers !== flavorForGM) {
-  //   privateMessage("", actorCaster, flavorForGM);
-  // }
 }
 
 async function chatContestOfPower(
@@ -473,4 +436,4 @@ async function privateMessage(content, actor, title, flavor, type = "") {
   // await roll.toMessage(messageData, { rollMode: CONST.DICE_ROLL_MODES.BLIND });
 }
 
-export { chatContestOfMagic, chatFailedCasting, chatContestOfPower };
+export { chatContestOfMagic, chatContestOfPower };

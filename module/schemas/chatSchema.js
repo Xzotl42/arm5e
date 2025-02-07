@@ -81,9 +81,15 @@ export class RollChatSchema extends BasicChatSchema {
       impact: new fields.SchemaField(
         {
           fatigueLevels: basicIntegerField(0, 0),
-          wound: new fields.DocumentUUIDField()
+          wound: new fields.DocumentUUIDField(),
+          woundGravity: new fields.StringField({
+            required: false,
+            blank: false,
+            nullable: true,
+            initial: null
+          })
         },
-        { initial: { fatigueLevels: 0, wound: null } }
+        { initial: { fatigueLevels: 0, wound: null, woundGravity: null } }
       )
     };
   }
@@ -145,7 +151,7 @@ export class RollChatSchema extends BasicChatSchema {
     return this.parent.rolls[0].botches;
   }
 
-  async getFlavor() {
+  getFlavor() {
     let img = this.roll?.img;
     let showItem = this.showRollResults(this.parent.actor, this.roll.actorType);
     let label = this.label;
@@ -162,7 +168,7 @@ export class RollChatSchema extends BasicChatSchema {
 
     res += `<div>${this.originalFlavor}</div>`;
     if (showItem) {
-      res += await this.getImpactMessage();
+      res += this.getImpactMessage();
     }
     res += `${
       this.roll.details
@@ -255,7 +261,7 @@ export class RollChatSchema extends BasicChatSchema {
       this.confidence.allowed &&
       this.botches == 0 &&
       (this.confidence.used ?? 0) < this.confidence.score &&
-      !actor._isGrog()
+      actor.canUseConfidencePoint()
     ) {
       let title = game.i18n.localize("arm5e.messages.useConf");
       const useConfButton = $(
@@ -276,27 +282,21 @@ export class RollChatSchema extends BasicChatSchema {
     const actor = game.actors.get(actorId);
 
     if (actor && (this.confidence.used ?? 0) < this.confidence.score) {
-      if (await actor.useConfidencePoint()) {
-        // add +3 * useConf to roll
-
-        let usedConf = this.confidence.used + 1 || 1;
-        // if (usedConf == 1) {
-        // if (this.roll.botchCheck) {
-        //   flavor += this.rolls[0].dice[0].results[0].result;
-        // } else {
-        //   flavor += 0;
-        // }
-        // }
-
-        let msgData = { system: { confidence: {}, roll: {} } };
-        msgData.system.confidence.used = usedConf;
-        msgData.system.roll.formula += `+ ${this.formula}`;
-        await this.parent.update(msgData);
-      }
+      fatigueCost(
+        actor,
+        this.parent.rollTotal + this.confidenceModifier,
+        this.roll.difficulty,
+        this.magic.ritual
+      );
+      let usedConf = this.confidence.used + 1 || 1;
+      let msgData = { system: { confidence: {}, roll: {} } };
+      msgData.system.confidence.used = usedConf;
+      msgData.system.roll.formula += `+ ${this.formula}`;
+      await this.parent.update(msgData);
     }
   }
 
-  async getImpactMessage() {
+  getImpactMessage() {
     let impactMessage = "";
     if (this.impact.fatigueLevels > 0) {
       impactMessage += `<br/>${game.i18n.format("arm5e.messages.fatigueLost", {
@@ -304,9 +304,8 @@ export class RollChatSchema extends BasicChatSchema {
       })} `;
     }
     if (this.impact.wound) {
-      const wound = await fromUuid(this.impact.wound);
       impactMessage += `<br/>${game.i18n.format("arm5e.messages.woundResult", {
-        typeWound: wound.system.gravity
+        typeWound: this.impact.woundGravity
       })}`;
     }
     if (this.roll.botchCheck && this.parent.rollTotal > 0) {
@@ -348,10 +347,13 @@ export class MagicChatSchema extends RollChatSchema {
       ...super.defineSchema(),
       magic: new fields.SchemaField({
         caster: new fields.DocumentUUIDField(),
-        targets: new fields.ArrayField(new fields.DocumentUUIDField())
+        targets: new fields.ArrayField(new fields.DocumentUUIDField()),
+        ritual: boolOption(false)
       })
     };
   }
+
+  //
 
   failedCasting() {
     return this.parent.rollTotal + this.confidenceModifier - this.roll.difficulty < -10;
