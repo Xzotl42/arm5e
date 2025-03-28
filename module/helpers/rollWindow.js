@@ -1,6 +1,6 @@
 import { ARM5E } from "../config.js";
 import { simpleDie, stressDie, noRoll, changeMight, useItemCharge } from "../dice.js";
-import { PickRequisites, checkTargetAndCalculateResistance, noFatigue } from "./magic.js";
+import { PickRequisites, handleTargetsOfMagic, noFatigue } from "./magic.js";
 import { ArM5eActor } from "../actor/actor.js";
 import {
   setAgingEffects,
@@ -62,6 +62,7 @@ const ROLL_PROPERTIES = {
     MODE: ROLL_MODES.STRESS,
     TITLE: "arm5e.dialog.title.rolldie",
     MODIFIERS: 1,
+    CALLBACK: combatAttack,
     // ALTER_ROLL: doubleAbility,
     ALT_ACTION: exertSelf,
     ALT_ACTION_LABEL: "arm5e.dialog.button.exertSelf"
@@ -71,6 +72,7 @@ const ROLL_PROPERTIES = {
     MODE: ROLL_MODES.STRESS,
     TITLE: "arm5e.dialog.title.rolldie",
     MODIFIERS: 1,
+    CALLBACK: combatDefense,
     // ALTER_ROLL: doubleAbility,
     ALT_ACTION: exertSelf,
     ALT_ACTION_LABEL: "arm5e.dialog.button.exertSelf"
@@ -288,15 +290,16 @@ function getDebugButtonsIfNeeded(actor, callback) {
  * @param actor
  */
 function getDialogData(dataset, html, actor) {
-  const callback = getRollTypeProperties(dataset.roll).CALLBACK;
+  const rollProperties = getRollTypeProperties(dataset.roll);
+  const callback = rollProperties.CALLBACK;
 
   let btns = {};
   let mode = 0;
-  const altAction = getRollTypeProperties(dataset.roll).ALT_ACTION;
+  const altAction = rollProperties.ALT_ACTION;
   let altBtn;
   if (altAction) {
-    const btnLabel = getRollTypeProperties(dataset.roll).ALT_ACTION_LABEL;
-    const rollAlteration = getRollTypeProperties(dataset.roll).ALTER_ROLL;
+    const btnLabel = rollProperties.ALT_ACTION_LABEL;
+    const rollAlteration = rollProperties.ALTER_ROLL;
     altBtn = {
       icon: "<i class='fas fa-check'></i>",
       label: game.i18n.localize(btnLabel),
@@ -309,17 +312,16 @@ function getDialogData(dataset, html, actor) {
       }
     };
   }
-  const properties = getRollTypeProperties(dataset.roll);
-  const title = properties.TITLE;
-  if (properties.MODE & ROLL_MODES.STRESS || ROLL_MODES[dataset.dieType] & ROLL_MODES.STRESS) {
-    if (properties.MODE & ROLL_MODES.NO_BOTCH) {
+  const title = rollProperties.TITLE;
+  if (rollProperties.MODE & ROLL_MODES.STRESS || ROLL_MODES[dataset.dieType] & ROLL_MODES.STRESS) {
+    if (rollProperties.MODE & ROLL_MODES.NO_BOTCH) {
       mode = 4; // No botches
     }
 
     btns.yes = {
       icon: "<i class='fas fa-check'></i>",
       label: game.i18n.localize(
-        properties.ACTION_LABEL ? properties.ACTION_LABEL : "arm5e.dialog.button.stressdie"
+        rollProperties.ACTION_LABEL ? rollProperties.ACTION_LABEL : "arm5e.dialog.button.stressdie"
       ),
       callback: async (html) => {
         getFormData(html, actor);
@@ -329,11 +331,16 @@ function getDialogData(dataset, html, actor) {
     if (altAction) {
       btns.alt = altBtn;
     }
-    if (properties.MODE & ROLL_MODES.SIMPLE || ROLL_MODES[dataset.dieType] & ROLL_MODES.SIMPLE) {
+    if (
+      rollProperties.MODE & ROLL_MODES.SIMPLE ||
+      ROLL_MODES[dataset.dieType] & ROLL_MODES.SIMPLE
+    ) {
       btns.no = {
         icon: "<i class='fas fa-check'></i>",
         label: game.i18n.localize(
-          properties.ACTION_LABEL ? properties.ACTION_LABEL : "arm5e.dialog.button.simpledie"
+          rollProperties.ACTION_LABEL
+            ? rollProperties.ACTION_LABEL
+            : "arm5e.dialog.button.simpledie"
         ),
         callback: async (html) => {
           getFormData(html, actor);
@@ -350,14 +357,14 @@ function getDialogData(dataset, html, actor) {
       };
     }
   } else if (
-    properties.MODE & ROLL_MODES.SIMPLE ||
+    rollProperties.MODE & ROLL_MODES.SIMPLE ||
     ROLL_MODES[dataset.dieType] & ROLL_MODES.SIMPLE
   ) {
     // Simple die only
     btns.yes = {
       icon: "<i class='fas fa-check'></i>",
       label: game.i18n.localize(
-        properties.ACTION_LABEL ? properties.ACTION_LABEL : "arm5e.dialog.button.simpledie"
+        rollProperties.ACTION_LABEL ? rollProperties.ACTION_LABEL : "arm5e.dialog.button.simpledie"
       ),
       callback: async (html) => {
         getFormData(html, actor);
@@ -379,7 +386,7 @@ function getDialogData(dataset, html, actor) {
     btns.yes = {
       icon: "<i class='fas fa-check'></i>",
       label: game.i18n.localize(
-        properties.ACTION_LABEL ? properties.ACTION_LABEL : "arm5e.dialog.powerUse"
+        rollProperties.ACTION_LABEL ? rollProperties.ACTION_LABEL : "arm5e.dialog.powerUse"
       ),
       callback: async (html) => {
         getFormData(html, actor);
@@ -415,7 +422,7 @@ async function useMagicItem(dataset, item) {
   }
 
   prepareRollVariables(dataset, item.actor);
-  log(false, `Roll variables: ${JSON.stringify(item.actor.system.roll)}`);
+  // log(false, `Roll variables: ${JSON.stringify(item.actor.system.roll)}`);
   let template = "systems/arm5e/templates/actor/parts/actor-itemUse.html";
   item.actor.system.roll = item.actor.rollInfo;
   item.actor.config = CONFIG.ARM5E;
@@ -590,19 +597,38 @@ async function renderRollTemplate(dataset, template, actor) {
 
 /**
  *
+ * @param attacker
+ * @param roll
+ * @param message
+ */
+async function combatAttack(attacker, roll, message) {}
+
+/**
+ *
+ * @param defense
+ * @param roll
+ * @param message
+ */
+async function combatDefense(defense, roll, message) {}
+
+/**
+ *
  * @param actorCaster
  * @param roll
  * @param message
  */
 async function castSpell(actorCaster, roll, message) {
+  // message.system.magic = { caster: actor.uuid, targets: [] };
+  // message.system.magic.targets =
+
   // First check that the spell succeeds
   const levelOfSpell = actorCaster.rollInfo.magic.level;
   const totalOfSpell = Math.round(roll._total);
-  message.system.roll.difficulty = levelOfSpell;
-  message.type = "magic";
-
+  const messageUpdate = {};
+  messageUpdate["system.roll.difficulty"] = levelOfSpell;
+  // messageUpdate["type"] = "magic";
+  const updateData = {};
   if (roll.botches > 0) {
-    const updateData = {};
     if (roll.botches >= actorCaster.system.bonuses.arts.warpingThreshold) {
       // twilight pending
       updateData["system.twilight.pointsGained"] = roll.botches;
@@ -611,7 +637,7 @@ async function castSpell(actorCaster, roll, message) {
       updateData["system.twilight.season"] = actorCaster.rollInfo.environment.season;
     }
     updateData["system.warping.points"] = actorCaster.system.warping.points + roll.botches;
-    await actorCaster.update(updateData);
+    // await actorCaster.update(updateData);
   }
   if (actorCaster.rollInfo.type == "spell") {
     let fatigue = SpellSchema.fatigueCost(
@@ -621,12 +647,9 @@ async function castSpell(actorCaster, roll, message) {
       actorCaster.rollInfo.magic.ritual
     );
 
-    // Lose fatigue levels
-    message.system.impact = await actorCaster.loseFatigueLevel(fatigue);
-    const delta = totalOfSpell - levelOfSpell;
-    if (delta < -10) {
-      return false;
-    }
+    // Lost fatigue levels + wound if overflow
+    message.system.impact = actorCaster._changeFatigueLevel(updateData, fatigue);
+    messageUpdate["system.impact"] = message.system.impact;
 
     // Uncomment when A-A integration is ready
     // let data = {
@@ -636,15 +659,30 @@ async function castSpell(actorCaster, roll, message) {
     // };
 
     // Hooks.callAll("arm5e:spellcasting", data, {user : game.user.id});
-  } else {
-    log(false, `Casting total: ${totalOfSpell}`);
-    // Magic effect
-    if (totalOfSpell < levelOfSpell) {
-      return false;
-    }
   }
+
+  if (actorCaster.canUseConfidencePoint() && message.system.confidence.allowed && !roll.botches) {
+    // do not update fatigue yet.
+    delete updateData["system.fatigueCurrent"];
+
+    if (message.system.impact.fatigueLevels || message.system.impact.woundGravity) {
+      updateData["system.states.confidencePrompt"] = true;
+    }
+  } else {
+    if (message.system.impact.woundGravity) {
+      await actorCaster.setWound(
+        1,
+        CONFIG.ARM5E.recovery.rankMapping[woundGravity],
+        game.i18n.localize("arm5e.sheet.fatigueOverflow")
+      );
+    }
+    messageUpdate["system.impact.applied"] = true;
+  }
+
+  await actorCaster.update(updateData);
+  await handleTargetsOfMagic(actorCaster, roll, message);
+  message.updateSource(messageUpdate);
   // Then do contest of magic
-  await checkTargetAndCalculateResistance(actorCaster, roll, message);
 }
 
 /**
@@ -669,17 +707,15 @@ async function castSupernaturalEffect(actorCaster, roll, message) {
       updateData["system.twilight.season"] = actorCaster.rollInfo.environment.season;
     }
     updateData["system.warping.points"] = actorCaster.system.warping.points + roll.botches;
-    await actorCaster.update(updateData);
   }
 
-  log(false, `Casting total: ${totalOfSpell}`);
-  // Magic effect
-  if (totalOfSpell < levelOfSpell) {
-    // await chatFailedCasting(actorCaster, roll, message, 0);
-    return false;
-  }
+  messageUpdate["system.impact.applied"] = true;
+
+  await actorCaster.update(updateData);
+
+  message.updateSource(messageUpdate);
   // Then do contest of magic
-  await checkTargetAndCalculateResistance(actorCaster, roll, message);
+  await handleTargetsOfMagic(actorCaster, roll, message);
 }
 
 /**

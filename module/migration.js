@@ -399,8 +399,15 @@ export const migrateActorData = async function (actorDoc, actorItems) {
         updateData["system.charType"] = { value: actor.system.charType };
       }
 
+      if (actor.system.pendingCrisis) {
+        updateData["system.states.pendingCrisis"] = true;
+      }
+      if (actor.system.creationMode != undefined) {
+        updateData["system.states.creationMode"] = actor.system.creationMode;
+      }
+
       if (actor.type === "beast") {
-        if (!actor.system.characteristics.int) {
+        if (!actor.system.characteristics?.int) {
           // if (actor.system.characteristics.int) {
           // delete actor.system.characteristics.int;
 
@@ -780,7 +787,7 @@ export const migrateActorData = async function (actorDoc, actorItems) {
     actor.type == "laboratory" ||
     actor.type == "covenant"
   ) {
-    let applied = actorDoc.effects;
+    let applied;
     if (actorDoc instanceof ArM5eActor) {
       applied = Array.from(actorDoc.allApplicableEffects());
     } else if (actor.synthetic) {

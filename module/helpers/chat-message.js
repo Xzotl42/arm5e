@@ -113,56 +113,6 @@ export class Arm5eChatMessage extends ChatMessage {
   }
 }
 
-function getFlavorForPlayersTotalSpell(flavorTotalSpell, actorCaster, showDataOfNPC) {
-  if (actorCaster.hasPlayerOwner) {
-    return flavorTotalSpell;
-  }
-  if (showDataOfNPC) {
-    return flavorTotalSpell;
-  }
-  return "";
-}
-
-function getFlavorForPlayersTotalPenetration(flavorTotalPenetration, actorCaster, showDataOfNPC) {
-  if (actorCaster.hasPlayerOwner) {
-    return flavorTotalPenetration;
-  }
-  if (showDataOfNPC) {
-    return flavorTotalPenetration;
-  }
-  return "";
-}
-
-function getFlavorForPlayersTotalMagicResistance(
-  flavorTotalMagicResistance,
-  actorTarget,
-  showDataOfNPC
-) {
-  if (actorTarget.hasPlayerOwner) {
-    return flavorTotalMagicResistance;
-  }
-  if (showDataOfNPC) {
-    return flavorTotalMagicResistance;
-  }
-  return "";
-}
-
-function getFlavorForPlayersResult({
-  messageOnlyWithName,
-  messageTotalWithName,
-  actorTarget,
-  actorCaster,
-  showDataOfNPC
-}) {
-  if (actorTarget.hasPlayerOwner && actorCaster.hasPlayerOwner) {
-    return messageTotalWithName;
-  }
-  if (showDataOfNPC) {
-    return messageTotalWithName;
-  }
-  return messageOnlyWithName;
-}
-
 async function chatContestOfPower(
   message,
   { actorCaster, actorTarget, penetrationTotal, magicResistance, total, form }
@@ -214,13 +164,13 @@ async function chatContestOfPower(
 
   const messageTotalWithName =
     total > 0
-      ? messageTotal.replace("$target$", actorTarget.name).replace("$total$", total)
-      : messageTotal.replace("$target$", actorTarget.name).replace("$total$", -total);
+      ? messageTotal.replace("{target}", actorTarget.name).replace("{total}", total)
+      : messageTotal.replace("{target}", actorTarget.name).replace("{total}", -total);
 
   const messageOnlyWithName =
     total > 0
-      ? messageWithoutTotal.replace("$target$", actorTarget.name)
-      : messageWithoutTotal.replace("$target$", actorTarget.name);
+      ? messageWithoutTotal.replace("{target}", actorTarget.name)
+      : messageWithoutTotal.replace("{target}", actorTarget.name);
 
   const showDataOfNPC = game.settings.get("arm5e", "showNPCMagicDetails") === "SHOW_ALL";
   const flavorForPlayersTotalSpell = getFlavorForPlayersTotalSpell(
@@ -345,13 +295,13 @@ async function chatContestOfMagic(
 
   const messageTotalWithName =
     total > 0
-      ? messageTotal.replace("$target$", actorTarget.name).replace("$total$", total)
-      : messageTotal.replace("$target$", actorTarget.name).replace("$total$", -total);
+      ? messageTotal.replace("{target}", actorTarget.name).replace("{total}", total)
+      : messageTotal.replace("{target}", actorTarget.name).replace("{total}", -total);
 
   const messageOnlyWithName =
     total > 0
-      ? messageWithoutTotal.replace("$target$", actorTarget.name)
-      : messageWithoutTotal.replace("$target$", actorTarget.name);
+      ? messageWithoutTotal.replace("{target}", actorTarget.name)
+      : messageWithoutTotal.replace("{target}", actorTarget.name);
 
   const showDataOfNPC = game.settings.get("arm5e", "showNPCMagicDetails") === "SHOW_ALL";
   const flavorForPlayersTotalSpell = getFlavorForPlayersTotalSpell(
@@ -380,31 +330,23 @@ async function chatContestOfMagic(
   const flavorForPlayers = `${flavorForPlayersTotalSpell}${flavorForPlayersTotalPenetration}${flavorForPlayersTotalMagicResistance}`;
 
   // const content = `<h4 class="dice-total">${flavorForPlayersResult}</h4>`;
+  const msgData = {};
+  msgData["flavor"] +=
+    message.flavor +
+    title +
+    flavorForPlayersResult +
+    (flavorForPlayers == ""
+      ? ""
+      : putInFoldableLinkWithAnimation(
+          "arm5e.sheet.details",
+          flavorForPlayers,
+          true,
+          "clickable2"
+        ));
+  msgData["system.roll.actorType"] = actorCaster.type; // for if the actor is deleted
 
-  message = await message.update({
-    // content: content,
-    flavor:
-      message.flavor +
-      title +
-      flavorForPlayersResult +
-      (flavorForPlayers == ""
-        ? ""
-        : putInFoldableLinkWithAnimation(
-            "arm5e.sheet.details",
-            flavorForPlayers,
-            true,
-            "clickable2"
-          )),
-    "flags.arm5e.actorType": actorCaster.type // for if the actor is deleted
-  });
+  message.updateSource(msgData);
 
-  // ChatMessage.create({
-  //   content,
-  //   flavor: title + putInFoldableLinkWithAnimation("arm5e.sheet.details", flavorForPlayers),
-  //   speaker: ChatMessage.getSpeaker({
-  //     actorCaster
-  //   })
-  // });
   if (flavorForPlayers !== flavorForGM) {
     privateMessage(messageTotalWithName, actorCaster, title, flavorForGM, "magic");
   }

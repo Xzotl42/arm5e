@@ -499,9 +499,10 @@ img.clickable2:hover {
 }
 
 .system-arm5e .chat-button {
-  width: 22px;
-  height: 22px;
-  font-size: 10px;
+  width: 47%;
+  align-items: center;
+  height: 30px;
+  font-size: 16px;
   line-height: 1px;
   background: rgba(0, 0, 0, 0.1);
 }

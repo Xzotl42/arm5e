@@ -96,7 +96,7 @@ export class QuickCombat extends FormApplication {
   }
 }
 export async function quickCombat(tokenName, actor) {
-  if (!actor._isCharacter()) return;
+  if (!actor.isCharacter()) return;
 
   const combat = new QuickCombat(
     {
@@ -159,11 +159,11 @@ export class QuickVitals extends FormApplication {
       this.render();
     });
     html.find(".addFatigue").click(async () => {
-      await this.object.actor._changeFatigueLevel(1, false);
+      await this.object.actor.loseFatigueLevel(1, false);
       this.render();
     });
     html.find(".removeFatigue").click(async () => {
-      await this.object.actor._changeFatigueLevel(-1, false);
+      await this.object.actor.recoverFatigueLevel(1);
       this.render();
     });
     html.find(".addWound").click(async (event) => {
@@ -182,7 +182,7 @@ export class QuickVitals extends FormApplication {
 }
 
 export async function quickVitals(tokenName, actor) {
-  if (!actor._isCharacter()) return;
+  if (!actor.isCharacter()) return;
 
   const vitals = new QuickVitals(
     {

@@ -91,7 +91,7 @@ export class CovenantSchema extends foundry.abstract.TypeDataModel {
       // aegisCovenant: basicIntegerField(),
       modifiersLife: new fields.SchemaField({
         magi: basicIntegerField(1),
-        mundane: basicIntegerField(0, -10)
+        mundane: basicIntegerField(0)
       }),
       scene: new fields.SchemaField({
         value: new fields.StringField({ required: false, blank: true, initial: "" }),
@@ -142,7 +142,7 @@ export class CovenantSchema extends foundry.abstract.TypeDataModel {
         required: false,
         initial: null
       }),
-      npcInhabitants: basicIntegerField(),
+      npcInhabitants: basicIntegerField(0, 0),
       loyalty: new fields.SchemaField({
         points: new fields.SchemaField({
           modifier: basicIntegerField(),
@@ -199,14 +199,14 @@ export class CovenantSchema extends foundry.abstract.TypeDataModel {
       }),
       finances: new fields.SchemaField({
         wealth: basicIntegerField(),
-        totalIncome: basicIntegerField(),
-        baseExpenditure: basicIntegerField(),
-        costSavings: basicIntegerField(),
-        totalExpenditure: basicIntegerField(),
-        inhabitantsPoints: basicIntegerField(),
-        laboratoriesPoints: basicIntegerField(),
-        weaponsPoints: basicIntegerField(),
-        averageEquipMaintenance: basicIntegerField(5)
+        totalIncome: basicIntegerField(0, 0),
+        baseExpenditure: basicIntegerField(0, 0),
+        costSavings: basicIntegerField(0, 0),
+        totalExpenditure: basicIntegerField(0, 0),
+        inhabitantsPoints: basicIntegerField(0, 0),
+        laboratoriesPoints: basicIntegerField(0, 0),
+        weaponsPoints: basicIntegerField(0, 0),
+        averageEquipMaintenance: basicIntegerField(5, 0)
       }),
       // DEPRECATED
       wealth: new fields.ObjectField({
@@ -382,7 +382,7 @@ export class CovenantSchema extends foundry.abstract.TypeDataModel {
       update["system.-wealth"] = null;
     }
 
-    if (data.buildPoints.labText) {
+    if (data.buildPoints?.labText) {
       update["system.buildPoints.-labText"] = null;
     }
 

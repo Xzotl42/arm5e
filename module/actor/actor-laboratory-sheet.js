@@ -120,7 +120,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
     if (
       context.system.owner &&
       context.system.owner.linked &&
-      context.system.owner.document._isMagus()
+      context.system.owner.document.isMagus()
     ) {
       // Owner
       // this.actor.apps[context.system.owner.document.sheet.appId] =
@@ -724,9 +724,18 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
     const dropData = TextEditor.getDragEventData(event);
     if (dropData.type === "Item") {
       // If (this.item.system.activity === "teaching" || this.item.system.activity === "training") {
-      const item = await Item.implementation.fromDropData(dropData);
+      let item = await Item.implementation.fromDropData(dropData);
       let planning = this.actor.getFlag(ARM5E.SYSTEM_ID, "planning");
-
+      if (item.type === "book") {
+        let topicIdx = Number(dropData.topicIdx);
+        const topic = item.system.topics[topicIdx];
+        if (topic.category == "labText") {
+          item = new ArM5eItem(
+            { name: topic.name, type: "laboratoryText", system: topic.system.toObject() },
+            { temporary: true }
+          );
+        }
+      }
       if (event.currentTarget.dataset.drop === "spell") {
         event.stopPropagation();
         switch (item.type) {
@@ -792,9 +801,30 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
         event.stopPropagation();
         switch (item.type) {
           case "laboratoryText": {
-            if (item.system.type !== "spell") {
+            if (!["enchantment", "spell"].includes(item.system.type)) {
               break;
             }
+            if (item.system.draft && item.system.author !== this.actor.system.owner.value) {
+              ui.notifications.info(game.i18n.localize("arm5e.lab.planning.msg.draftLabText"));
+              return false;
+            }
+
+            const effect = item.toObject();
+            effect.type = item.system.type;
+            let data = new ArM5eItem(effect, { temporary: true });
+            resetOwnerFields(data);
+            planning.data.enchantment = {
+              name: data.name,
+              img: data.img,
+              type: "enchantment",
+              system: data.system
+            };
+            await this.submit({
+              preventClose: true,
+              updateData: { "flags.arm5e.planning": planning }
+            });
+            this.render();
+            return true;
           }
           case "magicalEffect":
           case "spell": {
@@ -934,7 +964,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
     // link both ways
     let updateArray = [];
 
-    if (droppedActor._isCharacter()) {
+    if (droppedActor.isCharacter()) {
       if (this.actor.system.owner.linked) {
         delete this.actor.system.owner.document.apps[this.appId];
         delete this.actor.apps[this.actor.system.owner.document.sheet?.appId];

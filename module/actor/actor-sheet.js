@@ -216,7 +216,7 @@ export class ArM5eActorSheet extends ActorSheet {
     const actorData = context.actor;
     context.ui = this.getUserCache();
 
-    if (context.actor.system.creationMode) {
+    if (context.actor.system.states?.creationMode) {
       context.ui.creationMode = { edit: "" };
       context.ui.storyMode = { edit: "readonly" };
     } else {
@@ -242,7 +242,7 @@ export class ArM5eActorSheet extends ActorSheet {
       edit: context.isGM ? "" : "readonly"
     };
 
-    if (this.actor._isCharacter()) {
+    if (this.actor.isCharacter()) {
       context.characList = Object.keys(context.system.characCfg);
     }
 
@@ -344,7 +344,7 @@ export class ArM5eActorSheet extends ActorSheet {
       }
     }
 
-    context.system.isCharacter = this.actor._isCharacter();
+    context.system.isCharacter = this.actor.isCharacter();
     if (context.system.isCharacter) {
       if (context.system.charType?.value === "entity") {
         let cnt = Object.entries(context.system.realms).filter((e) => e[1].aligned == true);
@@ -369,7 +369,7 @@ export class ArM5eActorSheet extends ActorSheet {
         };
       }
       context.isDead = this.actor.system.wounds.dead.length > 0;
-      context.system.isMagus = this.actor._isMagus();
+      context.system.isMagus = this.actor.isMagus();
       // if (context.system.covenant) {
       //   if (context.system.covenant.linked) {
       //     this.actor.apps[context.system.covenant.document.sheet.appId] =
@@ -664,7 +664,7 @@ export class ArM5eActorSheet extends ActorSheet {
 
       context.combat = computeCombatStats(this.actor);
 
-      if (this.actor._isMagus()) {
+      if (this.actor.isMagus()) {
         if (!this.twilight) {
           this.twilight = new TwilightEpisode(this.actor);
         }
@@ -1255,7 +1255,7 @@ export class ArM5eActorSheet extends ActorSheet {
     html.find(".vis-study").click(async (ev) => {
       const li = $(ev.currentTarget).parents(".item");
       const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
-      if (!this.actor._isMagus()) return;
+      if (!this.actor.isMagus()) return;
       const entry = await item.system.createDiaryEntryToStudyVis(this.actor);
       entry.sheet.render(true);
     });
@@ -1263,7 +1263,7 @@ export class ArM5eActorSheet extends ActorSheet {
     html.find(".study-labtext").click(async (ev) => {
       const li = $(ev.currentTarget).parents(".item");
       const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
-      if (!this.actor._isMagus()) return;
+      if (!this.actor.isMagus()) return;
       await item._studyLabText(item, ev);
     });
 
@@ -1405,8 +1405,8 @@ export class ArM5eActorSheet extends ActorSheet {
     html.find(".soak-damage").click(this._onSoakDamage.bind(this));
     html.find(".damage").click(this._onCalculateDamage.bind(this));
     html.find(".power-use").click(this._onUsePower.bind(this));
-    html.find(".addFatigue").click(async (event) => this.actor._changeFatigueLevel(1));
-    html.find(".removeFatigue").click(async (event) => this.actor._changeFatigueLevel(-1));
+    html.find(".addFatigue").click(async (event) => this.actor.loseFatigueLevel(1));
+    html.find(".removeFatigue").click(async (event) => this.actor.recoverFatigueLevel(1));
     html.find(".add-wound").click(async (event) => {
       const dataset = getDataset(event);
       await this.actor.changeWound(1, dataset.type);
@@ -1432,6 +1432,10 @@ export class ArM5eActorSheet extends ActorSheet {
     html.find(".plan-reading").click(async (ev) => this._readBook(ev));
 
     html.find(".indexkey-edit").change((event) => this._slugifyIndexKey(event));
+
+    html.find(".clear-confidencePrompt").click(async (event) => {
+      await this.actor.clearConfidencePrompt();
+    });
   }
 
   async _slugifyIndexKey(event) {
@@ -1698,7 +1702,7 @@ export class ArM5eActorSheet extends ActorSheet {
       }
     }
 
-    if (actor._isMagus()) {
+    if (actor.isMagus()) {
       extraData.isMagus = true;
       extraData.formRes = {};
       for (let [key, form] of Object.entries(actor.system.arts.forms)) {
@@ -1830,9 +1834,16 @@ export class ArM5eActorSheet extends ActorSheet {
       });
       return false;
     }
+
+    if (this.actor.system.states.confidencePrompt) {
+      ui.notifications.info(game.i18n.localize("arm5e.notification.confidencePromptPending"), {
+        permanent: true
+      });
+      return false;
+    }
     if ((getRollTypeProperties(dataset.roll).MODE & ROLL_MODES.UNCONSCIOUS) == 0) {
       // if (dataset.roll != "char" && dataset.roll != "aging" && dataset.roll != "crisis") {
-      if (this.actor.system.pendingCrisis) {
+      if (this.actor.system.states.pendingCrisis) {
         ui.notifications.info(game.i18n.localize("arm5e.notification.pendingCrisis"), {
           permanent: true
         });
@@ -1939,6 +1950,7 @@ export class ArM5eActorSheet extends ActorSheet {
         return "Neutral";
     }
   }
+
   async _handleTransfer(item) {
     const html = await TextEditor.enrichHTML(
       `<div class="flex-center"><p>${game.i18n.format("arm5e.dialog.confirmTransfer-question", {

@@ -2819,7 +2819,7 @@ ARM5E.books.categories = {
   art: "arm5e.sheet.art",
   ability: "arm5e.sheet.ability",
   mastery: "arm5e.activity.options.mastery",
-  labText: "ITEM.TypeLaboratorytext"
+  labText: "TYPES.Item.laboratoryText"
 };
 
 ARM5E.activities.lab = {
@@ -3263,7 +3263,7 @@ ARM5E.generic.sourcesTypes = {
 };
 
 ARM5E.recovery = {
-  rankMapping: { 0: "healthy", 1: "light", 2: "medium", 3: "heavy", 4: "incap", 5: "dead" },
+  rankMapping: ["healthy", "light", "medium", "heavy", "incap", "dead"],
   wounds: {
     healthy: {
       rank: 0,
@@ -3371,7 +3371,7 @@ ARM5E.ActorProfiles = {
       { key: "profession", option: "Scribe", inc: 5 },
       { key: "artesLib", option: "", inc: 5 },
       { key: "philosophy", option: "", inc: 5 },
-      { key: "theology", option: "", inc: 5 },
+      { key: "theology", option: "Christian", inc: 5 },
       { key: "law", option: "canonLaw", inc: 5 },
       { key: "deadLanguage", option: "Latin", inc: 5 }
     ]

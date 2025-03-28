@@ -136,7 +136,7 @@ export class ArM5eMagicSystem {
   async getData(context) {
     const templates = context.system.magicSystem.templates;
 
-    context.isMagus = this.actor._isMagus();
+    context.isMagus = this.actor.isMagus();
 
     for (let [name, template] of Object.entries(templates)) {
       template.selection = {};

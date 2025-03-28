@@ -4,6 +4,7 @@ import { getConfirmation } from "../constants/ui.js";
 import { ArM5eActorSheet } from "../actor/actor-sheet.js";
 import { spellFormLabel, spellTechniqueLabel } from "../helpers/magic.js";
 import { BookSchema } from "../schemas/bookSchema.js";
+import { ArM5eItem } from "./item.js";
 /**
  * Extend the basic ItemSheet with some very simple modifications
  * @extends {ItemSheet}

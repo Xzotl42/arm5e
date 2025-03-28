@@ -267,7 +267,7 @@ export class BookSchema extends foundry.abstract.TypeDataModel {
       system: this.toObject()
     };
     formData.reading.book.system.topicIndex = Number(dataset.index);
-    if (item.isOwned && item.actor._isCharacter()) {
+    if (item.isOwned && item.actor.isCharacter()) {
       formData.reading.reader.id = item.actor.id;
     }
 
@@ -284,7 +284,7 @@ export class BookSchema extends foundry.abstract.TypeDataModel {
     }
 
     let formData = new ScriptoriumObject();
-    if (item.isOwned && item.actor._isCharacter()) {
+    if (item.isOwned && item.actor.isCharacter()) {
       formData.copying.scribe.id = item.actor.id;
       formData.copying.scribe.name = item.actor.name;
     }

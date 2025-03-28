@@ -21,6 +21,7 @@ import { compareDiaryEntries, isInThePast } from "../tools/time.js";
 import Aura from "../helpers/aura.js";
 import { canBeEnchanted } from "../helpers/magic.js";
 import { ArM5eMagicSystem } from "./subsheets/magic-system.js";
+import { ArM5eItem } from "../item/item.js";
 
 /**
  * Extend the base Actor entity by defining a custom roll data structure which is ideal for the Simple system.
@@ -62,7 +63,7 @@ export class ArM5eActor extends Actor {
       return;
     }
     const datetime = game.settings.get("arm5e", "currentDate");
-    if (this.system.creationMode) {
+    if (this.system.states.creationMode) {
       this.system.description.born.value = Number(datetime.year) - this.system.age.value;
     } else {
       this.system.age.value = this.system.description?.born?.value
@@ -100,7 +101,7 @@ export class ArM5eActor extends Actor {
 
     this.system.bonuses = {};
 
-    if (this._isMagus()) {
+    if (this.isMagus()) {
       // Hack, if the active effect for magus is not setup
       this.system.realms.magic.aligned = true;
 
@@ -348,7 +349,7 @@ export class ArM5eActor extends Actor {
     };
 
     // Might as ressource
-    if (this._hasMight()) {
+    if (this.hasMight()) {
       system.resource.might = {
         value: system.might.points,
         max: system.might.value
@@ -369,7 +370,7 @@ export class ArM5eActor extends Actor {
           } else if (item.system.category == "altForm") {
             system.magicSystem.nouns.push(item);
           } else {
-            if (this._isMagus()) {
+            if (this.isMagus()) {
               if (item.system.key == "finesse") {
                 system.laboratory.abilitiesSelected.finesse.value = item.system.finalScore;
               } else if (item.system.key == "awareness") {
@@ -538,7 +539,7 @@ export class ArM5eActor extends Actor {
     system.vis.sort((a, b) => (a.sort || 0) - (b.sort || 0));
     system.weapons.sort((a, b) => (a.sort || 0) - (b.sort || 0));
 
-    if (this._isMagus()) {
+    if (this.isMagus()) {
       soak += this.system?.familiar?.cordFam?.bronze ?? 0;
 
       /*
@@ -668,7 +669,7 @@ export class ArM5eActor extends Actor {
       }
     }
 
-    if (this._isGrog()) {
+    if (this.isGrog()) {
       system.con.score = 0;
       system.con.points = 0;
     }
@@ -785,7 +786,7 @@ export class ArM5eActor extends Actor {
     // rollData.config.magic.arts = ARM5E.magic.arts;
     // rollData.config.magic.penetration = ARM5E.magic.penetration;
     let rollData = { raw: this.system };
-    if (this._isCharacter()) {
+    if (this.isCharacter()) {
       rollData.char = Object.fromEntries(
         Object.entries(this.system.characteristics).map(([k, v]) => [k, v.value])
       );
@@ -799,7 +800,7 @@ export class ArM5eActor extends Actor {
       }
       rollData.combat = this.system.combat;
 
-      if (this._isMagus()) {
+      if (this.isMagus()) {
         rollData.magic = {};
 
         for (let [k, v] of Object.entries(this.system.arts.techniques)) {
@@ -906,35 +907,35 @@ export class ArM5eActor extends Actor {
   }
 
   // To identify the type of character
-  _isMagus() {
+  isMagus() {
     return (
       (this.type == "npc" && this.system.charType.value == "magusNPC") ||
       (this.type == "player" && this.system.charType.value == "magus")
     );
   }
 
-  static isMagus(type, charType) {
+  static IsMagus(type, charType) {
     return (type == "npc" && charType == "magusNPC") || (type == "player" && charType == "magus");
   }
 
-  _hasMight() {
+  hasMight() {
     return this.type == "npc" && this.system.charType.value == "entity";
   }
 
-  _isCompanion() {
+  isCompanion() {
     return this.type == "player" && this.system.charType.value == "companion";
   }
 
-  _isGrog() {
+  isGrog() {
     return this.type == "player" && this.system.charType.value == "grog";
   }
 
-  _isCharacter() {
+  isCharacter() {
     return this.type == "player" || this.type == "npc" || this.type == "beast";
   }
 
   getAbilityScore(abilityKey, abilityOption = "") {
-    if (!this._isCharacter()) {
+    if (!this.isCharacter()) {
       return null;
     }
     let ability = this.system.abilities.filter(
@@ -948,7 +949,7 @@ export class ArM5eActor extends Actor {
   }
 
   getArtScore(artKey) {
-    if (!this._isCharacter()) {
+    if (!this.isCharacter()) {
       return null;
     }
     let artType = "techniques";
@@ -960,20 +961,35 @@ export class ArM5eActor extends Actor {
 
   // Vitals management
 
-  async loseFatigueLevel(num, wound = true) {
-    return await this._changeFatigueLevel(num, wound);
+  async recoverFatigueLevel(num) {
+    const updateData = {};
+    const res = this._changeFatigueLevel(updateData, -num, false);
+    if (res.fatigueLevels) await this.update(updateData, {});
+    return res;
   }
 
-  async _changeFatigueLevel(num, wound = true) {
+  async loseFatigueLevel(num, wound = true) {
+    const updateData = {};
+    const res = this._changeFatigueLevel(updateData, num, wound);
+    if (res.fatigueLevels) await this.update(updateData, {});
+    if (res.woundGravity) {
+      await this.changeWound(
+        1,
+        ARM5E.recovery.rankMapping[woundGravity],
+        game.i18n.localize("arm5e.sheet.fatigueOverflow")
+      );
+    }
+    return res;
+  }
+
+  _changeFatigueLevel(updateData, num, wound = true) {
     const res = {
       fatigueLevels: 0,
-      wound: null,
-      woundGravity: null
+      woundGravity: 0
     };
-    if (!this._isCharacter() || (num <= 0 && this.system.fatigueCurrent == 0)) {
+    if (!this.isCharacter() || (num <= 0 && this.system.fatigueCurrent == 0)) {
       return res;
     }
-    let updateData = {};
     let tmp = this.system.fatigueCurrent + num;
     let overflow = 0;
     if (tmp < 0) {
@@ -991,52 +1007,19 @@ export class ArM5eActor extends Actor {
     }
 
     if (wound && overflow > 0) {
-      // Fatigue overflow
-      let woundType;
-      switch (overflow) {
-        case 1:
-          woundType = "light";
-          break;
-        case 2:
-          woundType = "medium";
-          break;
-        case 3:
-          woundType = "heavy";
-          break;
-        case 4:
-          woundType = "incap";
-          break;
-        default:
-          woundType = "dead";
-          break;
-      }
-
-      const datetime = game.settings.get("arm5e", "currentDate");
-      let woundData = {
-        name: `${game.i18n.localize(`arm5e.sheet.${woundType}`)} ${game.i18n.localize(
-          "arm5e.sheet.wound.label"
-        )}`,
-        type: "wound",
-        system: {
-          inflictedDate: {
-            year: datetime.year,
-            season: datetime.season
-          },
-          healedDate: { year: null, season: "spring" },
-          gravity: woundType,
-          originalGravity: woundType,
-          trend: 0,
-          bonus: 0,
-          nextRoll: 0,
-          description: "Fatigue loss overflow"
-        }
-      };
-      const [wound] = await this.createEmbeddedDocuments("Item", [woundData]);
-      res.wound = wound.uuid;
-      res.woundGravity = woundType;
+      res.woundGravity = overflow <= 5 ? overflow : 5;
     }
-    await this.update(updateData, {});
     return res;
+  }
+
+  _clearConfidencePrompt(updateData) {
+    updateData["system.states.confidencePrompt"] = false;
+  }
+
+  async clearConfidencePrompt() {
+    const updateData = {};
+    this._clearConfidencePrompt(updateData);
+    await this.update(updateData);
   }
 
   async addActiveEffect(name, type, subtype, value, option = null, icon) {
@@ -1091,8 +1074,8 @@ export class ArM5eActor extends Actor {
   //   return;
   // }
 
-  async changeWound(amount, wtype) {
-    if (!this._isCharacter() || (amount < 0 && this.system.wounds[type].length == 0)) {
+  async changeWound(amount, wtype, description = "") {
+    if (!this.isCharacter() || (amount <= 0 && this.system.wounds[type].length == 0)) {
       return [];
     }
     let wounds = [];
@@ -1114,7 +1097,7 @@ export class ArM5eActor extends Actor {
           trend: 0,
           bonus: 0,
           nextRoll: 0,
-          description: ""
+          description: description
         }
       };
       wounds.push(woundData);
@@ -1124,31 +1107,47 @@ export class ArM5eActor extends Actor {
 
   // Used by Quick magic dialog
   async selectVoiceAndGestures(stance, value) {
-    if (this._isMagus()) {
+    const updateData = {};
+    if (this._selectVoiceAndGestures(updateData, stance, value)) await this.update(updateData);
+  }
+
+  _selectVoiceAndGestures(updateData, stance, value) {
+    if (this.isMagus()) {
       if (["voice", "gestures"].includes(stance)) {
         const update = {};
-        update[`system.stances.${stance}Stance`] = value;
-        await this.update(update);
+        updateData[`system.stances.${stance}Stance`] = value;
+        return true;
       }
     }
+    return false;
   }
 
   canUseConfidencePoint() {
-    if (!this._isCharacter() || this._isGrog()) {
+    if (!this.isCharacter() || this.isGrog()) {
       return false;
     }
 
     if (this.system.con.points == 0) {
-      ui.notifications.info(
-        game.i18n.format("arm5e.notification.noConfidencePointsLeft", { name: this.name }),
-        {
-          permanent: false
-        }
-      );
+      // ui.notifications.info(
+      //   game.i18n.format("arm5e.notification.noConfidencePointsLeft", { name: this.name }),
+      //   {
+      //     permanent: false
+      //   }
+      // );
       return false;
     }
-    log(false, "Used confidence point");
-    // await this.update({ system: { con: { points: this.system.con.points - 1 } } });
+    return true;
+  }
+
+  async useConfidencePoint() {
+    const updateData = {};
+    if (this._useConfidencePoint(updateData)) await this.update(updateData);
+  }
+
+  _useConfidencePoint(updateData) {
+    if (!this.canUseConfidencePoint()) return false;
+
+    updateData["system.con.points"] = this.system.con.points - 1;
     return true;
   }
 
@@ -1157,29 +1156,79 @@ export class ArM5eActor extends Actor {
   }
 
   async rest() {
-    if (!this._isCharacter()) {
-      return;
-    }
-    await this.update(this._rest(), {});
+    const updateData = {};
+    if (this._rest(updateData)) await this.update(updateData, {});
   }
 
-  _rest(data) {
-    return (data["system.fatigueCurrent"] = 0);
+  _rest(updateData) {
+    if (!this.isCharacter()) {
+      return false;
+    }
+    updateData["system.fatigueCurrent"] = 0;
+    return true;
   }
 
   async loseMightPoints(num) {
-    await this.update(this._loseMightPoints(num), {});
+    const updateData = {};
+    if (this._loseMightPoints(updateData, num)) await this.update(updateData, {});
   }
 
-  _loseMightPoints(num) {
-    if (!this._isCharacter()) {
-      return {};
+  _loseMightPoints(updateData, num) {
+    if (!this.isCharacter()) {
+      return false;
     }
     if (num > this.system.might.points) {
       ui.notifications.warn("Spending more might points than available");
-      return {};
+      return false;
     }
-    return { "system.might.points": Number(this.system.might.points) - num };
+
+    updateData["system.might.points"] = Number(this.system.might.points) - num;
+    return true;
+  }
+
+  magicResistance(form) {
+    if (!this.isCharacter()) return null;
+
+    let magicResistance =
+      Number(this.system.laboratory?.magicResistance?.value) ||
+      Number(this.system?.might?.value) ||
+      0; //  No magicResistance != magicResistance of 0
+
+    // TODO support magic resistance for hedge magic forms
+
+    let specialityIncluded = "";
+    const parma = this.getAbilityStats("parma");
+    if (parma.speciality && parma.speciality.toUpperCase() === form.toUpperCase()) {
+      specialityIncluded = form;
+      magicResistance += 5;
+    }
+
+    const arts = this.system?.arts;
+    let auraMod = 0;
+    // TODO, do a better job for player aligned to a realm
+    if (this.hasMight()) {
+      let aura = Aura.fromActor(this);
+      auraMod = aura.computeMaxAuraModifier(this.system.realms);
+      magicResistance += parseInt(auraMod);
+    }
+
+    let formScore = 0;
+    if (arts) {
+      const formKey = Object.keys(arts.forms).filter(
+        (key) => arts.forms[key].label.toUpperCase() === form.toUpperCase()
+      )[0];
+      formScore = arts.forms[formKey]?.finalScore || 0;
+    }
+
+    return {
+      might: this.system?.might?.value,
+      specialityIncluded,
+      total: magicResistance + formScore,
+      form: form,
+      formScore,
+      parma,
+      aura: auraMod
+    };
   }
 
   // Set the proper default icon just before creation
@@ -1197,14 +1246,22 @@ export class ArM5eActor extends Actor {
   }
 
   async getAgingEffects(agingData) {
-    if (!this._isCharacter()) {
+    const updateData = {};
+    const res = this._getAgingEffects(updateData, agingData);
+
+    if (res) await this.update(updateData, {});
+    return res;
+  }
+
+  _getAgingEffects(updateData, agingData) {
+    if (!this.isCharacter()) {
       return;
     }
     let amount = agingData.impact;
     let char1 = agingData.char;
     let char2 = agingData.char2;
     let naturalAging = agingData.season == "winter";
-    let updateData = {};
+
     let result = { crisis: false, apparent: 1, charac: {} };
     switch (amount) {
       case 0:
@@ -1301,7 +1358,7 @@ export class ArM5eActor extends Actor {
     log(false, "Aging effect");
     log(false, updateData);
     if (result.crisis) {
-      updateData["system.pendingCrisis"] = true;
+      updateData["system.states.pendingCrisis"] = true;
       updateData["system.lastCrisis"] = { year: agingData.year, season: agingData.season };
     }
 
@@ -1309,7 +1366,6 @@ export class ArM5eActor extends Actor {
       updateData["system.warping.points"] =
         this.system.warping.points + CONFIG.ARM5E.activities.aging.warping.impact;
     }
-    await this.update(updateData, {});
     return result;
   }
 
@@ -1419,7 +1475,7 @@ export class ArM5eActor extends Actor {
   }
 
   hasMagicResistance() {
-    return this._isMagus() || this._hasMight() || this.system.bonuses.magicResistance !== null;
+    return this.isMagus() || this.hasMight() || this.system.bonuses.magicResistance !== null;
   }
 
   // getLabTotalForEffect(spell, options = {}) {
@@ -1432,7 +1488,7 @@ export class ArM5eActor extends Actor {
   // }
 
   async changeHermeticArt(art, amount) {
-    if (!this._isMagus()) return;
+    if (!this.isMagus()) return;
 
     let artType = "forms";
     if (Object.keys(CONFIG.ARM5E.magic.techniques).includes(art)) {
@@ -1443,12 +1499,14 @@ export class ArM5eActor extends Actor {
     });
   }
 
+  _changeMight(updateData, amount) {
+    if (!this.hasMight()) return false;
+    updateData["system.might.points"] = this.system.might.points + amount;
+    return true;
+  }
   async changeMight(amount) {
-    if (!this._hasMight()) return;
-
-    await this.update({
-      system: { might: { points: this.system.might.points + amount } }
-    });
+    let updateData = {};
+    if (this._changeMight(updateData, amount)) await this.update(updateData);
   }
 
   get hasWounds() {

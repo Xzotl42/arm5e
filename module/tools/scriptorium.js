@@ -2057,7 +2057,7 @@ export class Scriptorium extends FormApplication {
         break;
       }
       case "art": {
-        if (!reader._isMagus()) {
+        if (!reader.isMagus()) {
           context.ui.reading.warning.push(game.i18n.localize("arm5e.scriptorium.msg.notMagus"));
           context.ui.reading.error = true;
         }
@@ -2084,7 +2084,7 @@ export class Scriptorium extends FormApplication {
         break;
       }
       case "mastery":
-        if (!reader._isMagus()) {
+        if (!reader.isMagus()) {
           context.ui.reading.warning.push(game.i18n.localize("arm5e.scriptorium.msg.notMagus"));
           context.ui.reading.error = true;
         }

@@ -11,18 +11,23 @@
           <div class="flexrow"><input class="flex1" name="name" type="text" value="{{actor.name}}"
               title="{{actor.name}}" placeholder="Name" />
 
-            {{#if system.creationMode}}
+            {{#if system.states.creationMode}}
               <div class="flex0 padding10" style="width:36px"><img src="systems/arm5e/assets/icons/creation-mode.svg"
                   title='{{localize "arm5e.sheet.edition.creationMode"}}'
                   style="border: 0px; height: 18px; min-height:30px; min-width: 30px;">
 
               </div>
             {{/if}}
-            {{#if system.pendingCrisis}}
+            {{#if system.states.pendingCrisis}}
               <div class="flex0 padding10" style="width:36px"><a class="rollable" data-roll="crisis"
                   data-year="{{system.lastCrisis.year}}" data-season="{{system.lastCrisis.season}}"
                   title='{{localize "arm5e.aging.crisis.tooltip"}}' style="font-size: 20pt;"><i
                     class="icon-Icon_Aging_crisis"></i></a>
+              </div>
+            {{/if}}
+            {{#if system.states.confidencePrompt}}
+              <div class="flex0 padding10" style="width:36px"><a class="clear-confidencePrompt"
+                  title='{{localize "Confidence prompt"}}' style="font-size: 20pt;"><i class="fas fa-user-plus"></i></a>
               </div>
             {{/if}}
             {{#if system.twilight.stage}}

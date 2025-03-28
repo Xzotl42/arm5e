@@ -100,6 +100,7 @@
   "arm5e.sheet.effects": "Effects",
   "arm5e.sheet.effect": "Effect",
   "arm5e.sheet.fatigue": "Fatigue",
+  "arm5e.sheet.fatigueOverflow": "Fatigue overflow",
   "arm5e.sheet.wounds": "Wounds",
   "arm5e.sheet.wound.label": "Wound",
   "arm5e.sheet.vitals": "Vitals",
@@ -293,17 +294,17 @@
   "arm5e.sheet.totalPenetration": "Penetration total",
   "arm5e.sheet.totalMagicResistance": "Magic resistance total",
   "arm5e.sheet.noMagicResistance": "No magic resistance",
-  "arm5e.sheet.spellOverMagicResistance": "Spell successful on $target$ by $total$",
-  "arm5e.sheet.magicResistanceOverSpell": "Spell failed on $target$ by $total$",
+  "arm5e.sheet.spellOverMagicResistance": "Spell successful on {target} by {total}",
+  "arm5e.sheet.magicResistanceOverSpell": "Spell failed on {target} by {total}",
 
-  "arm5e.sheet.spellOverMagicResistanceWithNoTotal": "Spell successful on $target$",
-  "arm5e.sheet.magicResistanceOverSpellWithNoTotal": "Spell failed to work on $target$",
+  "arm5e.sheet.spellOverMagicResistanceWithNoTotal": "Spell successful on {target}",
+  "arm5e.sheet.magicResistanceOverSpellWithNoTotal": "Spell failed to work on {target}",
   "arm5e.sheet.powerCost": "Might {might} - 5 times cost ({cost})",
   "arm5e.sheet.powerLevel": "5 times cost ({res})",
 
   "arm5e.sheet.formRes": "Form resistance",
   "arm5e.sheet.natRes": "Natural resistance",
-  "arm5e.sheet.formScore": "Form score ($form$)",
+  "arm5e.sheet.formScore": "Form score ({form})",
   "arm5e.sheet.parma": "Parma Magica",
   "arm5e.sheet.encumbrance": "Encumbrance",
   "arm5e.sheet.might": "Might",
@@ -1091,6 +1092,8 @@
   "arm5e.notification.effectLinked": "Deletion impossible. An effect is linked to that capacity.",
   "arm5e.notification.itemMoved": "The item named \"{name}\" has moved and can longer be found.",
   "arm5e.notification.entityWithMultipleRealmAlignments": "This character with Might is aligned with multiple realms. Check the active effects.",
+  "arm5e.notification.confidencePromptPending": "There is a pending confidence spending in the chat. Resolve it or click on the status icon next to the character's name.",
+
   "arm5e.canvas.buttons.setAura": "Configure Aura",
   "arm5e.canvas.buttons.clearAura": "Clear Aura",
 
@@ -1148,6 +1151,7 @@
   "arm5e.messages.noWound": "No wound inflicted",
   "arm5e.messages.applyDamage": "Apply damage",
   "arm5e.messages.useConf": "Use confidence point",
+  "arm5e.messages.noConf": "Pass confidence use",
   "arm5e.messages.die.exploding": "Exploding stress die!",
   "arm5e.messages.die.noBotch": "No botch out of {dicenum} dice rolled!",
   "arm5e.messages.die.botch": "One botch!",
@@ -1671,5 +1675,6 @@
   "arm5e.generic.orphans": "Orphans",
   "arm5e.generic.invalid": "Invalid",
   "arm5e.generic.versus": "Versus",
-  "arm5e.generic.inherit": "Inherit"
+  "arm5e.generic.inherit": "Inherit",
+  "arm5e.generic.pending": "Pending"
 }

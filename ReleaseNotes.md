@@ -13,10 +13,17 @@
 - [Technical] Code clean-up, factorization, encapsulation
   - Actor data preparation clean-up => prepareBaseData and prepareDerivedData in Datamodel
   - Item data preparation clean-up => prepareBaseData and prepareDerivedData in Datamodel
-- [Technical] ChatMessage datamodel with sub-types for rolls,combat,spells
+  - Most setters have been split in 2 parts for easy macro operations:
+    - \_setProperty: list data fields to update or create.
+    - async setProperty: calling the above and update the document accordingly
+- [Technical] ChatMessage datamodel with sub-types for rolls, combat, spells
   - Easier update, allowing recreation from scratch.
+  - Improved confidence spending
+  - New magic roll chat messages
 - [Technical] removal of some duplicate unused id attributes
 - Dropping a magical effect on a lab will switch the activity to spell invention.
+- Dropping a book's lab text topic from an Actor library on to a lab will now work
+- Gift type of magi inhabitants is set automatically if they have Gentle Gift or Blatant Gift.
 
 ### Bug fixes
 
@@ -35,6 +42,10 @@
 - Clicking on the dice icon of a spell sheet no longer tries to cast it spontaneously
 - Removed some noisy errors when closing some applications
 - Fixed techniques filter
+- Event and actions loyalty modifier can now go negative
+- Mundane scholar profile is working again.
+- Rolling a magic effect from its sheet no longer consider the effect a spell.
+- [Dice so nice] The system will let the animation finish before anouncing a die explosion or asking the number of botch dice.
 
 ## 2.3.2.17, Quendalon, back from the wood with weird eyes
 

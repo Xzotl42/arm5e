@@ -60,7 +60,7 @@ export class ArM5eItem extends Item {
           name: "N/A"
         };
         abilitiesSelect["a0"] = temp;
-        if (this.actor._isCharacter()) {
+        if (this.actor.isCharacter()) {
           this.system.canEquip = true;
         }
         // find the actor abilities and create the select
@@ -77,7 +77,7 @@ export class ArM5eItem extends Item {
 
         system.abilities = abilitiesSelect;
       } else if (this.type == "armor" && this.actor != null) {
-        if (this.actor._isCharacter()) {
+        if (this.actor.isCharacter()) {
           this.system.canEquip = true;
         }
       }

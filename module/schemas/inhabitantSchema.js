@@ -116,9 +116,9 @@ export class InhabitantSchema extends foundry.abstract.TypeDataModel {
     if (this.document) {
       this.name = this.document.name;
       this.yearBorn = this.document.system.description.born.value;
-      this.category = this.document._isMagus()
+      this.category = this.document.isMagus()
         ? "magi"
-        : this.document._isCompanion()
+        : this.document.isCompanion()
         ? "companions"
         : this.category;
       this.linked = true;

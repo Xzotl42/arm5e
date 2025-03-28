@@ -1,8 +1,9 @@
 import { ROLL_MODES, ROLL_PROPERTIES, getRollTypeProperties } from "./helpers/rollWindow.js";
-import { checkTargetAndCalculateResistance } from "./helpers/magic.js";
 import { log, putInFoldableLink, putInFoldableLinkWithAnimation, sleep } from "./tools.js";
 import { ARM5E } from "./config.js";
 import { ArsRoll } from "./helpers/stressdie.js";
+import { Arm5eChatMessage } from "./helpers/chat-message.js";
+import { handleTargetsOfMagic } from "./helpers/magic.js";
 let iterations = 1;
 
 /**
@@ -12,7 +13,7 @@ let iterations = 1;
  * @param {any} callBack
  * @returns {any}
  */
-async function simpleDie(actor, type = "OPTION", callBack) {
+async function simpleDie(actor, type = "OPTION", callback, modes = 0) {
   iterations = 1;
   // actor = getFormData(html, actor);
   actor = await getRollFormula(actor);
@@ -24,8 +25,8 @@ async function simpleDie(actor, type = "OPTION", callBack) {
   if (rollInfo.magic.divide > 1) {
     formula = "(1D10+" + rollInfo.formula + ")/" + rollInfo.magic.divide;
   }
-  const dieRoll = new ArsRoll(formula, actor.system);
-  let tmp = await dieRoll.roll();
+  const roll = new ArsRoll(formula, actor.system);
+  let dieRoll = await roll.roll();
 
   let rollMode = game.settings.get("core", "rollMode");
   // let showRolls = game.settings.get("arm5e", "showRolls");
@@ -33,49 +34,63 @@ async function simpleDie(actor, type = "OPTION", callBack) {
     rollMode = CONST.DICE_ROLL_MODES.PRIVATE;
   }
 
-  const system = {
-    label: rollInfo.label,
-    img: actor.img,
-    confidence: {
-      allowed: (rollProperties.MODE & ROLL_MODES.NO_CONF) == 0,
-      score: actor.system.con.score
-    },
-    roll: {
-      type: type.toUpperCase(),
-      img: rollInfo.img,
-      name: rollInfo.name,
-      itemUuid: rollInfo.itemUuid,
-      secondaryScore: rollInfo.secondaryScore,
-      divider: rollInfo.magic.divide,
-      details: rollInfo.details,
-      actorType: actor.type // for if the actor is deleted
-    }
-  };
-  if (ArsRoll.isCombat(type)) {
-    system.combat = { attacker: actor.uuid, defenders: [] };
+  let confAllowed = actor.system.con.score > 0 && (rollProperties.MODE & ROLL_MODES.NO_CONF) == 0;
+  if (modes & 16) {
+    confAllowed = false;
   }
 
-  if (ArsRoll.isMagic(type)) {
-    system.magic = { caster: actor.uuid, targets: [] };
+  let message;
+  if (!(modes & 32)) {
+    const system = {
+      img: actor.img,
+      label: rollInfo.label,
+      confidence: {
+        allowed: confAllowed,
+        score: actor.system.con.score
+      },
+      roll: {
+        type: dieRoll.getMessageType(rollInfo.type),
+        img: rollInfo.img,
+        // name: rollInfo.name,
+        itemUuid: rollInfo.itemUuid,
+        secondaryScore: rollInfo.secondaryScore,
+        botchCheck: false,
+        details: rollInfo.details,
+        divider: 1,
+        difficulty: 0,
+        actorType: actor.type // for if the actor is deleted
+      },
+      impact: { fatigueLevels: 0, woundGravity: 0, applied: false }
+    };
+
+    const messageData = await dieRoll.toMessage(
+      {
+        flavor: flavorTxt,
+        // flavor: chatTitle + flavorTxt + details,
+        speaker: ChatMessage.getSpeaker({
+          actor: actor
+        }),
+        system: system,
+        type: "roll"
+      },
+      { rollMode: rollMode, create: false }
+    );
+
+    message = new Arm5eChatMessage(messageData);
+
+    message.system.addInfo(actor);
+  } else {
+    if (game.modules.get("dice-so-nice")?.active) {
+      await game.dice3d.showForRoll(dieRoll); //, user, synchronize, whisper, blind, chatMessageID, speaker)
+    }
   }
-  // TODO: HERE Do the callback for before message creation
-  const messageData = await tmp.toMessage(
-    {
-      flavor: flavorTxt,
-      speaker: ChatMessage.getSpeaker({
-        actor: actor
-      }),
-      system: system,
-      type: "roll"
-    },
-    { rollMode: rollMode, create: false }
-  );
-  if (callBack) {
-    await callBack(actor, tmp, messageData);
+
+  if (callback) {
+    await callback(actor, dieRoll, message, rollInfo);
   }
-  ChatMessage.create(messageData);
+  if (!(modes & 32)) await Arm5eChatMessage.create(message.toObject());
   actor.rollInfo.reset();
-  return tmp;
+  return dieRoll;
 }
 
 // modes bitmask:
@@ -95,10 +110,11 @@ async function simpleDie(actor, type = "OPTION", callBack) {
  * @param {any} botchNum=-1
  * @returns {any}
  */
-async function stressDie(actor, type = "OPTION", modes = 0, callBack = undefined, botchNum = -1) {
+async function stressDie(actor, type = "OPTION", modes = 0, callback = undefined, botchNum = -1) {
   iterations = 1;
   actor = await getRollFormula(actor);
   const rollInfo = actor.rollInfo;
+  const rollProperties = getRollTypeProperties(type);
   let rollOptions = {
     minimize: false,
     maximize: false,
@@ -127,12 +143,10 @@ async function stressDie(actor, type = "OPTION", modes = 0, callBack = undefined
     rollOptions.prompt = false;
   }
 
-  let confAllowed = actor.system.con.score > 0;
+  let confAllowed = actor.system.con.score > 0 && (rollProperties.MODE & ROLL_MODES.NO_CONF) == 0;
   if (modes & 16) {
     confAllowed = false;
   }
-
-  confAllowed = (getRollTypeProperties(type).MODE & ROLL_MODES.NO_CONF) == 0;
 
   let flavorTxt = rollInfo.flavor.length ? `<p>${rollInfo.flavor}</p>` : "";
   flavorTxt += `<p>${game.i18n.localize("arm5e.dialog.button.stressdie")}:</p>`;
@@ -178,13 +192,10 @@ async function stressDie(actor, type = "OPTION", modes = 0, callBack = undefined
   }
 
   let rollMode = game.settings.get("core", "rollMode");
-  if (
-    getRollTypeProperties(type).MODE & ROLL_MODES.PRIVATE &&
-    rollMode != CONST.DICE_ROLL_MODES.BLIND
-  ) {
+  if (rollProperties.MODE & ROLL_MODES.PRIVATE && rollMode != CONST.DICE_ROLL_MODES.BLIND) {
     rollMode = CONST.DICE_ROLL_MODES.PRIVATE;
   }
-  let messageData;
+  let message;
   if (!(modes & 32)) {
     const system = {
       img: actor.img,
@@ -194,47 +205,48 @@ async function stressDie(actor, type = "OPTION", modes = 0, callBack = undefined
         score: actor.system.con.score
       },
       roll: {
-        type: type.toUpperCase(),
+        type: dieRoll.getMessageType(rollInfo.type),
         img: rollInfo.img,
         // name: rollInfo.name,
         itemUuid: rollInfo.itemUuid,
         secondaryScore: rollInfo.secondaryScore,
         botchCheck: botchCheck,
         details: rollInfo.details,
-        divider: rollInfo.magic.divide,
+        divider: 1,
+        difficulty: 0,
         actorType: actor.type // for if the actor is deleted
-      }
+      },
+      impact: { fatigueLevels: 0, woundGravity: 0, applied: false }
     };
-    if (ArsRoll.isCombat(type)) {
-      system.combat = { attacker: actor.uuid, defenders: [] };
-    }
 
-    if (ArsRoll.isMagic(type)) {
-      system.magic = { caster: actor.uuid, targets: [], ritual: rollInfo.magic.ritual };
-    }
-    messageData = await dieRoll.toMessage(
+    //   system.combat = { attacker: actor.uuid, defenders: [] };
+    //   system.magic = { caster: actor.uuid, targets: [], ritual: rollInfo.magic.ritual };
+    const messageData = await dieRoll.toMessage(
       {
         flavor: flavorTxt,
         // flavor: chatTitle + flavorTxt + details,
         speaker: ChatMessage.getSpeaker({
           actor: actor
         }),
-        whisper: ChatMessage.getWhisperRecipients("gm"),
         system: system,
         type: "roll"
       },
       { rollMode: rollMode, create: false }
     );
+
+    message = new Arm5eChatMessage(messageData);
+
+    message.system.addInfo(actor);
   } else {
     if (game.modules.get("dice-so-nice")?.active) {
-      game.dice3d.showForRoll(dieRoll); //, user, synchronize, whisper, blind, chatMessageID, speaker)
+      await game.dice3d.showForRoll(dieRoll); //, user, synchronize, whisper, blind, chatMessageID, speaker)
     }
   }
 
-  if (callBack) {
-    await callBack(actor, dieRoll, messageData, rollInfo);
+  if (callback) {
+    await callback(actor, dieRoll, message, rollInfo);
   }
-  ChatMessage.create(messageData);
+  if (!(modes & 32)) Arm5eChatMessage.create(message.toObject());
   actor.rollInfo.reset();
   return dieRoll;
 }
@@ -629,10 +641,8 @@ async function getRollFormula(actor) {
         )} (${multiplier}) =  ${score * multiplier}`;
       }
       rollInfo.penetration.total = score * multiplier;
-      rollInfo.secondaryScore = score * multiplier - rollInfo.magic.level;
-    }
-
-    if (rollInfo.type == "power") {
+      rollInfo.secondaryScore = rollInfo.penetration.total;
+    } else if (rollInfo.type == "power") {
       const multiplier =
         rollInfo.penetration.multiplierBonusArcanic +
         rollInfo.penetration.multiplierBonusSympathic +
@@ -651,9 +661,7 @@ async function getRollFormula(actor) {
         )} (${multiplier}) =  ${score * multiplier}`;
       }
       rollInfo.penetration.total = rollInfo.secondaryScore;
-    }
-
-    if (rollInfo.type == "item") {
+    } else if (rollInfo.type == "item") {
       msg += `<br /> + <b>${game.i18n.localize("arm5e.sheet.penetration")} </b> (${
         rollInfo.penetration.total
       }) :  <br />`;
@@ -717,7 +725,7 @@ async function explodingRoll(actorData, rollOptions = {}, botchNum = -1) {
   log(false, `Dice result: ${diceResult}`);
   if (diceResult === explodingScore) {
     if (game.modules.get("dice-so-nice")?.active) {
-      game.dice3d.showForRoll(dieRoll, game.user, true); //, whisper, blind, chatMessageID, speaker)
+      await game.dice3d.showForRoll(dieRoll, game.user, true); //, whisper, blind, chatMessageID, speaker)
     }
     if (rollOptions.alternateStressDie) {
       iterations++;
@@ -782,7 +790,7 @@ async function explodingRoll(actorData, rollOptions = {}, botchNum = -1) {
     if (iterations === 1 && diceResult === botchCheckScore) {
       iterations = 0;
       if (game.modules.get("dice-so-nice")?.active) {
-        game.dice3d.showForRoll(dieRoll); //, user, synchronize, whisper, blind, chatMessageID, speaker)
+        await game.dice3d.showForRoll(dieRoll); //, user, synchronize, whisper, blind, chatMessageID, speaker)
       }
       if (rollOptions.noBotch) {
         let output_roll = new ArsRoll(actorData.rollInfo.formula.toString(), {}, options);
@@ -878,17 +886,14 @@ export async function createRoll(rollFormula, multiplier, divide, options = {}) 
   return output_roll;
 }
 
-async function noRoll(actor, mode, callback, roll) {
+async function noRoll(actor, modes, callback) {
   actor = await getRollFormula(actor);
   const rollInfo = actor.rollInfo;
-
+  const rollProperties = getRollTypeProperties(rollInfo.type);
   let formula = `${rollInfo.formula}`;
 
   let rollMode = game.settings.get("core", "rollMode");
-  if (
-    getRollTypeProperties(rollInfo.type).MODE & ROLL_MODES.PRIVATE &&
-    rollMode != CONST.DICE_ROLL_MODES.BLIND
-  ) {
+  if (rollProperties.MODE & ROLL_MODES.PRIVATE && rollMode != CONST.DICE_ROLL_MODES.BLIND) {
     rollMode = CONST.DICE_ROLL_MODES.PRIVATE;
   }
 
@@ -906,45 +911,52 @@ async function noRoll(actor, mode, callback, roll) {
       score: actor.system.con.score
     },
     roll: {
-      details: rollInfo.details,
-      type: "OPTION",
+      type: dieRoll.getMessageType(rollInfo.type),
       img: rollInfo.img,
+      // name: rollInfo.name,
       itemUuid: rollInfo.itemUuid,
       secondaryScore: rollInfo.secondaryScore,
+      botchCheck: false,
+      details: rollInfo.details,
       divider: rollInfo.magic.divide,
       actorType: actor.type // for if the actor is deleted
-    }
-  };
-  let msgType = "roll";
-  if (ArsRoll.isMagic(rollInfo.type)) {
-    system.magic = { caster: actor.uuid, targets: [] };
-    msgType = "magic";
-  }
-
-  const message = await tmp.toMessage(
-    {
-      system: system,
-      type: msgType,
-      speaker: ChatMessage.getSpeaker({
-        actor
-      })
     },
-    { rollMode: rollMode }
-  );
-  await checkTargetAndCalculateResistance(actor, dieRoll, message);
-  if (callback) {
-    await callback(actor, dieRoll, message);
-  }
+    impact: { fatigueLevels: 0, woundGravity: 0, applied: false }
+  };
 
+  const messageData = await tmp.toMessage(
+    {
+      // flavor: flavorTxt,
+      // flavor: chatTitle + flavorTxt + details,
+      speaker: ChatMessage.getSpeaker({
+        actor: actor
+      }),
+      system: system,
+      type: "roll"
+    },
+    { rollMode: rollMode, create: false }
+  );
+
+  let message = new Arm5eChatMessage(messageData);
+
+  message.system.addInfo(actor);
+
+  if (callback) {
+    await callback(actor, dieRoll, message, rollInfo);
+  }
+  await Arm5eChatMessage.create(message.toObject());
   actor.rollInfo.reset();
+  return dieRoll;
 }
 
 async function changeMight(actor, roll, message) {
+  await handleTargetsOfMagic(actor, roll, message);
   await actor.changeMight(-actor.rollInfo.power.cost);
 }
 
 async function useItemCharge(actor, roll, message) {
   const item = actor.items.get(actor.rollInfo.item.id);
+  await handleTargetsOfMagic(actor, roll, message);
   await item.useItemCharge();
 }
 export { simpleDie, stressDie, noRoll, changeMight, useItemCharge };

@@ -117,7 +117,7 @@ export class ArM5eRollInfo {
         if (dataset.id) {
           let power = this._actor.items.get(dataset.id);
           if (power.system.form === "inherit") {
-            if (this._actor._hasMight()) {
+            if (this._actor.hasMight()) {
               this.power.form = this._actor.system.might.form;
             } else {
               this.power.form = "an";
@@ -332,7 +332,7 @@ export class ArM5eRollInfo {
         let livingMod = 0;
         if (actorSystemData.covenant?.linked) {
           let cov = actorSystemData.covenant.document;
-          if (ArM5eActor.isMagus(this._actor.type, actorSystemData.charType.value)) {
+          if (ArM5eActor.IsMagus(this._actor.type, actorSystemData.charType.value)) {
             livingMod = cov.system.modifiersLife.magi ?? 0;
           } else {
             livingMod = cov.system.modifiersLife.mundane ?? 0;

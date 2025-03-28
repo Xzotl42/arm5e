@@ -407,11 +407,19 @@ export class ArM5eCovenantActorSheet extends ArM5eActorSheet {
     if (!["laboratory", "player", "npc", "beast"].includes(actor.type)) return false;
     // add person to covenant inhabitants
     let targetActor = this.actor;
-    if (actor._isMagus()) {
+    if (actor.isMagus()) {
       let pts = 5;
       if (targetActor.system.season == "summer" || targetActor.system.season == "autumn") {
         pts = 10;
       }
+      // check if it has gentle or blatant gift
+      let giftType = "normal";
+      if (actor.hasVirtue("gentle-gift")) {
+        giftType = "gentle";
+      } else if (actor.hasFlaw("blatant-gift")) {
+        giftType = "blatant";
+      }
+
       // TODO: fill other fields?
       const itemData = [
         {
@@ -421,6 +429,7 @@ export class ArM5eCovenantActorSheet extends ArM5eActorSheet {
           system: {
             category: "magi",
             actorId: actor._id,
+            giftType: giftType,
             job:
               actor.system.description.title.value +
               " " +
@@ -441,7 +450,7 @@ export class ArM5eCovenantActorSheet extends ArM5eActorSheet {
         itemData[0]._id = magi[0]._id;
         return await this.actor.updateEmbeddedDocuments("Item", itemData, { render: true });
       }
-    } else if (actor._isCompanion()) {
+    } else if (actor.isCompanion()) {
       let pts = 3;
       if (targetActor.system.season == "summer" || targetActor.system.season == "autumn") {
         pts = 5;
@@ -472,7 +481,7 @@ export class ArM5eCovenantActorSheet extends ArM5eActorSheet {
         return await this.actor.updateEmbeddedDocuments("Item", itemData, { render: true });
       }
     } else if (
-      actor._isGrog() ||
+      actor.isGrog() ||
       (actor.type == "npc" && actor.system.charType.value == "mundane")
     ) {
       let pts = 1;
@@ -530,12 +539,12 @@ export class ArM5eCovenantActorSheet extends ArM5eActorSheet {
   async _unbindActor(actor) {
     if (!["laboratory", "player", "npc", "beast"].includes(actor.type)) return true;
     let targetActor = this.actor;
-    if (actor._isMagus()) {
+    if (actor.isMagus()) {
       let hab = targetActor.system.inhabitants.magi.filter((h) => h.system.actorId == actor._id);
       if (hab.length) {
         return await this.actor.deleteEmbeddedDocuments("Item", [hab[0]._id], { render: true });
       }
-    } else if (actor._isCompanion()) {
+    } else if (actor.isCompanion()) {
       let hab = targetActor.system.inhabitants.companion.filter(
         (h) => h.system.actorId == actor._id
       );
@@ -543,7 +552,7 @@ export class ArM5eCovenantActorSheet extends ArM5eActorSheet {
         return await this.actor.deleteEmbeddedDocuments("Item", [hab[0]._id], { render: true });
       }
     } else if (
-      actor._isGrog() ||
+      actor.isGrog() ||
       (actor.type == "npc" && actor.system.charType.value == "mundane")
     ) {
       let hab = targetActor.system.inhabitants.habitants.filter(

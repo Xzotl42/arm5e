@@ -49,9 +49,9 @@ export class ArM5eItemMagicSheet extends ArM5eItemSheet {
       context.locked = true;
     }
 
-    if (this.item.isOwned && this.item.actor._isCharacter()) {
+    if (this.item.isOwned && this.item.actor.isCharacter()) {
       if (this.item.type === "power") {
-        context.ownerHasMight = this.item.actor._hasMight();
+        context.ownerHasMight = this.item.actor.hasMight();
       }
     }
 
@@ -95,7 +95,7 @@ export class ArM5eItemMagicSheet extends ArM5eItemSheet {
 
         break;
       case "power":
-        if (this.item.isOwned && this.item.actor._hasMight()) {
+        if (this.item.isOwned && this.item.actor.hasMight()) {
           context.selection.forms = {
             inherit: { label: game.i18n.localize("arm5e.generic.inherit") },
             ...CONFIG.ARM5E.magic.forms

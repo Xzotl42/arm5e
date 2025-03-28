@@ -94,7 +94,7 @@ export async function agingCrisis(actor, roll, message) {
     system: { label: game.i18n.localize("arm5e.aging.crisis.summary") }
   });
 
-  await actor.update({ system: { pendingCrisis: false } }, {});
+  await actor.update({ "system.states.pendingCrisis": false }, {});
 }
 
 export async function updateAgingDiaryEntry(actor, input) {
