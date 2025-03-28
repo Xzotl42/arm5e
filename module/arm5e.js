@@ -7,7 +7,6 @@ import { ArM5eNPCActorSheet } from "./actor/actor-npc-sheet.js";
 import { ArM5eLaboratoryActorSheet } from "./actor/actor-laboratory-sheet.js";
 import { ArM5eCovenantActorSheet } from "./actor/actor-covenant-sheet.js";
 import { ArM5eMagicCodexSheet } from "./actor/actor-magic-codex-sheet.js";
-import { ArM5eActorsDirectory } from "./ui/ars-actors-directory.js";
 import { ArM5eItem } from "./item/item.js";
 import { ArM5eItemSheet, ArM5eItemSheetNoDesc } from "./item/item-sheet.js";
 import { ArM5eItemMagicSheet } from "./item/item-magic-sheet.js";
@@ -143,7 +142,6 @@ Hooks.once("init", async function () {
   //CONFIG.Dice.rolls.push(ArsRoll);
 
   // UI customization
-  CONFIG.ui.actors = ArM5eActorsDirectory;
   CONFIG.Item.sidebarIcon = "icon-Icon_magic-chest";
   CONFIG.JournalEntry.sidebarIcon = "icon-Tool_Journals_sidebar";
 
