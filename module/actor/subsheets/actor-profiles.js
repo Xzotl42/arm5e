@@ -66,7 +66,7 @@ export class ArM5eActorProfiles {
     let actorUpdate = {};
     if (config.arts) {
       for (let a of config.arts) {
-        if (!this.actor._isMagus()) {
+        if (!this.actor.isMagus()) {
           continue;
         }
         if (a.inc) {

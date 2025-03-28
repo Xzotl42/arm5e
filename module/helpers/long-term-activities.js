@@ -1,5 +1,5 @@
 import { getDataset, log } from "../tools.js";
-import { ArM5ePCActor } from "../actor/actor.js";
+import { ArM5eActor } from "../actor/actor.js";
 import { InvestigationRoll } from "../tools/investigationRoll.js";
 import { getAbilityFromCompendium } from "../tools/compendia.js";
 import { ArsRoll } from "./stressdie.js";
@@ -84,21 +84,17 @@ export async function agingCrisis(actor, roll, message) {
   const crisisTable = docs.filter((rt) => rt.name === "Aging crisis table")[0];
   let res = crisisTable.getResultsForRoll(roll.total)[0].text;
 
-  const title =
-    '<h2 class="ars-chat-title chat-icon">' +
-    game.i18n.localize("arm5e.aging.crisis.summary") +
-    "</h2>";
-
   // log(false, `Crisis result expanded: ${msg}`);
   ChatMessage.create({
-    content: title + "<h3>" + game.i18n.localize(`arm5e.aging.crisis.${res}`) + "</h3><br/>",
+    content: "<h3>" + game.i18n.localize(`arm5e.aging.crisis.${res}`) + "</h3><br/>",
     speaker: ChatMessage.getSpeaker({
       actor: actor
     }),
-    whisper: ChatMessage.getWhisperRecipients("gm")
+    whisper: ChatMessage.getWhisperRecipients("gm"),
+    system: { label: game.i18n.localize("arm5e.aging.crisis.summary") }
   });
 
-  await actor.update({ system: { pendingCrisis: false } }, {});
+  await actor.update({ "system.states.pendingCrisis": false }, {});
 }
 
 export async function updateAgingDiaryEntry(actor, input) {
@@ -746,7 +742,7 @@ function checkIfCapped(context, teacherScore, coeff, progressItem) {
       context.system.sourceBonus +
       progressItem.system.xp) *
     coeff;
-  let teacherXp = ArM5ePCActor.getAbilityXp(teacherScore);
+  let teacherXp = ArM5eActor.getAbilityXp(teacherScore);
   // TODO check/review
   if (newXp > teacherXp) {
     let newSource = teacherXp / coeff - progressItem.system.xp; //- context.system.sourceModifier;
@@ -928,7 +924,7 @@ export function validTeaching(context, actor, item) {
     const art = actor.system.arts[artType][progressArt.key];
     // checkIfCapped(context, teacherScore, 1, spell);
     let newXp = context.system.sourceQuality + art.xp;
-    let teacherXp = ArM5ePCActor.getArtXp(teacherScore);
+    let teacherXp = ArM5eActor.getArtXp(teacherScore);
     if (newXp > teacherXp) {
       let newSource = teacherXp - art.xp;
       context.system.theoriticalSource = context.system.sourceQuality;

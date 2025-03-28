@@ -13,8 +13,7 @@
         "page": 0,
         "indexKey": "",
         "review_status": "toReview",
-        "reviewer": "",
-        "creationMode": true
+        "reviewer": ""
       },
       "npcbase": {
         "age": {
@@ -39,7 +38,11 @@
           "divine": { "aligned": false },
           "infernal": { "aligned": false }
         },
-        "pendingCrisis": false,
+        "states": {
+          "pendingCrisis": false,
+          "creationMode": true,
+          "confidencePrompt": false
+        },
         "biography": "Character biography, notes, &c.",
         "characteristics": {
           "int": {
@@ -831,6 +834,11 @@
       "templates": ["base", "fatigue"],
       "age": {
         "value": 20
+      },
+      "states": {
+        "pendingCrisis": false,
+        "creationMode": true,
+        "confidencePrompt": false
       },
       "characteristics": {
         "int": {

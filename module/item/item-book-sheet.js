@@ -4,6 +4,7 @@ import { getConfirmation } from "../constants/ui.js";
 import { ArM5eActorSheet } from "../actor/actor-sheet.js";
 import { spellFormLabel, spellTechniqueLabel } from "../helpers/magic.js";
 import { BookSchema } from "../schemas/bookSchema.js";
+import { ArM5eItem } from "./item.js";
 /**
  * Extend the basic ItemSheet with some very simple modifications
  * @extends {ItemSheet}
@@ -52,9 +53,9 @@ export class ArM5eBookSheet extends ArM5eItemSheet {
             await this.item.update(updateData);
           }
         }
-        // this.submit({ preventClose: true, updateData: updateData });
+        // await this.submit({ preventClose: true, updateData: updateData });
       }
-    // this.submit({ preventClose: true, updateData: updateData });
+    // await this.submit({ preventClose: true, updateData: updateData });
     //  else if (event.currentTarget.dataset.drop === "labtext") {
   }
   /* -------------------------------------------- */
@@ -226,7 +227,8 @@ export class ArM5eBookSheet extends ArM5eItemSheet {
     topics[index] = topic;
     let updateData = {};
     updateData[`system.topics`] = topics;
-    this.submit({ preventClose: true, updateData: updateData });
+    await this.submit({ preventClose: true, updateData: updateData });
+    this.render();
   }
 
   async _changeTopicCategory(item, event) {
@@ -282,7 +284,8 @@ export class ArM5eBookSheet extends ArM5eItemSheet {
     topics[index] = topic;
     let updateData = {};
     updateData[`system.topics`] = topics;
-    this.submit({ preventClose: true, updateData: updateData });
+    await this.submit({ preventClose: true, updateData: updateData });
+    this.render();
   }
 
   async _showLabText(item, event) {

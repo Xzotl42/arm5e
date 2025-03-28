@@ -53,7 +53,7 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
           return;
         }
         const actor = await Actor.implementation.fromDropData(data);
-        if (actor._isCharacter()) await this._setTeacher(actor);
+        if (actor.isCharacter()) await this._setTeacher(actor);
       }
     } else if (data.type == "Item") {
       if (event.currentTarget.dataset.tab === "abilities") {
@@ -153,7 +153,7 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
     context.system.errorParam = "";
     context.system.infoParam = "";
 
-    if (this.actor.system.pendingCrisis) {
+    if (this.actor.system.states.pendingCrisis) {
       context.system.applyError = "arm5e.notification.pendingCrisis";
       context.system.disabled = "disabled";
       context.activityState = "disabled";
@@ -196,7 +196,7 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
     //   log(false, `Source modifier: ${context.system.sourceModifier}`);
     // }
 
-    if (this.actor._isMagus()) {
+    if (this.actor.isMagus()) {
       context.ui.showMagicProgress = true;
     }
 
@@ -276,7 +276,7 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
           return context;
         }
         // if teacher is not a Magus, he/she cannot teach spell masteries and arts
-        if (teacher !== undefined && !teacher._isMagus()) {
+        if (teacher !== undefined && !teacher.isMagus()) {
           context.ui.showMagicProgress = false;
         }
         context.system.sourceModifier += teacher.system.bonuses.activities.teacher;
@@ -1451,7 +1451,7 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
         );
         if (!confirmed) return;
         let actorUpdate = {
-          system: { pendingCrisis: false }
+          "system.states.pendingCrisis": false
         };
 
         let effects = this.item.getFlag("arm5e", "effect");

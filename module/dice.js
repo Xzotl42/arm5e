@@ -1,9 +1,9 @@
 import { ROLL_MODES, ROLL_PROPERTIES, getRollTypeProperties } from "./helpers/rollWindow.js";
-import { checkTargetAndCalculateResistance } from "./helpers/magic.js";
 import { log, putInFoldableLink, putInFoldableLinkWithAnimation, sleep } from "./tools.js";
 import { ARM5E } from "./config.js";
-import { showRollResults } from "./helpers/chat.js";
 import { ArsRoll } from "./helpers/stressdie.js";
+import { Arm5eChatMessage } from "./helpers/chat-message.js";
+import { handleTargetsOfMagic } from "./helpers/magic.js";
 let iterations = 1;
 
 /**
@@ -13,69 +13,90 @@ let iterations = 1;
  * @param {any} callBack
  * @returns {any}
  */
-async function simpleDie(actor, type = "OPTION", callBack) {
+async function simpleDie(actor, type = "OPTION", callback, modes = 0) {
   iterations = 1;
   // actor = getFormData(html, actor);
   actor = await getRollFormula(actor);
   const rollInfo = actor.rollInfo;
-
+  const rollProperties = getRollTypeProperties(type);
   //console.log('simple die');
   let flavorTxt = `<p>${game.i18n.localize("arm5e.dialog.button.simpledie")}:</p>`;
-  let details = putInFoldableLinkWithAnimation("arm5e.sheet.details", flavorTxt + rollInfo.details);
-  let conf = actor.system.con.score;
-
-  if ((getRollTypeProperties(type).MODE & ROLL_MODES.NO_CONF) != 0) {
-    conf = 0;
-  }
-  let chatTitle = '<h2 class="ars-chat-title chat-icon">' + rollInfo.label + "</h2>";
   let formula = "1D10+" + rollInfo.formula;
   if (rollInfo.magic.divide > 1) {
     formula = "(1D10+" + rollInfo.formula + ")/" + rollInfo.magic.divide;
   }
-  const dieRoll = new ArsRoll(formula, actor.system);
-  let tmp = await dieRoll.roll();
+  const roll = new ArsRoll(formula, actor.system);
+  let dieRoll = await roll.roll();
 
   let rollMode = game.settings.get("core", "rollMode");
   // let showRolls = game.settings.get("arm5e", "showRolls");
-  if (
-    getRollTypeProperties(type).MODE & ROLL_MODES.PRIVATE &&
-    rollMode != CONST.DICE_ROLL_MODES.BLIND
-  ) {
+  if (rollProperties.MODE & ROLL_MODES.PRIVATE && rollMode != CONST.DICE_ROLL_MODES.BLIND) {
     rollMode = CONST.DICE_ROLL_MODES.PRIVATE;
   }
 
-  const flags = {
-    arm5e: {
-      roll: { type: type, img: rollInfo.img, name: rollInfo.name, id: rollInfo.itemId },
-      type: "confidence",
-      confScore: conf,
-      actorType: actor.type, // for if the actor is deleted
-      secondaryScore: rollInfo.secondaryScore
-    }
-  };
-
-  // TODO: HERE Do the callback for before message creation
-  const message = await tmp.toMessage(
-    {
-      speaker: ChatMessage.getSpeaker({
-        actor: actor
-      }),
-      flavor: chatTitle + details,
-      flags: flags
-    },
-    { rollMode: rollMode }
-  );
-  if (callBack) {
-    await callBack(actor, tmp, message);
+  let confAllowed = actor.system.con.score > 0 && (rollProperties.MODE & ROLL_MODES.NO_CONF) == 0;
+  if (modes & 16) {
+    confAllowed = false;
   }
+
+  let message;
+  if (!(modes & 32)) {
+    const system = {
+      img: actor.img,
+      label: rollInfo.label,
+      confidence: {
+        allowed: confAllowed,
+        score: actor.system.con.score
+      },
+      roll: {
+        type: dieRoll.getMessageType(rollInfo.type),
+        img: rollInfo.img,
+        // name: rollInfo.name,
+        itemUuid: rollInfo.itemUuid,
+        secondaryScore: rollInfo.secondaryScore,
+        botchCheck: false,
+        details: rollInfo.details,
+        divider: 1,
+        difficulty: 0,
+        actorType: actor.type // for if the actor is deleted
+      },
+      impact: { fatigueLevels: 0, woundGravity: 0, applied: false }
+    };
+
+    const messageData = await dieRoll.toMessage(
+      {
+        flavor: flavorTxt,
+        // flavor: chatTitle + flavorTxt + details,
+        speaker: ChatMessage.getSpeaker({
+          actor: actor
+        }),
+        system: system,
+        type: "roll"
+      },
+      { rollMode: rollMode, create: false }
+    );
+
+    message = new Arm5eChatMessage(messageData);
+
+    message.system.addInfo(actor);
+  } else {
+    if (game.modules.get("dice-so-nice")?.active) {
+      await game.dice3d.showForRoll(dieRoll); //, user, synchronize, whisper, blind, chatMessageID, speaker)
+    }
+  }
+
+  if (callback) {
+    await callback(actor, dieRoll, message, rollInfo);
+  }
+  if (!(modes & 32)) await Arm5eChatMessage.create(message.toObject());
   actor.rollInfo.reset();
-  return tmp;
+  return dieRoll;
 }
 
 // modes bitmask:
 // 0 => standard
 // 1 => force a one/explosion
-// 2 => force a zero/bothc check
+// 2 => force a zero/botch check
 // 4 => Aging roll
 // 8 => non-interactive
 // 16 => no confidence
@@ -89,10 +110,11 @@ async function simpleDie(actor, type = "OPTION", callBack) {
  * @param {any} botchNum=-1
  * @returns {any}
  */
-async function stressDie(actor, type = "OPTION", modes = 0, callBack = undefined, botchNum = -1) {
+async function stressDie(actor, type = "OPTION", modes = 0, callback = undefined, botchNum = -1) {
   iterations = 1;
   actor = await getRollFormula(actor);
   const rollInfo = actor.rollInfo;
+  const rollProperties = getRollTypeProperties(type);
   let rollOptions = {
     minimize: false,
     maximize: false,
@@ -121,23 +143,16 @@ async function stressDie(actor, type = "OPTION", modes = 0, callBack = undefined
     rollOptions.prompt = false;
   }
 
-  let confAllowed = actor.system.con.score;
+  let confAllowed = actor.system.con.score > 0 && (rollProperties.MODE & ROLL_MODES.NO_CONF) == 0;
   if (modes & 16) {
     confAllowed = false;
   }
 
-  if ((getRollTypeProperties(type).MODE & ROLL_MODES.NO_CONF) != 0) {
-    confAllowed = 0;
-  }
-
-  let formula = rollInfo.formula;
   let flavorTxt = rollInfo.flavor.length ? `<p>${rollInfo.flavor}</p>` : "";
   flavorTxt += `<p>${game.i18n.localize("arm5e.dialog.button.stressdie")}:</p>`;
-  let details = putInFoldableLinkWithAnimation("arm5e.sheet.details", flavorTxt + rollInfo.details);
-  let chatTitle = `<h2 class="ars-chat-title chat-icon">${rollInfo.label} </h2>`;
   let dieRoll = await explodingRoll(actor, rollOptions, botchNum);
 
-  let botchCheck = 0;
+  let botchCheck = false;
   if (iterations > 1) {
     flavorTxt = `<h2 class="dice-msg">${game.i18n.localize(
       "arm5e.messages.die.exploding"
@@ -173,48 +188,65 @@ async function stressDie(actor, type = "OPTION", modes = 0, callBack = undefined
       dieRoll._total = 0;
     }
 
-    botchCheck = 1;
+    botchCheck = true;
   }
 
   let rollMode = game.settings.get("core", "rollMode");
-  if (
-    getRollTypeProperties(type).MODE & ROLL_MODES.PRIVATE &&
-    rollMode != CONST.DICE_ROLL_MODES.BLIND
-  ) {
+  if (rollProperties.MODE & ROLL_MODES.PRIVATE && rollMode != CONST.DICE_ROLL_MODES.BLIND) {
     rollMode = CONST.DICE_ROLL_MODES.PRIVATE;
   }
   let message;
   if (!(modes & 32)) {
-    message = await dieRoll.toMessage(
+    const system = {
+      img: actor.img,
+      label: rollInfo.label,
+      confidence: {
+        allowed: confAllowed,
+        score: actor.system.con.score
+      },
+      roll: {
+        type: dieRoll.getMessageType(rollInfo.type),
+        img: rollInfo.img,
+        // name: rollInfo.name,
+        itemUuid: rollInfo.itemUuid,
+        secondaryScore: rollInfo.secondaryScore,
+        botchCheck: botchCheck,
+        details: rollInfo.details,
+        divider: 1,
+        difficulty: 0,
+        actorType: actor.type // for if the actor is deleted
+      },
+      impact: { fatigueLevels: 0, woundGravity: 0, applied: false }
+    };
+
+    //   system.combat = { attacker: actor.uuid, defenders: [] };
+    //   system.magic = { caster: actor.uuid, targets: [], ritual: rollInfo.magic.ritual };
+    const messageData = await dieRoll.toMessage(
       {
-        flavor: chatTitle + flavorTxt + details,
+        flavor: flavorTxt,
+        // flavor: chatTitle + flavorTxt + details,
         speaker: ChatMessage.getSpeaker({
           actor: actor
         }),
-        whisper: ChatMessage.getWhisperRecipients("gm"),
-        flags: {
-          arm5e: {
-            roll: { type: type, img: rollInfo.img, name: rollInfo.name, id: rollInfo.itemId },
-            type: "confidence",
-            divide: rollInfo.magic.divide,
-            actorType: actor.type, // for if the actor is deleted
-            confScore: confAllowed,
-            botchCheck: botchCheck,
-            secondaryScore: rollInfo.secondaryScore
-          }
-        }
+        system: system,
+        type: "roll"
       },
-      { rollMode: rollMode }
+      { rollMode: rollMode, create: false }
     );
+
+    message = new Arm5eChatMessage(messageData);
+
+    message.system.addInfo(actor);
   } else {
     if (game.modules.get("dice-so-nice")?.active) {
-      game.dice3d.showForRoll(dieRoll); //, user, synchronize, whisper, blind, chatMessageID, speaker)
+      await game.dice3d.showForRoll(dieRoll); //, user, synchronize, whisper, blind, chatMessageID, speaker)
     }
   }
 
-  if (callBack) {
-    await callBack(actor, dieRoll, message, rollInfo);
+  if (callback) {
+    await callback(actor, dieRoll, message, rollInfo);
   }
+  if (!(modes & 32)) Arm5eChatMessage.create(message.toObject());
   actor.rollInfo.reset();
   return dieRoll;
 }
@@ -442,7 +474,7 @@ async function getRollFormula(actor) {
     if (rollInfo.magic.ritual === true) {
       value = actorSystemData.laboratory.abilitiesSelected.artesLib.value;
       value += actorSystemData.laboratory.abilitiesSelected.philosophy.value;
-      total = parseInt(total) + parseInt(value);
+      total += value;
       msg = newLine(msg);
       msg =
         msg +
@@ -585,7 +617,7 @@ async function getRollFormula(actor) {
     ///
     // after computing total
     ///
-    if (rollInfo.type == "spell" || rollInfo.type == "magic" || rollInfo.type == "spont") {
+    if (["spell", "magic", "spont"].includes(rollInfo.type)) {
       const multiplier =
         rollInfo.penetration.multiplierBonusArcanic +
         rollInfo.penetration.multiplierBonusSympathic +
@@ -600,15 +632,17 @@ async function getRollFormula(actor) {
         score += rollInfo.magic.masteryScore;
       }
 
+      msg += ` + <br /><b>${game.i18n.localize("arm5e.sheet.penetration")} </b> (${
+        score * multiplier
+      }) <br />`;
       if (score > 0) {
-        msg += " + <br /><b>Penetration: </b> <br />";
-        msg += "Score (" + score + ") * Multiplier (" + multiplier + ") = " + score * multiplier;
+        msg += `${game.i18n.localize("arm5e.sheet.score")} (${score}) * ${game.i18n.localize(
+          "arm5e.generic.multiplier"
+        )} (${multiplier}) =  ${score * multiplier}`;
       }
       rollInfo.penetration.total = score * multiplier;
-      rollInfo.secondaryScore = score * multiplier - rollInfo.magic.level;
-    }
-
-    if (rollInfo.type == "power") {
+      rollInfo.secondaryScore = rollInfo.penetration.total;
+    } else if (rollInfo.type == "power") {
       const multiplier =
         rollInfo.penetration.multiplierBonusArcanic +
         rollInfo.penetration.multiplierBonusSympathic +
@@ -618,16 +652,19 @@ async function getRollFormula(actor) {
         score += 1;
       }
       rollInfo.secondaryScore = score * multiplier;
-      msg += `<br /> + <b>Penetration </b> (${score * multiplier}) :  <br />`;
-      // msg += `Might (${actorSystemData.might.value}) - 5 times cost (${rollInfo.power.cost})`;
+      msg += ` + <br /><b>${game.i18n.localize("arm5e.sheet.penetration")} </b> (${
+        score * multiplier
+      }) <br />`;
       if (score > 0) {
-        msg += " ( Score (" + score + ") * Multiplier (" + multiplier + ") )";
+        msg += `${game.i18n.localize("arm5e.sheet.score")} (${score}) * ${game.i18n.localize(
+          "arm5e.generic.multiplier"
+        )} (${multiplier}) =  ${score * multiplier}`;
       }
       rollInfo.penetration.total = rollInfo.secondaryScore;
-    }
-
-    if (rollInfo.type == "item") {
-      msg += `<br /> + <b>Penetration </b> (${rollInfo.penetration.total}) :  <br />`;
+    } else if (rollInfo.type == "item") {
+      msg += `<br /> + <b>${game.i18n.localize("arm5e.sheet.penetration")} </b> (${
+        rollInfo.penetration.total
+      }) :  <br />`;
       rollInfo.secondaryScore = rollInfo.penetration.total;
     }
 
@@ -688,7 +725,7 @@ async function explodingRoll(actorData, rollOptions = {}, botchNum = -1) {
   log(false, `Dice result: ${diceResult}`);
   if (diceResult === explodingScore) {
     if (game.modules.get("dice-so-nice")?.active) {
-      game.dice3d.showForRoll(dieRoll, game.user, true); //, whisper, blind, chatMessageID, speaker)
+      await game.dice3d.showForRoll(dieRoll, game.user, true); //, whisper, blind, chatMessageID, speaker)
     }
     if (rollOptions.alternateStressDie) {
       iterations++;
@@ -753,7 +790,7 @@ async function explodingRoll(actorData, rollOptions = {}, botchNum = -1) {
     if (iterations === 1 && diceResult === botchCheckScore) {
       iterations = 0;
       if (game.modules.get("dice-so-nice")?.active) {
-        game.dice3d.showForRoll(dieRoll); //, user, synchronize, whisper, blind, chatMessageID, speaker)
+        await game.dice3d.showForRoll(dieRoll); //, user, synchronize, whisper, blind, chatMessageID, speaker)
       }
       if (rollOptions.noBotch) {
         let output_roll = new ArsRoll(actorData.rollInfo.formula.toString(), {}, options);
@@ -841,7 +878,7 @@ export async function createRoll(rollFormula, multiplier, divide, options = {}) 
   let output_roll = new ArsRoll(rollInit, {}, options);
   output_roll.offset = rollFormula;
   output_roll.multiplier = multiplier;
-  output_roll.diviser = divide;
+  output_roll.divider = divide;
   output_roll.data = {};
   //output_roll.roll({ options });
   await output_roll.evaluate(options);
@@ -849,29 +886,14 @@ export async function createRoll(rollFormula, multiplier, divide, options = {}) 
   return output_roll;
 }
 
-async function noRoll(actor, mode, callback, roll) {
+async function noRoll(actor, modes, callback) {
   actor = await getRollFormula(actor);
   const rollInfo = actor.rollInfo;
-  //console.log('simple die');
-  //console.log(actorData);
-  let details = putInFoldableLinkWithAnimation("arm5e.sheet.details", rollInfo.details);
-
-  let chatTitle = '<h2 class="ars-chat-title chat-icon">' + rollInfo.label + "</h2>";
-
-  const flags = {
-    arm5e: {
-      roll: { type: rollInfo.type, img: rollInfo.img, name: rollInfo.name, id: rollInfo.itemId },
-      secondaryScore: rollInfo.secondaryScore,
-      actorType: actor.type // for if the actor is deleted
-    }
-  };
+  const rollProperties = getRollTypeProperties(rollInfo.type);
   let formula = `${rollInfo.formula}`;
 
   let rollMode = game.settings.get("core", "rollMode");
-  if (
-    getRollTypeProperties(rollInfo.type).MODE & ROLL_MODES.PRIVATE &&
-    rollMode != CONST.DICE_ROLL_MODES.BLIND
-  ) {
+  if (rollProperties.MODE & ROLL_MODES.PRIVATE && rollMode != CONST.DICE_ROLL_MODES.BLIND) {
     rollMode = CONST.DICE_ROLL_MODES.PRIVATE;
   }
 
@@ -879,32 +901,62 @@ async function noRoll(actor, mode, callback, roll) {
     formula += ` / ${rollInfo.magic.divide}`;
   }
   const dieRoll = new ArsRoll(formula, actor.system);
-  dieRoll.diviser = rollInfo.magic.divide;
+  dieRoll.divider = rollInfo.magic.divide;
   let tmp = await dieRoll.roll();
-  const message = await tmp.toMessage(
-    {
-      content: "",
-      flavor: chatTitle + details,
-      flags: flags,
-      speaker: ChatMessage.getSpeaker({
-        actor
-      })
+  const system = {
+    img: actor.img,
+    label: rollInfo.label,
+    confidence: {
+      allowed: false,
+      score: actor.system.con.score
     },
-    { rollMode: rollMode }
+    roll: {
+      type: dieRoll.getMessageType(rollInfo.type),
+      img: rollInfo.img,
+      // name: rollInfo.name,
+      itemUuid: rollInfo.itemUuid,
+      secondaryScore: rollInfo.secondaryScore,
+      botchCheck: false,
+      details: rollInfo.details,
+      divider: rollInfo.magic.divide,
+      actorType: actor.type // for if the actor is deleted
+    },
+    impact: { fatigueLevels: 0, woundGravity: 0, applied: false }
+  };
+
+  const messageData = await tmp.toMessage(
+    {
+      // flavor: flavorTxt,
+      // flavor: chatTitle + flavorTxt + details,
+      speaker: ChatMessage.getSpeaker({
+        actor: actor
+      }),
+      system: system,
+      type: "roll"
+    },
+    { rollMode: rollMode, create: false }
   );
-  await checkTargetAndCalculateResistance(actor, dieRoll, message);
+
+  let message = new Arm5eChatMessage(messageData);
+
+  message.system.addInfo(actor);
+
   if (callback) {
-    await callback(actor, dieRoll, message);
+    await callback(actor, dieRoll, message, rollInfo);
   }
+  await Arm5eChatMessage.create(message.toObject());
   actor.rollInfo.reset();
+  return dieRoll;
 }
 
 async function changeMight(actor, roll, message) {
+  await handleTargetsOfMagic(actor, roll, message);
   await actor.changeMight(-actor.rollInfo.power.cost);
 }
 
 async function useItemCharge(actor, roll, message) {
   const item = actor.items.get(actor.rollInfo.item.id);
+  await handleTargetsOfMagic(actor, roll, message);
   await item.useItemCharge();
 }
 export { simpleDie, stressDie, noRoll, changeMight, useItemCharge };

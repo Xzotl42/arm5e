@@ -46,29 +46,13 @@ export class ArM5eActiveEffectConfig extends ActiveEffectConfig {
     } else {
       context.types = ACTIVE_EFFECTS_TYPES;
     }
-    // backward compatibility with V10
-    if (CONFIG.ISV10) {
-      context.data.ui = {
-        nameAttr: "label",
-        name: context.data.label,
-        imgAttr: "icon",
-        img: context.data.icon
-      };
-    } else if (CONFIG.ISV12) {
-      context.data.ui = {
-        nameAttr: "name",
-        name: context.data.name,
-        img: context.data.img,
-        imgAttr: "img"
-      };
-    } else {
-      context.data.ui = {
-        nameAttr: "name",
-        name: context.data.name,
-        imgAttr: "icon",
-        img: context.data.icon
-      };
-    }
+
+    context.data.ui = {
+      nameAttr: "name",
+      name: context.data.name,
+      img: context.data.img,
+      imgAttr: "img"
+    };
 
     // first effect created, add null effect type and subtype (still needed?)
     context.selectedTypes = this.object.getFlag("arm5e", "type");
@@ -351,13 +335,14 @@ export class ArM5eActiveEffectConfig extends ActiveEffectConfig {
     const changesData = this.document.changes;
     changesData[index].key = computedKey.replace("#OPTION#", chosenOption);
     updateData.changes = changesData;
-    return this.submit({ preventClose: true, updateData: updateData });
+    await this.submit({ preventClose: true, updateData: updateData });
+    this.render();
   }
 
   async _addEffectChange(updateFlags) {
     const changesData = this.document.changes;
     changesData.push({ key: "", mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: "" });
-    return this.submit({
+    return await this.submit({
       preventClose: true,
       updateData: {
         changes: changesData,

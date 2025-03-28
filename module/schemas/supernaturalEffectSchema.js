@@ -13,9 +13,6 @@ import { baseLevel, SpellSchema } from "./magicSchemas.js";
 const fields = foundry.data.fields;
 
 export class SupernaturalEffectSchema extends SpellSchema {
-  // TODO remove in V11
-  static _enableV10Validation = true;
-
   static defineSchema() {
     return {
       ...itemBase(),

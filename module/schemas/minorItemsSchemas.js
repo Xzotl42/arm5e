@@ -2,14 +2,7 @@
 import { ARM5E } from "../config.js";
 import { VIRTUESFLAWS_DEFAULT_ICONS } from "../constants/ui.js";
 import { convertToNumber, log } from "../tools.js";
-import {
-  boolOption,
-  convertToInteger,
-  CostField,
-  itemBase,
-  NullableEmbeddedDataField,
-  XpField
-} from "./commonSchemas.js";
+import { boolOption, convertToInteger, CostField, itemBase, XpField } from "./commonSchemas.js";
 import { EnchantmentExtension, ItemState } from "./enchantmentSchema.js";
 const fields = foundry.data.fields;
 
@@ -20,10 +13,7 @@ const fields = foundry.data.fields;
 //   .concat(Object.keys(ARM5E.virtueFlawTypes.covenant))
 //   .concat("Special")
 //   .concat("other");
-export class VirtueFlawSchema extends foundry.abstract.DataModel {
-  // TODO remove in V11
-  static _enableV10Validation = true;
-
+export class VirtueFlawSchema extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     return {
       ...itemBase(),
@@ -142,10 +132,7 @@ export class VirtueFlawSchema extends foundry.abstract.DataModel {
   }
 }
 
-export class QualityInferioritySchema extends foundry.abstract.DataModel {
-  // TODO remove in V11
-  static _enableV10Validation = true;
-
+export class QualityInferioritySchema extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     return {
       ...itemBase(),
@@ -222,9 +209,7 @@ export class QualityInferioritySchema extends foundry.abstract.DataModel {
   }
 }
 
-export class ItemSchema extends foundry.abstract.DataModel {
-  // TODO remove in V11
-  static _enableV10Validation = true;
+export class ItemSchema extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     return {
       ...itemBase(),
@@ -245,9 +230,9 @@ export class ItemSchema extends foundry.abstract.DataModel {
       cost: CostField("standard"),
       carried: boolOption(false, true),
       state: ItemState(),
-      enchantments: new NullableEmbeddedDataField(EnchantmentExtension, {
+      enchantments: new fields.EmbeddedDataField(EnchantmentExtension, {
         nullable: true,
-        initial: CONFIG.ISV10 ? new EnchantmentExtension() : null
+        initial: null
       })
     };
   }
@@ -260,18 +245,9 @@ export class ItemSchema extends foundry.abstract.DataModel {
       updateData["system.weight"] = 0;
     }
 
-    if (CONFIG.ISV10) {
-      if (itemData.system.state != "inert") {
-        const updateExt = EnchantmentExtension.migrate(itemData);
-        foundry.utils.mergeObject(updateData, updateExt);
-      } else {
-        updateData["system.enchantments"] = new EnchantmentExtension();
-      }
-    } else {
-      if (itemData.system.enchantments != null) {
-        const updateExt = EnchantmentExtension.migrate(itemData);
-        foundry.utils.mergeObject(updateData, updateExt);
-      }
+    if (itemData.system.enchantments != null) {
+      const updateExt = EnchantmentExtension.migrate(itemData);
+      foundry.utils.mergeObject(updateData, updateExt);
     }
 
     return updateData;
@@ -292,10 +268,7 @@ export class ItemSchema extends foundry.abstract.DataModel {
     return data;
   }
 }
-export class ReputationSchema extends foundry.abstract.DataModel {
-  // TODO remove in V11
-  static _enableV10Validation = true;
-
+export class ReputationSchema extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     return {
       ...itemBase(),
@@ -361,10 +334,7 @@ export class ReputationSchema extends foundry.abstract.DataModel {
   }
 }
 
-export class PersonalityTraitSchema extends foundry.abstract.DataModel {
-  // TODO remove in V11
-  static _enableV10Validation = true;
-
+export class PersonalityTraitSchema extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     return {
       ...itemBase(),
@@ -454,10 +424,7 @@ export class PersonalityTraitSchema extends foundry.abstract.DataModel {
   }
 }
 
-export class SanctumSchema extends foundry.abstract.DataModel {
-  // TODO remove in V11
-  static _enableV10Validation = true;
-
+export class SanctumSchema extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     return {
       ...itemBase(),
@@ -496,6 +463,20 @@ export class SanctumSchema extends foundry.abstract.DataModel {
         choices: Object.keys(ARM5E.lab.usage)
       })
     };
+  }
+
+  prepareDerivedData() {
+    this.document = game.actors.get(this.sanctumId);
+
+    if (this.document) {
+      this.name = this.document.name;
+      this.owner = this.document.system.owner.value;
+      this.quality = this.document.system.generalQuality.total;
+      this.buildPoints = this.document.system.buildPoints;
+      this.linked = true;
+    } else {
+      this.linked = false;
+    }
   }
 
   // static migrateData(data) {
@@ -539,11 +520,10 @@ export class SanctumSchema extends foundry.abstract.DataModel {
   }
 }
 
+// TEMPLATE for Document types
+// export class MyTypeSchema extends foundry.abstract.TypeDataModel {
 // TEMPLATE
 export class MySchema extends foundry.abstract.DataModel {
-  // TODO remove in V11
-  static _enableV10Validation = true;
-
   static defineSchema() {
     return { ...itemBase() };
   }

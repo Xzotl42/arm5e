@@ -1,4 +1,4 @@
-import { ArM5ePCActor } from "../actor/actor.js";
+import { ArM5eActor } from "../actor/actor.js";
 import ArM5eActiveEffect from "../helpers/active-effects.js";
 import { computeLevel, spellFormLabel, spellTechniqueLabel } from "../helpers/magic.js";
 import { getTopicDescription } from "../item/item-book-sheet.js";
@@ -173,7 +173,7 @@ export class Scriptorium extends FormApplication {
     // If (app.object.reading.book.uuid != null) {
     //   fromUuidSync(app.object.reading.book.uuid).apps[app.appId] = undefined;
     // }
-    if (app.object.reading.reader.id != null) {
+    if (app.object?.reading?.reader.id != null) {
       let reader = game.actors.get(app.object.reading.reader.id);
       delete reader.apps[app.appId];
     }
@@ -198,9 +198,6 @@ export class Scriptorium extends FormApplication {
         const text = await Item.implementation.fromDropData(dropData);
         if (text.type == "laboratoryText") {
           await this._addLabText(text);
-          // } else if (text.type == "spell") {
-          //   text = effectToLabText(text);
-          //   await this._addLabText(text);
         }
       } else if (event.currentTarget.dataset.drop === "copy-book") {
         const book = await Item.implementation.fromDropData(dropData);
@@ -493,7 +490,7 @@ export class Scriptorium extends FormApplication {
       context.ui.canEditWriter = "readonly";
       context.ui.disabledWriter = "disabled";
       let writer = game.actors.get(context.writing.writer.id);
-      const activeEffects = CONFIG.ISV10 ? writer.effects : writer.appliedEffects;
+      const activeEffects = writer.appliedEffects;
       context.writing.writer.writingBonus = 0;
       const writingEffects = ArM5eActiveEffect.findAllActiveEffectsWithTypeAndSubtypeFiltered(
         activeEffects,
@@ -2060,7 +2057,7 @@ export class Scriptorium extends FormApplication {
         break;
       }
       case "art": {
-        if (!reader._isMagus()) {
+        if (!reader.isMagus()) {
           context.ui.reading.warning.push(game.i18n.localize("arm5e.scriptorium.msg.notMagus"));
           context.ui.reading.error = true;
         }
@@ -2087,7 +2084,7 @@ export class Scriptorium extends FormApplication {
         break;
       }
       case "mastery":
-        if (!reader._isMagus()) {
+        if (!reader.isMagus()) {
           context.ui.reading.warning.push(game.i18n.localize("arm5e.scriptorium.msg.notMagus"));
           context.ui.reading.error = true;
         }
@@ -2115,7 +2112,7 @@ export class Scriptorium extends FormApplication {
     const coeff = artStat.xpCoeff;
     const currentTopic = context.reading.book.system.topics[context.reading.book.system.topicIndex];
     let newXp = currentTopic.quality + reader.system.bonuses.activities.reading + artStat.xp;
-    let maxXp = ArM5ePCActor.getArtXp(currentTopic.level) / coeff;
+    let maxXp = ArM5eActor.getArtXp(currentTopic.level) / coeff;
     if (newXp > maxXp) {
       let newSource = maxXp - artStat.xp;
       currentTopic.theoriticalQuality = currentTopic.quality;
@@ -2139,7 +2136,7 @@ export class Scriptorium extends FormApplication {
     const coeff = ability.system.xpCoeff;
     const currentTopic = context.reading.book.system.topics[context.reading.book.system.topicIndex];
     let newXp = currentTopic.quality + reader.system.bonuses.activities.reading + ability.system.xp;
-    let maxXp = ArM5ePCActor.getAbilityXp(currentTopic.level) / coeff;
+    let maxXp = ArM5eActor.getAbilityXp(currentTopic.level) / coeff;
     if (newXp > maxXp) {
       let newSource = maxXp - ability.system.xp;
       currentTopic.theoriticalQuality = currentTopic.quality;

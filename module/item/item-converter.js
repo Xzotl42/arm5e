@@ -31,6 +31,7 @@ export function effectToLabText(spellData) {
     delete spellData.system.mastery;
     delete spellData.system.exp;
     delete spellData.system.bonus;
+    delete spellData.system.bonusDesc;
     delete spellData.system.applyFocus;
   } else if (spellData.type == "magicalEffect") {
     spellData.system.type = "spell";

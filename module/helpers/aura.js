@@ -112,17 +112,10 @@ export default class Aura {
   _nightModifier(realm) {
     realm = realm || this.dominantRealm;
 
-    if (CONFIG.ISV12) {
-      if (this.scene?.environment.darknessLevel == 1) {
-        // Probably not the most accurate check
-        return this.nightModifier[realm] || 0;
-      } else return 0;
-    } else {
-      if (this.scene?.darkness == 1) {
-        // Probably not the most accurate check
-        return this.nightModifier[realm] || 0;
-      } else return 0;
-    }
+    if (this.scene?.environment.darknessLevel == 1) {
+      // Probably not the most accurate check
+      return this.nightModifier[realm] || 0;
+    } else return 0;
   }
 
   /**

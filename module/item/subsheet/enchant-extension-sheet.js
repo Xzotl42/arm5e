@@ -423,10 +423,7 @@ export class ArM5eItemEnchantmentSheet {
     });
 
     html.find(".appraise").click(async () => {
-      if (
-        this.item.system.enchantments == null ||
-        (this.item.system.state === "inert" && CONFIG.ISV10)
-      ) {
+      if (this.item.system.enchantments == null || this.item.system.state === "inert") {
         const updateData = {};
         updateData["system.state"] = "appraised";
         updateData["system.enchantments"] = new EnchantmentExtension();
@@ -441,11 +438,7 @@ export class ArM5eItemEnchantmentSheet {
         if (confirm) {
           const updateData = {};
           updateData["system.state"] = "inert";
-          if (CONFIG.ISV10) {
-            updateData["system.enchantments"] = new EnchantmentExtension();
-          } else {
-            updateData["system.enchantments"] = null;
-          }
+          updateData["system.enchantments"] = null;
           await this.item.update(updateData);
         }
       }
@@ -455,11 +448,13 @@ export class ArM5eItemEnchantmentSheet {
       let effect = this.item.system.enchantments.effects[evt.currentTarget.dataset.index];
       let update = await PickRequisites(effect.system, evt.currentTarget.dataset.flavor);
 
-      if (update)
-        this.sheet.submit({
+      if (update) {
+        await this.sheet.submit({
           preventClose: true,
           updateData: { [`system.enchantments.effects.${evt.currentTarget.dataset.index}`]: update }
         });
+        this.sheet.render();
+      }
     });
 
     html.find(".aspect-change").change(async (e) => {
@@ -473,10 +468,11 @@ export class ArM5eItemEnchantmentSheet {
         this.item.system.enchantments.ASPECTS[aspect].effects[effect].bonus;
       aspects[Number(dataset.index)].effects =
         this.item.system.enchantments.ASPECTS[aspect].effects;
-      this.sheet.submit({
+      await this.sheet.submit({
         preventClose: true,
         updateData: { "system.enchantments.aspects": aspects }
       });
+      this.sheet.render();
     });
     html.find(".effect-change").change(async (e) => {
       const dataset = getDataset(e);
@@ -488,10 +484,11 @@ export class ArM5eItemEnchantmentSheet {
         this.item.system.enchantments.ASPECTS[aspect].effects[effect].bonus;
       aspects[Number(dataset.index)].effects =
         this.item.system.enchantments.ASPECTS[aspect].effects;
-      this.sheet.submit({
+      await this.sheet.submit({
         preventClose: true,
         updateData: { "system.enchantments.aspects": aspects }
       });
+      this.sheet.render();
     });
 
     html.find(".attribute-create").click(async (e) => {

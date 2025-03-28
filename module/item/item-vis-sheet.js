@@ -19,7 +19,7 @@ export class ArM5eItemVisSheet extends ArM5eItemSheetNoDesc {
   async getData() {
     const context = await super.getData();
 
-    context.displayStudyIcon = this.item.isOwned && this.item.actor._isMagus();
+    context.displayStudyIcon = this.item.isOwned && this.item.actor.isMagus();
     return context;
   }
 
@@ -35,7 +35,7 @@ export class ArM5eItemVisSheet extends ArM5eItemSheetNoDesc {
     const item = this.item;
     if (!this.item.isOwned) return;
     const actor = item.actor;
-    if (!actor._isMagus()) return;
+    if (!actor.isMagus()) return;
 
     const entry = await item.system.createDiaryEntryToStudyVis(actor);
     entry.sheet.render(true);

@@ -98,7 +98,7 @@
           </div>
         </li>
         {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
-        {{#each system.familiar.abilitiesFam as |ability key|}}
+        {{#each system.familiar.abilities as |ability key|}}
           <li class="item item-value flexrow" data-name="{{item.name}}" data-item-id="{{ability._id}}">
             <div class="flexrow flex-center">
               <span class="flexrow item-title rollable" data-roll="1d10+{{item.system.score}}"
@@ -125,7 +125,7 @@
           </div>
         </li>
         {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
-        {{#each system.familiar.powersFam as |power key|}}
+        {{#each system.familiar.powers as |power key|}}
           <li class="item item-value flexrow" data-name="{{item.name}}" data-item-id="{{power._id}}">
             <div class="flexrow flex-center">
               <span class="flexrow item-title" name="item.name">{{power.name}} </span>

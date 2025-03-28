@@ -4,10 +4,7 @@ import { convertToNumber, log } from "../tools.js";
 import { Scriptorium } from "../tools/scriptorium.js";
 import { itemBase } from "./commonSchemas.js";
 const fields = foundry.data.fields;
-export class InhabitantSchema extends foundry.abstract.DataModel {
-  // TODO remove in V11
-  static _enableV10Validation = true;
-
+export class InhabitantSchema extends foundry.abstract.TypeDataModel {
   //   "habitantMagi",
   //   "habitantCompanion",
   //   "habitantSpecialists",
@@ -112,6 +109,22 @@ export class InhabitantSchema extends foundry.abstract.DataModel {
       };
     }
     return res;
+  }
+
+  prepareDerivedData() {
+    this.document = game.actors.get(this.actorId);
+    if (this.document) {
+      this.name = this.document.name;
+      this.yearBorn = this.document.system.description.born.value;
+      this.category = this.document.isMagus()
+        ? "magi"
+        : this.document.isCompanion()
+        ? "companions"
+        : this.category;
+      this.linked = true;
+    } else {
+      this.linked = false;
+    }
   }
 
   static getIcon(item, newValue = null) {

@@ -206,7 +206,7 @@
     </div>
 
     <div class="flex-group-left padding12 backSection">
-      {{#unless system.pendingCrisis }}
+      {{#unless system.states.pendingCrisis }}
         <a class="schedule-aging clickable" title="Aging roll" data-year="{{datetime.year}}"
           data-season="{{datetime.season}}" style="font-size: 16pt;">
           <i class="icon-Icon_Aging2"></i>

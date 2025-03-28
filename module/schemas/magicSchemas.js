@@ -1,6 +1,7 @@
 /* eslint-disable jsdoc/require-returns-type */
-import { ArM5ePCActor } from "../actor/actor.js";
+import { ArM5eActor } from "../actor/actor.js";
 import { ARM5E } from "../config.js";
+import { IsMagicalEffect } from "../helpers/magic.js";
 import { convertToNumber, log } from "../tools.js";
 import {
   authorship,
@@ -222,10 +223,7 @@ const migrateMagicalItem = (itemData) => {
   return updateData;
 };
 
-export class BaseEffectSchema extends foundry.abstract.DataModel {
-  // TODO remove in V11
-  static _enableV10Validation = true;
-
+export class BaseEffectSchema extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     return {
       ...itemBase(),
@@ -249,10 +247,7 @@ export class BaseEffectSchema extends foundry.abstract.DataModel {
   }
 }
 
-export class MagicalEffectSchema extends foundry.abstract.DataModel {
-  // TODO remove in V11
-  static _enableV10Validation = true;
-
+export class MagicalEffectSchema extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     return {
       ...itemBase(),
@@ -263,7 +258,9 @@ export class MagicalEffectSchema extends foundry.abstract.DataModel {
       applyFocus: boolOption(false, true)
     };
   }
-
+  prepareOwnerData() {
+    this.castingTotal = this._computeCastingTotal(this.parent.actor, { char: "sta" });
+  }
   static migrate(itemData) {
     const updateData = migrateMagicalItem(itemData);
 
@@ -276,20 +273,146 @@ export class MagicalEffectSchema extends foundry.abstract.DataModel {
 
     return updateData;
   }
+
+  getTechniqueData() {
+    if (!IsMagicalEffect(this.parent)) return ["", 0, false];
+    const actorSystemData = this.parent.actor.system;
+    let label = CONFIG.ARM5E.magic.techniques[this.technique.value].label;
+    let tech = 1000;
+    let techReq = Object.entries(this["technique-req"]).filter((r) => r[1] === true);
+    let techDeficient = false;
+    if (techReq.length > 0) {
+      label += " (";
+      techReq.forEach((key) => {
+        if (actorSystemData.arts.techniques[key[0]].deficient) {
+          techDeficient = true;
+        }
+        tech = Math.min(tech, actorSystemData.arts.techniques[key[0]].finalScore);
+        label += CONFIG.ARM5E.magic.arts[key[0]].short + " ";
+      });
+      // remove last whitespace
+      label = label.substring(0, label.length - 1);
+      label += ")";
+      tech = Math.min(actorSystemData.arts.techniques[this.technique.value].finalScore, tech);
+    } else {
+      tech = actorSystemData.arts.techniques[this.technique.value].finalScore;
+    }
+    techDeficient =
+      techDeficient || actorSystemData.arts.techniques[this.technique.value].deficient;
+    return [label, tech, techDeficient];
+  }
+
+  getFormData() {
+    if (!IsMagicalEffect(this.parent)) return ["", 0, false];
+    const actorSystemData = this.parent.actor.system;
+    let label = CONFIG.ARM5E.magic.forms[this.form.value].label;
+    let form = 1000;
+    let formDeficient = false;
+    let formReq = Object.entries(this["form-req"]).filter((r) => r[1] === true);
+    if (formReq.length > 0) {
+      label += " (";
+      formReq.forEach((key) => {
+        if (actorSystemData.arts.forms[key[0]].deficient) {
+          formDeficient = true;
+        }
+        form = Math.min(form, actorSystemData.arts.forms[key[0]].finalScore);
+        label += CONFIG.ARM5E.magic.arts[key[0]].short + " ";
+      });
+      // remove last comma
+      label = label.substring(0, label.length - 1);
+      label += ")";
+      form = Math.min(actorSystemData.arts.forms[this.form.value].finalScore, form);
+    } else {
+      form = actorSystemData.arts.forms[this.form.value].finalScore;
+    }
+    formDeficient = formDeficient || actorSystemData.arts.forms[this.form.value].deficient;
+    return [label, form, formDeficient];
+  }
+
+  _computeCastingTotal(owner, options = {}) {
+    if (owner.type != "player" && owner.type != "npc") {
+      return 0;
+    }
+    let res = owner.system.characteristics[options.char].value;
+    let tech = 1000;
+    let form = 1000;
+    let deficiencyDivider = 1;
+    let deficientTech = false;
+    let deficientForm = false;
+    let techReq = Object.entries(this["technique-req"]).filter((r) => r[1] === true);
+    let formReq = Object.entries(this["form-req"]).filter((r) => r[1] === true);
+    if (owner.system.arts.techniques[this.technique.value].deficient) {
+      deficientTech = true;
+    }
+    if (owner.system.arts.forms[this.form.value].deficient) {
+      deficientForm = true;
+    }
+    if (techReq.length > 0) {
+      techReq.forEach((key) => {
+        if (owner.system.arts.techniques[key[0]].deficient) {
+          deficientTech = true;
+        }
+        tech = Math.min(tech, owner.system.arts.techniques[key[0]].finalScore);
+      });
+
+      tech = Math.min(owner.system.arts.techniques[this.technique.value].finalScore, tech);
+    } else {
+      tech = owner.system.arts.techniques[this.technique.value].finalScore;
+    }
+    if (formReq.length > 0) {
+      formReq.forEach((key) => {
+        if (owner.system.arts.forms[key[0]].deficient) {
+          deficientForm = true;
+        }
+        form = Math.min(tech, owner.system.arts.forms[key[0]].finalScore);
+      });
+      form = Math.min(owner.system.arts.forms[this.form.value].finalScore, form);
+    } else {
+      form = owner.system.arts.forms[this.form.value].finalScore;
+    }
+    if (this.applyFocus || options.focus) {
+      res += tech + form + Math.min(tech, form);
+    } else {
+      res += tech + form;
+    }
+    // Mastery
+    if (this.finalScore) {
+      res += this.finalScore;
+    }
+
+    if (this.ritual) {
+      res += owner.system.laboratory.abilitiesSelected.artesLib.value;
+      res += owner.system.laboratory.abilitiesSelected.philosophy.value;
+    }
+    if (deficientTech && deficientForm) {
+      deficiencyDivider = 4;
+    } else if (deficientTech || deficientForm) {
+      deficiencyDivider = 2;
+    }
+
+    // log(false, `Casting total: ${res}`)
+    return Math.round(res / deficiencyDivider);
+  }
 }
 
-export class SpellSchema extends foundry.abstract.DataModel {
-  // TODO remove in V11
-  static _enableV10Validation = true;
+export class SpellParamsSchema extends foundry.abstract.DataModel {
+  static defineSchema() {
+    return SpellSchema.defineSchema();
+  }
 
+  static migrateData(data) {
+    return SpellSchema.migrateData(data);
+  }
+
+  static migrate(itemData) {
+    return SpellSchema.migrate(itemData);
+  }
+}
+
+export class SpellSchema extends MagicalEffectSchema {
   static defineSchema() {
     return {
-      ...itemBase(),
-      ...TechniquesForms(),
-      ...SpellAttributes(),
-      baseLevel: baseLevel(),
-      baseEffectDescription: baseDescription(),
-      applyFocus: boolOption(false, true),
+      ...super.defineSchema(),
       ritual: boolOption(),
       bonus: ModifierField(),
       bonusDesc: baseDescription(),
@@ -305,20 +428,19 @@ export class SpellSchema extends foundry.abstract.DataModel {
    * @returns void
    */
   prepareOwnerData() {
-    if (!this.parent.isOwned) return;
-
     const owner = this.parent.actor;
 
     this.xpCoeff = owner.system.bonuses.arts.masteryXpCoeff;
     this.xpBonus = owner.system.bonuses.arts.masteryXpMod;
-    this.derivedScore = ArM5ePCActor.getAbilityScoreFromXp(
+    this.derivedScore = ArM5eActor.getAbilityScoreFromXp(
       Math.round((this.xp + this.xpBonus) * this.xpCoeff)
     );
 
-    this.xpNextLevel = Math.round(ArM5ePCActor.getAbilityXp(this.derivedScore + 1) / this.xpCoeff);
+    this.xpNextLevel = Math.round(ArM5eActor.getAbilityXp(this.derivedScore + 1) / this.xpCoeff);
     this.remainingXp = this.xp + this.xpBonus;
 
     this.finalScore = this.derivedScore;
+    this.castingTotal = this._computeCastingTotal(this.parent.actor, { char: "sta" });
   }
 
   static getIcon(item, newValue = null) {
@@ -377,6 +499,27 @@ export class SpellSchema extends foundry.abstract.DataModel {
     }
   }
 
+  static fatigueCost(actor, castingTotal, difficulty, ritual = false) {
+    const delta = castingTotal - difficulty;
+    if (ritual) {
+      if (delta < 0) {
+        return Math.max(
+          1 +
+            Math.ceil((levelOfSpell - totalOfSpell) / 5) -
+            actor.system.bonuses.arts.ritualFatigueCancelled,
+          0
+        );
+      } else {
+        return Math.max(1 - actorCaster.system.bonuses.arts.ritualFatigueCancelled, 0);
+      }
+    } else {
+      if (delta < -actor.system.bonuses.arts.spellFatigueThreshold) {
+        return 1;
+      }
+    }
+    return 0;
+  }
+
   static migrateData(data) {
     return data;
   }
@@ -413,11 +556,17 @@ export class SpellSchema extends foundry.abstract.DataModel {
     return updateData;
   }
 }
+export class LabTextTopicSchema extends foundry.abstract.DataModel {
+  static defineSchema() {
+    return LabTextSchema.defineSchema();
+  }
 
-export class LabTextSchema extends foundry.abstract.DataModel {
-  // TODO remove in V11
-  static _enableV10Validation = true;
+  static migrate(itemData) {
+    return LabTextSchema.migrate(itemData);
+  }
+}
 
+export class LabTextSchema extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     return {
       ...itemBase(),

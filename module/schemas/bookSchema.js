@@ -6,16 +6,12 @@ import {
   hermeticForm,
   hermeticTechnique,
   itemBase,
-  NullableEmbeddedDataField,
   authorship
 } from "./commonSchemas.js";
 import { EnchantmentExtension, ItemState } from "./enchantmentSchema.js";
-import { LabTextSchema } from "./magicSchemas.js";
+import { LabTextTopicSchema } from "./magicSchemas.js";
 const fields = foundry.data.fields;
-export class BookSchema extends foundry.abstract.DataModel {
-  // TODO remove in V11
-  static _enableV10Validation = true;
-
+export class BookSchema extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     return {
       ...itemBase(),
@@ -61,7 +57,7 @@ export class BookSchema extends foundry.abstract.DataModel {
           spellName: new fields.StringField({ required: false, nullable: true, initial: null }), // TODO merge in "name"
           spellTech: hermeticTechnique(),
           spellForm: hermeticForm(),
-          labtext: new NullableEmbeddedDataField(LabTextSchema, {
+          labtext: new fields.EmbeddedDataField(LabTextTopicSchema, {
             required: false,
             nullable: true,
             initial: null
@@ -97,9 +93,9 @@ export class BookSchema extends foundry.abstract.DataModel {
         }
       ),
       state: ItemState(),
-      enchantments: new NullableEmbeddedDataField(EnchantmentExtension, {
+      enchantments: new fields.EmbeddedDataField(EnchantmentExtension, {
         nullable: true,
-        initial: CONFIG.ISV10 ? new EnchantmentExtension() : null
+        initial: null
       }),
       cost: CostField("priceless"),
       quantity: new fields.NumberField({
@@ -147,7 +143,7 @@ export class BookSchema extends foundry.abstract.DataModel {
     data.topics = data.topics instanceof Array ? data.topics : Object.values(data.topics);
     for (const topic of data.topics) {
       if (topic.category === "labText") {
-        topic.labtext = LabTextSchema.sanitizeData(topic.labtext);
+        topic.labtext = LabTextTopicSchema.sanitizeData(topic.labtext);
       }
     }
     if (data.enchantments) {
@@ -271,7 +267,7 @@ export class BookSchema extends foundry.abstract.DataModel {
       system: this.toObject()
     };
     formData.reading.book.system.topicIndex = Number(dataset.index);
-    if (item.isOwned && item.actor._isCharacter()) {
+    if (item.isOwned && item.actor.isCharacter()) {
       formData.reading.reader.id = item.actor.id;
     }
 
@@ -288,7 +284,7 @@ export class BookSchema extends foundry.abstract.DataModel {
     }
 
     let formData = new ScriptoriumObject();
-    if (item.isOwned && item.actor._isCharacter()) {
+    if (item.isOwned && item.actor.isCharacter()) {
       formData.copying.scribe.id = item.actor.id;
       formData.copying.scribe.name = item.actor.name;
     }

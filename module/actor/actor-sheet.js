@@ -59,6 +59,7 @@ import { Sanatorium } from "../tools/sanatorium.js";
 import { MedicalHistory } from "../tools/med-history.js";
 import { ArM5eActorProfiles } from "./subsheets/actor-profiles.js";
 import { ArM5eMagicSystem } from "./subsheets/magic-system.js";
+import { getRefCompendium } from "../tools/compendia.js";
 
 export class ArM5eActorSheet extends ActorSheet {
   constructor(object, options) {
@@ -215,7 +216,7 @@ export class ArM5eActorSheet extends ActorSheet {
     const actorData = context.actor;
     context.ui = this.getUserCache();
 
-    if (context.actor.system.creationMode) {
+    if (context.actor.system.states?.creationMode) {
       context.ui.creationMode = { edit: "" };
       context.ui.storyMode = { edit: "readonly" };
     } else {
@@ -241,7 +242,7 @@ export class ArM5eActorSheet extends ActorSheet {
       edit: context.isGM ? "" : "readonly"
     };
 
-    if (this.actor._isCharacter()) {
+    if (this.actor.isCharacter()) {
       context.characList = Object.keys(context.system.characCfg);
     }
 
@@ -249,8 +250,6 @@ export class ArM5eActorSheet extends ActorSheet {
       context.enrichedDescription = await TextEditor.enrichHTML(this.actor.system.description, {
         // Whether to show secret blocks in the finished html
         secrets: this.document.isOwner,
-        // Necessary in v11, can be removed in v12
-        async: true,
         // Data to fill in for inline rolls
         rollData: context.rollData,
         // Relative UUID resolution
@@ -345,7 +344,7 @@ export class ArM5eActorSheet extends ActorSheet {
       }
     }
 
-    context.system.isCharacter = this.actor._isCharacter();
+    context.system.isCharacter = this.actor.isCharacter();
     if (context.system.isCharacter) {
       if (context.system.charType?.value === "entity") {
         let cnt = Object.entries(context.system.realms).filter((e) => e[1].aligned == true);
@@ -370,7 +369,7 @@ export class ArM5eActorSheet extends ActorSheet {
         };
       }
       context.isDead = this.actor.system.wounds.dead.length > 0;
-      context.system.isMagus = this.actor._isMagus();
+      context.system.isMagus = this.actor.isMagus();
       // if (context.system.covenant) {
       //   if (context.system.covenant.linked) {
       //     this.actor.apps[context.system.covenant.document.sheet.appId] =
@@ -665,7 +664,7 @@ export class ArM5eActorSheet extends ActorSheet {
 
       context.combat = computeCombatStats(this.actor);
 
-      if (this.actor._isMagus()) {
+      if (this.actor.isMagus()) {
         if (!this.twilight) {
           this.twilight = new TwilightEpisode(this.actor);
         }
@@ -786,7 +785,7 @@ export class ArM5eActorSheet extends ActorSheet {
 
     // Prepare active effects
     context.effects = ArM5eActiveEffect.prepareActiveEffectCategories(
-      CONFIG.ISV10 ? this.actor.effects : Array.from(this.actor.allApplicableEffects())
+      Array.from(this.actor.allApplicableEffects())
     );
     this._prepareCharacterItems(context);
 
@@ -1226,7 +1225,7 @@ export class ArM5eActorSheet extends ActorSheet {
       const dataset = getDataset(ev);
       const val = ev.target.value;
       updateUserCache(this.actor.id, dataset.category, dataset.list, "minYearFilter", val);
-      this.submit({ preventClose: true });
+      await this.submit({ preventClose: true });
       this.render();
     });
 
@@ -1235,7 +1234,7 @@ export class ArM5eActorSheet extends ActorSheet {
       const dataset = getDataset(ev);
       const val = ev.target.value;
       updateUserCache(this.actor.id, dataset.category, dataset.list, "maxYearFilter", val);
-      this.submit({ preventClose: true });
+      await this.submit({ preventClose: true });
       this.render();
     });
 
@@ -1256,7 +1255,7 @@ export class ArM5eActorSheet extends ActorSheet {
     html.find(".vis-study").click(async (ev) => {
       const li = $(ev.currentTarget).parents(".item");
       const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
-      if (!this.actor._isMagus()) return;
+      if (!this.actor.isMagus()) return;
       const entry = await item.system.createDiaryEntryToStudyVis(this.actor);
       entry.sheet.render(true);
     });
@@ -1264,7 +1263,7 @@ export class ArM5eActorSheet extends ActorSheet {
     html.find(".study-labtext").click(async (ev) => {
       const li = $(ev.currentTarget).parents(".item");
       const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
-      if (!this.actor._isMagus()) return;
+      if (!this.actor.isMagus()) return;
       await item._studyLabText(item, ev);
     });
 
@@ -1290,12 +1289,7 @@ export class ArM5eActorSheet extends ActorSheet {
 
     html.find(".effect-edit").click(async (ev) => {
       const li = $(ev.currentTarget).parents(".item");
-      let effect;
-      if (CONFIG.ISV10) {
-        effect = this.actor.effects.get(li.data("effectId"));
-      } else {
-        effect = await fromUuid(li.data("effectId"));
-      }
+      let effect = await fromUuid(li.data("effectId"));
       // const item = this.actor.items.get(li.data("itemId"))
       effect.sheet.render(true, { focus: true });
     });
@@ -1411,8 +1405,8 @@ export class ArM5eActorSheet extends ActorSheet {
     html.find(".soak-damage").click(this._onSoakDamage.bind(this));
     html.find(".damage").click(this._onCalculateDamage.bind(this));
     html.find(".power-use").click(this._onUsePower.bind(this));
-    html.find(".addFatigue").click(async (event) => this.actor._changeFatigueLevel(1));
-    html.find(".removeFatigue").click(async (event) => this.actor._changeFatigueLevel(-1));
+    html.find(".addFatigue").click(async (event) => this.actor.loseFatigueLevel(1));
+    html.find(".removeFatigue").click(async (event) => this.actor.recoverFatigueLevel(1));
     html.find(".add-wound").click(async (event) => {
       const dataset = getDataset(event);
       await this.actor.changeWound(1, dataset.type);
@@ -1438,6 +1432,10 @@ export class ArM5eActorSheet extends ActorSheet {
     html.find(".plan-reading").click(async (ev) => this._readBook(ev));
 
     html.find(".indexkey-edit").change((event) => this._slugifyIndexKey(event));
+
+    html.find(".clear-confidencePrompt").click(async (event) => {
+      await this.actor.clearConfidencePrompt();
+    });
   }
 
   async _slugifyIndexKey(event) {
@@ -1598,10 +1596,24 @@ export class ArM5eActorSheet extends ActorSheet {
   async _onItemAdd(event) {
     const dataset = getDataset(event);
     if (event.stopPropagation) event.stopPropagation();
-    const moduleRef = game.settings.get(ARM5E.SYSTEM_ID, "compendiaRef");
-    const collection = game.packs.get(`${moduleRef}.${dataset.compendium}`);
+    const collection = await getRefCompendium(dataset.compendium);
+    if (!collection) {
+      return await _onItemCreate(event);
+    }
     new Compendium({ collection }).render(true);
     return;
+  }
+
+  convertIfNeeded(data) {
+    if (this.needConversion(data.type)) {
+      return this.convert(data);
+    } else {
+      return data;
+    }
+  }
+
+  convert(data) {
+    return data;
   }
 
   /**
@@ -1620,20 +1632,22 @@ export class ArM5eActorSheet extends ActorSheet {
 
   async _itemCreate(dataset) {
     // Get the type of item to create.
-    const type = dataset.type;
+    let data = this.convertIfNeeded(dataset);
+    const type = data.type;
     // Initialize a default name.
     let name;
-    if (dataset.name) {
-      name = dataset.name;
+    if (data.name) {
+      name = data.name;
     } else {
       name = `New ${type.capitalize()}`;
     }
+
     // Prepare the item object.
     const itemData = [
       {
         name: name,
         type: type,
-        system: foundry.utils.duplicate(dataset)
+        system: foundry.utils.duplicate(data)
       }
     ];
     // Remove the type from the dataset since it's in the itemData.type prop.
@@ -1688,7 +1702,7 @@ export class ArM5eActorSheet extends ActorSheet {
       }
     }
 
-    if (actor._isMagus()) {
+    if (actor.isMagus()) {
       extraData.isMagus = true;
       extraData.formRes = {};
       for (let [key, form] of Object.entries(actor.system.arts.forms)) {
@@ -1820,9 +1834,16 @@ export class ArM5eActorSheet extends ActorSheet {
       });
       return false;
     }
+
+    if (this.actor.system.states.confidencePrompt) {
+      ui.notifications.info(game.i18n.localize("arm5e.notification.confidencePromptPending"), {
+        permanent: true
+      });
+      return false;
+    }
     if ((getRollTypeProperties(dataset.roll).MODE & ROLL_MODES.UNCONSCIOUS) == 0) {
       // if (dataset.roll != "char" && dataset.roll != "aging" && dataset.roll != "crisis") {
-      if (this.actor.system.pendingCrisis) {
+      if (this.actor.system.states.pendingCrisis) {
         ui.notifications.info(game.i18n.localize("arm5e.notification.pendingCrisis"), {
           permanent: true
         });
@@ -1850,7 +1871,7 @@ export class ArM5eActorSheet extends ActorSheet {
           "twilight_understanding"
         ].includes(dataset.roll)
       ) {
-        if (this.actor.system.twilight.stage > 1) {
+        if (this.actor.system.twilight?.stage > 1) {
           ui.notifications.info(game.i18n.localize("arm5e.notification.pendingTwilight"), {
             permanent: true
           });
@@ -1929,6 +1950,7 @@ export class ArM5eActorSheet extends ActorSheet {
         return "Neutral";
     }
   }
+
   async _handleTransfer(item) {
     const html = await TextEditor.enrichHTML(
       `<div class="flex-center"><p>${game.i18n.format("arm5e.dialog.confirmTransfer-question", {
@@ -2082,7 +2104,7 @@ export class ArM5eActorSheet extends ActorSheet {
       item = resetOwnerFields(item);
     }
 
-    return super._onDropItemCreate(filtered);
+    return await super._onDropItemCreate(filtered);
   }
 
   /**
@@ -2153,8 +2175,6 @@ export class ArM5eActorSheet extends ActorSheet {
       context.enrichedBiography = await TextEditor.enrichHTML(this.actor.system.biography, {
         // Whether to show secret blocks in the finished html
         secrets: this.document.isOwner,
-        // Necessary in v11, can be removed in v12
-        async: true,
         // Data to fill in for inline rolls
         rollData: context.rollData,
         // Relative UUID resolution
@@ -2165,8 +2185,6 @@ export class ArM5eActorSheet extends ActorSheet {
       context.enrichedSigil = await TextEditor.enrichHTML(this.actor.system.sigil.value, {
         // Whether to show secret blocks in the finished html
         secrets: this.document.isOwner,
-        // Necessary in v11, can be removed in v12
-        async: true,
         // Data to fill in for inline rolls
         rollData: context.rollData,
         // Relative UUID resolution
@@ -2178,8 +2196,6 @@ export class ArM5eActorSheet extends ActorSheet {
       context.enrichedWarping = await TextEditor.enrichHTML(this.actor.system.warping.effects, {
         // Whether to show secret blocks in the finished html
         secrets: this.document.isOwner,
-        // Necessary in v11, can be removed in v12
-        async: true,
         // Data to fill in for inline rolls
         rollData: context.rollData,
         // Relative UUID resolution
@@ -2193,8 +2209,6 @@ export class ArM5eActorSheet extends ActorSheet {
         {
           // Whether to show secret blocks in the finished html
           secrets: this.document.isOwner,
-          // Necessary in v11, can be removed in v12
-          async: true,
           // Data to fill in for inline rolls
           rollData: context.rollData,
           // Relative UUID resolution
@@ -2208,8 +2222,6 @@ export class ArM5eActorSheet extends ActorSheet {
         {
           // Whether to show secret blocks in the finished html
           secrets: this.document.isOwner,
-          // Necessary in v11, can be removed in v12
-          async: true,
           // Data to fill in for inline rolls
           rollData: context.rollData,
           // Relative UUID resolution
@@ -2240,8 +2252,6 @@ export async function setWounds(soakData, actor) {
   }
   // here toggle dead status if applicable
 
-  const title =
-    '<h2 class="ars-chat-title chat-icon">' + game.i18n.localize("arm5e.sheet.soak") + "</h2>";
   const messageDamage = `${game.i18n.localize("arm5e.sheet.damage")} (${soakData.damage})`;
   const messageStamina = `${game.i18n.localize("arm5e.sheet.stamina")} (${soakData.stamina})`;
   let messageBonus = "";
@@ -2273,8 +2283,14 @@ export async function setWounds(soakData, actor) {
 
   const details = ` ${messageDamage}<br/> ${messageStamina}<br/> ${messageProt}<br/> ${messageBonus}${messageModifier}<b>${messageTotal}</b>`;
   ChatMessage.create({
+    type: "combat",
+    system: {
+      label: game.i18n.localize("arm5e.sheet.soak"),
+      roll: {
+        details: putInFoldableLinkWithAnimation("arm5e.sheet.details", details)
+      }
+    },
     content: `<h4 class="dice-total">${messageWound}</h4>`,
-    flavor: title + putInFoldableLinkWithAnimation("arm5e.sheet.details", details),
     speaker: ChatMessage.getSpeaker({
       actor
     })

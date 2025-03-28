@@ -1,6 +1,20 @@
 import { ARM5E } from "../config.js";
 import { log } from "../tools.js";
 
+// get the corresponding collection from the reference module, based on configuration.
+export async function getRefCompendium(collectionName) {
+  const moduleRef = game.settings.get(ARM5E.SYSTEM_ID, "compendiaRef");
+  let collection = game.packs.get(`${moduleRef}.${collectionName}`);
+  if (collection) {
+    return collection;
+  }
+  collection = game.packs.get(`${"arm5e-compendia"}.${collectionName}`);
+  if (!collection) {
+    console.log(`Unknown compendium ${dataset.compendium}.`);
+  }
+  return collection;
+}
+
 /**
  *
  * @param key

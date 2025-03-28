@@ -138,7 +138,7 @@ export const DateField = (year = 1220, season = "spring") =>
 export const basicTextField = () =>
   new fields.StringField({ required: false, blank: true, initial: "" });
 
-export const basicIntegerField = (initial = 0, min = 0) =>
+export const basicIntegerField = (initial = 0, min = -99999) =>
   new fields.NumberField({
     required: false,
     nullable: false,

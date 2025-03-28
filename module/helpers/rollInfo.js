@@ -1,6 +1,6 @@
 import { ARM5E } from "../config.js";
 import ArM5eActiveEffect from "./active-effects.js";
-import { ArM5ePCActor } from "../actor/actor.js";
+import { ArM5eActor } from "../actor/actor.js";
 import { log } from "../tools.js";
 import { getRollTypeProperties, ROLL_MODIFIERS, ROLL_PROPERTIES } from "./rollWindow.js";
 import Aura from "./aura.js";
@@ -64,6 +64,7 @@ export class ArM5eRollInfo {
       case ROLL_PROPERTIES.DEFENSE.VAL:
         if (this.img === "") this.img = actorSystemData.combat.img;
         this.itemId = actorSystemData.combat.itemId;
+        this.itemUuid = actorSystemData.combat.itemUuid;
         this.name = actorSystemData.combat.name;
 
         break;
@@ -79,6 +80,7 @@ export class ArM5eRollInfo {
         const ab = this._actor.items.get(dataset.ability);
         if (this.img === "") this.img = ab.img;
         this.itemId = ab.id;
+        this.itemUuid = ab.uuid;
         this.name = ab.name;
         this.label = this.name;
         this.ability.id = dataset.ability;
@@ -106,6 +108,8 @@ export class ArM5eRollInfo {
           this.item.form = effect.system.form.value;
           this.item.charged = item.system.enchantments.charged;
           this.item.id = dataset.id;
+          this.itemId = effect._id;
+          this.itemUuid = effect.uuid;
         }
         break;
 
@@ -113,7 +117,7 @@ export class ArM5eRollInfo {
         if (dataset.id) {
           let power = this._actor.items.get(dataset.id);
           if (power.system.form === "inherit") {
-            if (this._actor._hasMight()) {
+            if (this._actor.hasMight()) {
               this.power.form = this._actor.system.might.form;
             } else {
               this.power.form = "an";
@@ -125,6 +129,7 @@ export class ArM5eRollInfo {
           this.label += ` (${ARM5E.magic.arts[this.power.form].short})`;
           if (this.img === "") this.img = power.img;
           this.itemId = power.id;
+          this.itemUuid = power.uuid;
           this.power.cost = Number(power.system.cost);
           this.power.penetrationPenalty = this.power.cost * 5;
         }
@@ -138,6 +143,7 @@ export class ArM5eRollInfo {
             this.label = effect.name;
           }
           this.itemId = effect.id;
+          this.itemUuid = effect.uuid;
           if (effect.system.characteristic) {
             this.characteristic = effect.system.characteristic;
             this.characteristicLabel =
@@ -192,12 +198,13 @@ export class ArM5eRollInfo {
           this.label += ` (${spell.system.level})`;
           if (this.img === "") this.img = spell.img;
           this.itemId = spell.id;
-          let techData = spell._getTechniqueData(this._actor.system);
+          this.itemUuid = spell.uuid;
+          let techData = spell.system.getTechniqueData();
           this.magic.technique.value = spell.system.technique.value;
           this.magic.technique.label = techData[0];
           this.magic.technique.score = techData[1];
           this.magic.technique.deficiency = techData[2];
-          let formData = spell._getFormData(this._actor.system);
+          let formData = spell.system.getFormData();
           this.magic.form.label = formData[0];
           this.magic.form.score = formData[1];
           this.magic.form.deficiency = formData[2];
@@ -325,7 +332,7 @@ export class ArM5eRollInfo {
         let livingMod = 0;
         if (actorSystemData.covenant?.linked) {
           let cov = actorSystemData.covenant.document;
-          if (ArM5ePCActor.isMagus(this._actor.type, actorSystemData.charType.value)) {
+          if (ArM5eActor.IsMagus(this._actor.type, actorSystemData.charType.value)) {
             livingMod = cov.system.modifiersLife.magi ?? 0;
           } else {
             livingMod = cov.system.modifiersLife.mundane ?? 0;
@@ -339,7 +346,7 @@ export class ArM5eRollInfo {
           3,
           "-"
         );
-        if (actorSystemData.familiar && actorSystemData.familiar.cordFam.bronze > 0) {
+        if (actorSystemData.familiar && actorSystemData.familiar.cordFam?.bronze > 0) {
           this.setGenericField(
             game.i18n.localize("arm5e.aging.roll.bronze"),
             actorSystemData.familiar.cordFam.bronze,
@@ -464,7 +471,7 @@ export class ArM5eRollInfo {
     } else if ("spell" == type) {
       type = "formulaicMagic";
     }
-    const activeEffects = CONFIG.ISV10 ? this._actor.effects : this._actor.appliedEffects;
+    const activeEffects = this._actor.appliedEffects;
     let activeEffectsByType = ArM5eActiveEffect.findAllActiveEffectsWithTypeAndSubtypeFiltered(
       activeEffects,
       "optionalRollBonus",
@@ -478,8 +485,7 @@ export class ArM5eRollInfo {
       for (let ch of effect.changes) {
         total += Number(ch.value);
       }
-      const name = CONFIG.ISV10 ? effect.label : effect.name;
-      res.push({ name: name, key: effect.changes[0].key, bonus: total, active: false });
+      res.push({ name: effect.name, key: effect.changes[0].key, bonus: total, active: false });
     }
     return res;
   }
@@ -649,6 +655,7 @@ export class ArM5eRollInfo {
     // Added to chat message as an icon for the roll
     this.img = "";
     this.itemId = "";
+    this.itemUuid = "";
     // Roll window title
     this.name = "";
     this.flavor = "";
@@ -694,14 +701,14 @@ export class ArM5eRollInfo {
   getSpellcastingModifiers() {
     this.bonuses += this._actor.system.bonuses.arts.spellcasting;
     // Log(false, `Bonus spellcasting: ${this._actor.system.bonuses.arts.spellcasting}`);
-    const activeEffects = CONFIG.ISV10 ? this._actor.effects : this._actor.appliedEffects;
+    const activeEffects = this._actor.appliedEffects;
     let activeEffectsByType = ArM5eActiveEffect.findAllActiveEffectsWithType(
       activeEffects,
       "spellcasting"
     );
     this.activeEffects.concat(
       activeEffectsByType.map((activeEffect) => {
-        const label = CONFIG.ISV10 ? activeEffect.label : activeEffect.name;
+        const label = activeEffect.name;
         let value = 0;
 
         activeEffect.changes

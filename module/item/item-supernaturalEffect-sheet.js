@@ -262,6 +262,7 @@ export class ArM5eSupernaturalEffectSheet extends ArM5eItemMagicSheet {
       preventClose: true,
       updateData: updateData
     });
+    this.render();
   }
 
   // TODO
@@ -282,5 +283,6 @@ export class ArM5eSupernaturalEffectSheet extends ArM5eItemMagicSheet {
       preventClose: true,
       updateData: updateData
     });
+    this.render();
   }
 }

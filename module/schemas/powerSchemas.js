@@ -1,15 +1,12 @@
 /* eslint-disable jsdoc/require-returns-type */
-import { ArM5ePCActor } from "../actor/actor.js";
+import { ArM5eActor } from "../actor/actor.js";
 import { ARM5E } from "../config.js";
 import { convertToNumber, log } from "../tools.js";
 import { hermeticForm, itemBase, RealmField } from "./commonSchemas.js";
 
 const fields = foundry.data.fields;
 
-export class PowerSchema extends foundry.abstract.DataModel {
-  // TODO remove in V11
-  static _enableV10Validation = true;
-
+export class PowerSchema extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     return {
       ...itemBase(),
@@ -46,16 +43,16 @@ export class PowerSchema extends foundry.abstract.DataModel {
   }
 
   static migrateData(data) {
-    if (isNaN(data.cost)) {
+    if (data.cost !== undefined && isNaN(data.cost)) {
       data.description += `<h3>Migration note:</h3><p>Cost is now strictly a number, previous value:"${data.cost}", new value: 1</p>`;
       data.cost = 1;
     }
-    if (isNaN(data.init)) {
+    if (data.init !== undefined && isNaN(data.init)) {
       data.description += `<h3>Migration note:</h3><p>Init is now strictly a number, previous value:"${data.init}", new value: 0`;
       data.init = 0;
     }
 
-    if (isNaN(data.penetration)) {
+    if (data.penetration !== undefined && isNaN(data.penetration)) {
       data.description += `<h3>Migration note:</h3><p>penetration is now strictly a number, previous value:"${data.penetration}", new value: 0`;
       data.penetration = 0;
     }

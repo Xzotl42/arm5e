@@ -10,15 +10,12 @@ import {
   SeasonField,
   XpField
 } from "./commonSchemas.js";
-import { SpellSchema, baseLevel } from "./magicSchemas.js";
+import { SpellParamsSchema, baseLevel } from "./magicSchemas.js";
 import { ItemSchema } from "./minorItemsSchemas.js";
 import { ArmorSchema, WeaponSchema } from "./weaponArmorSchema.js";
 const fields = foundry.data.fields;
 
-export class DiaryEntrySchema extends foundry.abstract.DataModel {
-  // TODO remove in V11
-  static _enableV10Validation = true;
-
+export class DiaryEntrySchema extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     return {
       description: new fields.StringField({ required: false, blank: true, initial: "" }),
@@ -255,7 +252,7 @@ export class DiaryEntrySchema extends foundry.abstract.DataModel {
                 initial: ""
               }),
               level: baseLevel(),
-              spellData: new fields.EmbeddedDataField(SpellSchema)
+              spellData: new fields.EmbeddedDataField(SpellParamsSchema)
             }),
             { required: false, initial: [] }
           )
@@ -267,6 +264,25 @@ export class DiaryEntrySchema extends foundry.abstract.DataModel {
         }
       )
     };
+  }
+
+  prepareData() {
+    if (!this.done) {
+      for (let a of this.progress.abilities) {
+        if (a.key == "") {
+          let ability = this.parent.actor.items.get(a.id);
+          if (ability) {
+            a.key = ability.system.key;
+            a.option = ability.system.option;
+          } else {
+            log(
+              false,
+              `${this.parent.actor.name} ability doesn't exist : ${a.name} for ${this.parent.name}`
+            );
+          }
+        }
+      }
+    }
   }
 
   static buildSchedule(duration, year, season, date = "", applied = false) {

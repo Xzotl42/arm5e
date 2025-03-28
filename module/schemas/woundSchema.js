@@ -4,10 +4,7 @@ import { getShiftedDate, seasonOrder, seasonsDelta } from "../tools/time.js";
 import { baseDescription, itemBase, NullableSchemaField, SeasonField } from "./commonSchemas.js";
 const fields = foundry.data.fields;
 
-export class WoundSchema extends foundry.abstract.DataModel {
-  // TODO remove in V11
-  static _enableV10Validation = true;
-
+export class WoundSchema extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     return {
       ...itemBase(),

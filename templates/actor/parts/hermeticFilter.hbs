@@ -8,7 +8,6 @@
               "arm5e.sheet.technique"
             }}</label>
           <select
-            id="techniqueFilter"
             name="techniqueFilter"
             data-type="String"
             style="flex: 0 0 100px"
@@ -20,7 +19,7 @@
               {{selectOptions
                 @root.config.magic.techniques
                 selected=techniqueFilter
-                labelAttr="label2"
+                labelAttr="label"
                 blank=""
               }}
             {{/with}}

@@ -3,10 +3,7 @@ import { ABILITIES_DEFAULT_ICONS } from "../constants/ui.js";
 import { log } from "../tools.js";
 import { boolOption, itemBase, XpField } from "./commonSchemas.js";
 const fields = foundry.data.fields;
-export class ArtSchema extends foundry.abstract.DataModel {
-  // TODO remove in V11
-  static _enableV10Validation = true;
-
+export class ArtSchema extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     return {
       ...itemBase(),

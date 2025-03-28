@@ -1,10 +1,51 @@
-# Release notes
+## 2.4.0.0, Radislav am Polanach
 
-## 2.3.2.18, Quendalon, Fae only
+### Compatibility change
+
+- Foundry VTT V12+ only
+
+### Features & changes
+
+- [Technical] Switch to V12
+  - Use of TypeDataModel instead of DataModel for Document types
+  - Removed of V10 only code.
+  - Removed V12 deprecation warnings
+- [Technical] Code clean-up, factorization, encapsulation
+  - Actor data preparation clean-up => prepareBaseData and prepareDerivedData in Datamodel
+  - Item data preparation clean-up => prepareBaseData and prepareDerivedData in Datamodel
+  - Most setters have been split in 2 parts for easy macro operations:
+    - \_setProperty: list data fields to update or create.
+    - async setProperty: calling the above and update the document accordingly
+- [Technical] ChatMessage datamodel with sub-types for rolls, combat, spells
+  - Easier update, allowing recreation from scratch.
+  - Improved confidence spending
+  - New magic roll chat messages
+- [Technical] removal of some duplicate unused id attributes
+- Dropping a magical effect on a lab will switch the activity to spell invention.
+- Dropping a book's lab text topic from an Actor library on to a lab will now work
+- Gift type of magi inhabitants is set automatically if they have Gentle Gift or Blatant Gift.
 
 ### Bug fixes
 
+- Power form and cost change is now possible on unlinked token
 - Empty ability option will be ignored and restored to original value instead of "OptionName".
+- Fix error on botch when casting spells
+- Adding boons and hooks opens the correct compendium
+- Adding lab virtues and flaws opens the correct compendium
+- Added back the possibility to create new virtues and flaws for some Actor types with an unfurnished compendium.
+- Qualities and inferiorities were not displayed properly for entities
+- Fix problem with ability rolls for actors without twilight
+- Submit was not awaited for in some sheets (mostly lab sheet), this would cause a reset to previous value after edit on heavy loaded systems or higher latency games (Forge,...)
+- [technical] With datamodel inheriting from TypeDataModel instead of DataModel, the type field was ignored at creation. Adding a toObject() fixes the problem. (eg: conversion of spell into labText)
+- Failed casting message was not displayed properly for Mythic blood characters
+- Fixed error with group schedule activity creation in the Astrolabium
+- Clicking on the dice icon of a spell sheet no longer tries to cast it spontaneously
+- Removed some noisy errors when closing some applications
+- Fixed techniques filter
+- Event and actions loyalty modifier can now go negative
+- Mundane scholar profile is working again.
+- Rolling a magic effect from its sheet no longer consider the effect a spell.
+- [Dice so nice] The system will let the animation finish before anouncing a die explosion or asking the number of botch dice.
 
 ## 2.3.2.17, Quendalon, back from the wood with weird eyes
 

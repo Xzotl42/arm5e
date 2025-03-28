@@ -1,6 +1,6 @@
 // Import Modules
 import { ARM5E, enrichAbilities, localizeAbilities, localizeCategories } from "./config.js";
-import { ArM5ePCActor } from "./actor/actor.js";
+import { ArM5eActor } from "./actor/actor.js";
 import { ArM5ePCActorSheet } from "./actor/actor-pc-sheet.js";
 import { ArM5eBeastActorSheet } from "./actor/actor-beast-sheet.js";
 import { ArM5eNPCActorSheet } from "./actor/actor-npc-sheet.js";
@@ -19,7 +19,6 @@ import ArM5eActiveEffect from "./helpers/active-effects.js";
 import { prepareDatasetByTypeOfItem } from "./helpers/hotbar-helpers.js";
 import { ArM5ePreloadHandlebarsTemplates } from "./templates.js";
 import { ArM5eActiveEffectConfig } from "./helpers/active-effect-config.sheet.js";
-import * as Arm5eChatMessage from "./helpers/chat.js";
 
 // Experiment
 import { ArsLayer, addArsButtons } from "./ui/ars-layer.js";
@@ -63,7 +62,7 @@ import { InhabitantSchema } from "./schemas/inhabitantSchema.js";
 import { SimpleCalendarSeasons, seasonOrder, seasonOrderInv } from "./tools/time.js";
 import { WoundSchema } from "./schemas/woundSchema.js";
 import { ArM5eSmallSheet } from "./item/item-small-sheet.js";
-import { EnchantmentSchema } from "./schemas/enchantmentSchema.js";
+import { EnchantmentEffectSchema } from "./schemas/enchantmentSchema.js";
 import { magicalAttributesHelper } from "./helpers/magic.js";
 import { CovenantSchema } from "./schemas/covenantSchema.js";
 import { ArM5eCovenantInhabitantSheet } from "./item/item-inhabitantCovenant.js";
@@ -71,7 +70,13 @@ import { ArM5eSupernaturalEffectSheet } from "./item/item-supernaturalEffect-she
 import { SupernaturalEffectSchema } from "./schemas/supernaturalEffectSchema.js";
 import { Arm5eSocketHandler } from "./helpers/socket-messages.js";
 import { PowerSchema } from "./schemas/powerSchemas.js";
-// Import { ArtSchema } from "./schemas/artSchema.js";
+import {
+  BasicChatSchema,
+  CombatChatSchema,
+  RollChatSchema,
+  MagicChatSchema
+} from "./schemas/chatSchema.js";
+import { Arm5eChatMessage } from "./helpers/chat-message.js";
 
 Hooks.once("i18nInit", async function () {
   CONFIG.ARM5E.LOCALIZED_ABILITIES = localizeAbilities();
@@ -82,24 +87,16 @@ Hooks.once("i18nInit", async function () {
 Hooks.once("init", async function () {
   game.arm5e = {
     ArsLayer,
-    ArM5ePCActor,
+    ArM5eActor,
     ArM5eItem,
     // ArtSchema,
     rollItemMacro
   };
 
-  // Flags to manage backward compatibility
-  CONFIG.ISV10 = foundry.utils.isNewerVersion(11, game.version);
-  CONFIG.ISV11 = foundry.utils.isNewerVersion(12, game.release.generation);
-  CONFIG.ISV12 = game.release.generation >= 12;
   // Add system metadata
   CONFIG.ARM5E = ARM5E;
-  CONFIG.ARM5E.ItemDataModels = CONFIG.ISV10
-    ? CONFIG.Item.systemDataModels
-    : CONFIG.Item.dataModels;
-  CONFIG.ARM5E.ActorDataModels = CONFIG.ISV10
-    ? CONFIG.Actor.systemDataModels
-    : CONFIG.Actor.dataModels;
+  CONFIG.ARM5E.ItemDataModels = CONFIG.Item.dataModels;
+  CONFIG.ARM5E.ActorDataModels = CONFIG.Actor.dataModels;
 
   CONFIG.SC = { SEASONS: SimpleCalendarSeasons };
 
@@ -181,9 +178,10 @@ Hooks.once("init", async function () {
     .map((e) => e[0]);
 
   // Define custom Document classes
-  CONFIG.Actor.documentClass = ArM5ePCActor;
+  CONFIG.Actor.documentClass = ArM5eActor;
   CONFIG.Item.documentClass = ArM5eItem;
   CONFIG.ActiveEffect.documentClass = ArM5eActiveEffect;
+  CONFIG.ChatMessage.documentClass = Arm5eChatMessage;
 
   // Define datamodel schemas
   setDatamodels();
@@ -509,9 +507,9 @@ Hooks.on("renderDialog", (dialog, html) => {
   });
 });
 
-Hooks.on("renderChatMessage", (message, html, data) =>
-  Arm5eChatMessage.addChatListeners(message, html, data)
-);
+// Hooks.on("renderChatMessage", (message, html, data) =>
+//   Arm5eChatMessage.addChatListeners(message, html, data)
+// );
 
 Hooks.on("createChatMessage", (message, html, data) =>
   Arm5eChatMessage.enrichChatMessage(message, html, data)
@@ -559,7 +557,7 @@ function setDatamodels() {
   CONFIG.ARM5E.ItemDataModels.wound = WoundSchema;
   CONFIG.ARM5E.ItemDataModels.labCovenant = SanctumSchema;
 
-  CONFIG.ARM5E.ItemDataModels.enchantment = EnchantmentSchema;
+  CONFIG.ARM5E.ItemDataModels.enchantment = EnchantmentEffectSchema;
   CONFIG.ARM5E.ItemDataModels.book = BookSchema;
   CONFIG.ARM5E.ItemDataModels.diaryEntry = DiaryEntrySchema;
   CONFIG.ARM5E.ItemDataModels.supernaturalEffect = SupernaturalEffectSchema;
@@ -569,8 +567,13 @@ function setDatamodels() {
   CONFIG.ARM5E.ActorDataModels.magicCodex = CodexSchema;
   CONFIG.ARM5E.ActorDataModels.covenant = CovenantSchema;
 
-  // Deprecated types
+  // ChatMessages
 
+  CONFIG.ChatMessage.dataModels.standard = BasicChatSchema;
+  CONFIG.ChatMessage.dataModels.roll = RollChatSchema;
+  CONFIG.ChatMessage.dataModels.combat = CombatChatSchema;
+  CONFIG.ChatMessage.dataModels.magic = MagicChatSchema;
+  // Deprecated types
   CONFIG.ARM5E.ItemDataModels.visStockCovenant = VisSchema;
 }
 
@@ -639,7 +642,6 @@ function registerSheets() {
         "inferiority",
         "ability",
         "abilityFamiliar",
-
         // "might",
         "powerFamiliar",
         // "mightFamiliar",

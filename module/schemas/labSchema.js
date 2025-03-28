@@ -1,4 +1,5 @@
-import { log } from "../tools.js";
+import Aura from "../helpers/aura.js";
+import { compareTopics, log } from "../tools.js";
 import { actorBase } from "./actorCommonSchema.js";
 import { actorLink, basicTextField } from "./commonSchemas.js";
 const fields = foundry.data.fields;
@@ -16,10 +17,7 @@ const labAttribute = () => {
   });
 };
 
-export class LabSchema extends foundry.abstract.DataModel {
-  // TODO remove in V11
-  static _enableV10Validation = true;
-
+export class LabSchema extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     return {
       description: new fields.StringField({ required: false, blank: true, initial: "" }),
@@ -56,6 +54,165 @@ export class LabSchema extends foundry.abstract.DataModel {
       rooms: basicTextField(),
       personalities: basicTextField()
     };
+  }
+
+  prepareBaseData() {
+    this.size.bonus = 0;
+    this.generalQuality.bonus = 0;
+    this.safety.bonus = 0;
+    this.health.bonus = 0;
+    this.refinement.bonus = 0;
+    this.upkeep.bonus = 0;
+    this.warping.bonus = 0;
+    this.aesthetics.bonus = 0;
+    this.aesthetics.max = 999;
+    this.auraBonus = 0;
+
+    // Create data keys for lab specialty
+    this.specialty = {};
+    for (let key of Object.keys(CONFIG.ARM5E.magic.arts)) {
+      this.specialty[key] = { bonus: 0 };
+    }
+
+    this.specialty.experimentation = { bonus: 0 };
+    this.specialty.familiar = { bonus: 0 };
+    this.specialty.items = { bonus: 0 };
+    this.specialty.longevityRituals = { bonus: 0 };
+    this.specialty.spells = { bonus: 0 };
+    this.specialty.texts = { bonus: 0 };
+    this.specialty.visExtraction = { bonus: 0 };
+
+    this.owner.document = game.actors.get(this.owner.actorId);
+    if (this.owner.document) {
+      this.owner.value = this.owner.document.name;
+      this.owner.linked = true;
+    } else {
+      this.owner.linked = false;
+    }
+
+    // Hopefully this can be reworked to use ID instead of name
+    this.aura = new Aura(this.covenant.document?.system?.scene?.id);
+  }
+
+  prepareDerivedData() {
+    this.physicalBooks = [];
+    this.artsTopics = [];
+    this.mundaneTopics = [];
+    this.masteryTopics = [];
+    this.laboratoryTexts = [];
+    this.totalVirtues = 0;
+    this.totalFlaws = 0;
+    // TODO TMP
+    this.specialities_old = [];
+    this.personalities_old = [];
+    this.distinctive = [];
+    this.rooms_old = [];
+    // TODO END
+
+    this.rawVis = [];
+    this.items = [];
+    this.virtues = [];
+    this.flaws = [];
+    this.diaryEntries = [];
+    this.laboratoryTexts = [];
+
+    for (let [key, item] of this.items.entries()) {
+      // TODO TMP
+      if (item.type === "speciality") {
+        this.specialities_old.push(item);
+      } else if (item.type === "distinctive") {
+        this.distinctive.push(item);
+      } else if (item.type === "sanctumRoom") {
+        this.rooms_old.push(item);
+      } else if (item.type === "personality") {
+        this.personalities_old.push(item);
+      } else if (item.type === "book") {
+        let idx = 0;
+        for (let topic of item.system.topics) {
+          topic.id = item.id;
+          topic.img = item.img;
+          topic.index = idx++;
+          topic.book = item.name;
+          switch (topic.category) {
+            case "ability":
+              this.mundaneTopics.push(topic);
+              break;
+            case "art":
+              this.artsTopics.push(topic);
+              break;
+            case "mastery":
+              this.masteryTopics.push(topic);
+              break;
+            case "labText":
+              topic.system = topic.labtext;
+              if (topic.labtext != null) {
+                topic.name = `${topic.book}: ${topic.labtextTitle}`;
+              }
+              this.laboratoryTexts.push(topic);
+              break;
+            default:
+              error(false, `Unknown topic category${topic.category}`);
+          }
+        }
+        this.physicalBooks.push(item);
+      } else if (item.type === "laboratoryText") {
+        let topic = {
+          id: item.id,
+          img: item.img,
+          index: 0,
+          book: "",
+          category: "labText",
+          name: item.name,
+          system: item.system
+        };
+
+        this.laboratoryTexts.push(topic);
+      } else if (item.type === "vis") {
+        this.rawVis.push(item);
+      } else if (item.type === "item") {
+        this.items.push(item);
+      } else if (item.type === "virtue") {
+        this.virtues.push(item);
+        if (ARM5E.impacts[item.system.impact.value]) {
+          this.totalVirtues += ARM5E.impacts[item.system.impact.value].cost;
+        }
+      } else if (item.type === "flaw") {
+        this.flaws.push(item);
+        if (ARM5E.impacts[item.system.impact.value]) {
+          this.totalFlaws += ARM5E.impacts[item.system.impact.value].cost;
+        }
+      } else if (item.type === "diaryEntry") {
+        this.diaryEntries.push(item);
+      }
+    }
+    this.virtues.sort((a, b) => (a.sort || 0) - (b.sort || 0));
+    this.flaws.sort((a, b) => (a.sort || 0) - (b.sort || 0));
+    this.rawVis.sort((a, b) => (a.sort || 0) - (b.sort || 0));
+    this.items.sort((a, b) => (a.sort || 0) - (b.sort || 0));
+
+    this.physicalBooks.sort((a, b) => (a.sort || 0) - (b.sort || 0));
+    this.artsTopics.sort(compareTopics);
+    this.mundaneTopics.sort(compareTopics);
+    this.masteryTopics.sort(compareTopics);
+    this.laboratoryTexts.sort(compareTopics);
+
+    this.size.total = this.size.value + this.size.bonus;
+    this.generalQuality.total = this.generalQuality.value + this.generalQuality.bonus;
+
+    this.health.total = this.health.value + this.health.bonus;
+    this.refinement.total = this.refinement.value + this.refinement.bonus;
+    this.upkeep.total = this.upkeep.value + this.upkeep.bonus;
+    this.warping.total = this.warping.value + this.warping.bonus;
+    this.aesthetics.total = Math.min(
+      this.aesthetics.value + this.aesthetics.bonus,
+      this.aesthetics.max
+    );
+
+    this.freeVirtues = this.size.total + this.refinement.total;
+    this.occupiedSize = Math.max(this.totalVirtues - this.totalFlaws, 0) - this.refinement.total;
+    this.baseSafety = this.refinement.total - Math.max(this.occupiedSize, 0);
+    this.safety.bonus += this.baseSafety;
+    this.safety.total = this.safety.value + this.safety.bonus;
   }
 
   get buildPoints() {
