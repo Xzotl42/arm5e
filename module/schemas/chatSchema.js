@@ -279,6 +279,7 @@ export class RollChatSchema extends BasicChatSchema {
   addActionButtons(btnContainer, actor) {
     // confidence
     // confidence has been used already => no button
+    let btnCnt = 0;
     if (
       !this.impact.applied &&
       this.confidence.allowed &&
@@ -302,6 +303,7 @@ export class RollChatSchema extends BasicChatSchema {
         await message.system.useConfidence(actorId);
       });
       btnContainer.append(useConfButton);
+      btnCnt++;
       if (this.impact.fatigueLevels || this.impact.woundGravity) {
         const noConfButton = $(
           `<button class="dice-no-confidence chat-button" data-msg-id="${
@@ -329,8 +331,10 @@ export class RollChatSchema extends BasicChatSchema {
           await message.update({ "system.impact.applied": true });
         });
         btnContainer.append(noConfButton);
+        btnCnt++;
       }
     }
+    return btnCnt;
   }
 
   fatigueCost(actor) {

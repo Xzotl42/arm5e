@@ -1,5 +1,4 @@
 import { getActorsFromTargetedTokens } from "./tokens.js";
-import { chatContestOfMagic, chatContestOfPower } from "./chat-message.js";
 import { log } from "../tools.js";
 import Aura from "./aura.js";
 
@@ -648,25 +647,12 @@ async function noFatigue(actor) {
  * @param roll
  * @param message
  */
-async function handleTargetsOfMagic(actorCaster, roll, message) {
+async function handleTargetsOfMagic(actorCaster, form, message) {
   const targetedTokens = game.user.targets; //getActorsFromTargetedTokens(actorCaster);
   if (!targetedTokens) {
     return false;
   }
 
-  const form = CONFIG.ARM5E.magic.arts[actorCaster.rollInfo.magic.form.value]?.label ?? "NONE";
-  // const penetration =
-  //   message.system.roll.secondaryScore +
-  //   message.rollTotal +
-  //   message.system.confidenceModifier -
-  //   message.system.roll.difficulty;
-
-  // return {
-  //   penetration,
-  //   magicResistance,
-  //   total: penetration.total - magicResistance.total,
-  //   form
-  // };
   const targets = [];
   for (let tokenTarget of targetedTokens) {
     const target = {
@@ -682,209 +668,6 @@ async function handleTargetsOfMagic(actorCaster, roll, message) {
     "system.magic.targets": targets
     // "system.magic.caster.penetration.total": penetration
   });
-
-  // switch (actorCaster.rollInfo.type) {
-  //   case "power":
-  //     for (let actorTarget of actorsTargeted) {
-  //       const target = {
-  //         uuid: actorTarget.uuid,
-  //         magicResistance: actorTarget.magicResistance(form)
-  //       };
-
-  //       targets.push(target);
-
-  //       const successOfPower = calculateSuccessOfPower({
-  //         actorTarget,
-  //         actorCaster,
-  //         roll,
-  //         message: message
-  //       });
-
-  //       await chatContestOfPower(message, {
-  //         actorCaster,
-  //         actorTarget,
-  //         ...successOfPower
-  //       });
-  //     }
-  //     break;
-  //   case "item":
-  //     for (let actorTarget of actorsTargeted) {
-  //       const successOfPower = calculateSuccessOfMagicItem({
-  //         actorTarget,
-  //         actorCaster,
-  //         roll,
-  //         message: message
-  //       });
-  //       await chatContestOfPower(message, {
-  //         actorCaster,
-  //         actorTarget,
-  //         ...successOfPower
-  //       });
-  //     }
-  //     break;
-  //   default:
-  //     for (let actorTarget of actorsTargeted) {
-  //       const successOfMagic = calculateSuccessOfMagic({
-  //         actorTarget,
-  //         actorCaster,
-  //         roll,
-  //         message: message
-  //       });
-  //       await chatContestOfMagic(message, {
-  //         actorCaster,
-  //         actorTarget,
-  //         ...successOfMagic
-  //       });
-  //     }
-  // }
-}
-
-/**
- *
- * @param root0
- * @param root0.actorCaster
- * @param root0.roll
- * @param root0.spell
- */
-function calculatePenetration({ actorCaster, roll, spell }) {
-  const levelOfSpell = actorCaster.rollInfo.magic.level;
-  const totalOfSpell = roll._total;
-  const penetrationRolldata = actorCaster.rollInfo.penetration;
-  const penetration = actorCaster.getAbilityStats("penetration");
-  let specialityIncluded = "";
-  if (penetrationRolldata.specApply) {
-    specialityIncluded = penetration.speciality;
-  }
-  // If (
-  //   CONFIG.ARM5E.magic.arts[spell.system.form.value].label.toUpperCase() ===
-  //     penetration.speciality.toUpperCase() ||
-  //   CONFIG.ARM5E.magic.arts[spell.system.form.value].label.toUpperCase() ===
-  //     penetration.speciality.toUpperCase()
-  // ) {
-  //   penetration += 1;
-  //   specialityIncluded = penetration.speciality;
-  // }
-
-  return {
-    totalOfSpell,
-    levelOfSpell,
-    penetration: penetrationRolldata.total,
-    specialityIncluded,
-    total: totalOfSpell - levelOfSpell + penetrationRolldata.total
-  };
-}
-
-/**
- *
- * @param actor
- * @param form
- */
-// function calculateResistance(actor, form) {
-//   let magicResistance =
-//     Number(actor.system.laboratory?.magicResistance?.value) ||
-//     Number(actor.system?.might?.value) ||
-//     0; //  No magicResistance != magicResistance of 0
-
-//   // TODO support magic resistance for hedge magic forms
-
-//   let specialityIncluded = "";
-//   const parma = actor.getAbilityStats("parma");
-//   if (parma.speciality && parma.speciality.toUpperCase() === form.toUpperCase()) {
-//     specialityIncluded = form;
-//     magicResistance += 5;
-//   }
-
-//   const arts = actor.system?.arts;
-//   let auraMod = 0;
-//   // TODO, do a better job for player aligned to a realm
-//   if (actor.hasMight()) {
-//     let aura = Aura.fromActor(actor);
-//     auraMod = aura.computeMaxAuraModifier(actor.system.realms);
-//     magicResistance += parseInt(auraMod);
-//   }
-
-//   let formScore = 0;
-//   if (arts) {
-//     const formKey = Object.keys(arts.forms).filter(
-//       (key) => arts.forms[key].label.toUpperCase() === form.toUpperCase()
-//     )[0];
-//     formScore = arts.forms[formKey]?.finalScore || 0;
-//   }
-
-//   return {
-//     might: actor.system?.might?.value,
-//     specialityIncluded,
-//     total: magicResistance + formScore,
-//     formScore,
-//     parma,
-//     aura: auraMod
-//   };
-// }
-
-/**
- *
- * @param root0
- * @param root0.actorCaster
- * @param root0.actorTarget
- * @param root0.roll
- */
-function calculateSuccessOfMagic({ actorCaster, actorTarget, roll, message }) {
-  const form = CONFIG.ARM5E.magic.arts[actorCaster.rollInfo.magic.form.value]?.label ?? "NONE";
-  const penetration =
-    message.system.roll.secondaryScore + message.rollTotal + message.system.confidenceModifier;
-  const magicResistance = actorTarget.magicResistance(form);
-  return {
-    penetration,
-    magicResistance,
-    total: penetration.total - magicResistance.total,
-    form
-  };
-}
-
-// TODO: merge with above for big refactorization next version
-
-/**
- *
- * @param root0
- * @param root0.actorCaster
- * @param root0.actorTarget
- * @param root0.roll
- */
-function calculateSuccessOfPower({ actorCaster, actorTarget, roll }) {
-  const form = CONFIG.ARM5E.magic.arts[actorCaster.rollInfo.power.form].label;
-  const penetrationTotal =
-    actorCaster.rollInfo.secondaryScore + roll.total + message.system.confidenceModifier;
-
-  // CalculatePenetration({ actorCaster, roll, spell });
-  const magicResistance = actorTarget.magicResistance(form);
-  return {
-    penetrationTotal,
-    magicResistance,
-    total: penetrationTotal - magicResistance.total,
-    form
-  };
-}
-
-/**
- *
- * @param root0
- * @param root0.actorCaster
- * @param root0.actorTarget
- * @param root0.roll
- */
-function calculateSuccessOfMagicItem({ actorCaster, actorTarget, roll }) {
-  const form = CONFIG.ARM5E.magic.arts[actorCaster.rollInfo.item.form].label;
-  const penetrationTotal =
-    actorCaster.rollInfo.secondaryScore + roll.total + message.system.confidenceModifier;
-
-  // CalculatePenetration({ actorCaster, roll, spell });
-  const magicResistance = actorTarget.magicResistance(form);
-  return {
-    penetrationTotal,
-    magicResistance,
-    total: penetrationTotal - magicResistance.total,
-    form
-  };
 }
 
 /**
@@ -897,4 +680,4 @@ function magicalAttributesHelper(attributes, options) {
   return HandlebarsHelpers.selectOptions(attributes, options);
 }
 
-export { calculateSuccessOfMagic, handleTargetsOfMagic, noFatigue, magicalAttributesHelper };
+export { handleTargetsOfMagic, noFatigue, magicalAttributesHelper };

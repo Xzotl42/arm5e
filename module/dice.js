@@ -49,7 +49,7 @@ async function simpleDie(actor, type = "OPTION", callback, modes = 0) {
         score: actor.system.con.score
       },
       roll: {
-        type: dieRoll.getMessageType(rollInfo.type),
+        type: rollInfo.type,
         img: rollInfo.img,
         // name: rollInfo.name,
         itemUuid: rollInfo.itemUuid,
@@ -205,7 +205,7 @@ async function stressDie(actor, type = "OPTION", modes = 0, callback = undefined
         score: actor.system.con.score
       },
       roll: {
-        type: dieRoll.getMessageType(rollInfo.type),
+        type: rollInfo.type,
         img: rollInfo.img,
         // name: rollInfo.name,
         itemUuid: rollInfo.itemUuid,
@@ -911,7 +911,7 @@ async function noRoll(actor, modes, callback) {
       score: actor.system.con.score
     },
     roll: {
-      type: dieRoll.getMessageType(rollInfo.type),
+      type: rollInfo.type,
       img: rollInfo.img,
       // name: rollInfo.name,
       itemUuid: rollInfo.itemUuid,
@@ -950,13 +950,15 @@ async function noRoll(actor, modes, callback) {
 }
 
 async function changeMight(actor, roll, message) {
-  await handleTargetsOfMagic(actor, roll, message);
+  const form = CONFIG.ARM5E.magic.arts[actor.rollInfo.power.form]?.label ?? "NONE";
+  await handleTargetsOfMagic(actor, form, message);
   await actor.changeMight(-actor.rollInfo.power.cost);
 }
 
 async function useItemCharge(actor, roll, message) {
+  const form = CONFIG.ARM5E.magic.arts[actor.rollInfo.item.form]?.label ?? "NONE";
   const item = actor.items.get(actor.rollInfo.item.id);
-  await handleTargetsOfMagic(actor, roll, message);
+  await handleTargetsOfMagic(actor, form, message);
   await item.useItemCharge();
 }
 export { simpleDie, stressDie, noRoll, changeMight, useItemCharge };
