@@ -26,6 +26,7 @@ const ROLL_MODES = {
   NO_CONF: 8, // No confidence use
   UNCONSCIOUS: 16, // Can roll unconscious
   PRIVATE: 32, // Roll is private between the GM and player
+  NO_ROLL: 64, // for magic item or power use
   // common combos
   STRESS_OR_SIMPLE: 3
 };
@@ -170,6 +171,22 @@ const ROLL_PROPERTIES = {
     TITLE: "arm5e.dialog.title.rolldie",
     ACTION_LABEL: "arm5e.dialog.powerUse",
     CALLBACK: castSupernaturalEffect
+  },
+  POWER: {
+    VAL: "power",
+    MODE: 64, // use dataset.dieType
+    MODIFIERS: 7,
+    TITLE: "arm5e.dialog.powerUse",
+    ACTION_LABEL: "arm5e.dialog.powerUse"
+    // CALLBACK: castSupernaturalEffect
+  },
+  ITEM: {
+    VAL: "item",
+    MODE: 72, // no die roll and no confidence
+    MODIFIERS: 4, // only impacted by aura
+    TITLE: "arm5e.dialog.magicItemUse",
+    ACTION_LABEL: "arm5e.dialog.powerUse"
+    // CALLBACK: castSupernaturalEffect
   }
 };
 
@@ -420,7 +437,7 @@ async function useMagicItem(dataset, item) {
     ui.notifications.warn(game.i18n.localize("arm5e.notification.noChargesLeft"));
     return;
   }
-
+  const rollProperties = getRollTypeProperties(dataset.roll);
   prepareRollVariables(dataset, item.actor);
   // log(false, `Roll variables: ${JSON.stringify(item.actor.system.roll)}`);
   let template = "systems/arm5e/templates/actor/parts/actor-itemUse.html";
@@ -436,7 +453,7 @@ async function useMagicItem(dataset, item) {
       buttons: {
         yes: {
           icon: "<i class='fas fa-check'></i>",
-          label: game.i18n.localize("arm5e.dialog.magicItemUse"),
+          label: game.i18n.localize(),
           callback: async (html) => {
             getFormData(html, item.actor);
             await noRoll(item.actor, 1, useItemCharge);
@@ -469,7 +486,7 @@ async function usePower(dataset, actor) {
     ui.notifications.warn(game.i18n.localize("arm5e.notification.noMightPoints"));
     return;
   }
-
+  const rollProperties = getRollTypeProperties(dataset.roll);
   prepareRollVariables(dataset, actor);
   // log(false, `Roll variables: ${JSON.stringify(actor.system.roll)}`);
   let template = "systems/arm5e/templates/actor/parts/actor-powerUse.html";
@@ -485,7 +502,7 @@ async function usePower(dataset, actor) {
       buttons: {
         yes: {
           icon: "<i class='fas fa-check'></i>",
-          label: game.i18n.localize("arm5e.dialog.powerUse"),
+          label: game.i18n.localize(rollProperties.ACTION_LABEL),
           callback: async (html) => {
             getFormData(html, actor);
             if (actor.system.features.hasMight) {
@@ -678,9 +695,9 @@ async function castSpell(actorCaster, roll, message) {
     }
     messageUpdate["system.impact.applied"] = true;
   }
-
+  const form = CONFIG.ARM5E.magic.arts[actorCaster.rollInfo.magic.form.value]?.label ?? "NONE";
   await actorCaster.update(updateData);
-  await handleTargetsOfMagic(actorCaster, roll, message);
+  await handleTargetsOfMagic(actorCaster, form, message);
   message.updateSource(messageUpdate);
   // Then do contest of magic
 }
@@ -715,7 +732,8 @@ async function castSupernaturalEffect(actorCaster, roll, message) {
 
   message.updateSource(messageUpdate);
   // Then do contest of magic
-  await handleTargetsOfMagic(actorCaster, roll, message);
+  const form = CONFIG.ARM5E.magic.arts[actorCaster.rollInfo.magic.form.value]?.label ?? "NONE";
+  await handleTargetsOfMagic(actorCaster, form, message);
 }
 
 /**

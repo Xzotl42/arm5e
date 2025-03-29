@@ -1,4 +1,4 @@
-## 2.4.0.1, Radislav am Polanach
+## 2.4.0.2, Radislav am Polanach
 
 ### Compatibility change
 
@@ -21,6 +21,7 @@
   - Improved confidence spending
   - New magic roll chat messages
 - [Technical] removal of some duplicate unused id attributes
+- [Technical] V13 compatibility (WIP)
 - Dropping a magical effect on a lab will switch the activity to spell invention.
 - Dropping a book's lab text topic from an Actor library on to a lab will now work
 - Gift type of magi inhabitants is set automatically if they have Gentle Gift or Blatant Gift.
@@ -46,6 +47,7 @@
 - Mundane scholar profile is working again.
 - Rolling a magic effect from its sheet no longer consider the effect a spell.
 - [Dice so nice] The system will let the animation finish before anouncing a die explosion or asking the number of botch dice.
+- Form is properly taken into account when resisting power and magic item effects
 
 ## 2.3.2.17, Quendalon, back from the wood with weird eyes
 
