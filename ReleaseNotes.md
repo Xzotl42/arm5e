@@ -1,5 +1,15 @@
 # Release notes
 
+## 2.3.2.26, Quendalon, more than just flowers and bees
+
+### Bug fixes
+
+- [technical] Added an await to some submit calls that were missing it.
+- [Dice so nice] The system will let the animation finish before anouncing a die explosion or asking the number of botch dice.
+- Legacy magic item migration will ensure that the enchantments parameters are valid before converting to an enchanted item.
+- NPCs now have a spell totals tab too.
+- Changing an ability key to a generic ability will fill the ability option with a placeholder.
+
 ## 2.3.2.25, Quendalon, more than just mushrooms
 
 ### Bug fixes

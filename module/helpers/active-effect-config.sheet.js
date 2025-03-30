@@ -351,13 +351,13 @@ export class ArM5eActiveEffectConfig extends ActiveEffectConfig {
     const changesData = this.document.changes;
     changesData[index].key = computedKey.replace("#OPTION#", chosenOption);
     updateData.changes = changesData;
-    return this.submit({ preventClose: true, updateData: updateData });
+    return await this.submit({ preventClose: true, updateData: updateData });
   }
 
   async _addEffectChange(updateFlags) {
     const changesData = this.document.changes;
     changesData.push({ key: "", mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: "" });
-    return this.submit({
+    return await this.submit({
       preventClose: true,
       updateData: {
         changes: changesData,

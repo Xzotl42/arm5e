@@ -85,7 +85,7 @@
       <div class="resource flexrow">
         {{#unless system.altArt}}
           <label for="system.key" class="header-label">{{localize "arm5e.sheet.skill.abilityKey"}}</label>
-          <select class="change-abilitykey ability-key" name="system.key" data-dtype="String">
+          <select class="change-abilitykey ability-key" data-dtype="String">
             {{selectOptions abilityKeysList selected=system.key labelAttr="label"}}
           </select>
         {{/unless}}

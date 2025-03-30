@@ -1250,6 +1250,16 @@ export const migrateItemData = async function (item) {
       ench.year = convertToNumber(itemData.system.year, 1200);
       ench.author = itemData.system.creator;
       ench.talisman = false;
+
+      // ensure that spell parameters are valid before computing the level:
+      const effectName =
+        itemData.system.effects == ""
+          ? game.i18n.localize("arm5e.sheet.effect")
+          : itemData.system.effects;
+      itemData.system.duration.value = _guessDuration(effectName, itemData.system.duration.value);
+      itemData.system.range.value = _guessRange(effectName, itemData.system.range.value);
+      itemData.system.target.value = _guessTarget(effectName, itemData.system.target.value);
+
       const level = computeLevel(itemData.system, "spell");
       const delta = itemData.system.level - level;
       if (delta != 0) {
@@ -1524,7 +1534,7 @@ function cleanItemData(item) {
 function _guessRange(name, value) {
   if (value && value !== "") {
     switch (value.toLowerCase()) {
-      case "personnal":
+      case "personal":
       case "pers":
       case "per":
       case game.i18n.localize("arm5e.spell.ranges.personal"):

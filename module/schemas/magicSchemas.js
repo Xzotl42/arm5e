@@ -557,7 +557,7 @@ function _guessDuration(name, value) {
 function _guessRange(name, value) {
   if (value && value !== "") {
     switch (value.toLowerCase()) {
-      case "personnal":
+      case "personal":
       case "pers":
       case "per":
       case game.i18n.localize("arm5e.spell.ranges.personal"):

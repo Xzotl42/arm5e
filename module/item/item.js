@@ -338,13 +338,18 @@ export class ArM5eItem extends Item {
     return true;
   }
 
-  async _updateIcon(key, value) {
+  _updateIcon(value) {
     if (this.needIconUpdate()) {
-      await this.update({
-        img: CONFIG.ARM5E.ItemDataModels[this.type].getIcon(this, value),
-        [key]: value
-      });
+      return {
+        img: CONFIG.ARM5E.ItemDataModels[this.type].getIcon(this, value)
+      };
     }
+    return {};
+  }
+
+  async updateIcon(value) {
+    const updateData = this._updateIcon(value);
+    await this.update(updateData);
   }
 
   needIconUpdate(value) {

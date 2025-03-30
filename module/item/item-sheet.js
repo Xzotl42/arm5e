@@ -527,17 +527,22 @@ export class ArM5eItemSheet extends ItemSheet {
 
   async _changeAbilitykey(item, event) {
     event.preventDefault();
-    await this.item._updateIcon("system.key", event.target.value);
+    const updateData = this.item._updateIcon(event.target.value);
+    await this.item.system.changeKey(event.target.value, updateData);
   }
 
   async _changeInhabitantCategory(item, event) {
     event.preventDefault();
-    await this.item._updateIcon("system.category", event.target.value);
+    const updateData = this.item._updateIcon(event.target.value);
+    updateData["system.category"] = event.target.value;
+    await this.item.update(updateData);
   }
 
   async _changeVFType(item, event) {
     event.preventDefault();
-    await this.item._updateIcon("system.type", event.target.value);
+    const updateData = this.item._updateIcon(event.target.value);
+    updateData["system.type"] = event.target.value;
+    await this.item.update(updateData);
   }
 
   async _onSelectDefaultCharacteristic(item, event) {

@@ -265,7 +265,28 @@
       {{/if}}
       {{#if (eq system.charType.value "magusNPC")}} {{!-- Arts Tab --}}
         <div class="tab arts" data-group="primary" data-tab="arts">
-          {{> "systems/arm5e/templates/actor/parts/actor-arts.html" }}
+          {{!-- Sheet Tab Navigation --}}
+          <nav class="arm5eSubTabs arts-tabs tabs" data-group="arts-secondary">
+            <a class="item posRelative" data-tab="arts-subtab" data-group="arts-secondary">
+              <div class="navItem-right-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
+              <div class="navItem-left-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
+              {{localize "arm5e.sheet.arts"}}
+            </a>
+            <a class="item posRelative" data-tab="casting-total" data-group="arts-secondary">
+              <div class="navItem-right-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
+              <div class="navItem-left-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
+              {{localize "arm5e.sheet.castingTotals"}}
+            </a>
+          </nav>
+          {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+          <section class="arts-body">
+            <div class="tab" data-group="arts-secondary" data-tab="arts-subtab">
+              {{> "systems/arm5e/templates/actor/parts/actor-arts.html" }}
+            </div>
+            <div class="tab" data-group="arts-secondary" data-tab="casting-total">
+              {{> "systems/arm5e/templates/actor/parts/actor-castingTotals.html" }}
+            </div>
+          </section>
         </div>
         {{!-- Laboratory Tab --}}
         <div class="tab laboratory" data-group="primary" data-tab="laboratory">

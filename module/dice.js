@@ -208,7 +208,7 @@ async function stressDie(actor, type = "OPTION", modes = 0, callBack = undefined
     );
   } else {
     if (game.modules.get("dice-so-nice")?.active) {
-      game.dice3d.showForRoll(dieRoll); //, user, synchronize, whisper, blind, chatMessageID, speaker)
+      await game.dice3d.showForRoll(dieRoll); //, user, synchronize, whisper, blind, chatMessageID, speaker)
     }
   }
 
@@ -688,7 +688,7 @@ async function explodingRoll(actorData, rollOptions = {}, botchNum = -1) {
   log(false, `Dice result: ${diceResult}`);
   if (diceResult === explodingScore) {
     if (game.modules.get("dice-so-nice")?.active) {
-      game.dice3d.showForRoll(dieRoll, game.user, true); //, whisper, blind, chatMessageID, speaker)
+      await game.dice3d.showForRoll(dieRoll, game.user, true); //, whisper, blind, chatMessageID, speaker)
     }
     if (rollOptions.alternateStressDie) {
       iterations++;
@@ -753,7 +753,7 @@ async function explodingRoll(actorData, rollOptions = {}, botchNum = -1) {
     if (iterations === 1 && diceResult === botchCheckScore) {
       iterations = 0;
       if (game.modules.get("dice-so-nice")?.active) {
-        game.dice3d.showForRoll(dieRoll); //, user, synchronize, whisper, blind, chatMessageID, speaker)
+        await game.dice3d.showForRoll(dieRoll); //, user, synchronize, whisper, blind, chatMessageID, speaker)
       }
       if (rollOptions.noBotch) {
         let output_roll = new ArsRoll(actorData.rollInfo.formula.toString(), {}, options);

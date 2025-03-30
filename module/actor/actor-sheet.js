@@ -1227,7 +1227,7 @@ export class ArM5eActorSheet extends ActorSheet {
       const dataset = getDataset(ev);
       const val = ev.target.value;
       updateUserCache(this.actor.id, dataset.category, dataset.list, "minYearFilter", val);
-      this.submit({ preventClose: true });
+      await this.submit({ preventClose: true });
       this.render();
     });
 
@@ -1236,7 +1236,7 @@ export class ArM5eActorSheet extends ActorSheet {
       const dataset = getDataset(ev);
       const val = ev.target.value;
       updateUserCache(this.actor.id, dataset.category, dataset.list, "maxYearFilter", val);
-      this.submit({ preventClose: true });
+      await this.submit({ preventClose: true });
       this.render();
     });
 

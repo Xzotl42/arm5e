@@ -756,7 +756,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
             let newEffect = new ArM5eItem(item.toObject(), { temporary: true });
             planning.type = "inventSpell";
             planning.data = newEffect.toObject();
-            this.submit({
+            await this.submit({
               preventClose: true,
               updateData: { "flags.arm5e.planning": planning }
             });
