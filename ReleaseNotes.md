@@ -1,6 +1,6 @@
 # Release notes
 
-## 2.3.2.26, Quendalon, more than just flowers and bees
+## 2.3.2.27, Quendalon, more than just flowers and bees
 
 ### Bug fixes
 
