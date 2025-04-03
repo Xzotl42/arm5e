@@ -1,4 +1,4 @@
-## 2.4.0.2, Radislav am Polanach
+## 2.4.0.3, Radislav am Polanach
 
 ### Compatibility change
 
@@ -25,6 +25,7 @@
 - Dropping a magical effect on a lab will switch the activity to spell invention.
 - Dropping a book's lab text topic from an Actor library on to a lab will now work
 - Gift type of magi inhabitants is set automatically if they have Gentle Gift or Blatant Gift.
+- Arts and abilities active effects definitions are generated dynamically
 
 ### Bug fixes
 
@@ -48,6 +49,17 @@
 - Rolling a magic effect from its sheet no longer consider the effect a spell.
 - [Dice so nice] The system will let the animation finish before anouncing a die explosion or asking the number of botch dice.
 - Form is properly taken into account when resisting power and magic item effects
+- Ability option clean-up leaves capitalization as is.
+
+## 2.3.2.27, Quendalon, more than just flowers and bees
+
+### Bug fixes
+
+[technical] Added an await to some submit calls that were missing it.
+[Dice so nice] The system will let the animation finish before anouncing a die explosion or asking the number of botch dice.
+Legacy magic item migration will ensure that the enchantments parameters are valid before converting to an enchanted item.
+NPCs now have a spell totals tab too.
+Changing an ability key to a generic ability will fill the ability option with a placeholder.
 
 ## 2.3.2.17, Quendalon, back from the wood with weird eyes
 

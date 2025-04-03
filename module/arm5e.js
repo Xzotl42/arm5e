@@ -29,7 +29,6 @@ import { migrateSettings, registerSettings } from "./settings.js";
 import { registerTestSuites } from "./tests/tests.js";
 import { AlternateStressDie, ArsRoll, StressDie, StressDieInternal } from "./helpers/stressdie.js";
 import { UserguideTour } from "./tours/userguide-tour.js";
-
 import {
   BaseEffectSchema,
   MagicalEffectSchema,
@@ -76,6 +75,7 @@ import {
   MagicChatSchema
 } from "./schemas/chatSchema.js";
 import { Arm5eChatMessage } from "./helpers/chat-message.js";
+import { addActiveEffectsDefinitions } from "./constants/activeEffectsTypes.js";
 
 Hooks.once("i18nInit", async function () {
   CONFIG.ARM5E.LOCALIZED_ABILITIES = localizeAbilities();
@@ -222,6 +222,10 @@ Hooks.once("init", async function () {
 });
 
 Hooks.once("ready", async function () {
+  // add generated active effects based on CONFIG
+
+  addActiveEffectsDefinitions();
+
   await migrateSettings();
   // Check that the arm5e-compendia module is at least the minimum version
   const req = game.system.relationships.requires.find((e) => e.id == CONFIG.ARM5E.REF_MODULE_ID);

@@ -11,7 +11,7 @@ import {
   slugify
 } from "../tools.js";
 
-import ACTIVE_EFFECTS_TYPES from "../constants/activeEffectsTypes.js";
+import { ACTIVE_EFFECTS_TYPES } from "../constants/activeEffectsTypes.js";
 
 import { migrateActorData } from "../migration.js";
 

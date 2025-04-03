@@ -282,7 +282,7 @@ export class ArM5eMagicSystem {
       return;
     }
     // remove any non alphanumeric character
-    newOption = slugify(newOption); //.replace(/[^a-zA-Z0-9]/gi, "");
+    newOption = slugify(newOption, false);
 
     const components = this.actor.system.magicSystem.templates[dataset.id].components;
     components[dataset.index].key = dataset.key;

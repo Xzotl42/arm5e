@@ -1,5 +1,623 @@
 // Rule: all subtypes of a given type must have a different "key" value or it becomes impossible to edit them properly
-export default {
+
+import { ARM5E } from "../config.js";
+
+export function addActiveEffectsDefinitions() {
+  // Arts related effects
+
+  ACTIVE_EFFECTS_TYPES.art.subtypes = {
+    ...puissantTechniques(),
+    ...puissantForms()
+  };
+
+  ACTIVE_EFFECTS_TYPES.affinity.subtypes = {
+    ...affinityTechniques(),
+    ...affinityForms()
+  };
+
+  ACTIVE_EFFECTS_TYPES.deficiency.subtypes = {
+    ...deficientTechniques(),
+    ...deficientForms()
+  };
+
+  ACTIVE_EFFECTS_TYPES.formResistance.subtypes = {
+    ...resistanceForms()
+  };
+
+  // Abilities related effects
+
+  // Puissant abilities
+
+  ACTIVE_EFFECTS_TYPES.bonusGeneralAbility.subtypes = {
+    ...Object.entries(ARM5E.GENERAL_ABILITIES).reduce((a, current) => {
+      if (current[1].option) {
+        a[current[0]] = {
+          mnemonic: current[1].mnemonic,
+          key: `system.bonuses.skills.${current[0]}_#OPTION.bonus`,
+          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          default: 2,
+          option: current[1].optionDefault
+        };
+      } else {
+        a[current[0]] = {
+          mnemonic: current[1].mnemonic,
+          key: `system.bonuses.skills.${current[0]}.bonus`,
+          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          default: 2
+        };
+      }
+      return a;
+    }, {})
+  };
+
+  ACTIVE_EFFECTS_TYPES.bonusAcademicAbility.subtypes = {
+    ...Object.entries(ARM5E.ACADEMIC_ABILITIES).reduce((a, current) => {
+      if (current[1].option) {
+        a[current[0]] = {
+          mnemonic: current[1].mnemonic,
+          key: `system.bonuses.skills.${current[0]}_#OPTION.bonus`,
+          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          default: 2,
+          option: current[1].optionDefault
+        };
+      } else {
+        a[current[0]] = {
+          mnemonic: current[1].mnemonic,
+          key: `system.bonuses.skills.${current[0]}.bonus`,
+          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          default: 2
+        };
+      }
+      return a;
+    }, {})
+  };
+
+  ACTIVE_EFFECTS_TYPES.bonusArcaneAbility.subtypes = {
+    ...Object.entries(ARM5E.ARCANE_ABILITIES).reduce((a, current) => {
+      if (current[1].option) {
+        a[current[0]] = {
+          mnemonic: current[1].mnemonic,
+          key: `system.bonuses.skills.${current[0]}_#OPTION.bonus`,
+          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          default: 2,
+          option: current[1].optionDefault
+        };
+      } else {
+        a[current[0]] = {
+          mnemonic: current[1].mnemonic,
+          key: `system.bonuses.skills.${current[0]}.bonus`,
+          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          default: 2
+        };
+      }
+      return a;
+    }, {})
+  };
+
+  ACTIVE_EFFECTS_TYPES.bonusMartialAbility.subtypes = {
+    ...Object.entries(ARM5E.MARTIAL_ABILITIES).reduce((a, current) => {
+      if (current[1].option) {
+        a[current[0]] = {
+          mnemonic: current[1].mnemonic,
+          key: `system.bonuses.skills.${current[0]}_#OPTION.bonus`,
+          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          default: 2,
+          option: current[1].optionDefault
+        };
+      } else {
+        a[current[0]] = {
+          mnemonic: current[1].mnemonic,
+          key: `system.bonuses.skills.${current[0]}.bonus`,
+          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          default: 2
+        };
+      }
+      return a;
+    }, {})
+  };
+
+  ACTIVE_EFFECTS_TYPES.bonusSupernaturalAbility.subtypes = {
+    ...Object.entries(ARM5E.SUPERNATURAL_ABILITIES).reduce((a, current) => {
+      if (current[1].option) {
+        a[current[0]] = {
+          mnemonic: current[1].mnemonic,
+          key: `system.bonuses.skills.${current[0]}_#OPTION.bonus`,
+          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          default: 2,
+          option: current[1].optionDefault
+        };
+      } else {
+        a[current[0]] = {
+          mnemonic: current[1].mnemonic,
+          key: `system.bonuses.skills.${current[0]}.bonus`,
+          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          default: 2
+        };
+      }
+      return a;
+    }, {})
+  };
+
+  ACTIVE_EFFECTS_TYPES.bonusMysteryAbility.subtypes = {
+    ...Object.entries(ARM5E.MYSTERY_ABILITIES).reduce((a, current) => {
+      if (current[1].option) {
+        a[current[0]] = {
+          mnemonic: current[1].mnemonic,
+          key: `system.bonuses.skills.${current[0]}_#OPTION.bonus`,
+          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          default: 2,
+          option: current[1].optionDefault
+        };
+      } else {
+        a[current[0]] = {
+          mnemonic: current[1].mnemonic,
+          key: `system.bonuses.skills.${current[0]}.bonus`,
+          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          default: 2
+        };
+      }
+      return a;
+    }, {})
+  };
+
+  ACTIVE_EFFECTS_TYPES.bonusAlternateArt.subtypes = {
+    ...Object.entries(ARM5E.ALT_TECHNIQUE_ABILITIES).reduce((a, current) => {
+      if (current[1].option) {
+        a[current[0]] = {
+          mnemonic: current[1].mnemonic,
+          key: `system.bonuses.skills.${current[0]}_#OPTION.bonus`,
+          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          default: 2,
+          option: current[1].optionDefault
+        };
+      } else {
+        a[current[0]] = {
+          mnemonic: current[1].mnemonic,
+          key: `system.bonuses.skills.${current[0]}.bonus`,
+          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          default: 2
+        };
+      }
+      return a;
+    }, {}),
+    ...Object.entries(ARM5E.ALT_FORM_ABILITIES).reduce((a, current) => {
+      if (current[1].option) {
+        a[current[0]] = {
+          mnemonic: current[1].mnemonic,
+          key: `system.bonuses.skills.${current[0]}_#OPTION.bonus`,
+          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          default: 2,
+          option: current[1].optionDefault
+        };
+      } else {
+        a[current[0]] = {
+          mnemonic: current[1].mnemonic,
+          key: `system.bonuses.skills.${current[0]}.bonus`,
+          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          default: 2
+        };
+      }
+      return a;
+    }, {})
+  };
+
+  // Affinities for abilities
+
+  ACTIVE_EFFECTS_TYPES.affinityGeneralAbility.subtypes = {
+    ...Object.entries(ARM5E.GENERAL_ABILITIES).reduce((a, current) => {
+      if (current[1].option) {
+        a[current[0]] = {
+          mnemonic: current[1].mnemonic,
+          key: `system.bonuses.skills.${current[0]}_#OPTION.xpCoeff`,
+          mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
+          default: 1.5,
+          option: current[1].optionDefault
+        };
+      } else {
+        a[current[0]] = {
+          mnemonic: current[1].mnemonic,
+          key: `system.bonuses.skills.${current[0]}.xpCoeff`,
+          mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
+          default: 1.5
+        };
+      }
+      return a;
+    }, {})
+  };
+
+  ACTIVE_EFFECTS_TYPES.affinityAcademicAbility.subtypes = {
+    ...Object.entries(ARM5E.ACADEMIC_ABILITIES).reduce((a, current) => {
+      if (current[1].option) {
+        a[current[0]] = {
+          mnemonic: current[1].mnemonic,
+          key: `system.bonuses.skills.${current[0]}_#OPTION.xpCoeff`,
+          mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
+          default: 1.5,
+          option: current[1].optionDefault
+        };
+      } else {
+        a[current[0]] = {
+          mnemonic: current[1].mnemonic,
+          key: `system.bonuses.skills.${current[0]}.xpCoeff`,
+          mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
+          default: 1.5
+        };
+      }
+      return a;
+    }, {})
+  };
+
+  ACTIVE_EFFECTS_TYPES.affinityArcaneAbility.subtypes = {
+    ...Object.entries(ARM5E.ARCANE_ABILITIES).reduce((a, current) => {
+      if (current[1].option) {
+        a[current[0]] = {
+          mnemonic: current[1].mnemonic,
+          key: `system.bonuses.skills.${current[0]}_#OPTION.xpCoeff`,
+          mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
+          default: 1.5,
+          option: current[1].optionDefault
+        };
+      } else {
+        a[current[0]] = {
+          mnemonic: current[1].mnemonic,
+          key: `system.bonuses.skills.${current[0]}.xpCoeff`,
+          mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
+          default: 1.5
+        };
+      }
+      return a;
+    }, {})
+  };
+
+  ACTIVE_EFFECTS_TYPES.affinityMartialAbility.subtypes = {
+    ...Object.entries(ARM5E.MARTIAL_ABILITIES).reduce((a, current) => {
+      if (current[1].option) {
+        a[current[0]] = {
+          mnemonic: current[1].mnemonic,
+          key: `system.bonuses.skills.${current[0]}_#OPTION.xpCoeff`,
+          mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
+          default: 1.5,
+          option: current[1].optionDefault
+        };
+      } else {
+        a[current[0]] = {
+          mnemonic: current[1].mnemonic,
+          key: `system.bonuses.skills.${current[0]}.xpCoeff`,
+          mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
+          default: 1.5
+        };
+      }
+      return a;
+    }, {})
+  };
+  ACTIVE_EFFECTS_TYPES.affinitySupernaturalAbility.subtypes = {
+    ...Object.entries(ARM5E.SUPERNATURAL_ABILITIES).reduce((a, current) => {
+      if (current[1].option) {
+        a[current[0]] = {
+          mnemonic: current[1].mnemonic,
+          key: `system.bonuses.skills.${current[0]}_#OPTION.xpCoeff`,
+          mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
+          default: 1.5,
+          option: current[1].optionDefault
+        };
+      } else {
+        a[current[0]] = {
+          mnemonic: current[1].mnemonic,
+          key: `system.bonuses.skills.${current[0]}.xpCoeff`,
+          mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
+          default: 1.5
+        };
+      }
+      return a;
+    }, {})
+  };
+  ACTIVE_EFFECTS_TYPES.affinityMysteryAbility.subtypes = {
+    ...Object.entries(ARM5E.MYSTERY_ABILITIES).reduce((a, current) => {
+      if (current[1].option) {
+        a[current[0]] = {
+          mnemonic: current[1].mnemonic,
+          key: `system.bonuses.skills.${current[0]}_#OPTION.xpCoeff`,
+          mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
+          default: 1.5,
+          option: current[1].optionDefault
+        };
+      } else {
+        a[current[0]] = {
+          mnemonic: current[1].mnemonic,
+          key: `system.bonuses.skills.${current[0]}.xpCoeff`,
+          mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
+          default: 1.5
+        };
+      }
+      return a;
+    }, {})
+  };
+
+  ACTIVE_EFFECTS_TYPES.affinityAlternateArt.subtypes = {
+    ...Object.entries(ARM5E.ALT_TECHNIQUE_ABILITIES).reduce((a, current) => {
+      if (current[1].option) {
+        a[current[0]] = {
+          mnemonic: current[1].mnemonic,
+          key: `system.bonuses.skills.${current[0]}_#OPTION.xpCoeff`,
+          mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
+          default: 1.5,
+          option: current[1].optionDefault
+        };
+      } else {
+        a[current[0]] = {
+          mnemonic: current[1].mnemonic,
+          key: `system.bonuses.skills.${current[0]}.xpCoeff`,
+          mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
+          default: 1.5
+        };
+      }
+      return a;
+    }, {}),
+    ...Object.entries(ARM5E.ALT_FORM_ABILITIES).reduce((a, current) => {
+      if (current[1].option) {
+        a[current[0]] = {
+          mnemonic: current[1].mnemonic,
+          key: `system.bonuses.skills.${current[0]}_#OPTION.xpCoeff`,
+          mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
+          default: 1.5,
+          option: current[1].optionDefault
+        };
+      } else {
+        a[current[0]] = {
+          mnemonic: current[1].mnemonic,
+          key: `system.bonuses.skills.${current[0]}.xpCoeff`,
+          mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
+          default: 1.5
+        };
+      }
+      return a;
+    }, {})
+  };
+
+  ACTIVE_EFFECTS_TYPES.xpBonusSupernaturalAbility.subtypes = {
+    ...Object.entries(ARM5E.SUPERNATURAL_ABILITIES).reduce((a, current) => {
+      if (current[1].option) {
+        a[current[0]] = {
+          mnemonic: current[1].mnemonic,
+          key: `system.bonuses.skills.${current[0]}_#OPTION.xpMod`,
+          mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
+          default: 1.5,
+          option: current[1].optionDefault
+        };
+      } else {
+        a[current[0]] = {
+          mnemonic: current[1].mnemonic,
+          key: `system.bonuses.skills.${current[0]}.xpMod`,
+          mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
+          default: 1.5
+        };
+      }
+      return a;
+    }, {})
+  };
+
+  // XP bonus
+
+  ACTIVE_EFFECTS_TYPES.xpBonusGeneralAbility.subtypes = {
+    ...Object.entries(ARM5E.GENERAL_ABILITIES).reduce((a, current) => {
+      if (current[1].option) {
+        a[current[0]] = {
+          mnemonic: current[1].mnemonic,
+          key: `system.bonuses.skills.${current[0]}_#OPTION.xpMod`,
+          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          default: 5,
+          option: current[1].optionDefault
+        };
+      } else {
+        a[current[0]] = {
+          mnemonic: current[1].mnemonic,
+          key: `system.bonuses.skills.${current[0]}.xpMod`,
+          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          default: 5
+        };
+      }
+      return a;
+    }, {})
+  };
+
+  ACTIVE_EFFECTS_TYPES.xpBonusAcademicAbility.subtypes = {
+    ...Object.entries(ARM5E.ACADEMIC_ABILITIES).reduce((a, current) => {
+      if (current[1].option) {
+        a[current[0]] = {
+          mnemonic: current[1].mnemonic,
+          key: `system.bonuses.skills.${current[0]}_#OPTION.xpMod`,
+          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          default: 5,
+          option: current[1].optionDefault
+        };
+      } else {
+        a[current[0]] = {
+          mnemonic: current[1].mnemonic,
+          key: `system.bonuses.skills.${current[0]}.xpMod`,
+          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          default: 5
+        };
+      }
+      return a;
+    }, {})
+  };
+
+  ACTIVE_EFFECTS_TYPES.xpBonusArcaneAbility.subtypes = {
+    ...Object.entries(ARM5E.ARCANE_ABILITIES).reduce((a, current) => {
+      if (current[1].option) {
+        a[current[0]] = {
+          mnemonic: current[1].mnemonic,
+          key: `system.bonuses.skills.${current[0]}_#OPTION.xpMod`,
+          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          default: 5,
+          option: current[1].optionDefault
+        };
+      } else {
+        a[current[0]] = {
+          mnemonic: current[1].mnemonic,
+          key: `system.bonuses.skills.${current[0]}.xpMod`,
+          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          default: 5
+        };
+      }
+      return a;
+    }, {})
+  };
+
+  ACTIVE_EFFECTS_TYPES.xpBonusMartialAbility.subtypes = {
+    ...Object.entries(ARM5E.MARTIAL_ABILITIES).reduce((a, current) => {
+      if (current[1].option) {
+        a[current[0]] = {
+          mnemonic: current[1].mnemonic,
+          key: `system.bonuses.skills.${current[0]}_#OPTION.xpMod`,
+          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          default: 5,
+          option: current[1].optionDefault
+        };
+      } else {
+        a[current[0]] = {
+          mnemonic: current[1].mnemonic,
+          key: `system.bonuses.skills.${current[0]}.xpMod`,
+          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          default: 5
+        };
+      }
+      return a;
+    }, {})
+  };
+
+  ACTIVE_EFFECTS_TYPES.xpBonusSupernaturalAbility.subtypes = {
+    ...Object.entries(ARM5E.SUPERNATURAL_ABILITIES).reduce((a, current) => {
+      if (current[1].option) {
+        a[current[0]] = {
+          mnemonic: current[1].mnemonic,
+          key: `system.bonuses.skills.${current[0]}_#OPTION.xpMod`,
+          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          default: 5,
+          option: current[1].optionDefault
+        };
+      } else {
+        a[current[0]] = {
+          mnemonic: current[1].mnemonic,
+          key: `system.bonuses.skills.${current[0]}.xpMod`,
+          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          default: 5
+        };
+      }
+      return a;
+    }, {})
+  };
+
+  ACTIVE_EFFECTS_TYPES.xpBonusMysteryAbility.subtypes = {
+    ...Object.entries(ARM5E.MYSTERY_ABILITIES).reduce((a, current) => {
+      if (current[1].option) {
+        a[current[0]] = {
+          mnemonic: current[1].mnemonic,
+          key: `system.bonuses.skills.${current[0]}_#OPTION.xpMod`,
+          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          default: 5,
+          option: current[1].optionDefault
+        };
+      } else {
+        a[current[0]] = {
+          mnemonic: current[1].mnemonic,
+          key: `system.bonuses.skills.${current[0]}.xpMod`,
+          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          default: 5
+        };
+      }
+      return a;
+    }, {})
+  };
+}
+
+const puissantTechniques = () => {
+  return Object.entries(ARM5E.magic.techniques).reduce((a, current) => {
+    a[current[0]] = {
+      mnemonic: current[1].label,
+      key: `system.arts.techniques.${current[0]}.bonus`,
+      mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+      default: 3
+    };
+    return a;
+  }, {});
+};
+
+const puissantForms = () => {
+  return Object.entries(ARM5E.magic.forms).reduce((a, current) => {
+    a[current[0]] = {
+      mnemonic: current[1].label,
+      key: `system.arts.forms.${current[0]}.bonus`,
+      mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+      default: 3
+    };
+    return a;
+  }, {});
+};
+
+const affinityTechniques = () => {
+  return Object.entries(ARM5E.magic.techniques).reduce((a, current) => {
+    a[current[0]] = {
+      mnemonic: current[1].label,
+      key: `system.arts.techniques.${current[0]}.xpCoeff`,
+      mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
+      default: 1.5
+    };
+    return a;
+  }, {});
+};
+
+const affinityForms = () => {
+  return Object.entries(ARM5E.magic.forms).reduce((a, current) => {
+    a[current[0]] = {
+      mnemonic: current[1].label,
+      key: `system.arts.forms.${current[0]}.xpCoeff`,
+      mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
+      default: 1.5
+    };
+    return a;
+  }, {});
+};
+
+const deficientTechniques = () => {
+  return Object.entries(ARM5E.magic.techniques).reduce((a, current) => {
+    a[current[0]] = {
+      mnemonic: current[1].label,
+      key: `system.arts.techniques.${current[0]}.deficient`,
+      mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+      default: true,
+      readonly: true
+    };
+    return a;
+  }, {});
+};
+
+const deficientForms = () => {
+  return Object.entries(ARM5E.magic.forms).reduce((a, current) => {
+    a[current[0]] = {
+      mnemonic: current[1].label,
+      key: `system.arts.forms.${current[0]}.deficient`,
+      mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+      default: true,
+      readonly: true
+    };
+    return a;
+  }, {});
+};
+
+const resistanceForms = () => {
+  return Object.entries(ARM5E.magic.forms).reduce((a, current) => {
+    a[current[0]] = {
+      mnemonic: current[1].label,
+      key: `system.bonuses.resistance.${current[0]}`,
+      mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+      default: 0
+    };
+    return a;
+  }, {});
+};
+
+export const ACTIVE_EFFECTS_TYPES = {
   none: {
     category: "none",
     type: "none",
@@ -197,307 +815,23 @@ export default {
     type: "art",
     mnemonic: "arm5e.sheet.arts",
     subtypes: {
-      cr: {
-        mnemonic: "Creo",
-        key: "system.arts.techniques.cr.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-        default: 3
-      },
-      in: {
-        mnemonic: "Intellego",
-        key: "system.arts.techniques.in.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-        default: 3
-      },
-      mu: {
-        mnemonic: "Muto",
-        key: "system.arts.techniques.mu.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-        default: 3
-      },
-      pe: {
-        mnemonic: "Perdo",
-        key: "system.arts.techniques.pe.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-        default: 3
-      },
-      re: {
-        mnemonic: "Rego",
-        key: "system.arts.techniques.re.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-        default: 3
-      },
-      an: {
-        mnemonic: "Animal",
-        key: "system.arts.forms.an.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-        default: 3
-      },
-      aq: {
-        mnemonic: "Aquam",
-        key: "system.arts.forms.aq.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-        default: 3
-      },
-      au: {
-        mnemonic: "Auram",
-        key: "system.arts.forms.au.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-        default: 3
-      },
-      co: {
-        mnemonic: "Corpus",
-        key: "system.arts.forms.co.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-        default: 3
-      },
-      he: {
-        mnemonic: "Herbam",
-        key: "system.arts.forms.he.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-        default: 3
-      },
-      ig: {
-        mnemonic: "Ignem",
-        key: "system.arts.forms.ig.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-        default: 3
-      },
-      im: {
-        mnemonic: "Imaginem",
-        key: "system.arts.forms.im.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-        default: 3
-      },
-      me: {
-        mnemonic: "Mentem",
-        key: "system.arts.forms.me.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-        default: 3
-      },
-      te: {
-        mnemonic: "Terram",
-        key: "system.arts.forms.te.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-        default: 3
-      },
-      vi: {
-        mnemonic: "Vim",
-        key: "system.arts.forms.vi.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-        default: 3
-      }
+      // added dynamically
     }
   },
-
   affinity: {
     category: "magic",
     type: "affinity",
     mnemonic: "arm5e.sheet.activeEffect.types.arts.affinity",
     subtypes: {
-      cr: {
-        mnemonic: "Creo",
-        key: "system.arts.techniques.cr.xpCoeff",
-        mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
-        default: 1.5
-      },
-      in: {
-        mnemonic: "Intellego",
-        key: "system.arts.techniques.in.xpCoeff",
-        mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
-        default: 1.5
-      },
-      mu: {
-        mnemonic: "Muto",
-        key: "system.arts.techniques.mu.xpCoeff",
-        mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
-        default: 1.5
-      },
-      pe: {
-        mnemonic: "Perdo",
-        key: "system.arts.techniques.pe.xpCoeff",
-        mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
-        default: 1.5
-      },
-      re: {
-        mnemonic: "Rego",
-        key: "system.arts.techniques.re.xpCoeff",
-        mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
-        default: 1.5
-      },
-      an: {
-        mnemonic: "Animal",
-        key: "system.arts.forms.an.xpCoeff",
-        mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
-        default: 1.5
-      },
-      aq: {
-        mnemonic: "Aquam",
-        key: "system.arts.forms.aq.xpCoeff",
-        mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
-        default: 1.5
-      },
-      au: {
-        mnemonic: "Auram",
-        key: "system.arts.forms.au.xpCoeff",
-        mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
-        default: 1.5
-      },
-      co: {
-        mnemonic: "Corpus",
-        key: "system.arts.forms.co.xpCoeff",
-        mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
-        default: 1.5
-      },
-      he: {
-        mnemonic: "Herbam",
-        key: "system.arts.forms.he.xpCoeff",
-        mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
-        default: 1.5
-      },
-      ig: {
-        mnemonic: "Ignem",
-        key: "system.arts.forms.ig.xpCoeff",
-        mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
-        default: 1.5
-      },
-      im: {
-        mnemonic: "Imaginem",
-        key: "system.arts.forms.im.xpCoeff",
-        mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
-        default: 1.5
-      },
-      me: {
-        mnemonic: "Mentem",
-        key: "system.arts.forms.me.xpCoeff",
-        mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
-        default: 1.5
-      },
-      te: {
-        mnemonic: "Terram",
-        key: "system.arts.forms.te.xpCoeff",
-        mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
-        default: 1.5
-      },
-      vi: {
-        mnemonic: "Vim",
-        key: "system.arts.forms.vi.xpCoeff",
-        mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
-        default: 1.5
-      }
+      // added dynamically
     }
   },
-
   deficiency: {
     category: "magic",
     type: "artDeficiency",
     mnemonic: "arm5e.sheet.activeEffect.types.arts.deficiency",
     subtypes: {
-      cr: {
-        mnemonic: "Creo",
-        key: "system.arts.techniques.cr.deficient",
-        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-        default: true,
-        readonly: true
-      },
-      in: {
-        mnemonic: "Intellego",
-        key: "system.arts.techniques.in.deficient",
-        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-        default: true,
-        readonly: true
-      },
-      mu: {
-        mnemonic: "Muto",
-        key: "system.arts.techniques.mu.deficient",
-        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-        default: true,
-        readonly: true
-      },
-      pe: {
-        mnemonic: "Perdo",
-        key: "system.arts.techniques.pe.deficient",
-        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-        default: true,
-        readonly: true
-      },
-      re: {
-        mnemonic: "Rego",
-        key: "system.arts.techniques.re.deficient",
-        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-        default: true,
-        readonly: true
-      },
-      an: {
-        mnemonic: "Animal",
-        key: "system.arts.forms.an.deficient",
-        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-        default: true,
-        readonly: true
-      },
-      aq: {
-        mnemonic: "Aquam",
-        key: "system.arts.forms.aq.deficient",
-        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-        default: true,
-        readonly: true
-      },
-      au: {
-        mnemonic: "Auram",
-        key: "system.arts.forms.au.deficient",
-        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-        default: true,
-        readonly: true
-      },
-      co: {
-        mnemonic: "Corpus",
-        key: "system.arts.forms.co.deficient",
-        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-        default: true,
-        readonly: true
-      },
-      he: {
-        mnemonic: "Herbam",
-        key: "system.arts.forms.he.deficient",
-        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-        default: true,
-        readonly: true
-      },
-      ig: {
-        mnemonic: "Ignem",
-        key: "system.arts.forms.ig.deficient",
-        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-        default: true,
-        readonly: true
-      },
-      im: {
-        mnemonic: "Imaginem",
-        key: "system.arts.forms.im.deficient",
-        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-        default: true,
-        readonly: true
-      },
-      me: {
-        mnemonic: "Mentem",
-        key: "system.arts.forms.me.deficient",
-        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-        default: true,
-        readonly: true
-      },
-      te: {
-        mnemonic: "Terram",
-        key: "system.arts.forms.te.deficient",
-        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-        default: true,
-        readonly: true
-      },
-      vi: {
-        mnemonic: "Vim",
-        key: "system.arts.forms.vi.deficient",
-        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-        default: true,
-        readonly: true
-      }
+      // added dynamically
     }
   },
   formResistance: {
@@ -505,66 +839,7 @@ export default {
     type: "formResistance",
     mnemonic: "arm5e.sheet.activeEffect.types.formResistance",
     subtypes: {
-      an: {
-        mnemonic: "Animal",
-        key: "system.bonuses.resistance.an",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-        default: 0
-      },
-      aq: {
-        mnemonic: "Aquam",
-        key: "system.bonuses.resistance.aq",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-        default: 0
-      },
-      au: {
-        mnemonic: "Auram",
-        key: "system.bonuses.resistance.au",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-        default: 0
-      },
-      co: {
-        mnemonic: "Corpus",
-        key: "system.bonuses.resistance.co",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-        default: 0
-      },
-      he: {
-        mnemonic: "Herbam",
-        key: "system.bonuses.resistance.he",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-        default: 0
-      },
-      ig: {
-        mnemonic: "Ignem",
-        key: "system.bonuses.resistance.ig",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-        default: 0
-      },
-      im: {
-        mnemonic: "Imaginem",
-        key: "system.bonuses.resistance.im",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-        default: 0
-      },
-      me: {
-        mnemonic: "Mentem",
-        key: "system.bonuses.resistance.me",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-        default: 0
-      },
-      te: {
-        mnemonic: "Terram",
-        key: "system.bonuses.resistance.te",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-        default: 0
-      },
-      vi: {
-        mnemonic: "Vim",
-        key: "system.bonuses.resistance.vi",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-        default: 0
-      }
+      // added dynamically
     }
   },
   vitals: {
@@ -892,228 +1167,7 @@ export default {
     type: "bonusGeneralAbility",
     mnemonic: "arm5e.sheet.activeEffect.types.generalAbilitiesBonus",
     subtypes: {
-      animalHandling: {
-        mnemonic: "arm5e.skill.general.animalHandling",
-        key: "system.bonuses.skills.animalHandling.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-        default: 2
-      },
-      areaLore: {
-        mnemonic: "arm5e.skill.general.areaLore",
-        key: "system.bonuses.skills.areaLore_#OPTION#.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-        default: 2,
-        option: "areaName"
-      },
-      athletics: {
-        mnemonic: "arm5e.skill.general.athletics",
-        key: "system.bonuses.skills.athletics.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-        default: 2
-      },
-      awareness: {
-        mnemonic: "arm5e.skill.general.awareness",
-        key: "system.bonuses.skills.awareness.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-        default: 2
-      },
-      bargain: {
-        mnemonic: "arm5e.skill.general.bargain",
-        key: "system.bonuses.skills.bargain.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-        default: 2
-      },
-      brawl: {
-        mnemonic: "arm5e.skill.general.brawl",
-        key: "system.bonuses.skills.brawl.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-        default: 2
-      },
-      carouse: {
-        mnemonic: "arm5e.skill.general.carouse",
-        key: "system.bonuses.skills.carouse.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-        default: 2
-      },
-      charm: {
-        mnemonic: "arm5e.skill.general.charm",
-        key: "system.bonuses.skills.charm.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-        default: 2
-      },
-      concentration: {
-        mnemonic: "arm5e.skill.general.concentration",
-        key: "system.bonuses.skills.concentration.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-        default: 2
-      },
-      craft: {
-        mnemonic: "arm5e.skill.general.craft",
-        key: "system.bonuses.skills.craft_#OPTION#.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-        default: 2,
-        option: "craftName"
-      },
-      etiquette: {
-        mnemonic: "arm5e.skill.general.etiquette",
-        key: "system.bonuses.skills.etiquette.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-        default: 2
-      },
-      folkKen: {
-        mnemonic: "arm5e.skill.general.folkKen",
-        key: "system.bonuses.skills.folkKen.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-        default: 2
-      },
-      guile: {
-        mnemonic: "arm5e.skill.general.guile",
-        key: "system.bonuses.skills.guile.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-        default: 2
-      },
-      hunt: {
-        mnemonic: "arm5e.skill.general.hunt",
-        key: "system.bonuses.skills.hunt.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-        default: 2
-      },
-      intrigue: {
-        mnemonic: "arm5e.skill.general.intrigue",
-        key: "system.bonuses.skills.intrigue.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-        default: 2
-      },
-      leadership: {
-        mnemonic: "arm5e.skill.general.leadership",
-        key: "system.bonuses.skills.leadership.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-        default: 2
-      },
-      legerdemain: {
-        mnemonic: "arm5e.skill.general.legerdemain",
-        key: "system.bonuses.skills.legerdemain.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-        default: 2
-      },
-      livingLanguage: {
-        mnemonic: "arm5e.skill.general.livingLanguage",
-        key: "system.bonuses.skills.livingLanguage_#OPTION#.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-        default: 2,
-        option: "languageName"
-      },
-      music: {
-        mnemonic: "arm5e.skill.general.music",
-        key: "system.bonuses.skills.music.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-        default: 2
-      },
-      organizationLore: {
-        mnemonic: "arm5e.skill.general.organizationLore",
-        key: "system.bonuses.skills.organizationLore_#OPTION#.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-        default: 2,
-        option: "organizationName"
-      },
-      profession: {
-        mnemonic: "arm5e.skill.general.profession",
-        key: "system.bonuses.skills.profession_#OPTION#.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-        default: 2,
-        option: "professionName"
-      },
-      ride: {
-        mnemonic: "arm5e.skill.general.ride",
-        key: "system.bonuses.skills.ride.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-        default: 2
-      },
-      stealth: {
-        mnemonic: "arm5e.skill.general.stealth",
-        key: "system.bonuses.skills.stealth.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-        default: 2
-      },
-      survival: {
-        mnemonic: "arm5e.skill.general.survival",
-        key: "system.bonuses.skills.survival.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-        default: 2
-      },
-      swim: {
-        mnemonic: "arm5e.skill.general.swim",
-        key: "system.bonuses.skills.swim.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-        default: 2
-      },
-      teaching: {
-        mnemonic: "arm5e.skill.general.teaching",
-        key: "system.bonuses.skills.teaching.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-        default: 2
-      }
-    }
-  },
-  bonusArcaneAbility: {
-    category: "abilities",
-    type: "bonusArcaneAbility",
-    mnemonic: "arm5e.sheet.activeEffect.types.arcaneAbilitiesBonus",
-    subtypes: {
-      hermeticCode: {
-        mnemonic: "arm5e.skill.arcane.hermeticCode",
-        key: "system.bonuses.skills.hermeticCode.bonus",
-        mode: 2,
-        default: 2
-      },
-      dominionLore: {
-        mnemonic: "arm5e.skill.arcane.dominionLore",
-        key: "system.bonuses.skills.dominionLore.bonus",
-        mode: 2,
-        default: 2
-      },
-      faerieLore: {
-        mnemonic: "arm5e.skill.arcane.faerieLore",
-        key: "system.bonuses.skills.faerieLore.bonus",
-        mode: 2,
-        default: 2
-      },
-      finesse: {
-        mnemonic: "arm5e.skill.arcane.finesse",
-        key: "system.bonuses.skills.finesse.bonus",
-        mode: 2,
-        default: 2
-      },
-      infernalLore: {
-        mnemonic: "arm5e.skill.arcane.infernalLore",
-        key: "system.bonuses.skills.infernalLore.bonus",
-        mode: 2,
-        default: 2
-      },
-      magicLore: {
-        mnemonic: "arm5e.skill.arcane.magicLore",
-        key: "system.bonuses.skills.magicLore.bonus",
-        mode: 2,
-        default: 2
-      },
-      magicTheory: {
-        mnemonic: "arm5e.skill.arcane.magicTheory",
-        key: "system.bonuses.skills.magicTheory.bonus",
-        mode: 2,
-        default: 2
-      },
-      parma: {
-        mnemonic: "arm5e.skill.arcane.parma",
-        key: "system.bonuses.skills.parma.bonus",
-        mode: 2,
-        default: 2
-      },
-      penetration: {
-        mnemonic: "arm5e.skill.arcane.penetration",
-        key: "system.bonuses.skills.penetration.bonus",
-        mode: 2,
-        default: 2
-      }
+      // add dynamically
     }
   },
   bonusAcademicAbility: {
@@ -1121,87 +1175,24 @@ export default {
     type: "bonusAcademicAbility",
     mnemonic: "arm5e.sheet.activeEffect.types.academicAbilitiesBonus",
     subtypes: {
-      artesLib: {
-        mnemonic: "arm5e.skill.academic.artesLib",
-        key: "system.bonuses.skills.artesLib.bonus",
-        mode: 2,
-        default: 2
-      },
-      // civilCanonLaw: {
-      //   mnemonic: "arm5e.skill.academic.civilCanonLaw",
-      //   key: "system.bonuses.skills.civilCanonLaw.bonus",
-      //   mode: 2,
-      //   default: 2
-      // },
-      // commonLaw: {
-      //   mnemonic: "arm5e.skill.academic.commonLaw",
-      //   key: "system.bonuses.skills.commonLaw.bonus",
-      //   mode: 2,
-      //   default: 2
-      // },
-      law: {
-        abel: "arm5e.skill.academic.law",
-        key: "system.bonuses.skills.law_#OPTION#.bonus",
-        mode: 2,
-        default: 2,
-        option: "legalForum"
-      },
-      deadLanguage: {
-        mnemonic: "arm5e.skill.academic.deadLanguage",
-        key: "system.bonuses.skills.deadLanguage_#OPTION#.bonus",
-        mode: 2,
-        default: 2,
-        option: "languageName"
-      },
-      medicine: {
-        mnemonic: "arm5e.skill.academic.medicine",
-        key: "system.bonuses.skills.medicine.bonus",
-        mode: 2,
-        default: 2
-      },
-      philosophy: {
-        mnemonic: "arm5e.skill.academic.philosophy",
-        key: "system.bonuses.skills.philosophy.bonus",
-        mode: 2,
-        default: 2
-      },
-      theology: {
-        mnemonic: "arm5e.skill.academic.theology",
-        key: "system.bonuses.skills.theology.bonus",
-        mode: 2,
-        default: 2
-      }
+      // add dynamically
     }
   },
+  bonusArcaneAbility: {
+    category: "abilities",
+    type: "bonusArcaneAbility",
+    mnemonic: "arm5e.sheet.activeEffect.types.arcaneAbilitiesBonus",
+    subtypes: {
+      // add dynamically
+    }
+  },
+
   bonusMartialAbility: {
     category: "abilities",
     type: "bonusMartialAbility",
     mnemonic: "arm5e.sheet.activeEffect.types.martialAbilitiesBonus",
     subtypes: {
-      bows: {
-        mnemonic: "arm5e.skill.martial.bows",
-        key: "system.bonuses.skills.bows.bonus",
-        mode: 2,
-        default: 2
-      },
-      singleWeapon: {
-        mnemonic: "arm5e.skill.martial.singleWeapon",
-        key: "system.bonuses.skills.singleWeapon.bonus",
-        mode: 2,
-        default: 2
-      },
-      greatWeapon: {
-        mnemonic: "arm5e.skill.martial.greatWeapon",
-        key: "system.bonuses.skills.greatWeapon.bonus",
-        mode: 2,
-        default: 2
-      },
-      trownWeapon: {
-        mnemonic: "arm5e.skill.martial.trownWeapon",
-        key: "system.bonuses.skills.trownWeapon.bonus",
-        mode: 2,
-        default: 2
-      }
+      // add dynamically
     }
   },
   bonusMysteryAbility: {
@@ -1209,37 +1200,7 @@ export default {
     type: "bonusMysteryAbility",
     mnemonic: "arm5e.sheet.activeEffect.types.mysteryAbilitiesBonus",
     subtypes: {
-      enigma: {
-        mnemonic: "arm5e.skill.mystery.enigma",
-        key: "system.bonuses.skills.enigma.bonus",
-        mode: 2,
-        default: 2
-      },
-      faerieMagic: {
-        mnemonic: "arm5e.skill.mystery.faerieMagic",
-        key: "system.bonuses.skills.faerieMagic.bonus",
-        mode: 2,
-        default: 2
-      },
-      heartbeast: {
-        mnemonic: "arm5e.skill.mystery.heartbeast",
-        key: "system.bonuses.skills.heartbeast.bonus",
-        mode: 2,
-        default: 2
-      },
-      verditiusMagic: {
-        mnemonic: "arm5e.skill.mystery.verditiusMagic",
-        key: "system.bonuses.skills.verditiusMagic.bonus",
-        mode: 2,
-        default: 2
-      },
-      cult: {
-        mnemonic: "arm5e.skill.mystery.cult",
-        key: "system.bonuses.skills.cult_#OPTION#.bonus",
-        mode: 2,
-        default: 2,
-        option: "cultName"
-      }
+      // add dynamically
     }
   },
   bonusSupernaturalAbility: {
@@ -1247,73 +1208,7 @@ export default {
     type: "bonusSupernaturalAbility",
     mnemonic: "arm5e.sheet.activeEffect.types.supernaturalAbilitiesBonus",
     subtypes: {
-      animalKen: {
-        mnemonic: "arm5e.skill.supernatural.animalKen",
-        key: "system.bonuses.skills.animalKen.bonus",
-        mode: 2,
-        default: 2
-      },
-      dowsing: {
-        mnemonic: "arm5e.skill.supernatural.dowsing",
-        key: "system.bonuses.skills.dowsing.bonus",
-        mode: 2,
-        default: 2
-      },
-      enchantingMusic: {
-        mnemonic: "arm5e.skill.supernatural.enchantingMusic",
-        key: "system.bonuses.skills.enchantingMusic.bonus",
-        mode: 2,
-        default: 2
-      },
-      entrancement: {
-        mnemonic: "arm5e.skill.supernatural.entrancement",
-        key: "system.bonuses.skills.entrancement.bonus",
-        mode: 2,
-        default: 2
-      },
-      magicSensitivity: {
-        mnemonic: "arm5e.skill.supernatural.magicSensitivity",
-        key: "system.bonuses.skills.magicSensitivity.bonus",
-        mode: 2,
-        default: 2
-      },
-      premonitions: {
-        mnemonic: "arm5e.skill.supernatural.premonitions",
-        key: "system.bonuses.skills.premonitions.bonus",
-        mode: 2,
-        default: 2
-      },
-      secondSight: {
-        mnemonic: "arm5e.skill.supernatural.secondSight",
-        key: "system.bonuses.skills.secondSight.bonus",
-        mode: 2,
-        default: 2
-      },
-      senseHolyAndUnholy: {
-        mnemonic: "arm5e.skill.supernatural.senseHolyAndUnholy",
-        key: "system.bonuses.skills.senseHolyAndUnholy.bonus",
-        mode: 2,
-        default: 2
-      },
-      shapeshifter: {
-        mnemonic: "arm5e.skill.supernatural.shapeshifter",
-        key: "system.bonuses.skills.shapeshifter.bonus",
-        mode: 2,
-        default: 2
-      },
-      supernatural: {
-        mnemonic: "arm5e.skill.supernatural.generic",
-        key: "system.bonuses.skills.supernatural_#OPTION#.bonus",
-        mode: 2,
-        default: 2,
-        option: "supernaturalAbilityName"
-      },
-      wildernessSense: {
-        mnemonic: "arm5e.skill.supernatural.wildernessSense",
-        key: "system.bonuses.skills.wildernessSense.bonus",
-        mode: 2,
-        default: 2
-      }
+      // add dynamically
     }
   },
   bonusAlternateArt: {
@@ -1321,102 +1216,63 @@ export default {
     type: "bonusAlternateArt",
     mnemonic: "arm5e.sheet.activeEffect.types.AlternateArtBonus",
     subtypes: {
-      technique: {
-        mnemonic: "arm5e.skill.generic.technique",
-        key: "system.bonuses.skills.technique_#OPTION#.bonus",
-        mode: 2,
-        default: 2,
-        option: "techniqueName"
-      },
-      form: {
-        mnemonic: "arm5e.skill.generic.form",
-        key: "system.bonuses.skills.form_#OPTION#.bonus",
-        mode: 2,
-        default: 2,
-        option: "formName"
-      }
+      // add dynamically
     }
   },
+
+  xpBonusGeneralAbility: {
+    category: "abilities",
+    type: "xpBonusGeneralAbility",
+    mnemonic: "arm5e.sheet.activeEffect.types.generalAbilitiesXPBonus",
+    subtypes: {
+      // add dynamically
+    }
+  },
+
+  xpBonusAcademicAbility: {
+    category: "abilities",
+    type: "xpBonusAcademicAbility",
+    mnemonic: "arm5e.sheet.activeEffect.types.academicAbilitiesXPBonus",
+    subtypes: {
+      // add dynamically
+    }
+  },
+
+  xpBonusArcaneAbility: {
+    category: "abilities",
+    type: "xpBonusArcaneAbility",
+    mnemonic: "arm5e.sheet.activeEffect.types.arcaneAbilitiesXPBonus",
+    subtypes: {
+      // add dynamically
+    }
+  },
+
+  xpBonusMartialAbility: {
+    category: "abilities",
+    type: "xpBonusMartialAbility",
+    mnemonic: "arm5e.sheet.activeEffect.types.martialAbilitiesXPBonus",
+    subtypes: {
+      // add dynamically
+    }
+  },
+
   xpBonusSupernaturalAbility: {
     category: "abilities",
     type: "xpBonusSupernaturalAbility",
     mnemonic: "arm5e.sheet.activeEffect.types.supernaturalAbilitiesXPBonus",
     subtypes: {
-      animalKen: {
-        mnemonic: "arm5e.skill.supernatural.animalKen",
-        key: "system.bonuses.skills.animalKen.xpMod",
-        mode: 2,
-        default: 5
-      },
-      dowsing: {
-        mnemonic: "arm5e.skill.supernatural.dowsing",
-        key: "system.bonuses.skills.dowsing.xpMod",
-        mode: 2,
-        default: 5
-      },
-      enchantingMusic: {
-        mnemonic: "arm5e.skill.supernatural.enchantingMusic",
-        key: "system.bonuses.skills.enchantingMusic.xpMod",
-        mode: 2,
-        default: 5
-      },
-      entrancement: {
-        mnemonic: "arm5e.skill.supernatural.entrancement",
-        key: "system.bonuses.skills.entrancement.xpMod",
-        mode: 2,
-        default: 5
-      },
-      magicSensitivity: {
-        mnemonic: "arm5e.skill.supernatural.magicSensitivity",
-        key: "system.bonuses.skills.magicSensitivity.xpMod",
-        mode: 2,
-        default: 5
-      },
-      premonitions: {
-        mnemonic: "arm5e.skill.supernatural.premonitions",
-        key: "system.bonuses.skills.premonitions.xpMod",
-        mode: 2,
-        default: 5
-      },
-      secondSight: {
-        mnemonic: "arm5e.skill.supernatural.secondSight",
-        key: "system.bonuses.skills.secondSight.xpMod",
-        mode: 2,
-        default: 5
-      },
-      senseHolyAndUnholy: {
-        mnemonic: "arm5e.skill.supernatural.senseHolyAndUnholy",
-        key: "system.bonuses.skills.senseHolyAndUnholy.xpMod",
-        mode: 2,
-        default: 5
-      },
-      shapeshifter: {
-        mnemonic: "arm5e.skill.supernatural.shapeshifter",
-        key: "system.bonuses.skills.shapeshifter.xpMod",
-        mode: 2,
-        default: 5
-      },
-      supernatural: {
-        mnemonic: "arm5e.skill.supernatural.generic",
-        key: "system.bonuses.skills.supernatural_#OPTION#.xpMod",
-        mode: 2,
-        default: 5,
-        option: "supernaturalAbilityName"
-      },
-      wildernessSense: {
-        mnemonic: "arm5e.skill.supernatural.wildernessSense",
-        key: "system.bonuses.skills.wildernessSense.xpMod",
-        mode: 2,
-        default: 5
-      },
-      heartbeast: {
-        mnemonic: "arm5e.skill.mystery.heartbeast",
-        key: "system.bonuses.skills.heartbeast.xpMod",
-        mode: 2,
-        default: 5
-      }
+      // add dynamically
     }
   },
+  xpBonusMysteryAbility: {
+    category: "abilities",
+    type: "xpBonusMysteryAbility",
+    mnemonic: "arm5e.sheet.activeEffect.types.mysteryAbilitiesXPBonus",
+    subtypes: {
+      // add dynamically
+    }
+  },
+
   // xpBonusMysticalAbility: {
   //   category: "abilities",
   //   type: "xpBonusMysticalAbility",
@@ -1498,167 +1354,7 @@ export default {
     type: "affinityGeneralAbility",
     mnemonic: "arm5e.sheet.activeEffect.types.generalAbilitiesAffinity",
     subtypes: {
-      animalHandling: {
-        mnemonic: "arm5e.skill.general.animalHandling",
-        key: "system.bonuses.skills.animalHandling.xpCoeff",
-        mode: 1,
-        default: 1.5
-      },
-      areaLore: {
-        mnemonic: "arm5e.skill.general.areaLore",
-        key: "system.bonuses.skills.areaLore_#OPTION#.xpCoeff",
-        mode: 1,
-        default: 1.5,
-        option: "areaName"
-      },
-      athletics: {
-        mnemonic: "arm5e.skill.general.athletics",
-        key: "system.bonuses.skills.athletics.xpCoeff",
-        mode: 1,
-        default: 1.5
-      },
-      awareness: {
-        mnemonic: "arm5e.skill.general.awareness",
-        key: "system.bonuses.skills.awareness.xpCoeff",
-        mode: 1,
-        default: 1.5
-      },
-      bargain: {
-        mnemonic: "arm5e.skill.general.bargain",
-        key: "system.bonuses.skills.bargain.xpCoeff",
-        mode: 1,
-        default: 1.5
-      },
-      brawl: {
-        mnemonic: "arm5e.skill.general.brawl",
-        key: "system.bonuses.skills.brawl.xpCoeff",
-        mode: 1,
-        default: 1.5
-      },
-      carouse: {
-        mnemonic: "arm5e.skill.general.carouse",
-        key: "system.bonuses.skills.carouse.xpCoeff",
-        mode: 1,
-        default: 1.5
-      },
-      charm: {
-        mnemonic: "arm5e.skill.general.charm",
-        key: "system.bonuses.skills.charm.xpCoeff",
-        mode: 1,
-        default: 1.5
-      },
-      concentration: {
-        mnemonic: "arm5e.skill.general.concentration",
-        key: "system.bonuses.skills.concentration.xpCoeff",
-        mode: 1,
-        default: 1.5
-      },
-      craft: {
-        mnemonic: "arm5e.skill.general.craft",
-        key: "system.bonuses.skills.craft_#OPTION#.xpCoeff",
-        mode: 1,
-        default: 1.5,
-        option: "craftName"
-      },
-      etiquette: {
-        mnemonic: "arm5e.skill.general.etiquette",
-        key: "system.bonuses.skills.etiquette.xpCoeff",
-        mode: 1,
-        default: 1.5
-      },
-      folkKen: {
-        mnemonic: "arm5e.skill.general.folkKen",
-        key: "system.bonuses.skills.folkKen.xpCoeff",
-        mode: 1,
-        default: 1.5
-      },
-      guile: {
-        mnemonic: "arm5e.skill.general.guile",
-        key: "system.bonuses.skills.guile.xpCoeff",
-        mode: 1,
-        default: 1.5
-      },
-      hunt: {
-        mnemonic: "arm5e.skill.general.hunt",
-        key: "system.bonuses.skills.hunt.xpCoeff",
-        mode: 1,
-        default: 1.5
-      },
-      intrigue: {
-        mnemonic: "arm5e.skill.general.intrigue",
-        key: "system.bonuses.skills.intrigue.xpCoeff",
-        mode: 1,
-        default: 1.5
-      },
-      leadership: {
-        mnemonic: "arm5e.skill.general.leadership",
-        key: "system.bonuses.skills.leadership.xpCoeff",
-        mode: 1,
-        default: 1.5
-      },
-      legerdemain: {
-        mnemonic: "arm5e.skill.general.legerdemain",
-        key: "system.bonuses.skills.legerdemain.xpCoeff",
-        mode: 1,
-        default: 1.5
-      },
-      livingLanguage: {
-        mnemonic: "arm5e.skill.general.livingLanguage",
-        key: "system.bonuses.skills.livingLanguage_#OPTION#.xpCoeff",
-        mode: 1,
-        default: 1.5,
-        option: "languageName"
-      },
-      music: {
-        mnemonic: "arm5e.skill.general.music",
-        key: "system.bonuses.skills.music.xpCoeff",
-        mode: 1,
-        default: 1.5
-      },
-      organizationLore: {
-        mnemonic: "arm5e.skill.general.organizationLore",
-        key: "system.bonuses.skills.organizationLore_#OPTION#.xpCoeff",
-        mode: 1,
-        default: 1.5,
-        option: "orgName"
-      },
-      profession: {
-        mnemonic: "arm5e.skill.general.profession",
-        key: "system.bonuses.skills.profession_#OPTION#.xpCoeff",
-        mode: 1,
-        default: 1.5,
-        option: "professionName"
-      },
-      ride: {
-        mnemonic: "arm5e.skill.general.ride",
-        key: "system.bonuses.skills.ride.xpCoeff",
-        mode: 1,
-        default: 1.5
-      },
-      stealth: {
-        mnemonic: "arm5e.skill.general.stealth",
-        key: "system.bonuses.skills.stealth.xpCoeff",
-        mode: 1,
-        default: 1.5
-      },
-      survival: {
-        mnemonic: "arm5e.skill.general.survival",
-        key: "system.bonuses.skills.survival.xpCoeff",
-        mode: 1,
-        default: 1.5
-      },
-      swim: {
-        mnemonic: "arm5e.skill.general.swim",
-        key: "system.bonuses.skills.swim.xpCoeff",
-        mode: 1,
-        default: 1.5
-      },
-      teaching: {
-        mnemonic: "arm5e.skill.general.teaching",
-        key: "system.bonuses.skills.teaching.xpCoeff",
-        mode: 1,
-        default: 1.5
-      }
+      // add dynamically
     }
   },
   affinityArcaneAbility: {
@@ -1666,60 +1362,7 @@ export default {
     type: "affinityArcaneAbility",
     mnemonic: "arm5e.sheet.activeEffect.types.arcaneAbilitiesAffinity",
     subtypes: {
-      hermeticCode: {
-        mnemonic: "arm5e.skill.arcane.hermeticCode",
-        key: "system.bonuses.skills.hermeticCode.xpCoeff",
-        mode: 1,
-        default: 1.5
-      },
-      dominionLore: {
-        mnemonic: "arm5e.skill.arcane.dominionLore",
-        key: "system.bonuses.skills.dominionLore.xpCoeff",
-        mode: 1,
-        default: 1.5
-      },
-      faerieLore: {
-        mnemonic: "arm5e.skill.arcane.faerieLore",
-        key: "system.bonuses.skills.faerieLore.xpCoeff",
-        mode: 1,
-        default: 1.5
-      },
-      finesse: {
-        mnemonic: "arm5e.skill.arcane.finesse",
-        key: "system.bonuses.skills.finesse.xpCoeff",
-        mode: 1,
-        default: 1.5
-      },
-      infernalLore: {
-        mnemonic: "arm5e.skill.arcane.infernalLore",
-        key: "system.bonuses.skills.infernalLore.xpCoeff",
-        mode: 1,
-        default: 1.5
-      },
-      magicLore: {
-        mnemonic: "arm5e.skill.arcane.magicLore",
-        key: "system.bonuses.skills.magicLore.xpCoeff",
-        mode: 1,
-        default: 1.5
-      },
-      magicTheory: {
-        mnemonic: "arm5e.skill.arcane.magicTheory",
-        key: "system.bonuses.skills.magicTheory.xpCoeff",
-        mode: 1,
-        default: 1.5
-      },
-      parma: {
-        mnemonic: "arm5e.skill.arcane.parma",
-        key: "system.bonuses.skills.parma.xpCoeff",
-        mode: 1,
-        default: 1.5
-      },
-      penetration: {
-        mnemonic: "arm5e.skill.arcane.penetration",
-        key: "system.bonuses.skills.penetration.xpCoeff",
-        mode: 1,
-        default: 1.5
-      }
+      // add dynamically
     }
   },
   affinityAcademicAbility: {
@@ -1727,49 +1370,7 @@ export default {
     type: "affinityAcademicAbility",
     mnemonic: "arm5e.sheet.activeEffect.types.academicAbilitiesAffinity",
     subtypes: {
-      artesLib: {
-        mnemonic: "arm5e.skill.academic.artesLib",
-        key: "system.bonuses.skills.artesLib.xpCoeff",
-        mode: 1,
-        default: 1.5
-      },
-      civilCanonLaw: {
-        mnemonic: "arm5e.skill.academic.civilCanonLaw",
-        key: "system.bonuses.skills.civilCanonLaw.xpCoeff",
-        mode: 1,
-        default: 1.5
-      },
-      commonLaw: {
-        mnemonic: "arm5e.skill.academic.commonLaw",
-        key: "system.bonuses.skills.commonLaw.xpCoeff",
-        mode: 1,
-        default: 1.5
-      },
-      deadLanguage: {
-        mnemonic: "arm5e.skill.academic.deadLanguage",
-        key: "system.bonuses.skills.deadLanguage_#OPTION#.xpCoeff",
-        mode: 1,
-        default: 1.5,
-        option: "languageName"
-      },
-      medicine: {
-        mnemonic: "arm5e.skill.academic.medicine",
-        key: "system.bonuses.skills.medicine.xpCoeff",
-        mode: 1,
-        default: 1.5
-      },
-      philosophy: {
-        mnemonic: "arm5e.skill.academic.philosophy",
-        key: "system.bonuses.skills.philosophy.xpCoeff",
-        mode: 1,
-        default: 1.5
-      },
-      theology: {
-        mnemonic: "arm5e.skill.academic.theology",
-        key: "system.bonuses.skills.theology.xpCoeff",
-        mode: 1,
-        default: 1.5
-      }
+      // add dynamically
     }
   },
   affinityMartialAbility: {
@@ -1777,30 +1378,7 @@ export default {
     type: "affinityMartialAbility",
     mnemonic: "arm5e.sheet.activeEffect.types.martialAbilitiesAffinity",
     subtypes: {
-      bows: {
-        mnemonic: "arm5e.skill.martial.bows",
-        key: "system.bonuses.skills.bows.xpCoeff",
-        mode: 1,
-        default: 1.5
-      },
-      singleWeapon: {
-        mnemonic: "arm5e.skill.martial.singleWeapon",
-        key: "system.bonuses.skills.singleWeapon.xpCoeff",
-        mode: 1,
-        default: 1.5
-      },
-      greatWeapon: {
-        mnemonic: "arm5e.skill.martial.greatWeapon",
-        key: "system.bonuses.skills.greatWeapon.xpCoeff",
-        mode: 1,
-        default: 1.5
-      },
-      trownWeapon: {
-        mnemonic: "arm5e.skill.martial.trownWeapon",
-        key: "system.bonuses.skills.trownWeapon.xpCoeff",
-        mode: 1,
-        default: 1.5
-      }
+      // add dynamically
     }
   },
   affinityMysteryAbility: {
@@ -1808,37 +1386,7 @@ export default {
     type: "affinityMysteryAbility",
     mnemonic: "arm5e.sheet.activeEffect.types.mysteryAbilitiesAffinity",
     subtypes: {
-      enigma: {
-        mnemonic: "arm5e.skill.mystery.enigma",
-        key: "system.bonuses.skills.enigma.xpCoeff",
-        mode: 1,
-        default: 1.5
-      },
-      faerieMagic: {
-        mnemonic: "arm5e.skill.mystery.faerieMagic",
-        key: "system.bonuses.skills.faerieMagic.xpCoeff",
-        mode: 1,
-        default: 1.5
-      },
-      heartbeast: {
-        mnemonic: "arm5e.skill.mystery.heartbeast",
-        key: "system.bonuses.skills.heartbeast.xpCoeff",
-        mode: 1,
-        default: 1.5
-      },
-      verditiusMagic: {
-        mnemonic: "arm5e.skill.mystery.verditiusMagic",
-        key: "system.bonuses.skills.verditiusMagic.xpCoeff",
-        mode: 1,
-        default: 1.5
-      },
-      cult: {
-        mnemonic: "arm5e.skill.mystery.cult",
-        key: "system.bonuses.skills.cult_#OPTION#.xpCoeff",
-        mode: 1,
-        default: 1.5,
-        option: "cultName"
-      }
+      // add dynamically
     }
   },
   affinitySupernaturalAbility: {
@@ -1846,73 +1394,7 @@ export default {
     type: "affinitySupernaturalAbility",
     mnemonic: "arm5e.sheet.activeEffect.types.supernaturalAbilitiesAffinity",
     subtypes: {
-      animalKen: {
-        mnemonic: "arm5e.skill.supernatural.animalKen",
-        key: "system.bonuses.skills.animalKen.xpCoeff",
-        mode: 1,
-        default: 1.5
-      },
-      dowsing: {
-        mnemonic: "arm5e.skill.supernatural.dowsing",
-        key: "system.bonuses.skills.dowsing.xpCoeff",
-        mode: 1,
-        default: 1.5
-      },
-      enchantingMusic: {
-        mnemonic: "arm5e.skill.supernatural.enchantingMusic",
-        key: "system.bonuses.skills.enchantingMusic.xpCoeff",
-        mode: 1,
-        default: 1.5
-      },
-      entrancement: {
-        mnemonic: "arm5e.skill.supernatural.entrancement",
-        key: "system.bonuses.skills.entrancement.xpCoeff",
-        mode: 1,
-        default: 1.5
-      },
-      magicSensitivity: {
-        mnemonic: "arm5e.skill.supernatural.magicSensitivity",
-        key: "system.bonuses.skills.magicSensitivity.xpCoeff",
-        mode: 1,
-        default: 1.5
-      },
-      premonitions: {
-        mnemonic: "arm5e.skill.supernatural.premonitions",
-        key: "system.bonuses.skills.premonitions.xpCoeff",
-        mode: 1,
-        default: 1.5
-      },
-      secondSight: {
-        mnemonic: "arm5e.skill.supernatural.secondSight",
-        key: "system.bonuses.skills.secondSight.xpCoeff",
-        mode: 1,
-        default: 1.5
-      },
-      senseHolyAndUnholy: {
-        mnemonic: "arm5e.skill.supernatural.senseHolyAndUnholy",
-        key: "system.bonuses.skills.senseHolyAndUnholy.xpCoeff",
-        mode: 1,
-        default: 1.5
-      },
-      shapeshifter: {
-        mnemonic: "arm5e.skill.supernatural.shapeshifter",
-        key: "system.bonuses.skills.shapeshifter.xpCoeff",
-        mode: 1,
-        default: 1.5
-      },
-      supernatural: {
-        mnemonic: "arm5e.skill.supernatural.generic",
-        key: "system.bonuses.skills.supernatural_#OPTION#.xpCoeff",
-        mode: 1,
-        default: 1.5,
-        option: "supernaturalAbilityName"
-      },
-      wildernessSense: {
-        mnemonic: "arm5e.skill.supernatural.wildernessSense",
-        key: "system.bonuses.skills.wildernessSense.xpCoeff",
-        mode: 1,
-        default: 1.5
-      }
+      // add dynamically
     }
   },
   affinityAlternateArt: {
@@ -1920,20 +1402,7 @@ export default {
     type: "affinityAlternateArt",
     mnemonic: "arm5e.sheet.activeEffect.types.affinityAlternateArt",
     subtypes: {
-      technique: {
-        mnemonic: "arm5e.skill.technique.generic",
-        key: "system.bonuses.skills.technique_#OPTION#.xpCoeff",
-        mode: 1,
-        default: 1.5,
-        option: "techniqueName"
-      },
-      form: {
-        mnemonic: "arm5e.skill.form.generic",
-        key: "system.bonuses.skills.form_#OPTION#.xpCoeff",
-        mode: 1,
-        default: 1.5,
-        option: "formName"
-      }
+      // add dynamically
     }
   },
 

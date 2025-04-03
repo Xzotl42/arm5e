@@ -200,11 +200,18 @@ export class ArM5eItem extends Item {
     return true;
   }
 
-  async _updateIcon(key, value) {
-    await this.update({
-      img: CONFIG.ARM5E.ItemDataModels[this.type].getIcon(this, value),
-      [key]: value
-    });
+  _updateIcon(value) {
+    if (this.needIconUpdate()) {
+      return {
+        img: CONFIG.ARM5E.ItemDataModels[this.type].getIcon(this, value)
+      };
+    }
+    return {};
+  }
+
+  async updateIcon(value) {
+    const updateData = this._updateIcon(value);
+    await this.update(updateData);
   }
 
   needIconUpdate(value) {
@@ -212,7 +219,7 @@ export class ArM5eItem extends Item {
       let currentDefIcon = CONFIG.ARM5E.ItemDataModels[this.type].getIcon(this);
       // if the current img is the default icon of the previous value, allow change
       if (
-        // this.img === currentDefIcon ||
+        this.img === currentDefIcon ||
         this.img === ARM5E_DEFAULT_ICONS.MONO[this.type] ||
         this.img === ARM5E_DEFAULT_ICONS.COLOR[this.type] ||
         this.img === "icons/svg/mystery-man.svg" ||
