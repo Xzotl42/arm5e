@@ -66,8 +66,6 @@ export class AbilitySchema extends foundry.abstract.TypeDataModel {
   }
 
   static migrateData(data) {
-    if (data.optionLinked === undefined) data.optionLinked = false;
-
     return data;
   }
 
@@ -93,10 +91,7 @@ export class AbilitySchema extends foundry.abstract.TypeDataModel {
 
   async increaseScore() {
     let xpMod = 0;
-    if (
-      ["supernaturalCat", "altTechnique", "altForm"].includes(this.category) &&
-      this.parent.isOwned
-    ) {
+    if (this.parent.isOwned) {
       let key = this.option == "" ? this.key : this.key + "_" + this.option;
       xpMod = this.parent.parent.system.bonuses.skills[key].xpMod;
     }
@@ -121,10 +116,7 @@ export class AbilitySchema extends foundry.abstract.TypeDataModel {
 
   async decreaseScore() {
     let xpMod = 0;
-    if (
-      ["supernaturalCat", "altTechnique", "altForm"].includes(this.category) &&
-      this.parent.isOwned
-    ) {
+    if (this.parent.isOwned) {
       let key = this.option == "" ? this.key : this.key + "_" + this.option;
       xpMod = this.parent.parent.system.bonuses.skills[key].xpMod;
     }
@@ -151,6 +143,15 @@ export class AbilitySchema extends foundry.abstract.TypeDataModel {
       let delta = newXp - this.xp;
       console.log(`Removed ${delta} xps from ${this.xp} to ${newXp} total`);
     }
+  }
+
+  async changeKey(value, updateData = {}) {
+    updateData["system.key"] = value;
+    if (CONFIG.ARM5E.ALL_ABILITIES[value] && CONFIG.ARM5E.ALL_ABILITIES[value].option) {
+      updateData["system.option"] = CONFIG.ARM5E.ALL_ABILITIES[value].optionDefault;
+      updateData["system.optionLinked"] = true;
+    }
+    await this.parent.update(updateData);
   }
 
   static migrate(itemData) {

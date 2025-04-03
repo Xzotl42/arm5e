@@ -100,15 +100,25 @@ export async function getDocumentFromCompendium(pack, id) {
  *
  * @param str
  */
-export function slugify(str) {
-  return String(str)
-    .normalize("NFKD")
-    .replace(/[\u0300-\u036f]/g, "") // Remove all accents.
-    .trim()
-    .toLowerCase()
-    .replace(/[^a-z0-9 -]/g, "") // Remove non-alphanumeric characters
-    .replace(/\s+/g, "-") // Replace spaces with hyphens
-    .replace(/-+/g, "-"); // Remove consecutive hyphens
+export function slugify(str, lowercaseOnly = true) {
+  if (lowercaseOnly) {
+    return String(str)
+      .normalize("NFKD")
+      .replace(/[\u0300-\u036f]/g, "") // Remove all accents.
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9 -]/g, "") // Remove non-alphanumeric characters
+      .replace(/\s+/g, "-") // Replace spaces with hyphens
+      .replace(/-+/g, "-"); // Remove consecutive hyphens
+  } else {
+    return String(str)
+      .normalize("NFKD")
+      .replace(/[\u0300-\u036f]/g, "") // Remove all accents.
+      .trim()
+      .replace(/[^A-Za-z0-9 -]/g, "") // Remove non-alphanumeric characters
+      .replace(/\s+/g, "-") // Replace spaces with hyphens
+      .replace(/-+/g, "-"); // Remove consecutive hyphens
+  }
 }
 
 /**

@@ -503,17 +503,22 @@ export class ArM5eItemSheet extends ItemSheet {
 
   async _changeAbilitykey(item, event) {
     event.preventDefault();
-    await this.item._updateIcon("system.key", event.target.value);
+    const updateData = this.item._updateIcon(event.target.value);
+    await this.item.system.changeKey(event.target.value, updateData);
   }
 
   async _changeInhabitantCategory(item, event) {
     event.preventDefault();
-    await this.item._updateIcon("system.category", event.target.value);
+    const updateData = this.item._updateIcon(event.target.value);
+    updateData["system.category"] = event.target.value;
+    await this.item.update(updateData);
   }
 
   async _changeVFType(item, event) {
     event.preventDefault();
-    await this.item._updateIcon("system.type", event.target.value);
+    const updateData = this.item._updateIcon(event.target.value);
+    updateData["system.type"] = event.target.value;
+    await this.item.update(updateData);
   }
 
   async _onSelectDefaultCharacteristic(item, event) {
@@ -533,7 +538,7 @@ export class ArM5eItemSheet extends ItemSheet {
 
     if (this.item.system.optionLinked) {
       const newName = event.currentTarget.value;
-      const newValue = slugify(event.currentTarget.value); //.replace(/[^a-zA-Z0-9]/gi, "");
+      const newValue = slugify(event.currentTarget.value, false);
       await this.item.update(
         {
           name: newName,
@@ -553,7 +558,7 @@ export class ArM5eItemSheet extends ItemSheet {
       return;
     } else {
       // remove any non alphanumeric character
-      event.currentTarget.value = slugify(event.currentTarget.value); //.replace(/[^a-zA-Z0-9]/gi, "");
+      event.currentTarget.value = slugify(event.currentTarget.value, false);
     }
     await this.item.update(
       {

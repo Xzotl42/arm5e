@@ -827,7 +827,7 @@ export class CovenantSchema extends foundry.abstract.TypeDataModel {
     for (let spe of this.inhabitants.specialists) {
       if (spe.system.category === "specialists") {
         if (spe.system.specialistType == "other" && spe.system.fieldOfWork != "none") {
-          let craft = slugify(spe.system.job);
+          let craft = slugify(spe.system.job, false);
           let saves = spe.system.craftSavings;
           if (!craftSavings[spe.system.fieldOfWork].crafts[craft]) {
             craftSavings[spe.system.fieldOfWork].crafts[craft] = { val: saves, type: "spec" };
@@ -837,7 +837,7 @@ export class CovenantSchema extends foundry.abstract.TypeDataModel {
           craftSavings[spe.system.fieldOfWork].total += saves;
         }
       } else if (spe.system.category === "craftsmen" && spe.system.fieldOfWork != "none") {
-        let craft = slugify(spe.system.job);
+        let craft = slugify(spe.system.job, false);
         let saves = spe.system.craftSavings;
         if (!craftSavings[spe.system.fieldOfWork].crafts[craft]) {
           craftSavings[spe.system.fieldOfWork].crafts[craft] = { val: saves, type: "craft" };

@@ -31,6 +31,8 @@ export class ArM5eSmallSheet extends ArM5eItemSheetNoDesc {
 
   async _changeGravity(item, event) {
     event.preventDefault();
-    await this.item._updateIcon("system.gravity", event.target.value);
+    const updateData = this.item._updateIcon(event.target.value);
+    updateData["system.gravity"] = event.target.value;
+    await this.item.update(updateData);
   }
 }
