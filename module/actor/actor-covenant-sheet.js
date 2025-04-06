@@ -146,10 +146,14 @@ export class ArM5eCovenantActorSheet extends ArM5eActorSheet {
 
     context.system.loyalty.points.actuals =
       context.system.loyalty.points.base + context.system.loyalty.points.modifiersTotal;
-
+    log(
+      false,
+      `total modifiers: ${context.system.loyalty.points.modifiersTotal}, total pts : ${context.system.loyalty.points.actuals}`
+    );
     context.system.loyalty.points.prevailing = ArM5ePCActor.getAbilityScoreFromXp(
       Math.abs(context.system.loyalty.points.actuals)
     );
+
     if (context.system.loyalty.points.actuals < 0) {
       context.system.loyalty.points.prevailing = -context.system.loyalty.points.prevailing;
     }

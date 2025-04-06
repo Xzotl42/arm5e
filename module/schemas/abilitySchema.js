@@ -71,10 +71,7 @@ export class AbilitySchema extends foundry.abstract.DataModel {
 
   async increaseScore() {
     let xpMod = 0;
-    if (
-      ["supernaturalCat", "altTechnique", "altForm"].includes(this.category) &&
-      this.parent.isOwned
-    ) {
+    if (this.parent.isOwned) {
       let key = this.option == "" ? this.key : this.key + "_" + this.option;
       xpMod = this.parent.parent.system.bonuses.skills[key].xpMod;
     }
@@ -99,10 +96,7 @@ export class AbilitySchema extends foundry.abstract.DataModel {
 
   async decreaseScore() {
     let xpMod = 0;
-    if (
-      ["supernaturalCat", "altTechnique", "altForm"].includes(this.category) &&
-      this.parent.isOwned
-    ) {
+    if (this.parent.isOwned) {
       let key = this.option == "" ? this.key : this.key + "_" + this.option;
       xpMod = this.parent.parent.system.bonuses.skills[key].xpMod;
     }

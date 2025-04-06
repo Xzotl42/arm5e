@@ -1,5 +1,19 @@
 # Release notes
 
+## 2.3.2.28, Quendalon, more than just sparows and bunnies
+
+### Features & changes
+
+- Arts and abilities active effects definitions are generated dynamically
+
+### Bug fixes
+
+- Negative values are again taken into account for covenant events loyaty.
+- Longevity ritual cost is computed properly.
+- Longevity ritual for another person is no longer generating an error.
+- Characteristic boost applied 2 times no longer result in undefined value.
+- Effect requisites are properly reset when switch from spell invention to longevity ritual or item investigation.
+
 ## 2.3.2.27, Quendalon, more than just flowers and bees
 
 ### Bug fixes

@@ -71,6 +71,7 @@ import { ArM5eSupernaturalEffectSheet } from "./item/item-supernaturalEffect-she
 import { SupernaturalEffectSchema } from "./schemas/supernaturalEffectSchema.js";
 import { Arm5eSocketHandler } from "./helpers/socket-messages.js";
 import { PowerSchema } from "./schemas/powerSchemas.js";
+import { addActiveEffectsDefinitions } from "./constants/activeEffectsTypes.js";
 // Import { ArtSchema } from "./schemas/artSchema.js";
 
 Hooks.once("i18nInit", async function () {
@@ -226,6 +227,10 @@ Hooks.once("init", async function () {
 });
 
 Hooks.once("ready", async function () {
+  // add generated active effects based on CONFIG
+
+  addActiveEffectsDefinitions();
+
   await migrateSettings();
   // Check that the arm5e-compendia module is at least the minimum version
   const req = game.system.relationships.requires.find((e) => e.id == CONFIG.ARM5E.REF_MODULE_ID);

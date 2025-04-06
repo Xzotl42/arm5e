@@ -2,7 +2,7 @@ import { ARM5E } from "../config.js";
 
 import { log, error, slugify } from "../tools.js";
 
-import ACTIVE_EFFECTS_TYPES from "../constants/activeEffectsTypes.js";
+import { ACTIVE_EFFECTS_TYPES } from "../constants/activeEffectsTypes.js";
 
 /**
  * Extend the base ActiveEffectConfig sheet by limiting what can be edited

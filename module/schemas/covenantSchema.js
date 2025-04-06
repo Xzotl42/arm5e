@@ -152,8 +152,8 @@ export class CovenantSchema extends foundry.abstract.DataModel {
         modifiers: new fields.SchemaField({
           equipment: new fields.StringField({ required: false, blank: false, initial: "standard" }),
           wages: new fields.StringField({ required: false, blank: false, initial: "normal" }),
-          familiarity: basicIntegerField(),
-          events: basicIntegerField(0)
+          familiarity: basicIntegerField(0),
+          events: basicIntegerField(0, -9999)
         })
       }),
       // DEPRECATED

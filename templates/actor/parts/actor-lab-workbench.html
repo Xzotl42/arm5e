@@ -17,8 +17,7 @@
   <div class="flexcol">
     <div class="flexrow flex01" style="margin-bottom: 5px;">
       <label class="header-label flex01" style="padding-right: 5px;">{{localize "arm5e.activity.activity"}}</label>
-      <select class="lab-activity flex01" name="flags.arm5e.planning.type" data-dtype="String"
-        data-activity="{{planning.type}}">
+      <select class="lab-activity flex01" data-dtype="String" data-activity="{{planning.type}}">
         {{selectOptions
           config.activities.lab
           selected=flags.arm5e.planning.type

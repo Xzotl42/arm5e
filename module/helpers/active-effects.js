@@ -1,5 +1,5 @@
 import { ArM5ePCActor } from "../actor/actor.js";
-import ACTIVE_EFFECTS_TYPES from "../constants/activeEffectsTypes.js";
+import { ACTIVE_EFFECTS_TYPES } from "../constants/activeEffectsTypes.js";
 import { ArM5eItem } from "../item/item.js";
 // import { ArM5eItem } from "../item/item.js";
 import { log } from "../tools.js";

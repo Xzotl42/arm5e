@@ -116,7 +116,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
     await GetFilteredMagicalAttributes(context.selection);
 
     GetEnchantmentSelectOptions(context);
-
+    this._prepareCharacterItems(context);
     if (
       context.system.owner &&
       context.system.owner.linked &&
@@ -147,17 +147,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
           data: defaultData
         };
       }
-
-      // if (context.planning.activity === undefined) {
-      //   context.planning.activity = new SpellActivity(
-      //     this.actor.uuid,
-      //     this.actor.system.owner.document.uuid,
-      //     "inventSpell"
-      //   );
-      //   context.planning.type = "inventSpell";
-      // }
     } else {
-      this._prepareCharacterItems(context);
       const defaultType = "none";
       const defaultActivity = new NoLabActivity(this.actor.uuid, defaultType);
       const defaultData = await defaultActivity.getDefaultData();
@@ -173,22 +163,10 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
 
       return context;
     }
+
     const activity = context.planning.activity;
     context.config = CONFIG.ARM5E;
 
-    // Context.planning = this.actor.getFlag(ARM5E.SYSTEM_ID, "planning");
-
-    // if (this.planning === undefined) {
-    //   let newData = await this.planning.activity.getDefaultData();
-    //   this.planning = {
-    //     type: "inventSpell",
-    //     data: newData,
-    //     visibility: { desc: "hide", attr: "hide", options: "hide" },
-    //     modifiers: { generic: 0, aura: 0 },
-    //     distractions: "none",
-    //     magicThSpecApply: false
-    //   };
-    // }
     context.edition = context.config.activities.lab[context.planning.type].edition;
     context.planning.messages = [];
 
@@ -415,6 +393,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
     if (this.actor.flags.arm5e.planning?.activity instanceof SpellActivity) {
       this.actor.flags.arm5e.planning.activity.activateListeners(html);
     }
+
     // Everything below here is only needed if the sheet is editable
     if (!this.options.editable) return;
     html.find(".advanced-req").click(async () => {
@@ -463,7 +442,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
         preventClose: true,
         updateData: { "flags.arm5e.planning.data.receptacle": newReceptacle }
       });
-      render();
+      this.render();
     });
 
     html.find(".aspect-change").change(async (e) => {
@@ -480,7 +459,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
         preventClose: true,
         updateData: { "flags.arm5e.planning.data.receptacle.system.enchantments.aspects": aspects }
       });
-      render();
+      this.render();
     });
     html.find(".effect-change").change(async (e) => {
       const dataset = getDataset(e);
@@ -495,7 +474,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
         preventClose: true,
         updateData: { "flags.arm5e.planning.data.receptacle.system.enchantments.aspects": aspects }
       });
-      render();
+      this.render();
     });
 
     html.find(".owner-link").change(async (ev) => {
@@ -539,7 +518,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
       preventClose: true,
       updateData: { "flags.arm5e.planning.data.visCost": planning.data.visCost }
     });
-    render();
+    this.render();
   }
 
   async _changeActivity(event) {
@@ -783,6 +762,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
               preventClose: true,
               updateData: { "flags.arm5e.planning": planning }
             });
+            this.render();
             return true;
           }
           default:

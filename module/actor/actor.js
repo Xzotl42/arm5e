@@ -11,7 +11,7 @@ import {
   slugify
 } from "../tools.js";
 
-import ACTIVE_EFFECTS_TYPES from "../constants/activeEffectsTypes.js";
+import { ACTIVE_EFFECTS_TYPES } from "../constants/activeEffectsTypes.js";
 
 import { migrateActorData } from "../migration.js";
 
@@ -414,7 +414,7 @@ export class ArM5ePCActor extends Actor {
       } else {
         system.characTotal -= (Math.abs(c.value) * (Math.abs(c.value) + 1)) / 2;
       }
-      c.value = Math.max(c.upgrade, c.value);
+      c.value = Math.max(c.upgrade ?? -99, c.value);
     }
 
     // Fatigue management
