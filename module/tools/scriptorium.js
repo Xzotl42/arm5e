@@ -1387,7 +1387,9 @@ export class Scriptorium extends FormApplication {
           maxLevel: maxLevel,
           xp: entryData[0].system.cappedGain
             ? quality
-            : quality + reader.system.bonuses.activities.reading
+            : quality +
+              reader.system.bonuses.activities.reading +
+              reader.system.bonuses.activities.readingArts
         });
         break;
       case "mastery":

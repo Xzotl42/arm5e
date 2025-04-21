@@ -322,13 +322,14 @@ export class RollChatSchema extends BasicChatSchema {
 
           const updateData = { "system.states.confidencePrompt": false };
           actor._changeFatigueLevel(updateData, this.impact.fatigueLevels, false);
-          await actor.update(updateData);
-          await actor.changeWound(
+          const p0 = actor.update(updateData);
+          const p1 = actor.changeWound(
             1,
             CONFIG.ARM5E.recovery.rankMapping[this.impact.woundGravity],
             game.i18n.localize("arm5e.sheet.fatigueOverflow")
           );
-          await message.update({ "system.impact.applied": true });
+          const p2 = message.update({ "system.impact.applied": true });
+          await Promise.all([p0, p1, p2]);
         });
         btnContainer.append(noConfButton);
         btnCnt++;
@@ -371,8 +372,9 @@ export class RollChatSchema extends BasicChatSchema {
         const tmp = {}; // no update of actor needed, just recompute impact
         msgData.system.impact = actor._changeFatigueLevel(tmp, fatigue);
       }
-      await actor.update(updateData);
-      await this.parent.update(msgData);
+      const p0 = actor.update(updateData);
+      const p1 = this.parent.update(msgData);
+      await Promise.all([p0, p1]);
     }
   }
 

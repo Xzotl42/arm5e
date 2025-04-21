@@ -193,6 +193,7 @@ export class ArM5eActor extends Actor {
       teaching: 0,
       teacher: 0,
       reading: 0,
+      readingArts: 0,
       writing: 0,
       adventuring: 0,
       visStudy: 0

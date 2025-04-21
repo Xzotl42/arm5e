@@ -442,7 +442,15 @@ export class LongevityRitualActivity extends LabActivity {
     return "systems/arm5e/templates/lab-activities/longevity-ritual.html";
   }
   async getDefaultData() {
+    const effect = new ArM5eItem(
+      {
+        name: this.title,
+        type: "spell"
+      },
+      { temporary: true, render: false }
+    );
     return {
+      ...effect.toObject(),
       subject: {
         self: true,
         magical: true,
@@ -507,11 +515,11 @@ export class LongevityRitualActivity extends LabActivity {
       const actor = await fromUuid(this.actorUuid);
       age = actor.system.age.value;
     } else {
-      age = input.data.target.age ?? 35;
+      age = input.data.subject.age ?? 35;
       input.data.subject.age = age;
     }
     return {
-      amount: Math.ceil(age / 10),
+      amount: Math.ceil(age / 5),
       technique: "cr",
       form: "co"
     };
@@ -1100,8 +1108,17 @@ export class InvestigationActivity extends LabActivity {
   }
 
   async getDefaultData() {
-    const result = {};
-    result.receptacle = null;
+    const effect = new ArM5eItem(
+      {
+        name: this.title,
+        type: "spell"
+      },
+      { temporary: true, render: false }
+    );
+    const result = {
+      ...effect.toObject(),
+      receptacle: null
+    };
     return result;
   }
 }

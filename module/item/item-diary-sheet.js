@@ -1016,27 +1016,32 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
       return context;
     }
 
-    let achievementsIndexes = [];
+    let achievementPromises = [];
     for (const achievement of this.item.system.achievements) {
       // if an id exists update it
       let item;
       if (achievement._id) {
-        [item] = await this.actor.updateEmbeddedDocuments("Item", [achievement], {});
+        achievementPromises.push(this.actor.updateEmbeddedDocuments("Item", [achievement], {}));
       } else {
-        [item] = await this.actor.createEmbeddedDocuments("Item", [achievement], {});
-
-        // fill the id of the item created for rollback
-        achievementsIndexes.push(item._id);
+        achievementPromises.push(this.actor.createEmbeddedDocuments("Item", [achievement], {}));
       }
       if (item.isAResource()) {
-        let [track] = await item.createResourceTrackingDiaryEntry(
-          this.item.name,
-          this.actor,
-          item.system.quantity,
-          this.item.system.dates[0]
+        achievementPromises.push(
+          item.createResourceTrackingDiaryEntry(
+            this.item.name,
+            this.actor,
+            item.system.quantity,
+            this.item.system.dates[0]
+          )
         );
-        achievementsIndexes.push(track._id);
       }
+    }
+    await Promise.all(achievementPromises);
+
+    let achievementsIndexes = [];
+    for (const a of achievementPromises) {
+      // fill the id of the item created for rollback
+      achievementsIndexes.push(a._id);
     }
 
     switch (this.item.system.activity) {
@@ -1277,10 +1282,11 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
 
     const actor = this.actor;
     let updateData = [];
+    let promises = [];
     if (this.item.system.achievements.length != 0) {
       let items = this.item.system.achievements.filter((e) => !e.updateExisting).map((e) => e._id);
       if (items.length > 0) {
-        await this.actor.deleteEmbeddedDocuments("Item", items, {});
+        promises.push(this.actor.deleteEmbeddedDocuments("Item", items, {}));
       }
     }
     switch (this.item.system.activity) {
@@ -1309,12 +1315,17 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
               log(false, `Deleted topic : ${topicToDelete}`);
               let topics = foundry.utils.duplicate(book.system.topics);
               topics.splice(indexToDelete, 1);
-              await this.actor.updateEmbeddedDocuments(
-                "Item",
-                [{ _id: book._id, system: { topics: topics }, "flags.arm5e.currentBookTopic": 0 }],
-                {}
+              promises.push(
+                this.actor.updateEmbeddedDocuments(
+                  "Item",
+                  [
+                    { _id: book._id, system: { topics: topics }, "flags.arm5e.currentBookTopic": 0 }
+                  ],
+                  {}
+                )
               );
             } else {
+              await Promise.all(promises);
               ui.notifications.warn(game.i18n.localize("arm5e.scriptorium.msg.topicNoFound"));
               return;
             }
@@ -1322,13 +1333,16 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
             //lab texts
             let topics = foundry.utils.duplicate(book.system.topics);
             topics.splice(dependency.data.topicIndex, dependency.data.topicNumber);
-            await this.actor.updateEmbeddedDocuments(
-              "Item",
-              [{ _id: book._id, system: { topics: topics }, "flags.arm5e.currentBookTopic": 0 }],
-              {}
+            promises.push(
+              this.actor.updateEmbeddedDocuments(
+                "Item",
+                [{ _id: book._id, system: { topics: topics }, "flags.arm5e.currentBookTopic": 0 }],
+                {}
+              )
             );
           }
         } else {
+          await Promise.all(promises);
           ui.notifications.warn(game.i18n.localize("arm5e.scriptorium.msg.topicNoFound"));
           return;
         }
@@ -1339,7 +1353,8 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
       case "itemInvestigation":
       case "twilight":
         // delete the diary entry
-        await this.actor.deleteEmbeddedDocuments("Item", [this.item.id], {});
+        promises.push(this.actor.deleteEmbeddedDocuments("Item", [this.item.id], {}));
+        await Promise.all(promises);
         return;
 
       case "learnSpell":
@@ -1355,13 +1370,15 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
               if (dependency.flags == 0) {
                 let item = new ArM5eItem(r, { temporary: true });
                 // delete
-                await actor.deleteEmbeddedDocuments("Item", [dependency.itemId], {});
+                promises.push(actor.deleteEmbeddedDocuments("Item", [dependency.itemId], {}));
               } else if (dependency.flags == 1) {
                 // resource update
                 let item = actor.items.get(dependency.itemId);
-                await item.update(
-                  { "system.quantity": item.system.quantity + dependency.data.amount },
-                  { parent: actor }
+                promises.push(
+                  item.update(
+                    { "system.quantity": item.system.quantity + dependency.data.amount },
+                    { parent: actor }
+                  )
                 );
               }
             }
@@ -1428,17 +1445,20 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
           actorUpdate.system.arts[artType][a.key].xp = xps < 0 ? 0 : xps;
         }
 
-        await this.actor.deleteEmbeddedDocuments(
-          "Item",
-          this.item.system.progress.newSpells.map((e) => e.id)
+        promises.push(
+          this.actor.deleteEmbeddedDocuments(
+            "Item",
+            this.item.system.progress.newSpells.map((e) => e.id)
+          )
         );
 
-        await this.actor.update(actorUpdate, { render: true });
-        await this.actor.updateEmbeddedDocuments("Item", updateData, { render: true });
+        promises.push(this.actor.update(actorUpdate, { render: true }));
+        promises.push(this.actor.updateEmbeddedDocuments("Item", updateData, { render: true }));
 
         if (["visExtraction", "visStudy", "minorEnchantment"].includes(this.item.system.activity)) {
           // delete the diary entry
-          await this.actor.deleteEmbeddedDocuments("Item", [this.item.id], {});
+          promises.push(this.actor.deleteEmbeddedDocuments("Item", [this.item.id], {}));
+          await Promise.all(promises);
           return;
         }
         break;
@@ -1449,7 +1469,10 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
           game.i18n.localize("arm5e.aging.rollback.confirm"),
           ArM5eActorSheet.getFlavor(this.item.actor?.type)
         );
-        if (!confirmed) return;
+        if (!confirmed) {
+          await Promise.all(promises);
+          return;
+        }
         let actorUpdate = {
           "system.states.pendingCrisis": false
         };
@@ -1484,16 +1507,21 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
             actor.system.warping.points - CONFIG.ARM5E.activities.aging.warping.impact;
           actorUpdate.system.warping = { points: newWarping < 0 ? 0 : newWarping };
         }
-        await this.actor.update(actorUpdate, {});
-        await this.actor.deleteEmbeddedDocuments("Item", [this.item.id], {});
+        promises.push(this.actor.update(actorUpdate, {}));
+        promises.push(this.actor.deleteEmbeddedDocuments("Item", [this.item.id], {}));
+        await Promise.all(promises);
         return;
         break;
       }
     }
     let description = this.item.system.description + "<h4>Rollbacked<h4>";
-    await this.item.update({
-      system: { done: false, description: description }
-    });
+    promises.push(
+      this.item.update({
+        system: { done: false, description: description }
+      })
+    );
+
+    await Promise.all(promises);
   }
 
   async _addNewSpell(spell) {

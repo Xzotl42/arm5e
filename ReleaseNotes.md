@@ -1,4 +1,4 @@
-## 2.4.0.3, Radislav am Polanach
+## 2.4.0.4, Radislav am Polanach
 
 ### Compatibility change
 
@@ -26,6 +26,9 @@
 - Dropping a book's lab text topic from an Actor library on to a lab will now work
 - Gift type of magi inhabitants is set automatically if they have Gentle Gift or Blatant Gift.
 - Arts and abilities active effects definitions are generated dynamically
+- New active effects:
+  - Reading about Art (Study bonus)
+- [technical] Speed optimization all over the place
 
 ### Bug fixes
 
@@ -50,6 +53,21 @@
 - [Dice so nice] The system will let the animation finish before anouncing a die explosion or asking the number of botch dice.
 - Form is properly taken into account when resisting power and magic item effects
 - Ability option clean-up leaves capitalization as is.
+- Botching during vis study can now trigger a twilight episode.
+
+## 2.3.2.28, Quendalon, more than just sparows and bunnies
+
+### Features & changes
+
+- Arts and abilities active effects definitions are generated dynamically
+
+### Bug fixes
+
+- Negative values are again taken into account for covenant events loyaty.
+- Longevity ritual cost is computed properly.
+- Longevity ritual for another person is no longer generating an error.
+- Characteristic boost applied 2 times no longer result in undefined value.
+- Effect requisites are properly reset when switch from spell invention to longevity ritual or item investigation.
 
 ## 2.3.2.27, Quendalon, more than just flowers and bees
 

@@ -1030,9 +1030,15 @@ export function computeTotals(context) {
 
 export async function setVisStudyResults(actor, roll, message, rollInfo) {
   if (roll.botches > 0) {
-    await actor.update({
-      "system.warping.points": actorCaster.system.warping.points + roll.botches
-    });
+    if (roll.botches >= actor.system.bonuses.arts.warpingThreshold) {
+      // twilight pending
+      updateData["system.twilight.pointsGained"] = roll.botches;
+      updateData["system.twilight.stage"] = TWILIGHT_STAGES.PENDING_STRENGTH;
+      updateData["system.twilight.year"] = actor.rollInfo.environment.year;
+      updateData["system.twilight.season"] = actor.rollInfo.environment.season;
+    }
+    updateData["system.warping.points"] = actor.system.warping.points + roll.botches;
+    await actor.update(updateData);
     //ui.notifications.info()
   } else {
     let diaryitem = actor.items.get(actor.rollInfo.additionalData.diaryId);
