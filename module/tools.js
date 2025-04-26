@@ -344,12 +344,14 @@ export function hermeticFilter(filters, inputArray) {
     filters.levelFilter !== "" &&
     filters.levelFilter !== "0"
   ) {
-    if (filters.levelOperator === 0) {
-      inputArray = inputArray.filter((e) => e.system.level === parseInt(filters.levelFilter));
-    } else if (filters.levelOperator === -1) {
-      inputArray = inputArray.filter((e) => e.system.level <= parseInt(filters.levelFilter));
+    const operator = parseInt(filters.levelOperator);
+    const level = parseInt(filters.levelFilter);
+    if (operator === 0) {
+      inputArray = inputArray.filter((e) => e.system.level === level);
+    } else if (operator === -1) {
+      inputArray = inputArray.filter((e) => e.system.level <= level);
     } else {
-      inputArray = inputArray.filter((e) => e.system.level >= parseInt(filters.levelFilter));
+      inputArray = inputArray.filter((e) => e.system.level >= level);
     }
   }
   return inputArray;
@@ -374,18 +376,14 @@ export function topicFilter(filters, inputArray, typeField) {
     filters.levelFilter !== "" &&
     filters.levelFilter !== "0"
   ) {
-    if (filters.levelOperator === 0) {
-      inputArray = inputArray.filter(
-        (e) => e.type === "Tractatus" || e.level === parseInt(filters.levelFilter)
-      );
-    } else if (filters.levelOperator === -1) {
-      inputArray = inputArray.filter(
-        (e) => e.type === "Tractatus" || e.level <= parseInt(filters.levelFilter)
-      );
+    const operator = parseInt(filters.levelOperator);
+    const level = parseInt(filters.levelFilter);
+    if (operator === 0) {
+      inputArray = inputArray.filter((e) => e.type === "Tractatus" || e.level === level);
+    } else if (operator === -1) {
+      inputArray = inputArray.filter((e) => e.type === "Tractatus" || e.level <= level);
     } else {
-      inputArray = inputArray.filter(
-        (e) => e.type === "Tractatus" || e.level >= parseInt(filters.levelFilter)
-      );
+      inputArray = inputArray.filter((e) => e.type === "Tractatus" || e.level >= level);
     }
   }
   if (
@@ -394,12 +392,14 @@ export function topicFilter(filters, inputArray, typeField) {
     filters.qualityFilter !== "" &&
     filters.qualityFilter !== "0"
   ) {
-    if (filters.qualityOperator === 0) {
-      inputArray = inputArray.filter((e) => e.quality === parseInt(filters.qualityFilter));
-    } else if (filters.qualityOperator === -1) {
-      inputArray = inputArray.filter((e) => e.quality <= parseInt(filters.qualityFilter));
+    const operator = parseInt(filters.qualityOperator);
+    const level = parseInt(filters.qualityFilter);
+    if (operator === 0) {
+      inputArray = inputArray.filter((e) => e.quality === level);
+    } else if (operator === -1) {
+      inputArray = inputArray.filter((e) => e.quality <= level);
     } else {
-      inputArray = inputArray.filter((e) => e.quality >= parseInt(filters.qualityFilter));
+      inputArray = inputArray.filter((e) => e.quality >= level);
     }
   }
   return inputArray;
@@ -423,12 +423,14 @@ export function hermeticTopicFilter(filters, inputArray) {
     filters.qualityFilter !== "" &&
     filters.qualityFilter !== "0"
   ) {
-    if (filters.qualityOperator === 0) {
-      inputArray = inputArray.filter((e) => e.quality === parseInt(filters.qualityFilter));
-    } else if (filters.qualityOperator === -1) {
-      inputArray = inputArray.filter((e) => e.quality <= parseInt(filters.qualityFilter));
+    const operator = parseInt(filters.qualityOperator);
+    const level = parseInt(filters.qualityFilter);
+    if (operator === 0) {
+      inputArray = inputArray.filter((e) => e.quality === level);
+    } else if (operator === -1) {
+      inputArray = inputArray.filter((e) => e.quality <= level);
     } else {
-      inputArray = inputArray.filter((e) => e.quality >= parseInt(filters.qualityFilter));
+      inputArray = inputArray.filter((e) => e.quality >= level);
     }
   }
   return inputArray;

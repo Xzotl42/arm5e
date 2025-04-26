@@ -1,5 +1,18 @@
 # Release notes
 
+## 2.3.2.29, Quendalon, power to the narrative
+
+### Features & changes
+
+- New active effects:
+  - Reading about Art (Study bonus)
+
+### Bug fixes
+
+- Fixed active effects creation and update of optional abilities
+- Filters based on a numerical value are working again.
+- Enchantment capacities are computed properly.
+
 ## 2.3.2.28, Quendalon, more than just sparows and bunnies
 
 ### Features & changes

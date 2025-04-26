@@ -39,7 +39,7 @@
               data-dtype="Number"
               style="margin-right: 4px; max-width:40px"
               class="minyear-filter resource-focus"
-              data-list="{{@root.list}}"
+              data-list="{{../list}}"
               data-category="events"
             />
           {{/with}}
@@ -47,6 +47,7 @@
         <span class="flex03">
           <label for="system.maxYearFilter" class="header-label">
             {{localize "arm5e.time.maxYear"}}</label>
+          {{log "list " list}}
           {{#with (lookup ui.filters.events list)}}
             <input
               type="number"
@@ -55,7 +56,7 @@
               data-dtype="Number"
               style="margin-right: 4px; max-width:40px"
               class="maxyear-filter resource-focus"
-              data-list="{{@root.list}}"
+              data-list="{{../list}}"
               data-category="events"
             />
           {{/with}}

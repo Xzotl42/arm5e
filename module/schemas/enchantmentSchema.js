@@ -112,6 +112,7 @@ export class EnchantmentExtension extends foundry.abstract.DataModel {
           initial: []
         }
       ),
+      compounded: boolOption(true),
       charges: new fields.NumberField({
         required: false,
         nullable: true,
