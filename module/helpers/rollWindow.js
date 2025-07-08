@@ -712,8 +712,10 @@ async function castSupernaturalEffect(actorCaster, roll, message) {
   // First check that the spell succeeds
   const levelOfSpell = actorCaster.rollInfo.magic.level;
   const totalOfSpell = Math.round(roll._total);
-  message.system.roll.difficulty = levelOfSpell;
-  message.type = "magic";
+  const messageUpdate = {};
+  const updateData = {};
+  messageUpdate["system.roll.difficulty"] = levelOfSpell;
+  messageUpdate["type"] = "magic";
   if (roll.botches > 0) {
     const updateData = {};
     if (roll.botches >= actorCaster.system.bonuses.arts.warpingThreshold) {

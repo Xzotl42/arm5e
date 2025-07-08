@@ -75,7 +75,7 @@ export class EnchantmentExtension extends foundry.abstract.DataModel {
           }
         ]
       }),
-      compounded: boolOption(),
+      compounded: boolOption(true),
       capacityMode: new fields.StringField({
         required: false,
         blank: false,

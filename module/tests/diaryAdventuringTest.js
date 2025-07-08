@@ -3,6 +3,7 @@ import { getCompanion, getMagus } from "./testData.js";
 import { ArsLayer } from "../ui/ars-layer.js";
 import { ARM5E } from "../config.js";
 import Aura from "../helpers/aura.js";
+import { getAbilityFromCompendium } from "../tools/compendia.js";
 
 // import { Quench } from "../quench.js";
 
@@ -119,6 +120,67 @@ export function registerAdventuringTesting(quench) {
           assert.ok(true);
           sheet.close();
         });
+        it("Multiple Abilities", async function () {
+          let sheet = entry.sheet;
+
+          const sheetData = await entry.sheet.getData();
+          log(false, JSON.stringify(sheetData.system));
+          // sheet._tabs[0].activate("advanced");
+          expect(entry.system.done).to.equal(false);
+          expect(entry.system.dates.length).to.equal(1);
+
+          expect(entry.system.progress.abilities.length).to.equal(0);
+          const abilities = [magus.system.abilities[0]];
+          abilities.push(await getAbilityFromCompendium("areaLore", "Geneva"));
+          const oldXps = [abilities[0].system.xp, 0];
+          let progressItemCol = await addProgressItem(
+            entry,
+            "abilities",
+            abilities[0]._id,
+            sheetData
+          );
+
+          entry.sheet._addAbility(abilities[1]);
+
+          const progressAbilities = foundry.utils.duplicate(entry.system.progress.abilities);
+          expect(entry.system.progress.spells.length).to.equal(0);
+          expect(entry.system.progress.arts.length).to.equal(0);
+          expect(entry.system.progress.newSpells.length).to.equal(0);
+          expect(entry.system.progress.abilities.length).to.equal(2);
+
+          result = await sheet._onProgressApply(event, false);
+
+          expect(result.system.applyError).to.equal("arm5e.activity.msg.wrongTotalXp");
+
+          // assign xp
+
+          progressAbilities[0].xp = 99;
+          await entry.update({ "system.progress.abilities": progressAbilities });
+          result = await sheet._onProgressApply(event, false);
+
+          expect(result.system.applyError).to.equal("arm5e.activity.msg.wrongSingleItemXp");
+          progressAbilities[0].xp = 3 + result.system.sourceModifier;
+          progressAbilities[1].xp = 2;
+          await entry.update({ "system.progress.abilities": progressAbilities });
+
+          result = await sheet._onProgressApply(event, false);
+
+          expect(result.system.applyError).to.equal("");
+
+          expect(abilities[0].system.xp).to.equal(oldXps[0] + 3);
+          abilities[1] = magus.getAbility("areaLore", "Geneva");
+          expect(abilities[1] != undefined);
+          expect(abilities[1].system.xp).to.equal(oldXps[1] + 2);
+
+          await sheet._onProgressRollback(undefined, false);
+          expect(abilities[0].system.xp).to.equal(oldXps[0]);
+          expect(abilities[1].system.xp).to.equal(oldXps[1]);
+          // log(false, JSON.stringify(sheetData));
+          await entry.update({ "system.progress.abilities": [] });
+          assert.ok(true);
+          sheet.close();
+        });
+
         it("Single spell", async function () {
           let sheet = entry.sheet;
 

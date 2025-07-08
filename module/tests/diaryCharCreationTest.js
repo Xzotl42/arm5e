@@ -280,7 +280,7 @@ export function registerApprenticeshipTesting(quench) {
             { temporary: true }
           );
 
-          await sheet._addNewSpell(spell);
+          await sheet.addNewSpell(spell);
 
           expect(entry.system.progress.spells.length).to.equal(0);
           expect(entry.system.progress.arts.length).to.equal(0);
@@ -309,9 +309,6 @@ export function registerApprenticeshipTesting(quench) {
       after(async function () {
         if (actor) {
           await actor.delete();
-        }
-        if (magusToken) {
-          await magusToken.delete();
         }
         if (magus) {
           await magus.delete();

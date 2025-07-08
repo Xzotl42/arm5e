@@ -4,6 +4,66 @@ import { InvestigationRoll } from "../tools/investigationRoll.js";
 import { getAbilityFromCompendium } from "../tools/compendia.js";
 import { ArsRoll } from "./stressdie.js";
 import { DiaryEntrySchema } from "../schemas/diarySchema.js";
+import {
+  AgingActivity,
+  BookActivity,
+  DiaryActivity,
+  ProgressActivity,
+  RecoveryActivity,
+  ResourceActivity,
+  TwilightActivity,
+  VisStudy
+} from "../seasonal-activities/progressActivity.js";
+import { LabActivity } from "../seasonal-activities/labActivity.js";
+
+export function ActivityFactory(type, owner, diaryData) {
+  let ownerUuid = owner ? owner.uuid : null;
+  switch (type) {
+    case "inventSpell":
+    case "learnSpell":
+    case "minorEnchantment":
+    case "chargedItem":
+    case "visExtraction":
+    case "longevityRitual":
+    case "investigateItem":
+      const labUuid = diaryData.lab ? diaryData.lab.uuid : null;
+      ownerUuid = diaryData.lab ? diaryData.lab.owner : null;
+      return LabActivity.LabActivityFactory(labUuid, ownerUuid, type);
+    case "resource":
+    case "lab":
+      const labUuid2 = diaryData.lab ? diaryData.lab.uuid : null;
+      ownerUuid = diaryData.lab ? diaryData.lab.owner : null;
+      return new ResourceActivity(labUuid2, ownerUuid, type);
+    case "adventuring":
+    case "exposure":
+    case "practice":
+    case "training":
+    case "teaching":
+    case "hermeticApp":
+    case "childhood":
+    case "laterLife":
+    case "laterLifeMagi":
+      return new ProgressActivity(ownerUuid, type);
+    case "reading":
+    case "writing":
+    case "copying":
+      let book = diaryData.externalIds.length > 0 ? diaryData.externalIds[0].itemId : null;
+      return new BookActivity(ownerUuid, book, type);
+    case "aging":
+      return new AgingActivity(ownerUuid);
+    case "twilight":
+      return new TwilightActivity(ownerUuid);
+    case "visStudy":
+      return new VisStudy(ownerUuid);
+    case "recovery":
+      return new RecoveryActivity(ownerUuid);
+    case "none":
+      return new DiaryActivity(ownerUuid);
+    default:
+      log(false, "Unknown activity");
+      return null;
+  }
+}
 
 export async function setAgingEffects(actor, roll, message) {
   let rtCompendium = game.packs.get("arm5e.rolltables");
@@ -238,8 +298,13 @@ export class TwilightEpisode {
     return formData;
   }
 }
+
 export async function createTwilightDiaryEntry(actor, input) {
-  let diaryEntry = {
+  return actor.createEmbeddedDocuments("Item", [_createTwilightDiaryEntry(input)], {});
+}
+
+function _createTwilightDiaryEntry(input) {
+  return {
     name: game.i18n.localize("arm5e.twilight.episode"),
     img: "systems/arm5e/assets/icons/Icon_Warping.png",
     type: "diaryEntry",
@@ -252,7 +317,6 @@ export async function createTwilightDiaryEntry(actor, input) {
       rollDone: input.rollDone ?? false
     }
   };
-  return await actor.createEmbeddedDocuments("Item", [diaryEntry], {});
 }
 
 export async function twilightUnderstandingRoll(item) {
@@ -294,6 +358,7 @@ export async function twilightControl(actor, roll, message) {
   const updateData = {};
 
   const msgUpdate = {};
+  const promises = [];
   if (roll.botches) {
     // botch => impossible to understand, direct diary entry:
     const dur = await TwilightEpisode.getDuration(actor.system.warping.finalScore);
@@ -311,12 +376,11 @@ export async function twilightControl(actor, roll, message) {
         "<br/>" +
         TwilightEpisode.getTechnicalDescription(actor.system.twilight.pointsGained, dur)
     };
-    const [diary] = await createTwilightDiaryEntry(actor, input);
+    promises.push(createTwilightDiaryEntry(actor, input));
+
     msgUpdate["flavor"] = message.flavor + game.i18n.localize("arm5e.twilight.chat.botchedControl");
-    await message.update(msgUpdate);
-    await resetTwilight(actor, roll, message);
-    diary.sheet.render(true);
-    return;
+    message.updateSource(msgUpdate);
+    promises.push(actor.update(_resetTwilight(), {}));
   } else if (roll.total >= actor.system.twilight.strength) {
     const input = {
       year: actor.rollInfo.environment.year,
@@ -329,12 +393,14 @@ export async function twilightControl(actor, roll, message) {
         str: actor.system.twilight.strength
       })
     };
-    await createTwilightDiaryEntry(actor, input);
     msgUpdate["flavor"] =
       message.flavor + `<h2>${game.i18n.localize("arm5e.twilight.chat.successControl")}</h2>`;
-    await message.update(msgUpdate);
-    await resetTwilight(actor, roll, message);
-    return;
+
+    promises.push(createTwilightDiaryEntry(actor, input));
+
+    message.updateSource(msgUpdate);
+
+    promises.push(actor.update(_resetTwilight(), {}));
   } else {
     updateData["system.twilight.year"] = actor.rollInfo.environment.year;
     updateData["system.twilight.season"] = actor.rollInfo.environment.season;
@@ -344,10 +410,14 @@ export async function twilightControl(actor, roll, message) {
     updateData["system.twilight.stage"] = TWILIGHT_STAGES.PENDING_COMPLEXITY;
     msgUpdate["flavor"] =
       message.flavor + `<h2>${game.i18n.localize("arm5e.twilight.chat.failedControl")}</h2>`;
-    await message.update(msgUpdate);
+
+    message.updateSource(msgUpdate);
+    promises.push(actor.update(updateData, {}));
   }
-  await actor.update(updateData, {});
+  await Promise.all(promises);
+  if (promises[0].result.type === "diaryEntry") promises[0].sheet.render(true);
 }
+
 export async function twilightUnderstanding(actor, roll, message) {
   const msgUpdate = {};
   const diaryUpdate = {};
@@ -404,13 +474,19 @@ export async function twilightUnderstanding(actor, roll, message) {
     msgUpdate["flavor"] =
       message.flavor + `<h2>${game.i18n.localize("arm5e.twilight.chat.failedUnderstanding")}</h2>`;
   }
-  await message.update(msgUpdate);
-  await diary.update(diaryUpdate);
-  await resetTwilight(actor, roll, message);
+  message.updateSource(msgUpdate);
+  const promises = [];
+  promises.push(diary.update(diaryUpdate));
+  promises.push(actor.update(_resetTwilight(), {}));
+  await Promise.all(promises);
   diary.sheet.render(true);
 }
 
-export async function resetTwilight(actor, roll, message) {
+export async function resetTwilight(actor) {
+  await actor.update(_resetTwilight(), {});
+}
+
+export function _resetTwilight() {
   const updateData = {};
   updateData["system.twilight.year"] = null;
   updateData["system.twilight.season"] = null;
@@ -421,28 +497,75 @@ export async function resetTwilight(actor, roll, message) {
   updateData["system.twilight.enigmaSpec"] = false;
   updateData["system.twilight.concentrationSpec"] = false;
   updateData["system.twilight.stage"] = TWILIGHT_STAGES.NONE;
-  await actor.update(updateData, {});
+  return updateData;
 }
 
 // ********************
 // Progress activities
 // ********************
 
+export function listOfPartialDates(actor, item) {
+  const partialDates = [];
+}
+
 export function genericValidationOfActivity(context, actor, item) {
+  context.partialDates = [];
   // check if there are any previous activities not applied.
   if (context.enforceSchedule && item.system.hasUnappliedActivityInThePast(actor)) {
     context.system.applyPossible = false;
     context.system.applyError = "arm5e.activity.msg.unappliedActivities";
+    return;
   }
-  // check if it ends in the future
-  let currentDate = game.settings.get("arm5e", "currentDate");
+
+  const currentDate = game.settings.get("arm5e", "currentDate");
+  // check if it starts in the future
   if (
-    context.lastSeason.year > currentDate.year ||
-    (context.lastSeason.year == currentDate.year &&
-      CONFIG.SEASON_ORDER[context.lastSeason.season] > CONFIG.SEASON_ORDER[currentDate.season])
+    context.firstSeason.year > currentDate.year ||
+    (context.firstSeason.year == currentDate.year &&
+      CONFIG.SEASON_ORDER[context.firstSeason.season] > CONFIG.SEASON_ORDER[currentDate.season])
   ) {
     context.system.applyPossible = false;
-    context.system.applyError = "arm5e.activity.msg.activityEndsInFuture";
+    context.system.applyError = "arm5e.activity.msg.activityStartsInFuture";
+    return;
+  }
+  const activityConfig = CONFIG.ARM5E.activities.generic[context.system.activity];
+  if (activityConfig.scheduling.partial && context.system.duration > 1) {
+    // get how many unapplied seasons are in the past
+    context.partialDates = context.system.dates.filter(
+      (e) =>
+        e.applied == false &&
+        (e.year <= currentDate.year ||
+          (e.year == currentDate.year &&
+            CONFIG.SEASON_ORDER[e.season] <= CONFIG.SEASON_ORDER[currentDate.season]))
+    );
+    if (context.partialDates.length == 0) {
+      context.system.applyPossible = false;
+      context.partialApply = false;
+      context.system.applyError = "arm5e.activity.msg.noProgressPossible";
+    } else {
+      context.partialApply = true;
+    }
+
+    if (
+      context.lastSeason.year > currentDate.year ||
+      (context.lastSeason.year == currentDate.year &&
+        CONFIG.SEASON_ORDER[context.lastSeason.season] > CONFIG.SEASON_ORDER[currentDate.season])
+    ) {
+      context.system.applyPossible = false;
+      context.endsInTheFuture = true;
+    }
+  } else {
+    // check if it ends in the future
+    if (
+      context.lastSeason.year > currentDate.year ||
+      (context.lastSeason.year == currentDate.year &&
+        CONFIG.SEASON_ORDER[context.lastSeason.season] > CONFIG.SEASON_ORDER[currentDate.season])
+    ) {
+      context.endsInTheFuture = true;
+      context.partialApply = false;
+      context.system.applyPossible = false;
+      context.system.applyError = "arm5e.activity.msg.activityEndsInFuture";
+    }
   }
 }
 

@@ -90,6 +90,14 @@ export class LabSchema extends foundry.abstract.TypeDataModel {
       this.owner.linked = false;
     }
 
+    this.covenant.document = game.actors.get(this.covenant.actorId);
+    if (this.covenant.document) {
+      this.covenant.value = this.covenant.document.name;
+      this.covenant.linked = true;
+    } else {
+      this.covenant.linked = false;
+    }
+
     // Hopefully this can be reworked to use ID instead of name
     this.aura = new Aura(this.covenant.document?.system?.scene?.id);
   }

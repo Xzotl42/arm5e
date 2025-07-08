@@ -56,7 +56,7 @@ export class ActivitySchedule extends FormApplication {
 
     data.selectedDates = [];
     const YEARS_BACK = 2;
-    const YEARS_FORWARD = 5;
+    const YEARS_FORWARD = 3;
     const MIN_YEAR = Math.min(data.displayYear - YEARS_BACK, data.firstYear);
     const MAX_YEAR = Math.max(
       data.displayYear + YEARS_FORWARD,
@@ -116,6 +116,12 @@ export class ActivitySchedule extends FormApplication {
           (y == data.curYear && CONFIG.SEASON_ORDER[data.curSeason] < CONFIG.SEASON_ORDER[s])
         ) {
           year.seasons[s].future = true;
+        } else if (
+          y == data.curYear &&
+          CONFIG.SEASON_ORDER[data.curSeason] == CONFIG.SEASON_ORDER[s]
+        ) {
+          // styling for today
+          year.seasons[s].today = true;
         }
         // flag current activity schedule
         if (dateIndex < dates.length) {
@@ -175,6 +181,8 @@ export class ActivitySchedule extends FormApplication {
           }
           if (event.future) {
             event.style += " future";
+          } else if (event.today) {
+            event.style += " today";
           }
         } else {
           if (event.others.length > 0) {
@@ -197,6 +205,8 @@ export class ActivitySchedule extends FormApplication {
           }
           if (event.future) {
             event.style += " future";
+          } else if (event.today) {
+            event.style += " today";
           }
           if (data.selectedCnt == data.activity.system.duration) {
             event.edition = false;

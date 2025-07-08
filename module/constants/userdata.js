@@ -43,7 +43,7 @@ function updateUserCache(actorId, category, list, key, value) {
   } else {
     usercache[actorId].filters[category][list][key] = value;
   }
-  log(false, `Set field ${key} to ${value}`);
+  log(false, `Set field ${key} of ${list ?? "unknown"} to ${value}`);
   sessionStorage.setItem(`usercache-${game.user.id}`, JSON.stringify(usercache));
 }
 

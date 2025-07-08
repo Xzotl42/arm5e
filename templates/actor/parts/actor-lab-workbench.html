@@ -39,6 +39,19 @@
             id="planning-options-{{@root.actor._id}}">
             <div class="flexrow">
               <div class="resource flexcol flex-center">
+                <label class="header-label">{{localize "arm5e.spell.applyFocus" }}</label>
+                <input type="checkbox" name="flags.arm5e.planning.applyFocus" {{checked planning.applyFocus}} />
+              </div>
+              {{!--#unless (eq planning.type "spellLearning")}}
+                <div class="resource flexcol flex-center">
+                  <label class="header-label">{{localize "arm5e.lab.specialty.experimentation" }}</label>
+                  <input type="checkbox" name="flags.arm5e.planning.experimentation" {{checked
+                    planning.experimentation}} />
+                  <input type="number" class="resource-focus slim" name="flags.arm5e.planning.experimentationBonus"
+                    value="{{planning.experimentationBonus}}" />
+                </div>
+              {{/unless--}}
+              <div class="resource flexcol flex-center">
                 <label class="header-label ">{{localize "arm5e.skill.arcane.magicTheory"}}
                   {{localize "arm5e.sheet.speciality"}}</label>
                 <input class="flex01" title="{{system.owner.magicTheory.speciality}}" type="text"

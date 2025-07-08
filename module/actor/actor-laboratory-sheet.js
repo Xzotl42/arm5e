@@ -594,7 +594,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
     if (onlyData) return planning;
     let tmp = await this.actor.update(
       { "flags.arm5e.planning": planning },
-      { diff: false, recursive: true, render: true }
+      { diff: false, recursive: false, render: true }
     );
     this.render();
   }
@@ -607,6 +607,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
   async _schedule() {
     let planning = this.actor.getFlag(ARM5E.SYSTEM_ID, "planning");
 
+    const activity = this.actor.flags.arm5e.planning.activity;
     let owner = this.actor.system.owner.document;
     let applied = false;
     let dates = DiaryEntrySchema.buildSchedule(
@@ -614,14 +615,6 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
       planning.date.year,
       planning.date.season
     );
-
-    let achievements = [];
-    // planning = this.actor.getFlag(ARM5E.SYSTEM_ID, "planning");
-    // let achievement = await planning.activity.activityAchievement(planning);
-    let achievement = await this.actor.flags.arm5e.planning.activity.activityAchievements(planning);
-    if (achievement != null) {
-      achievements.push(...achievement);
-    }
 
     // Add a lab diary entry for occupation
     const labLog = [
@@ -642,8 +635,6 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
     ];
 
     const externalIds = [];
-
-    let targetLevel = this.actor.flags.arm5e.planning.activity.getTargetLevel(planning);
 
     switch (planning.type) {
       case "investigateItem":
@@ -689,51 +680,27 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
         throw new Error("Unsupported activity");
     }
 
-    const entryData = [
-      {
-        name: this.actor.flags.arm5e.planning.activity.getDiaryName(planning),
-        type: "diaryEntry",
-        system: {
-          done: false,
-          cappedGain: false,
-          dates: dates,
-          sourceQuality: targetLevel,
-          activity: planning.type,
-          progress: {
-            abilities: [],
-            arts: [],
-            spells: [],
-            newSpells: []
-          },
-          optionKey: "standard",
-          duration: planning.duration,
-          description: this.actor.flags.arm5e.planning.activity.getDiaryDescription(planning),
-          achievements: achievements,
-          lab: {
-            type: planning.type,
-            uuid: this.uuid,
-            experimentation: planning.experimentation,
-            labModifier: planning.experimentationBonus,
-            target: targetLevel,
-            labTotal: planning.labTotal.score
-          }
-        }
-      }
-    ];
+    const entryData = [activity.getDiaryEntryData(planning)];
+
+    let achievement = await activity.activityAchievements(planning);
+    if (achievement != null) {
+      entryData[0].system.achievements.push(...achievement);
+    }
+
     let log = await this.actor.createEmbeddedDocuments("Item", labLog, {});
     externalIds.push({ actorId: this.actor._id, itemId: log[0]._id, flags: 2 });
     entryData[0].system.externalIds = externalIds;
-
     let entry = await owner.createEmbeddedDocuments("Item", entryData, {});
-    switch (planning.type) {
-      case "inventSpell":
-      case "learnSpell":
-        await entry[0].sheet._addNewSpell(planning.data);
-        break;
-      default:
-        break;
-    }
+    // switch (planning.type) {
+    //   case "inventSpell":
+    //   case "learnSpell":
+    //     await entry[0].sheet.addNewSpell(planning.data);
+    //     break;
+    //   default:
+    //     break;
+    // }
     entry[0].sheet.render(true);
+    return entry[0]; // for test purposes
   }
 
   async _onDrop(event) {
@@ -971,6 +938,42 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
     }
   }
 
+  async _setOwner(character) {
+    let updateArray = [];
+    if (character.isCharacter()) {
+      if (this.actor.system.owner.linked) {
+        delete this.actor.system.owner.document.apps[this.appId];
+        delete this.actor.apps[this.actor.system.owner.document.sheet?.appId];
+        updateArray.push(this.actor.system.owner.document.sheet._unbindActor(this.actor));
+      }
+      updateArray.push(character.sheet._bindActor(this.actor));
+      updateArray.push(this._bindActor(character));
+    }
+    return await Promise.all(updateArray);
+  }
+
+  async setOwner(character) {
+    return await Actor.updateDocuments(await this._setOwner(character));
+  }
+
+  async _setCovenant(covenant) {
+    let updateArray = [];
+    if (covenant.type === "covenant") {
+      if (this.actor.system.covenant.linked) {
+        delete this.actor.system.covenant.document.apps[this.appId];
+        delete this.actor.apps[this.actor.system.covenant.document.sheet?.appId];
+        await this.actor.system.covenant.document.sheet._unbindActor(this.actor);
+      }
+      await covenant.sheet._bindActor(this.actor);
+      updateArray.push(this._bindActor(covenant));
+    }
+    return await Promise.all(updateArray);
+  }
+
+  async setCovenant(covenant) {
+    return await Actor.updateDocuments(await this._setCovenant(covenant));
+  }
+
   /**
    * Handle dropping of an actor reference or item data onto an Actor Sheet
    * @param {DragEvent} event     The concluding DragEvent which contains drop data
@@ -985,30 +988,16 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
     }
     let droppedActor = await fromUuid(data.uuid);
     // link both ways
-    let updateArray = [];
 
     if (droppedActor.isCharacter()) {
-      if (this.actor.system.owner.linked) {
-        delete this.actor.system.owner.document.apps[this.appId];
-        delete this.actor.apps[this.actor.system.owner.document.sheet?.appId];
-        updateArray.push(await this.actor.system.owner.document.sheet._unbindActor(this.actor));
-      }
-      updateArray.push(await droppedActor.sheet._bindActor(this.actor));
+      return await this.setOwner(droppedActor);
     } else if (droppedActor.type === "covenant") {
-      if (this.actor.system.covenant.linked) {
-        delete this.actor.system.covenant.document.apps[this.appId];
-        delete this.actor.apps[this.actor.system.covenant.document.sheet?.appId];
-        await this.actor.system.covenant.document.sheet._unbindActor(this.actor);
-      }
-      await droppedActor.sheet._bindActor(this.actor);
+      return await this.setCovenant(droppedActor);
     }
-    updateArray.push(await this._bindActor(droppedActor));
-
-    return await Actor.updateDocuments(updateArray);
   }
 
   async _bindActor(actor) {
-    if (!["covenant", "player", "npc", "beast"].includes(actor.type)) return false;
+    if (!["covenant", "player", "npc", "beast"].includes(actor.type)) return [];
     let updateData = { _id: this.actor._id };
     if (actor.type == "covenant") {
       updateData["system.covenant.value"] = actor.name;
@@ -1016,13 +1005,14 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
     } else if (["player", "npc", "beast"].includes(actor.type)) {
       updateData["system.owner.value"] = actor.name;
       updateData["system.owner.actorId"] = actor._id;
+      this.actor.system.owner.document = actor;
       updateData["flags.arm5e.planning"] = await this._resetPlanning("none", undefined, true);
     }
     return updateData;
   }
 
   async _unbindActor(actor) {
-    if (!["covenant", "player", "npc", "beast"].includes(actor.type)) return false;
+    if (!["covenant", "player", "npc", "beast"].includes(actor.type)) return [];
     let updateData = { _id: this.actor._id };
     if (actor.type == "covenant") {
       updateData["system.covenant.value"] = "";
@@ -1030,6 +1020,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
     } else if (["player", "npc", "beast"].includes(actor.type)) {
       updateData["system.owner.value"] = "";
       updateData["system.owner.actorId"] = null;
+      this.actor.system.owner.document = actor;
       updateData["flags.arm5e.planning"] = await this._resetPlanning("none", undefined, true);
     }
 

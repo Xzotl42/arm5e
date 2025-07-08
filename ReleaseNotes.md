@@ -1,4 +1,4 @@
-## 2.4.0.4, Radislav am Polanach
+## 2.4.0.5, Radislav am Polanach
 
 ### Compatibility change
 
@@ -28,7 +28,11 @@
 - Arts and abilities active effects definitions are generated dynamically
 - New active effects:
   - Reading about Art (Study bonus)
-- [technical] Speed optimization all over the place
+- [technical] Speed optimization all over the place - on going
+- It is again possible to switch between spell invention and spell learning without resetting the spell's attributes.
+- [technical] the Astrolabium is now a singleton (ie: only one window exists)
+- It is possible to progress in alternate arts in seasonal activities (as abilities)
+- Added physical condition modifier (@physicalCondition) to rollData, to be used in inline rolls
 
 ### Bug fixes
 
@@ -54,6 +58,13 @@
 - Form is properly taken into account when resisting power and magic item effects
 - Ability option clean-up leaves capitalization as is.
 - Botching during vis study can now trigger a twilight episode.
+- Filters based on a numerical value are working again.
+- Enchantment capacities are computed properly.
+- Drop an compendium item on the lab will work the first time.
+- Generic abilities score is properly displayed in diary entries
+- Fix button to create new Qualities and Inferiorities on the character sheet.
+- Added a few missing sourcebooks and the "other" one
+- Physical condition is taken into account when rolling initiative from combat tracker.
 
 ## 2.3.2.28, Quendalon, more than just sparows and bunnies
 

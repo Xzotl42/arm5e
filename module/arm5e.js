@@ -76,6 +76,7 @@ import {
 } from "./schemas/chatSchema.js";
 import { Arm5eChatMessage } from "./helpers/chat-message.js";
 import { addActiveEffectsDefinitions } from "./constants/activeEffectsTypes.js";
+import { Astrolab } from "./tools/astrolab.js";
 
 Hooks.once("i18nInit", async function () {
   CONFIG.ARM5E.LOCALIZED_ABILITIES = localizeAbilities();
@@ -116,7 +117,7 @@ Hooks.once("init", async function () {
    * @type {string}
    */
   CONFIG.Combat.initiative = {
-    formula: "1ds + @char.qik + @combat.init - @combat.overload",
+    formula: "1ds + @char.qik + @combat.init - @combat.overload + @physicalCondition",
     decimals: 2
   };
 
@@ -222,6 +223,13 @@ Hooks.once("init", async function () {
 });
 
 Hooks.once("ready", async function () {
+  // astrolabium singleton
+  let formData = {
+    seasons: CONFIG.ARM5E.seasons,
+    ...game.settings.get("arm5e", "currentDate")
+  };
+  ui.astrolab = new Astrolab(formData, {});
+
   // add generated active effects based on CONFIG
 
   addActiveEffectsDefinitions();
@@ -331,7 +339,9 @@ Hooks.once("ready", async function () {
   game.packs.get(`${ARM5E.REF_MODULE_ID}.virtues`).getIndex({ fields: ["system.indexKey"] });
   game.packs.get(`${ARM5E.REF_MODULE_ID}.flaws`).getIndex({ fields: ["system.indexKey"] });
   game.packs.get(`${ARM5E.REF_MODULE_ID}.equipment`).getIndex({ fields: ["system.indexKey"] });
-  game.packs.get(`${ARM5E.REF_MODULE_ID}.spells`).getIndex({ fields: ["system.indexKey"] });
+  game.packs.get(`${ARM5E.REF_MODULE_ID}.spells`).getIndex({
+    fields: ["system.indexKey", "system.technique.value", "system.form.value", "system.level"]
+  });
 
   // TESTING
 });

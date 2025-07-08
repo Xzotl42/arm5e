@@ -40,14 +40,10 @@ export class ArsLayer extends InteractionLayer {
     }
   }
   static async openAstrolab() {
-    let formData = {
-      seasons: CONFIG.ARM5E.seasons,
-      ...game.settings.get("arm5e", "currentDate")
-    };
     // const html = await renderTemplate("systems/arm5e/templates/generic/astrolab.html", dialogData);
 
-    const astrolab = new Astrolab(formData, {}); // data, options
-    const res = await astrolab.render(true);
+    // const astrolab = new Astrolab(formData, {}); // data, options
+    const res = await ui.astrolab.render(true);
   }
   static async openScriptorium() {
     let formData = new ScriptoriumObject();

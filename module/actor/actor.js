@@ -49,7 +49,7 @@ export class ArM5eActor extends Actor {
     }
     // Add properties used for active effects:
 
-    if (["player", "npc", "laboratory"].includes(this.type)) {
+    if (["player", "npc"].includes(this.type)) {
       this.system.covenant.document = game.actors.get(this.system.covenant.actorId);
       if (this.system.covenant.document) {
         this.system.covenant.value = this.system.covenant.document.name;
@@ -342,7 +342,7 @@ export class ArM5eActor extends Actor {
 
     // Resources
     system.resource = {};
-    // Fatigue as resource (test)
+    // Fatigue as resource for token bar
 
     system.resource.fatigue = {
       value: system.fatigueMaxLevel - system.fatigueCurrent,
@@ -812,6 +812,7 @@ export class ArM5eActor extends Actor {
           rollData.magic[k] = v.finalScore;
         }
       }
+      rollData.physicalCondition = this.system.fatigueTotal + this.system.penalties.wounds.total;
     } else {
       rollData = super.getRollData();
     }

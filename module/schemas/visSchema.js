@@ -145,6 +145,10 @@ export class VisSchema extends foundry.abstract.TypeDataModel {
   }
 
   async createDiaryEntryToStudyVis(actor) {
+    return await Promise.all(_createDiaryEntryToStudyVis(actor));
+  }
+
+  _createDiaryEntryToStudyVis(actor) {
     let currentDate = game.settings.get("arm5e", "currentDate");
     const entryData = [
       {
@@ -177,8 +181,8 @@ export class VisSchema extends foundry.abstract.TypeDataModel {
         }
       }
     ];
-    let entry = await actor.createEmbeddedDocuments("Item", entryData, {});
-    return entry[0];
+    let entry = actor.createEmbeddedDocuments("Item", entryData, {});
+    return entry;
   }
 }
 

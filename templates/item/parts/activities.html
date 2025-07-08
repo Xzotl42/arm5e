@@ -75,7 +75,6 @@
       </div>
     </section>
   </div>
-
   <div class="tab progress-abilities" data-tab="abilities" data-group="diary-secondary">
     <header class="effect-change effects-header flexrow">
       <div class="type">{{ localize "arm5e.skill.category.label" }}</div>
@@ -154,7 +153,6 @@
       </div>
 
     </header>
-
     <div class="resource">
       <ol class="progresses-list">
         {{#each system.progress.arts as |art idx|}}
@@ -163,6 +161,7 @@
               class="progress-art flex02" {{@root.system.disabled}} style="min-width: 150px;">
               {{selectOptions @root.system.ownedArts selected=art.key labelAttr="label" nameAttr="key" valueAttr="key"}}
             </select>
+            {{log "TOTO02"}}
             <div class="xp">
               {{#unless ../ui.showTeacher}}
                 <input type="number" name="system.progress.arts.{{idx}}.xp" value="{{art.xp}}" data-dtype="Number"
@@ -186,7 +185,6 @@
       </ol>
     </div>
   </div>
-
   <div class="tab" data-tab="masteries" data-group="diary-secondary">
     <header class="effect-change effects-header flexrow" style="padding-left: 15px">
       <div class="form">{{ localize "arm5e.sheet.form" }}</div>

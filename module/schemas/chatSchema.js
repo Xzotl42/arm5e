@@ -236,6 +236,8 @@ export class RollChatSchema extends BasicChatSchema {
       return input.replace(/1di /g, "1d10 ");
     } else if (input.match(/1di10 /g)) {
       return input.replace(/1di10 /g, "1d10 ");
+    } else if (input.match(/1dsx=1 /g)) {
+      return input.replace(/1dsx=1 /g, "1d10 ");
     } else if (input.match(/1di/g)) {
       return input.replace(/1di/g, "1d10");
     }

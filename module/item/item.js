@@ -123,11 +123,6 @@ export class ArM5eItem extends Item {
 
     if (this.type == "ability") {
       this.system.category = CONFIG.ARM5E.ALL_ABILITIES[this.system.key]?.category ?? "general";
-    } else if (this.type == "diaryEntry") {
-      const systemData = this.system;
-      if (systemData.optionKey == undefined) {
-        systemData.optionKey = "standard";
-      }
     } else if (this.type == "wound") {
       this.system.title = `${this.name}`;
       if (this.system.recoveryTime == 0) {
@@ -382,6 +377,13 @@ export class ArM5eItem extends Item {
 
   async createResourceTrackingDiaryEntry(fromActor, toActor, quantity = 1, date = null) {
     if (!game.settings.get("arm5e", "trackResources")) return [];
+    return await Promise.all(
+      this._createResourceTrackingDiaryEntry(fromActor, toActor, quantity, date)
+    );
+  }
+
+  _createResourceTrackingDiaryEntry(fromActor, toActor, quantity = 1, date = null) {
+    if (!game.settings.get("arm5e", "trackResources")) return [];
 
     let currentDate = game.settings.get("arm5e", "currentDate");
     if (date) {
@@ -446,7 +448,7 @@ export class ArM5eItem extends Item {
           }
         }
       ];
-      const tmp = await fromActor.createEmbeddedDocuments("Item", fromEntryData, {});
+      const tmp = fromActor.createEmbeddedDocuments("Item", fromEntryData, {});
       entries.push(...tmp);
     }
 
@@ -500,7 +502,7 @@ export class ArM5eItem extends Item {
           }
         }
       ];
-      const tmp = await toActor.createEmbeddedDocuments("Item", toEntryData, {});
+      const tmp = toActor.createEmbeddedDocuments("Item", toEntryData, {});
       entries.push(...tmp);
     }
 

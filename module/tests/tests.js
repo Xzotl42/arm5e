@@ -11,6 +11,7 @@ import { registerApprenticeshipTesting } from "./diaryCharCreationTest.js";
 import { registerExposureTesting } from "./diaryExposureTest.js";
 import { registerTeachingTesting } from "./diaryTeachingTest.js";
 import { registerTrainingTesting } from "./diaryTrainingTest.js";
+import { registerVisTesting } from "./diaryVis.js";
 import { registerItemCreationTests } from "./itemCreationTests.js";
 import { registerLabActivityTesting } from "./labActivityTest.js";
 import { registerOnRollTesting } from "./onRollTest.js";
@@ -46,4 +47,5 @@ export function registerTestSuites(quench) {
   registerTrainingTesting(quench);
   registerTeachingTesting(quench);
   registerExposureTesting(quench);
+  registerVisTesting(quench);
 }

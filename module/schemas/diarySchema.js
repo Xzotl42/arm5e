@@ -1,4 +1,6 @@
 import { ARM5E } from "../config.js";
+import { ActivityFactory } from "../helpers/long-term-activities.js";
+import { Activity } from "../seasonal-activities/activity.js";
 import { convertToNumber, log } from "../tools.js";
 import { nextDate } from "../tools/time.js";
 import { BookSchema } from "./bookSchema.js";
@@ -124,7 +126,7 @@ export class DiaryEntrySchema extends foundry.abstract.TypeDataModel {
         new fields.SchemaField({
           actorId: new NullableDocumentIdField(),
           itemId: new NullableDocumentIdField(),
-          uuid: new fields.StringField({
+          uuid: new fields.DocumentUUIDField({
             required: false,
             blank: false,
             nullable: true,
@@ -262,6 +264,38 @@ export class DiaryEntrySchema extends foundry.abstract.TypeDataModel {
           blank: false,
           initial: { abilities: [], spells: [], arts: [], newSpells: [] }
         }
+      ),
+      lab: new fields.SchemaField(
+        {
+          type: new fields.StringField({ required: true, blank: false }),
+          uuid: new fields.DocumentUUIDField(),
+          experimentation: boolOption(false),
+          target: new fields.NumberField({
+            required: false,
+            nullable: false,
+            integer: true,
+            min: 0,
+            initial: 0,
+            step: 1
+          }),
+          labModifier: new fields.NumberField({
+            required: false,
+            nullable: false,
+            integer: true,
+            min: 0,
+            initial: 0,
+            step: 1
+          }),
+          labTotal: new fields.NumberField({
+            required: false,
+            nullable: false,
+            integer: true,
+            min: 0,
+            initial: 0,
+            step: 1
+          })
+        },
+        { nullable: true, required: false, initial: null }
       )
     };
   }
@@ -300,30 +334,72 @@ export class DiaryEntrySchema extends foundry.abstract.TypeDataModel {
     return schedule;
   }
 
+  progressPossible(actor) {
+    const currentDate = game.settings.get("arm5e", "currentDate");
+    // Date of the first unapplied ability in the past
+    return this.dates.filter(
+      (e) =>
+        e.applied == false &&
+        (e.year <= currentDate.year ||
+          (e.year == currentDate.year &&
+            CONFIG.SEASON_ORDER[e.season] <= CONFIG.SEASON_ORDER[currentDate.season]))
+    );
+  }
+
   hasUnappliedActivityInThePast(actor) {
     if (this.activity === "none") {
       return false;
     }
-    let year = this.dates[this.dates.length - 1].year;
-    let season = this.dates[this.dates.length - 1].season;
-    // For each diary entry of the actor
-    for (let entry of Object.values(actor.system.diaryEntries)) {
-      // the entry is not the current entry
-      if (entry._id != this.parent._id) {
-        if (entry.system.done || entry.system.activity === "none") {
-          continue;
-        }
-        if (
-          entry.system.dates[entry.system.dates.length - 1].year < year ||
-          (entry.system.dates[entry.system.dates.length - 1] == year &&
-            CONFIG.SEASON_ORDER[entry.system.dates[entry.system.dates.length - 1].season] <
-              CONFIG.SEASON_ORDER[season])
-        ) {
-          return true;
+
+    const currentDate = game.settings.get("arm5e", "currentDate");
+    // Date of the first unapplied ability in the past
+    const pastDates = this.dates.filter(
+      (e) =>
+        e.applied == false &&
+        (e.year <= currentDate.year ||
+          (e.year == currentDate.year &&
+            CONFIG.SEASON_ORDER[e.season] <= CONFIG.SEASON_ORDER[currentDate.season]))
+    );
+    if (pastDates.length) {
+      let year = pastDates[0].year;
+      let season = pastDates[0].season;
+      // For each diary entry of the actor
+      for (let entry of Object.values(actor.system.diaryEntries)) {
+        // the entry is not the current entry
+        if (entry._id != this.parent._id) {
+          if (entry.system.done || entry.system.activity === "none") {
+            continue;
+          }
+          if (
+            entry.system.dates[entry.system.dates.length - 1].year < year ||
+            (entry.system.dates[entry.system.dates.length - 1] == year &&
+              CONFIG.SEASON_ORDER[entry.system.dates[entry.system.dates.length - 1].season] <
+                CONFIG.SEASON_ORDER[season])
+          ) {
+            return true;
+          }
         }
       }
     }
     return false;
+  }
+
+  prepareDerivedData() {
+    if (this.optionKey == undefined) {
+      this.optionKey = "standard";
+    }
+    this.nbApplied = 0;
+    for (const date of this.dates) {
+      if (date.applied) {
+        this.nbApplied++;
+      } else {
+      }
+    }
+    this.activityHandler = ActivityFactory(
+      this.activity,
+      this.parent.isOwned ? this.parent.actor : null,
+      this
+    );
   }
 
   static getDefault(itemData) {
@@ -439,12 +515,6 @@ export class DiaryEntrySchema extends foundry.abstract.TypeDataModel {
           applied: itemData.system.applied
         }
       ];
-    } else if (itemData.system.date != undefined) {
-      for (let d of itemData.system.dates) {
-        d.date = itemData.system.date;
-      }
-      updateData["system.-=date"] = null;
-      updateData["system.dates"] = itemData.system.dates;
     } else if (itemData.system.dates instanceof Array) {
       if (itemData.system.dates.length == 0) {
         updateData["system.dates"] = [
@@ -452,9 +522,10 @@ export class DiaryEntrySchema extends foundry.abstract.TypeDataModel {
             year: Number(currentDate.year),
             season: currentDate.season,
             date: itemData.system.date ?? "",
-            applied: itemData.system.applied ?? false
+            applied: itemData.system.done ?? false
           }
         ];
+        updateData["system.duration"] = 1;
       } else {
         let newDates = itemData.system.dates;
         let update = false;
@@ -468,6 +539,10 @@ export class DiaryEntrySchema extends foundry.abstract.TypeDataModel {
             } else {
               d.year = Number(d.year);
             }
+            update = true;
+          }
+          if (itemData.system.done && !d.applied) {
+            d.applied = true;
             update = true;
           }
         }
@@ -495,6 +570,7 @@ export class DiaryEntrySchema extends foundry.abstract.TypeDataModel {
       updateData["system.done"] =
         itemData.system.dates.filter((d) => d.applied == true).length == itemData.system.duration;
     }
+
     // if (itemData.system.applied !== undefined) {
     //   // if applied exists, the array should be of length 1
     //   updateData["system.dates"] = [

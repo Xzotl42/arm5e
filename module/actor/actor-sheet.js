@@ -704,7 +704,7 @@ export class ArM5eActorSheet extends ActorSheet {
           if (entry.system.done || entry.system.activity == "none") {
             activity.ui = { diary: 'style="font-style: normal;"' };
           } else {
-            activity.ui = { diary: 'style="font-style: italic;"' };
+            activity.ui = { diary: 'style="font-style: italic; color: grey"' };
           }
 
           if (entry.system.dates.length > 1) {
@@ -1282,7 +1282,8 @@ export class ArM5eActorSheet extends ActorSheet {
     // Update Inventory Item
     html.find(".item-edit").click(async (ev) => {
       const li = $(ev.currentTarget).parents(".item");
-      const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
+      const dataset = li[0].dataset;
+      const item = this.actor.getEmbeddedDocument("Item", dataset.itemId);
       // const item = this.actor.items.get(li.data("itemId"))
       item.sheet.render(true, { focus: true });
     });
@@ -2122,30 +2123,27 @@ export class ArM5eActorSheet extends ActorSheet {
     let droppedActor = await fromUuid(data.uuid);
     // link both ways
     let updateArray = [];
-
     if (droppedActor.type === "covenant") {
       if (this.actor.system.covenant.linked) {
         delete this.actor.apps[this.actor.system.covenant.document.sheet?.appId];
         delete this.actor.system.covenant.document.apps[this.appId];
-        updateArray.push(await this.actor.system.covenant.document.sheet._unbindActor(this.actor));
-        await droppedActor.sheet._bindActor(this.actor);
+        updateArray.push(...this.actor.system.covenant.document.sheet._unbindActor(this.actor));
+        updateArray.push(...droppedActor.sheet._bindActor(this.actor));
       }
     } else if (droppedActor.type === "laboratory") {
       if (this.actor.system.sanctum.linked) {
         delete this.actor.apps[this.actor.system.owner.sanctum.sheet?.appId];
         delete this.actor.system.sanctum.document.apps[this.appId];
-        updateArray.push(await this.actor.system.sanctum.document.sheet._unbindActor(this.actor));
+        updateArray.push(this.actor.system.sanctum.document.sheet._unbindActor(this.actor));
       }
-      updateArray.push(await droppedActor.sheet._bindActor(this.actor));
+      updateArray.push(droppedActor.sheet._bindActor(this.actor));
     }
-
-    updateArray.push(await this._bindActor(droppedActor));
-
-    return await Actor.updateDocuments(updateArray);
+    updateArray.push(this._bindActor(droppedActor));
+    return await Actor.updateDocuments(await Promise.all(updateArray));
   }
 
-  async _bindActor(actor) {
-    if (!["covenant", "laboratory"].includes(actor.type)) return false;
+  _bindActor(actor) {
+    if (!["covenant", "laboratory"].includes(actor.type)) return [];
     let updateData = { _id: this.actor._id };
     if (actor.type == "covenant") {
       updateData["system.covenant.value"] = actor.name;
@@ -2157,8 +2155,8 @@ export class ArM5eActorSheet extends ActorSheet {
     return updateData;
   }
 
-  async _unbindActor(actor) {
-    if (!["covenant", "laboratory"].includes(actor.type)) return false;
+  _unbindActor(actor) {
+    if (!["covenant", "laboratory"].includes(actor.type)) return [];
     let updateData = { _id: this.actor._id };
     if (actor.type == "covenant") {
       updateData["system.covenant.value"] = "";

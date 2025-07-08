@@ -798,7 +798,7 @@ ARM5E.ALT_TECHNIQUE_ABILITIES = {
     option: true,
     category: "altTechnique",
     optionPlaceholder: "arm5e.skill.options.technique",
-    optionDefault: "technique-name"
+    optionDefault: "altTech"
   }
 };
 
@@ -808,7 +808,7 @@ ARM5E.ALT_FORM_ABILITIES = {
     option: true,
     category: "altForm",
     optionPlaceholder: "arm5e.skill.options.form",
-    optionDefault: "form-name"
+    optionDefault: "altForm"
   }
 };
 
@@ -2285,7 +2285,8 @@ ARM5E.activities.generic = {
     secondaryFilter: null,
     scheduling: {
       duplicate: true,
-      conflict: false
+      conflict: false,
+      partial: false
     }
   },
   resource: {
@@ -2298,7 +2299,8 @@ ARM5E.activities.generic = {
     secondaryFilter: null,
     scheduling: {
       duplicate: true,
-      conflict: false
+      conflict: false,
+      partial: false
     }
   },
   adventuring: {
@@ -2318,7 +2320,8 @@ ARM5E.activities.generic = {
     secondaryFilter: null,
     scheduling: {
       duplicate: true,
-      conflict: false
+      conflict: false,
+      partial: false
     }
   },
   exposure: {
@@ -2338,7 +2341,8 @@ ARM5E.activities.generic = {
     secondaryFilter: null,
     scheduling: {
       duplicate: false,
-      conflict: false
+      conflict: false,
+      partial: false
     }
   },
   practice: {
@@ -2364,7 +2368,8 @@ ARM5E.activities.generic = {
     secondaryFilter: null,
     scheduling: {
       duplicate: false,
-      conflict: true
+      conflict: true,
+      partial: false
     }
   },
   training: {
@@ -2384,7 +2389,8 @@ ARM5E.activities.generic = {
     secondaryFilter: null,
     scheduling: {
       duplicate: false,
-      conflict: true
+      conflict: true,
+      partial: false
     }
   },
   teaching: {
@@ -2408,7 +2414,8 @@ ARM5E.activities.generic = {
     secondaryFilter: null,
     scheduling: {
       duplicate: false,
-      conflict: true
+      conflict: true,
+      partial: false
     }
   },
 
@@ -2431,7 +2438,8 @@ ARM5E.activities.generic = {
     durationEdit: true,
     scheduling: {
       duplicate: false,
-      conflict: true
+      conflict: true,
+      partial: false
     }
   },
   childhood: {
@@ -2453,7 +2461,8 @@ ARM5E.activities.generic = {
     durationEdit: true,
     scheduling: {
       duplicate: false,
-      conflict: true
+      conflict: true,
+      partial: false
     }
   },
   laterLife: {
@@ -2475,7 +2484,8 @@ ARM5E.activities.generic = {
     durationEdit: true,
     scheduling: {
       duplicate: false,
-      conflict: true
+      conflict: true,
+      partial: false
     }
   },
   laterLifeMagi: {
@@ -2497,7 +2507,8 @@ ARM5E.activities.generic = {
     durationEdit: true,
     scheduling: {
       duplicate: false,
-      conflict: true
+      conflict: true,
+      partial: false
     }
   },
   reading: {
@@ -2518,7 +2529,8 @@ ARM5E.activities.generic = {
     secondaryFilter: null,
     scheduling: {
       duplicate: false,
-      conflict: true
+      conflict: true,
+      partial: false
     }
   },
   writing: {
@@ -2539,7 +2551,8 @@ ARM5E.activities.generic = {
     secondaryFilter: null,
     scheduling: {
       duplicate: false,
-      conflict: true
+      conflict: true,
+      partial: true
     }
   },
   copying: {
@@ -2560,7 +2573,8 @@ ARM5E.activities.generic = {
     secondaryFilter: null,
     scheduling: {
       duplicate: false,
-      conflict: true
+      conflict: true,
+      partial: true
     }
   },
   learnSpell: {
@@ -2581,7 +2595,8 @@ ARM5E.activities.generic = {
     secondaryFilter: null,
     scheduling: {
       duplicate: false,
-      conflict: true
+      conflict: true,
+      partial: false
     }
   },
   inventSpell: {
@@ -2602,7 +2617,8 @@ ARM5E.activities.generic = {
     secondaryFilter: null,
     scheduling: {
       duplicate: true,
-      conflict: true
+      conflict: true,
+      partial: true
     }
   },
   visExtraction: {
@@ -2623,7 +2639,8 @@ ARM5E.activities.generic = {
     secondaryFilter: null,
     scheduling: {
       duplicate: false,
-      conflict: true
+      conflict: true,
+      partial: false
     }
   },
   lab: {
@@ -2636,7 +2653,8 @@ ARM5E.activities.generic = {
     secondaryFilter: null,
     scheduling: {
       duplicate: false,
-      conflict: true
+      conflict: true,
+      partial: true
     }
   },
   aging: {
@@ -2658,7 +2676,8 @@ ARM5E.activities.generic = {
     roll: { label: "arm5e.activity.roll.aging", action: agingRoll },
     scheduling: {
       duplicate: true,
-      conflict: false
+      conflict: false,
+      partial: false
     }
   },
   twilight: {
@@ -2679,7 +2698,8 @@ ARM5E.activities.generic = {
     roll: { label: "arm5e.twilight.episode", action: twilightUnderstandingRoll },
     scheduling: {
       duplicate: true,
-      conflict: false
+      conflict: false,
+      partial: false
     }
   },
   visStudy: {
@@ -2701,7 +2721,8 @@ ARM5E.activities.generic = {
     roll: { label: "arm5e.activity.roll.visStudy", action: visStudy },
     scheduling: {
       duplicate: false,
-      conflict: true
+      conflict: true,
+      partial: false
     }
   },
   recovery: {
@@ -2722,7 +2743,8 @@ ARM5E.activities.generic = {
     secondaryFilter: null,
     scheduling: {
       duplicate: true,
-      conflict: false
+      conflict: false,
+      partial: true
     }
   },
   longevityRitual: {
@@ -2743,7 +2765,8 @@ ARM5E.activities.generic = {
     secondaryFilter: null,
     scheduling: {
       duplicate: false,
-      conflict: true
+      conflict: true,
+      partial: false
     }
     // application: longevityRitual
   },
@@ -2765,7 +2788,8 @@ ARM5E.activities.generic = {
     secondaryFilter: null,
     scheduling: {
       duplicate: false,
-      conflict: true
+      conflict: true,
+      partial: false
     }
   },
   chargedItem: {
@@ -2786,7 +2810,8 @@ ARM5E.activities.generic = {
     secondaryFilter: null,
     scheduling: {
       duplicate: false,
-      conflict: true
+      conflict: true,
+      partial: false
     }
   },
   investigateItem: {
@@ -2808,7 +2833,8 @@ ARM5E.activities.generic = {
     roll: { label: "arm5e.activity.roll.investigate", action: investigate },
     scheduling: {
       duplicate: false,
-      conflict: true
+      conflict: true,
+      partial: false
     }
   }
 };
@@ -3254,11 +3280,20 @@ ARM5E.generic.sourcesTypes = {
   ML: {
     label: "arm5e.sheet.source.ML"
   },
+  TTT: {
+    label: "arm5e.sheet.source.TTT"
+  },
   Hook: {
     label: "arm5e.sheet.source.Hooks"
   },
   "F&F": {
     label: "arm5e.sheet.source.F&F"
+  },
+  LotN: {
+    label: "arm5e.sheet.source.LotN"
+  },
+  others: {
+    label: "arm5e.sheet.source.others"
   }
 };
 
