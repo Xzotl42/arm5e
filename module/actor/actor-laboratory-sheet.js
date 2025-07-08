@@ -21,7 +21,8 @@ import {
   TOPIC_FILTER
 } from "../constants/userdata.js";
 import { DiaryEntrySchema } from "../schemas/diarySchema.js";
-import { LabActivity, NoLabActivity, SpellActivity } from "../seasonal-activities/activity.js";
+import { LabActivity, NoLabActivity, SpellActivity } from "../seasonal-activities/labActivity.js";
+
 import { investigate } from "../helpers/long-term-activities.js";
 import { ArM5eItem } from "../item/item.js";
 /**
@@ -130,7 +131,11 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
 
       context.planning = this.actor.getFlag(ARM5E.SYSTEM_ID, "planning");
       if (context.planning) {
-        context.planning.activity = LabActivity.ActivityFactory(this.actor, context.planning.type);
+        context.planning.activity = LabActivity.LabActivityFactory(
+          this.actor.uuid,
+          this.actor.system.owner.document.uuid,
+          context.planning.type
+        );
         if (!context.planning.data)
           context.planning.data = await context.planning.activity.getDefaultData();
       } else {
@@ -290,7 +295,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
       this.actor,
       this.actor.system.owner.document,
       context.planning.data,
-      context.planning.distractions
+      { distractions: context.planning.distractions, focus: context.planning.applyFocus }
     );
     context.planning.activityBonus = activity.ownerActivityMod;
     context.planning.labSpecTotal = activity.labActivitySpec(this.actor);
@@ -363,6 +368,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
       isValid &= res.valid;
     }
 
+    // rename it to post-processing?
     activity.lastLabTotalAdjustment(context);
 
     let result = activity.validation(context.planning);
@@ -546,30 +552,35 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
   async _changeActivity(event) {
     const activity = getDataset(event).activity;
     let chosenActivity = $(".lab-activity").find("option:selected")[0].value;
-    // switch (chosenActivity) {
-    //   case "inventSpell":
-    //   case "learnSpell":
-    //     switch (activity) {
-    //       case "inventSpell":
-    //       case "learnSpell":
-    //         await this._resetPlanning(chosenActivity);
-    //         break;
-    //       default:
-    //         break;
-    //     }
-    //     return;
-    //   case "minorEnchantment":
-    //   case "visExtraction":
-    //   case "longevityRitual":
-    //     break;
-    // }
+    switch (chosenActivity) {
+      case "inventSpell":
+      case "learnSpell":
+        switch (activity) {
+          case "inventSpell":
+          case "learnSpell":
+            const planning = this.actor.getFlag(ARM5E.SYSTEM_ID, "planning");
+            await this._resetPlanning(chosenActivity, planning.data);
+            return;
+          default:
+            break;
+        }
+        break;
+      case "minorEnchantment":
+      case "visExtraction":
+      case "longevityRitual":
+        break;
+    }
     await this._resetPlanning(chosenActivity);
   }
 
-  async _resetPlanning(activityType = "none", onlyData = false) {
+  async _resetPlanning(activityType = "none", data = undefined, onlyData = false) {
     // await this.actor.update({ "flags.arm5e.planning.-=data": null }, { render: false });
-    const activity = LabActivity.ActivityFactory(this.actor, activityType);
-    let newData = await activity.getDefaultData();
+    const activity = LabActivity.LabActivityFactory(
+      this.actor.uuid,
+      this.actor.system.owner.document.uuid,
+      activityType
+    );
+    let newData = data ?? (await activity.getDefaultData());
     const planning = {
       activity: activity,
       type: activityType,
@@ -577,14 +588,10 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
       visibility: { desc: "hide", attr: "hide", options: "hide" },
       modifiers: { generic: 0, aura: 0, aspects: 0 },
       distractions: "none",
-      magicThSpecApply: false
+      magicThSpecApply: false,
+      applyFocus: false
     };
     if (onlyData) return planning;
-    // await this.actor.setFlag(ARM5E.SYSTEM_ID, "planning", planning);
-    // let tmp = await this.submit({
-    //   preventClose: true,
-    //   updateData: { "flags.arm5e.planning": planning }
-    // });
     let tmp = await this.actor.update(
       { "flags.arm5e.planning": planning },
       { diff: false, recursive: true, render: true }
@@ -611,9 +618,9 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
     let achievements = [];
     // planning = this.actor.getFlag(ARM5E.SYSTEM_ID, "planning");
     // let achievement = await planning.activity.activityAchievement(planning);
-    let achievement = await this.actor.flags.arm5e.planning.activity.activityAchievement(planning);
+    let achievement = await this.actor.flags.arm5e.planning.activity.activityAchievements(planning);
     if (achievement != null) {
-      achievements.push(achievement);
+      achievements.push(...achievement);
     }
 
     // Add a lab diary entry for occupation
@@ -634,13 +641,11 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
       }
     ];
 
-    let sourceQuality = 0;
     const externalIds = [];
+
+    let targetLevel = this.actor.flags.arm5e.planning.activity.getTargetLevel(planning);
+
     switch (planning.type) {
-      case "inventSpell":
-      case "learnSpell":
-        sourceQuality = computeLevel(planning.data.system, planning.type);
-        break;
       case "investigateItem":
         externalIds.push({
           actorId: null,
@@ -651,8 +656,11 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
         });
         break;
       case "visExtraction":
+      case "inventSpell":
+      case "learnSpell":
       case "chargedItem":
         break;
+
       case "minorEnchantment":
       case "longevityRitual":
         for (let [k, vis] of Object.entries(planning.data.visCost.magus)) {
@@ -689,7 +697,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
           done: false,
           cappedGain: false,
           dates: dates,
-          sourceQuality: sourceQuality,
+          sourceQuality: targetLevel,
           activity: planning.type,
           progress: {
             abilities: [],
@@ -700,7 +708,15 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
           optionKey: "standard",
           duration: planning.duration,
           description: this.actor.flags.arm5e.planning.activity.getDiaryDescription(planning),
-          achievements: achievements
+          achievements: achievements,
+          lab: {
+            type: planning.type,
+            uuid: this.uuid,
+            experimentation: planning.experimentation,
+            labModifier: planning.experimentationBonus,
+            target: targetLevel,
+            labTotal: planning.labTotal.score
+          }
         }
       }
     ];
@@ -721,8 +737,15 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
   }
 
   async _onDrop(event) {
+    event.stopPropagation();
     const dropData = TextEditor.getDragEventData(event);
     if (dropData.type === "Item") {
+      let dropTarget;
+      if (event.currentTarget) {
+        dropTarget = event.currentTarget.dataset.drop;
+      } else {
+        dropTarget = event.target[0].closest("drop");
+      }
       // If (this.item.system.activity === "teaching" || this.item.system.activity === "training") {
       let item = await Item.implementation.fromDropData(dropData);
       let planning = this.actor.getFlag(ARM5E.SYSTEM_ID, "planning");
@@ -736,8 +759,8 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
           );
         }
       }
-      if (event.currentTarget.dataset.drop === "spell") {
-        event.stopPropagation();
+      if (dropTarget === "spell") {
+        // event.stopPropagation();
         switch (item.type) {
           case "laboratoryText": {
             if (item.system.type !== "spell") {
@@ -797,8 +820,8 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
           default:
             return await super._onDrop(event);
         }
-      } else if (event.currentTarget.dataset.drop === "enchant") {
-        event.stopPropagation();
+      } else if (dropTarget === "enchant") {
+        // event.stopPropagation();
         switch (item.type) {
           case "laboratoryText": {
             if (!["enchantment", "spell"].includes(item.system.type)) {
@@ -864,8 +887,8 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
           case "item": {
           }
         }
-      } else if (event.currentTarget.dataset.drop === "magic-item") {
-        event.stopPropagation();
+      } else if (dropTarget === "magic-item") {
+        // event.stopPropagation();
         if (
           Object.keys(ARM5E.lab.enchantment.enchantableTypes).includes(item.type) &&
           item.system.state == "enchanted"
@@ -890,7 +913,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
         return res;
       }
     } else {
-      event.stopPropagation();
+      // event.stopPropagation();
       const res = await super._onDrop(event);
       //await this._resetPlanning();
       return res;
@@ -993,7 +1016,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
     } else if (["player", "npc", "beast"].includes(actor.type)) {
       updateData["system.owner.value"] = actor.name;
       updateData["system.owner.actorId"] = actor._id;
-      updateData["flags.arm5e.planning"] = await this._resetPlanning("none", true);
+      updateData["flags.arm5e.planning"] = await this._resetPlanning("none", undefined, true);
     }
     return updateData;
   }
@@ -1007,7 +1030,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
     } else if (["player", "npc", "beast"].includes(actor.type)) {
       updateData["system.owner.value"] = "";
       updateData["system.owner.actorId"] = null;
-      updateData["flags.arm5e.planning"] = await this._resetPlanning("none", true);
+      updateData["flags.arm5e.planning"] = await this._resetPlanning("none", undefined, true);
     }
 
     return updateData;
