@@ -14,7 +14,7 @@
   font-family: "Ars Magica icons";
   font-style: normal;
   font-weight: normal;
-  font-size: 16pt;
+  font-size: 18pt;
   line-height: 1;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -77,6 +77,7 @@
 }
 .icon-Icon_Edit:before {
   content: "\004e";
+  padding-top: 11px;
 }
 
 .icon-Icon_Delete_Big_Hand_Gesture:before {
@@ -86,6 +87,7 @@
 
 .icon-Icon_Delete_Hand_Gesture:before {
   content: "\004f";
+  padding-top: 11px;
 }
 
 .icon-SmallIcon_Delete_Hand_Gesture:before {

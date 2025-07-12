@@ -33,7 +33,7 @@ export function addActiveEffectsDefinitions() {
       if (current[1].option) {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
-          key: `system.bonuses.skills.${current[0]}_#OPTION.bonus`,
+          key: `system.bonuses.skills.${current[0]}_#OPTION#.bonus`,
           mode: CONST.ACTIVE_EFFECT_MODES.ADD,
           default: 2,
           option: current[1].optionDefault
@@ -55,7 +55,7 @@ export function addActiveEffectsDefinitions() {
       if (current[1].option) {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
-          key: `system.bonuses.skills.${current[0]}_#OPTION.bonus`,
+          key: `system.bonuses.skills.${current[0]}_#OPTION#.bonus`,
           mode: CONST.ACTIVE_EFFECT_MODES.ADD,
           default: 2,
           option: current[1].optionDefault
@@ -77,7 +77,7 @@ export function addActiveEffectsDefinitions() {
       if (current[1].option) {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
-          key: `system.bonuses.skills.${current[0]}_#OPTION.bonus`,
+          key: `system.bonuses.skills.${current[0]}_#OPTION#.bonus`,
           mode: CONST.ACTIVE_EFFECT_MODES.ADD,
           default: 2,
           option: current[1].optionDefault
@@ -99,7 +99,7 @@ export function addActiveEffectsDefinitions() {
       if (current[1].option) {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
-          key: `system.bonuses.skills.${current[0]}_#OPTION.bonus`,
+          key: `system.bonuses.skills.${current[0]}_#OPTION#.bonus`,
           mode: CONST.ACTIVE_EFFECT_MODES.ADD,
           default: 2,
           option: current[1].optionDefault
@@ -121,7 +121,7 @@ export function addActiveEffectsDefinitions() {
       if (current[1].option) {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
-          key: `system.bonuses.skills.${current[0]}_#OPTION.bonus`,
+          key: `system.bonuses.skills.${current[0]}_#OPTION#.bonus`,
           mode: CONST.ACTIVE_EFFECT_MODES.ADD,
           default: 2,
           option: current[1].optionDefault
@@ -143,7 +143,7 @@ export function addActiveEffectsDefinitions() {
       if (current[1].option) {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
-          key: `system.bonuses.skills.${current[0]}_#OPTION.bonus`,
+          key: `system.bonuses.skills.${current[0]}_#OPTION#.bonus`,
           mode: CONST.ACTIVE_EFFECT_MODES.ADD,
           default: 2,
           option: current[1].optionDefault
@@ -165,7 +165,7 @@ export function addActiveEffectsDefinitions() {
       if (current[1].option) {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
-          key: `system.bonuses.skills.${current[0]}_#OPTION.bonus`,
+          key: `system.bonuses.skills.${current[0]}_#OPTION#.bonus`,
           mode: CONST.ACTIVE_EFFECT_MODES.ADD,
           default: 2,
           option: current[1].optionDefault
@@ -184,7 +184,7 @@ export function addActiveEffectsDefinitions() {
       if (current[1].option) {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
-          key: `system.bonuses.skills.${current[0]}_#OPTION.bonus`,
+          key: `system.bonuses.skills.${current[0]}_#OPTION#.bonus`,
           mode: CONST.ACTIVE_EFFECT_MODES.ADD,
           default: 2,
           option: current[1].optionDefault
@@ -208,7 +208,7 @@ export function addActiveEffectsDefinitions() {
       if (current[1].option) {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
-          key: `system.bonuses.skills.${current[0]}_#OPTION.xpCoeff`,
+          key: `system.bonuses.skills.${current[0]}_#OPTION#.xpCoeff`,
           mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
           default: 1.5,
           option: current[1].optionDefault
@@ -230,7 +230,7 @@ export function addActiveEffectsDefinitions() {
       if (current[1].option) {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
-          key: `system.bonuses.skills.${current[0]}_#OPTION.xpCoeff`,
+          key: `system.bonuses.skills.${current[0]}_#OPTION#.xpCoeff`,
           mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
           default: 1.5,
           option: current[1].optionDefault
@@ -252,7 +252,7 @@ export function addActiveEffectsDefinitions() {
       if (current[1].option) {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
-          key: `system.bonuses.skills.${current[0]}_#OPTION.xpCoeff`,
+          key: `system.bonuses.skills.${current[0]}_#OPTION#.xpCoeff`,
           mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
           default: 1.5,
           option: current[1].optionDefault
@@ -274,7 +274,7 @@ export function addActiveEffectsDefinitions() {
       if (current[1].option) {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
-          key: `system.bonuses.skills.${current[0]}_#OPTION.xpCoeff`,
+          key: `system.bonuses.skills.${current[0]}_#OPTION#.xpCoeff`,
           mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
           default: 1.5,
           option: current[1].optionDefault
@@ -295,7 +295,7 @@ export function addActiveEffectsDefinitions() {
       if (current[1].option) {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
-          key: `system.bonuses.skills.${current[0]}_#OPTION.xpCoeff`,
+          key: `system.bonuses.skills.${current[0]}_#OPTION#.xpCoeff`,
           mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
           default: 1.5,
           option: current[1].optionDefault
@@ -316,7 +316,7 @@ export function addActiveEffectsDefinitions() {
       if (current[1].option) {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
-          key: `system.bonuses.skills.${current[0]}_#OPTION.xpCoeff`,
+          key: `system.bonuses.skills.${current[0]}_#OPTION#.xpCoeff`,
           mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
           default: 1.5,
           option: current[1].optionDefault
@@ -338,7 +338,7 @@ export function addActiveEffectsDefinitions() {
       if (current[1].option) {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
-          key: `system.bonuses.skills.${current[0]}_#OPTION.xpCoeff`,
+          key: `system.bonuses.skills.${current[0]}_#OPTION#.xpCoeff`,
           mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
           default: 1.5,
           option: current[1].optionDefault
@@ -357,7 +357,7 @@ export function addActiveEffectsDefinitions() {
       if (current[1].option) {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
-          key: `system.bonuses.skills.${current[0]}_#OPTION.xpCoeff`,
+          key: `system.bonuses.skills.${current[0]}_#OPTION#.xpCoeff`,
           mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
           default: 1.5,
           option: current[1].optionDefault
@@ -379,7 +379,7 @@ export function addActiveEffectsDefinitions() {
       if (current[1].option) {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
-          key: `system.bonuses.skills.${current[0]}_#OPTION.xpMod`,
+          key: `system.bonuses.skills.${current[0]}_#OPTION#.xpMod`,
           mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
           default: 1.5,
           option: current[1].optionDefault
@@ -403,7 +403,7 @@ export function addActiveEffectsDefinitions() {
       if (current[1].option) {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
-          key: `system.bonuses.skills.${current[0]}_#OPTION.xpMod`,
+          key: `system.bonuses.skills.${current[0]}_#OPTION#.xpMod`,
           mode: CONST.ACTIVE_EFFECT_MODES.ADD,
           default: 5,
           option: current[1].optionDefault
@@ -425,7 +425,7 @@ export function addActiveEffectsDefinitions() {
       if (current[1].option) {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
-          key: `system.bonuses.skills.${current[0]}_#OPTION.xpMod`,
+          key: `system.bonuses.skills.${current[0]}_#OPTION#.xpMod`,
           mode: CONST.ACTIVE_EFFECT_MODES.ADD,
           default: 5,
           option: current[1].optionDefault
@@ -447,7 +447,7 @@ export function addActiveEffectsDefinitions() {
       if (current[1].option) {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
-          key: `system.bonuses.skills.${current[0]}_#OPTION.xpMod`,
+          key: `system.bonuses.skills.${current[0]}_#OPTION#.xpMod`,
           mode: CONST.ACTIVE_EFFECT_MODES.ADD,
           default: 5,
           option: current[1].optionDefault
@@ -469,7 +469,7 @@ export function addActiveEffectsDefinitions() {
       if (current[1].option) {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
-          key: `system.bonuses.skills.${current[0]}_#OPTION.xpMod`,
+          key: `system.bonuses.skills.${current[0]}_#OPTION#.xpMod`,
           mode: CONST.ACTIVE_EFFECT_MODES.ADD,
           default: 5,
           option: current[1].optionDefault
@@ -491,7 +491,7 @@ export function addActiveEffectsDefinitions() {
       if (current[1].option) {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
-          key: `system.bonuses.skills.${current[0]}_#OPTION.xpMod`,
+          key: `system.bonuses.skills.${current[0]}_#OPTION#.xpMod`,
           mode: CONST.ACTIVE_EFFECT_MODES.ADD,
           default: 5,
           option: current[1].optionDefault
@@ -513,7 +513,7 @@ export function addActiveEffectsDefinitions() {
       if (current[1].option) {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
-          key: `system.bonuses.skills.${current[0]}_#OPTION.xpMod`,
+          key: `system.bonuses.skills.${current[0]}_#OPTION#.xpMod`,
           mode: CONST.ACTIVE_EFFECT_MODES.ADD,
           default: 5,
           option: current[1].optionDefault
@@ -775,6 +775,12 @@ export const ACTIVE_EFFECTS_TYPES = {
         key: "system.bonuses.activities.reading",
         mode: CONST.ACTIVE_EFFECT_MODES.ADD,
         default: 3
+      },
+      readingArts: {
+        mnemonic: "arm5e.activity.readingArts",
+        key: "system.bonuses.activities.readingArts",
+        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        default: 2
       },
       visStudy: {
         mnemonic: "arm5e.activity.visStudy",

@@ -101,7 +101,8 @@ export const itemBase = () => {
       initial: "toReview",
       choices: Object.keys(CONFIG.ARM5E.generic.reviewStatus)
     }),
-    reviewer: new fields.StringField({ required: false, blank: true, initial: "" })
+    reviewer: new fields.StringField({ required: false, blank: true, initial: "" }),
+    credits: new fields.StringField({ required: false, blank: true, initial: "" })
   };
 };
 

@@ -25,4 +25,10 @@
       {{selectOptions config.generic.reviewStatus selected=system.review_status labelAttr="label" localize=false}}
     </select>
   </div>
+  {{#if (eq system.source "others")}}
+    <div class="resource flexrow">
+      <label class="label-light resource" style="max-width: 120px;">Credits & Details</label>
+      <input type="text" {{noEdit}} name="system.credits" value="{{system.credits}}" data-dtype="String" />
+    </div>
+  {{/if}}
 </div>

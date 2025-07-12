@@ -523,7 +523,7 @@ export class SanctumSchema extends foundry.abstract.TypeDataModel {
 // TEMPLATE for Document types
 // export class MyTypeSchema extends foundry.abstract.TypeDataModel {
 // TEMPLATE
-export class MySchema extends foundry.abstract.DataModel {
+export class MySchema extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     return { ...itemBase() };
   }

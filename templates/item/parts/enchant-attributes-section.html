@@ -189,16 +189,15 @@
                 <input type="text" name="system.enchantments.capacities.{{idx}}.desc" value="{{capa.desc}}"
                   data-dtype="String" style="min-width: 160px;" title="{{capa.desc}}" />
               </div>
-              <div class="padding2 modifier">
+              <!--div class="padding2 modifier">
                 <input type="number" readonly value="{{capa.used}}" data-dtype="Number" />
-              </div>
+              </div-->
               <div class="padding2 modifier">
                 <input type="number" readonly value="{{capa.total}}" data-dtype="Number" />
                 <input type="text" name="system.enchantments.capacities.{{idx}}.id" hidden value="{{capa.id}}"
                   data-dtype="String" />
               </div>
-              {{#if (or @root.isGM (or  @root.system.enchantments.attunementVisible)
-                 (gt @root.system.enchantments.visibleEnchant 1 ))}}
+              {{#if capa.visiblePreparation}}
                 <div class="padding2 flex-group-center">
                   <label class="label-light"
                     style="position: relative; bottom: 10px;">{{localize "arm5e.lab.enchantment.item.state.prepared"}}</label>

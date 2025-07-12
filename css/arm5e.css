@@ -733,6 +733,29 @@ img.clickable2:hover {
   border: 1px dashed #bbb;
 }
 
+.calendar-season.busy.today {
+  border: 4px;
+  border-style: outset;
+  border-color: rgb(20 55 175/ 50%);
+}
+
+.calendar-season.conflict.today {
+  border: 4px;
+  border-style: outset;
+  border-color: rgb(135 38 22 / 50%);
+}
+
+.calendar-season.current.today {
+  border: 4px;
+  border-style: outset;
+  border-color: rgb(51 120 34 / 50%);
+}
+
+.calendar-season.today {
+  border: 4px;
+  border-style: outset;
+}
+
 .schedule-update:disabled {
   background: rgba(95, 95, 95, 0.25);
 }
@@ -2078,6 +2101,7 @@ img.art-icon {
   flex: 0 0 86px;
   text-align: right;
   margin-right: 8px;
+  /* padding-top: 11pt; */
 }
 
 .arm5e .spell-value {

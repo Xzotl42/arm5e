@@ -6,9 +6,13 @@
 </li>
 {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
 {{#each system.filteredSpells as |spell id|}}
-  <li class="item spell-value flexrow" data-name="{{spell.name}}" data-item-id="{{spell.id}}"
-    data-item-type="{{spell.type}}">
-    <div class="item-image item-control item-edit"><img src="{{spell.img}}" title="{{spell.name}}" style="max-height:50px"/></div>
+  <li class="item spell-value flexrow" data-name="{{spell.name}}" data-item-id="{{spell.id}}" data-uuid="{{spell.uuid}}"
+    data-item-type="{{spell.type}}" data-compendium="spells">
+    {{#if spell.system.description}}
+    <div class="item-image item-control item-edit" style="max-width:60px"><img src="{{spell.img}}" title="{{spell.name}}" style="max-height:50px"/></div>
+    {{else}}
+    <div class="item-image item-control item-view" style="max-width:60px"><img src="{{spell.img}}" title="{{spell.name}}" style="max-height:50px"/></div>
+    {{/if}}
     <div class="flexrow flex-center">
       <span class="flexrow spell-title design" data-name="{{spell.name}}">
         <!-- data-level="{{spell.system.baseLevel}}" data-technique="{{spell.system.technique.value}}" data-form="{{spell.system.form.value}}"-->
@@ -19,12 +23,22 @@
         {{spell.system.localizedDesc}}
       </span>
     </div>
+    {{#if spell.parent}}
     <div class="item-controls">
-      <a class="item-control item-edit" title='{{localize "arm5e.hints.edit" item=(localize "ITEM.TypeSpell")}}'><i
+      <a class="item-control item-edit" title='{{localize "arm5e.hints.edit" item=(localize "TYPES.Item.spell")}}' ><i
           class="icon-Icon_Edit"></i></a>
-      <a class="item-control effect-delete"
-        title='{{localize "arm5e.hints.delete" item=(localize "ITEM.TypeSpell")}}'><i
+      <a class="item-control item-delete"
+        title='{{localize "arm5e.hints.delete" item=(localize "TYPES.Item.spell")}}'><i
           class="icon-Icon_Delete_Hand_Gesture"></i></a>
     </div>
+    {{else}}
+      <div class="item-controls">
+      <a class="item-control item-view" title='{{localize "arm5e.hints.view" item=(localize "TYPES.Item.spell")}}'><i
+          class="icon-Icon_Read"></i></a>
+      <a class="item-control item-clone"
+        title='{{localize "arm5e.hints.clone" item=(localize "TYPES.Item.spell")}}'><i
+          class="icon-Icon_Copy"></i></a>
+    </div>
+    {{/if}}
   </li>
 {{/each}}

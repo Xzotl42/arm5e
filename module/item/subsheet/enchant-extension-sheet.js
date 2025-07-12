@@ -110,8 +110,17 @@ export class ArM5eItemEnchantmentSheet {
         ARM5E.lab.enchantment.materialBase[capa.materialBase].base *
         ARM5E.lab.enchantment.sizeMultiplier[capa.sizeMultiplier].mult;
 
-      if (capa.prepared) {
+      capa.visiblePreparation =
+        enchants.state != "lesser" &&
+        (enchants.attunementVisible || enchants.visibleEnchant > 1 || context.isGM);
+      if (capa.prepared || enchants.state == "lesser") {
         enchants.prepared = true;
+        if (enchants.capacityMode == "sum") {
+          enchants.totalCapa += capa.total;
+        } else if (capa.total > enchants.totalCapa) {
+          // Max mode
+          enchants.totalCapa = capa.total;
+        }
       }
       // TODO: set invisible if all effects linked are hidden
       capa.visible = true;
@@ -156,7 +165,6 @@ export class ArM5eItemEnchantmentSheet {
     GetEnchantmentSelectOptions(context);
 
     let idx = 0;
-    let overcap = false;
     enchants.visibleEnchant = 0;
     enchants.visibleCapacities = 0;
     for (let e of enchants.effects) {
@@ -172,26 +180,20 @@ export class ArM5eItemEnchantmentSheet {
           return e.receptacleId == c.id;
         });
         if (capaIdx >= 0) {
-          if (enchants.capacityMode == "sum") {
-            enchants.totalCapa += enchants.capacities[capaIdx].total;
-          } else if (enchants.capacities[capaIdx].total > enchants.totalCapa) {
-            // Max mode
-            enchants.totalCapa = enchants.capacities[capaIdx].total;
-          }
           enchants.capacities[capaIdx].used += Math.ceil(e.system.level / 10);
           enchants.capacities[capaIdx].visible = true;
-          enchants.usedCapa += Math.ceil(e.system.level / 10);
-          if (!overcap && enchants.capacities[capaIdx].used > enchants.capacities[capaIdx].total) {
-            enchants.invalidItem = true;
-            enchants.invalidMsg.push("arm5e.enchantment.msg.capacityOverflow");
-            overcap = true;
-          }
         }
+        enchants.usedCapa += Math.ceil(e.system.level / 10);
       }
       e.prefix = `system.enchantments.effects.${idx}.`;
 
       e.visibility = context.ui.sections.visibility.enchantments[idx];
       idx++;
+    }
+
+    if (enchants.state !== "talisman" && enchants.usedCapa > enchants.totalCapa) {
+      enchants.invalidItem = true;
+      enchants.invalidMsg.push("arm5e.enchantment.msg.capacityOverflow");
     }
     enchants.visibleType = context.isGM;
     if (enchants.visibleEnchant == 1 && enchants.charged) {

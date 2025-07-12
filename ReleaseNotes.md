@@ -1,4 +1,4 @@
-## 2.4.0.3, Radislav am Polanach
+## 2.4.0.6, Radislav am Polanach
 
 ### Compatibility change
 
@@ -26,6 +26,18 @@
 - Dropping a book's lab text topic from an Actor library on to a lab will now work
 - Gift type of magi inhabitants is set automatically if they have Gentle Gift or Blatant Gift.
 - Arts and abilities active effects definitions are generated dynamically
+- New active effects:
+  - Reading about Art (Study bonus)
+- [technical] Speed optimization all over the place - on going
+- It is again possible to switch between spell invention and spell learning without resetting the spell's attributes.
+- [technical] the Astrolabium is now a singleton (ie: only one window exists)
+- It is possible to progress in alternate arts in seasonal activities (as abilities)
+- Added physical condition modifier (@physicalCondition) to rollData, to be used in inline rolls
+- Cosmetic changes:
+  - bigger icons
+  - better spacing
+- Codex has been migrated to V10 datamodel.
+- Codex now allows to browse and filter the content of ars-compendia base effects and spells without importing everything.
 
 ### Bug fixes
 
@@ -50,6 +62,29 @@
 - [Dice so nice] The system will let the animation finish before anouncing a die explosion or asking the number of botch dice.
 - Form is properly taken into account when resisting power and magic item effects
 - Ability option clean-up leaves capitalization as is.
+- Botching during vis study can now trigger a twilight episode.
+- Filters based on a numerical value are working again.
+- Enchantment capacities are computed properly.
+- Drop an compendium item on the lab will work the first time.
+- Generic abilities score is properly displayed in diary entries
+- Fix button to create new Qualities and Inferiorities on the character sheet.
+- Added a few missing sourcebooks and the "other" one
+- Physical condition is taken into account when rolling initiative from combat tracker.
+- Roll icon doesn't appear anymore for spells not owned by a character
+
+## 2.3.2.28, Quendalon, more than just sparows and bunnies
+
+### Features & changes
+
+- Arts and abilities active effects definitions are generated dynamically
+
+### Bug fixes
+
+- Negative values are again taken into account for covenant events loyaty.
+- Longevity ritual cost is computed properly.
+- Longevity ritual for another person is no longer generating an error.
+- Characteristic boost applied 2 times no longer result in undefined value.
+- Effect requisites are properly reset when switch from spell invention to longevity ritual or item investigation.
 
 ## 2.3.2.27, Quendalon, more than just flowers and bees
 

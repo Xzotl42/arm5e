@@ -46,7 +46,7 @@ export class ArsRoll extends Roll {
     const msg = await super.toMessage(messageData, { rollMode, create: false });
 
     // add type and system data
-    msg.type = this.getMessageType(messageData.system.roll.type);
+    msg.type = this.getMessageType(messageData);
     // create the message:
     const cls = getDocumentClass("ChatMessage");
     if (create) {
@@ -56,7 +56,16 @@ export class ArsRoll extends Roll {
     }
   }
 
-  getMessageType(rollType) {
+  getMessageType(messageData) {
+    let rollType;
+    if (messageData.system) {
+      rollType = messageData.system.roll.type;
+    } else {
+      // from combat tracker
+      if (messageData.flags["core.initiativeRoll"]) {
+        return "combat";
+      }
+    }
     if (["magic", "spont", "spell", "supernatural", "item", "power"].includes(rollType)) {
       return "magic";
     } else if (["init", "attack", "defense"].includes(rollType)) {

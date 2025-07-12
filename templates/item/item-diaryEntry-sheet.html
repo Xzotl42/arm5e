@@ -5,7 +5,7 @@
     <div class="header-fields">
       <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="name" /></h1>
       <div class="flexrow">
-        <div class="resource">
+        <div class="resource flex0">
           <label>{{localize "arm5e.generic.begins"}}: </label>
         </div>
         <div class="resource">
@@ -24,7 +24,7 @@
       </div>
       {{#if (gt system.duration 1)}}
         <div class="flexrow">
-          <div class="resource">
+          <div class="resource flex0">
             <label>{{localize "arm5e.generic.ends"}}: </label>
           </div>
           <div class="resource">
@@ -53,15 +53,23 @@
         </div>
       </div>
 
-      <div class="flexrow">
-        <div class="flex01">
-          <label>{{localize "arm5e.sheet.duration"}}</label> <input type="number" class="duration"
+      <div class="flex-group-left flexrow ">
+        <div class="marginsides10 resource">
+          <label>{{localize "arm5e.sheet.duration"}}</label> <input type="number" class="duration resource-focus slim"
             name="system.duration" value="{{system.duration}}" data-dtype="Number" {{ui.editDuration}} />
         </div>
+        {{#if (gt system.duration 1)}}
+          <div class="marginsides10 resource">
+            <label>{{localize "arm5e.sheet.progress"}}</label>
+            <input type="text" class="resource-focus slim" value="{{progress}}" data-dtype="Text" readonly />
+            <!--fieldset style="text-align:center;">
+              <label style=" font-size: 11pt;"> {{nbApplied}} / {{system.duration}} </label>
+            </fieldset-->
+          </div>
+        {{/if}}
         {{#if ui.schedule}}
-          <div class="resource">
-            <a class="select-dates flex0" style="width:50px"><i {{{astrolabIconStyle}}}
-                class=" icon-Tool_Astrolab"></i></a>
+          <div class="marginsides10 resource">
+            <a class="select-dates slim"><i {{{astrolabIconStyle}}} class=" icon-Tool_Astrolab"></i></a>
           </div>
         {{/if}}
         {{#if isOwned}}
@@ -106,22 +114,32 @@
         {{> "systems/arm5e/templates/item/parts/seasonal-activity.html" }}
       </div>
       <div class="flexrow">
-        {{#if system.applyPossible}}
+        {{#if partialButton}}
           {{#if rollNeeded}}
             <button class="arm5e flex03 roll-activity" style="font-family: bookAntika">{{localize rollLabel}}</button>
           {{else}}
-            <button class="arm5e flex02 progress-apply" style="font-family: bookAntika"
-              data-qualitymod="{{system.sourceModifier}}">{{localize "arm5e.sheet.action.apply"}}
+            <button class="arm5e flex02 progress-partial" style="font-family: bookAntika"
+              data-qualitymod="{{system.sourceModifier}}">{{localize "arm5e.sheet.action.partialProgress"}}
             </button>
           {{/if}}
         {{else}}
-          {{#unless system.done}}
-            <button class="arm5e flex02 progress-refresh"
-              style="font-family: bookAntika">{{localize "arm5e.lab.planning.button.refresh"}}</button>
+          {{#if system.applyPossible}}
+            {{#if rollNeeded}}
+              <button class="arm5e flex03 roll-activity" style="font-family: bookAntika">{{localize rollLabel}}</button>
+            {{else}}
+              <button class="arm5e flex02 progress-apply" style="font-family: bookAntika"
+                data-qualitymod="{{system.sourceModifier}}">{{localize "arm5e.sheet.action.apply"}}
+              </button>
+            {{/if}}
           {{else}}
-            <button class="arm5e flex02 progress-rollback"
-              style="font-family: bookAntika">{{localize "arm5e.sheet.action.rollback"}}</button>
-          {{/unless}}
+            {{#unless system.done}}
+              <button class="arm5e flex02 progress-refresh"
+                style="font-family: bookAntika">{{localize "arm5e.lab.planning.button.refresh"}}</button>
+            {{else}}
+              <button class="arm5e flex02 progress-rollback"
+                style="font-family: bookAntika">{{localize "arm5e.sheet.action.rollback"}}</button>
+            {{/unless}}
+          {{/if}}
         {{/if}}
         <div class="flexcol">
           <label class="header-label"

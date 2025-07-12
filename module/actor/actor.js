@@ -49,7 +49,7 @@ export class ArM5eActor extends Actor {
     }
     // Add properties used for active effects:
 
-    if (["player", "npc", "laboratory"].includes(this.type)) {
+    if (["player", "npc"].includes(this.type)) {
       this.system.covenant.document = game.actors.get(this.system.covenant.actorId);
       if (this.system.covenant.document) {
         this.system.covenant.value = this.system.covenant.document.name;
@@ -193,6 +193,7 @@ export class ArM5eActor extends Actor {
       teaching: 0,
       teacher: 0,
       reading: 0,
+      readingArts: 0,
       writing: 0,
       adventuring: 0,
       visStudy: 0
@@ -341,7 +342,7 @@ export class ArM5eActor extends Actor {
 
     // Resources
     system.resource = {};
-    // Fatigue as resource (test)
+    // Fatigue as resource for token bar
 
     system.resource.fatigue = {
       value: system.fatigueMaxLevel - system.fatigueCurrent,
@@ -718,33 +719,6 @@ export class ArM5eActor extends Actor {
     log(false, system);
   }
 
-  _prepareMagicCodexData() {
-    this.img = CONFIG.ARM5E_DEFAULT_ICONS.magicCodex;
-    const system = this.system;
-    let baseEffects = [];
-    let magicEffects = [];
-    let spells = [];
-    let enchantments = [];
-    for (let [key, item] of this.items.entries()) {
-      if (item.type == "baseEffect") {
-        baseEffects.push(item);
-      }
-      if (item.type == "magicalEffect") {
-        magicEffects.push(item);
-      }
-      if (item.type == "spell") {
-        spells.push(item);
-      }
-      if (item.type == "enchantment") {
-        enchantments.push(item);
-      }
-    }
-    system.baseEffects = baseEffects.sort(compareBaseEffects);
-    system.magicEffects = magicEffects.sort(compareMagicalEffects);
-    system.enchantments = enchantments.sort(compareMagicalEffects);
-    system.spells = spells.sort(compareSpells);
-  }
-
   /**
    * Determine default artwork based on the provided actor data.
    * @param {ActorData} actorData                      The source actor data.
@@ -811,6 +785,7 @@ export class ArM5eActor extends Actor {
           rollData.magic[k] = v.finalScore;
         }
       }
+      rollData.physicalCondition = this.system.fatigueTotal + this.system.penalties.wounds.total;
     } else {
       rollData = super.getRollData();
     }

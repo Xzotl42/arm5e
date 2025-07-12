@@ -404,7 +404,7 @@ export class ArM5eCovenantActorSheet extends ArM5eActorSheet {
   }
 
   async _bindActor(actor) {
-    if (!["laboratory", "player", "npc", "beast"].includes(actor.type)) return false;
+    if (!["laboratory", "player", "npc", "beast"].includes(actor.type)) return [];
     // add person to covenant inhabitants
     let targetActor = this.actor;
     if (actor.isMagus()) {
@@ -533,11 +533,11 @@ export class ArM5eCovenantActorSheet extends ArM5eActorSheet {
         return await this.actor.updateEmbeddedDocuments("Item", itemData, { render: true });
       }
     }
-    return {};
+    return [];
   }
 
   async _unbindActor(actor) {
-    if (!["laboratory", "player", "npc", "beast"].includes(actor.type)) return true;
+    if (!["laboratory", "player", "npc", "beast"].includes(actor.type)) return [];
     let targetActor = this.actor;
     if (actor.isMagus()) {
       let hab = targetActor.system.inhabitants.magi.filter((h) => h.system.actorId == actor._id);
