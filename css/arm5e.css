@@ -2101,6 +2101,7 @@ img.art-icon {
   flex: 0 0 86px;
   text-align: right;
   margin-right: 8px;
+  /* padding-top: 11pt; */
 }
 
 .arm5e .spell-value {

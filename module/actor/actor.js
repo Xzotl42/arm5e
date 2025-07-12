@@ -719,33 +719,6 @@ export class ArM5eActor extends Actor {
     log(false, system);
   }
 
-  _prepareMagicCodexData() {
-    this.img = CONFIG.ARM5E_DEFAULT_ICONS.magicCodex;
-    const system = this.system;
-    let baseEffects = [];
-    let magicEffects = [];
-    let spells = [];
-    let enchantments = [];
-    for (let [key, item] of this.items.entries()) {
-      if (item.type == "baseEffect") {
-        baseEffects.push(item);
-      }
-      if (item.type == "magicalEffect") {
-        magicEffects.push(item);
-      }
-      if (item.type == "spell") {
-        spells.push(item);
-      }
-      if (item.type == "enchantment") {
-        enchantments.push(item);
-      }
-    }
-    system.baseEffects = baseEffects.sort(compareBaseEffects);
-    system.magicEffects = magicEffects.sort(compareMagicalEffects);
-    system.enchantments = enchantments.sort(compareMagicalEffects);
-    system.spells = spells.sort(compareSpells);
-  }
-
   /**
    * Determine default artwork based on the provided actor data.
    * @param {ActorData} actorData                      The source actor data.

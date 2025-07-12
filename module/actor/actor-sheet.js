@@ -1288,6 +1288,24 @@ export class ArM5eActorSheet extends ActorSheet {
       item.sheet.render(true, { focus: true });
     });
 
+    // View compendium Item
+    html.find(".item-view").click(async (ev) => {
+      const li = $(ev.currentTarget).parents(".item");
+      const dataset = li[0].dataset;
+      const item = await fromUuid(dataset.uuid);
+      item.sheet.render(true, { focus: true });
+    });
+
+    html.find(".item-clone").click(async (ev) => {
+      const li = $(ev.currentTarget).parents(".item");
+      const dataset = li[0].dataset;
+      const item = await fromUuid(dataset.uuid);
+      const [newItem] = await this.actor.createEmbeddedDocuments("Item", [
+        { name: item.name, type: item.type, system: foundry.utils.duplicate(item.system) }
+      ]);
+      newItem.sheet.render(true, { focus: true });
+    });
+
     html.find(".effect-edit").click(async (ev) => {
       const li = $(ev.currentTarget).parents(".item");
       let effect = await fromUuid(li.data("effectId"));

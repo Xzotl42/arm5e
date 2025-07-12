@@ -1,7 +1,7 @@
 import { ARM5E } from "../config.js";
 import { compareBaseEffects, compareMagicalEffects, compareSpells } from "../tools.js";
 
-import { SeasonField } from "./commonSchemas.js";
+import { boolOption, SeasonField } from "./commonSchemas.js";
 
 const fields = foundry.data.fields;
 
@@ -30,7 +30,9 @@ export const actorBase = () => {
 
 export class CodexSchema extends foundry.abstract.TypeDataModel {
   static defineSchema() {
-    return {};
+    return {
+      withCompendia: boolOption(true)
+    };
   }
 
   // static migrateData(data) {
@@ -61,9 +63,18 @@ export class CodexSchema extends foundry.abstract.TypeDataModel {
         this.enchantments.push(item);
       }
     }
-    this.baseEffects.sort(compareBaseEffects);
+
+    if (this.withCompendia) {
+      let spellsCompendium = game.packs.get("arm5e-compendia.spells");
+      for (let s of spellsCompendium.index) {
+        if (s.type == "spell") this.spells.push(s);
+        else {
+          this.baseEffects.push(s);
+        }
+      }
+    }
+
     this.magicEffects.sort(compareMagicalEffects);
     this.enchantments.sort(compareMagicalEffects);
-    this.spells.sort(compareSpells);
   }
 }

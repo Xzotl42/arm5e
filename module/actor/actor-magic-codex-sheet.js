@@ -1,6 +1,6 @@
 import { ArM5eActorSheet } from "./actor-sheet.js";
 
-import { hermeticFilter, log } from "../tools.js";
+import { compareBaseEffects, compareSpells, hermeticFilter, log } from "../tools.js";
 
 import { labTextToEffect } from "../item/item-converter.js";
 import { ArM5eItem } from "../item/item.js";
@@ -68,13 +68,14 @@ export class ArM5eMagicCodexSheet extends ArM5eActorSheet {
     let filters = context.ui.filters.hermetic.filter;
     context.system.filteredBaseEffects = hermeticFilter(filters, context.system.baseEffects);
     context.system.baseEffectCount = context.system.filteredBaseEffects.length;
+    context.system.filteredBaseEffects.sort(compareBaseEffects);
     context.system.filteredMagicEffects = hermeticFilter(filters, context.system.magicEffects);
     context.system.magicEffectsCount = context.system.filteredMagicEffects.length;
     context.system.filteredEnchantments = hermeticFilter(filters, context.system.enchantments);
     context.system.enchantmentsCount = context.system.filteredEnchantments.length;
     context.system.filteredSpells = hermeticFilter(filters, context.system.spells);
     context.system.spellsCount = context.system.filteredSpells.length;
-
+    context.system.filteredSpells = context.system.filteredSpells.sort(compareSpells);
     const filterBySettingAspects = await GetFilteredAspects();
     const searchStr = context.ui.filters.aspects.searchString;
     if (searchStr && searchStr.length < 3) {

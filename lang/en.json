@@ -167,6 +167,7 @@
   "arm5e.sheet.combatInstructions1": "Equip weapons and armor to see the totals.",
   "arm5e.sheet.combatInstructions2": "If your specialty is with the shield, mark it on the shield and not on the weapon. If you don't have the shield equipped, the specialty bonus doesn't apply.",
   "arm5e.sheet.combatInstructions3": "Create a 'mounted' item with the ability to 'mount' and mark on its attributes that it is a horse. When you equip it, the calculations will be applied.",
+  "arm5e.sheet.withCompendium": "Include compendia",
 
   "arm5e.dialog.chooseCovenant": "Choose a covenant",
 
@@ -1560,6 +1561,8 @@
   "arm5e.hints.design": "Design {item}",
   "arm5e.hints.read": "Read {item}",
   "arm5e.hints.copy": "Copy {item}",
+  "arm5e.hints.view": "View {item}",
+  "arm5e.hints.clone": "Clone {item}",
   "arm5e.hints.recover": "Recover from {item}",
   "arm5e.hints.createLabText": "Create draft laboratory text",
   "arm5e.hints.useMagicItem": "Trigger the effect \"{name}\"",

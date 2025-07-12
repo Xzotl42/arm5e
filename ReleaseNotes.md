@@ -1,4 +1,4 @@
-## 2.4.0.5, Radislav am Polanach
+## 2.4.0.6, Radislav am Polanach
 
 ### Compatibility change
 
@@ -33,6 +33,11 @@
 - [technical] the Astrolabium is now a singleton (ie: only one window exists)
 - It is possible to progress in alternate arts in seasonal activities (as abilities)
 - Added physical condition modifier (@physicalCondition) to rollData, to be used in inline rolls
+- Cosmetic changes:
+  - bigger icons
+  - better spacing
+- Codex has been migrated to V10 datamodel.
+- Codex now allows to browse and filter the content of ars-compendia base effects and spells without importing everything.
 
 ### Bug fixes
 
@@ -65,6 +70,7 @@
 - Fix button to create new Qualities and Inferiorities on the character sheet.
 - Added a few missing sourcebooks and the "other" one
 - Physical condition is taken into account when rolling initiative from combat tracker.
+- Roll icon doesn't appear anymore for spells not owned by a character
 
 ## 2.3.2.28, Quendalon, more than just sparows and bunnies
 

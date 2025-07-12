@@ -12,18 +12,24 @@
       <div class="header-fields">
         <div class="resources flexrow flex-between">
           <span class="codexname flexrow" style="padding-top: 4px">
+            <div class="resource flexrow">
+              <label for="system.technique.value" class="header-label">{{localize "arm5e.sheet.withCompendium"}}</label>
+              <input type="checkbox" name="system.withCompendia" {{checked system.withCompendia}}>
+            </div>
+          </span>
+          <span class="codexname flexrow" style="padding-top: 4px">
             <label for="techniqueFilter" class="header-label"
-              style="padding-left: 24px">{{localize "arm5e.sheet.technique"}}</label>
+              style="padding-right: 10px; text-align: right;">{{localize "arm5e.sheet.technique"}}</label>
             <select name="techniqueFilter" class="technique-filter" data-type="String" data-list="filter"
-              data-category="hermetic" style="flex: 0 0 100px">
+              data-category="hermetic" style="flex: 0 0 80px; font-size: 11pt">
               {{selectOptions config.magic.techniques selected=ui.filters.hermetic.filter.techniqueFilter labelAttr="label" blank="" }}
             </select>
           </span>
           <span class="codexname flexrow" style="padding-top: 4px">
             <label for="formFilter" class="header-label"
-              style="padding-left: 24px">{{localize "arm5e.sheet.form"}}</label>
+              style="padding-right: 10px; text-align: right;">{{localize "arm5e.sheet.form"}}</label>
             <select name="formFilter" data-type="String" class="form-filter" data-list="filter" data-category="hermetic"
-              style="flex: 0 0">
+              style="flex: 0 0 ; font-size: 11pt">
               {{selectOptions config.magic.forms selected=ui.filters.hermetic.filter.formFilter labelAttr="label" blank="" }}
             </select>
           </span>
@@ -33,7 +39,7 @@
             <select name="levelOperator" data-type="Number" data-list="filter" data-category="hermetic"
               style="flex: 0 0; font-family: bookAntiqua" class="levelOperator-filter">
               {{selectOptions config.genericOptions.filterOperator selected=ui.filters.hermetic.filter.levelOperator
-                 nameAttr="key" valueAttr="key" labelAttr="label" blank=""}}
+                 nameAttr="key" valueAttr="key" labelAttr="label"}}
             </select>
             <input type="number" name="levelFilter" data-list="filter" data-category="hermetic"
               value="{{ui.filters.hermetic.filter.levelFilter}}" data-dtype="Number" class="level-filter" />

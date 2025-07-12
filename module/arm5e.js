@@ -22,7 +22,7 @@ import { ArM5eActiveEffectConfig } from "./helpers/active-effect-config.sheet.js
 // Experiment
 import { ArsLayer, addArsButtons } from "./ui/ars-layer.js";
 
-import { migration } from "./migration.js";
+import { migrateCompendium, migration } from "./migration.js";
 import { log } from "./tools.js";
 
 import { migrateSettings, registerSettings } from "./settings.js";
@@ -90,7 +90,8 @@ Hooks.once("init", async function () {
     ArM5eActor,
     ArM5eItem,
     // ArtSchema,
-    rollItemMacro
+    rollItemMacro,
+    migrateCompendium
   };
 
   // Add system metadata
@@ -340,7 +341,24 @@ Hooks.once("ready", async function () {
   game.packs.get(`${ARM5E.REF_MODULE_ID}.flaws`).getIndex({ fields: ["system.indexKey"] });
   game.packs.get(`${ARM5E.REF_MODULE_ID}.equipment`).getIndex({ fields: ["system.indexKey"] });
   game.packs.get(`${ARM5E.REF_MODULE_ID}.spells`).getIndex({
-    fields: ["system.indexKey", "system.technique.value", "system.form.value", "system.level"]
+    fields: [
+      "system.indexKey",
+      "system.technique.value",
+      "system.form.value",
+      "system.baseLevel",
+      "system.level",
+      "system.technique-req",
+      "system.form-req",
+      "system.range.value",
+      "system.duration.value",
+      "system.target.value",
+      // "system.complexity",
+      // "system.targetSize",
+      // "system.enhancingRequisite",
+      "system.ritual"
+      // "system.general",
+      // "system.levelOffset"
+    ]
   });
 
   // TESTING

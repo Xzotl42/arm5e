@@ -1,7 +1,7 @@
 /* eslint-disable jsdoc/require-returns-type */
 import { ArM5eActor } from "../actor/actor.js";
 import { ARM5E } from "../config.js";
-import { IsMagicalEffect } from "../helpers/magic.js";
+import { computeLevel, IsMagicalEffect } from "../helpers/magic.js";
 import { convertToNumber, log } from "../tools.js";
 import {
   authorship,
@@ -219,7 +219,9 @@ const migrateMagicalItem = (itemData) => {
         " use rather the levelOffset field for general spells<br/>"
     });
   }
-
+  if (["spell", "enchantment"].includes(itemData.type)) {
+    updateData["system.level"] = computeLevel(itemData.system, itemData.type);
+  }
   return updateData;
 };
 
@@ -419,7 +421,8 @@ export class SpellSchema extends MagicalEffectSchema {
       xp: XpField(),
       masteryAbilities: baseDescription(),
       general: boolOption(),
-      levelOffset: ModifierField()
+      levelOffset: ModifierField(),
+      level: baseLevel()
     };
   }
 
