@@ -8,10 +8,65 @@ export class ArsRoll extends Roll {
     this.divider = 1;
     this.multiplier = 1;
     this.offset = 0;
-    this.botchCheck = false;
   }
 
-  modifier() {
+  get botchDice() {
+    if (!this._evaluated) return 0;
+    if (this.dice.length > 1) {
+      return 0;
+    }
+    const theDie = this.dice[0];
+    // if (
+    //   theDie instanceof StressDie ||
+    //   theDie instanceof StressDieInternal ||
+    //   theDie instanceof AlternateStressDie
+    // ) {
+    return theDie.options.botchDice;
+    // }
+    // return 0;
+  }
+
+  set botchDice(val) {
+    if (!this._evaluated || this.dice.length > 1) {
+      return;
+    }
+    const theDie = this.dice[0];
+    if (
+      !(theDie instanceof StressDie) &&
+      !(theDie instanceof StressDieInternal) &&
+      !(theDie instanceof AlternateStressDie)
+    ) {
+      theDie.options.botchDice = val;
+    }
+  }
+
+  get total() {
+    if (!this._evaluated) return null;
+    if (this.dice.length > 1) {
+      return super.total;
+    }
+    const theDie = this.dice[0];
+    if (
+      !(theDie instanceof StressDie) &&
+      !(theDie instanceof StressDieInternal) &&
+      !(theDie instanceof AlternateStressDie)
+    ) {
+      return super.total;
+    }
+    StressDieInternal;
+    if (theDie.botchCheck) {
+      this.botchCheck = true;
+      this.botches = -theDie.total;
+      if (this.botches) {
+        return 0;
+      } else {
+        return super.total + this.botches;
+      }
+    }
+    return super.total;
+  }
+
+  get modifier() {
     if (!this.result) {
       return 0;
     }
@@ -83,11 +138,12 @@ export class StressDie extends foundry.dice.terms.Die {
     if (typeof this.faces !== "number") {
       throw new Error("A StressDie term must have a numeric number of faces.");
     }
-    this.botchCheck = false;
   }
 
   // whether we are botch checking
-  botchCheck;
+  get botchCheck() {
+    return this._evaluated && this.results[0].result === 10;
+  }
 
   /** @inheritdoc */
   static DENOMINATION = "s";
@@ -102,7 +158,6 @@ export class StressDie extends foundry.dice.terms.Die {
       this.number = this.options.botchDice + 1;
       this._evaluated = false;
       this.modifiers = ["cf=10"];
-      this.botchCheck = true;
       await super.evaluate();
       return this;
     }
@@ -112,7 +167,10 @@ export class StressDie extends foundry.dice.terms.Die {
 
   get total() {
     if (!this._evaluated) return null;
-    if (this.botchCheck) return 1 - super.total;
+    if (this.botchCheck) {
+      this.botches = super.total - 1;
+      return -this.botches;
+    }
     const res = this.results.reduce((t, r, i, a) => {
       // log(false, `DBG: total.reduce res=${r.result}, i=${i} * t=${t} ; ${r.active}) `);
       if (!r.active) {
@@ -222,7 +280,9 @@ export class AlternateStressDie extends foundry.dice.terms.Die {
   }
 
   // whether we are botch checking
-  botchCheck;
+  get botchCheck() {
+    return this._evaluated && this.results[0].result === 1;
+  }
 
   /** @inheritdoc */
   static DENOMINATION = "a";

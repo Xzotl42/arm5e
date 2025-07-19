@@ -1,4 +1,4 @@
-## 2.4.0.6, Radislav am Polanach
+## 2.4.0.7, Radislav am Polanach
 
 ### Compatibility change
 
@@ -71,6 +71,7 @@
 - Added a few missing sourcebooks and the "other" one
 - Physical condition is taken into account when rolling initiative from combat tracker.
 - Roll icon doesn't appear anymore for spells not owned by a character
+- Chat rolls with stress die resulting in a botch are clearly indicated
 
 ## 2.3.2.28, Quendalon, more than just sparows and bunnies
 

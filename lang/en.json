@@ -992,6 +992,7 @@
   "arm5e.lab.self": "Self",
   "arm5e.lab.option.oneCharge": "One charge per item",
 
+  "arm5e.lab.specialty.label": "Lab's specialty",
   "arm5e.lab.specialty.experimentation": "Experimentation",
   "arm5e.lab.specialty.familiar": "Familiar",
   "arm5e.lab.specialty.items": "Items",
@@ -1160,7 +1161,7 @@
   "arm5e.messages.useConf": "Use confidence point",
   "arm5e.messages.noConf": "Pass confidence use",
   "arm5e.messages.die.exploding": "Exploding stress die!",
-  "arm5e.messages.die.noBotch": "No botch out of {dicenum} dice rolled!",
+  "arm5e.messages.die.noBotch": "No botch out of {dicenum} die/dice rolled!",
   "arm5e.messages.die.botch": "One botch!",
   "arm5e.messages.die.botches": "{num} botches!",
   "arm5e.messages.die.bonus": "Bonus",
@@ -1574,6 +1575,10 @@
   "arm5e.config.compendiaRef": "Compendia reference",
   "arm5e.config.hint.compendiaRef": "Select the module that will serve as reference to the system for compendium content",
 
+  "arm5e.rolltables.experimentation.title": "Arcane Experimentation",
+  "arm5e.rolltables.experimentation.roll": "Roll for experimentation",
+  "arm5e.rolltables.experimentation.report": "Experimentation report",
+  "arm5e.rolltables.experimentation.riskModifier": "Risk modifier",
   "arm5e.rolltables.experimentation.disaster.avoid": "You avoid disaster but waste the season.",
   "arm5e.rolltables.experimentation.disaster.destroyedCreation": "Your creation is destroyed.",
   "arm5e.rolltables.experimentation.disaster.destroyedCreationPlus": "Your creation is destroyed, and so is some other valuable item that you keep in your laboratory.",
@@ -1589,16 +1594,22 @@
   "arm5e.rolltables.experimentation.discovery.rollTwice": "Roll twice, and reroll this result if it is generated again",
 
   "arm5e.rolltables.experimentation.extrordinaryResults.none": "No Extraordinary Effects",
+  "arm5e.rolltables.experimentation.extrordinaryResults.desc.none": "Your experiment works without producing any unintended effects.",
   "arm5e.rolltables.experimentation.extrordinaryResults.sideEffect": "Side Effect",
+  "arm5e.rolltables.experimentation.extrordinaryResults.desc.sideEffect": "Your magical creation acquires a side effect. Roll a simple die, and work out the specifics with the storyguide.",
   "arm5e.rolltables.experimentation.extrordinaryResults.noBenefit": "No Benefit",
+  "arm5e.rolltables.experimentation.extrordinaryResults.desc.noBenefit": "Your experimentation produces no results. You lose the benefit of the extra die and risk modifier — recalculate your Lab Total without those modifiers. If your new Lab Total is too low to succeed in the project, it must be abandoned.",
   "arm5e.rolltables.experimentation.extrordinaryResults.failure": "Complete Failure",
+  "arm5e.rolltables.experimentation.extrordinaryResults.desc.failure": "You get nothing from your efforts, and your season is wasted. If you were working on a familiar or enchanted item, roll a simple die. On a 0, it is destroyed.",
   "arm5e.rolltables.experimentation.extrordinaryResults.special": "Special or Story event",
+  "arm5e.rolltables.experimentation.extrordinaryResults.desc.special": "The storyguide picks one of the following: <br><ul><li>The creation requires additional raw vis. The magus must spend a number of additional pawns of vis that match the Technique or Form of the project equal to the magnitude of the effect (including modifications) plus the risk modifier. If he is unable to do so, either because he does not have the vis, or because he cannot handle enough vis in a single season, treat as a Complete Failure.</li><li>The magus also creates a spell, with the same Technique and Form as the project, of any level that he could create in a single season. The spell is designed by the storyguide or troupe, and need not have an obvious connection to the project. The magus knows it, and can write up the Laboratory Text as normal, allowing other magi to create it as well. It is simpler if this spell does follow all the rules of Hermetic Magic, but that is not essential if the troupe is happy with the complications. Treat this as No Extraordinary Effects for the main project.</li><li>The creation is modified in some way that does not necessarily fall under the categories of Side Effect or Modified Effect, although it may if desired. This allows the storyguide to introduce any sort of supernatural effect — the creation could even be strongly affected by a different realm. The result may be positive or negative from the magus's perspective, but should be interesting for the troupe.  A story event happens. This can be anything; it could be used as an opportunity to introduce a major plot line, or as a brief and amusing distraction. It does not need to happen immediately; the uncontrolled magic might set something in motion, or it might be a result of using the creation in a particular context, some time later. The story event may be basically positive — the magus might attract the attention of a potential familiar, for example. Unless the story event requires otherwise, treat this as No Extraordinary Effects for the project itself.</li></ul>",
   "arm5e.rolltables.experimentation.extrordinaryResults.discovery": "Discovery",
-  "arm5e.rolltables.experimentation.extrordinaryResults.modifiedEffect": "Modified effect.",
+  "arm5e.rolltables.experimentation.extrordinaryResults.desc.discovery": "Roll a simple die and add your risk modifier. If you are engaged in Arcane Discovery (see page @@), you make a discovery that advances your project, and ignore this table.",
+  "arm5e.rolltables.experimentation.extrordinaryResults.modifiedEffect": "Modified effect",
+  "arm5e.rolltables.experimentation.extrordinaryResults.desc.modifiedEffect": "Roll a simple die and add your risk modifier. If you were investigating a magic item, you have changed one or more of its powers.",
   "arm5e.rolltables.experimentation.extrordinaryResults.rollTwice": "Roll twice on this table.",
-  "arm5e.rolltables.experimentation.extrordinaryResults.disaster": "Disaster.",
-
-  "arm5e.rolltables.experimentation": "",
+  "arm5e.rolltables.experimentation.extrordinaryResults.disaster": "Disaster",
+  "arm5e.rolltables.experimentation.extrordinaryResults.desc.disaster": "You fail miserably. Consult the following table for the result, depending on the number of zeroes rolled on the botch dice. Suffer the effect for the number you roll and for all lower numbers, unless explicitly told otherwise. For example, an explosion (3) also destroys the creation and inflicts Warping Points on the magus.",
 
   "arm5e.twilight.episode": "Twilight Episode",
   "arm5e.twilight.reset": "Do you want to reset this Twilight Episode?",
@@ -1693,5 +1704,6 @@
   "arm5e.generic.invalid": "Invalid",
   "arm5e.generic.versus": "Versus",
   "arm5e.generic.inherit": "Inherit",
-  "arm5e.generic.pending": "Pending"
+  "arm5e.generic.pending": "Pending",
+  "arm5e.generic.clear": "Clear"
 }

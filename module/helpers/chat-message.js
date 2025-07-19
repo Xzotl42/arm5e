@@ -26,6 +26,27 @@ export class Arm5eChatMessage extends ChatMessage {
         this.system.originalFlavor = this.flavor;
       }
       this.flavor = this.system.getFlavor();
+    } else if (this.type === "base" && this.isRoll) {
+      // chat roll
+      this.rolls[0].total;
+      if (this.rolls.length == 1 && this.rolls[0].botchCheck) {
+        const botches = this.rolls[0].botches;
+        if (botches == 0) {
+          this.flavor += `<div class='flex-center' ><b style='text-align: center'>${game.i18n.format(
+            "arm5e.messages.die.noBotch",
+            { dicenum: this.rolls[0].botchDice }
+          )}</b></div>`;
+        } else if (botches == 1) {
+          this.flavor += `<div class='flex-center' ><b style='text-align: center'>${game.i18n.localize(
+            "arm5e.messages.die.botch"
+          )}</b></div>`;
+        } else {
+          this.flavor += `<div class='flex-center' ><b style='text-align: center'>${game.i18n.format(
+            "arm5e.messages.die.botches",
+            { num: botches }
+          )}</b></div>`;
+        }
+      }
     }
 
     const html = await super.getHTML();
