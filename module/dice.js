@@ -56,7 +56,7 @@ async function simpleDie(actor, type = "OPTION", callback, modes = 0) {
         secondaryScore: rollInfo.secondaryScore,
         botchCheck: false,
         details: rollInfo.details,
-        divider: 1,
+        divider: rollInfo.magic.divide,
         difficulty: 0,
         actorType: actor.type // for if the actor is deleted
       },
@@ -212,7 +212,7 @@ async function stressDie(actor, type = "OPTION", modes = 0, callback = undefined
         secondaryScore: rollInfo.secondaryScore,
         botchCheck: botchCheck,
         details: rollInfo.details,
-        divider: 1,
+        divider: rollInfo.magic.divide,
         difficulty: 0,
         actorType: actor.type // for if the actor is deleted
       },

@@ -1,4 +1,4 @@
-## 2.4.0.6, Radislav am Polanach
+## 2.4.0.8, Radislav am Polanach
 
 ### Compatibility change
 
@@ -38,6 +38,7 @@
   - better spacing
 - Codex has been migrated to V10 datamodel.
 - Codex now allows to browse and filter the content of ars-compendia base effects and spells without importing everything.
+- Arcane experimentation dialog.
 
 ### Bug fixes
 
@@ -71,6 +72,8 @@
 - Added a few missing sourcebooks and the "other" one
 - Physical condition is taken into account when rolling initiative from combat tracker.
 - Roll icon doesn't appear anymore for spells not owned by a character
+- Chat rolls with stress die resulting in a botch are clearly indicated
+- Health attribute of the lab is taken into account for aging rolls.
 
 ## 2.3.2.28, Quendalon, more than just sparows and bunnies
 

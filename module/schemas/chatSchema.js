@@ -14,6 +14,11 @@ export class BasicChatSchema extends foundry.abstract.TypeDataModel {
         required: false,
         blank: true,
         initial: ""
+      }),
+      originalFlavor: new fields.StringField({
+        required: false,
+        blank: true,
+        initial: ""
       })
 
       // style/mode : for announcement, OOC, NPC speech.
@@ -30,10 +35,18 @@ export class BasicChatSchema extends foundry.abstract.TypeDataModel {
     return updateData;
   }
 
-  addListeners(html) {}
+  addListeners(html) {
+    // TEMPORARY until chat rework
+    html.find(".clickable").click((ev) => {
+      $(ev.currentTarget).next().toggleClass("hide");
+    });
+    html.find(".clickable2").click((ev) => {
+      $(ev.currentTarget).next().toggleClass("hide");
+    });
+  }
 
   getFlavor() {
-    return `<h2 class="ars-chat-title chat-icon">${this.label}</h2>`;
+    return `<h2 class="ars-chat-title chat-icon">${this.label}</h2><div>${this.originalFlavor}</div>`;
   }
 
   // standard chat message doesn't have targets;
@@ -51,11 +64,7 @@ export class RollChatSchema extends BasicChatSchema {
         score: basicIntegerField(0, 0),
         used: basicIntegerField(0, 0)
       }),
-      originalFlavor: new fields.StringField({
-        required: false,
-        blank: true,
-        initial: ""
-      }),
+
       roll: new fields.SchemaField({
         img: new fields.FilePathField({
           categories: ["IMAGE"],
@@ -121,7 +130,6 @@ export class RollChatSchema extends BasicChatSchema {
 
   addListeners(html) {
     super.addListeners(html);
-
     if (this.parent.originatorOrGM) {
       const itemImg = html.find(".item-image");
       if (itemImg) {
@@ -134,14 +142,6 @@ export class RollChatSchema extends BasicChatSchema {
           }
         });
       }
-
-      // TEMPORARY until chat rework
-      html.find(".clickable").click((ev) => {
-        $(ev.currentTarget).next().toggleClass("hide");
-      });
-      html.find(".clickable2").click((ev) => {
-        $(ev.currentTarget).next().toggleClass("hide");
-      });
     }
   }
 
@@ -232,6 +232,8 @@ export class RollChatSchema extends BasicChatSchema {
   cleanupFormula(input) {
     if (input.match(/(\d+)d10cf=10/g)) {
       return input.replace(/(\d+)d10cf=10/g, "$1 botch dice");
+    } else if (input.match(/(\d+)dscf=10/g)) {
+      return input.replace(/(\d+)dscf=10/g, "$1 botch dice");
     } else if (input.match(/1di /g)) {
       return input.replace(/1di /g, "1d10 ");
     } else if (input.match(/1di10 /g)) {

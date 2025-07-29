@@ -77,6 +77,7 @@ import {
 import { Arm5eChatMessage } from "./helpers/chat-message.js";
 import { addActiveEffectsDefinitions } from "./constants/activeEffectsTypes.js";
 import { Astrolab } from "./tools/astrolab.js";
+import { ArsApps } from "./tools/apps.js";
 
 Hooks.once("i18nInit", async function () {
   CONFIG.ARM5E.LOCALIZED_ABILITIES = localizeAbilities();
@@ -90,6 +91,7 @@ Hooks.once("init", async function () {
     ArM5eActor,
     ArM5eItem,
     // ArtSchema,
+    ArsApps,
     rollItemMacro,
     migrateCompendium
   };

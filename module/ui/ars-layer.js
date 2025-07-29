@@ -3,14 +3,13 @@ import { Astrolab } from "../tools/astrolab.js";
 import { ArM5eActiveEffectConfig } from "../helpers/active-effect-config.sheet.js";
 import { Scriptorium, ScriptoriumObject } from "../tools/scriptorium.js";
 import { AuraConfig } from "./aura-config.js";
+import { ArsApps } from "../tools/apps.js";
 
 export class ArsLayer extends InteractionLayer {
   async draw() {
     await super.draw();
     return this;
   }
-
-  async _draw() {}
 
   addListenersDialog(html) {
     html.find('input[name="inputField"]').change((ev) => {
@@ -24,6 +23,9 @@ export class ArsLayer extends InteractionLayer {
       ev.currentTarget.select();
     });
   }
+  ///////////////
+  // for backward compatibility, use ArsApps instead
+  ///////////////
 
   static async clearAura(bypassDialog = false) {
     if (bypassDialog) {
@@ -40,14 +42,10 @@ export class ArsLayer extends InteractionLayer {
     }
   }
   static async openAstrolab() {
-    // const html = await renderTemplate("systems/arm5e/templates/generic/astrolab.html", dialogData);
-
-    // const astrolab = new Astrolab(formData, {}); // data, options
     const res = await ui.astrolab.render(true);
   }
   static async openScriptorium() {
     let formData = new ScriptoriumObject();
-    // // const html = await renderTemplate("systems/arm5e/templates/generic/astrolab.html", dialogData);
     const scriptorium = new Scriptorium(formData, {}); // data, options
     const res = await scriptorium.render(true);
   }
@@ -55,6 +53,9 @@ export class ArsLayer extends InteractionLayer {
   static async openAuraConfig() {
     new AuraConfig(canvas.scene).render(true);
   }
+  ///////////////
+  // for backward compatibility: end
+  ///////////////
 }
 
 export function addArsButtons(buttons) {
@@ -71,7 +72,7 @@ export function addArsButtons(buttons) {
         icon: "icon-Tool_Auras",
         visible: game.user.isGM,
         button: true,
-        onClick: () => ArsLayer.openAuraConfig()
+        onClick: () => ArsApps.openAuraConfig()
       },
       {
         name: "clearAura",
@@ -79,7 +80,7 @@ export function addArsButtons(buttons) {
         icon: "icon-Tool_Delete_Perdo2",
         visible: game.user.isGM,
         button: true,
-        onClick: () => ArsLayer.clearAura()
+        onClick: () => ArsApps.clearAura()
       },
       {
         name: "astrolab",
@@ -87,7 +88,7 @@ export function addArsButtons(buttons) {
         icon: "icon-Tool_Astrolab",
         visible: game.user.isGM,
         button: true,
-        onClick: () => ArsLayer.openAstrolab()
+        onClick: () => ArsApps.openAstrolab()
       },
       {
         name: "scriptorium",
@@ -95,7 +96,15 @@ export function addArsButtons(buttons) {
         icon: "icon-Tool_Scriptorium",
         visible: true,
         button: true,
-        onClick: () => ArsLayer.openScriptorium()
+        onClick: () => ArsApps.openScriptorium()
+      },
+      {
+        name: "arcaneExperimentation",
+        title: "arm5e.rolltables.experimentation.title",
+        icon: "icon-Tool_Ars",
+        visible: true,
+        button: true,
+        onClick: () => ArsApps.openLabExperimentation()
       }
     ],
     activeTool: "aura"

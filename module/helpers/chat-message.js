@@ -26,6 +26,27 @@ export class Arm5eChatMessage extends ChatMessage {
         this.system.originalFlavor = this.flavor;
       }
       this.flavor = this.system.getFlavor();
+    } else if (this.type === "base" && this.isRoll) {
+      // chat roll
+      this.rolls[0].total;
+      if (this.rolls.length == 1 && this.rolls[0].botchCheck) {
+        const botches = this.rolls[0].botches;
+        if (botches == 0) {
+          this.flavor += `<div class='flex-center' ><b style='text-align: center'>${game.i18n.format(
+            "arm5e.messages.die.noBotch",
+            { dicenum: this.rolls[0].botchDice }
+          )}</b></div>`;
+        } else if (botches == 1) {
+          this.flavor += `<div class='flex-center' ><b style='text-align: center'>${game.i18n.localize(
+            "arm5e.messages.die.botch"
+          )}</b></div>`;
+        } else {
+          this.flavor += `<div class='flex-center' ><b style='text-align: center'>${game.i18n.format(
+            "arm5e.messages.die.botches",
+            { num: botches }
+          )}</b></div>`;
+        }
+      }
     }
 
     const html = await super.getHTML();
@@ -119,27 +140,18 @@ export class Arm5eChatMessage extends ChatMessage {
   }
 }
 
-async function privateMessage(content, actor, title, flavor, type = "") {
-  // only roll messages can be hidden from roller
-
-  // let roll = new Roll("0");
-
+export async function privateMessage(content, actor, title, flavor, type = "") {
   let messageData = {
     content: "",
-    flavor: title + content + putInFoldableLinkWithAnimation("arm5e.sheet.details", flavor),
+    flavor: content + putInFoldableLinkWithAnimation("arm5e.sheet.details", flavor),
     speaker: ChatMessage.getSpeaker({
-      actor
+      actor: actor
     }),
-    type: CONST.CHAT_MESSAGE_TYPES.ROLL,
+    type: "standard",
     // roll: "0",
+    system: { label: title },
     whisper: ChatMessage.getWhisperRecipients("gm"),
-    blind: true,
-    flags: {
-      arm5e: {
-        type: type,
-        actorType: actor.type // for if the actor is deleted
-      }
-    }
+    blind: true
   };
   ChatMessage.create(messageData);
   // await roll.toMessage(messageData, { rollMode: CONST.DICE_ROLL_MODES.BLIND });

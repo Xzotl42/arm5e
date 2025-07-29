@@ -1,0 +1,49 @@
+<form class="{{cssClass}} scriptorium scriptorium-sheet" autocomplete="off">
+  <div class="scriptorium flex0">
+    <img src="systems/arm5e/assets/scriptorium/Scriptorium_header.png" style="border: 0px;" />
+  </div>
+  <h1 class="scriptorium-title width: 100%;" text-align="center">{{localize "arm5e.rolltables.experimentation.title" }}
+  </h1>
+  <header class="scriptorium-header flexcol marginsides32">
+    <div class="flexrow">
+      <div class="resource flexcol flex-center">
+        <label class="header-label">{{localize "arm5e.rolltables.experimentation.riskModifier" }}</label>
+        <input type="number" class="resource-focus slim" name="riskModifier" value="{{riskModifier}}" />
+      </div>
+
+      <div class="resource flexcol flex-center">
+        <label class="header-label">{{localize "arm5e.sheet.aura" }}</label>
+        <input type="number" class="resource-focus slim" name="aura" value="{{aura}}" />
+      </div>
+      <div class="resource flexcol flex-center">
+        <label
+          class="header-label">{{localize "arm5e.rolltables.experimentation.extraordinaryResults.discovery.short" }}</label>
+        <input type="checkbox" class="resource-focus slim" name="discovery" {{checked discovery}} />
+      </div>
+    </div>
+    <div class="flexrow">
+      <button class="arm5e experimentation-roll" style="font-family: bookAntika; margin:5px">
+        {{localize "arm5e.rolltables.experimentation.roll"}}
+      </button>
+      <button class="arm5e clear-all" style="font-family: bookAntika; margin:5px">
+        {{localize "arm5e.generic.clear"}}
+      </button>
+    </div>
+  </header>
+
+  <div class="marginsides32">
+    {{> "systems/arm5e/templates/generic/metalic-bar.html" topoffset="-7px" }}
+  </div>
+  {{!-- Sheet Body --}}
+
+  <section class="sheet-body">
+    <h2 class="marginsides32">{{localize "arm5e.rolltables.experimentation.report.label" }}</h2>
+    <div class="marginsides32" style="height: 377px ; min-height: 377px;">
+      {{editor report target="report" button=true engine="prosemirror" editable=true}}
+    </div>
+  </section>
+
+  <div class="footer-background flex0">
+    <img src="systems/arm5e/assets/scriptorium/Scriptorium_footer.png" />
+  </div>
+</form>

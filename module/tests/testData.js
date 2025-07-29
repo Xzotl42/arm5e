@@ -449,6 +449,59 @@ export const spellData3 = {
   masteryAbilities: ""
 };
 
+export const spellData4 = {
+  description: "",
+  source: "custom",
+  page: 0,
+  technique: {
+    value: "pe"
+  },
+  "technique-req": {
+    cr: false,
+    in: false,
+    mu: false,
+    pe: false,
+    re: false
+  },
+  form: {
+    value: "vi"
+  },
+  "form-req": {
+    an: false,
+    aq: false,
+    au: false,
+    co: false,
+    he: false,
+    ig: false,
+    im: false,
+    me: false,
+    te: false,
+    vi: false
+  },
+  range: {
+    value: "personal"
+  },
+  duration: {
+    value: "sun"
+  },
+  target: {
+    value: "ind"
+  },
+  targetSize: 3,
+  complexity: 4,
+  enhancingRequisite: 0,
+  general: true,
+  levelOffset: 3,
+  baseLevel: 4,
+  baseEffectDescription: "",
+  applyFocus: false,
+  ritual: false,
+  bonus: 3,
+  bonusDesc: "Talisman",
+  xp: 30,
+  masteryAbilities: ""
+};
+
 export const newSpell1 = {
   description: "",
   source: "custom",
@@ -842,6 +895,11 @@ export async function getMagus(magusName = "MerlinTheMagus", items = [], overrid
     name: "Ritual spell",
     type: "spell",
     system: spellData3
+  });
+  items.push({
+    name: "Spell with deficiency",
+    type: "spell",
+    system: spellData4
   });
 
   await character.createEmbeddedDocuments("Item", items, {});

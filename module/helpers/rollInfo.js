@@ -331,13 +331,19 @@ export class ArM5eRollInfo {
         );
         let livingMod = 0;
         if (actorSystemData.covenant?.linked) {
-          let cov = actorSystemData.covenant.document;
+          const cov = actorSystemData.covenant.document;
           if (ArM5eActor.IsMagus(this._actor.type, actorSystemData.charType.value)) {
             livingMod = cov.system.modifiersLife.magi ?? 0;
           } else {
             livingMod = cov.system.modifiersLife.mundane ?? 0;
           }
         }
+        // Health attribute of the lab.
+        if (actorSystemData.sanctum?.linked) {
+          const lab = actorSystemData.covenant.document;
+          livingMod += Math.floor(lab.system.health.total / 2);
+        }
+
         this.setGenericField(game.i18n.localize("arm5e.sheet.modifiersLife"), livingMod, 2, "-");
 
         this.setGenericField(

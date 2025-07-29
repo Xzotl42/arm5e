@@ -19,6 +19,7 @@ export function registerRollTesting(quench) {
       let Sp1;
       let Sp2;
       let Sp3;
+      let Sp4;
       let magusToken;
       let aura;
 
@@ -41,6 +42,7 @@ export function registerRollTesting(quench) {
         Sp1 = magus.items.getName("Standard spell");
         Sp2 = magus.items.getName("Spell with focus");
         Sp3 = magus.items.getName("Ritual spell");
+        Sp4 = magus.items.getName("Spell with deficiency");
 
         await magus.addActiveEffect("Affinity Corpus", "affinity", "co", 2, null);
         await magus.addActiveEffect("Puissant Muto", "art", "mu", 3, null);
@@ -75,7 +77,7 @@ export function registerRollTesting(quench) {
                   return;
                 }
                 assert.equal(
-                  roll.modifier(),
+                  roll.modifier,
                   actor.system.characteristics[c].value,
                   "modifier not correct"
                 );
@@ -96,7 +98,7 @@ export function registerRollTesting(quench) {
                 log(false, roll);
                 assert.ok(roll);
                 assert.equal(
-                  roll.modifier(),
+                  roll.modifier,
                   actor.system.characteristics[c].value,
                   "modifier not correct"
                 );
@@ -126,7 +128,7 @@ export function registerRollTesting(quench) {
                 assert.equal(roll.total, 0, "botched");
                 return;
               }
-              assert.equal(roll.modifier(), ageMod, "modifier not correct");
+              assert.equal(roll.modifier, ageMod, "modifier not correct");
             } catch (err) {
               console.error(`Error: ${err}`);
               assert.ok(false);
@@ -151,7 +153,7 @@ export function registerRollTesting(quench) {
                 assert.equal(roll.total, 0, "botched");
                 return;
               }
-              assert.equal(roll.modifier(), ageMod, "modifier not correct");
+              assert.equal(roll.modifier, ageMod, "modifier not correct");
             } catch (err) {
               console.error(`Error: ${err}`);
               assert.ok(false);
@@ -187,7 +189,7 @@ export function registerRollTesting(quench) {
               assert.equal(roll.total, 0, "botched");
               return;
             }
-            assert.equal(roll.modifier(), 1, "bad modifier");
+            assert.equal(roll.modifier, 1, "bad modifier");
           } catch (err) {
             console.error(`Error: ${err}`);
             assert.ok(false);
@@ -215,7 +217,7 @@ export function registerRollTesting(quench) {
             log(false, roll);
             assert.ok(roll.total > 50);
 
-            assert.equal(roll.modifier(), 50, "modifier not correct");
+            assert.equal(roll.modifier, 50, "modifier not correct");
           } catch (err) {
             console.error(`Error: ${err}`);
             assert.ok(false);
@@ -247,7 +249,7 @@ export function registerRollTesting(quench) {
               actor.system.characteristics.qik.value +
               actor.system.combat.init -
               actor.system.combat.overload;
-            assert.equal(roll.modifier(), tot, "modifier not correct");
+            assert.equal(roll.modifier, tot, "modifier not correct");
           } catch (err) {
             console.error(`Error: ${err}`);
             assert.ok(false);
@@ -279,7 +281,7 @@ export function registerRollTesting(quench) {
               actor.system.characteristics.dex.value +
               actor.system.combat.atk +
               actor.system.combat.ability;
-            assert.equal(roll.modifier(), tot);
+            assert.equal(roll.modifier, tot);
           } catch (err) {
             console.error(`Error: ${err}`);
             assert.ok(false);
@@ -307,7 +309,7 @@ export function registerRollTesting(quench) {
               return;
             }
             assert.equal(
-              roll.modifier(),
+              roll.modifier,
               actor.system.characteristics.qik.value +
                 actor.system.combat.ability +
                 actor.system.combat.dfn
@@ -343,7 +345,7 @@ export function registerRollTesting(quench) {
               actor.system.characteristics.dex.value +
               actor.system.combat.atk +
               2 * actor.system.combat.ability;
-            assert.equal(roll.modifier(), tot);
+            assert.equal(roll.modifier, tot);
           } catch (err) {
             console.error(`Error: ${err}`);
             assert.ok(false);
@@ -376,7 +378,7 @@ export function registerRollTesting(quench) {
               actor.system.combat.atk +
               actor.system.combat.ability -
               3;
-            assert.equal(roll.modifier(), tot);
+            assert.equal(roll.modifier, tot);
           } catch (err) {
             console.error(`Error: ${err}`);
             assert.ok(false);
@@ -413,7 +415,7 @@ export function registerRollTesting(quench) {
               magus.system.penalties.wounds.total +
               magus.system.fatigueTotal +
               aura.modifier;
-            assert.equal(roll.modifier(), tot);
+            assert.equal(roll.modifier, tot);
           } catch (err) {
             console.error(`Error: ${err}`);
             assert.ok(false);
@@ -448,7 +450,7 @@ export function registerRollTesting(quench) {
               magus.system.fatigueTotal +
               1 +
               aura.modifier;
-            assert.equal(roll.modifier(), tot);
+            assert.equal(roll.modifier, tot);
           } catch (err) {
             console.error(`Error: ${err}`);
             assert.ok(false);
@@ -481,7 +483,7 @@ export function registerRollTesting(quench) {
               magus.system.fatigueTotal +
               2 +
               aura.modifier;
-            assert.equal(roll.modifier(), tot);
+            assert.equal(roll.modifier, tot);
           } catch (err) {
             console.error(`Error: ${err}`);
             assert.ok(false);
@@ -514,7 +516,7 @@ export function registerRollTesting(quench) {
               magus.system.penalties.wounds.total +
               magus.system.fatigueTotal +
               aura.modifier;
-            assert.equal(roll.modifier(), tot);
+            assert.equal(roll.modifier, tot);
           } catch (err) {
             console.error(`Error: ${err}`);
             assert.ok(false);
@@ -548,7 +550,7 @@ export function registerRollTesting(quench) {
               magus.system.penalties.wounds.total +
               magus.system.fatigueTotal +
               aura.modifier;
-            assert.equal(roll.modifier(), tot);
+            assert.equal(roll.modifier, tot);
           } catch (err) {
             console.error(`Error: ${err}`);
             assert.ok(false);
@@ -584,7 +586,7 @@ export function registerRollTesting(quench) {
               Sp1.system.finalScore +
               Sp1.system.bonus +
               aura.modifier;
-            assert.equal(roll.modifier(), tot);
+            assert.equal(roll.modifier, tot);
           } catch (err) {
             console.error(`Error: ${err}`);
             assert.ok(false);
@@ -620,7 +622,41 @@ export function registerRollTesting(quench) {
               Sp2.system.finalScore +
               Sp2.system.bonus +
               aura.modifier;
-            assert.equal(roll.modifier(), tot);
+            assert.equal(roll.modifier, tot);
+          } catch (err) {
+            console.error(`Error: ${err}`);
+            assert.ok(false);
+          }
+        });
+        it("Spell + deficiency", async function () {
+          let type = "spell";
+          try {
+            let dataset = {
+              roll: type,
+              name: "Spell deficient",
+              bonusActiveEffects: magus.system.bonuses.arts.spellcasting,
+              id: Sp4._id
+            };
+            magus.rollInfo.init(dataset, magus);
+            let roll = await stressDie(magus, type, 0, undefined, 3);
+            log(false, roll);
+            assert.ok(roll);
+            if (roll.botches) {
+              assert.equal(roll.total, 0, "botched");
+              return;
+            }
+            const aura = Aura.fromActor(magus);
+            aura.computeMaxAuraModifier(magus.system.realms);
+            let tot =
+              magus.system.arts.techniques.pe.finalScore +
+              magus.system.arts.forms.vi.finalScore +
+              magus.system.characteristics.sta.value +
+              magus.system.penalties.wounds.total +
+              magus.system.fatigueTotal +
+              Sp4.system.finalScore +
+              Sp4.system.bonus +
+              aura.modifier;
+            assert.equal(roll.modifier, tot);
           } catch (err) {
             console.error(`Error: ${err}`);
             assert.ok(false);
@@ -660,7 +696,7 @@ export function registerRollTesting(quench) {
               Sp2.system.finalScore +
               Sp2.system.bonus +
               aura.modifier;
-            assert.equal(roll.modifier(), tot);
+            assert.equal(roll.modifier, tot);
           } catch (err) {
             console.error(`Error: ${err}`);
             assert.ok(false);
@@ -694,7 +730,7 @@ export function registerRollTesting(quench) {
               Sp3.system.finalScore +
               Sp3.system.bonus +
               aura.modifier;
-            assert.equal(roll.modifier(), tot);
+            assert.equal(roll.modifier, tot);
           } catch (err) {
             console.error(`Error: ${err}`);
             assert.ok(false);
