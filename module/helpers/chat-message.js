@@ -140,27 +140,18 @@ export class Arm5eChatMessage extends ChatMessage {
   }
 }
 
-async function privateMessage(content, actor, title, flavor, type = "") {
-  // only roll messages can be hidden from roller
-
-  // let roll = new Roll("0");
-
+export async function privateMessage(content, actor, title, flavor, type = "") {
   let messageData = {
     content: "",
-    flavor: title + content + putInFoldableLinkWithAnimation("arm5e.sheet.details", flavor),
+    flavor: content + putInFoldableLinkWithAnimation("arm5e.sheet.details", flavor),
     speaker: ChatMessage.getSpeaker({
-      actor
+      actor: actor
     }),
-    type: CONST.CHAT_MESSAGE_TYPES.ROLL,
+    type: "standard",
     // roll: "0",
+    system: { label: title },
     whisper: ChatMessage.getWhisperRecipients("gm"),
-    blind: true,
-    flags: {
-      arm5e: {
-        type: type,
-        actorType: actor.type // for if the actor is deleted
-      }
-    }
+    blind: true
   };
   ChatMessage.create(messageData);
   // await roll.toMessage(messageData, { rollMode: CONST.DICE_ROLL_MODES.BLIND });

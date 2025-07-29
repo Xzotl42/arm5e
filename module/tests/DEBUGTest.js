@@ -91,7 +91,7 @@ export function registerDEBUGTest(quench) {
               magus.system.penalties.wounds.total +
               magus.system.fatigueTotal +
               aura.modifier;
-            assert.equal(roll.modifier(), tot);
+            assert.equal(roll.modifier, tot);
           } catch (err) {
             console.error(`Error: ${err}`);
             assert.ok(false);

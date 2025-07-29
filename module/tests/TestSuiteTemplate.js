@@ -52,7 +52,7 @@ export function register__TEMPLATE__Testing(quench) {
               return;
             }
             assert.equal(
-              roll.modifier(),
+              roll.modifier,
               actor.system.characteristics[c].value,
               "modifier not correct"
             );

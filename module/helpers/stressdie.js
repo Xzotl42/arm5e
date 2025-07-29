@@ -8,6 +8,7 @@ export class ArsRoll extends Roll {
     this.divider = 1;
     this.multiplier = 1;
     this.offset = 0;
+    this.originalFormula = formula;
   }
 
   get botchDice() {
@@ -53,7 +54,6 @@ export class ArsRoll extends Roll {
     ) {
       return super.total;
     }
-    StressDieInternal;
     if (theDie.botchCheck) {
       this.botchCheck = true;
       this.botches = -theDie.total;
@@ -64,6 +64,22 @@ export class ArsRoll extends Roll {
       }
     }
     return super.total;
+  }
+
+  get desc() {
+    if (!this._evaluated) return "";
+
+    if (this.botchCheck) {
+      if (this.botches == 0) {
+        return `${super.total}`;
+      } else if (this.botches == 1) {
+        return game.i18n.localize("arm5e.messages.die.botch");
+      } else {
+        return game.i18n.format("arm5e.messages.die.botches", { num: this.botches });
+      }
+    } else {
+      return `${super.total}`;
+    }
   }
 
   get modifier() {
@@ -117,8 +133,10 @@ export class ArsRoll extends Roll {
       rollType = messageData.system.roll.type;
     } else {
       // from combat tracker
-      if (messageData.flags["core.initiativeRoll"]) {
-        return "combat";
+      if (messageData.flags) {
+        if (messageData.flags["core.initiativeRoll"]) {
+          return "combat";
+        }
       }
     }
     if (["magic", "spont", "spell", "supernatural", "item", "power"].includes(rollType)) {
@@ -276,7 +294,6 @@ export class AlternateStressDie extends foundry.dice.terms.Die {
     if (typeof this.faces !== "number") {
       throw new Error("A StressDie term must have a numeric number of faces.");
     }
-    this.botchCheck = false;
   }
 
   // whether we are botch checking
