@@ -1577,6 +1577,9 @@
 
   "arm5e.rolltables.experimentation.title": "Arcane Experimentation",
   "arm5e.rolltables.experimentation.roll": "Roll for experimentation",
+  "arm5e.rolltables.experimentation.createJournal": "Create Journal",
+  "arm5e.rolltables.experimentation.subject": "Subject of experiment",
+
   "arm5e.rolltables.experimentation.insight": "Successful discovery! You can now attempt to stabilize with a risk modifier of {risk}",
   "arm5e.rolltables.experimentation.report.label": "Experimentation report",
   "arm5e.rolltables.experimentation.report.tableRoll": "Rolled on \"{tablename}\" table with :<br/><div style=\"align-text:center\">{formula} = {total}</div>",

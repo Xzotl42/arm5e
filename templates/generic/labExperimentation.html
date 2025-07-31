@@ -4,7 +4,28 @@
   </div>
   <h1 class="scriptorium-title width: 100%;" text-align="center">{{localize "arm5e.rolltables.experimentation.title" }}
   </h1>
-  <header class="scriptorium-header flexcol marginsides32">
+  <header class="flexcol marginsides32">
+    <div class="resource flexrow flex-group-center">
+      <label class="resource header-label flex0">{{localize "arm5e.sheet.name"}}</label>
+      <input type="text" class="resource flex03 resource-focus" name="subject" value="{{subject}}"
+        style="max-width:300px;width:300px;">
+    </div>
+    <div class="resource flexrow flex-group-center">
+      <div class="resource-content flexrow flex-center">
+        <label for="season" class="header-label">{{localize "arm5e.sheet.season"}}</label>
+        <select name="season" data-type="String" class="flex0">
+          {{selectOptions seasons selected=season localize=true labelAttr="label"}}
+        </select>
+      </div>
+      <div class="resource-content flexrow flex-center">
+        <label for="year" class="header-label">{{localize "arm5e.sheet.year"}}</label>
+        <input type="number" name="year" value="{{year}}" data-dtype="Number" class="resource-focus slim" />
+
+      </div>
+      <div class="resource-content flexrow flex-center" style="padding:10px">
+        <button class="create-journal">{{localize "arm5e.rolltables.experimentation.createJournal"}}</button>
+      </div>
+    </div>
     <div class="flexrow">
       <div class="resource flexcol flex-center">
         <label class="header-label">{{localize "arm5e.rolltables.experimentation.riskModifier" }}</label>
@@ -38,8 +59,8 @@
 
   <section class="sheet-body">
     <h2 class="marginsides32">{{localize "arm5e.rolltables.experimentation.report.label" }}</h2>
-    <div class="marginsides32" style="height: 377px ; min-height: 377px;">
-      {{editor report target="report" button=true engine="prosemirror" editable=true}}
+    <div class="marginsides32" style="height: 250px ; min-height: 250px;">
+      {{editor reportBody target="reportBody" button=true engine="prosemirror" editable=true}}
     </div>
   </section>
 
