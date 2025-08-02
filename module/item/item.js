@@ -377,12 +377,12 @@ export class ArM5eItem extends Item {
 
   async createResourceTrackingDiaryEntry(fromActor, toActor, quantity = 1, date = null) {
     if (!game.settings.get("arm5e", "trackResources")) return [];
-    return await Promise.all(
+    return await Promise.resolve(
       this._createResourceTrackingDiaryEntry(fromActor, toActor, quantity, date)
     );
   }
 
-  _createResourceTrackingDiaryEntry(fromActor, toActor, quantity = 1, date = null) {
+  async _createResourceTrackingDiaryEntry(fromActor, toActor, quantity = 1, date = null) {
     if (!game.settings.get("arm5e", "trackResources")) return [];
 
     let currentDate = game.settings.get("arm5e", "currentDate");
@@ -448,7 +448,7 @@ export class ArM5eItem extends Item {
           }
         }
       ];
-      const tmp = fromActor.createEmbeddedDocuments("Item", fromEntryData, {});
+      const tmp = await fromActor.createEmbeddedDocuments("Item", fromEntryData, {});
       entries.push(...tmp);
     }
 
@@ -502,7 +502,7 @@ export class ArM5eItem extends Item {
           }
         }
       ];
-      const tmp = toActor.createEmbeddedDocuments("Item", toEntryData, {});
+      const tmp = await toActor.createEmbeddedDocuments("Item", toEntryData, {});
       entries.push(...tmp);
     }
 
