@@ -326,7 +326,7 @@ export class SpellActivity extends LabActivity {
 
   getDiaryEntryData(planning) {
     const res = super.getDiaryEntryData(planning);
-    res.system.newSpells.push(ArM5eItemDiarySheet._addNewSpell(planning.data));
+    res.system.progress.newSpells.push(ArM5eItemDiarySheet._addNewSpell(planning.data));
     return res;
   }
 
