@@ -377,5 +377,8 @@
     },
     "extends": [
         "prettier"
+    ],
+    "ignorePatterns": [
+        "foundry/**/*"
     ]
 }

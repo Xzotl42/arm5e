@@ -1,4 +1,4 @@
-## 2.4.0.9, Radislav am Polanach
+## 2.4.0.10, Radislav am Polanach
 
 ### Compatibility change
 
@@ -39,6 +39,11 @@
 - Codex has been migrated to V10 datamodel.
 - Codex now allows to browse and filter the content of ars-compendia base effects and spells without importing everything.
 - Arcane experimentation dialog.
+- [V13 compatibility]
+  - Fixed sidebar and canvas icons.
+  - Missing Ars Magica buttons
+  - Canvas buttons are now working
+  - Fixed pause button
 
 ### Bug fixes
 

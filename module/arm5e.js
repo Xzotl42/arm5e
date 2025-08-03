@@ -21,7 +21,7 @@ import { ArM5eActiveEffectConfig } from "./helpers/active-effect-config.sheet.js
 
 // Experiment
 import { ArsLayer, addArsButtons } from "./ui/ars-layer.js";
-
+import { ArsGamePause } from "./ui/ars-pause.js";
 import { migrateCompendium, migration } from "./migration.js";
 import { log } from "./tools.js";
 
@@ -96,6 +96,7 @@ Hooks.once("init", async function () {
     migrateCompendium
   };
 
+  CONFIG.ISV12 = game.release.generation == 12;
   // Add system metadata
   CONFIG.ARM5E = ARM5E;
   CONFIG.ARM5E.ItemDataModels = CONFIG.Item.dataModels;
@@ -125,10 +126,17 @@ Hooks.once("init", async function () {
   };
 
   // Adding ars layer
-  CONFIG.Canvas.layers.arsmagica = {
-    layerClass: ArsLayer,
-    group: "primary"
-  };
+  if (CONFIG.ISV12) {
+    CONFIG.Canvas.layers.arsmagica = {
+      layerClass: ArsLayer,
+      group: "primary"
+    };
+  } else {
+    CONFIG.Canvas.layers.arsmagica = {
+      layerClass: ArsLayer,
+      group: "interface"
+    };
+  }
 
   // Combatant.prototype.getInitiativeRoll = function (formula) {
 
@@ -149,6 +157,9 @@ Hooks.once("init", async function () {
   CONFIG.Item.sidebarIcon = "icon-Icon_magic-chest";
   CONFIG.JournalEntry.sidebarIcon = "icon-Tool_Journals_sidebar";
 
+  if (!CONFIG.ISV12) {
+    CONFIG.ui.pause = ArsGamePause;
+  }
   CONFIG.ARM5E_DEFAULT_ICONS = ARM5E_DEFAULT_ICONS[game.settings.get("arm5e", "defaultIconStyle")];
   CONFIG.INHABITANTS_DEFAULT_ICONS =
     INHABITANTS_DEFAULT_ICONS[game.settings.get("arm5e", "defaultIconStyle")];
@@ -554,11 +565,10 @@ Hooks.on("applyActiveEffect", (actor, change, current, delta, changes) => {
 
 Hooks.on("getSceneControlButtons", (buttons) => addArsButtons(buttons));
 
+// V12 only
 Hooks.on("renderPause", function () {
   if ($("#pause").attr("class") !== "paused") return;
   const path = "systems/arm5e/assets/clockwork.svg";
-  // Const opacity = 100
-  const speed = "20s linear 0s infinite normal none running rotation";
   const opacity = 0.6;
   $("#pause.paused img").attr("src", path);
   $("#pause.paused img").css({ opacity: opacity, "--fa-animation-duration": "20s" });

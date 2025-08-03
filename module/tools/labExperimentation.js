@@ -5,7 +5,7 @@ import { privateMessage } from "../helpers/chat-message.js";
 export class LabExperimentation extends FormApplication {
   constructor(
     data = {
-      experimenter: game.user.character.name,
+      experimenter: game.user.character?.name || "Anonymous",
       subject: "",
       riskModifier: 0,
       aura: 0,
