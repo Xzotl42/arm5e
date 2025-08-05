@@ -62,46 +62,103 @@ export class ArsLayer extends InteractionLayer {
 }
 
 export function addArsButtons(buttons) {
-  buttons.push({
-    name: "ArsMagica",
-    title: "ArsMagica",
-    layer: "arsmagica",
-    icon: "icon-Tool_Ars",
-    visible: true,
-    tools: [
-      {
-        name: "aura",
-        title: game.i18n.localize("arm5e.canvas.buttons.setAura"),
-        icon: "icon-Tool_Auras",
-        visible: game.user.isGM,
-        button: true,
-        onClick: () => ArsLayer.openAuraConfig()
-      },
-      {
-        name: "clearAura",
-        title: game.i18n.localize("arm5e.canvas.buttons.clearAura"),
-        icon: "icon-Tool_Delete_Perdo2",
-        visible: game.user.isGM,
-        button: true,
-        onClick: () => ArsLayer.clearAura()
-      },
-      {
-        name: "astrolab",
-        title: "Astrolabium",
-        icon: "icon-Tool_Astrolab",
-        visible: game.user.isGM,
-        button: true,
-        onClick: () => ArsLayer.openAstrolab()
-      },
-      {
-        name: "scriptorium",
-        title: "Scriptorium",
-        icon: "icon-Tool_Scriptorium",
-        visible: true,
-        button: true,
-        onClick: () => ArsLayer.openScriptorium()
+  if (CONFIG.ISV13) {
+    buttons["ArsMagica"] = {
+      name: "ArsMagica",
+      title: "ArsMagica",
+      layer: "arsmagica",
+      icon: "icon-Tool_Ars",
+      visible: true,
+      tools: {
+        aura: {
+          name: "aura",
+          order: 1,
+          title: game.i18n.localize("arm5e.canvas.buttons.setAura"),
+          icon: "icon-Tool_Auras",
+          visible: game.user.isGM,
+          button: true,
+          onChange: (event, active) => {
+            if (active) ArsLayer.openAuraConfig();
+          }
+        },
+        clearAura: {
+          name: "clearAura",
+          order: 2,
+          title: game.i18n.localize("arm5e.canvas.buttons.clearAura"),
+          icon: "icon-Tool_Delete_Perdo2",
+          visible: game.user.isGM,
+          button: true,
+          onChange: (event, active) => {
+            if (active) ArsLayer.clearAura();
+          }
+        },
+        astrolab: {
+          name: "astrolab",
+          order: 3,
+          title: "Astrolabium",
+          icon: "icon-Tool_Astrolab",
+          visible: game.user.isGM,
+          button: true,
+          onChange: (event, active) => {
+            if (active) ArsLayer.openAstrolab();
+          }
+        },
+        scriptorium: {
+          name: "scriptorium",
+          order: 4,
+          title: "Scriptorium",
+          icon: "icon-Tool_Scriptorium",
+          visible: true,
+          button: true,
+          onChange: (event, active) => {
+            if (active) ArsLayer.openScriptorium();
+          }
+        }
       }
-    ],
-    activeTool: "aura"
-  });
+    };
+  } else {
+    buttons.push({
+      name: "ArsMagica",
+      title: "ArsMagica",
+      layer: "arsmagica",
+      icon: "icon-Tool_Ars",
+      onChange: (event, active) => {},
+      visible: true,
+      tools: [
+        {
+          name: "aura",
+          title: game.i18n.localize("arm5e.canvas.buttons.setAura"),
+          icon: "icon-Tool_Auras",
+          visible: game.user.isGM,
+          button: true,
+          onClick: () => ArsLayer.openAuraConfig()
+        },
+        {
+          name: "clearAura",
+          title: game.i18n.localize("arm5e.canvas.buttons.clearAura"),
+          icon: "icon-Tool_Delete_Perdo2",
+          visible: game.user.isGM,
+          button: true,
+          onClick: () => ArsLayer.clearAura()
+        },
+        {
+          name: "astrolab",
+          title: "Astrolabium",
+          icon: "icon-Tool_Astrolab",
+          visible: game.user.isGM,
+          button: true,
+          onClick: () => ArsLayer.openAstrolab()
+        },
+        {
+          name: "scriptorium",
+          title: "Scriptorium",
+          icon: "icon-Tool_Scriptorium",
+          visible: true,
+          button: true,
+          onClick: () => ArsLayer.openScriptorium()
+        }
+      ],
+      activeTool: "aura"
+    });
+  }
 }

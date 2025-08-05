@@ -3257,11 +3257,20 @@ ARM5E.generic.sourcesTypes = {
   ML: {
     label: "arm5e.sheet.source.ML"
   },
+  TTT: {
+    label: "arm5e.sheet.source.TTT"
+  },
   Hook: {
     label: "arm5e.sheet.source.Hooks"
   },
   "F&F": {
     label: "arm5e.sheet.source.F&F"
+  },
+  LotN: {
+    label: "arm5e.sheet.source.LotN"
+  },
+  others: {
+    label: "arm5e.sheet.source.others"
   }
 };
 
@@ -3374,7 +3383,7 @@ ARM5E.ActorProfiles = {
       { key: "profession", option: "Scribe", inc: 5 },
       { key: "artesLib", option: "", inc: 5 },
       { key: "philosophy", option: "", inc: 5 },
-      { key: "theology", option: "", inc: 5 },
+      { key: "theology", option: "Christian", inc: 5 },
       { key: "law", option: "canonLaw", inc: 5 },
       { key: "deadLanguage", option: "Latin", inc: 5 }
     ]

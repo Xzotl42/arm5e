@@ -92,7 +92,9 @@ Hooks.once("init", async function () {
   // Flags to manage backward compatibility
   CONFIG.ISV10 = foundry.utils.isNewerVersion(11, game.version);
   CONFIG.ISV11 = foundry.utils.isNewerVersion(12, game.release.generation);
-  CONFIG.ISV12 = game.release.generation >= 12;
+  CONFIG.ISV12 = game.release.generation == 12;
+  CONFIG.ISV13 = game.release.generation == 13;
+  CONFIG.V12ORMORE = game.release.generation >= 12;
   // Add system metadata
   CONFIG.ARM5E = ARM5E;
   CONFIG.ARM5E.ItemDataModels = CONFIG.ISV10
@@ -121,15 +123,22 @@ Hooks.once("init", async function () {
    * @type {string}
    */
   CONFIG.Combat.initiative = {
-    formula: "1ds + @char.qik + @combat.init - @combat.overload",
+    formula: "1ds + @char.qik + @combat.init - @combat.overload + @physicalCondition",
     decimals: 2
   };
 
   // Adding ars layer
-  CONFIG.Canvas.layers.arsmagica = {
-    layerClass: ArsLayer,
-    group: "primary"
-  };
+  if (CONFIG.ISV13) {
+    CONFIG.Canvas.layers.arsmagica = {
+      layerClass: ArsLayer,
+      group: "interface"
+    };
+  } else {
+    CONFIG.Canvas.layers.arsmagica = {
+      layerClass: ArsLayer,
+      group: "primary"
+    };
+  }
 
   // Combatant.prototype.getInitiativeRoll = function (formula) {
 
@@ -249,6 +258,12 @@ Hooks.once("ready", async function () {
         }
       );
     }
+  }
+
+  if (game.release.generation == 13) {
+    ui.notifications.info(game.i18n.localize("arm5e.system.V13Disclaimer"), {
+      permanent: true
+    });
   }
 
   // Wait to register hotbar drop hook on ready so that modules could register earlier if they want to
@@ -527,7 +542,7 @@ Hooks.on("applyActiveEffect", (actor, change, current, delta, changes) => {
   ArM5eActiveEffect.applyCustomEffect(actor, change, current, delta, changes);
 });
 
-Hooks.on("getSceneControlButtons", (buttons) => addArsButtons(buttons));
+Hooks.on("getSceneControlButtons", (controls) => addArsButtons(controls));
 
 Hooks.on("renderPause", function () {
   if ($("#pause").attr("class") !== "paused") return;

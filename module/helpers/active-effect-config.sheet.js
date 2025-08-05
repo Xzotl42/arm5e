@@ -54,7 +54,7 @@ export class ArM5eActiveEffectConfig extends ActiveEffectConfig {
         imgAttr: "icon",
         img: context.data.icon
       };
-    } else if (CONFIG.ISV12) {
+    } else if (CONFIG.V12ORMORE) {
       context.data.ui = {
         nameAttr: "name",
         name: context.data.name,
@@ -62,6 +62,7 @@ export class ArM5eActiveEffectConfig extends ActiveEffectConfig {
         imgAttr: "img"
       };
     } else {
+      // V11
       context.data.ui = {
         nameAttr: "name",
         name: context.data.name,

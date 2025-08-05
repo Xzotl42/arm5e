@@ -70,7 +70,7 @@ export class ArsRoll extends Roll {
   // }
   // }
 }
-// FRO V12 only : export class StressDie extends foundry.dice.terms.Die {
+// FOR V12 only : export class StressDie extends foundry.dice.terms.Die {
 export class StressDie extends Die {
   constructor(termData = {}) {
     termData.faces = 10;

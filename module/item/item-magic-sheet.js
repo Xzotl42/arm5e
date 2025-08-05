@@ -53,6 +53,7 @@ export class ArM5eItemMagicSheet extends ArM5eItemSheet {
       if (this.item.type === "power") {
         context.ownerHasMight = this.item.actor._hasMight();
       }
+      context.noRoll = true;
     }
 
     // If settings were too restrictive, allow existing Items to keep their value.

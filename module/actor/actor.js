@@ -996,6 +996,7 @@ export class ArM5ePCActor extends Actor {
           rollData.magic[k] = v.finalScore;
         }
       }
+      rollData.physicalCondition = this.system.fatigueTotal + this.system.penalties.wounds.total;
     } else {
       rollData = super.getRollData();
     }

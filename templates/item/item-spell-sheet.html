@@ -4,7 +4,7 @@
     <div class="header-fields">
       <h1 class="charname" style="font-size: 24pt; font-family: blackmoor">
         <div class="flexrow">{{localize "arm5e.sheet.spell"}}
-          {{#if item.isOwned}}
+          {{#if noRoll}}
             <a class="create-labtext" data-flavor="{{ui.flavor}}" title="Create draft lab text"><i
                 class="icon-Icon_Details2"></i></a>
           {{/if}}
@@ -15,7 +15,7 @@
       <h1 class="charname">
         <div class="flexrow"><input name="name" type="text" title="{{item.name}}" value="{{item.name}}"
             placeholder="Name" />
-          {{#if item.isOwned}}
+          {{#if noRoll}}
             <div class="flex0 padding10 "><a class="rollable" data-roll="spell" data-id="{{item._id}}"
                 data-modifier="{{ item.system.bonus }}" data-name="{{item.name}}" data-usefatigue="true"
                 title='{{localize "arm5e.dialog.button.roll"}}'><img src="systems/arm5e/assets/dice.png"
@@ -53,7 +53,7 @@
         </div>
         <div class="resource flexcol flex-center">
           <label class="header-label">{{localize "arm5e.sheet.level"}}</label>
-          <input class="design-level" type="number" {{noEdit}} name="system.level" value="{{system.level}}"
+          <input class="design-level" type="number" readonly name="system.level" value="{{system.level}}"
             data-dtype="Number" style="max-width: 60px;" />
         </div>
       </div>

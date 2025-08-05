@@ -91,7 +91,7 @@ a.header-button.close {
 
 /* General settings fonts */
 
-button {
+button.arm5e {
   font-family: bookAntiqua;
 }
 
@@ -488,7 +488,7 @@ img.clickable2:hover {
   background-image: url("../assets/chat/background.webp");
   /* --color-shadow-primary: #003487; */
   background-repeat: repeat;
-  background-size: cover;
+  background-size: 100%;
   border: 2px solid #6f6c66;
   border-radius: 0px;
 }
@@ -1559,7 +1559,7 @@ div[class*="foldable-section"] {
 .enchant-description,
 .details {
   opacity: 1;
-  max-height: 800px;
+  max-height: 3800px;
   transition-property: opacity, max-height;
   transition-duration: 0.6s;
   transition-timing-function: ease-in-out;
@@ -1639,7 +1639,8 @@ div[class*="foldable-section"] {
 
 .arm5e .sheet-body .editor,
 .arm5e .sheet-body .tab .editor {
-  height: fit-content;
+  height: -moz-available;
+  height: -webkit-fill-available;
   min-height: 200px;
   overflow-y: auto;
   padding: 5px;
@@ -1649,7 +1650,8 @@ div[class*="foldable-section"] {
 }
 .arm5e .sheet-body .editor.prosemirror,
 .arm5e .sheet-body .tab .editor.prosemirror {
-  height: fit-content;
+  height: -moz-available;
+  height: -webkit-fill-available;
   min-height: 200px;
   overflow-y: auto;
   padding: 5px;

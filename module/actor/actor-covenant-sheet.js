@@ -312,6 +312,7 @@ export class ArM5eCovenantActorSheet extends ArM5eActorSheet {
     const info = getUuidInfo(data.uuid);
     const item = await fromUuid(data.uuid);
     const type = item.type;
+
     // transform input into labText
     if (type == "spell" || type == "magicalEffect" || type == "enchantment") {
       log(false, "Valid drop");

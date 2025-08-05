@@ -92,7 +92,7 @@ export class CovenantSchema extends foundry.abstract.DataModel {
       // aegisCovenant: basicIntegerField(),
       modifiersLife: new fields.SchemaField({
         magi: basicIntegerField(1),
-        mundane: basicIntegerField(0, -10)
+        mundane: basicIntegerField(0)
       }),
       scene: new fields.SchemaField({
         value: new fields.StringField({ required: false, blank: true, initial: "" }),
@@ -143,7 +143,7 @@ export class CovenantSchema extends foundry.abstract.DataModel {
         required: false,
         initial: null
       }),
-      npcInhabitants: basicIntegerField(),
+      npcInhabitants: basicIntegerField(0, 0),
       loyalty: new fields.SchemaField({
         points: new fields.SchemaField({
           modifier: basicIntegerField(),
@@ -200,14 +200,14 @@ export class CovenantSchema extends foundry.abstract.DataModel {
       }),
       finances: new fields.SchemaField({
         wealth: basicIntegerField(),
-        totalIncome: basicIntegerField(),
-        baseExpenditure: basicIntegerField(),
-        costSavings: basicIntegerField(),
-        totalExpenditure: basicIntegerField(),
-        inhabitantsPoints: basicIntegerField(),
-        laboratoriesPoints: basicIntegerField(),
-        weaponsPoints: basicIntegerField(),
-        averageEquipMaintenance: basicIntegerField(5)
+        totalIncome: basicIntegerField(0, 0),
+        baseExpenditure: basicIntegerField(0, 0),
+        costSavings: basicIntegerField(0, 0),
+        totalExpenditure: basicIntegerField(0, 0),
+        inhabitantsPoints: basicIntegerField(0, 0),
+        laboratoriesPoints: basicIntegerField(0, 0),
+        weaponsPoints: basicIntegerField(0, 0),
+        averageEquipMaintenance: basicIntegerField(5, 0)
       }),
       // DEPRECATED
       wealth: new fields.ObjectField({
@@ -253,7 +253,7 @@ export class CovenantSchema extends foundry.abstract.DataModel {
           descriptionUpdate += newComputedField(`Build points current ${k}`, v.actuals);
         }
       }
-      update["system.constructionPoints"] = null;
+      update["system.-constructionPoints"] = null;
     }
 
     if (data.system.yearExpenditure) {
@@ -269,7 +269,7 @@ export class CovenantSchema extends foundry.abstract.DataModel {
           descriptionUpdate += newComputedField(`Expenditure ${k}`, v.expenditure);
         }
       }
-      update["system.yearExpenditure"] = null;
+      update["system.-yearExpenditure"] = null;
     }
 
     if (data.system.costsSavings) {
@@ -280,7 +280,7 @@ export class CovenantSchema extends foundry.abstract.DataModel {
           descriptionUpdate += newComputedField(`Cost savings ${k}`, v.saving);
         }
       }
-      update["system.costsSavings"] = null;
+      update["system.-costsSavings"] = null;
     }
 
     if (data.system.loyaltyPoints) {
@@ -305,7 +305,7 @@ export class CovenantSchema extends foundry.abstract.DataModel {
         );
       }
 
-      update["system.loyaltyPoints"] = null;
+      update["system.-loyaltyPoints"] = null;
     }
 
     if (data.system.loyaltyModifiers) {
@@ -340,7 +340,7 @@ export class CovenantSchema extends foundry.abstract.DataModel {
         );
       }
 
-      update["system.loyaltyModifiers"] = null;
+      update["system.-loyaltyModifiers"] = null;
     }
 
     if (data.system.wealth) {
@@ -380,7 +380,11 @@ export class CovenantSchema extends foundry.abstract.DataModel {
         data.system.wealth.weaponsPoints
       );
 
-      update["system.wealth"] = null;
+      update["system.-wealth"] = null;
+    }
+
+    if (data.buildPoints?.labText) {
+      update["system.buildPoints.-labText"] = null;
     }
 
     if (descriptionUpdate !== "") {

@@ -331,6 +331,12 @@ export class ArM5eRollInfo {
             livingMod = cov.system.modifiersLife.mundane ?? 0;
           }
         }
+        // Health attribute of the lab.
+        if (actorSystemData.sanctum?.linked) {
+          const lab = actorSystemData.covenant.document;
+          livingMod += Math.floor(lab.system.health.total / 2);
+        }
+
         this.setGenericField(game.i18n.localize("arm5e.sheet.modifiersLife"), livingMod, 2, "-");
 
         this.setGenericField(
@@ -339,7 +345,7 @@ export class ArM5eRollInfo {
           3,
           "-"
         );
-        if (actorSystemData.familiar && actorSystemData.familiar.cordFam.bronze > 0) {
+        if (actorSystemData.familiar && actorSystemData.familiar.cordFam?.bronze > 0) {
           this.setGenericField(
             game.i18n.localize("arm5e.aging.roll.bronze"),
             actorSystemData.familiar.cordFam.bronze,

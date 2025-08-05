@@ -92,7 +92,7 @@ export default class ArM5eActiveEffect extends ActiveEffect {
         if (CONFIG.ISV10) {
           data.label = game.i18n.localize("arm5e.sheet.activeEffect.new");
           data.icon = "icons/svg/aura.svg";
-        } else if (CONFIG.ISV12) {
+        } else if (CONFIG.V12ORMORE) {
           data.name = game.i18n.localize("arm5e.sheet.activeEffect.new");
           data.img = "icons/svg/aura.svg";
         } else {
@@ -144,7 +144,7 @@ export default class ArM5eActiveEffect extends ActiveEffect {
         e.name = e.label;
         e.img = e.icon;
         e.UUID = e._id;
-        // } else if (CONFIG.ISV12) {
+        // } else if (CONFIG.V12ORMORE) {
       } else {
         e.UUID = e.uuid;
       }

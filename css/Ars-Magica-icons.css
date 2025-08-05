@@ -14,10 +14,11 @@
   font-family: "Ars Magica icons";
   font-style: normal;
   font-weight: normal;
-  font-size: 16pt;
+  font-size: 18pt;
   line-height: 1;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  vertical-align: middle;
 }
 .icon-Icon_Ars:before {
   content: "\0041";
@@ -25,7 +26,7 @@
 .icon-Tool_Ars:before {
   content: "\0041";
   font-size: 19pt;
-  padding-top: 11px;
+  vertical-align: middle;
 }
 .icon-Icon_Details:before {
   content: "\0042";
@@ -55,7 +56,6 @@
 .icon-Tool_Auras:before {
   content: "\0047";
   font-size: 19pt;
-  padding-top: 11px;
 }
 .icon-Icon_Auras2:before {
   content: "\0048";
@@ -103,7 +103,7 @@
 .icon-Tool_Scriptorium:before {
   content: "\0057";
   font-size: 19pt;
-  padding-top: 11px;
+  vertical-align: middle;
 }
 .icon-Tool_Journals:before {
   content: "\0057";
@@ -111,12 +111,11 @@
 
 .icon-Tool_Journals_sidebar:before {
   content: "\0057";
-  padding-top: 6px;
 }
 .icon-Tool_Delete_Perdo2:before {
   content: "\0051";
   font-size: 19pt;
-  padding-top: 11px;
+  vertical-align: middle;
 }
 .icon-Icon_Soak:before {
   content: "\0052";
@@ -127,11 +126,10 @@
 .icon-Tool_Astrolab:before {
   content: "\0053";
   font-size: 19pt;
-  padding-top: 11px;
+  vertical-align: middle;
 }
 .icon-Tool_AstrolabBig:before {
   content: "\0053";
-  padding-top: 16px;
   font-size: 28pt;
 }
 .icon-Icon_Locked:before {
@@ -151,7 +149,6 @@
 }
 .icon-Icon_Read:before {
   font-size: 22pt;
-  padding-top: 0px;
   content: "\0058";
 }
 .icon-Icon_Copy:before {
@@ -165,7 +162,6 @@
 }
 .icon-Icon_magic-chest:before {
   content: "\0062";
-  padding-top: 6px;
 }
 .icon-Icon_Sanatorium:before {
   content: "\0063";

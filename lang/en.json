@@ -101,6 +101,7 @@
   "arm5e.sheet.labTexts": "Laboratory texts",
 
   "arm5e.system.dependencyWarning": "The system requires module {name} to be at least version {minimum}, the current version is {current}. You may encounter errors and bugs, please update",
+  "arm5e.system.V13Disclaimer": "DISCLAIMER: The Ars Magica system is currently supporting V13 with a best effort policy as the next V12 release is currently the focus. Everything should work but you may encounter minor layout problems, if not, please report any bug on the discord server.",
 
   "arm5e.sheet.player": "Player",
   "arm5e.sheet.playername": "Player's name",
@@ -1185,7 +1186,10 @@
   "arm5e.sheet.source.TtA": "Through the Aegis",
   "arm5e.sheet.source.ML": "Mythic Locations",
   "arm5e.sheet.source.F&F": "Faith and Flame",
+  "arm5e.sheet.source.LotN": "Lands of the Nile",
   "arm5e.sheet.source.custom": "Homebrew",
+  "arm5e.sheet.source.TTT": "Thrice-Told Tales",
+  "arm5e.sheet.source.others": "Other",
 
   "arm5e.messages.wound.light": "light",
   "arm5e.messages.wound.medium": "medium",

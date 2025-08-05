@@ -1,5 +1,28 @@
 # Release notes
 
+## 2.3.2.30, Quendalon, did I mention fae?
+
+### Features & changes
+
+- Added a few missing sourcebooks and the "other" one
+- New Credits field for metadata when source is Other.
+- Added physical condition modifier (@physicalCondition) to rollData, to be used in inline rolls
+
+### Bug fixes
+
+- Roll icon doesn't appear anymore for spells not owned by a character
+- Rolling a magic effect from its sheet no longer consider the effect a spell.
+- Health attribute of the lab is taken into account for aging rolls.
+- Lab reset is properly done
+- Physical condition is taken into account when rolling initiative from combat tracker.
+- Fixed the wrong lab description in diary when there is a magical focus involved.
+- Dropping of a compendium item on the lab will work the first time.
+- [V13 compatibility]
+  - Fixed sidebar and canvas icons.
+  - Missing Ars Magica buttons
+  - Canvas buttons are now working
+  - Fixed editors
+
 ## 2.3.2.29, Quendalon, power to the narrative
 
 ### Features & changes
