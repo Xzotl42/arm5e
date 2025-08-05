@@ -22,6 +22,7 @@
   - Missing Ars Magica buttons
   - Canvas buttons are now working
   - Fixed editors
+  - Fixed pause logo
 
 ## 2.3.2.29, Quendalon, power to the narrative
 

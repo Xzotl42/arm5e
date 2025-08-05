@@ -2454,6 +2454,11 @@ li.roll.stressdie.d10.exploded.min {
   filter: sepia(0.5) hue-rotate(60deg);
 }
 
+.ars-pause {
+  animation-duration: 20s;
+  opacity: 0.6;
+}
+
 /* .content {
   min-height: calc(58vh - 75px);
 }

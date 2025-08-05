@@ -7,7 +7,6 @@ import { ArM5eNPCActorSheet } from "./actor/actor-npc-sheet.js";
 import { ArM5eLaboratoryActorSheet } from "./actor/actor-laboratory-sheet.js";
 import { ArM5eCovenantActorSheet } from "./actor/actor-covenant-sheet.js";
 import { ArM5eMagicCodexSheet } from "./actor/actor-magic-codex-sheet.js";
-import { ArM5eActorsDirectory } from "./ui/ars-actors-directory.js";
 import { ArM5eItem } from "./item/item.js";
 import { ArM5eItemSheet, ArM5eItemSheetNoDesc } from "./item/item-sheet.js";
 import { ArM5eItemMagicSheet } from "./item/item-magic-sheet.js";
@@ -23,7 +22,7 @@ import * as Arm5eChatMessage from "./helpers/chat.js";
 
 // Experiment
 import { ArsLayer, addArsButtons } from "./ui/ars-layer.js";
-
+import { ArsGamePause } from "./ui/ars-pause.js";
 import { migration } from "./migration.js";
 import { log } from "./tools.js";
 
@@ -156,10 +155,12 @@ Hooks.once("init", async function () {
   //CONFIG.Dice.rolls.push(ArsRoll);
 
   // UI customization
-  CONFIG.ui.actors = ArM5eActorsDirectory;
   CONFIG.Item.sidebarIcon = "icon-Icon_magic-chest";
   CONFIG.JournalEntry.sidebarIcon = "icon-Tool_Journals_sidebar";
 
+  if (CONFIG.ISV13) {
+    CONFIG.ui.pause = ArsGamePause;
+  }
   CONFIG.ARM5E_DEFAULT_ICONS = ARM5E_DEFAULT_ICONS[game.settings.get("arm5e", "defaultIconStyle")];
   CONFIG.INHABITANTS_DEFAULT_ICONS =
     INHABITANTS_DEFAULT_ICONS[game.settings.get("arm5e", "defaultIconStyle")];
@@ -547,8 +548,6 @@ Hooks.on("getSceneControlButtons", (controls) => addArsButtons(controls));
 Hooks.on("renderPause", function () {
   if ($("#pause").attr("class") !== "paused") return;
   const path = "systems/arm5e/assets/clockwork.svg";
-  // Const opacity = 100
-  const speed = "20s linear 0s infinite normal none running rotation";
   const opacity = 0.6;
   $("#pause.paused img").attr("src", path);
   $("#pause.paused img").css({ opacity: opacity, "--fa-animation-duration": "20s" });
