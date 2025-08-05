@@ -44,6 +44,7 @@
   - Missing Ars Magica buttons
   - Canvas buttons are now working
   - Fixed pause button
+  - Fixed editors
 
 ### Bug fixes
 
@@ -79,6 +80,7 @@
 - Roll icon doesn't appear anymore for spells not owned by a character
 - Chat rolls with stress die resulting in a botch are clearly indicated
 - Health attribute of the lab is taken into account for aging rolls.
+- Fixed the wrong lab description in diary when there is a magical focus involved.
 
 ## 2.3.2.28, Quendalon, more than just sparows and bunnies
 

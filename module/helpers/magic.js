@@ -614,9 +614,9 @@ export function computeRawCastingTotal(effect, owner, options = {}) {
   if (effectData.applyFocus || options.focus) {
     res += tech + form + Math.min(tech, form);
     if (tech >= form) {
-      techlabel = `(${techlabel} x 2) : ${2 * tech}`;
+      formlabel = `(${formlabel} x 2) : ${2 * form}`;
     } else {
-      formlabel += `(${formlabel} x 2) : ${2 * form}`;
+      techlabel += `(${techlabel} x 2) : ${2 * tech}`;
     }
   } else {
     res += tech + form;

@@ -268,6 +268,12 @@ Hooks.once("ready", async function () {
     }
   }
 
+  if (game.release.generation == 13) {
+    ui.notifications.info(game.i18n.localize("arm5e.system.V13Disclaimer"), {
+      permanent: true
+    });
+  }
+
   // Wait to register hotbar drop hook on ready so that modules could register earlier if they want to
   Hooks.on("hotbarDrop", (bar, data, slot) => {
     if (["Item", "Actor"].includes(data.type)) {
