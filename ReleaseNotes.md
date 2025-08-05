@@ -1,6 +1,6 @@
 # Release notes
 
-## 2.3.2.30, Quendalon, did I mention fae?
+## 2.3.2.31, Quendalon, did I mention fae?
 
 ### Features & changes
 
@@ -22,7 +22,6 @@
   - Missing Ars Magica buttons
   - Canvas buttons are now working
   - Fixed editors
-  - Fixed pause logo
 
 ## 2.3.2.29, Quendalon, power to the narrative
 
