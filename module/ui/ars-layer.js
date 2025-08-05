@@ -59,59 +59,7 @@ export class ArsLayer extends InteractionLayer {
 }
 
 export function addArsButtons(buttons) {
-  if (CONFIG.ISV12) {
-    buttons.push({
-      name: "ArsMagica",
-      title: "ArsMagica",
-      layer: "arsmagica",
-      icon: "icon-Tool_Ars",
-      onChange: (event, active) => {},
-      visible: true,
-      tools: [
-        {
-          name: "aura",
-          title: game.i18n.localize("arm5e.canvas.buttons.setAura"),
-          icon: "icon-Tool_Auras",
-          visible: game.user.isGM,
-          button: true,
-          onClick: () => ArsApps.openAuraConfig()
-        },
-        {
-          name: "clearAura",
-          title: game.i18n.localize("arm5e.canvas.buttons.clearAura"),
-          icon: "icon-Tool_Delete_Perdo2",
-          visible: game.user.isGM,
-          button: true,
-          onClick: () => ArsApps.clearAura()
-        },
-        {
-          name: "astrolab",
-          title: "Astrolabium",
-          icon: "icon-Tool_Astrolab",
-          visible: game.user.isGM,
-          button: true,
-          onClick: () => ArsApps.openAstrolab()
-        },
-        {
-          name: "scriptorium",
-          title: "Scriptorium",
-          icon: "icon-Tool_Scriptorium",
-          visible: true,
-          button: true,
-          onClick: () => ArsApps.openScriptorium()
-        },
-        {
-          name: "arcaneExperimentation",
-          title: "arm5e.rolltables.experimentation.title",
-          icon: "icon-Tool_Ars",
-          visible: true,
-          button: true,
-          onClick: () => ArsApps.openLabExperimentation()
-        }
-      ],
-      activeTool: "aura"
-    });
-  } else {
+  if (CONFIG.ISV13) {
     buttons["ArsMagica"] = {
       name: "ArsMagica",
       title: "ArsMagica",
@@ -176,5 +124,57 @@ export function addArsButtons(buttons) {
         }
       }
     };
+  } else {
+    buttons.push({
+      name: "ArsMagica",
+      title: "ArsMagica",
+      layer: "arsmagica",
+      icon: "icon-Tool_Ars",
+      onChange: (event, active) => {},
+      visible: true,
+      tools: [
+        {
+          name: "aura",
+          title: game.i18n.localize("arm5e.canvas.buttons.setAura"),
+          icon: "icon-Tool_Auras",
+          visible: game.user.isGM,
+          button: true,
+          onClick: () => ArsApps.openAuraConfig()
+        },
+        {
+          name: "clearAura",
+          title: game.i18n.localize("arm5e.canvas.buttons.clearAura"),
+          icon: "icon-Tool_Delete_Perdo2",
+          visible: game.user.isGM,
+          button: true,
+          onClick: () => ArsApps.clearAura()
+        },
+        {
+          name: "astrolab",
+          title: "Astrolabium",
+          icon: "icon-Tool_Astrolab",
+          visible: game.user.isGM,
+          button: true,
+          onClick: () => ArsApps.openAstrolab()
+        },
+        {
+          name: "scriptorium",
+          title: "Scriptorium",
+          icon: "icon-Tool_Scriptorium",
+          visible: true,
+          button: true,
+          onClick: () => ArsApps.openScriptorium()
+        },
+        {
+          name: "arcaneExperimentation",
+          title: "arm5e.rolltables.experimentation.title",
+          icon: "icon-Tool_Ars",
+          visible: true,
+          button: true,
+          onClick: () => ArsApps.openLabExperimentation()
+        }
+      ],
+      activeTool: "aura"
+    });
   }
 }

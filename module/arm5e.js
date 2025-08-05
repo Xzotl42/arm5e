@@ -21,7 +21,7 @@ import { ArM5eActiveEffectConfig } from "./helpers/active-effect-config.sheet.js
 
 // Experiment
 import { ArsLayer, addArsButtons } from "./ui/ars-layer.js";
-import { ArsGamePause } from "./ui/ars-pause.js";
+import { customizePause } from "./ui/ars-pause.js";
 import { migrateCompendium, migration } from "./migration.js";
 import { log } from "./tools.js";
 
@@ -96,7 +96,7 @@ Hooks.once("init", async function () {
     migrateCompendium
   };
 
-  CONFIG.ISV12 = game.release.generation == 12;
+  CONFIG.ISV13 = game.release.generation == 13;
   // Add system metadata
   CONFIG.ARM5E = ARM5E;
   CONFIG.ARM5E.ItemDataModels = CONFIG.Item.dataModels;
@@ -126,15 +126,15 @@ Hooks.once("init", async function () {
   };
 
   // Adding ars layer
-  if (CONFIG.ISV12) {
+  if (CONFIG.ISV13) {
     CONFIG.Canvas.layers.arsmagica = {
       layerClass: ArsLayer,
-      group: "primary"
+      group: "interface"
     };
   } else {
     CONFIG.Canvas.layers.arsmagica = {
       layerClass: ArsLayer,
-      group: "interface"
+      group: "primary"
     };
   }
 
@@ -157,8 +157,8 @@ Hooks.once("init", async function () {
   CONFIG.Item.sidebarIcon = "icon-Icon_magic-chest";
   CONFIG.JournalEntry.sidebarIcon = "icon-Tool_Journals_sidebar";
 
-  if (!CONFIG.ISV12) {
-    CONFIG.ui.pause = ArsGamePause;
+  if (CONFIG.ISV13) {
+    customizePause();
   }
   CONFIG.ARM5E_DEFAULT_ICONS = ARM5E_DEFAULT_ICONS[game.settings.get("arm5e", "defaultIconStyle")];
   CONFIG.INHABITANTS_DEFAULT_ICONS =
