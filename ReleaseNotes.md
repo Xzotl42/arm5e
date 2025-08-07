@@ -1,5 +1,13 @@
 # Release notes
 
+## 2.3.2.32, Quendalon, that was all
+
+### V13 compatibility
+
+- Pause logo is back
+- Fixed journals
+- Fixed invisible unticked checkboxes on black background.
+
 ## 2.3.2.31, Quendalon, did I mention fae?
 
 ### Features & changes

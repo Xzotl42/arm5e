@@ -22,6 +22,7 @@ import * as Arm5eChatMessage from "./helpers/chat.js";
 
 // Experiment
 import { ArsLayer, addArsButtons } from "./ui/ars-layer.js";
+import { customizePause } from "./ui/ars-pause.js";
 import { migration } from "./migration.js";
 import { log } from "./tools.js";
 
@@ -157,6 +158,9 @@ Hooks.once("init", async function () {
   CONFIG.Item.sidebarIcon = "icon-Icon_magic-chest";
   CONFIG.JournalEntry.sidebarIcon = "icon-Tool_Journals_sidebar";
 
+  if (CONFIG.ISV13) {
+    customizePause();
+  }
   CONFIG.ARM5E_DEFAULT_ICONS = ARM5E_DEFAULT_ICONS[game.settings.get("arm5e", "defaultIconStyle")];
   CONFIG.INHABITANTS_DEFAULT_ICONS =
     INHABITANTS_DEFAULT_ICONS[game.settings.get("arm5e", "defaultIconStyle")];
