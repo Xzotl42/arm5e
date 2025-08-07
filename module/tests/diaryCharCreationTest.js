@@ -310,9 +310,7 @@ export function registerApprenticeshipTesting(quench) {
         if (actor) {
           await actor.delete();
         }
-        if (magusToken) {
-          await magusToken.delete();
-        }
+
         if (magus) {
           await magus.delete();
         }
