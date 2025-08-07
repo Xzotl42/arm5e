@@ -1,8 +1,4 @@
 export function customizePause() {
-  CONFIG.ui.pause = ArsGamePause;
-}
-
-if (CONFIG.ISV13) {
   class ArsGamePause extends foundry.applications.ui.GamePause {
     /** @override */
     async _prepareContext(_options) {
@@ -29,4 +25,6 @@ if (CONFIG.ISV13) {
       return [img, caption];
     }
   }
+
+  CONFIG.ui.pause = ArsGamePause;
 }
