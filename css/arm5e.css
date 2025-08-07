@@ -2457,7 +2457,7 @@ input[type="checkbox"] {
   --checkbox-checked-color: transparent;
   border-radius: 0;
   flex: 0 0 20px;
-  border: 1px solid black;
+  border: 1px solid #8e7759;
 }
 
 input[type="checkbox"]::before {

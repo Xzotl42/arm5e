@@ -12,6 +12,7 @@
 - Fixed pause button
 - Fixed editors
 - Fixed journals
+- Fixed invisible unticked checkboxes on black background.
 
 ### Features & changes
 
