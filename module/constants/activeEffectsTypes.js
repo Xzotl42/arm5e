@@ -621,6 +621,7 @@ export const ACTIVE_EFFECTS_TYPES = {
   none: {
     category: "none",
     type: "none",
+    tags: ["character", "covenant", "sanctum"],
     mnemonic: "arm5e.sheet.activeEffect.types.nullEffect",
     subtypes: {
       none: {
@@ -633,6 +634,7 @@ export const ACTIVE_EFFECTS_TYPES = {
   spellcasting: {
     category: "magic",
     type: "spellcasting",
+    tags: ["character"],
     mnemonic: "arm5e.sheet.activeEffect.type.spellcasting",
     subtypes: {
       voiceLoud: {
@@ -732,6 +734,7 @@ export const ACTIVE_EFFECTS_TYPES = {
   activities: {
     category: "progress",
     type: "activities",
+    tags: ["character"],
     mnemonic: "arm5e.activity.label",
     subtypes: {
       adventuring: {
@@ -800,6 +803,7 @@ export const ACTIVE_EFFECTS_TYPES = {
   spellmastery: {
     category: "magic",
     type: "spellmastery",
+    tags: ["character"],
     mnemonic: "arm5e.sheet.activeEffect.types.spellmastery",
     subtypes: {
       xpCoeff: {
@@ -819,6 +823,7 @@ export const ACTIVE_EFFECTS_TYPES = {
   art: {
     category: "magic",
     type: "art",
+    tags: ["character"],
     mnemonic: "arm5e.sheet.arts",
     subtypes: {
       // added dynamically
@@ -827,6 +832,7 @@ export const ACTIVE_EFFECTS_TYPES = {
   affinity: {
     category: "magic",
     type: "affinity",
+    tags: ["character"],
     mnemonic: "arm5e.sheet.activeEffect.types.arts.affinity",
     subtypes: {
       // added dynamically
@@ -835,6 +841,7 @@ export const ACTIVE_EFFECTS_TYPES = {
   deficiency: {
     category: "magic",
     type: "artDeficiency",
+    tags: ["character"],
     mnemonic: "arm5e.sheet.activeEffect.types.arts.deficiency",
     subtypes: {
       // added dynamically
@@ -843,6 +850,7 @@ export const ACTIVE_EFFECTS_TYPES = {
   formResistance: {
     category: "traits",
     type: "formResistance",
+    tags: ["character"],
     mnemonic: "arm5e.sheet.activeEffect.types.formResistance",
     subtypes: {
       // added dynamically
@@ -851,6 +859,7 @@ export const ACTIVE_EFFECTS_TYPES = {
   vitals: {
     category: "traits",
     type: "vitals",
+    tags: ["character"],
     mnemonic: "arm5e.sheet.activeEffect.types.vitals",
     subtypes: {
       size: {
@@ -900,6 +909,7 @@ export const ACTIVE_EFFECTS_TYPES = {
   characteristics: {
     category: "traits",
     type: "characteristics",
+    tags: ["character"],
     mnemonic: "arm5e.sheet.activeEffect.types.characteristics",
     subtypes: {
       int: {
@@ -961,6 +971,7 @@ export const ACTIVE_EFFECTS_TYPES = {
   characteristicBoost: {
     category: "traits",
     type: "characteristics",
+    tags: ["character"],
     mnemonic: "arm5e.sheet.activeEffect.types.characteristicBoost",
     subtypes: {
       int: {
@@ -1022,6 +1033,7 @@ export const ACTIVE_EFFECTS_TYPES = {
   fatigue: {
     category: "traits",
     type: "fatigue",
+    tags: ["character"],
     mnemonic: "arm5e.sheet.activeEffect.types.fatigue",
     subtypes: {
       total: {
@@ -1083,6 +1095,7 @@ export const ACTIVE_EFFECTS_TYPES = {
   wounds: {
     category: "traits",
     type: "wounds",
+    tags: ["character"],
     mnemonic: "arm5e.sheet.activeEffect.types.wounds",
     subtypes: {
       total: {
@@ -1114,6 +1127,7 @@ export const ACTIVE_EFFECTS_TYPES = {
   realm: {
     category: "magic",
     type: "realm",
+    tags: ["character"],
     mnemonic: "arm5e.sheet.activeEffect.types.realmAlignment",
     subtypes: {
       magic: {
@@ -1145,6 +1159,7 @@ export const ACTIVE_EFFECTS_TYPES = {
   characterFeatures: {
     category: "character",
     type: "characterFeatures",
+    tags: ["character"],
     mnemonic: "Character features",
     subtypes: {
       magicSystem: {
@@ -1171,6 +1186,7 @@ export const ACTIVE_EFFECTS_TYPES = {
   bonusGeneralAbility: {
     category: "abilities",
     type: "bonusGeneralAbility",
+    tags: ["character"],
     mnemonic: "arm5e.sheet.activeEffect.types.generalAbilitiesBonus",
     subtypes: {
       // add dynamically
@@ -1179,6 +1195,7 @@ export const ACTIVE_EFFECTS_TYPES = {
   bonusAcademicAbility: {
     category: "abilities",
     type: "bonusAcademicAbility",
+    tags: ["character"],
     mnemonic: "arm5e.sheet.activeEffect.types.academicAbilitiesBonus",
     subtypes: {
       // add dynamically
@@ -1187,6 +1204,7 @@ export const ACTIVE_EFFECTS_TYPES = {
   bonusArcaneAbility: {
     category: "abilities",
     type: "bonusArcaneAbility",
+    tags: ["character"],
     mnemonic: "arm5e.sheet.activeEffect.types.arcaneAbilitiesBonus",
     subtypes: {
       // add dynamically
@@ -1196,6 +1214,7 @@ export const ACTIVE_EFFECTS_TYPES = {
   bonusMartialAbility: {
     category: "abilities",
     type: "bonusMartialAbility",
+    tags: ["character"],
     mnemonic: "arm5e.sheet.activeEffect.types.martialAbilitiesBonus",
     subtypes: {
       // add dynamically
@@ -1204,6 +1223,7 @@ export const ACTIVE_EFFECTS_TYPES = {
   bonusMysteryAbility: {
     category: "abilities",
     type: "bonusMysteryAbility",
+    tags: ["character"],
     mnemonic: "arm5e.sheet.activeEffect.types.mysteryAbilitiesBonus",
     subtypes: {
       // add dynamically
@@ -1212,6 +1232,7 @@ export const ACTIVE_EFFECTS_TYPES = {
   bonusSupernaturalAbility: {
     category: "abilities",
     type: "bonusSupernaturalAbility",
+    tags: ["character"],
     mnemonic: "arm5e.sheet.activeEffect.types.supernaturalAbilitiesBonus",
     subtypes: {
       // add dynamically
@@ -1220,6 +1241,7 @@ export const ACTIVE_EFFECTS_TYPES = {
   bonusAlternateArt: {
     category: "abilities",
     type: "bonusAlternateArt",
+    tags: ["character"],
     mnemonic: "arm5e.sheet.activeEffect.types.AlternateArtBonus",
     subtypes: {
       // add dynamically
@@ -1229,6 +1251,7 @@ export const ACTIVE_EFFECTS_TYPES = {
   xpBonusGeneralAbility: {
     category: "abilities",
     type: "xpBonusGeneralAbility",
+    tags: ["character"],
     mnemonic: "arm5e.sheet.activeEffect.types.generalAbilitiesXPBonus",
     subtypes: {
       // add dynamically
@@ -1238,6 +1261,7 @@ export const ACTIVE_EFFECTS_TYPES = {
   xpBonusAcademicAbility: {
     category: "abilities",
     type: "xpBonusAcademicAbility",
+    tags: ["character"],
     mnemonic: "arm5e.sheet.activeEffect.types.academicAbilitiesXPBonus",
     subtypes: {
       // add dynamically
@@ -1247,6 +1271,7 @@ export const ACTIVE_EFFECTS_TYPES = {
   xpBonusArcaneAbility: {
     category: "abilities",
     type: "xpBonusArcaneAbility",
+    tags: ["character"],
     mnemonic: "arm5e.sheet.activeEffect.types.arcaneAbilitiesXPBonus",
     subtypes: {
       // add dynamically
@@ -1256,6 +1281,7 @@ export const ACTIVE_EFFECTS_TYPES = {
   xpBonusMartialAbility: {
     category: "abilities",
     type: "xpBonusMartialAbility",
+    tags: ["character"],
     mnemonic: "arm5e.sheet.activeEffect.types.martialAbilitiesXPBonus",
     subtypes: {
       // add dynamically
@@ -1265,6 +1291,7 @@ export const ACTIVE_EFFECTS_TYPES = {
   xpBonusSupernaturalAbility: {
     category: "abilities",
     type: "xpBonusSupernaturalAbility",
+    tags: ["character"],
     mnemonic: "arm5e.sheet.activeEffect.types.supernaturalAbilitiesXPBonus",
     subtypes: {
       // add dynamically
@@ -1273,6 +1300,7 @@ export const ACTIVE_EFFECTS_TYPES = {
   xpBonusMysteryAbility: {
     category: "abilities",
     type: "xpBonusMysteryAbility",
+    tags: ["character"],
     mnemonic: "arm5e.sheet.activeEffect.types.mysteryAbilitiesXPBonus",
     subtypes: {
       // add dynamically
@@ -1297,6 +1325,7 @@ export const ACTIVE_EFFECTS_TYPES = {
   qualityAbilityBoost: {
     category: "abilities",
     type: "qualityAbilityBoost",
+    tags: ["character"],
     mnemonic: "arm5e.sheet.activeEffect.types.qualityAbilityBoost",
     subtypes: {
       athletics: {
@@ -1358,6 +1387,7 @@ export const ACTIVE_EFFECTS_TYPES = {
   affinityGeneralAbility: {
     category: "abilities",
     type: "affinityGeneralAbility",
+    tags: ["character"],
     mnemonic: "arm5e.sheet.activeEffect.types.generalAbilitiesAffinity",
     subtypes: {
       // add dynamically
@@ -1366,6 +1396,7 @@ export const ACTIVE_EFFECTS_TYPES = {
   affinityArcaneAbility: {
     category: "abilities",
     type: "affinityArcaneAbility",
+    tags: ["character"],
     mnemonic: "arm5e.sheet.activeEffect.types.arcaneAbilitiesAffinity",
     subtypes: {
       // add dynamically
@@ -1374,6 +1405,7 @@ export const ACTIVE_EFFECTS_TYPES = {
   affinityAcademicAbility: {
     category: "abilities",
     type: "affinityAcademicAbility",
+    tags: ["character"],
     mnemonic: "arm5e.sheet.activeEffect.types.academicAbilitiesAffinity",
     subtypes: {
       // add dynamically
@@ -1382,6 +1414,7 @@ export const ACTIVE_EFFECTS_TYPES = {
   affinityMartialAbility: {
     category: "abilities",
     type: "affinityMartialAbility",
+    tags: ["character"],
     mnemonic: "arm5e.sheet.activeEffect.types.martialAbilitiesAffinity",
     subtypes: {
       // add dynamically
@@ -1390,6 +1423,7 @@ export const ACTIVE_EFFECTS_TYPES = {
   affinityMysteryAbility: {
     category: "abilities",
     type: "affinityMysteryAbility",
+    tags: ["character"],
     mnemonic: "arm5e.sheet.activeEffect.types.mysteryAbilitiesAffinity",
     subtypes: {
       // add dynamically
@@ -1398,14 +1432,16 @@ export const ACTIVE_EFFECTS_TYPES = {
   affinitySupernaturalAbility: {
     category: "abilities",
     type: "affinitySupernaturalAbility",
+    tags: ["character"],
     mnemonic: "arm5e.sheet.activeEffect.types.supernaturalAbilitiesAffinity",
     subtypes: {
-      // add dynamically
+      // add dynamicallyv
     }
   },
   affinityAlternateArt: {
     category: "abilities",
     type: "affinityAlternateArt",
+    tags: ["character"],
     mnemonic: "arm5e.sheet.activeEffect.types.affinityAlternateArt",
     subtypes: {
       // add dynamically
@@ -1415,6 +1451,7 @@ export const ACTIVE_EFFECTS_TYPES = {
   labActivity: {
     category: "magic",
     type: "laboratory",
+    tags: ["character"],
     mnemonic: "arm5e.sheet.activeEffect.types.labActivity",
     subtypes: {
       learnSpell: {
@@ -1434,6 +1471,7 @@ export const ACTIVE_EFFECTS_TYPES = {
   labSpecialty: {
     category: "laboratory",
     type: "laboratorySpec",
+    tags: ["sanctum"],
     mnemonic: "arm5e.sheet.activeEffect.types.laboratorySpec",
     subtypes: {
       texts: {
@@ -1573,6 +1611,7 @@ export const ACTIVE_EFFECTS_TYPES = {
   laboratory: {
     category: "laboratory",
     type: "laboratory",
+    tags: ["sanctum"],
     mnemonic: "arm5e.sheet.activeEffect.types.laboratoryAttr",
     subtypes: {
       size: {
@@ -1641,6 +1680,7 @@ export const ACTIVE_EFFECTS_TYPES = {
   optionalRollBonus: {
     category: "roll",
     type: "optionalRollBonus",
+    tags: ["character"],
     mnemonic: "arm5e.sheet.activeEffect.types.roll.optional",
     subtypes: {
       spontMagic: {
@@ -1678,6 +1718,7 @@ export const ACTIVE_EFFECTS_TYPES = {
   covenantBuildPoints: {
     category: "covenant",
     type: "buildPoints",
+    tags: ["covenant"],
     mnemonic: "arm5e.sheet.activeEffect.type.covenantBuildPoint",
     subtypes: {
       library: {
@@ -1727,6 +1768,7 @@ export const ACTIVE_EFFECTS_TYPES = {
   covenantExpenses: {
     category: "covenant",
     type: "expenses",
+    tags: ["covenant"],
     mnemonic: "arm5e.sheet.activeEffect.type.yearlyExpenses",
     subtypes: {
       inhabitant: {
@@ -1782,6 +1824,7 @@ export const ACTIVE_EFFECTS_TYPES = {
   covenantCostSavingMundane: {
     category: "covenant",
     type: "savingsMundane",
+    tags: ["covenant"],
     mnemonic: "arm5e.sheet.activeEffect.type.yearlySavings.mundane",
     subtypes: {
       buildings: {
@@ -1831,6 +1874,7 @@ export const ACTIVE_EFFECTS_TYPES = {
   covenantCostSavingMagic: {
     category: "covenant",
     type: "savingsMagic",
+    tags: ["covenant"],
     mnemonic: "arm5e.sheet.activeEffect.type.yearlySavings.magic",
     subtypes: {
       buildings: {
@@ -1880,6 +1924,7 @@ export const ACTIVE_EFFECTS_TYPES = {
   covenantInhabitants: {
     category: "covenant",
     type: "covenantInhabitants",
+    tags: ["covenant"],
     mnemonic: "arm5e.sheet.activeEffect.type.covenantInhabitants",
     subtypes: {
       turbula: {
