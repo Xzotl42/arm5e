@@ -2531,11 +2531,12 @@ li.roll.stressdie.d10.exploded.min {
 }
 
 .arm5eV2 input[type="text"],
-input[type="number"],
-input[type="password"],
-input[type="date"],
-input[type="time"],
-select {
+.arm5eV2 input[type="number"],
+.arm5eV2 input[type="password"],
+.arm5eV2 input[type="checkbox"],
+.arm5eV2 input[type="date"],
+.arm5eV2 input[type="time"],
+.arm5eV2 select {
   width: calc(100% - 2px);
   min-width: 20px;
   height: 20px;
@@ -2545,7 +2546,7 @@ select {
   color: var(--input-text-color);
   font-family: inherit;
   font-size: 9pt;
-  text-align: inherit;
+  text-align: center;
   line-height: inherit;
   border-width: 0px 1px 1px 0px;
   border-style: solid #7a7971;
@@ -2556,12 +2557,7 @@ select {
   user-select: text;
 }
 
-.arm5eV2 .active-effect-config .tab.changes ol li {
-  display: contents;
-}
-
-.arm5eV2 .active-effect-config .tab.changes header,
-.active-effect-config .tab.changes .effects-header {
+.active-effect-config.arm5eV2.active-effect-sheet .tab.changes header {
   align-items: center;
   display: flex;
   gap: 0.25rem;
@@ -2571,8 +2567,7 @@ select {
   position: relative;
 }
 
-.arm5eV2 .active-effect-config .tab.changes header,
-.active-effect-config .tab.changes ol {
+.active-effect-config.arm5eV2.active-effect-sheet .tab.changes ol {
   align-items: center;
   display: contents;
   gap: 0.25rem;
@@ -2581,16 +2576,3 @@ select {
   padding: 2px;
   position: relative;
 }
-
-/* .application.arm5e {
-  color: #000;
-}
-
-.arm5e .standard-form .form-group > label,
-.standard-form .form-group > span.label {
-  color: #000;
-}
-
-nav.tab[data-tab] {
-  color: #000;
-} */
