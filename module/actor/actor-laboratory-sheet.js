@@ -781,7 +781,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
           return true;
         }
         default:
-          return await super._onDrop(event);
+          return await super._onDropItem(event, data);
       }
     } else if (dropTarget === "enchant") {
       event.stopImmediatePropagation();
@@ -849,6 +849,9 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
         }
         case "item": {
         }
+        default: {
+          return await super._onDropItem(event, data);
+        }
       }
     } else if (dropTarget === "magic-item") {
       event.stopImmediatePropagation();
@@ -869,7 +872,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
         });
         this.render();
       } else {
-        return false;
+        return await super._onDropItem(event, data);
       }
     } else {
       const type = item.type;

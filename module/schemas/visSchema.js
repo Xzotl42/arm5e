@@ -253,16 +253,16 @@ export class VisSourceSchema extends foundry.abstract.TypeDataModel {
     const existingReserve = covenantVis.filter((e) => {
       return e.system.art == this.art && e.name == this.visLabel;
     });
+    let resource;
     if (existingReserve.length) {
       // update existing Vis pile
-      const vis = structuredClone(existingReserve[0]);
+      resource = structuredClone(existingReserve[0]);
       const updateData = {
         _id: existingReserve[0]._id,
-        "system.quantity": vis.system.quantity + this.pawns
+        "system.quantity": resource.system.quantity + this.pawns
       };
-      await this.parent.actor.updateEmbeddedDocuments("Item", [updateData]);
+      [resource] = await this.parent.actor.updateEmbeddedDocuments("Item", [updateData]);
       this.parent.actor.sheet.render(false);
-      return;
     } else {
       let desc;
       if (this.form == "") {
@@ -289,14 +289,14 @@ export class VisSourceSchema extends foundry.abstract.TypeDataModel {
           description: desc
         }
       };
-      await this.parent.createResourceTrackingDiaryEntry(
-        this.parent.name,
-        this.parent.actor,
-        this.pawns
-      );
-      return await this.parent.actor.createEmbeddedDocuments("Item", [vis]);
-    }
 
+      [resource] = await this.parent.actor.createEmbeddedDocuments("Item", [vis]);
+    }
+    await resource.createResourceTrackingDiaryEntry(
+      this.parent.name,
+      this.parent.actor,
+      this.pawns
+    );
     //TODO check the year harvested
   }
 

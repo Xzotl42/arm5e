@@ -1,4 +1,4 @@
-## 2.4.0.11, Radislav am Polanach
+## 2.4.0.12, Radislav am Polanach
 
 ### Compatibility
 
@@ -13,12 +13,11 @@
 - Fixed editors
 - Fixed journals
 - Fixed invisible unticked checkboxes on black background.
-
 - Active Effect config migrated to appV2
 
 ### Features & changes
 
-- [Technical] Switch to V12
+- [Technical] Switch to V12 only
   - Use of TypeDataModel instead of DataModel for Document types
   - Removed of V10 only code.
   - Removed V12 deprecation warnings
@@ -33,7 +32,6 @@
   - Improved confidence spending
   - New magic roll chat messages
 - [Technical] removal of some duplicate unused id attributes
-- [Technical] V13 compatibility (WIP)
 - Dropping a magical effect on a lab will switch the activity to spell invention.
 - Dropping a book's lab text topic from an Actor library on to a lab will now work
 - Gift type of magi inhabitants is set automatically if they have Gentle Gift or Blatant Gift.
