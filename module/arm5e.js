@@ -83,6 +83,7 @@ Hooks.once("i18nInit", async function () {
   CONFIG.ARM5E.LOCALIZED_ABILITIES = localizeAbilities();
   CONFIG.ARM5E.LOCALIZED_ABILITIESCAT = localizeCategories();
   CONFIG.ARM5E.LOCALIZED_ABILITIES_ENRICHED = enrichAbilities(CONFIG.ARM5E.LOCALIZED_ABILITIES);
+  // CONFIG.ARM5E.LOCALIZED_ACTIVE_EFFECTS_TYPES;
 });
 
 Hooks.once("init", async function () {

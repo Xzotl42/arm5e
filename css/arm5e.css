@@ -278,9 +278,14 @@ span.player-name {
   color: #000;
 }
 
+/* .journal-sheet .journal-header { */
+/* background: url(../assets/compendium/parchment.png) repeat; */
+/* } */
+
 .journal-sheet .journal-header .title {
   margin: 0;
   background: rgba(0, 0, 0, 0.1);
+
   font-size: var(--font-size-32);
   font-family: Blackmoor;
   color: #000;

@@ -1,4 +1,8 @@
-## 2.4.0.10, Radislav am Polanach
+## 2.4.0.11, Radislav am Polanach
+
+### Compatibility
+
+- Foundry VTT V12+ only
 
 ### V13 compatibility
 
@@ -10,9 +14,7 @@
 - Fixed journals
 - Fixed invisible unticked checkboxes on black background.
 
-### Compatibility change
-
-- Foundry VTT V12+ only
+- Active Effect config migrated to appV2
 
 ### Features & changes
 
