@@ -21,7 +21,7 @@ import { ArM5eActiveEffectConfig } from "./helpers/active-effect-config.sheet.js
 
 // Experiment
 import { ArsLayer, addArsButtons } from "./ui/ars-layer.js";
-
+import { customizePause } from "./ui/ars-pause.js";
 import { migrateCompendium, migration } from "./migration.js";
 import { log } from "./tools.js";
 
@@ -83,6 +83,7 @@ Hooks.once("i18nInit", async function () {
   CONFIG.ARM5E.LOCALIZED_ABILITIES = localizeAbilities();
   CONFIG.ARM5E.LOCALIZED_ABILITIESCAT = localizeCategories();
   CONFIG.ARM5E.LOCALIZED_ABILITIES_ENRICHED = enrichAbilities(CONFIG.ARM5E.LOCALIZED_ABILITIES);
+  // CONFIG.ARM5E.LOCALIZED_ACTIVE_EFFECTS_TYPES;
 });
 
 Hooks.once("init", async function () {
@@ -96,6 +97,7 @@ Hooks.once("init", async function () {
     migrateCompendium
   };
 
+  CONFIG.ISV13 = game.release.generation == 13;
   // Add system metadata
   CONFIG.ARM5E = ARM5E;
   CONFIG.ARM5E.ItemDataModels = CONFIG.Item.dataModels;
@@ -125,10 +127,17 @@ Hooks.once("init", async function () {
   };
 
   // Adding ars layer
-  CONFIG.Canvas.layers.arsmagica = {
-    layerClass: ArsLayer,
-    group: "primary"
-  };
+  if (CONFIG.ISV13) {
+    CONFIG.Canvas.layers.arsmagica = {
+      layerClass: ArsLayer,
+      group: "interface"
+    };
+  } else {
+    CONFIG.Canvas.layers.arsmagica = {
+      layerClass: ArsLayer,
+      group: "primary"
+    };
+  }
 
   // Combatant.prototype.getInitiativeRoll = function (formula) {
 
@@ -149,6 +158,9 @@ Hooks.once("init", async function () {
   CONFIG.Item.sidebarIcon = "icon-Icon_magic-chest";
   CONFIG.JournalEntry.sidebarIcon = "icon-Tool_Journals_sidebar";
 
+  if (CONFIG.ISV13) {
+    customizePause();
+  }
   CONFIG.ARM5E_DEFAULT_ICONS = ARM5E_DEFAULT_ICONS[game.settings.get("arm5e", "defaultIconStyle")];
   CONFIG.INHABITANTS_DEFAULT_ICONS =
     INHABITANTS_DEFAULT_ICONS[game.settings.get("arm5e", "defaultIconStyle")];
@@ -255,6 +267,12 @@ Hooks.once("ready", async function () {
         }
       );
     }
+  }
+
+  if (game.release.generation == 13) {
+    ui.notifications.info(game.i18n.localize("arm5e.system.V13Disclaimer"), {
+      permanent: true
+    });
   }
 
   // Wait to register hotbar drop hook on ready so that modules could register earlier if they want to
@@ -554,11 +572,10 @@ Hooks.on("applyActiveEffect", (actor, change, current, delta, changes) => {
 
 Hooks.on("getSceneControlButtons", (buttons) => addArsButtons(buttons));
 
+// V12 only
 Hooks.on("renderPause", function () {
   if ($("#pause").attr("class") !== "paused") return;
   const path = "systems/arm5e/assets/clockwork.svg";
-  // Const opacity = 100
-  const speed = "20s linear 0s infinite normal none running rotation";
   const opacity = 0.6;
   $("#pause.paused img").attr("src", path);
   $("#pause.paused img").css({ opacity: opacity, "--fa-animation-duration": "20s" });
@@ -738,7 +755,11 @@ function registerSheets() {
 
     // [DEV] comment line bellow to get access to the original sheet
     DocumentSheetConfig.unregisterSheet(ActiveEffect, "core", ActiveEffectConfig);
-    DocumentSheetConfig.registerSheet(ActiveEffect, "arm5e", ArM5eActiveEffectConfig);
+    if (CONFIG.ISV13) {
+      DocumentSheetConfig.registerSheet(ActiveEffect, "arm5e", ArM5eActiveEffectConfigV2);
+    } else {
+      DocumentSheetConfig.registerSheet(ActiveEffect, "arm5e", ArM5eActiveEffectConfig);
+    }
   } catch (err) {
     err.message = `Failed registration of a sheet: ${err.message}`;
     console.error(err);

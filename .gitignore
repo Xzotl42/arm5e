@@ -1,7 +1,8 @@
 # IDE
 .idea/
 .vs/
-externalV10/*
+foundry-config.yaml
+foundry
 
 # Node Modules
 package*.json
@@ -12,15 +13,11 @@ test.js
 .npmignore
 TODO.txt
 foundry.js
-packs/actors/**
-packs/journals/**
-packs/macros/**
-packs/rolltables/**
-packs/scenes/**
+packs/**
 .eslintrc.json
 website/UserGuide/.obsidian
 arm5e.lock
 CommitChangeNotes.md
 
 .vscode/settings.json
-module/arm5e.codeV12-workspace.code-workspace
+*.code-workspace
