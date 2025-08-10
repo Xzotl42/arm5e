@@ -250,12 +250,32 @@ span.player-name {
 
 /*journal stuff */
 
+.journal-sheet .journal-sidebar {
+  background: url(../assets/compendium/parchment.png) repeat;
+  color: #000;
+}
+
+.journal-sidebar search {
+  background: black;
+  border-radius: 3px;
+  opacity: 0.5;
+}
+.journal-sheet .window-content {
+  background: url(../assets/compendium/parchment.png) repeat;
+  color: #000;
+}
+
+.theme-dark .journal-sheet h4.window-title {
+  color: var(--color-light-2);
+}
+
 .sheet.journal-entry .journal-entry-content {
   flex: 1;
   height: 100%;
   background: url(../assets/compendium/parchment.png) repeat;
   border: 2px solid #000;
   border-radius: 6px 0 0 0;
+  color: #000;
 }
 
 .journal-sheet .journal-header .title {
@@ -263,9 +283,15 @@ span.player-name {
   background: rgba(0, 0, 0, 0.1);
   font-size: var(--font-size-32);
   font-family: Blackmoor;
+  color: #000;
   height: 50px;
   line-height: 50px;
   border-radius: 4px;
+}
+
+.journal-entry-page {
+  font-family: bookAntiqua;
+  color: #000;
 }
 
 .journal-entry-page li {
@@ -274,19 +300,44 @@ span.player-name {
 
 .journal-entry-page h1 {
   font-family: bookAntiqua;
+  color: #000;
 }
 
 .journal-entry-page h2 {
   font-family: bookAntiqua;
+  color: #000;
 }
 
 .journal-entry-page h3 {
   font-family: bookAntiqua;
-  font-size: 16px;
+  font-size: 16pt;
+  color: #000;
+  border-bottom: 1px solid var(--color-warm-3);
+}
+
+.journal-entry-page h4 {
+  font-family: bookAntiqua;
+  font-size: 16pt;
+  color: #000;
 }
 
 .journal-entry-page p {
   font-family: bookAntiqua;
+  color: #000;
+}
+
+.theme-dark .journal-entry-page .editor.prosemirror {
+  font-family: bookAntiqua;
+  /* font-size: 16px; */
+  background: url(../assets/compendium/parchment.png) repeat;
+  color: var(--color-text-dark-primary);
+}
+
+.theme-light .journal-entry-page .editor.prosemirror {
+  font-family: bookAntiqua;
+  font-size: 16px;
+  color: var(--color-text-light-primary);
+  background: url(../assets/compendium/parchment.png) repeat;
 }
 
 a.content-link,
@@ -986,7 +1037,7 @@ img.clickable2:hover {
   font-family: "bookAntiquaBold";
   /* font-size: 12pt; */
 }
-.arm5ActiveEffect {
+.arm5eActiveEffect {
   background-image: url("../assets/dialog/LargeDialog_Background.png");
   background-repeat: repeat-y;
   background-size: cover;
@@ -994,20 +1045,21 @@ img.clickable2:hover {
   /* font-size: 12pt; */
 }
 
-.arm5ActiveEffect .effect-options {
+.arm5eActiveEffect .effect-options {
   font-family: "bookAntiquaBold";
   padding-left: 48px;
   padding-right: 48px;
+  height: auto;
 }
 
-.arm5e .arm5ActiveEffect .header-background {
+.arm5e .arm5eActiveEffect .header-background {
   border: 0px;
   padding-left: 0px;
   padding-right: 0px;
   margin-left: 0px;
   width: 100%;
 }
-.arm5e .arm5ActiveEffect .footer-background {
+.arm5e .arm5eActiveEffect .footer-background {
   border: 0px;
   padding-left: 0px;
   padding-right: 0px;
@@ -1015,7 +1067,7 @@ img.clickable2:hover {
   height: 87px;
   width: 100%;
 }
-.arm5e .arm5ActiveEffect .header-background img {
+.arm5e .arm5eActiveEffect .header-background img {
   border: 0px;
 }
 
@@ -2103,7 +2155,6 @@ img.art-icon {
   flex: 0 0 86px;
   text-align: right;
   margin-right: 8px;
-  /* padding-top: 11pt; */
 }
 
 .arm5e .spell-value {
@@ -2398,10 +2449,10 @@ input[type="checkbox"] {
   align-content: center;
   justify-content: center;
   font-size: 2rem;
-
+  --checkbox-checked-color: transparent;
   border-radius: 0;
   flex: 0 0 20px;
-  border: 1px solid black;
+  border: 1px solid #8e7759;
 }
 
 input[type="checkbox"]::before {
@@ -2487,10 +2538,67 @@ li.roll.stressdie.d10.exploded.min {
   opacity: 0.6;
 }
 
-/* .content {
-  min-height: calc(58vh - 75px);
+/* V13 styles */
+
+.arm5eV2 .effect-options {
+  font-family: "bookAntiquaBold";
+  padding-left: 48px;
+  padding-right: 48px;
+  height: 120px;
 }
-*/
-/* .footer {
-  height: 75px;
-} */
+
+.arm5eV2 .sheet-header .item-small-img {
+  -webkit-box-flex: 0;
+  -ms-flex: 0 0 64px;
+  flex: 0 0 64px;
+  height: 64px;
+  margin-right: 8px;
+  margin-bottom: 8px;
+}
+
+.arm5eV2 input[type="text"],
+.arm5eV2 input[type="number"],
+.arm5eV2 input[type="password"],
+.arm5eV2 input[type="checkbox"],
+.arm5eV2 input[type="date"],
+.arm5eV2 input[type="time"],
+.arm5eV2 select {
+  width: calc(100% - 2px);
+  min-width: 20px;
+  height: 20px;
+  /* background: rgba(0, 0, 0, 0.05); */
+  padding: 1px 3px;
+  margin: 0;
+  color: var(--input-text-color);
+  font-family: inherit;
+  font-size: 9pt;
+  text-align: center;
+  line-height: inherit;
+  border-width: 0px 1px 1px 0px;
+  border-style: solid #7a7971;
+  border-radius: 3px;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+.active-effect-config.arm5eV2.active-effect-sheet .tab.changes header {
+  align-items: center;
+  display: flex;
+  gap: 0.25rem;
+  grid-template-columns: 12rem 7rem 7rem 4rem 1rem;
+  margin: 0;
+  padding: 2px;
+  position: relative;
+}
+
+.active-effect-config.arm5eV2.active-effect-sheet .tab.changes ol {
+  align-items: center;
+  display: contents;
+  gap: 0.25rem;
+  grid-template-columns: 12rem 7rem 7rem 4rem 1rem;
+  margin: 0;
+  padding: 2px;
+  position: relative;
+}

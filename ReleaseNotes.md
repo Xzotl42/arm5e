@@ -1,5 +1,15 @@
 ## 2.4.0.10, Radislav am Polanach
 
+### V13 compatibility
+
+- Fixed sidebar and canvas icons.
+- Missing Ars Magica buttons
+- Canvas buttons are now working
+- Fixed pause button
+- Fixed editors
+- Fixed journals
+- Fixed invisible unticked checkboxes on black background.
+
 ### Compatibility change
 
 - Foundry VTT V12+ only
@@ -39,12 +49,6 @@
 - Codex has been migrated to V10 datamodel.
 - Codex now allows to browse and filter the content of ars-compendia base effects and spells without importing everything.
 - Arcane experimentation dialog.
-- [V13 compatibility]
-  - Fixed sidebar and canvas icons.
-  - Missing Ars Magica buttons
-  - Canvas buttons are now working
-  - Fixed pause button
-  - Fixed editors
 
 ### Bug fixes
 
@@ -81,6 +85,8 @@
 - Chat rolls with stress die resulting in a botch are clearly indicated
 - Health attribute of the lab is taken into account for aging rolls.
 - Fixed the wrong lab description in diary when there is a magical focus involved.
+- dropping a spell on the covenant sheet will convert it into a labtext
+- dropping a spell on the lab sheet outside of the planning area will add it as a labtext to the library
 
 ## 2.3.2.28, Quendalon, more than just sparows and bunnies
 
