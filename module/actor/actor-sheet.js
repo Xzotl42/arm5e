@@ -101,8 +101,24 @@ export class ArM5eActorSheet extends ActorSheet {
     return this.isEditable;
   }
 
+  //@overloaded : added await to _onDropX calls AppV2 to remove
   async _onDrop(event) {
-    return await super._onDrop(event);
+    const data = TextEditor.implementation.getDragEventData(event);
+    const actor = this.actor;
+    const allowed = Hooks.call("dropActorSheetData", actor, this, data);
+    if (allowed === false) return;
+
+    // Handle different data types
+    switch (data.type) {
+      case "ActiveEffect":
+        return await this._onDropActiveEffect(event, data);
+      case "Actor":
+        return await this._onDropActor(event, data);
+      case "Item":
+        return await this._onDropItem(event, data);
+      case "Folder":
+        return await this._onDropFolder(event, data);
+    }
   }
 
   /* -------------------------------------------- */

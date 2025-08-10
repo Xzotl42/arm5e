@@ -17,7 +17,8 @@ import ArM5eActiveEffect from "./helpers/active-effects.js";
 
 import { prepareDatasetByTypeOfItem } from "./helpers/hotbar-helpers.js";
 import { ArM5ePreloadHandlebarsTemplates } from "./templates.js";
-import { ArM5eActiveEffectConfig } from "./helpers/active-effect-config.sheet.js";
+import { ArM5eActiveEffectConfig } from "./helpers/active-effect-config-sheet.js";
+import { ArM5eActiveEffectConfigV2 } from "./sheets/active-effect-config-sheet_V2.js";
 import * as Arm5eChatMessage from "./helpers/chat.js";
 
 // Experiment
@@ -723,7 +724,11 @@ function registerSheets() {
 
     // [DEV] comment line bellow to get access to the original sheet
     DocumentSheetConfig.unregisterSheet(ActiveEffect, "core", ActiveEffectConfig);
-    DocumentSheetConfig.registerSheet(ActiveEffect, "arm5e", ArM5eActiveEffectConfig);
+    if (CONFIG.ISV13) {
+      DocumentSheetConfig.registerSheet(ActiveEffect, "arm5e", ArM5eActiveEffectConfigV2);
+    } else {
+      DocumentSheetConfig.registerSheet(ActiveEffect, "arm5e", ArM5eActiveEffectConfig);
+    }
   } catch (err) {
     err.message = `Failed registration of a sheet: ${err.message}`;
     console.error(err);

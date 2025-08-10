@@ -174,10 +174,12 @@ export class ArM5eActiveEffectConfig extends ActiveEffectConfig {
     let arrayTypes = this.object.getFlag("arm5e", "type");
     let arraySubtypes = this.object.getFlag("arm5e", "subtype");
     let arrayOptions = this.object.getFlag("arm5e", "option");
-    let newKey = ACTIVE_EFFECTS_TYPES[arrayTypes[index]].subtypes[arraySubtypes[index]].key;
+    const effect = ACTIVE_EFFECTS_TYPES[arrayTypes[index]].subtypes[arraySubtypes[index]];
+    let newKey = effect.key;
     if (arrayOptions[index] != null) {
       newKey = newKey.replace("#OPTION#", arrayOptions[index]);
     }
+
     const changesData = this.document.changes;
     changesData[index] = {
       mode: ACTIVE_EFFECTS_TYPES[arrayTypes[index]].subtypes[arraySubtypes[index]].mode,

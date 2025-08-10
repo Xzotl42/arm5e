@@ -1,6 +1,6 @@
 import { log } from "../tools.js";
 import { Astrolab } from "../tools/astrolab.js";
-import { ArM5eActiveEffectConfig } from "../helpers/active-effect-config.sheet.js";
+import { ArM5eActiveEffectConfig } from "../helpers/active-effect-config-sheet.js";
 import { Scriptorium, ScriptoriumObject } from "../tools/scriptorium.js";
 import { AuraConfig } from "./aura-config.js";
 

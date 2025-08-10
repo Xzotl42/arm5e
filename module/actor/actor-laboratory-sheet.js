@@ -9,7 +9,7 @@ import {
   computeLevel,
   computeRawCastingTotal
 } from "../helpers/magic.js";
-import { resetOwnerFields } from "../item/item-converter.js";
+import { resetOwnerFields, effectToLabText } from "../item/item-converter.js";
 import { ArM5eItemMagicSheet } from "../item/item-magic-sheet.js";
 import { getDataset, log } from "../tools.js";
 import { ArM5eActorSheet } from "./actor-sheet.js";
@@ -719,6 +719,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
       }
     }
     if (dropTarget === "spell") {
+      event.stopImmediatePropagation();
       switch (item.type) {
         case "laboratoryText": {
           if (item.system.type !== "spell") {
@@ -779,7 +780,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
           return await super._onDrop(event);
       }
     } else if (dropTarget === "enchant") {
-      // event.stopPropagation();
+      event.stopImmediatePropagation();
       switch (item.type) {
         case "laboratoryText": {
           if (!["enchantment", "spell"].includes(item.system.type)) {
@@ -846,7 +847,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
         }
       }
     } else if (dropTarget === "magic-item") {
-      // event.stopPropagation();
+      event.stopImmediatePropagation();
       if (
         Object.keys(ARM5E.lab.enchantment.enchantableTypes).includes(item.type) &&
         item.system.state == "enchanted"
@@ -867,6 +868,14 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
         return false;
       }
     } else {
+      const type = item.type;
+
+      // transform input into labText
+      if (type == "spell" || type == "magicalEffect" || type == "enchantment") {
+        log(false, "Valid drop");
+        // create a labText data:
+        return await super._onDropItemCreate(effectToLabText(item.toObject()));
+      }
       const res = await super._onDropItem(event, data);
       return res;
     }

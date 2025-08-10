@@ -1,5 +1,16 @@
 # Release notes
 
+## 2.3.2.33, Quendalon, that was all
+
+### V13 compatibility
+
+- Active Effect config migrated to appV2
+
+### Bug fixes
+
+- dropping a spell on the covenant sheet will convert it into a labtext
+- dropping a spell on the lab sheet outside of the planning area will add it as a labtext to the library
+
 ## 2.3.2.32, Quendalon, that was all
 
 ### V13 compatibility
