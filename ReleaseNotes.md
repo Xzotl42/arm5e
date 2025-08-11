@@ -1,6 +1,6 @@
 # Release notes
 
-## 2.3.2.33, Quendalon, that was all
+## 2.3.2.34, Quendalon, that was all (bis)
 
 ### V13 compatibility
 
