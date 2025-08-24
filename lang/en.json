@@ -1575,7 +1575,7 @@
   "arm5e.config.sourcebookFilter": "Sourcebooks filter",
   "arm5e.config.compendiaRef": "Compendia reference",
   "arm5e.config.hint.compendiaRef": "Select the module that will serve as reference to the system for compendium content",
-
+  "arm5e.config.currency.name": "Silver coins",
   "arm5e.rolltables.experimentation.title": "Arcane Experimentation",
   "arm5e.rolltables.experimentation.roll": "Roll for experimentation",
   "arm5e.rolltables.experimentation.createJournal": "Create Journal",

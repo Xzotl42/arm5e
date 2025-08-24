@@ -308,6 +308,20 @@ export class ArM5eItemSheet extends ItemSheet {
     // Prepare active effects
     context.effects = ArM5eActiveEffect.prepareActiveEffectCategories(this.item.effects);
 
+    // COST
+
+    if (itemData.system.cost) {
+      context.cost = {
+        detail: game.settings.get("arm5e", "moneyManagementLevel"),
+        currency: game.settings.get("arm5e", "currency"),
+        coeff: game.settings.get("arm5e", "currencyCoeff"),
+        hint: `${itemData.system.quantity * itemData.system.cost.amount} ${game.settings.get(
+          "arm5e",
+          "currency"
+        )} total`
+      };
+    }
+
     log(false, "item-sheet get data");
     log(false, context);
 

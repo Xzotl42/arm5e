@@ -69,6 +69,7 @@ export const ArM5ePreloadHandlebarsTemplates = async function () {
     "systems/arm5e/templates/item/parts/enchant-extension.html",
     "systems/arm5e/templates/item/parts/enchant-desc-section.html",
     "systems/arm5e/templates/item/parts/enchant-attributes-section.html",
+    "systems/arm5e/templates/item/parts/cost.hbs",
 
     // "systems/arm5e/templates/item/parts/item-enchantment.html",
     "systems/arm5e/templates/item/parts/magic-item.html",

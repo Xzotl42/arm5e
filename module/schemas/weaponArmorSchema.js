@@ -7,7 +7,7 @@ export class ArmorSchema extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     return {
       ...itemBase(),
-      cost: CostField("standard", 2),
+      cost: CostField("standard"),
       quantity: new fields.NumberField({
         required: false,
         nullable: false,

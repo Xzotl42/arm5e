@@ -1406,7 +1406,8 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
       spells: [],
       masteries: [],
       achievements: [],
-      dependencies: []
+      dependencies: [],
+      resources: []
     };
 
     // if the first date is not applied and in the past, remove any activity costs (vis, ...)

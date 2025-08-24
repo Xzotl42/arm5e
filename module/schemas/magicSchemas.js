@@ -276,9 +276,9 @@ export class MagicalEffectSchema extends foundry.abstract.TypeDataModel {
     return updateData;
   }
 
-  getTechniqueData() {
+  getTechniqueData(actor = null) {
     if (!IsMagicalEffect(this.parent)) return ["", 0, false];
-    const actorSystemData = this.parent.actor.system;
+    const actorSystemData = actor ? actor.system : this.parent.actor.system;
     let label = CONFIG.ARM5E.magic.techniques[this.technique.value].label;
     let tech = 1000;
     let techReq = Object.entries(this["technique-req"]).filter((r) => r[1] === true);
@@ -304,9 +304,9 @@ export class MagicalEffectSchema extends foundry.abstract.TypeDataModel {
     return [label, tech, techDeficient];
   }
 
-  getFormData() {
+  getFormData(actor = null) {
     if (!IsMagicalEffect(this.parent)) return ["", 0, false];
-    const actorSystemData = this.parent.actor.system;
+    const actorSystemData = actor ? actor.system : this.parent.actor.system;
     let label = CONFIG.ARM5E.magic.forms[this.form.value].label;
     let form = 1000;
     let formDeficient = false;
@@ -508,12 +508,12 @@ export class SpellSchema extends MagicalEffectSchema {
       if (delta < 0) {
         return Math.max(
           1 +
-            Math.ceil((levelOfSpell - totalOfSpell) / 5) -
+            Math.ceil((difficulty - castingTotal) / 5) -
             actor.system.bonuses.arts.ritualFatigueCancelled,
           0
         );
       } else {
-        return Math.max(1 - actorCaster.system.bonuses.arts.ritualFatigueCancelled, 0);
+        return Math.max(1 - actor.system.bonuses.arts.ritualFatigueCancelled, 0);
       }
     } else {
       if (delta < -actor.system.bonuses.arts.spellFatigueThreshold) {
