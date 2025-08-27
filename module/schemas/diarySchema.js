@@ -367,7 +367,7 @@ export class DiaryEntrySchema extends foundry.abstract.TypeDataModel {
       for (let entry of Object.values(actor.system.diaryEntries)) {
         // the entry is not the current entry
         if (entry._id != this.parent._id) {
-          if (entry.system.done || entry.system.activity === "none") {
+          if (entry.system.done || ["lab", "none"].includes(entry.system.activity)) {
             continue;
           }
           if (

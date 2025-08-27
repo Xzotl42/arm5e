@@ -393,6 +393,7 @@ export class ArM5eItem extends Item {
     const entries = [];
     if (!this.isAResource()) {
       log(false, "Nothing to track");
+      return entries;
     }
     let resourceName = this.system.resourceName
       ? this.system.resourceName(quantity)
@@ -449,7 +450,7 @@ export class ArM5eItem extends Item {
         }
       ];
       const tmp = fromActor.createEmbeddedDocuments("Item", fromEntryData, {});
-      entries.push(...tmp);
+      entries.push(tmp);
     }
 
     if (toActor instanceof Actor) {
@@ -503,7 +504,7 @@ export class ArM5eItem extends Item {
         }
       ];
       const tmp = toActor.createEmbeddedDocuments("Item", toEntryData, {});
-      entries.push(...tmp);
+      entries.push(tmp);
     }
 
     return entries;

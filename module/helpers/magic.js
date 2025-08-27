@@ -132,12 +132,13 @@ export function GetEnchantmentSelectOptions(context) {
  * @param flavor
  * @param editable
  */
-export async function PickRequisites(spelldata, flavor, editable) {
+export async function PickRequisites(spelldata, flavor, editable, updatePath = "system") {
   spelldata.config = {
     magic: {
       techniques: CONFIG.ARM5E.magic.techniques,
       forms: CONFIG.ARM5E.magic.forms
-    }
+    },
+    updatePath: updatePath
   };
   spelldata.edition = editable;
   spelldata.ui = { flavor: flavor };
@@ -156,7 +157,7 @@ export async function PickRequisites(spelldata, flavor, editable) {
             icon: "<i class='fas fa-check'></i>",
             label: game.i18n.localize("arm5e.dialog.button.save"),
             callback: async (html) => {
-              resolve(_setRequisites(html));
+              resolve(_setRequisites(html, updatePath));
             }
           },
           no: {
@@ -178,16 +179,16 @@ export async function PickRequisites(spelldata, flavor, editable) {
  *
  * @param selector
  */
-function _setRequisites(selector) {
+function _setRequisites(selector, updatePath) {
   let itemUpdate = {};
 
   for (const tech of Object.entries(CONFIG.ARM5E.magic.techniques)) {
     let found = selector.find(`.Selected${tech[1].label}`);
     if (found.length > 0) {
       if (found[0].checked === true) {
-        itemUpdate[`system.technique-req.${tech[0]}`] = true;
+        itemUpdate[`${updatePath}.technique-req.${tech[0]}`] = true;
       } else {
-        itemUpdate[`system.technique-req.${tech[0]}`] = false;
+        itemUpdate[`${updatePath}.technique-req.${tech[0]}`] = false;
       }
     }
   }
@@ -197,9 +198,9 @@ function _setRequisites(selector) {
     let found = selector.find(`.Selected${form[1].label}`);
     if (found.length > 0) {
       if (found[0].checked === true) {
-        itemUpdate[`system.form-req.${form[0]}`] = true;
+        itemUpdate[`${updatePath}.form-req.${form[0]}`] = true;
       } else {
-        itemUpdate[`system.form-req.${form[0]}`] = false;
+        itemUpdate[`${updatePath}.form-req.${form[0]}`] = false;
       }
     }
   }

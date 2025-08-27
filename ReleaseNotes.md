@@ -1,4 +1,4 @@
-## 2.4.0.11, Radislav am Polanach
+## 2.4.0.14, Radislav am Polanach
 
 ### Compatibility
 
@@ -13,12 +13,11 @@
 - Fixed editors
 - Fixed journals
 - Fixed invisible unticked checkboxes on black background.
-
 - Active Effect config migrated to appV2
 
 ### Features & changes
 
-- [Technical] Switch to V12
+- [Technical] Switch to V12 only
   - Use of TypeDataModel instead of DataModel for Document types
   - Removed of V10 only code.
   - Removed V12 deprecation warnings
@@ -33,16 +32,15 @@
   - Improved confidence spending
   - New magic roll chat messages
 - [Technical] removal of some duplicate unused id attributes
-- [Technical] V13 compatibility (WIP)
+- [Technical] Speed optimization all over the place - on going
+- It is again possible to switch between spell invention and spell learning without resetting the spell's attributes.
+- [Technical] the Astrolabium is now a singleton (ie: only one window exists)
 - Dropping a magical effect on a lab will switch the activity to spell invention.
 - Dropping a book's lab text topic from an Actor library on to a lab will now work
 - Gift type of magi inhabitants is set automatically if they have Gentle Gift or Blatant Gift.
 - Arts and abilities active effects definitions are generated dynamically
 - New active effects:
   - Reading about Art (Study bonus)
-- [technical] Speed optimization all over the place - on going
-- It is again possible to switch between spell invention and spell learning without resetting the spell's attributes.
-- [technical] the Astrolabium is now a singleton (ie: only one window exists)
 - It is possible to progress in alternate arts in seasonal activities (as abilities)
 - Added physical condition modifier (@physicalCondition) to rollData, to be used in inline rolls
 - Cosmetic changes:
@@ -51,6 +49,8 @@
 - Codex has been migrated to V10 datamodel.
 - Codex now allows to browse and filter the content of ars-compendia base effects and spells without importing everything.
 - Arcane experimentation dialog.
+- Money management (or not)
+- Better display of requisites in spell sheet
 
 ### Bug fixes
 
@@ -89,6 +89,8 @@
 - Fixed the wrong lab description in diary when there is a magical focus involved.
 - dropping a spell on the covenant sheet will convert it into a labtext
 - dropping a spell on the lab sheet outside of the planning area will add it as a labtext to the library
+- "Laboratory" activities won't prevent the application of future activities anymore.
+- It is again posssible to set requisites of enchantments in the lab.
 
 ## 2.3.2.28, Quendalon, more than just sparows and bunnies
 

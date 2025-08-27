@@ -14,23 +14,14 @@
           <input type="number" name="system.load" value="{{system.load}}" class="modifier resource-focus"
             data-dtype="Number" />
         </div>
-        <div class="resource" style="max-width: 110px;">
-          <label class="header-label">{{localize "arm5e.sheet.quantity"}}</label>
-          <input type="number" name="system.quantity" value="{{system.quantity}}" class="modifier resource-focus"
-            data-dtype="Number" />
-        </div>
-      </div>
-      <div class="flexrow">
         <div class="resource">
           <label class="checkbox-label">{{localize "arm5e.sheet.fullSet"}}</label>
           <input type="checkbox" name="system.full" {{checked system.full}} />
         </div>
-        <div class="resource">
-          <label for="system.cost.value" class="header-label">{{localize "arm5e.sheet.cost"}}</label>
-          <select name="system.cost.value" data-type="String">
-            {{selectOptions config.item.costs selected=system.cost.value labelAttr="label" localize=true labelAttr="label"}}
-          </select>
-        </div>
+      </div>
+      <div class="flexrow">
+
+        {{>"systems/arm5e/templates/item/parts/cost.hbs" classes="fit"}}
         {{#if system.canEquip}}
           <div class="resource">
             <label class="checkbox-label">{{localize "arm5e.sheet.equipped"}}</label>

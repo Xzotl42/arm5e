@@ -1,41 +1,55 @@
 <form class="sheet-content flexcol" autocomplete="off">
   <header class="sheet-header">
-    <img class="item-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" />
-    <div class="header-fields flexcol">
-      <div class="flexrow padding10">
-        <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name">
-        </h1>
-      </div>
-      <div class="flexrow">
-        <div class="flexrow padding10" style="max-width:44px">
-          <a class="item-control table-contents"
-            title='{{localize "arm5e.hints.create"  item=(localize "arm5e.book.tableContents")}}'><i
-              class="icon-Icon_Edit"></i></a>
-        </div>
-        {{#if isGM}}
-          <div class="resource">
-            <label class="header-label">{{localize "arm5e.sheet.state.label"}}</label>
-            <input type="text" value="{{localize (lookup config.lab.enchantment.receptacle.state system.state)}}"
-              data-dtype="String" readonly style="max-width: 200px;">
-          </div>
-          <div class="resource" style="max-width:44px">
-            <img src="systems/arm5e/assets/icons/Icon_Details_option1.png" class="appraise"
-              title="{{localize 'arm5e.lab.enchantment.item.enable'}}"
-              style="border: 0px; width: 32px; height: 32px;" />
-          </div>
-        {{/if}}
-      </div>
-      <div class="flexrow">
-        {{#if topicNum}}
+    <div class="flexcol" style="max-width: fit-content;">
+      <img class="item-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" style="max-width: fit-content;" />
+      {{#if topicNum}}
+        <div class="flexrow flex-group-center">
           <div class="img-container"><img class="nav-arrow previous-topic clickable" data-index="{{topicIdx}}"
               style="height: 20px;" src="systems/arm5e/assets/bLeft.png" />
           </div>
-          <div style="text-align: center; align-items: center; display:flex;">
+          <div style="text-align: center; align-items: center; display:flex; max-width: fit-content;">
             <label>{{localize "arm5e.sheet.topics.current" current=currentTopicNumber total=topicNum}}</label>
           </div>
           <div class="img-container"><img class="nav-arrow next-topic clickable" data-index="{{topicIdx}}"
               src="systems/arm5e/assets/bRight.png" style="height: 20px;" /></div>
-        {{/if}}
+        </div>
+      {{/if}}
+
+    </div>
+    <div class="header-fields flexcol">
+      <div class="flexcol">
+        <div class=" padding10">
+          <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name">
+          </h1>
+
+        </div>
+        <div class="flexrow">
+          {{>"systems/arm5e/templates/item/parts/cost.hbs" classes="fit"}}
+          {{#if isGM}}
+            <div class="resource">
+              <label class="header-label">{{localize "arm5e.sheet.state.label"}}</label>
+              <input type="text" value="{{localize (lookup config.lab.enchantment.receptacle.state system.state)}}"
+                data-dtype="String" readonly style="max-width: 200px;">
+            </div>
+            <div class="resource" style="max-width:44px">
+              <img src="systems/arm5e/assets/icons/Icon_Details_option1.png" class="appraise"
+                title="{{localize 'arm5e.lab.enchantment.item.enable'}}"
+                style="border: 0px; width: 32px; height: 32px;" />
+            </div>
+          {{/if}}
+          <div class="flexrow padding10" style="max-width:44px">
+            <a class="item-control table-contents"
+              title='{{localize "arm5e.hints.create"  item=(localize "arm5e.book.tableContents")}}'><i
+                class="icon-Icon_Edit"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="flexrow" style="min-height: 25px;">
+
+
+      </div>
+      <div class="flexrow">
+
         <div class="flexrow" style="align-items:center;justify-content: center;display: flex;">
           <div style="padding-left: 10px; max-width: 25px;">
             <a class="item-control new-topic" title="Add topic" data-index="{{topicIdx}}"><i class="fas fa-plus fa-xl">

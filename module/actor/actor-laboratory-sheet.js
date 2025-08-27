@@ -425,10 +425,17 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
     if (!this.options.editable) return;
     html.find(".advanced-req").click(async () => {
       let planning = this.actor.getFlag(ARM5E.SYSTEM_ID, "planning");
+      let updatePath = "system";
+      let spellData = planning.data.system;
+      if (["minorEnchantment", "chargedItem"].includes(planning.type)) {
+        spellData = planning.data.enchantment.system;
+        updatePath = "enchantment.system";
+      }
       let update = await PickRequisites(
-        planning.data.system,
+        spellData,
         "Lab",
-        planning.type === "learnSpell" ? "disabled" : ""
+        planning.type === "learnSpell" ? "disabled" : "",
+        updatePath
       );
       if (update) {
         let tmp = foundry.utils.mergeObject(planning.data, update);
@@ -781,7 +788,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
           return true;
         }
         default:
-          return await super._onDrop(event);
+          return await super._onDropItem(event, data);
       }
     } else if (dropTarget === "enchant") {
       event.stopImmediatePropagation();
@@ -849,6 +856,9 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
         }
         case "item": {
         }
+        default: {
+          return await super._onDropItem(event, data);
+        }
       }
     } else if (dropTarget === "magic-item") {
       event.stopImmediatePropagation();
@@ -869,7 +879,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
         });
         this.render();
       } else {
-        return false;
+        return await super._onDropItem(event, data);
       }
     } else {
       const type = item.type;

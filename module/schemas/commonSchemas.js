@@ -149,7 +149,7 @@ export const basicIntegerField = (initial = 0, min = -99999) =>
     min: min
   });
 
-export const CostField = (value = "n-a", coeff = 1, pounds = 1) =>
+export const CostField = (value = "n-a", amount = 0) =>
   new fields.SchemaField(
     {
       value: new fields.StringField({
@@ -158,29 +158,33 @@ export const CostField = (value = "n-a", coeff = 1, pounds = 1) =>
         initial: value,
         choices: Object.keys(CONFIG.ARM5E.item.costs)
       }),
-      mythicPounds: new fields.NumberField({
+      amount: new fields.NumberField({
         required: false,
-        initial: (value, pounds) => {
-          if (pounds) return pounds;
-          else {
-            switch (value) {
-              case "n-a":
-              case "priceless":
-                return 9999999;
-              case "none":
-                return 0;
-              case "inexp":
-                return 1 * coeff;
-              case "std":
-                return 4 * coeff;
-              case "exp":
-                return 16 * coeff;
-            }
-          }
-        }
+        initial: 0
       })
+      // mythicPounds: new fields.NumberField({
+      //   required: false,
+      //   initial: (value, pounds) => {
+      //     if (pounds) return pounds;
+      //     else {
+      //       switch (value) {
+      //         case "n-a":
+      //         case "priceless":
+      //           return 9999999;
+      //         case "none":
+      //           return 0;
+      //         case "inexp":
+      //           return 1 * coeff;
+      //         case "std":
+      //           return 4 * coeff;
+      //         case "exp":
+      //           return 16 * coeff;
+      //       }
+      //     }
+      //   }
+      // })
     },
-    { required: false, initial: { value: "n-a", mythicPounds: 0 } }
+    { required: false, initial: { value: "n-a", amount: amount } }
   );
 
 // export const possibleRanges = Object.keys(CONFIG.ARM5E.magic.ranges).filter((r) => !r.disabled);
