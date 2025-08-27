@@ -284,21 +284,18 @@ export class MagicalEffectSchema extends foundry.abstract.TypeDataModel {
     let techReq = Object.entries(this["technique-req"]).filter((r) => r[1] === true);
     let techDeficient = false;
     if (techReq.length > 0) {
-      label += " (";
       techReq.forEach((key) => {
         if (actorSystemData.arts.techniques[key[0]].deficient) {
           techDeficient = true;
         }
         tech = Math.min(tech, actorSystemData.arts.techniques[key[0]].finalScore);
-        label += CONFIG.ARM5E.magic.arts[key[0]].short + " ";
       });
-      // remove last whitespace
-      label = label.substring(0, label.length - 1);
-      label += ")";
       tech = Math.min(actorSystemData.arts.techniques[this.technique.value].finalScore, tech);
+      label += " " + this._getRequisitesStr(techReq);
     } else {
       tech = actorSystemData.arts.techniques[this.technique.value].finalScore;
     }
+
     techDeficient =
       techDeficient || actorSystemData.arts.techniques[this.technique.value].deficient;
     return [label, tech, techDeficient];
@@ -312,23 +309,42 @@ export class MagicalEffectSchema extends foundry.abstract.TypeDataModel {
     let formDeficient = false;
     let formReq = Object.entries(this["form-req"]).filter((r) => r[1] === true);
     if (formReq.length > 0) {
-      label += " (";
       formReq.forEach((key) => {
         if (actorSystemData.arts.forms[key[0]].deficient) {
           formDeficient = true;
         }
         form = Math.min(form, actorSystemData.arts.forms[key[0]].finalScore);
-        label += CONFIG.ARM5E.magic.arts[key[0]].short + " ";
       });
-      // remove last comma
-      label = label.substring(0, label.length - 1);
-      label += ")";
       form = Math.min(actorSystemData.arts.forms[this.form.value].finalScore, form);
+      label += " " + this._getRequisitesStr(formReq);
     } else {
       form = actorSystemData.arts.forms[this.form.value].finalScore;
     }
     formDeficient = formDeficient || actorSystemData.arts.forms[this.form.value].deficient;
     return [label, form, formDeficient];
+  }
+
+  getRequisitesStr() {
+    const req = Object.entries({
+      ...this["technique-req"],
+      ...this["form-req"]
+    }).filter((r) => r[1] === true);
+    return this._getRequisitesStr(req);
+  }
+
+  _getRequisitesStr(requisites) {
+    let result = "";
+    if (requisites.length == 0) {
+      return result;
+    }
+    result += "(";
+    requisites.forEach((key) => {
+      result += CONFIG.ARM5E.magic.arts[key[0]].short + " ";
+    });
+    // remove last whitespace
+    result = result.substring(0, result.length - 1);
+    result += ")";
+    return result;
   }
 
   _computeCastingTotal(owner, options = {}) {

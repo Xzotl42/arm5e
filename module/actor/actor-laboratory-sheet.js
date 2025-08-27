@@ -425,10 +425,17 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
     if (!this.options.editable) return;
     html.find(".advanced-req").click(async () => {
       let planning = this.actor.getFlag(ARM5E.SYSTEM_ID, "planning");
+      let updatePath = "system";
+      let spellData = planning.data.system;
+      if (["minorEnchantment", "chargedItem"].includes(planning.type)) {
+        spellData = planning.data.enchantment.system;
+        updatePath = "enchantment.system";
+      }
       let update = await PickRequisites(
-        planning.data.system,
+        spellData,
         "Lab",
-        planning.type === "learnSpell" ? "disabled" : ""
+        planning.type === "learnSpell" ? "disabled" : "",
+        updatePath
       );
       if (update) {
         let tmp = foundry.utils.mergeObject(planning.data, update);

@@ -1,4 +1,4 @@
-## 2.4.0.13, Radislav am Polanach
+## 2.4.0.14, Radislav am Polanach
 
 ### Compatibility
 
@@ -50,6 +50,7 @@
 - Codex now allows to browse and filter the content of ars-compendia base effects and spells without importing everything.
 - Arcane experimentation dialog.
 - Money management (or not)
+- Better display of requisites in spell sheet
 
 ### Bug fixes
 
@@ -89,6 +90,7 @@
 - dropping a spell on the covenant sheet will convert it into a labtext
 - dropping a spell on the lab sheet outside of the planning area will add it as a labtext to the library
 - "Laboratory" activities won't prevent the application of future activities anymore.
+- It is again posssible to set requisites of enchantments in the lab.
 
 ## 2.3.2.28, Quendalon, more than just sparows and bunnies
 

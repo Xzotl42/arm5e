@@ -545,9 +545,23 @@ function addListenersDialog(html) {
   html.find(".advanced-req-roll").click(async (e) => {
     const dataset = getDataset(e);
     const actor = game.actors.get(dataset.actorid);
-    const item = actor.items.get(dataset.itemid);
-    // Create a tmp Item in memory
-    let newSpell = new ArM5eItem(item.toObject(), { temporary: true });
+    let newSpell;
+    if (dataset.type == "spont") {
+      let newSpellData = {
+        technique: { value: actor.rollInfo.magic.technique.value },
+        form: { value: actor.rollInfo.magic.form.value }
+      };
+      newSpell = new ArM5eItem({
+        name: "SpontSpell",
+        type: "magicalEffect",
+        system: newSpellData
+      });
+    } else {
+      const item = actor.items.get(dataset.itemid);
+      // Create a tmp Item in memory
+      newSpell = new ArM5eItem(item.toObject());
+    }
+
     let update = await PickRequisites(newSpell.system, dataset.flavor);
     await newSpell.updateSource(update);
     let techData = newSpell.system.getTechniqueData(actor);
