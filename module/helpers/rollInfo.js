@@ -333,7 +333,7 @@ export class ArM5eRollInfo {
         }
         // Health attribute of the lab.
         if (actorSystemData.sanctum?.linked) {
-          const lab = actorSystemData.covenant.document;
+          const lab = actorSystemData.sanctum.document;
           livingMod += Math.floor(lab.system.health.total / 2);
         }
 

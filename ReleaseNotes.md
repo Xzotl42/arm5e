@@ -1,5 +1,11 @@
 # Release notes
 
+## 2.3.2.35, Quendalon, that was all (ter)
+
+### Bug fixes
+
+- Fixed problem with aging rolls when the character owns a lab.
+
 ## 2.3.2.34, Quendalon, that was all (bis)
 
 ### V13 compatibility
