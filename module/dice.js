@@ -78,7 +78,7 @@ async function simpleDie(actor, type = "OPTION", callback, modes = 0) {
 
     message = new Arm5eChatMessage(messageData);
 
-    message.system.addInfo(actor);
+    message.system.enrichMessageData(actor);
   } else {
     if (game.modules.get("dice-so-nice")?.active) {
       await game.dice3d.showForRoll(dieRoll); //, user, synchronize, whisper, blind, chatMessageID, speaker)
@@ -236,7 +236,7 @@ async function stressDie(actor, type = "OPTION", modes = 0, callback = undefined
 
     message = new Arm5eChatMessage(messageData);
 
-    message.system.addInfo(actor);
+    message.system.enrichMessageData(actor);
   } else {
     if (game.modules.get("dice-so-nice")?.active) {
       await game.dice3d.showForRoll(dieRoll); //, user, synchronize, whisper, blind, chatMessageID, speaker)
@@ -704,6 +704,7 @@ async function CheckBotch(botchDice, roll) {
   botchRoll.offset = roll.offset;
   botchRoll.botches = botchRoll.total;
   botchRoll.botchDice = botchDice;
+  botchRoll.divider = roll.divider; // to keep the modifier getter consistent
   return botchRoll;
   // return botchRoll.terms[0].total;
 }
@@ -939,7 +940,7 @@ async function noRoll(actor, modes, callback) {
 
   let message = new Arm5eChatMessage(messageData);
 
-  message.system.addInfo(actor);
+  message.system.enrichMessageData(actor);
 
   if (callback) {
     await callback(actor, dieRoll, message, rollInfo);

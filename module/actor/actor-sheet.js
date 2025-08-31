@@ -7,7 +7,6 @@ import { resetOwnerFields } from "../item/item-converter.js";
 import { ARM5E } from "../config.js";
 import {
   log,
-  getLastMessageByHeader,
   calculateWound,
   getDataset,
   hermeticFilter,
@@ -16,7 +15,8 @@ import {
   topicFilter,
   hermeticTopicFilter,
   diaryEntryFilter,
-  getUuidInfo
+  getUuidInfo,
+  getLastCombatMessageOfType
 } from "../tools.js";
 import ArM5eActiveEffect from "../helpers/active-effects.js";
 import {
@@ -37,12 +37,14 @@ import {
 } from "../helpers/rollWindow.js";
 
 import {
+  buildDamageDataset,
   buildSoakDataset,
   combatDamage,
   computeCombatStats,
   quickCombat,
   quickVitals,
-  rolledDamage
+  rolledDamage,
+  setWounds
 } from "../helpers/combat.js";
 import { quickMagic, spellFormLabel, spellTechniqueLabel } from "../helpers/magic.js";
 import { UI, getConfirmation } from "../constants/ui.js";
@@ -1586,6 +1588,11 @@ export class ArM5eActorSheet extends ActorSheet {
       ev.preventDefault();
       ev.currentTarget.select();
     });
+
+    html.find(".combatDamage").change((ev) => {
+      ev.preventDefault();
+      this.render(true);
+    });
   }
 
   async _increaseArt(type, art) {
@@ -1717,20 +1724,23 @@ export class ArM5eActorSheet extends ActorSheet {
   }
 
   async _onSoakDamage(html, actor) {
-    const lastMessageDamage = getLastMessageByHeader(game, "arm5e.sheet.damage");
+    const lastMessageDamage = getLastCombatMessageOfType("damage");
     const damage = parseInt($(lastMessageDamage?.content).text()) || 0;
-    const extraData = {
+    var actor = this.actor;
+    const form = lastMessageDamage ? lastMessageDamage.system.combat.damageForm : "te";
+    const data = {
+      actor,
       damage,
-      modifier: 0
+      modifier: 0,
+      natRes: "",
+      formRes: "",
+      selection: { natRes: {}, formRes: {} }
     };
 
-    var actor = this.actor;
-
-    extraData.natRes = {};
     for (let [key, resist] of Object.entries(actor.system.bonuses.resistance)) {
       if (resist !== 0) {
-        extraData.hasResistance = true;
-        extraData.natRes[key] = {
+        data.hasResistance = true;
+        data.selection.natRes[key] = {
           res: resist,
           label: `${CONFIG.ARM5E.magic.arts[key].label} (${resist})`
         };
@@ -1738,27 +1748,24 @@ export class ArM5eActorSheet extends ActorSheet {
     }
 
     if (actor.isMagus()) {
-      extraData.isMagus = true;
-      extraData.formRes = {};
+      data.isMagus = true;
+      data.selection.formRes = {};
       for (let [key, form] of Object.entries(actor.system.arts.forms)) {
-        extraData.formRes[key] = {
+        data.selection.formRes[key] = {
           res: Math.ceil(form.finalScore / 5),
           label: `${form.label} (${Math.ceil(form.finalScore / 5)})`
         };
       }
+      data.formRes = data.selection.formRes[form].res;
     }
 
-    const data = {
-      actor,
-      extraData
-    };
     let template = "systems/arm5e/templates/actor/parts/actor-soak.html";
     const dialog = await renderTemplate(template, data);
     new Dialog(
       {
         title: game.i18n.localize("arm5e.dialog.woundCalculator"),
         content: dialog,
-        render: this.addListenersDialog,
+        render: (html) => this.addListenersDialog(html),
         buttons: {
           yes: {
             icon: "<i class='fas fa-check'></i>",
@@ -1768,14 +1775,14 @@ export class ArM5eActorSheet extends ActorSheet {
               await setWounds(soakData, actor);
             }
           },
-          roll: {
-            label: game.i18n.localize("arm5e.dialog.button.roll"),
-            callback: async (html) => {
-              const soakData = buildSoakDataset(html);
-              await rolledDamage(soakData, actor);
-              await setWounds(soakData, actor);
-            }
-          },
+          // roll: {
+          //   label: game.i18n.localize("arm5e.dialog.button.roll"),
+          //   callback: async (html) => {
+          //     const soakData = buildSoakDataset(html);
+          //     await rolledSoak(soakData, actor);
+          //     await setWounds(soakData, actor);
+          //   }
+          // },
           no: {
             icon: "<i class='fas fa-ban'></i>",
             label: game.i18n.localize("arm5e.dialog.button.cancel"),
@@ -1798,31 +1805,29 @@ export class ArM5eActorSheet extends ActorSheet {
   }
 
   async _onCalculateDamage(html, actor) {
-    const lastAttackMessage = getLastMessageByHeader(game, "arm5e.sheet.attack");
-    const lastDefenceMessage = getLastMessageByHeader(game, "arm5e.sheet.defense");
+    const lastAttackMessage = getLastCombatMessageOfType("attack");
+    const lastDefenseMessage = getLastCombatMessageOfType("defense");
     const attack = parseInt(lastAttackMessage?.content || "0");
-    const defense = parseInt(lastDefenceMessage?.content || "0");
+    const defense = parseInt(lastDefenseMessage?.content || "0");
     const advantage = attack - defense;
-
-    const extraData = {
-      advantage,
-      modifier: 0
-    };
 
     var actor = this.actor;
 
     const data = {
       actor,
-      extraData
+      advantage,
+      modifier: 0,
+      formDamage: "te",
+      selection: { forms: CONFIG.ARM5E.magic.forms }
     };
-    let template = "systems/arm5e/templates/actor/parts/actor-calculateDamage.html";
+    let template = "systems/arm5e/templates/generic/combat-damage.html";
     const dialog = await renderTemplate(template, data);
 
     new Dialog(
       {
         title: game.i18n.localize("arm5e.dialog.damageCalculator"),
         content: dialog,
-        render: this.addListenersDialog,
+        render: (html) => this.addListenersDialog(html),
         buttons: {
           apply: {
             icon: "<i class='fas fa-check'></i>",
@@ -1832,9 +1837,8 @@ export class ArM5eActorSheet extends ActorSheet {
           // roll: {
           //   label: game.i18n.localize("arm5e.dialog.button.roll"),
           //   callback: async (html) => {
-          //     const soakData = buildSoakDataset(html);
-          //     await rolledDamage(soakData, actor);
-          //     await setWounds(soakData, actor);
+          //     const damageData = buildDamageDataset(html);
+          //     await rolledDamage(damageData, actor);
           //   }
           // },
           no: {
@@ -2271,64 +2275,5 @@ export class ArM5eActorSheet extends ActorSheet {
       formData = await this.twilight._updateObject(event, formData);
     }
     return await super._updateObject(event, formData);
-  }
-}
-export async function setWounds(soakData, actor) {
-  const size = actor?.system?.vitals?.siz?.value || 0;
-  const typeOfWound = calculateWound(soakData.damageToApply, size);
-  if (typeOfWound === false) {
-    ui.notifications.info(game.i18n.localize("arm5e.notification.notPossibleToCalculateWound"), {
-      permanent: true
-    });
-    return false;
-  }
-  // here toggle dead status if applicable
-
-  const messageDamage = `${game.i18n.localize("arm5e.sheet.damage")} (${soakData.damage})`;
-  const messageStamina = `${game.i18n.localize("arm5e.sheet.stamina")} (${soakData.stamina})`;
-  let messageBonus = "";
-  if (soakData.bonus) {
-    messageBonus = `${game.i18n.localize("arm5e.sheet.soakBonus")} (${soakData.bonus})<br/> `;
-  }
-  const messageProt = `${game.i18n.localize("arm5e.sheet.protection")} (${soakData.prot})`;
-  let messageModifier = "";
-  if (soakData.modifier) {
-    messageModifier += `${game.i18n.localize("arm5e.sheet.modifier")} (${soakData.modifier})<br/>`;
-  }
-  if (soakData.natRes) {
-    messageModifier += `${game.i18n.localize("arm5e.sheet.natRes")} (${soakData.natRes})<br/>`;
-  }
-  if (soakData.formRes) {
-    messageModifier += `${game.i18n.localize("arm5e.sheet.formRes")} (${soakData.formRes})<br/>`;
-  }
-  if (soakData.roll) {
-    messageModifier += `${game.i18n.localize("arm5e.dialog.button.roll")} (${soakData.roll})<br/>`;
-  }
-  const messageTotal = `${game.i18n.localize("arm5e.sheet.totalDamage")} = ${
-    soakData.damageToApply
-  }`;
-  const messageWound = typeOfWound
-    ? game.i18n.format("arm5e.messages.woundResult", {
-        typeWound: game.i18n.localize("arm5e.messages.wound." + typeOfWound.toLowerCase())
-      })
-    : game.i18n.localize("arm5e.messages.noWound");
-
-  const details = ` ${messageDamage}<br/> ${messageStamina}<br/> ${messageProt}<br/> ${messageBonus}${messageModifier}<b>${messageTotal}</b>`;
-  ChatMessage.create({
-    type: "combat",
-    system: {
-      label: game.i18n.localize("arm5e.sheet.soak"),
-      roll: {
-        details: putInFoldableLinkWithAnimation("arm5e.sheet.details", details)
-      }
-    },
-    content: `<h4 class="dice-total">${messageWound}</h4>`,
-    speaker: ChatMessage.getSpeaker({
-      actor
-    })
-  });
-
-  if (typeOfWound) {
-    await actor.changeWound(1, typeOfWound);
   }
 }

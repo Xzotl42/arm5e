@@ -8,7 +8,8 @@ const DEPRECATED = [
   "habitantHabitants",
   "habitantHorses",
   "habitantLivestock",
-  "habitantMagi"
+  "habitantMagi",
+  "magicItem"
 ];
 export function registerSheetDisplayTests(quench) {
   quench.registerBatch(

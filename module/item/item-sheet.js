@@ -310,7 +310,7 @@ export class ArM5eItemSheet extends ItemSheet {
 
     // COST
 
-    if (itemData.system.cost) {
+    if (itemData.system.cost?.amount) {
       context.cost = {
         detail: game.settings.get("arm5e", "moneyManagementLevel"),
         currency: game.settings.get("arm5e", "currency"),

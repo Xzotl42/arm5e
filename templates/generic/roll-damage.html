@@ -1,0 +1,26 @@
+<form class="{{cssClass}} arm5eRoll" autocomplete="off">
+  {{> "systems/arm5e/templates/roll/parts/roll-header.html" header="Damage_Soak" }}
+  <div class="roll-options">
+    <div class="flexrow flex-group-center">
+      <label class="resource-label flex0">{{localize "arm5e.sheet.combat.flavor.damageSource" }}</label>
+      <input type="text" name="damageSource" value="{{damageSource}}" data-dtype="String"
+        class="SelectedSource resource-focus " />
+    </div>
+    <div class="flexrow flex-group-center">
+      <label class="resource-label flex0">{{localize "arm5e.sheet.damage" }}</label>
+      <input type="number" name="modifier" value="{{modifier}}" data-dtype="Number"
+        class="SelectedModifier resource-focus modifier" />
+    </div>
+    <div class="flexrow flex-group-center">
+      <label class="resource-label"><img src="systems/arm5e/assets/ballSilver.png" width="20" height="20"
+          style="border :0px" /></label>
+    </div>
+    <div class="flexrow flex-group-center">
+      <label class="header-label fit">{{localize "arm5e.sheet.formDamage"}}</label>
+      <select name="formDamage" data-type="String" style="max-width: fit-content;">
+        {{selectOptions selection.forms selected=formDamage  labelAttr="label"  }}
+      </select>
+    </div>
+  </div>
+  {{> "systems/arm5e/templates/roll/parts/roll-footer.html" footer="Damage_Soak"}}
+</form>

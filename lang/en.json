@@ -163,11 +163,19 @@
   "arm5e.sheet.date": "Date",
   "arm5e.sheet.equipped": "Equipped",
   "arm5e.sheet.weaponExpert": "Weapon Expert",
-  "arm5e.sheet.combat": "Combat",
+  "arm5e.sheet.combat.label": "Combat",
   "arm5e.sheet.attackAdvantage": "Attack Advantage",
   "arm5e.sheet.combatInstructions1": "Equip weapons and armor to see the totals.",
   "arm5e.sheet.combatInstructions2": "If your specialty is with the shield, mark it on the shield and not on the weapon. If you don't have the shield equipped, the specialty bonus doesn't apply.",
   "arm5e.sheet.combatInstructions3": "Create a 'mounted' item with the ability to 'mount' and mark on its attributes that it is a horse. When you equip it, the calculations will be applied.",
+  "arm5e.sheet.combat.flavor.attack": "{attacker} attacks {target} with {weapon}.",
+  "arm5e.sheet.combat.flavor.defense": "{defender} defends against {attacker} with {weapon}.",
+  "arm5e.sheet.combat.flavor.defenseNoAttacker": "{defender} defends with {weapon}.",
+  "arm5e.sheet.combat.flavor.damage": "{attacker} tries to inflict damage.",
+  "arm5e.sheet.combat.flavor.soak": "{target} soaks the damage.",
+  "arm5e.sheet.combat.flavor.noWeapon": "no weapon",
+  "arm5e.sheet.combat.flavor.damageSource": "Source of damage",
+
   "arm5e.sheet.withCompendium": "Include compendia",
 
   "arm5e.dialog.chooseCovenant": "Choose a covenant",
@@ -306,6 +314,7 @@
   "arm5e.sheet.powerCost": "Might {might} - 5 times cost ({cost})",
   "arm5e.sheet.powerLevel": "5 times cost ({res})",
 
+  "arm5e.sheet.formDamage": "Form damage",
   "arm5e.sheet.formRes": "Form resistance",
   "arm5e.sheet.natRes": "Natural resistance",
   "arm5e.sheet.formScore": "Form score ({form})",
@@ -1756,5 +1765,6 @@
   "arm5e.generic.versus": "Versus",
   "arm5e.generic.inherit": "Inherit",
   "arm5e.generic.pending": "Pending",
-  "arm5e.generic.clear": "Clear"
+  "arm5e.generic.clear": "Clear",
+  "arm5e.generic.special": "Special"
 }

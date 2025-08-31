@@ -1787,8 +1787,9 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
   async addNewSpell(spell) {
     let newSpells = this.item.system.progress.newSpells;
     newSpells.push(ArM5eItemDiarySheet._addNewSpell(spell));
+    const updateData = {};
     updateData["system.progress.newSpells"] = newSpells;
-    await this.item.update();
+    await this.item.update(updateData);
   }
 
   static _addNewSpell(spell) {

@@ -136,7 +136,7 @@
   "arm5e.sheet.date": "Fecha",
   "arm5e.sheet.equipped": "Equipado",
   "arm5e.sheet.weaponExpert": "Experto con el Arma",
-  "arm5e.sheet.combat": "Combate",
+  "arm5e.sheet.combat.label": "Combate",
   "arm5e.sheet.attackAdvantage": "Ventaja de ataque",
   "arm5e.sheet.combatInstructions1": "Equipa las armas y armaduras para ver los totales.",
   "arm5e.sheet.combatInstructions2": "Si tu especialización es con el escudo, márcala en el escudo y no en el arma. Si no tienes el escudo equipado, no obtendrás el bono por la especialidad.",

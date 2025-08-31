@@ -497,21 +497,11 @@ export function compareLabTexts(e1, e2) {
   }
 }
 
-/**
- *
- * @param game
- * @param key
- */
-export function getLastMessageByHeader(game, key) {
-  const searchString = `${game.i18n.localize(key).toLowerCase()} </h2>`;
-  const messages = game.messages.filter((msg) => {
-    const flavor = (msg?.flavor || "").toLowerCase();
-    return flavor.indexOf(searchString) > -1;
+export function getLastCombatMessageOfType(type) {
+  return game.messages.contents.findLast((msg) => {
+    return msg.type == "combat" && msg.system.roll.type == type;
   });
-  if (messages.length) return messages.pop();
-  return false;
 }
-
 /**
  *
  * @param damage
@@ -519,7 +509,7 @@ export function getLastMessageByHeader(game, key) {
  */
 export function calculateWound(damage, size) {
   if (damage <= 0) {
-    return "";
+    return "none";
   }
   const typeOfWoundsBySize = getWoundType(size);
   // SIZES_AND_WOUNDS[size.toString()];

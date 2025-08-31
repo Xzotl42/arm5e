@@ -68,6 +68,9 @@ export class ArM5eRollInfo {
         this.name = actorSystemData.combat.name;
 
         break;
+      case ROLL_PROPERTIES.DAMAGE.VAL:
+      case ROLL_PROPERTIES.SOAK.VAL:
+        break;
       case ROLL_PROPERTIES.CHAR.VAL:
         this.characteristic = dataset.characteristic;
 
@@ -340,7 +343,7 @@ export class ArM5eRollInfo {
         }
         // Health attribute of the lab.
         if (actorSystemData.sanctum?.linked) {
-          const lab = actorSystemData.covenant.document;
+          const lab = actorSystemData.sanctum.document;
           livingMod += Math.floor(lab.system.health.total / 2);
         }
 

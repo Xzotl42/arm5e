@@ -136,7 +136,7 @@
   "arm5e.sheet.date": "Data",
   "arm5e.sheet.equipped": "Equipaggiato",
   "arm5e.sheet.weaponExpert": "Esperto d'arma",
-  "arm5e.sheet.combat": "Combattimento",
+  "arm5e.sheet.combat.label": "Combattimento",
   "arm5e.sheet.attackAdvantage": "Vantaggio d'attacco",
   "arm5e.sheet.combatInstructions1": "Equipaggia armi e armatura per vedere i totali.",
   "arm5e.sheet.combatInstructions2": "Se la tua specialità è con lo scudo, segnala sullo scudo e non sull'arma. Se non hai lo scudo equipaggiato, il bonus specialità non si applica.",

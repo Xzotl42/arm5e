@@ -415,6 +415,7 @@ export function registerRollTesting(quench) {
               magus.system.penalties.wounds.total +
               magus.system.fatigueTotal +
               aura.modifier;
+            log(false, roll);
             assert.equal(roll.modifier, tot);
           } catch (err) {
             console.error(`Error: ${err}`);
@@ -450,6 +451,7 @@ export function registerRollTesting(quench) {
               magus.system.fatigueTotal +
               1 +
               aura.modifier;
+            log(false, roll);
             assert.equal(roll.modifier, tot);
           } catch (err) {
             console.error(`Error: ${err}`);
@@ -483,6 +485,7 @@ export function registerRollTesting(quench) {
               magus.system.fatigueTotal +
               2 +
               aura.modifier;
+            log(false, roll);
             assert.equal(roll.modifier, tot);
           } catch (err) {
             console.error(`Error: ${err}`);
@@ -516,6 +519,7 @@ export function registerRollTesting(quench) {
               magus.system.penalties.wounds.total +
               magus.system.fatigueTotal +
               aura.modifier;
+            log(false, roll);
             assert.equal(roll.modifier, tot);
           } catch (err) {
             console.error(`Error: ${err}`);
@@ -550,6 +554,7 @@ export function registerRollTesting(quench) {
               magus.system.penalties.wounds.total +
               magus.system.fatigueTotal +
               aura.modifier;
+            log(false, roll);
             assert.equal(roll.modifier, tot);
           } catch (err) {
             console.error(`Error: ${err}`);
@@ -586,6 +591,7 @@ export function registerRollTesting(quench) {
               Sp1.system.finalScore +
               Sp1.system.bonus +
               aura.modifier;
+            log(false, roll);
             assert.equal(roll.modifier, tot);
           } catch (err) {
             console.error(`Error: ${err}`);
@@ -622,6 +628,7 @@ export function registerRollTesting(quench) {
               Sp2.system.finalScore +
               Sp2.system.bonus +
               aura.modifier;
+            log(false, roll);
             assert.equal(roll.modifier, tot);
           } catch (err) {
             console.error(`Error: ${err}`);
@@ -656,6 +663,7 @@ export function registerRollTesting(quench) {
               Sp4.system.finalScore +
               Sp4.system.bonus +
               aura.modifier;
+            log(false, roll);
             assert.equal(roll.modifier, tot);
           } catch (err) {
             console.error(`Error: ${err}`);
@@ -696,6 +704,7 @@ export function registerRollTesting(quench) {
               Sp2.system.finalScore +
               Sp2.system.bonus +
               aura.modifier;
+            log(false, roll);
             assert.equal(roll.modifier, tot);
           } catch (err) {
             console.error(`Error: ${err}`);
@@ -730,6 +739,7 @@ export function registerRollTesting(quench) {
               Sp3.system.finalScore +
               Sp3.system.bonus +
               aura.modifier;
+            log(false, roll);
             assert.equal(roll.modifier, tot);
           } catch (err) {
             console.error(`Error: ${err}`);

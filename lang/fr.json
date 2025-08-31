@@ -192,7 +192,7 @@
   "arm5e.sheet.date": "Date",
   "arm5e.sheet.equipped": "Equipé",
   "arm5e.sheet.weaponExpert": "Armes de spécialité",
-  "arm5e.sheet.combat": "Combat",
+  "arm5e.sheet.combat.label": "Combat",
   "arm5e.sheet.attackAdvantage": "Avantage d'attaque",
   "arm5e.sheet.combatInstructions1": "Équipez des armes et armures pour voir le total",
   "arm5e.sheet.combatInstructions2": "Si votre spécialité est avec le bouclier, marquez le sur le bouclier et non pas l'arme. Si vous n'avez pas le bouclier d'équippé, le bonus de spécialté ne s'applique pas.",
