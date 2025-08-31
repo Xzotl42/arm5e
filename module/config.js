@@ -1255,6 +1255,11 @@ ARM5E.impacts = {
     label: "arm5e.sheet.minor",
     dtype: "String",
     cost: 1
+  },
+  Special: {
+    label: "arm5e.generic.special",
+    dtype: "String",
+    cost: 0
   }
 };
 

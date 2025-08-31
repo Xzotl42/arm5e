@@ -83,17 +83,6 @@ export class ArM5eActor extends Actor {
       dead: []
     };
 
-    this.system.combat = {
-      load: 0,
-      overload: 0,
-      init: 0,
-      atk: 0,
-      dfn: 0,
-      dam: 0,
-      prot: 0,
-      ability: 0
-    };
-
     // // CHARACTER FEATURES
     if (this.system.features == undefined) {
       this.system.features = { magicSystem: false, powers: false };
@@ -273,7 +262,11 @@ export class ArM5eActor extends Actor {
     system.totalXPMasteries = 0;
 
     let soak = system.characteristics.sta.value + system.bonuses.traits.soak;
-    system.combat = {
+    this.system.combat = {
+      img: "",
+      name: "",
+      itemId: "",
+      itemUuid: "",
       load: 0,
       overload: 0,
       init: 0,
@@ -624,8 +617,8 @@ export class ArM5eActor extends Actor {
         system.combat.atk += weapon.system.atk;
         system.combat.dfn += weapon.system.dfn;
         system.combat.dam += weapon.system.dam;
-        system.combat.img = weapon.img;
-        system.combat.name = weapon.name;
+        system.combat.img = system.combat.img ? system.combat.img : weapon.img;
+        system.combat.name = system.combat.name ? system.combat.name : weapon.name;
         system.combat.itemId = weapon.id;
         system.combat.itemUuid = weapon.uuid;
 

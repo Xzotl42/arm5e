@@ -68,6 +68,22 @@ const ROLL_PROPERTIES = {
     ALT_ACTION: exertSelf,
     ALT_ACTION_LABEL: "arm5e.dialog.button.exertSelf"
   },
+  DAMAGE: {
+    VAL: "damage",
+    MODE: 25, // STRESS + NO_CONF + UNCONSCIOUS
+    TITLE: "arm5e.dialog.title.rolldie",
+    MODIFIERS: 0
+    // CALLBACK: damageRoll
+    // ALTER_ROLL: doubleAbility,
+  },
+  SOAK: {
+    VAL: "soak",
+    MODE: 25, // STRESS + NO_CONF + UNCONSCIOUS
+    TITLE: "arm5e.dialog.title.rolldie",
+    MODIFIERS: 0
+    // CALLBACK: soakRoll
+    // ALTER_ROLL: doubleAbility,
+  },
   DEFENSE: {
     VAL: "defense",
     MODE: ROLL_MODES.STRESS,
@@ -701,7 +717,7 @@ async function castSpell(actorCaster, roll, message) {
     }
   } else {
     if (message.system.impact.woundGravity) {
-      await actorCaster.setWound(
+      await actorCaster.changeWound(
         1,
         CONFIG.ARM5E.recovery.rankMapping[woundGravity],
         game.i18n.localize("arm5e.sheet.fatigueOverflow")

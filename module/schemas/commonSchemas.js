@@ -383,11 +383,11 @@ export const hermeticArtScore = () =>
     step: 1
   });
 
-export const hermeticForm = () =>
+export const hermeticForm = (init = "an") =>
   new fields.StringField({
     required: false,
     blank: false,
-    initial: "an",
+    initial: init,
     choices: Object.keys(CONFIG.ARM5E.magic.forms)
   });
 

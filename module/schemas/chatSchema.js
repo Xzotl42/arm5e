@@ -1,6 +1,6 @@
 import { ROLL_PROPERTIES } from "../helpers/rollWindow.js";
-import { log, putInFoldableLinkWithAnimation } from "../tools.js";
-import { basicIntegerField, boolOption } from "./commonSchemas.js";
+import { getLastCombatMessageOfType, log, putInFoldableLinkWithAnimation } from "../tools.js";
+import { basicIntegerField, boolOption, hermeticForm } from "./commonSchemas.js";
 import { SpellSchema } from "./magicSchemas.js";
 const fields = foundry.data.fields;
 export class BasicChatSchema extends foundry.abstract.TypeDataModel {
@@ -195,12 +195,6 @@ export class RollChatSchema extends BasicChatSchema {
         : ""
     }
     `;
-
-    if (this.getFailedMessage && this.failedCasting()) {
-      res += this.getFailedMessage();
-    } else {
-      res += this.getTargetsHtml();
-    }
 
     return res;
   }
@@ -406,7 +400,7 @@ export class RollChatSchema extends BasicChatSchema {
     return impactMessage;
   }
 
-  addInfo(actor) {}
+  enrichMessageData(actor) {}
 }
 
 export class CombatChatSchema extends RollChatSchema {
@@ -415,14 +409,88 @@ export class CombatChatSchema extends RollChatSchema {
       ...super.defineSchema(),
       combat: new fields.SchemaField({
         attacker: new fields.DocumentUUIDField(),
-        defenders: new fields.ArrayField(new fields.DocumentUUIDField())
+        defenders: new fields.ArrayField(new fields.DocumentUUIDField()),
+        damageForm: hermeticForm("te")
       })
     };
   }
 
-  addInfo(actor) {
-    this.combat = { attacker: actor.uuid, defenders: [] };
-    this.parent.updateSource({ "system.combat": this.combat });
+  enrichMessageData(actor) {
+    const updateData = {};
+    switch (this.roll.type) {
+      case "attack":
+        const targetedTokens = Array.from(game.user.targets);
+        updateData["system.combat"] = {
+          attacker: actor.uuid,
+          defenders: targetedTokens.map((e) => e.sourceId)
+        };
+        updateData.flavor =
+          `<p>${game.i18n.format("arm5e.sheet.combat.flavor.attack", {
+            attacker: actor.name,
+            target: this.combat.defenders.length
+              ? targetedTokens.map((e) => e.name).join(", ")
+              : "",
+            weapon: actor.system.combat.name
+              ? actor.system.combat.name
+              : game.i18n.localize("arm5e.sheet.combat.flavor.noWeapon")
+          })}</p>` + this.parent.flavor;
+
+        break;
+      case "defense":
+        {
+          const lastAttackMessage = getLastCombatMessageOfType("attack");
+          if (lastAttackMessage) {
+            const attacker = fromUuidSync(lastAttackMessage.system.combat.attacker);
+            updateData.flavor =
+              `<p>${game.i18n.format("arm5e.sheet.combat.flavor.defense", {
+                defender: actor.name,
+                attacker: attacker?.name ?? game.i18n.localize("arm5e.generic.unknown"),
+                weapon: actor.system.combat.name
+                  ? actor.system.combat.name
+                  : game.i18n.localize("arm5e.sheet.combat.flavor.noWeapon")
+              })}</p>` + this.parent.flavor;
+            updateData["system.combat"] = { attacker: attacker?.uuid ?? null, defenders: [] };
+          } else {
+            updateData.flavor =
+              `<p>${game.i18n.format("arm5e.sheet.combat.flavor.defenseNoAttacker", {
+                defender: actor.name,
+                weapon: actor.system.combat.name
+                  ? actor.system.combat.name
+                  : game.i18n.localize("arm5e.sheet.combat.flavor.noWeapon")
+              })}</p>` + this.parent.flavor;
+            updateData["system.combat"] = { attacker: null, defenders: [] };
+          }
+        }
+        break;
+      case "damage":
+        updateData.flavor = `<p>${game.i18n.format("arm5e.sheet.combat.flavor.damage", {
+          attacker: actor.name
+        })}</p>`;
+        updateData["system.combat"] = {
+          attacker: actor.uuid,
+          defenders: []
+        };
+        break;
+      case "soak":
+        {
+          const lastAttackMessage = getLastCombatMessageOfType("attack");
+          const attacker = fromUuidSync(lastAttackMessage.system.combat.attacker);
+          if (lastAttackMessage) {
+            updateData.flavor = `<p>${game.i18n.format("arm5e.sheet.combat.flavor.soak", {
+              target: actor.name
+            })}</p>`;
+            updateData["system.combat"] = {
+              attacker: attacker?.uuid ?? null,
+              defenders: []
+            };
+          }
+        }
+        break;
+      default:
+        break;
+    }
+
+    this.parent.updateSource(updateData);
   }
 
   static migrateData(data) {}
@@ -434,9 +502,9 @@ export class CombatChatSchema extends RollChatSchema {
 
     return updateData;
   }
-  // getFlavor() {
-  //   return super.getFlavor()
-  // }
+  getFlavor() {
+    return super.getFlavor();
+  }
 }
 export class MagicChatSchema extends RollChatSchema {
   static defineSchema() {
@@ -470,7 +538,7 @@ export class MagicChatSchema extends RollChatSchema {
     };
   }
 
-  addInfo(actor) {
+  enrichMessageData(actor) {
     this.magic = {
       caster: {
         uuid: actor.uuid,
@@ -493,6 +561,16 @@ export class MagicChatSchema extends RollChatSchema {
       "system.roll.difficulty": this.roll.difficulty,
       "system.roll.divider": this.roll.divider
     });
+  }
+
+  getFlavor() {
+    let res = super.getFlavor();
+    if (this.getFailedMessage && this.failedCasting()) {
+      res += this.getFailedMessage();
+    } else {
+      res += this.getTargetsHtml();
+    }
+    return res;
   }
 
   getTargetsHtml() {

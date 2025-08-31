@@ -17,24 +17,7 @@
 
 ### Features & changes
 
-- [Technical] Switch to V12 only
-  - Use of TypeDataModel instead of DataModel for Document types
-  - Removed of V10 only code.
-  - Removed V12 deprecation warnings
-- [Technical] Code clean-up, factorization, encapsulation
-  - Actor data preparation clean-up => prepareBaseData and prepareDerivedData in Datamodel
-  - Item data preparation clean-up => prepareBaseData and prepareDerivedData in Datamodel
-  - Most setters have been split in 2 parts for easy macro operations:
-    - \_setProperty: list data fields to update or create.
-    - async setProperty: calling the above and update the document accordingly
-- [Technical] ChatMessage datamodel with sub-types for rolls, combat, spells
-  - Easier update, allowing recreation from scratch.
-  - Improved confidence spending
-  - New magic roll chat messages
-- [Technical] removal of some duplicate unused id attributes
-- [Technical] Speed optimization all over the place - on going
 - It is again possible to switch between spell invention and spell learning without resetting the spell's attributes.
-- [Technical] the Astrolabium is now a singleton (ie: only one window exists)
 - Dropping a magical effect on a lab will switch the activity to spell invention.
 - Dropping a book's lab text topic from an Actor library on to a lab will now work
 - Gift type of magi inhabitants is set automatically if they have Gentle Gift or Blatant Gift.
@@ -51,6 +34,23 @@
 - Arcane experimentation dialog.
 - Money management (or not)
 - Better display of requisites in spell sheet
+- [Technical] Switch to V12 only
+  - Use of TypeDataModel instead of DataModel for Document types
+  - Removed of V10 only code.
+  - Removed V12 deprecation warnings
+- [Technical] Code clean-up, factorization, encapsulation
+  - Actor data preparation clean-up => prepareBaseData and prepareDerivedData in Datamodel
+  - Item data preparation clean-up => prepareBaseData and prepareDerivedData in Datamodel
+  - Most setters have been split in 2 parts for easy macro operations:
+    - \_setProperty: list data fields to update or create.
+    - async setProperty: calling the above and update the document accordingly
+- [Technical] ChatMessage datamodel with sub-types for rolls, combat, spells
+  - Easier update, allowing recreation from scratch.
+  - Improved confidence spending
+  - New magic roll chat messages
+- [Technical] removal of some duplicate unused id attributes
+- [Technical] Speed optimization all over the place - on going
+- [Technical] the Astrolabium is now a singleton (ie: only one window exists)
 
 ### Bug fixes
 

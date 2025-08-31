@@ -1,7 +1,7 @@
 /* eslint-disable jsdoc/require-returns-type */
 import { ArM5eActor } from "../actor/actor.js";
 import { ARM5E } from "../config.js";
-import { computeLevel, IsMagicalEffect } from "../helpers/magic.js";
+import { computeLevel, getRequisitesLabel, IsMagicalEffect } from "../helpers/magic.js";
 import { convertToNumber, log } from "../tools.js";
 import {
   authorship,
@@ -31,204 +31,26 @@ export const baseLevel = () =>
     step: 1
   });
 
-const migrateMagicalItem = (itemData) => {
-  const updateData = {};
-
-  if (typeof itemData.system.baseLevel !== "number") {
-    updateData["system.baseLevel"] = convertToNumber(itemData.system.baseLevel, 1);
-  } else if (itemData.system.baseLevel < 1) {
-    updateData["system.baseLevel"] = 1;
-    ChatMessage.create({
-      content:
-        "<b>Migration notice</b><br/>" +
-        `The Item of type: ${itemData.type} named ${itemData.name}` +
-        ` had a non-positive baseLevel of ${itemData.system.baseLevel}, ` +
-        `please review its new level (original: ${itemData.system.level}) and ` +
-        " use rather the levelOffset or complexity field for thats<br/>"
-    });
-  }
-
-  if (itemData.system.baseEffectDescription == null) {
-    updateData["system.baseEffectDescription"] = "";
-  }
-
-  if (itemData.type !== "baseEffect") {
-    if (itemData.type == "laboratoryText") {
-      // Fixing season key
-      if (!Object.keys(CONFIG.ARM5E.seasons).includes(itemData.system.season)) {
-        if (Object.keys(CONFIG.ARM5E.seasons).includes(itemData.system.season.toLowerCase())) {
-          updateData["system.season"] = itemData.system.season.toLowerCase();
-        } else {
-          updateData["system.season"] = "spring";
-        }
-      }
-    }
-    if (itemData.type !== "magicalEffect") {
-      if (itemData.system.ritual == undefined) {
-        updateData["system.ritual"] = false;
-      } else if (typeof itemData.system.ritual !== "boolean") {
-        if (itemData.system.ritual === "true") {
-          updateData["system.ritual"] = true;
-        } else {
-          updateData["system.ritual"] = false;
-        }
-      }
-    }
-    if (itemData.system.duration.value === undefined) {
-      updateData["system.duration.value"] = _guessDuration(itemData.name, itemData.system.duration);
-    } else if (CONFIG.ARM5E.magic.durations[itemData.system.duration.value] === undefined) {
-      // Console.log(`Guessing duration: ${itemData.system.duration}`);
-      updateData["system.duration.value"] = _guessDuration(
-        itemData.name,
-        itemData.system.duration.value
-      );
-    }
-
-    if (itemData.system.range.value === undefined) {
-      updateData["system.range.value"] = _guessRange(itemData.name, itemData.system.range);
-    } else if (CONFIG.ARM5E.magic.ranges[itemData.system.range.value] === undefined) {
-      // Console.log(`Guessing range: ${itemData.system.range}`);
-      updateData["system.range.value"] = _guessRange(itemData.name, itemData.system.range.value);
-    }
-
-    if (itemData.system.target.value === undefined) {
-      updateData["system.target.value"] = _guessTarget(itemData.name, itemData.system.target);
-    } else if (CONFIG.ARM5E.magic.targets[itemData.system.target.value] === undefined) {
-      // Console.log(`Guessing target: ${itemData.system.target}`);
-      updateData["system.target.value"] = _guessTarget(itemData.name, itemData.system.target.value);
-    }
-
-    if (itemData.system.levelOffset === null) {
-      updateData["system.levelOffset"] = 0;
-    }
-  }
-
-  if (itemData.system.technique.value === "") {
-    updateData["system.technique.value"] = "cr";
-  }
-  if (itemData.system.form.value === "") {
-    updateData["system.form.value"] = "an";
-  }
-  // Remove redundant data
-  if (itemData.system.techniques !== undefined) {
-    updateData["system.-=techniques"] = null;
-  }
-  if (itemData.system.forms !== undefined) {
-    updateData["system.-=forms"] = null;
-  }
-  if (itemData.system["technique-requisites"] !== undefined) {
-    updateData["system.-=technique-requisites"] = null;
-  }
-  if (itemData.system["form-requisites"] !== undefined) {
-    updateData["system.-=form-requisites"] = null;
-  }
-  if (itemData.system["technique-requisite"] !== undefined) {
-    if (
-      itemData.system["technique-requisite"].value !== "n-a" &&
-      itemData.system["technique-requisite"].value !== ""
-    ) {
-      updateData[`system.technique-req.${itemData.system["technique-requisite"].value}`] = true;
-    }
-    updateData["system.-=technique-requisite"] = null;
-  }
-
-  if (itemData.system["form-requisite"] !== undefined) {
-    if (
-      itemData.system["form-requisite"].value !== "n-a" &&
-      itemData.system["form-requisite"].value !== ""
-    ) {
-      updateData[`system.form-req.${itemData.system["form-requisite"].value}`] = true;
-    }
-    updateData["system.-=form-requisite"] = null;
-  }
-
-  for (let [req, val] of Object.entries(itemData.system["form-req"])) {
-    if (typeof val !== "boolean") {
-      if (val === "true") {
-        updateData[`system.form-req.${req}`] = true;
-      } else if (val === "false") {
-        updateData[`system.form-req.${req}`] = false;
-      }
-    }
-  }
-  for (let [req, val] of Object.entries(itemData.system["technique-req"])) {
-    if (typeof val !== "boolean") {
-      if (val === "true") {
-        updateData[`system.technique-req.${req}`] = true;
-      } else if (val === "false") {
-        updateData[`system.technique-req.${req}`] = false;
-      }
-    }
-  }
-
-  // Temporary : removal of authorship in spell, it will only be present in lab texts
-  if (itemData.type == "spell") {
-    if (itemData.system.author) {
-      updateData["system.-=author"] = null;
-    }
-    if (itemData.system.year) {
-      updateData["system.-=year"] = null;
-    }
-    if (itemData.system.season) {
-      updateData["system.-=season"] = null;
-    }
-    if (itemData.system.language) {
-      updateData["system.-=language"] = null;
-    }
-    if (itemData.system.exp) {
-      let exp = ((itemData.system.mastery * (itemData.system.mastery + 1)) / 2) * 5;
-      if (itemData.system.exp >= exp) {
-        updateData["system.xp"] = itemData.system.exp;
-      } else if (itemData.system.exp >= (itemData.system.mastery + 1) * 5) {
-        // If the experience is bigger than the neeeded for next level, ignore it
-        updateData["system.xp"] = exp;
-      } else {
-        // Compute normally
-        updateData["system.xp"] = exp + itemData.system.exp;
-      }
-
-      updateData["system.-=mastery"] = null;
-      updateData["system.-=exp"] = null;
-    }
-  }
-  if (itemData.system.description == null) {
-    updateData["system.description"] = "";
-  }
-
-  if (typeof itemData.system.targetSize !== "number") {
-    updateData["system.targetSize"] = convertToNumber(itemData.system.targetSize, 0);
-  }
-
-  if (typeof itemData.system.complexity !== "number") {
-    updateData["system.complexity"] = convertToNumber(itemData.system.complexity, 0);
-  }
-
-  if (typeof itemData.system.enhancingRequisite !== "number") {
-    updateData["system.enhancingRequisite"] = convertToNumber(
-      itemData.system.enhancingRequisite,
-      0
-    );
-  } else if (itemData.system.enhancingRequisite < 0) {
-    updateData["system.enhancingRequisite"] = 0;
-    ChatMessage.create({
-      content:
-        "<b>Migration notice</b><br/>" +
-        `The Item of type: ${itemData.type} named ${itemData.name}` +
-        ` had a negative enhancingRequisite of ${itemData.system.enhancingRequisite}, ` +
-        `please review its new level (original: ${itemData.system.level}) and ` +
-        " use rather the levelOffset field for general spells<br/>"
-    });
-  }
-  if (["spell", "enchantment"].includes(itemData.type)) {
-    updateData["system.level"] = computeLevel(itemData.system, itemData.type);
-  }
-  return updateData;
-};
-
-export class BaseEffectSchema extends foundry.abstract.TypeDataModel {
+class AbstractMagicEntity extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     return {
-      ...itemBase(),
+      ...itemBase()
+    };
+  }
+
+  getRequisitesStr() {
+    const req = Object.entries({
+      ...this["technique-req"],
+      ...this["form-req"]
+    }).filter((r) => r[1] === true);
+    return getRequisitesLabel(req);
+  }
+}
+
+export class BaseEffectSchema extends AbstractMagicEntity {
+  static defineSchema() {
+    return {
+      ...super.defineSchema(),
       ...TechniquesForms(),
       baseLevel: baseLevel(),
       baseEffectDescription: baseDescription()
@@ -249,10 +71,10 @@ export class BaseEffectSchema extends foundry.abstract.TypeDataModel {
   }
 }
 
-export class MagicalEffectSchema extends foundry.abstract.TypeDataModel {
+export class MagicalEffectSchema extends AbstractMagicEntity {
   static defineSchema() {
     return {
-      ...itemBase(),
+      ...super.defineSchema(),
       ...TechniquesForms(),
       ...SpellAttributes(),
       baseLevel: baseLevel(),
@@ -291,7 +113,7 @@ export class MagicalEffectSchema extends foundry.abstract.TypeDataModel {
         tech = Math.min(tech, actorSystemData.arts.techniques[key[0]].finalScore);
       });
       tech = Math.min(actorSystemData.arts.techniques[this.technique.value].finalScore, tech);
-      label += " " + this._getRequisitesStr(techReq);
+      label += " " + getRequisitesLabel(techReq);
     } else {
       tech = actorSystemData.arts.techniques[this.technique.value].finalScore;
     }
@@ -316,35 +138,12 @@ export class MagicalEffectSchema extends foundry.abstract.TypeDataModel {
         form = Math.min(form, actorSystemData.arts.forms[key[0]].finalScore);
       });
       form = Math.min(actorSystemData.arts.forms[this.form.value].finalScore, form);
-      label += " " + this._getRequisitesStr(formReq);
+      label += " " + getRequisitesLabel(formReq);
     } else {
       form = actorSystemData.arts.forms[this.form.value].finalScore;
     }
     formDeficient = formDeficient || actorSystemData.arts.forms[this.form.value].deficient;
     return [label, form, formDeficient];
-  }
-
-  getRequisitesStr() {
-    const req = Object.entries({
-      ...this["technique-req"],
-      ...this["form-req"]
-    }).filter((r) => r[1] === true);
-    return this._getRequisitesStr(req);
-  }
-
-  _getRequisitesStr(requisites) {
-    let result = "";
-    if (requisites.length == 0) {
-      return result;
-    }
-    result += "(";
-    requisites.forEach((key) => {
-      result += CONFIG.ARM5E.magic.arts[key[0]].short + " ";
-    });
-    // remove last whitespace
-    result = result.substring(0, result.length - 1);
-    result += ")";
-    return result;
   }
 
   _computeCastingTotal(owner, options = {}) {
@@ -585,10 +384,10 @@ export class LabTextTopicSchema extends foundry.abstract.DataModel {
   }
 }
 
-export class LabTextSchema extends foundry.abstract.TypeDataModel {
+export class LabTextSchema extends AbstractMagicEntity {
   static defineSchema() {
     return {
-      ...itemBase(),
+      ...super.defineSchema(),
       ...authorship(),
       type: new fields.StringField({
         required: false,
@@ -649,6 +448,204 @@ export class LabTextSchema extends foundry.abstract.TypeDataModel {
     return updateData;
   }
 }
+
+//////////
+// LEGACY migrations functions
+/////////
+
+const migrateMagicalItem = (itemData) => {
+  const updateData = {};
+
+  if (typeof itemData.system.baseLevel !== "number") {
+    updateData["system.baseLevel"] = convertToNumber(itemData.system.baseLevel, 1);
+  } else if (itemData.system.baseLevel < 1) {
+    updateData["system.baseLevel"] = 1;
+    ChatMessage.create({
+      content:
+        "<b>Migration notice</b><br/>" +
+        `The Item of type: ${itemData.type} named ${itemData.name}` +
+        ` had a non-positive baseLevel of ${itemData.system.baseLevel}, ` +
+        `please review its new level (original: ${itemData.system.level}) and ` +
+        " use rather the levelOffset or complexity field for thats<br/>"
+    });
+  }
+
+  if (itemData.system.baseEffectDescription == null) {
+    updateData["system.baseEffectDescription"] = "";
+  }
+
+  if (itemData.type !== "baseEffect") {
+    if (itemData.type == "laboratoryText") {
+      // Fixing season key
+      if (!Object.keys(CONFIG.ARM5E.seasons).includes(itemData.system.season)) {
+        if (Object.keys(CONFIG.ARM5E.seasons).includes(itemData.system.season.toLowerCase())) {
+          updateData["system.season"] = itemData.system.season.toLowerCase();
+        } else {
+          updateData["system.season"] = "spring";
+        }
+      }
+    }
+    if (itemData.type !== "magicalEffect") {
+      if (itemData.system.ritual == undefined) {
+        updateData["system.ritual"] = false;
+      } else if (typeof itemData.system.ritual !== "boolean") {
+        if (itemData.system.ritual === "true") {
+          updateData["system.ritual"] = true;
+        } else {
+          updateData["system.ritual"] = false;
+        }
+      }
+    }
+    if (itemData.system.duration.value === undefined) {
+      updateData["system.duration.value"] = _guessDuration(itemData.name, itemData.system.duration);
+    } else if (CONFIG.ARM5E.magic.durations[itemData.system.duration.value] === undefined) {
+      // Console.log(`Guessing duration: ${itemData.system.duration}`);
+      updateData["system.duration.value"] = _guessDuration(
+        itemData.name,
+        itemData.system.duration.value
+      );
+    }
+
+    if (itemData.system.range.value === undefined) {
+      updateData["system.range.value"] = _guessRange(itemData.name, itemData.system.range);
+    } else if (CONFIG.ARM5E.magic.ranges[itemData.system.range.value] === undefined) {
+      // Console.log(`Guessing range: ${itemData.system.range}`);
+      updateData["system.range.value"] = _guessRange(itemData.name, itemData.system.range.value);
+    }
+
+    if (itemData.system.target.value === undefined) {
+      updateData["system.target.value"] = _guessTarget(itemData.name, itemData.system.target);
+    } else if (CONFIG.ARM5E.magic.targets[itemData.system.target.value] === undefined) {
+      // Console.log(`Guessing target: ${itemData.system.target}`);
+      updateData["system.target.value"] = _guessTarget(itemData.name, itemData.system.target.value);
+    }
+
+    if (itemData.system.levelOffset === null) {
+      updateData["system.levelOffset"] = 0;
+    }
+  }
+
+  if (itemData.system.technique.value === "") {
+    updateData["system.technique.value"] = "cr";
+  }
+  if (itemData.system.form.value === "") {
+    updateData["system.form.value"] = "an";
+  }
+  // Remove redundant data
+  if (itemData.system.techniques !== undefined) {
+    updateData["system.-=techniques"] = null;
+  }
+  if (itemData.system.forms !== undefined) {
+    updateData["system.-=forms"] = null;
+  }
+  if (itemData.system["technique-requisites"] !== undefined) {
+    updateData["system.-=technique-requisites"] = null;
+  }
+  if (itemData.system["form-requisites"] !== undefined) {
+    updateData["system.-=form-requisites"] = null;
+  }
+  if (itemData.system["technique-requisite"] !== undefined) {
+    if (
+      itemData.system["technique-requisite"].value !== "n-a" &&
+      itemData.system["technique-requisite"].value !== ""
+    ) {
+      updateData[`system.technique-req.${itemData.system["technique-requisite"].value}`] = true;
+    }
+    updateData["system.-=technique-requisite"] = null;
+  }
+
+  if (itemData.system["form-requisite"] !== undefined) {
+    if (
+      itemData.system["form-requisite"].value !== "n-a" &&
+      itemData.system["form-requisite"].value !== ""
+    ) {
+      updateData[`system.form-req.${itemData.system["form-requisite"].value}`] = true;
+    }
+    updateData["system.-=form-requisite"] = null;
+  }
+
+  for (let [req, val] of Object.entries(itemData.system["form-req"])) {
+    if (typeof val !== "boolean") {
+      if (val === "true") {
+        updateData[`system.form-req.${req}`] = true;
+      } else if (val === "false") {
+        updateData[`system.form-req.${req}`] = false;
+      }
+    }
+  }
+  for (let [req, val] of Object.entries(itemData.system["technique-req"])) {
+    if (typeof val !== "boolean") {
+      if (val === "true") {
+        updateData[`system.technique-req.${req}`] = true;
+      } else if (val === "false") {
+        updateData[`system.technique-req.${req}`] = false;
+      }
+    }
+  }
+
+  // Temporary : removal of authorship in spell, it will only be present in lab texts
+  if (itemData.type == "spell") {
+    if (itemData.system.author) {
+      updateData["system.-=author"] = null;
+    }
+    if (itemData.system.year) {
+      updateData["system.-=year"] = null;
+    }
+    if (itemData.system.season) {
+      updateData["system.-=season"] = null;
+    }
+    if (itemData.system.language) {
+      updateData["system.-=language"] = null;
+    }
+    if (itemData.system.exp) {
+      let exp = ((itemData.system.mastery * (itemData.system.mastery + 1)) / 2) * 5;
+      if (itemData.system.exp >= exp) {
+        updateData["system.xp"] = itemData.system.exp;
+      } else if (itemData.system.exp >= (itemData.system.mastery + 1) * 5) {
+        // If the experience is bigger than the neeeded for next level, ignore it
+        updateData["system.xp"] = exp;
+      } else {
+        // Compute normally
+        updateData["system.xp"] = exp + itemData.system.exp;
+      }
+
+      updateData["system.-=mastery"] = null;
+      updateData["system.-=exp"] = null;
+    }
+  }
+  if (itemData.system.description == null) {
+    updateData["system.description"] = "";
+  }
+
+  if (typeof itemData.system.targetSize !== "number") {
+    updateData["system.targetSize"] = convertToNumber(itemData.system.targetSize, 0);
+  }
+
+  if (typeof itemData.system.complexity !== "number") {
+    updateData["system.complexity"] = convertToNumber(itemData.system.complexity, 0);
+  }
+
+  if (typeof itemData.system.enhancingRequisite !== "number") {
+    updateData["system.enhancingRequisite"] = convertToNumber(
+      itemData.system.enhancingRequisite,
+      0
+    );
+  } else if (itemData.system.enhancingRequisite < 0) {
+    updateData["system.enhancingRequisite"] = 0;
+    ChatMessage.create({
+      content:
+        "<b>Migration notice</b><br/>" +
+        `The Item of type: ${itemData.type} named ${itemData.name}` +
+        ` had a negative enhancingRequisite of ${itemData.system.enhancingRequisite}, ` +
+        `please review its new level (original: ${itemData.system.level}) and ` +
+        " use rather the levelOffset field for general spells<br/>"
+    });
+  }
+  if (["spell", "enchantment"].includes(itemData.type)) {
+    updateData["system.level"] = computeLevel(itemData.system, itemData.type);
+  }
+  return updateData;
+};
 
 // Unfortunately, since the duration was a free input field, it has to be guessed
 /**

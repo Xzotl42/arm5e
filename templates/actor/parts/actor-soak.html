@@ -3,7 +3,7 @@
   <div class="roll-options">
     <div class="flexrow flex-group-center">
       <label class="resource-label flex0">{{localize "arm5e.sheet.damage" }}</label>
-      <input type="number" name="damage" value="{{extraData.damage}}" data-dtype="Number"
+      <input type="number" name="damage" value="{{damage}}" data-dtype="Number"
         class="SelectedDamage resource-focus modifier" />
     </div>
     <div class="flexrow flex-group-center">
@@ -26,25 +26,26 @@
           }})</label>
       </div>
     {{/if}}
-    {{#if extraData.isMagus}}
+    {{#if isMagus}}
       <div class="flexrow flex-group-center">
         <label class="resource-label">-</label>
       </div>
       <div class="flexrow flex-group-center">
         <label class="header-label">{{localize "arm5e.sheet.formRes"}}</label>
+        {{log this}}
         <select name="formRes" data-type="String">
-          {{selectOptions extraData.formRes selected=formRes nameAttr="res" valueAttr="res" labelAttr="label" blank="" }}
+          {{selectOptions selection.formRes selected=formRes nameAttr="res" valueAttr="res" labelAttr="label" blank="" }}
         </select>
       </div>
     {{/if}}
-    {{#if extraData.hasResistance}}
+    {{#if hasResistance}}
       <div class="flexrow flex-group-center">
         <label class="resource-label">-</label>
       </div>
       <div class="flexrow flex-group-center">
         <label class="header-label">{{localize "arm5e.sheet.natRes"}}</label>
         <select name="natRes" data-type="String">
-          {{selectOptions extraData.natRes selected=natRes nameAttr="res" valueAttr="res" labelAttr="label" blank="" }}
+          {{selectOptions selection.natRes selected=natRes nameAttr="res" valueAttr="res" labelAttr="label" blank="" }}
         </select>
       </div>
     {{/if}}
@@ -66,7 +67,7 @@
 
     <div class="flexrow flex-group-center">
       <label class="resource-label flex0">{{localize "arm5e.sheet.modifier" }}</label>
-      <input type="number" name="modifier" value="{{extraData.modifier}}" data-dtype="Number"
+      <input type="number" name="modifier" value="{{modifier}}" data-dtype="Number"
         class="SelectedModifier resource-focus modifier" />
     </div>
   </div>

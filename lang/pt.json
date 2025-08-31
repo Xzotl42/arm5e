@@ -55,7 +55,7 @@
   "arm5e.sheet.date": "Encontro",
   "arm5e.sheet.equipped": "Equipado",
   "arm5e.sheet.weaponExpert": "Especialista em armas",
-  "arm5e.sheet.combat": "Combate",
+  "arm5e.sheet.combat.label": "Combate",
   "arm5e.sheet.attackAdvantage": "Vantagem de Ataque",
   "arm5e.sheet.combatInstructions1": "Equipe armas e armaduras para ver os totais.",
   "arm5e.sheet.combatInstructions2": "Se sua especialidade é com o escudo, marque-o no escudo e não na arma. Se você não tiver o escudo equipado, o bônus de especialidade não se aplica.",

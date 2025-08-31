@@ -11,6 +11,7 @@
               {{selectOptions config.virtueFlawTypes.available selected=system.type labelAttr="label" localize=true }}
             </select>
           </div>
+          {{log "TOTO toto"}}
           <div class="resource">
             <label for="system.impact.value" class="header-label">{{localize system.impact.label}}</label>
             <select name="system.impact.value" data-type="String">
@@ -32,7 +33,7 @@
       </div>
     </div>
   </header>
-
+  {{log "TOTO tabs"}}
   {{!-- Sheet Tab Navigation --}}
   <nav class="arm5eTabs sheet-tabs tabs" data-group="primary">
     <a class="item posRelative" data-tab="description">

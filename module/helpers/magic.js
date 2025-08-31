@@ -1,6 +1,4 @@
-import { getActorsFromTargetedTokens } from "./tokens.js";
 import { log } from "../tools.js";
-import Aura from "./aura.js";
 
 const VOICE_AND_GESTURES_ICONS = {
   voice: "icons/skills/trades/music-singing-voice-blue.webp",
@@ -380,6 +378,21 @@ export function addSpellMagnitude(base, num) {
   }
 }
 
+export function getRequisitesLabel(requisites) {
+  let result = "";
+  if (requisites.length == 0) {
+    return result;
+  }
+  result += "(";
+  requisites.forEach((key) => {
+    result += CONFIG.ARM5E.magic.arts[key[0]].short + " ";
+  });
+  // remove last whitespace
+  result = result.substring(0, result.length - 1);
+  result += ")";
+  return result;
+}
+
 /**
  *
  * @param item
@@ -388,15 +401,8 @@ export function addSpellMagnitude(base, num) {
 export function spellTechniqueLabel(item, short = false) {
   let label = CONFIG.ARM5E.magic.techniques[item.technique.value][short ? "short" : "label"];
   let techReq = Object.entries(item["technique-req"]).filter((r) => r[1] === true);
-  if (techReq.length > 0) {
-    label += " (";
-    techReq.forEach((key) => {
-      label += `${CONFIG.ARM5E.magic.arts[key[0]].short} `;
-    });
-    // Remove last whitespace
-    label = label.substring(0, label.length - 1);
-    label += ")";
-  }
+  label += getRequisitesLabel(techReq);
+
   return label;
 }
 
@@ -407,16 +413,8 @@ export function spellTechniqueLabel(item, short = false) {
  */
 export function spellFormLabel(item, short = false) {
   let label = CONFIG.ARM5E.magic.forms[item.form.value][short ? "short" : "label"];
-  let techReq = Object.entries(item["form-req"]).filter((r) => r[1] === true);
-  if (techReq.length > 0) {
-    label += " (";
-    techReq.forEach((key) => {
-      label += `${CONFIG.ARM5E.magic.arts[key[0]].short} `;
-    });
-    // Remove last whitespace
-    label = label.substring(0, label.length - 1);
-    label += ")";
-  }
+  let formReq = Object.entries(item["form-req"]).filter((r) => r[1] === true);
+  label += getRequisitesLabel(formReq);
   return label;
 }
 
