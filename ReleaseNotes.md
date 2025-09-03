@@ -35,6 +35,8 @@
 - Arcane experimentation dialog.
 - Money management (or not)
 - Better display of requisites in spell sheet
+- Shift clicking an Item in the hotbar will display its sheet instead of rolling
+- Control clicking an Item in the hotbar will display its owner's sheet instead of rolling
 - Time to recover all fatigue is displayed on the rest button
 - [Technical] Switch to V12 only
   - Use of TypeDataModel instead of DataModel for Document types
