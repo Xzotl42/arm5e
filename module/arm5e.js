@@ -434,7 +434,7 @@ async function createArM5eMacro(data, slot) {
 
   if (doc.isOwned) {
     // Create the macro command
-    const command = `game.arm5e.rollItemMacro('${doc._id}', '${doc.actor._id}');`;
+    const command = `game.arm5e.rollItemMacro('${doc._id}', '${doc.actor._id}',event);`;
     let macro = game.macros.contents.find((m) => m.name === doc.name && m.command === command);
     if (!macro) {
       macro = await Macro.create({
@@ -506,7 +506,7 @@ async function onDropActorSheetData(actor, sheet, data) {
  * @param actorId
  * @returns {Promise}
  */
-function rollItemMacro(itemId, actorId) {
+function rollItemMacro(itemId, actorId, event = undefined) {
   const actor = game.actors.get(actorId);
   if (!actor) {
     return ui.notifications.warn(`No Actor with Id ${actorId} exists in the world`);
@@ -514,6 +514,16 @@ function rollItemMacro(itemId, actorId) {
   const item = actor.items.get(itemId);
   if (!item)
     return ui.notifications.warn(`Your controlled Actor does not have an item with ID: ${itemId}`);
+  if (event) {
+    if (event.shiftKey) {
+      item.sheet.render(true);
+      return;
+    } else if (event.ctrlKey) {
+      actor.sheet.render(true);
+      return;
+    }
+  }
+
   const dataset = prepareDatasetByTypeOfItem(item);
   if (foundry.utils.isEmpty(dataset)) {
     item.sheet.render(true);

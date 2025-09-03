@@ -1,4 +1,4 @@
-## 2.4.0.14, Radislav am Polanach
+## 2.4.0.16, Radislav am Polanach
 
 ### Compatibility
 
@@ -24,6 +24,7 @@
 - Arts and abilities active effects definitions are generated dynamically
 - New active effects:
   - Reading about Art (Study bonus)
+  - Susceptibility to <Realm>
 - It is possible to progress in alternate arts in seasonal activities (as abilities)
 - Added physical condition modifier (@physicalCondition) to rollData, to be used in inline rolls
 - Cosmetic changes:
@@ -34,6 +35,9 @@
 - Arcane experimentation dialog.
 - Money management (or not)
 - Better display of requisites in spell sheet
+- Shift clicking an Item in the hotbar will display its sheet instead of rolling
+- Control clicking an Item in the hotbar will display its owner's sheet instead of rolling
+- Time to recover all fatigue is displayed on the rest button
 - [Technical] Switch to V12 only
   - Use of TypeDataModel instead of DataModel for Document types
   - Removed of V10 only code.
@@ -91,6 +95,7 @@
 - dropping a spell on the lab sheet outside of the planning area will add it as a labtext to the library
 - "Laboratory" activities won't prevent the application of future activities anymore.
 - It is again posssible to set requisites of enchantments in the lab.
+- Changing the realm of an entity is working again properly
 
 ## 2.3.2.28, Quendalon, more than just sparows and bunnies
 

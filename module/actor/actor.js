@@ -82,6 +82,19 @@ export class ArM5eActor extends Actor {
       incap: [],
       dead: []
     };
+    if (this.system.realms) {
+      this.system.realms["magic"].susceptible = false;
+      this.system.realms["faeric"].susceptible = false;
+      this.system.realms["divine"].susceptible = false;
+      this.system.realms["infernal"].susceptible = false;
+      // } else {
+      //   this.system.realms = {
+      //     magic: { susceptible: false },
+      //     faeric: { susceptible: false },
+      //     divine: { susceptible: false },
+      //     infernal: { susceptible: false }
+      //   };
+    }
 
     // // CHARACTER FEATURES
     if (this.system.features == undefined) {
@@ -311,6 +324,7 @@ export class ArM5eActor extends Actor {
     // Fatigue management
     if (system.fatigue) {
       system.fatigueTotal = 0;
+      system.fatigueTime = 0;
       let lvl = 0;
       for (let [key, item] of Object.entries(system.fatigue)) {
         let fatigueArray = [];
@@ -318,6 +332,7 @@ export class ArM5eActor extends Actor {
         for (let ii = 0; ii < item.amount; ii++) {
           if (lvl < system.fatigueCurrent) {
             fatigueArray.push(true);
+            system.fatigueTime += CONFIG.ARM5E.character.fatigueLevels[key].time;
             system.fatigueTotal = item.number > 0 ? 0 : item.number;
           } else {
             fatigueArray.push(false);
@@ -1154,7 +1169,7 @@ export class ArM5eActor extends Actor {
     return true;
   }
 
-  magicResistance(form) {
+  magicResistance(form, realm) {
     if (!this.isCharacter()) return null;
 
     let magicResistance =
@@ -1186,14 +1201,21 @@ export class ArM5eActor extends Actor {
         (key) => arts.forms[key].label.toUpperCase() === form.toUpperCase()
       )[0];
       formScore = arts.forms[formKey]?.finalScore || 0;
+      magicResistance += formScore;
+    }
+    let susceptible = this.system.realms[realm].susceptible;
+
+    if (susceptible) {
+      magicResistance = Math.round(magicResistance / 2);
     }
 
     return {
       might: this.system?.might?.value,
       specialityIncluded,
-      total: magicResistance + formScore,
+      total: magicResistance,
       form: form,
       formScore,
+      susceptible,
       parma,
       aura: auraMod
     };

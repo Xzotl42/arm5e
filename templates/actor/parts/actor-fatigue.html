@@ -6,7 +6,8 @@
         <a class="item-control removeFatigue" title="Remove fatigue level"><i class="fas fa-minus fa-lg"></i></a>
         <a class="item-control addFatigue" title="Add fatigue level"> <i class="fas fa-plus fa-lg"></i></a>
       </div>
-      <button class="arm5e rest" style="font-family: blackmoor">{{localize "arm5e.sheet.action.rest"}}</button>
+      <button class="arm5e rest" style="font-family: blackmoor">{{localize "arm5e.sheet.action.rest"}}
+        {{system.fatigueTime}} {{localize "arm5e.generic.minutesShort" }}</button>
     </div>
 
     <ol>
@@ -25,8 +26,7 @@
           <input type="text" name="system.fatigue.{{key}}.number"
             value="{{numberFormat fatigue.number decimals=0 sign=true}}" data-dtype="Number" readonly />
           {{#with (lookup @root.config.character.fatigueLevels key)}}
-            <input type="text" name="config.character.fatigueLevels.{{key}}.time" value="{{time}}" data-dtype="String"
-              readonly />
+            <input type="text" value="{{timeLabel}} {{localize timeUnits}}" data-dtype="String" readonly />
           {{/with}}
         </span>
       {{/each}}

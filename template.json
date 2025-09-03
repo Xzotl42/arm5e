@@ -33,10 +33,10 @@
           "actorId": null
         },
         "realms": {
-          "magic": { "aligned": false },
-          "faeric": { "aligned": false },
-          "divine": { "aligned": false },
-          "infernal": { "aligned": false }
+          "magic": { "aligned": false, "susceptible": false },
+          "faeric": { "aligned": false, "susceptible": false },
+          "divine": { "aligned": false, "susceptible": false },
+          "infernal": { "aligned": false, "susceptible": false }
         },
         "states": {
           "pendingCrisis": false,
@@ -868,6 +868,12 @@
         "qik": {
           "value": 0
         }
+      },
+      "realms": {
+        "magic": { "aligned": false, "susceptible": false },
+        "faeric": { "aligned": false, "susceptible": false },
+        "divine": { "aligned": false, "susceptible": false },
+        "infernal": { "aligned": false, "susceptible": false }
       },
       "vitals": {
         "siz": {

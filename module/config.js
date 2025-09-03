@@ -331,27 +331,38 @@ ARM5E.qualityTypes = {
 ARM5E.character.fatigueLevels = {
   fresh: {
     label: "arm5e.sheet.fresh",
-    time: null
+    time: 0,
+    timeLabel: ""
   },
   winded: {
     label: "arm5e.sheet.winded",
-    time: "2 min."
+    time: 2,
+    timeLabel: "2",
+    timeUnits: "arm5e.generic.minutesShort"
   },
   weary: {
     label: "arm5e.sheet.weary",
-    time: "10 min."
+    time: 10,
+    timeLabel: "10",
+    timeUnits: "arm5e.generic.minutesShort"
   },
   tired: {
     label: "arm5e.sheet.tired",
-    time: "30 min."
+    time: 30,
+    timeLabel: "30",
+    timeUnits: "arm5e.generic.minutesShort"
   },
   dazed: {
     label: "arm5e.sheet.dazed",
-    time: "1 hr."
+    time: 60,
+    timeLabel: "1",
+    timeUnits: "arm5e.generic.hoursShort"
   },
   unconscious: {
     label: "arm5e.sheet.unconscious",
-    time: "2 hr."
+    time: 120,
+    timeLabel: "2",
+    timeUnits: "arm5e.generic.hoursShort"
   }
 };
 

@@ -123,6 +123,8 @@ export class RollChatSchema extends BasicChatSchema {
     return updateData;
   }
 
+  enrichMessageData(actor) {}
+
   // standard roll chat message doesn't have targets;
   getTargetsHtml() {
     return "";
@@ -400,7 +402,12 @@ export class RollChatSchema extends BasicChatSchema {
     return impactMessage;
   }
 
-  enrichMessageData(actor) {}
+  enrichMessageData(actor) {
+    this.parent.updateSource({
+      "system.roll.difficulty": actor.rollInfo.magic.level,
+      "system.roll.divider": actor.rollInfo.magic.divide
+    });
+  }
 }
 
 export class CombatChatSchema extends RollChatSchema {
@@ -416,6 +423,7 @@ export class CombatChatSchema extends RollChatSchema {
   }
 
   enrichMessageData(actor) {
+    super.enrichMessageData(actor);
     const updateData = {};
     switch (this.roll.type) {
       case "attack":
@@ -533,12 +541,27 @@ export class MagicChatSchema extends RollChatSchema {
             })
           })
         ),
-        ritual: boolOption(false)
+        ritual: boolOption(false),
+        realm: new fields.StringField({
+          required: false,
+          blank: false,
+          initial: "magic",
+          choices: CONFIG.ARM5E.realmsExt
+        }),
+        form: hermeticForm("te")
       })
     };
   }
 
   enrichMessageData(actor) {
+    super.enrichMessageData(actor);
+
+    let realm = "magic";
+    if (actor.rollInfo.type == "power") {
+      realm = actor.rollInfo.power.realm;
+    } else if (actor.rollInfo.type == "supernatural") {
+      realm = actor.rollInfo.ability.realm;
+    }
     this.magic = {
       caster: {
         uuid: actor.uuid,
@@ -552,14 +575,12 @@ export class MagicChatSchema extends RollChatSchema {
         }
       },
       targets: [],
-      ritual: actor.rollInfo.magic.ritual
+      ritual: actor.rollInfo.magic.ritual,
+      realm: realm
     };
-    this.roll.difficulty = actor.rollInfo.magic.level;
-    this.roll.divider = actor.rollInfo.magic.divide;
+
     this.parent.updateSource({
-      "system.magic": this.magic,
-      "system.roll.difficulty": this.roll.difficulty,
-      "system.roll.divider": this.roll.divider
+      "system.magic": this.magic
     });
   }
 
@@ -637,10 +658,17 @@ export class MagicChatSchema extends RollChatSchema {
               target.magicResistance.specialityIncluded
             })`
           : "";
+
+        const susceptibility = target.magicResistance.susceptible
+          ? `${game.i18n.format("arm5e.sheet.realm.susceptible.impact", {
+              realm: game.i18n.localize(CONFIG.ARM5E.realms[this.magic.realm].label),
+              divisor: 2
+            })}<br>`
+          : "";
         const totalMagicResistance = `${game.i18n.localize("arm5e.sheet.totalMagicResistance")}: (${
           target.magicResistance.total
         })`;
-        flavorTotalMagicResistance = `${might}${parma}${parmaSpecialty}${form}${aura}<br/><b>${totalMagicResistance}</b>`;
+        flavorTotalMagicResistance = `${might}${parma}${parmaSpecialty}${form}${aura}<br/>${susceptibility}<b>${totalMagicResistance}</b>`;
       }
 
       const total =
