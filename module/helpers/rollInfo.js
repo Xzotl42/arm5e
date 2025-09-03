@@ -128,6 +128,7 @@ export class ArM5eRollInfo {
           } else {
             this.power.form = power.system.form;
           }
+          this.power.realm = actorSystemData.realm;
 
           this.label += ` (${ARM5E.magic.arts[this.power.form].short})`;
           if (this.img === "") this.img = power.img;
@@ -613,7 +614,8 @@ export class ArM5eRollInfo {
     this.power = {
       cost: 0,
       penetrationPenalty: 0,
-      form: ""
+      form: "",
+      realm: "magic"
     };
 
     this.twilight = {

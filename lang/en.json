@@ -679,6 +679,8 @@
   "arm5e.sheet.realm.visibleHint": "Show or hide the aura modifier when rolling",
   "arm5e.sheet.realm.nightModifier": "Night Modifier",
 
+  "arm5e.sheet.realm.susceptible.impact": "Due to susceptibility to {realm}, divided by {divisor}",
+
   "arm5e.sheet.authorship.author": "Author",
   "arm5e.sheet.authorship.label": "Authorship",
   "arm5e.sheet.authorship.language": "Language",
@@ -1238,6 +1240,7 @@
   "arm5e.sheet.activeEffect.types.laboratorySpec": "Laboratory's specialty",
   "arm5e.sheet.activeEffect.types.labActivity": "Character laboratory activity",
   "arm5e.sheet.activeEffect.types.realmAlignment": "Realm alignment",
+  "arm5e.sheet.activeEffect.types.realmSusceptibility": "Realm susceptibility",
   "arm5e.sheet.activeEffect.types.optional": "Optional bonus",
   "arm5e.sheet.activeEffect.types.spellmastery": "Spell mastery",
   "arm5e.sheet.activeEffect.types.roll.optional": "Optional roll bonus",
@@ -1766,5 +1769,9 @@
   "arm5e.generic.inherit": "Inherit",
   "arm5e.generic.pending": "Pending",
   "arm5e.generic.clear": "Clear",
-  "arm5e.generic.special": "Special"
+  "arm5e.generic.special": "Special",
+  "arm5e.generic.minutes": "minutes",
+  "arm5e.generic.minutesShort": "min.",
+  "arm5e.generic.hours": "hours",
+  "arm5e.generic.hoursShort": "hr."
 }

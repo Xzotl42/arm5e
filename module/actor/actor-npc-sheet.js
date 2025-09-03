@@ -152,7 +152,7 @@ export class ArM5eNPCActorSheet extends ArM5eActorSheet {
     super.activateListeners(html);
     html.find(".change-realm").change(async (event) => {
       event.preventDefault();
-      let chosenRealm = $(".change-realm").find("option:selected")[0].value;
+      let chosenRealm = html.find(".change-realm")[0].value;
       let currentRealm = getDataset(event).realm;
       let updateData = {};
       if (chosenRealm != "mundane") {

@@ -1156,6 +1156,38 @@ export const ACTIVE_EFFECTS_TYPES = {
       }
     }
   },
+  realmSusceptibility: {
+    category: "magic",
+    type: "realmSusceptibility",
+    tags: ["character"],
+    mnemonic: "arm5e.sheet.activeEffect.types.realmSusceptibility",
+    subtypes: {
+      magic: {
+        mnemonic: "arm5e.sheet.realm.magic",
+        key: "system.realms.magic.susceptible",
+        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+        default: true
+      },
+      faeric: {
+        mnemonic: "arm5e.sheet.realm.faeric",
+        key: "system.realms.faeric.susceptible",
+        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+        default: true
+      },
+      divine: {
+        mnemonic: "arm5e.sheet.realm.divine",
+        key: "system.realms.divine.susceptible",
+        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+        default: true
+      },
+      infernal: {
+        mnemonic: "arm5e.sheet.realm.infernal",
+        key: "system.realms.infernal.susceptible",
+        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+        default: true
+      }
+    }
+  },
   characterFeatures: {
     category: "character",
     type: "characterFeatures",
