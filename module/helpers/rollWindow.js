@@ -42,13 +42,15 @@ const ROLL_PROPERTIES = {
     VAL: "option",
     MODE: ROLL_MODES.STRESS_OR_SIMPLE,
     MODIFIERS: 1,
-    TITLE: "arm5e.dialog.title.rolldie"
+    TITLE: "arm5e.dialog.title.rolldie",
+    CALLBACK: applyImpact
   },
   ABILITY: {
     VAL: "ability",
     MODE: ROLL_MODES.STRESS_OR_SIMPLE,
     MODIFIERS: 1,
-    TITLE: "arm5e.dialog.title.rolldie"
+    TITLE: "arm5e.dialog.title.rolldie",
+    CALLBACK: applyImpact
   },
   // COMBAT: {
   //   MODE: ROLL_MODES.STRESS,
@@ -126,7 +128,8 @@ const ROLL_PROPERTIES = {
     VAL: "char",
     MODE: 19, // STRESS + SIMPLE + UNCONSCIOUS
     MODIFIERS: 1,
-    TITLE: "arm5e.dialog.title.rolldie"
+    TITLE: "arm5e.dialog.title.rolldie",
+    CALLBACK: applyImpact
   },
   SPELL: {
     VAL: "spell",
@@ -182,7 +185,7 @@ const ROLL_PROPERTIES = {
   },
   SUPERNATURAL: {
     VAL: "supernatural",
-    MODE: ROLL_MODES.NONE, // use dataset.dieType
+    MODE: ROLL_MODES.NONE, // use dataset.mode
     MODIFIERS: 7,
     TITLE: "arm5e.dialog.title.rolldie",
     ACTION_LABEL: "arm5e.dialog.powerUse",
@@ -190,7 +193,7 @@ const ROLL_PROPERTIES = {
   },
   POWER: {
     VAL: "power",
-    MODE: 64, // use dataset.dieType
+    MODE: 64, // use dataset.mode
     MODIFIERS: 7,
     TITLE: "arm5e.dialog.powerUse",
     ACTION_LABEL: "arm5e.dialog.powerUse"
@@ -211,7 +214,16 @@ const ROLL_PROPERTIES = {
  * @param type
  */
 function getRollTypeProperties(type) {
-  return ROLL_PROPERTIES[type.toUpperCase()] ?? ROLL_PROPERTIES.OPTION;
+  const properties = ROLL_PROPERTIES[type.toUpperCase()];
+  if (properties === undefined) {
+    console.error("Unknown type of roll!");
+  }
+  const res = foundry.utils.duplicate(properties);
+  // restore callback properties lost during duplication
+  res.CALLBACK = properties.CALLBACK;
+  res.ALT_ACTION = properties.ALT_ACTION;
+  res.ALTER_ROLL = properties.ALTER_ROLL;
+  return res;
 }
 
 /**
@@ -323,9 +335,9 @@ function getDebugButtonsIfNeeded(actor, callback) {
  * @param actor
  */
 function getDialogData(dataset, html, actor) {
-  const rollProperties = getRollTypeProperties(dataset.roll);
+  const rollInfo = actor.rollInfo;
+  const rollProperties = rollInfo.properties;
   const callback = rollProperties.CALLBACK;
-
   let btns = {};
   let mode = 0;
   const altAction = rollProperties.ALT_ACTION;
@@ -345,9 +357,10 @@ function getDialogData(dataset, html, actor) {
       }
     };
   }
-  const title = rollProperties.TITLE;
-  if (rollProperties.MODE & ROLL_MODES.STRESS || ROLL_MODES[dataset.dieType] & ROLL_MODES.STRESS) {
-    if (rollProperties.MODE & ROLL_MODES.NO_BOTCH) {
+  const title = rollInfo.title ? rollInfo.title : rollProperties.TITLE;
+  const rollMode = rollProperties.MODE;
+  if (rollMode & ROLL_MODES.STRESS) {
+    if (rollMode & ROLL_MODES.NO_BOTCH) {
       mode = 4; // No botches
     }
 
@@ -358,16 +371,13 @@ function getDialogData(dataset, html, actor) {
       ),
       callback: async (html) => {
         getFormData(html, actor);
-        await stressDie(actor, dataset.roll, mode, callback, actor.rollInfo.botchNumber);
+        await stressDie(actor, rollProperties.type, mode, callback, rollInfo.botchNumber);
       }
     };
     if (altAction) {
       btns.alt = altBtn;
     }
-    if (
-      rollProperties.MODE & ROLL_MODES.SIMPLE ||
-      ROLL_MODES[dataset.dieType] & ROLL_MODES.SIMPLE
-    ) {
+    if (rollMode & ROLL_MODES.SIMPLE) {
       btns.no = {
         icon: "<i class='fas fa-check'></i>",
         label: game.i18n.localize(
@@ -377,7 +387,7 @@ function getDialogData(dataset, html, actor) {
         ),
         callback: async (html) => {
           getFormData(html, actor);
-          await simpleDie(actor, dataset.roll, callback);
+          await simpleDie(actor, rollProperties.type, callback);
         }
       };
     } else {
@@ -385,14 +395,11 @@ function getDialogData(dataset, html, actor) {
         icon: "<i class='fas fa-ban'></i>",
         label: game.i18n.localize("arm5e.dialog.button.cancel"),
         callback: async (html) => {
-          await actor.rollInfo.reset();
+          await rollInfo.reset();
         }
       };
     }
-  } else if (
-    rollProperties.MODE & ROLL_MODES.SIMPLE ||
-    ROLL_MODES[dataset.dieType] & ROLL_MODES.SIMPLE
-  ) {
+  } else if (rollMode & ROLL_MODES.SIMPLE) {
     // Simple die only
     btns.yes = {
       icon: "<i class='fas fa-check'></i>",
@@ -401,7 +408,7 @@ function getDialogData(dataset, html, actor) {
       ),
       callback: async (html) => {
         getFormData(html, actor);
-        await simpleDie(actor, dataset.roll, callback);
+        await simpleDie(actor, rollProperties.type, callback);
       }
     };
     if (altAction) {
@@ -411,7 +418,7 @@ function getDialogData(dataset, html, actor) {
       icon: "<i class='fas fa-ban'></i>",
       label: game.i18n.localize("arm5e.dialog.button.cancel"),
       callback: async (html) => {
-        await actor.rollInfo.reset();
+        await rollInfo.reset();
       }
     };
   } else {
@@ -453,7 +460,6 @@ async function useMagicItem(dataset, item) {
     ui.notifications.warn(game.i18n.localize("arm5e.notification.noChargesLeft"));
     return;
   }
-  const rollProperties = getRollTypeProperties(dataset.roll);
   prepareRollVariables(dataset, item.actor);
   // log(false, `Roll variables: ${JSON.stringify(item.actor.system.roll)}`);
   let template = "systems/arm5e/templates/actor/parts/actor-itemUse.html";
@@ -502,8 +508,8 @@ async function usePower(dataset, actor) {
     ui.notifications.warn(game.i18n.localize("arm5e.notification.noMightPoints"));
     return;
   }
-  const rollProperties = getRollTypeProperties(dataset.roll);
   prepareRollVariables(dataset, actor);
+  const rollProperties = actor.rollInfo.properties;
   // log(false, `Roll variables: ${JSON.stringify(actor.system.roll)}`);
   let template = "systems/arm5e/templates/actor/parts/actor-powerUse.html";
   actor.system.roll = actor.rollInfo;
@@ -610,6 +616,12 @@ function addListenersDialog(html) {
     const e = html[0].getElementsByClassName("power-label")[0];
     e.value = e.value.replace(/\((.+)\)/i, `(${CONFIG.ARM5E.magic.arts[val].short})`);
   });
+
+  html.find(".SelectedDifficulty").change(async (event) => {
+    const dataset = getDataset(event);
+    const actor = game.actors.get(dataset.actorid);
+    actor.rollInfo.difficulty = parseInt(event.target.value);
+  });
 }
 
 /**
@@ -648,15 +660,83 @@ async function renderRollTemplate(dataset, template, actor) {
  * @param roll
  * @param message
  */
-async function combatAttack(attacker, roll, message) {}
+async function combatAttack(attacker, roll, message) {
+  await applyImpact(attacker, roll, message);
+}
 
 /**
  *
- * @param defense
+ * @param defender
  * @param roll
  * @param message
  */
-async function combatDefense(defense, roll, message) {}
+async function combatDefense(defender, roll, message) {
+  await applyImpact(defender, roll, message);
+}
+
+async function _applyImpact(actor, roll, message) {
+  const updateData = {};
+  const messageUpdate = {};
+
+  let fatigueUse = actor.rollInfo.impact.use.fatigue;
+  let fatigueFail = actor.rollInfo.impact.fail.fatigue;
+  // let fatiguePartial = actor.rollInfo.impact.partial.fatigue;
+
+  if (!fatigueUse && !fatigueFail) {
+    messageUpdate["system.impact"] = {
+      fatigueLevelsLost: 0,
+      fatigueLevelsPending: 0,
+      woundGravity: 0,
+      applied: false
+    };
+    return;
+  }
+  // remove fatigue on use
+  let impact = { fatigueLevelsLost: 0, fatigueLevelsPending: 0, woundGravity: 0, applied: false };
+  if (fatigueUse) {
+    let res = await actor.loseFatigueLevel(fatigueUse);
+    impact.fatigueLevelsLost = fatigueUse;
+  }
+
+  // check if the roll failed
+
+  // if (actor.rollInfo.rollFailed(roll)) {
+  if (fatigueFail) {
+    let res = actor._changeFatigueLevel(updateData, fatigueFail);
+    impact.fatigueLevelsPending = res.fatigueLevelsPending;
+    impact.woundGravity = res.woundGravity;
+  }
+  // }
+
+  // the actor can still change the situation by spending confidence.
+  if (actor.canUseConfidencePoint() && message.system.confidence.allowed && !roll.botches) {
+    // do not update fatigue yet.
+    delete updateData["system.fatigueCurrent"];
+    if (impact.fatigueLevelsPending || impact.woundGravity) {
+      updateData["system.states.confidencePrompt"] = true;
+    }
+  } else {
+    if (impact.woundGravity) {
+      await actor.changeWound(
+        1,
+        CONFIG.ARM5E.recovery.rankMapping[impact.woundGravity],
+        game.i18n.localize("arm5e.sheet.fatigueOverflow")
+      );
+    }
+    impact.fatigueLevelsLost += impact.fatigueLevelsPending;
+    impact.fatigueLevelsPending = 0;
+    impact.applied = true;
+  }
+  messageUpdate["system.impact"] = impact;
+  message.updateSource(messageUpdate);
+  return updateData;
+}
+
+// TODO
+async function applyImpact(actor, roll, message) {
+  const updateData = await _applyImpact(actor, roll, message);
+  await actor.update(updateData);
+}
 
 /**
  *
@@ -687,44 +767,19 @@ async function castSpell(actorCaster, roll, message) {
     // await actorCaster.update(updateData);
   }
   if (actorCaster.rollInfo.type == "spell") {
-    let fatigue = SpellSchema.fatigueCost(
+    const res = SpellSchema.fatigueCost(
       actorCaster,
       totalOfSpell,
       levelOfSpell,
       actorCaster.rollInfo.magic.ritual
     );
-
-    // Lost fatigue levels + wound if overflow
-    message.system.impact = actorCaster._changeFatigueLevel(updateData, fatigue);
-    messageUpdate["system.impact"] = message.system.impact;
-
-    // Uncomment when A-A integration is ready
-    // let data = {
-    //   itemId: actorCaster.rollInfo.itemId,
-    //   targets: game.user.targets,
-    //   actorId: actorCaster._id
-    // };
-
-    // Hooks.callAll("arm5e:spellcasting", data, {user : game.user.id});
+    actorCaster.rollInfo.impact.use.fatigue = res.use;
+    // actorCaster.rollInfo.impact.partial.fatigue = res.partial;
+    actorCaster.rollInfo.impact.fail.fatigue = res.fail;
   }
+  const updateImpact = await _applyImpact(actorCaster, roll, message);
+  foundry.utils.mergeObject(updateData, updateImpact);
 
-  if (actorCaster.canUseConfidencePoint() && message.system.confidence.allowed && !roll.botches) {
-    // do not update fatigue yet.
-    delete updateData["system.fatigueCurrent"];
-
-    if (message.system.impact.fatigueLevels || message.system.impact.woundGravity) {
-      updateData["system.states.confidencePrompt"] = true;
-    }
-  } else {
-    if (message.system.impact.woundGravity) {
-      await actorCaster.changeWound(
-        1,
-        CONFIG.ARM5E.recovery.rankMapping[woundGravity],
-        game.i18n.localize("arm5e.sheet.fatigueOverflow")
-      );
-    }
-    messageUpdate["system.impact.applied"] = true;
-  }
   const form = CONFIG.ARM5E.magic.arts[actorCaster.rollInfo.magic.form.value]?.label ?? "NONE";
   await actorCaster.update(updateData);
   await handleTargetsOfMagic(actorCaster, form, message);
@@ -759,7 +814,8 @@ async function castSupernaturalEffect(actorCaster, roll, message) {
   }
 
   messageUpdate["system.impact.applied"] = true;
-
+  const updateImpact = await _applyImpact(actorCaster, roll, message);
+  foundry.utils.mergeObject(updateData, updateImpact);
   await actorCaster.update(updateData);
 
   message.updateSource(messageUpdate);
@@ -882,6 +938,11 @@ export function getFormData(html, actor) {
   find = html.find(".SelectedYear");
   if (find.length > 0) {
     actor.rollInfo.environment.year = Number(find[0].value) ?? 1220;
+  }
+
+  find = html.find(".SelectedDifficulty");
+  if (find.length > 0) {
+    actor.rollInfo.difficulty = parseInt(find[0].value ?? 0);
   }
 
   if (

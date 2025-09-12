@@ -3375,6 +3375,11 @@ ARM5E.recovery = {
   rollMode: 56 // no chat message, no confidence, non-interactive
 };
 
+export function getWoundStr(gravity = 0) {
+  if (gravity > 5 && gravity < 0) return "";
+  return game.i18n.localize(ARM5E.recovery.wounds[ARM5E.recovery.rankMapping[gravity]].label);
+}
+
 ARM5E.ActorProfiles = {
   basic: {
     label: "Add basic abilities",

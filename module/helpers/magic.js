@@ -633,9 +633,9 @@ export function computeRawCastingTotal(effect, owner, options = {}) {
  *
  * @param actor
  */
-async function noFatigue(actor) {
+function noFatigue(actor) {
   if (actor.isMagus()) {
-    actor.rollInfo.useFatigue = false;
+    actor.rollInfo.impact.fail.fatigue = 0;
     actor.rollInfo.magic.divide = actor.system.bonuses.arts.spontDividerNoFatigue;
   }
 }

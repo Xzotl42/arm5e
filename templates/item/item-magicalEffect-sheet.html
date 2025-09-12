@@ -8,7 +8,8 @@
             placeholder="Name" />
           {{#if noRoll}}
             <div class="flex0 padding10 "><a class="rollable" data-roll="magic" data-id="{{item._id}}"
-                title='{{localize "arm5e.dialog.button.roll"}}'><img src="systems/arm5e/assets/dice.png"
+                data-fatigue-on-use="1" title='{{localize "arm5e.dialog.button.roll"}}'><img
+                  src="systems/arm5e/assets/dice.png"
                   style="border: 0px; height:30px; min-height:30px; min-width: 30px;"></a>
             </div>
           {{/if}}

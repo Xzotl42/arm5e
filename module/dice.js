@@ -18,7 +18,7 @@ async function simpleDie(actor, type = "OPTION", callback, modes = 0) {
   // actor = getFormData(html, actor);
   actor = await getRollFormula(actor);
   const rollInfo = actor.rollInfo;
-  const rollProperties = getRollTypeProperties(type);
+  const rollProperties = rollInfo.properties;
   //console.log('simple die');
   let flavorTxt = `<p>${game.i18n.localize("arm5e.dialog.button.simpledie")}:</p>`;
   let formula = "1D10+" + rollInfo.formula;
@@ -57,10 +57,10 @@ async function simpleDie(actor, type = "OPTION", callback, modes = 0) {
         botchCheck: false,
         details: rollInfo.details,
         divider: rollInfo.magic.divide,
-        difficulty: 0,
+        difficulty: rollInfo.difficulty,
         actorType: actor.type // for if the actor is deleted
       },
-      impact: { fatigueLevels: 0, woundGravity: 0, applied: false }
+      impact: { fatigueLevelsLost: 0, fatigueLevelsPending: 0, woundGravity: 0, applied: false }
     };
 
     const messageData = await dieRoll.toMessage(
@@ -89,7 +89,7 @@ async function simpleDie(actor, type = "OPTION", callback, modes = 0) {
     await callback(actor, dieRoll, message, rollInfo);
   }
   if (!(modes & 32)) await Arm5eChatMessage.create(message.toObject());
-  actor.rollInfo.reset();
+  // actor.rollInfo.reset();
   return dieRoll;
 }
 
@@ -114,7 +114,7 @@ async function stressDie(actor, type = "OPTION", modes = 0, callback = undefined
   iterations = 1;
   actor = await getRollFormula(actor);
   const rollInfo = actor.rollInfo;
-  const rollProperties = getRollTypeProperties(type);
+  const rollProperties = rollInfo.properties;
   let rollOptions = {
     minimize: false,
     maximize: false,
@@ -213,10 +213,10 @@ async function stressDie(actor, type = "OPTION", modes = 0, callback = undefined
         botchCheck: botchCheck,
         details: rollInfo.details,
         divider: rollInfo.magic.divide,
-        difficulty: 0,
+        difficulty: rollInfo.difficulty,
         actorType: actor.type // for if the actor is deleted
       },
-      impact: { fatigueLevels: 0, woundGravity: 0, applied: false }
+      impact: { fatigueLevelsLost: 0, fatigueLevelsPending: 0, woundGravity: 0, applied: false }
     };
 
     //   system.combat = { attacker: actor.uuid, defenders: [] };
@@ -247,7 +247,7 @@ async function stressDie(actor, type = "OPTION", modes = 0, callback = undefined
     await callback(actor, dieRoll, message, rollInfo);
   }
   if (!(modes & 32)) Arm5eChatMessage.create(message.toObject());
-  actor.rollInfo.reset();
+  // actor.rollInfo.reset();
   return dieRoll;
 }
 
@@ -610,9 +610,9 @@ async function getRollFormula(actor) {
       }
     }
 
-    if (rollInfo.useFatigue) {
-      await actor.loseFatigueLevel(1);
-    }
+    // if (rollInfo.useFatigue) {
+    //   await actor.loseFatigueLevel(1);
+    // }
 
     ///
     // after computing total
@@ -890,7 +890,7 @@ export async function createRoll(rollFormula, multiplier, divide, options = {}) 
 async function noRoll(actor, modes, callback) {
   actor = await getRollFormula(actor);
   const rollInfo = actor.rollInfo;
-  const rollProperties = getRollTypeProperties(rollInfo.type);
+  const rollProperties = rollInfo.properties;
   let formula = `${rollInfo.formula}`;
 
   let rollMode = game.settings.get("core", "rollMode");
@@ -920,9 +920,10 @@ async function noRoll(actor, modes, callback) {
       botchCheck: false,
       details: rollInfo.details,
       divider: rollInfo.magic.divide,
-      actorType: actor.type // for if the actor is deleted
+      actorType: actor.type, // for if the actor is deleted
+      difficulty: rollInfo.difficulty
     },
-    impact: { fatigueLevels: 0, woundGravity: 0, applied: false }
+    impact: { fatigueLevelsLost: 0, fatigueLevelsPending: 0, woundGravity: 0, applied: false }
   };
 
   const messageData = await tmp.toMessage(
@@ -946,7 +947,7 @@ async function noRoll(actor, modes, callback) {
     await callback(actor, dieRoll, message, rollInfo);
   }
   await Arm5eChatMessage.create(message.toObject());
-  actor.rollInfo.reset();
+  // actor.rollInfo.reset();
   return dieRoll;
 }
 

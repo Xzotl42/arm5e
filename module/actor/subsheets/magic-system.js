@@ -143,10 +143,10 @@ export class ArM5eMagicSystem {
       template.selection.targetType = { simple: "Simple", complex: "Complex" };
       // see rollWindow.js for value significance
       template.selection.rollType = [
-        { value: "STRESS", label: game.i18n.localize("arm5e.dialog.button.stressdie") },
-        { value: "SIMPLE", label: game.i18n.localize("arm5e.dialog.button.simpledie") },
-        { value: "STRESS_OR_SIMPLE", label: "Both" },
-        { value: "NONE", label: "No roll" }
+        { value: 1, label: game.i18n.localize("arm5e.dialog.button.stressdie") },
+        { value: 2, label: game.i18n.localize("arm5e.dialog.button.simpledie") },
+        { value: 3, label: "Both" },
+        { value: 64, label: "No roll" }
       ];
       let idx = 0;
       template.buttons = { mult: "disabled" };

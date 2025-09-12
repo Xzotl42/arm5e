@@ -15,7 +15,6 @@
       </li>
       {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
       {{#each (lookup ../system.supernaturalEffectsTemplates tid) as |item id|}}
-        {{log "THIS " this }}
         {{log "template "  @root.system.magicSystem.templates tid }}
         <li class="item item-value flexrow macro-ready" data-name="{{item.name}}" data-item-id="{{item._id}}">
 
@@ -23,7 +22,7 @@
           <div class="flexrow flex-center">
             {{#if item.system.valid}}
               <span class="flexrow item-title width4 rollable" data-roll="supernatural" data-id="{{item._id}}"
-                name="item.name" data-die-type="{{lookup (lookup @root.system.magicSystem.templates tid) 'rollType'}}">
+                name="item.name" data-mode="{{lookup (lookup @root.system.magicSystem.templates tid) 'rollType'}}">
                 {{item.name}} ({{item.system.level}})
               </span>
             {{else}}

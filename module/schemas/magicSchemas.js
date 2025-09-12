@@ -318,24 +318,25 @@ export class SpellSchema extends MagicalEffectSchema {
   }
 
   static fatigueCost(actor, castingTotal, difficulty, ritual = false) {
+    // const res = { use: 0, partial: 0, fail: 0 };
+    const res = { use: 0, fail: 0 };
     const delta = castingTotal - difficulty;
     if (ritual) {
+      // Mythic blood
+      res.use = Math.max(1 - actor.system.bonuses.arts.ritualFatigueCancelled, 0);
       if (delta < 0) {
-        return Math.max(
-          1 +
-            Math.ceil((difficulty - castingTotal) / 5) -
-            actor.system.bonuses.arts.ritualFatigueCancelled,
+        res.fail = Math.max(
+          Math.ceil((difficulty - castingTotal) / 5) -
+            Math.max(actor.system.bonuses.arts.ritualFatigueCancelled - 1, 0),
           0
         );
-      } else {
-        return Math.max(1 - actor.system.bonuses.arts.ritualFatigueCancelled, 0);
       }
     } else {
       if (delta < -actor.system.bonuses.arts.spellFatigueThreshold) {
-        return 1;
+        res.fail = 1;
       }
     }
-    return 0;
+    return res;
   }
 
   static migrateData(data) {

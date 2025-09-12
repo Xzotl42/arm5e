@@ -1,12 +1,21 @@
 <div class="flexcol grid grid-2col margintop18">
   <div class="flex-group-left backSection padding12">
-    <div class="grid grid-3col">
-      <label class="smallTitle">{{localize "arm5e.sheet.fatigue"}} ({{ system.fatigueTotal }})</label>
-      <div>
+    <div class="flexrow" style="max-height: 32px;">
+      <div style="margin-top: 12px;">
+        <label class="smallTitle">{{localize "arm5e.sheet.fatigue"}} ({{ system.fatigueTotal }})</label>
+      </div>
+      <div style="margin-top: 12px;">
         <a class="item-control removeFatigue" title="Remove fatigue level"><i class="fas fa-minus fa-lg"></i></a>
         <a class="item-control addFatigue" title="Add fatigue level"> <i class="fas fa-plus fa-lg"></i></a>
       </div>
-      <button class="arm5e rest" style="font-family: blackmoor">{{localize "arm5e.sheet.action.rest"}}
+      <div> <img class="fatigueRoll rollable tinyimg" data-roll="option" data-physicalcondition="true"
+          data-title="{{localize 'arm5e.sheet.fatigueRoll'}}" data-name="{{localize 'arm5e.sheet.fatigueRoll'}}"
+          data-mode="1" data-difficulty="6" data-option1="{{ system.characteristics.sta.value }}"
+          data-fatigue-on-fail="1" data-txtoption1="{{ localize config.character.characteristics.sta.label }}"
+          src="systems/arm5e/assets/icons/fatigue.svg" title="{{localize 'arm5e.sheet.fatigueRoll' }}">
+      </div>
+
+      <button class="arm5e rest" style="max-height: 32px; font-family: blackmoor">{{localize "arm5e.sheet.action.rest"}}
         {{system.fatigueTime}} {{localize "arm5e.generic.minutesShort" }}</button>
     </div>
 
