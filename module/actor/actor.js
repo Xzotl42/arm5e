@@ -947,18 +947,18 @@ export class ArM5eActor extends Actor {
   async recoverFatigueLevel(num) {
     const updateData = {};
     const res = this._changeFatigueLevel(updateData, -num, false);
-    if (res.fatigueLevels) await this.update(updateData, {});
+    if (res.fatigueLevelsPending) await this.update(updateData, {});
     return res;
   }
 
   async loseFatigueLevel(num, wound = true) {
     const updateData = {};
     const res = this._changeFatigueLevel(updateData, num, wound);
-    if (res.fatigueLevels) await this.update(updateData, {});
+    if (res.fatigueLevelsPending) await this.update(updateData, {});
     if (res.woundGravity) {
       await this.changeWound(
         1,
-        ARM5E.recovery.rankMapping[woundGravity],
+        ARM5E.recovery.rankMapping[res.woundGravity],
         game.i18n.localize("arm5e.sheet.fatigueOverflow")
       );
     }
@@ -967,7 +967,8 @@ export class ArM5eActor extends Actor {
 
   _changeFatigueLevel(updateData, num, wound = true) {
     const res = {
-      fatigueLevels: 0,
+      fatigueLevelsLost: 0,
+      fatigueLevelsPending: 0,
       woundGravity: 0
     };
     if (!this.isCharacter() || (num <= 0 && this.system.fatigueCurrent == 0)) {
@@ -977,15 +978,15 @@ export class ArM5eActor extends Actor {
     let overflow = 0;
     if (tmp < 0) {
       // character cannot restore more fatigue levels than he/she has
-      res.fatigueLevels = tmp;
+      res.fatigueLevelsPending = tmp;
       updateData["system.fatigueCurrent"] = 0;
     } else if (tmp > this.system.fatigueMaxLevel) {
       // overflow to a wound
-      res.fatigueLevels = this.system.fatigueMaxLevel - this.system.fatigueCurrent;
+      res.fatigueLevelsPending = this.system.fatigueMaxLevel - this.system.fatigueCurrent;
       updateData["system.fatigueCurrent"] = this.system.fatigueMaxLevel;
       overflow = tmp - this.system.fatigueMaxLevel;
     } else {
-      res.fatigueLevels = num;
+      res.fatigueLevelsPending = num;
       updateData["system.fatigueCurrent"] = tmp;
     }
 

@@ -17,7 +17,7 @@
             placeholder="Name" />
           {{#if noRoll}}
             <div class="flex0 padding10 "><a class="rollable" data-roll="spell" data-id="{{item._id}}"
-                data-modifier="{{ item.system.bonus }}" data-name="{{item.name}}" data-usefatigue="true"
+                data-modifier="{{ item.system.bonus }}" data-name="{{item.name}}" data-fatigue-on-use="1"
                 title='{{localize "arm5e.dialog.button.roll"}}'><img src="systems/arm5e/assets/dice.png"
                   style="border: 0px; height:30px; min-height:30px; min-width: 30px;"></a>
             </div>

@@ -1880,7 +1880,13 @@ export class ArM5eActorSheet extends ActorSheet {
       });
       return false;
     }
-    if ((getRollTypeProperties(dataset.roll).MODE & ROLL_MODES.UNCONSCIOUS) == 0) {
+
+    const rollProperties = getRollTypeProperties(dataset.roll);
+    if (dataset.mode) {
+      rollProperties.MODE = dataset.mode;
+    }
+
+    if ((rollProperties.MODE & ROLL_MODES.UNCONSCIOUS) == 0) {
       // if (dataset.roll != "char" && dataset.roll != "aging" && dataset.roll != "crisis") {
       if (this.actor.system.states.pendingCrisis) {
         ui.notifications.info(game.i18n.localize("arm5e.notification.pendingCrisis"), {
@@ -1927,6 +1933,7 @@ export class ArM5eActorSheet extends ActorSheet {
 
     const template = chooseTemplate(dataset);
     await renderRollTemplate(dataset, template, this.actor);
+    log(false, `spell info: ${JSON.stringify(this.actor.rollInfo.magic)}`);
     return true;
   }
 

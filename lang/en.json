@@ -102,6 +102,7 @@
   "arm5e.sheet.effect": "Effect",
   "arm5e.sheet.fatigue": "Fatigue",
   "arm5e.sheet.fatigueOverflow": "Fatigue overflow",
+  "arm5e.sheet.fatigueRoll": "Fatigue roll",
   "arm5e.sheet.wounds": "Wounds",
   "arm5e.sheet.wound.label": "Wound",
   "arm5e.sheet.vitals": "Vitals",
@@ -297,6 +298,7 @@
   "arm5e.sheet.soak": "Soak",
   "arm5e.sheet.soakBonus": "Soak bonus",
 
+  "arm5e.sheet.rollFailed": "Roll failed",
   "arm5e.sheet.spellFailed": "Spell failed",
   "arm5e.sheet.contestOfMagic": "Contest of magic",
   "arm5e.sheet.actions": "Actions",
@@ -1773,5 +1775,6 @@
   "arm5e.generic.minutes": "minutes",
   "arm5e.generic.minutesShort": "min.",
   "arm5e.generic.hours": "hours",
-  "arm5e.generic.hoursShort": "hr."
+  "arm5e.generic.hoursShort": "hr.",
+  "arm5e.generic.difficulty": "Difficulty"
 }

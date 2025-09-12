@@ -1462,6 +1462,17 @@ input[type="time"] {
   margin-bottom: 8px;
 }
 
+img.tinyimg {
+  -webkit-box-flex: 0;
+  -ms-flex: 0 0 100px;
+  flex: 0 0 100px;
+  max-height: 32px;
+  max-width: 32px;
+  margin-right: 16px;
+  margin-bottom: 16px;
+  object-fit: contain;
+}
+
 .arm5e .sheet-header .header-fields {
   -webkit-box-flex: 1;
   -ms-flex: 1;

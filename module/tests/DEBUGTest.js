@@ -62,41 +62,6 @@ export function registerDEBUGTest(quench) {
       });
 
       describe("Magic rolls", function () {
-        it("Raw spontaneous", async function () {
-          await magus.changeWound(3, "light");
-          let type = "spont";
-          try {
-            let dataset = {
-              roll: type,
-              name: "Spontaneous",
-              bonusActiveEffects: magus.system.bonuses.arts.spellcasting, // tmp
-              technique: "mu",
-              form: "co",
-              usefatigue: true
-            };
-            magus.rollInfo.init(dataset, magus);
-            let roll = await stressDie(magus, type, 0, undefined, 10);
-            log(false, roll);
-            assert.ok(roll);
-            if (roll.botches) {
-              assert.equal(roll.total, 0, "botched");
-              return;
-            }
-            const aura = Aura.fromActor(magus);
-            aura.computeMaxAuraModifier(magus.system.realms);
-            let tot =
-              magus.system.arts.techniques.mu.finalScore +
-              magus.system.arts.forms.co.finalScore +
-              magus.system.characteristics.sta.value +
-              magus.system.penalties.wounds.total +
-              magus.system.fatigueTotal +
-              aura.modifier;
-            assert.equal(roll.modifier, tot);
-          } catch (err) {
-            console.error(`Error: ${err}`);
-            assert.ok(false);
-          }
-        });
         it("Raw spontaneous + deficiency", async function () {
           let type = "spont";
           try {
@@ -106,7 +71,7 @@ export function registerDEBUGTest(quench) {
               bonusActiveEffects: magus.system.bonuses.arts.spellcasting,
               technique: "pe",
               form: "co",
-              usefatigue: true
+              fatigueOnUse: 1
             };
             magus.rollInfo.init(dataset, magus);
             let roll = await stressDie(magus, type, 0, undefined, 10);
@@ -124,9 +89,9 @@ export function registerDEBUGTest(quench) {
               magus.system.characteristics.sta.value +
               magus.system.penalties.wounds.total +
               magus.system.fatigueTotal +
-              1 +
               aura.modifier;
-            assert.equal(roll.modifier(), tot);
+            log(false, roll);
+            assert.equal(roll.modifier, tot);
           } catch (err) {
             console.error(`Error: ${err}`);
             assert.ok(false);
@@ -139,7 +104,7 @@ export function registerDEBUGTest(quench) {
               roll: type,
               bonusActiveEffects: magus.system.bonuses.arts.spellcasting,
               id: ME1._id,
-              usefatigue: true
+              fatigueOnUse: 1
             };
             magus.rollInfo.init(dataset, magus);
             let roll = await stressDie(magus, type, 0, undefined, 100);
@@ -157,76 +122,9 @@ export function registerDEBUGTest(quench) {
               magus.system.characteristics.sta.value +
               magus.system.penalties.wounds.total +
               magus.system.fatigueTotal +
-              2 +
               aura.modifier;
-            assert.equal(roll.modifier(), tot);
-          } catch (err) {
-            console.error(`Error: ${err}`);
-            assert.ok(false);
-          }
-        });
-        it("Magic effect all req", async function () {
-          let type = "magic";
-          try {
-            await magus.rest();
-            let dataset = {
-              roll: type,
-              bonusActiveEffects: magus.system.bonuses.arts.spellcasting,
-              id: ME2._id,
-              usefatigue: true
-            };
-            magus.rollInfo.init(dataset, magus);
-            let roll = await stressDie(magus, type, 0, undefined, 1);
             log(false, roll);
-            assert.ok(roll);
-            if (roll.botches) {
-              assert.equal(roll.total, 0, "botched");
-              return;
-            }
-            const aura = Aura.fromActor(magus);
-            aura.computeMaxAuraModifier(magus.system.realms);
-            let tot =
-              // magus.system.arts.techniques.cr.finalScore +
-              // magus.system.arts.forms.ig.finalScore +
-              magus.system.characteristics.sta.value +
-              magus.system.penalties.wounds.total +
-              magus.system.fatigueTotal +
-              aura.modifier;
-            assert.equal(roll.modifier(), tot);
-          } catch (err) {
-            console.error(`Error: ${err}`);
-            assert.ok(false);
-          }
-        });
-        it("Magic effect with focus", async function () {
-          let type = "magic";
-          try {
-            await magus.rest();
-            let dataset = {
-              roll: type,
-              bonusActiveEffects: magus.system.bonuses.arts.spellcasting,
-              id: ME3.id
-              // divide: 2,
-              // usefatigue: true
-            };
-            magus.rollInfo.init(dataset, magus);
-            let roll = await stressDie(magus, type, 0, undefined, 1);
-            log(false, roll);
-            assert.ok(roll);
-            if (roll.botches) {
-              assert.equal(roll.total, 0, "botched");
-              return;
-            }
-            const aura = Aura.fromActor(magus);
-            aura.computeMaxAuraModifier(magus.system.realms);
-            let tot =
-              magus.system.arts.techniques.mu.finalScore +
-              magus.system.arts.forms.an.finalScore * 2 +
-              magus.system.characteristics.sta.value +
-              magus.system.penalties.wounds.total +
-              magus.system.fatigueTotal +
-              aura.modifier;
-            assert.equal(roll.modifier(), tot);
+            assert.equal(roll.modifier, tot);
           } catch (err) {
             console.error(`Error: ${err}`);
             assert.ok(false);

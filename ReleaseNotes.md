@@ -1,4 +1,4 @@
-## 2.4.0.16, Radislav am Polanach
+## 2.4.0.18, Radislav am Polanach
 
 ### Compatibility
 
@@ -38,6 +38,8 @@
 - Shift clicking an Item in the hotbar will display its sheet instead of rolling
 - Control clicking an Item in the hotbar will display its owner's sheet instead of rolling
 - Time to recover all fatigue is displayed on the rest button
+- Fatigue rolls (fail the roll you lose fatigue)
+- Added difficulty target to characteristics and abilities rolls.
 - [Technical] Switch to V12 only
   - Use of TypeDataModel instead of DataModel for Document types
   - Removed of V10 only code.
@@ -55,6 +57,7 @@
 - [Technical] removal of some duplicate unused id attributes
 - [Technical] Speed optimization all over the place - on going
 - [Technical] the Astrolabium is now a singleton (ie: only one window exists)
+- [Technical] Improved the roll framework so generic roll can be more customized
 
 ### Bug fixes
 
