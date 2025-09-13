@@ -289,7 +289,7 @@ export class RollChatSchema extends BasicChatSchema {
   addActionButtons(btnContainer, actor) {
     // confidence
     // confidence has been used already => no button
-    let btnCnt = 0;
+    let buttonsArray = [];
     if (
       !this.impact.applied &&
       this.confidence.allowed &&
@@ -312,8 +312,8 @@ export class RollChatSchema extends BasicChatSchema {
         const message = game.messages.get(ev.currentTarget.dataset.msgId);
         await message.system.useConfidence(actorId);
       });
-      btnContainer.append(useConfButton);
-      btnCnt++;
+
+      buttonsArray.push(useConfButton);
       if (
         this.impact.fatigueLevelsPending ||
         this.impact.woundGravity ||
@@ -350,11 +350,16 @@ export class RollChatSchema extends BasicChatSchema {
           const p2 = message.update(messageData);
           await Promise.all([p0, p1, p2]);
         });
-        btnContainer.append(noConfButton);
-        btnCnt++;
+        buttonsArray.push(noConfButton);
       }
     }
-    return btnCnt;
+    if (buttonsArray.length === 0) return 0;
+    const btnRow = $('<div class="flexrow"></div>');
+    for (let b of buttonsArray) {
+      btnRow.append(b);
+    }
+    btnContainer.append(btnRow);
+    return buttonsArray.length;
   }
 
   fatigueCost(actor) {

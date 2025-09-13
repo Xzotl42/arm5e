@@ -150,6 +150,14 @@ h2.module-header {
 h2 {
   font-family: Blackmoor;
   font-size: 18px;
+  font-weight: normal;
+}
+
+h2.ars-chat-title {
+  font-family: Blackmoor;
+  font-size: 16pt;
+  font-weight: normal;
+  margin-top: 3px;
 }
 
 h3 {
@@ -557,7 +565,9 @@ img.clickable2:hover {
 .system-arm5e .chat-button {
   width: 47%;
   align-items: center;
-  height: 30px;
+  height: 25px;
+  margin-left: 2px;
+  margin-right: 2px;
   font-size: 16px;
   line-height: 1px;
   background: rgba(0, 0, 0, 0.1);
@@ -574,7 +584,8 @@ img.clickable2:hover {
 .ars-chat-title {
   font-family: "blackmoor";
   border-bottom: 1px solid #8e7759;
-  line-height: 20px;
+  line-height: 24px;
+  margin-bottom: 5px;
   color: var(--color-text-dark-secondary);
 }
 
@@ -584,7 +595,7 @@ img.clickable2:hover {
   font-weight: bold;
   position: relative;
   margin: 0;
-  line-height: 24px;
+  line-height: 20px;
   text-align: center;
   background: rgba(0, 0, 0, 0.1);
   border: 1px solid var(--color-border-light-2);
@@ -596,6 +607,7 @@ img.clickable2:hover {
 .chat-message .message-header .ars-chat-title {
   font-family: "blackmoor";
   border-bottom: 1px solid #8e7759;
+  font-weight: normal;
 }
 .arts-total-header {
   height: 57px;
@@ -1771,6 +1783,11 @@ div[class*="foldable-section"] {
 .checkbox-label {
   padding-top: 7px;
   height: auto;
+}
+
+.btn-container {
+  margin: 2px;
+  padding: 3px;
 }
 
 .flavor-bar-cov {

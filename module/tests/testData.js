@@ -442,7 +442,7 @@ export const spellData3 = {
   baseLevel: 4,
   baseEffectDescription: "",
   applyFocus: false,
-  ritual: false,
+  ritual: true,
   bonus: 3,
   bonusDesc: "Talisman",
   xp: 30,
