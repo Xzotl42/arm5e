@@ -1,61 +1,12 @@
 {
-  "ACTOR": {
-    "TypeBeast": "Animal",
-    "TypeCovenant": "Alliance",
-    "TypeLaboratory": "Laboratoire",
-    "TypeMagiccodex": "Codex magique",
-    "TypeNpc": "PNJ",
-    "TypePlayer": "Personnage joueur"
-  },
-  "ITEM": {
-    "TypeAbility": "Compétence",
-    "TypeAbilityfamiliar": "Compétence du familier",
-    "TypeArmor": "Armure",
-    "TypeBaseeffect": "Effet de base (interne)",
-    "TypeBook": "Livre",
-    "TypeCalendarcovenant": "Evénement du calendrier (interne)",
-    "TypeDiaryentry": "Entrée du journal (interne)",
-    "TypeDistinctive": "Élément distinctif du laboratoire (Obsolète)",
-    "TypeEnchantment": "Enchantement",
-    "TypeFlaw": "Vice",
-    "TypeHabitanthorses": "Cheval de l'Alliance",
-    "TypeHabitantlivestock": "Bétail de l'alliance",
-    "TypeHabitantmagi": "Habitant magi (Obsolète)",
-    "TypeHabitantmompanion": "Habitant companion (Obsolète)",
-    "TypeHabitantspecialists": "Habitant spécialiste (Obsolète)",
-    "TypeHook": "Idée d'aventure",
-    "TypeIncomingsource": "Source de revenus",
-    "TypeInhabitant": "Habitant de l'alliance",
-    "TypeItem": "Objet",
-    "TypeLaboratorytext": "Texte de laboratoire",
-    "TypeMagicaleffect": "Effet magique",
-    "TypeMagicitem": "Objet magique (Obsolète)",
-    "TypeMight": "Puisssance",
-    "TypeMightfamiliar": "Puisssance du familier",
-    "TypeMundanebook": "Livre ordinaire (Obsolète)",
-    "TypePersonalitytrait": "Personnalité",
-    "TypePossessionscovenant": "Possession de l'alliance",
-    "TypePower": "Pouvoir",
-    "TypePowerfamiliar": "Pouvoir de familier",
-    "TypeReputation": "Réputation",
-    "TypeSanctumroom": "Pièce du Sanctum (Obsolète)",
-    "TypeSpeciality": "Spécialité du laboratoire (Obsolète)",
-    "TypeSpell": "Sort",
-    "TypeVirtue": "Vertue",
-    "TypeVis": "Vis",
-    "TypeVissourcescovenant": "Source de vis de l'alliance",
-    "TypeVisstockcovenant": "Stock de vis de l'alliance",
-    "TypeWeapon": "Arme",
-    "TypeWound": "Blessure"
-  },
   "TYPES": {
     "Actor": {
-      "beast": "Animal",
-      "covenant": "Alliance",
-      "laboratory": "Laboratoire",
-      "magicCodex": "Codex magique",
-      "npc": "PNJ",
-      "player": "Personnage joueur"
+      "TypeBeast": "Animal",
+      "TypeCovenant": "Alliance",
+      "TypeLaboratory": "Laboratoire",
+      "TypeMagiccodex": "Codex magique",
+      "TypeNpc": "PNJ",
+      "TypePlayer": "Personnage joueur"
     },
     "Item": {
       "Might": "Puisssance",
@@ -77,6 +28,7 @@
       "habitantSpecialists": "Habitant spécialiste (Obsolète)",
       "hook": "Idée d'aventure",
       "incomingSource": "Source de revenus",
+      "inferiority": "Infériorité",
       "inhabitant": "Habitant de l'alliance",
       "item": "Objet",
       "laboratoryText": "Texte de laboratoire",
@@ -87,10 +39,12 @@
       "possessionsCovenant": "Possession de l'alliance",
       "power": "Pouvoir",
       "powerFamiliar": "Pouvoir de familier",
+      "quality": "Qualité",
       "reputation": "Réputation",
       "sanctumRoom": "Pièce du Sanctum (Obsolète)",
       "speciality": "Spécialité du laboratoire (Obsolète)",
       "spell": "Sort",
+      "supernaturalEffect": "Effet supernaturel",
       "virtue": "Vertue",
       "vis": "Vis",
       "visSourcesCovenant": "Source de vis de l'alliance",
@@ -132,6 +86,7 @@
       "msg": {
         "abilityMissing": "Cette compétence n'existe plus.",
         "activityEndsInFuture": "Impossible à appliquer. Cette activité finit dans le futur",
+        "activityStartsInFuture": "Impossible à appliquer. Cette activité commence dans le futur",
         "agingInWinter": "Le vieillissement se produit généralement en hiver, à moins qu'il ne s'agisse d'un effet externe.",
         "duplicates": "Doublon existant {param}",
         "gainCapped": "Le gain d'expérience a été plafonné à {param}, l'élève égalera le maître.",
@@ -140,6 +95,7 @@
         "noArt": "Aucun Art restant",
         "noEnoughVis": "Pas assez de vis disponible en stock.",
         "noProgressItems": "Aucun élément d'avancement n'a été sélectionné",
+        "noProgressPossible": "Il n’y a aucun progrès possible à la date actuelle.",
         "noSpell": "Aucun sort restant",
         "noTeacher": "Aucun enseignant sélectionné",
         "noTrainer": "Aucun entraîneur sélectionné",
@@ -172,7 +128,9 @@
         "masteries": "Maitrise"
       },
       "reading": "Lecture",
+      "readingArts": "Lecture concernant les Arts",
       "recovery": "Récupération",
+      "resource": "Suivi des ressources",
       "roll": {
         "aging": "Jet de vieillissement",
         "investigate": "Jet d'étude",
@@ -205,6 +163,21 @@
         "training": "Entrainement à {skills} avec {teacher}",
         "visStudy": "Etude sur vis {art}"
       },
+      "tracking": {
+        "addition": "{resource} ajouté à votre inventaire.",
+        "from": {
+          "generic": "{toActor} a reçu {resource} de {fromActor}.",
+          "vis": "{resource} récolté de {fromActor}.",
+          "visSource": "{resource} extrait de {fromActor}."
+        },
+        "removal": "{resource} retiré de l'inventaire.",
+        "resource": {
+          "vis": "{num} pion(s) de Vis {art}"
+        },
+        "to": {
+          "generic": "{fromActor} a donné {resource} à {toActor}."
+        }
+      },
       "training": "Apprentissage",
       "visStudy": "Etude sur vis",
       "writing": "Ecriture"
@@ -232,7 +205,7 @@
       "result5": "- Perdre un point en {characteristic}.<br/>",
       "result6": "- Gain de {num} point(s) de décrépitude.<br/>",
       "result7": "- Gain de {num} point(s) de distorsion à cause du rituel de longévité.<br/>",
-      "resultTitle": "Une autre année a passé pour votre {character}.",
+      "resultTitle": "Une autre année a passé pour {character}.",
       "roll": {
         "ComPrsPts": "1 Point de Vieillissement en Com et Pre.",
         "DexQikPts": "1 Point de Vieillissement en Dex et Viv.",
@@ -258,6 +231,7 @@
     "astrolab": {
       "restAll": "Reposez tout le monde",
       "setWorldDate": "Définir la date du monde",
+      "trackResources": "Suivre les resources",
       "updateActors": "Mise à jours des acteurs"
     },
     "book": {
@@ -286,6 +260,9 @@
     },
     "config": {
       "compendiaRef": "Référence au compendium",
+      "currency": {
+        "name": "Pièces d'argent"
+      },
       "hint": {
         "compendiaRef": "Sélectionner le module qui servira de référence au système pour le contenu du recueil"
       },
@@ -354,6 +331,7 @@
       "powerUse": "Pouvoir utilisé",
       "roll": {
         "exploding": {
+          "modifier": "Modificateur actuel",
           "multiplier": "Multiplicateur actuel"
         },
         "explodingroll": "Dé explose, relancez !"
@@ -392,20 +370,36 @@
         "name": "Nom du réceptacle"
       }
     },
+    "feature": {
+      "inteligentBeast": "Animal intelligent",
+      "magicSystem": "Système de magie alternatif - EXPERIMENTAL",
+      "powers": "Pouvoirs"
+    },
     "generic": {
       "abort": "Annulé",
       "all": "Tous",
       "always": "Toujours",
       "base": "Base",
       "begins": "Débuts",
+      "clear": "Effacer",
+      "config": "Configurer",
       "current": "Actuel",
       "custom": "Personnalisé",
       "default": "Défaut",
       "details": "Détails",
+      "difficulty": "Difficulté",
       "ends": "Fins",
       "hidden": "Caché",
+      "hours": "heures",
+      "hoursShort": "hr.",
       "info": "Information",
+      "inherit": "Hériter",
+      "invalid": "Invalide",
       "locked": "Vérrouillé",
+      "minutes": "minutes",
+      "minutesShort": "min.",
+      "modifier": "Modificateur",
+      "multiplier": "Multiplicateur",
       "multipliers": "Multiplicateurs",
       "na": "N/A",
       "needed": "Nécessaire",
@@ -416,15 +410,23 @@
       "numberOf": "Nombre de {thing}",
       "once": "Une seule fois",
       "options": "Options",
+      "orphans": "Orphelins",
       "other": "Autre",
       "params": "Paramètres",
+      "pending": "En attente",
+      "special": "Spécial",
       "standard": "Standard",
       "summary": "Résumé",
+      "template": "Modèle",
+      "templates": "Modèles",
       "total": "Total",
       "unknown": "Inconnu",
+      "versus": "Versus",
       "yes": "Oui"
     },
     "hints": {
+      "add": "Ajout {item}",
+      "clone": "Clône {item}",
       "copy": "Copie {item}",
       "create": "Créer {item}",
       "createLabText": "Créer un texte de laboratoire",
@@ -433,7 +435,8 @@
       "edit": "Modifier {item}",
       "read": "Lecture {item}",
       "recover": "Récupération de {item}",
-      "useMagicItem": "Déclencher l'effet \"{name}\""
+      "useMagicItem": "Déclencher l'effet \"{name}\"",
+      "view": "Regarde {item}"
     },
     "lab": {
       "activity": {
@@ -446,6 +449,9 @@
         "minorEnchantment": "Enchantement mineur",
         "openEnchantment": "Ouverture à l'enchantement",
         "spellLearning": "Apprentissage de sort",
+        "title": {
+          "longevityRitual": "Rituel de longévité pour {name}"
+        },
         "visExtraction": "Extraction de vis"
       },
       "bonus": {
@@ -457,6 +463,7 @@
         "aura": "Aura",
         "generic": "Modificateur générique",
         "labQuality": "Qualitée de laboratoire",
+        "moreVisUsed": "Vis additionnel utilisé",
         "specialties": "Spécialités"
       },
       "distraction": {
@@ -473,6 +480,7 @@
           "appraisal": "Préparé à l'enchantement",
           "charges": "Charges",
           "compounded": "Composé",
+          "enable": "Enchantement actif",
           "expiry": {
             "1y": "1 an",
             "70y": "70 ans",
@@ -536,6 +544,7 @@
       "option": {
         "oneCharge": "Une charge par objet"
       },
+      "otherSubject": "Autre sujet",
       "planning": {
         "button": {
           "refresh": "Rafraîchir",
@@ -563,6 +572,7 @@
           "dropItemToInvestigate": "Déposez ici un objet à étudier",
           "insufficientLabTotal": "Total de laboratoire en {arts} insuffisant pour extraire du vis.",
           "labTotalExcess": "Points de total de laboratoire en excés: {points}.",
+          "labTotalTooLow": "Le total de laboratoire est trop faible pour réaliser un rituel de longévité pour quelqu'un d'autre.",
           "longevityBonus": "{bonus} bonus au vieillissement.",
           "noOwner": "Ce laboratoire n'a pas de propriétaire. La planification n'est pas possible.",
           "notSkilledEnchant": "Pas assez compétent pour enchanter cet objet.",
@@ -579,10 +589,13 @@
           "wounded": " Attention : le personnage est bléssé ({penalty}), vérifier si cela s'applique au total de laboratoire"
         }
       },
+      "ritualSubject": "Sujet du rituel",
+      "self": "Soi même",
       "specialty": {
         "experimentation": "Expérimentation",
         "familiar": "Familier",
         "items": "Objets",
+        "label": "Spécialité de laboratoire",
         "longevityRituals": "Rituel de longévité",
         "spells": "Sorts",
         "texts": "Textes",
@@ -641,6 +654,7 @@
         "warpGain": "Gains de {num} point(s) de distorsion"
       },
       "fatigueLost": "Perdre {num} niveau(x) de fatigue",
+      "noConf": "Utilisation d'un point de confiance",
       "noWound": "Aucune blessure",
       "useConf": "Utiliser un Point de Confiance",
       "wound": {
@@ -658,6 +672,7 @@
         "none": "Vous n'avez pas d'Actor de Type 'MagicCodex' dans votre monde, certaines fonctionnalités seront désactivées/non fonctionnelles, vous pouvez importer celui qui est dans le Compendium 'Magi'",
         "tooMany": "Vous avez plus que 1 Actor de Type 'MagicCodex' dans votre monde, certaines fonctionnalités sont basé sur un unique MagicCodex, vous voudrez certainemetn en supprimer un (après avoir fusionner si besoin)"
       },
+      "confidencePromptPending": "Il y a une dépense de confiance en attente dans le chat. Résolvez-la ou cliquez sur l’icône d’état à côté du nom du personnage.",
       "crucible": {
         "labTotal": {
           "needed": "Total de Lab nécessaire"
@@ -671,6 +686,7 @@
       "dead": "Ce personnage est mort...",
       "doubleAbility": "Ce personnage a déjà cette compétence",
       "effectLinked": "Suppression impossible. Un effet est lié à cette capacité.",
+      "entityWithMultipleRealmAlignments": "Ce personnage doté de Puissance est aligné avec plusieurs royaumes. Vérifiez les effets actifs.",
       "incapacited": "Ce personnage est gravement blessé, aucune action possible...",
       "itemMoved": "L'objet nommé \"{name}\" a été déplacé et n'a pas pu être retrouvé.",
       "missingSpell": "Le sort \"{spellName}\" n'existe plus ou a été déplacé. Annuler.",
@@ -683,6 +699,7 @@
       "notMagus": "Ce personnage n'est pas un/une magus/maga.",
       "notPossibleToCalculateWound": "Nous ne pouvons pas calculer les Blessures (vérifier la Taille de votre Actor).",
       "pendingCrisis": "Ce personnage a une crise de vieillissement en cours, aucune action possible... Résolvez la crise en cliquant sur le crâne à côté du nom du personnage.",
+      "pendingTwilight": "Ce personnage a un épisode de Crépuscule en attente, aucun jet n’est possible tant qu’il n’est pas résolu. (Maj + clic en tant que MJ pour supprimer ce statut)",
       "roll": {
         "botchNum": "Entrez le nombre de dé(s) de Désastre svp."
       },
@@ -697,7 +714,152 @@
       }
     },
     "rolltables": {
-      "experimentation": ""
+      "experimentation": {
+        "createJournal": "Créer un journal",
+        "disaster": {
+          "1botch": "Tous ceux qui se trouvent dans le laboratoire gagnent un nombre de Points de Distrosion égal au nombre de zéros obtenus sur le jet de désastre. Les mages hermétiques (ainsi que toute personne initiée aux Arts Hermétiques) doivent effectuer un jet de Crépuscule s’ils en gagnent deux ou plus ; les membres d’autres traditions peuvent également subir des effets graves, selon les règles propres à leur tradition. La saison est totalement perdue ; voir Échec complet. S’il y a d’autres résultats et que les mages choisissent de ne pas résister au Crépuscule, ils y entrent avant que les effets ne se produisent et évitent ainsi tout dommage personnel.",
+          "2botches": "Votre création est détruite. S’il s’agit d’un projet d’une seule saison, cela équivaut à un Échec complet.",
+          "3botches": "Votre laboratoire acquiert le Défaut Endommagé.",
+          "4botches": "Explosion ! Votre laboratoire acquiert le Défaut En ruine (au lieu du Défaut Endommagé), et toutes les personnes présentes dans le laboratoire subissent deux Blessures Graves.",
+          "5botches": "Le conteur choisit l’une des options suivantes :<br/><ul><li>Un événement scénaristique menace l’ensemble de l'alliance. Cela peut survenir immédiatement après l’explosion (un incendie banal, par exemple), ou résulter d’un effet secondaire persistant de la magie incontrôlée, déclenchant une histoire quelque temps plus tard.</li>.<li>L’explosion détruit complètement le laboratoire. La structure acquiert les Vices Déformé et Instable, et l’ensemble du laboratoire doit être reconstruit de zéro, au lieu de recevoir le Défaut En ruine. Toute personne présente dans le laboratoire subit en plus une Blessure Incapacitante.</li></ul>",
+          "avoid": "Vous évitez le désastre, mais la saison est perdue.",
+          "covenantThreat": "Votre expérience se retourne contre vous d’une manière telle que c’est toute l'alliance qui se retrouve menacé, que ce soit par un incendie, l’invocation d’une menace majeure, ou toute autre calamité inventée par le conteur.",
+          "destroyedCreation": "Votre création est détruite.",
+          "destroyedCreationPlus": "Votre création est détruite, tout comme un autre objet précieux que vous conservez dans votre laboratoire.",
+          "explosion": "Explosion ! Votre équipement de laboratoire est ruiné, et vous devez lancer un dé simple pour chaque possession de valeur que vous conservez dans votre laboratoire. Sur un résultat de 0, l’objet est détruit. Vous subissez un montant de dégâts égal au résultat d’un dé simple + le niveau du sort ou de l’effet sur lequel vous travailliez.",
+          "rollTwice": "Lancez deux jets supplémentaires sur ce tableau.",
+          "warping": "Vous gagnez un nombre de Points de Distorsion égal au nombre de zéros obtenus sur le jet de désastre. Faites un jet de Crépuscule si vous en gagnez deux ou plus."
+        },
+        "discovery": {
+          "ability": {
+            "long": "Vous gagnez 15 points d'expérience dans une compétences en relation avec l'expérience.",
+            "short": "Découverte sur compétences."
+          },
+          "art": {
+            "long": "Vous gagnez 3 points d'expérience dans un art utiliser pour l'expérience.",
+            "short": "Découverte sur l'art."
+          },
+          "artPlus": {
+            "long": "Vous gagnez suffisamment de points d’expérience pour faire passer l’un des Arts utilisés lors de l’expérience au niveau suivant (ou trois points d’expérience, selon le plus élevé).",
+            "short": "Découverte majeur sur l'art."
+          },
+          "magicTheory": {
+            "long": "Vous gagnez 15 points d'expérience en Théorie de la Magie",
+            "short": "Découverte sur la Théorie de la magie."
+          },
+          "rollTwice": {
+            "long": "Relancez deux fois et relancez à nouveau si vous obtenez ce résultat.",
+            "short": "Relancer deux fois."
+          }
+        },
+        "extraordinaryResults": {
+          "disaster": {
+            "long": "Vous échouez misérablement. Consultez la table suivante pour connaître le résultat, en fonction du nombre de zéros obtenus sur les dés de désastre. Subissez l’effet correspondant au chiffre obtenu ainsi que tous les effets des chiffres inférieurs, sauf indication contraire explicite. Par exemple, une explosion (3) détruit également la création et inflige des Points de Distorsion au mage.",
+            "short": "Désastre"
+          },
+          "discovery": {
+            "long": "Lancez un dé simple et ajoutez votre modificateur de risque. Si vous êtes engagé dans une Découverte Arcanique (voir page @@), vous réalisez une découverte qui fait progresser votre projet et ignorez cette table.",
+            "short": "Découverte"
+          },
+          "failure": {
+            "long": "Vous ne retirez rien de vos efforts, et votre saison est perdue. Si vous travailliez sur un familier ou un objet enchanté, lancez un dé simple. Sur un 0, il est détruit.",
+            "short": "Echec complet"
+          },
+          "main": {
+            "short": "Réussite extraordinaire"
+          },
+          "modifiedEffect": {
+            "long": "Lancez un dé simple et ajoutez votre modificateur de risque. Si vous étiez en train d’examiner un objet magique, vous en avez modifié un ou plusieurs pouvoirs.",
+            "short": "Effet modifié"
+          },
+          "noBenefit": {
+            "long": "Votre expérimentation ne produit aucun résultat. Vous perdez le bénéfice du dé supplémentaire et du modificateur de risque — recalculez votre Total de Laboratoire sans ces modificateurs. Si votre nouveau Total de Laboratoire est trop faible pour réussir le projet, celui-ci doit être abandonné.",
+            "short": "Aucun bénéfice"
+          },
+          "none": {
+            "long": "Votre expérience fonctionne sans produire d’effets indésirables.",
+            "short": "Pas d'effet extraordinaire"
+          },
+          "rollTwice": {
+            "long": "",
+            "short": "Relancez deux fois sur cette table."
+          },
+          "sideEffect": {
+            "long": "Votre création magique acquiert un effet secondaire. Lancez un dé simple et déterminez-en les détails avec le conteur.",
+            "short": "Effet secondaire"
+          },
+          "special": {
+            "long": "Le conteur choisit l’une des options suivantes : <br><ul><li>La création requiert du vis brut supplémentaire. Le mage doit dépenser un nombre supplémentaire de pions de vis correspondant à la Technique ou à la Forme du projet, égal à la magnitude de l’effet (y compris les modifications) plus le modificateur de risque. S’il est incapable de le faire, soit parce qu’il ne dispose pas du vis nécessaire, soit parce qu’il ne peut manipuler une telle quantité de vis en une seule saison, considérez qu’il s’agit d’un Échec Complet.</li><li>Le mage crée également un sort, ayant la même Technique et la même Forme que le projet, d’un niveau qu’il pourrait créer en une seule saison. Le sort est conçu par le conteur ou la troupe, et n’a pas besoin d’avoir un lien évident avec le projet. Le mage le connaît, et peut rédiger le Texte de Laboratoire comme à l’accoutumée, permettant ainsi à d’autres mages de le reproduire. Il est plus simple que ce sort respecte toutes les règles de la Magie Hermétique, mais cela n’est pas essentiel si la troupe accepte les complications. Pour le projet principal, considérez cela comme « Aucun Effet Extraordinaire ».</li><li>La création est modifiée d’une manière qui n’entre pas nécessairement dans les catégories d’Effet Secondaire ou d’Effet Modifié, bien que cela puisse être le cas si on le souhaite. Cela permet au conteur d’introduire n’importe quel type d’effet surnaturel — la création pourrait même être fortement influencée par un autre royaume. Le résultat peut être positif ou négatif du point de vue du mage, mais doit rester intéressant pour la troupe. Un événement narratif survient. Cela peut être n’importe quoi : une occasion d’introduire une intrigue majeure, ou une brève distraction amusante. L’événement n’a pas besoin de se produire immédiatement ; la magie incontrôlée peut avoir mis quelque chose en mouvement, ou se manifester lors de l’utilisation de la création dans un contexte particulier, plus tard. L’événement narratif peut être globalement positif — par exemple, le mage pourrait attirer l’attention d’un familier potentiel. Sauf si l’événement exige le contraire, considérez qu’il s’agit d’« Aucun Effet Extraordinaire » pour le projet en lui-même.</li></ul>",
+            "short": "Evénement spécial ou d'histoire"
+          }
+        },
+        "insight": "Découverte réussie ! Vous pouvez maintenant tenter de stabiliser avec un modificateur de risque de {risk}.",
+        "modifiedEffect": {
+          "changed": {
+            "long": "L’effet réel de votre expérimentation est complètement modifié, à ceci près que la Technique et la Forme concernées demeurent inchangées, et que le niveau reste similaire.",
+            "short": "Effet modifié."
+          },
+          "increased": {
+            "long": "La portée, la durée, la cible ou la puissance du sort ou de l’effet est augmentée.",
+            "short": "Effet amélioré."
+          },
+          "modified": {
+            "long": "L’effet réel de votre expérimentation est modifié. Par exemple, un sort tel que la Malédiction de Circé (page 131) transforme la cible en chèvre plutôt qu’en porc.",
+            "short": "Effet modifié."
+          },
+          "reduced": {
+            "long": "Le sort ou l’effet est réduit en portée, en durée, en cible ou en puissance.",
+            "short": "Effet réduit."
+          },
+          "restricted": {
+            "long": "L’usage du sort ou de l’effet est restreint. Par exemple, il ne fonctionne pas dans certaines circonstances, comme lorsqu’il pleut.",
+            "short": "Effet restreint."
+          }
+        },
+        "report": {
+          "label": "Rapport d’expérimentation",
+          "tableRoll": "Jet effectué sur la table \"{tablename}\" avec :<br/><div style=\"align-text:center\">{formula} = {total}</div>",
+          "tableRoll2": "Jet effectué sur la table \"{tablename}\"."
+        },
+        "riskModifier": "Modificateur de risque",
+        "roll": "Jet d'expérimentation",
+        "sideEffect": {
+          "fatalFlaw": {
+            "long": "Le sort à un défaut fâcheux. Par exemple, un sort d’invisibilité vous fait luire.",
+            "short": "Défaut fatal."
+          },
+          "majorFlaw": {
+            "long": "Le sort a un défaut majeur. Par exemple, un sort de soins causera une grande douleur à la Cible.",
+            "short": "Défaut majeur."
+          },
+          "majorSideBenefit": {
+            "long": "Le sort a un effet bénéfique majeur. Par exemple, un sort permettant de se transformer en loup vous permettra également de parler à toutes les créatures tant que vous serez sous forme de loup.",
+            "short": "Effet bénéfique majeur."
+          },
+          "majorSideEffect": {
+            "long": "Le sort a un effet secondaire majeur. Par exemple, un sort de contrôle des plantes attirera tous les oiseaux à cents pas.",
+            "short": "Effet secondaire majeur."
+          },
+          "minorFlaw": {
+            "long": "L’effet a un défaut mineur. Par exemple, un sort vous permettant de communiquer avec les animaux fait que vous conservez certains schémas de langage de l’animal pendant un certain temps après que le sort a expiré.",
+            "short": "Défaut mineur."
+          },
+          "minorSideBenefit": {
+            "long": "Le sort a un effet bénéfique mineur. Par exemple, un sort de vent aura une odeur agréable et entravera le vol des insectes.",
+            "short": "Effet bénéfique mineur"
+          },
+          "minorSideEffect": {
+            "long": "Le sort a un effet secondaire mineur. Par exemple, un sort permettant de contrôler un animal fait pousser l’herbe sous ses pattes.",
+            "short": "Effet secondaire mineur."
+          },
+          "sigil": {
+            "long": "Votre sceau est exagéré à plusieurs fois sa force normale, devenant une partie majeure de l’effet.",
+            "short": "Sceau exagéré."
+          }
+        },
+        "subject": "Sujet de l'expérience",
+        "title": "Expérimentation magique"
+      }
     },
     "sanatorium": {
       "button": {
@@ -799,8 +961,9 @@
         "activity": "Traduire le texte de laboratoire \"{title}\""
       },
       "writer": {
-        "name": "Nom de l'écrivain",
-        "title": "Ecrivain",
+        "name": "Nom de l'auteur",
+        "nothingToWrite": "L’auteur n’a rien à écrire.",
+        "title": "Auteur",
         "writingScoreLabel": "Total d'écriture (Com + langage)",
         "writingScoreLabel2": "Score de traduction (Langage x 20) niveaux."
       },
@@ -813,17 +976,20 @@
       "abilities": "Compétences",
       "ability": "Compétence",
       "action": {
+        "Add": "Ajouter",
         "Create": "Créer",
         "Delete": "Supprimer",
         "Edit": "Éditer",
         "Filter": "Filtrer",
         "apply": "Appliqué",
         "invest": "Investir",
+        "partialProgress": "Progès partiel",
         "reset": "Remise à zéro",
         "rest": "Repos",
         "rollback": "Relancer",
         "update": "Mise à jours"
       },
+      "actions": "Actions",
       "activeEffect": {
         "add": "Ajouter {score} à {value}",
         "bonuses": {
@@ -871,8 +1037,10 @@
           "money": "Argent",
           "none": "Aucun",
           "provisions": "Provisions",
+          "ritualFatigueCancelled": "Niveaux de Fatigue rituelle annulés",
           "servants": "Serviteurs",
           "specialists": "Spécialistes",
+          "spellFatigueThreshold": "Seuil de Fatigue des sorts",
           "spontDivider": "Diviseur de magie spontanée",
           "spontDividerNoFatigue": "Diviseur de magie spontanée sans fatigue",
           "spontMagicRoll": "Jets de magie spontanée",
@@ -897,29 +1065,39 @@
           }
         },
         "types": {
+          "AlternateArtBonus": "Bonus d'Arts alternatifs",
           "academicAbilitiesAffinity": "Affinité Compétences Académiques (xp)",
           "academicAbilitiesBonus": "Bonus aux Compétences Académiques",
+          "academicAbilitiesXPBonus": "Bonus d'XP aux compétences Académiques",
+          "affinityAlternateArt": "Affinité pour les arts alternatifs (xp)",
           "arcaneAbilitiesAffinity": "Affinité Compétences Mystiques (xp)",
           "arcaneAbilitiesBonus": "Bonus aux Compétences Mystiques",
+          "arcaneAbilitiesXPBonus": "Bonus d'XP aux compétences Arcanique",
           "arts": {
             "affinity": "Affinité pour un Art",
             "deficiency": "Art déficient"
           },
+          "characteristicBoost": "Augmentation de Caractéristique",
           "characteristics": "Caractéristiques",
           "fatigue": "Fatigue",
           "formResistance": "Résistance naturelle",
           "generalAbilitiesAffinity": "Affinité Compétences Générales (xp)",
           "generalAbilitiesBonus": "Bonus aux Compétences Générales",
+          "generalAbilitiesXPBonus": "Bonus d'XP aux compétences Générales",
           "labActivity": "Activité de laboratoire du personnage",
           "laboratoryAttr": "Attributs de Laboratoires",
           "laboratorySpec": "Spécialité de laboratoire",
           "martialAbilitiesAffinity": "Affinité Compétences Martiales (xp)",
           "martialAbilitiesBonus": "Bonus aux Compétences Martiales",
+          "martialAbilitiesXPBonus": "Bonus d'XP aux compétences Martiales",
           "mysteryAbilitiesAffinity": "Affinité Compétences des Mystères (xp)",
           "mysteryAbilitiesBonus": "Bonus aux Compétences des Mystères",
+          "mysteryAbilitiesXPBonus": "Bonus d'XP aux compétences des Mystères",
           "nullEffect": "Aucun Effet",
           "optional": "Bonus Optionnel",
+          "qualityAbilityBoost": "Qualité – Augmentation de Compétence",
           "realmAlignment": "Alignement avec la Dimension",
+          "realmSusceptibility": "Vulnérabilité à la Dimension",
           "roll": {
             "optional": "Bonus optionnel au jet de dé"
           },
@@ -935,6 +1113,7 @@
       "advanced": "Avancé",
       "advantage": "Avantage",
       "aegisCovenant": "Ægis du Foyer",
+      "aegisPenetration": "Pénétraion de l'Aegis",
       "aesthetics": "Esthétique",
       "aestheticsMax": "Esthétique maximum",
       "age": "Âge",
@@ -953,6 +1132,7 @@
       "attackAdvantage": "Avantage d'attaque",
       "attributes": "Attributs",
       "aura": "Aura",
+      "auraCfg": "Configuration de l'Aura",
       "auraMod": "Modificateur d'aura",
       "authorship": {
         "author": "Auteur",
@@ -995,6 +1175,15 @@
       "child": "Enfant",
       "com": "Com",
       "combat": {
+        "flavor": {
+          "attack": "{attacker} attaque {target} avec {weapon}.",
+          "damage": "{attacker} essaye d'infliger des dégats.",
+          "damageSource": "Source des dégats",
+          "defense": "{defender} se défend contre {attacker} avec {weapon}.",
+          "defenseNoAttacker": "{defender} défends avec {weapon}.",
+          "noWeapon": "sans arme",
+          "soak": "{target} évite les dégats."
+        },
         "label": "Combat"
       },
       "combatInstructions1": "Équipez des armes et armures pour voir le total",
@@ -1036,6 +1225,7 @@
       "defense": "Défense",
       "dependants": "Bouches à nourrir",
       "description": "Description",
+      "details": "Détails",
       "determiningEffect": {
         "label": "Reconnaître un Effet Magique"
       },
@@ -1047,6 +1237,9 @@
       "domusMagnus": "Domus Magnus",
       "duration": "Durée",
       "economics": "Économie",
+      "edition": {
+        "creationMode": "Mode création"
+      },
       "effect": "Effet",
       "effects": "Effets",
       "effectsToggle": "Basculer",
@@ -1067,6 +1260,8 @@
         "label": "Vitesse d'Incantation Rapide"
       },
       "fatigue": "Fatigue",
+      "fatigueOverflow": "Excès de fatigue",
+      "fatigueRoll": "Jet de fatigue",
       "features": "Traits distinctifs",
       "fieldOfWork": "Domaine d'activité",
       "filters": "Filtres",
@@ -1074,6 +1269,7 @@
       "fo": "Fo",
       "focus": "Focus",
       "form": "Forme",
+      "formDamage": "Dommage de forme",
       "formRequisite": "Complément Forme",
       "formRes": "Résistance de forme",
       "formScore": "Score de Forme ({form})",
@@ -1140,9 +1336,7 @@
       },
       "labTexts": "Textes de laboratoire",
       "labTotal": "Total de Laboratoire",
-      "label": {
-        "details": "Détails"
-      },
+      "label": "Libellé",
       "laboratories": "Laboratoires",
       "laboratoriesPoints": "Points de laboratoires",
       "laboratoriesSumary": "1 livre pour 10 pts de Laboratoire (20% par artisanat)",
@@ -1205,6 +1399,7 @@
       },
       "magicResistanceOverSpell": "Le Sort échoue sur {target} de {total}",
       "magicResistanceOverSpellWithNoTotal": "Le Sort échoue sur {target}",
+      "magicSystem": "Système de magie",
       "magical-effects": "Effets Magiques",
       "magicalEffect": "Effet Magique Spontané",
       "magicalEffects": "Effets Magiques Spontanés",
@@ -1239,6 +1434,9 @@
       "none": "Aucun",
       "notEquippedWeapon": "Vous ne pouvez pas utiliser une arme non-équippée",
       "notes": "Notes",
+      "noun": "Noun",
+      "nounRequisite": "Requisit de Noun",
+      "nouns": "Nouns",
       "npc": "Pnj",
       "npcgrogs": "Autres Personnes",
       "npcs": "Pnjs",
@@ -1274,12 +1472,14 @@
       "possessions": "Possessions",
       "power": "Pouvoir",
       "powerCost": "Puissance {might} - 5 fois le coût ({cost})",
+      "powerLevel": "5 fois le cout ({res})",
       "powers": "Pouvoirs",
       "pre": "Pre",
       "presence": "Présence",
       "priceless": "Inestimable",
       "primus": "Primus",
       "profession": "Titre/Profession",
+      "progress": "Progression",
       "properties": "Propriétés et terres",
       "protection": "Protection",
       "provisions": "Provisions",
@@ -1299,6 +1499,9 @@
         "magic": "Magique",
         "mundane": "Vulgaire",
         "nightModifier": "Modificateur nocturne",
+        "susceptible": {
+          "impact": "En raison d’une vulnérabilité au {realm}, divisée par {divisor}"
+        },
         "visible": "Visible",
         "visibleHint": "Afficher ou masquer le modificateur d'aura lors du lancer"
       },
@@ -1306,12 +1509,15 @@
       "religion": "Religion",
       "reputation": "Réputation",
       "reputationType": {
+        "academic": "Académique",
         "ecclesiastic": "Ecclésiastique",
         "hermetic": "Hermétique",
+        "infernal": "Infernal",
         "local": "Local",
         "persona": "Persona"
       },
       "ritual": "Rituel",
+      "rollFailed": "Jet raté",
       "rooms": "Pièces",
       "safety": "Sécurité",
       "saga": "Saga",
@@ -1339,12 +1545,22 @@
       "soakBonus": "Bonus d'Encaissement",
       "soakRoll": "Jet d'encaissement",
       "socialStatus": "Statut Social",
+      "socialStatusEastern": "Statut Social (Eastern Christendom)",
+      "socialStatusHibernia": "Statut Social (Hibernia)",
+      "socialStatusIberia": "Statut Social (Iberia)",
+      "socialStatusIslamic": "Statut Social (Islamic)",
+      "socialStatusJewish": "Statut Social (Jewish)",
+      "socialStatusNorthAfrica": "Statut Social (North Africa)",
+      "socialStatusPersia": "Statut Social (Persia)",
+      "socialStatusProvencal": "Statut Social (Provencal)",
+      "socialStatusWestern": "Statut Social (Western Christendom)",
       "source": {
         "A&A": "Art & Academe",
         "AnM": "Ancient Magic",
         "Ant": "Antagonists",
         "App": "Apprentices",
         "ArM5": "Livre de Base",
+        "ArM5Def": "Ars Édition Définitive",
         "AtD": "Against the Dark",
         "BCoC": "Cabelais L'Alliance Brisée",
         "C&C": "The Cradle & The Crescent",
@@ -1365,6 +1581,7 @@
         "L&L": "The Lion and The Lily",
         "LH": "Legends of Hermes",
         "LoM": "Lord of Men",
+        "LotN": "Lands of the Nile",
         "ML": "Mythic Locations",
         "MoH": "Magi of Hermes",
         "RM": "Rival Magic",
@@ -1376,11 +1593,13 @@
         "TME": "Transforming Mythic Europe",
         "TMRE": "The Mysteries Revised Edition",
         "TSE": "The Sundered Eagle",
+        "TTT": "Thrice-Told Tales",
         "ToME": "Tales of Mythic Europe",
         "ToP": "Tales of Power",
         "TtA": "Through the Aegis",
         "custom": "Maison",
-        "label": "Source"
+        "label": "Source",
+        "others": "Autre"
       },
       "sourceQuality": "Qualité de la Source",
       "specialists": "Spécialistes",
@@ -1445,6 +1664,7 @@
       "trainingRequired": "Entrainement Requis",
       "tribunal": "Tribunal",
       "turbula": "Turbula",
+      "twilight": "Crépuscule",
       "twilightScars": "Marque du Crépuscule",
       "type": "Type",
       "typeAura": "Type d'Aura",
@@ -1452,6 +1672,9 @@
       "upkeep": "Entretien",
       "uses": "Utilisations",
       "usesLeft": "Charges restantes",
+      "verb": "Verbe",
+      "verbRequisite": "Verbe Requisit",
+      "verbs": "Verbes",
       "virtues": "Vertues",
       "virtuesFlaws": "Vertues & Vices",
       "vis": "Vis",
@@ -1479,6 +1702,7 @@
       "winded": "Essouflé",
       "windedLvl": "Niveaux Essouflés",
       "winter": "Hiver",
+      "withCompendium": "Inclure les compendiums",
       "wound": {
         "fresh": "Traitement non commencé",
         "gravity": "Gravité",
@@ -1523,17 +1747,22 @@
       "category": {
         "academic": "Académique",
         "arcane": "Mystique",
+        "form": "Forme alternative",
         "general": "Générale",
         "label": "Catégorie",
         "martial": "Martiale",
         "mystery": "Mystère",
-        "supernatural": "Supernaturelle"
+        "supernatural": "Supernaturelle",
+        "technique": "Technique alternative"
       },
       "commonCases": {
         "areaLore": "Conn. (Région)",
         "hermesLore": "Conn. Ordre d'Hermes",
         "latin": "Latin",
         "native": "Langue Maternelle"
+      },
+      "form": {
+        "generic": "Form ({option}) "
       },
       "general": {
         "animalHandling": "Conn. des Animaux",
@@ -1584,6 +1813,7 @@
         "arcane": "Nom de la compétence",
         "area": "Nom du domaine",
         "craft": "Nom de l'artisanat",
+        "form": "Nom de la Forme",
         "knowledge": "Sujet",
         "language": "Nom de la langue",
         "law": "Forum juridique",
@@ -1591,7 +1821,9 @@
         "mysteryCult": "Nom du culte",
         "organization": "Nom de l'organisation",
         "profession": "Nom du professeur",
-        "supernatural": "Nom de la compétence"
+        "supernatural": "Nom de la compétence",
+        "technique": "Nom de la technique",
+        "theology": "Religion"
       },
       "supernatural": {
         "animalKen": "Empathie Animale",
@@ -1605,6 +1837,9 @@
         "senseHolyAndUnholy": "Perception Sainteté & malignité",
         "shapeshifter": "Changeforme",
         "wildernessSense": "Sens de la Nature"
+      },
+      "technique": {
+        "generic": "Technique ({option}) "
       }
     },
     "spell": {
@@ -1751,12 +1986,75 @@
       }
     },
     "system": {
+      "V13Disclaimer": "Avertissement : Le système Ars Magica prend actuellement en charge la version V13 selon une politique de « meilleur effort », la prochaine version V12 étant l’objet de l’attention principale. Tout devrait fonctionner, mais vous pourriez rencontrer de légers problèmes de mise en page. Dans ce cas, merci de signaler tout bug sur le serveur Discord.",
       "dependencyWarning": "Le système exige que le module {name} soit au moins de la version {minimum}, la version actuelle est {current}. Il se peut que vous rencontriez des erreurs et des bugs, veuillez mettre à jour le module."
     },
     "time": {
       "maxYear": "Année maximum",
       "minYear": "Année minimum",
       "troupeSchedule": "Calendrier de la troupe"
+    },
+    "twilight": {
+      "avoid": "Éviter",
+      "chat": {
+        "botchedControl": "Échec critique au contrôle",
+        "botchedUnderstanding": "Échec critique de compréhension",
+        "failedControl": "Contrôle raté",
+        "failedUnderstanding": "Compréhension raté",
+        "successControl": "Contrôle réussi",
+        "successUnderstanding": "Compréhension réussi"
+      },
+      "complexity": "Jet de complexité du Crépuscule",
+      "comprehension": {
+        "roll": "Tentative de compréhension du Crépuscule"
+      },
+      "control": {
+        "avoid": "Éviter le Crépuscule",
+        "question": "Voulez-vous résister au Crépuscule ?",
+        "roll": "Tentative de contrôle du Crépuscule"
+      },
+      "diary": {
+        "botchedControl": "{name} a lamentablement échoué à contrôler la surcharge de magie (résistance {str}) et s’est retrouvé avec un fort mal de tête et quelques pertes de mémoire.",
+        "duration": "Temps passé en Crépuscule : {duration}",
+        "embraced": "{name} a accepté la surcharge de magie et est entré dans le Crépuscule",
+        "failedControl": "{name} n’a pas réussi à contrôler la surcharge de magie (résistance {str}) et est entré dans le Crépuscule",
+        "failedUnderstanding": "{name} n’a pas réussi à comprendre l’expérience (complexité : {complexity})",
+        "successControl": "{name} a réussi à contrôler la surcharge de magie (résistance {str}) et a évité le Crépuscule",
+        "successUnderstanding": "{name} a compris l’expérience (complexité : {complexity})"
+      },
+      "durations": {
+        "day": "Un jour (24 heures)",
+        "decades": "{num} années",
+        "diameter": "Diamètre (2 min)",
+        "eternal": "Éternité : Crépuscule final",
+        "hours": "Deux heures",
+        "moments": "Un instant",
+        "moon": "Un lune",
+        "season": "Une saison",
+        "sevenYears": "Sept ans",
+        "sun": "Soleil",
+        "year": "Un an"
+      },
+      "embrace": "Accepter",
+      "embraceTwilight": "Voulez-vous accepter le Crépuscule ou tenter de l’éviter ?",
+      "episode": "Épisode de Crépuscule",
+      "notification": {
+        "GMOnly": "MJ seulement",
+        "continueWithDiary": "Ouvrir le journal pour tenter la compréhension"
+      },
+      "reset": "Voulez-vous réinitialiser cet Épisode de Crépuscule ?",
+      "strength": "Jet de résistance au Crépuscule",
+      "tooltips": {
+        "pendingComplexity": "Jet de complexité du Crépuscule en attente (MJ uniquement)",
+        "pendingControl": "Jet de contrôle du Crépuscule en attente",
+        "pendingStrength": "Jet de résistance du Crépuscule en attente (MJ uniquement)",
+        "pendingUnderstanding": "Jet de compréhension du Crépuscule en attente",
+        "pendingUnderstanding2": "Jet de compréhension du Crépuscule en attente, via une entrée de journal"
+      },
+      "vimModifier": "Modificateur dû au score de Vim",
+      "warpingPoints": "Gains de points de Distorsion",
+      "warpingScore": "Score de Distorsion",
+      "warpingThreshold": "Seuil de Distorsion"
     }
   }
 }
