@@ -14,10 +14,10 @@ import { ArM5eBookSheet } from "./item/item-book-sheet.js";
 import { ArM5eItemDiarySheet } from "./item/item-diary-sheet.js";
 import { ArM5eItemVisSheet } from "./item/item-vis-sheet.js";
 import ArM5eActiveEffect from "./helpers/active-effects.js";
-
 import { prepareDatasetByTypeOfItem } from "./helpers/hotbar-helpers.js";
 import { ArM5ePreloadHandlebarsTemplates } from "./templates.js";
 import { ArM5eActiveEffectConfig } from "./helpers/active-effect-config.sheet.js";
+import { ArM5eActiveEffectConfigV2 } from "./sheets/active-effect-config-sheet_V2.js";
 
 // Experiment
 import { ArsLayer, addArsButtons } from "./ui/ars-layer.js";
