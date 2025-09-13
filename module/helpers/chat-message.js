@@ -121,7 +121,7 @@ export class Arm5eChatMessage extends ChatMessage {
   }
 
   addActionButtons(html, actor) {
-    const btnContainer = $('<div class="btn-container" style="margin:2px;padding:3px;"></div>');
+    const btnContainer = $('<div class="btn-container"></div>');
 
     let btnCnt = 0;
     if (this.system.addActionButtons) {
