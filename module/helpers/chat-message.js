@@ -11,6 +11,19 @@ export class Arm5eChatMessage extends ChatMessage {
     // }
   }
 
+  /** @inheritDoc */
+  prepareDerivedData() {
+    // Create Roll instances for contained dice rolls
+    this.rolls = this.rolls.reduce((rolls, rollData) => {
+      try {
+        rolls.push(ArsRoll.fromData(rollData));
+      } catch (err) {
+        Hooks.onError("ChatMessage#rolls", err, { rollData, log: "error" });
+      }
+      return rolls;
+    }, []);
+  }
+
   get actor() {
     return ChatMessage.getSpeakerActor(this.speaker);
   }

@@ -4,12 +4,15 @@ import { log } from "../tools.js";
 export class ArsRoll extends Roll {
   constructor(formula, data = {}, options = {}) {
     super(formula, data, options);
-    this.botches = 0;
-    this.divider = 1;
-    this.multiplier = 1;
-    this.offset = 0;
     this.originalFormula = formula;
   }
+  // number of botches
+  // botches = 0;
+  // for calculating modifier
+  // divider = 1;
+  // multiplier = 1;
+  //
+  offset = 0;
 
   get botchDice() {
     if (!this._evaluated) return 0;
@@ -55,8 +58,8 @@ export class ArsRoll extends Roll {
       return super.total;
     }
     if (theDie.botchCheck) {
-      this.botchCheck = true;
-      this.botches = -theDie.total;
+      this.options.botchCheck = true;
+      this.options.botches = -theDie.total;
       if (this.botches) {
         return 0;
       } else {
@@ -82,6 +85,26 @@ export class ArsRoll extends Roll {
     }
   }
 
+  get divider() {
+    return this.options.divider || 1;
+  }
+
+  get multiplier() {
+    return this.options.multiplier || 1;
+  }
+
+  get offset() {
+    return this.options.offset || 0;
+  }
+
+  get botches() {
+    return this.options.botches || 0;
+  }
+
+  get botchCheck() {
+    return this.options.botchCheck || false;
+  }
+
   get modifier() {
     if (!this.result) {
       return 0;
@@ -93,10 +116,11 @@ export class ArsRoll extends Roll {
       log(false, "ERROR: wrong number of dice");
       return 0;
     }
+    log(false, `DBG: modifier - options: ${JSON.stringify(this.options)}`);
 
     log(
       false,
-      `DBG: Roll total ${this.total} * ${this.divider} - (${this.dice[0].total} * ${this.multiplier}) `
+      `DBG: modifier - Roll total ${this.total} * ${this.divider} - (${this.dice[0].total} * ${this.multiplier}) `
     );
     return this.total * this.divider - this.dice[0].total * this.multiplier;
   }
@@ -114,8 +138,11 @@ export class ArsRoll extends Roll {
    *                                        true, or the Object of prepared chatData otherwise.
    */
   async toMessage(messageData = {}, { rollMode, create = true } = {}) {
-    const msg = await super.toMessage(messageData, { rollMode, create: false });
-
+    log(
+      false,
+      `DBG: Roll total ${this.total} * ${this.divider} (divider) - (${this.dice[0].total} (diceTotal) * ${this.multiplier} (multiplier)) `
+    );
+    let msg = await super.toMessage(messageData, { rollMode, create: false });
     // add type and system data
     msg.type = this.getMessageType(messageData);
     // create the message:

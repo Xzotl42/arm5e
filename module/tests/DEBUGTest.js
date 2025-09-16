@@ -74,8 +74,8 @@ export function registerDEBUGTest(quench) {
               fatigueOnUse: 1
             };
             magus.rollInfo.init(dataset, magus);
-            let roll = await stressDie(magus, type, 0, undefined, 10);
-            log(false, roll);
+            const msg = await stressDie(magus, type, 0, undefined, 10);
+            const roll = msg.rolls[0];
             assert.ok(roll);
             if (roll.botches) {
               assert.equal(roll.total, 0, "botched");
@@ -107,7 +107,9 @@ export function registerDEBUGTest(quench) {
               fatigueOnUse: 1
             };
             magus.rollInfo.init(dataset, magus);
-            let roll = await stressDie(magus, type, 0, undefined, 100);
+            const msg = await stressDie(magus, type, 0, undefined, 100);
+            const roll = msg.rolls[0];
+
             log(false, roll);
             assert.ok(roll);
             if (roll.botches) {

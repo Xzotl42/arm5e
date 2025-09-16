@@ -66,10 +66,11 @@ export function registerRollTesting(quench) {
               assert.ok(true);
             } else {
               try {
-                let dataset = { roll: "char", characteristic: c };
+                let dataset = { roll: "char", characteristic: c, difficulty: 6 };
                 actor.rollInfo.init(dataset, actor);
 
-                let roll = await stressDie(actor, "char", 0, null, 10);
+                const msg = await stressDie(actor, "char", 0, null, 10);
+                const roll = msg.rolls[0];
                 log(false, roll);
                 assert.ok(roll);
                 if (roll.botches) {
@@ -92,9 +93,10 @@ export function registerRollTesting(quench) {
               assert.ok(true);
             } else {
               try {
-                let dataset = { roll: "char", characteristic: c };
+                let dataset = { roll: "char", characteristic: c, difficulty: 6 };
                 actor.rollInfo.init(dataset, actor);
-                let roll = await simpleDie(actor, "char", null);
+                const msg = await simpleDie(actor, "char", null);
+                const roll = msg.rolls[0];
                 log(false, roll);
                 assert.ok(roll);
                 assert.equal(
@@ -121,7 +123,8 @@ export function registerRollTesting(quench) {
               };
               actor.rollInfo.init(dataset, actor);
               const ageMod = actor.rollInfo.getGenericFieldValue(1);
-              let roll = await stressDie(actor, "aging", 4, null, 0);
+              const msg = await stressDie(actor, "aging", 4, null, 0);
+              const roll = msg.rolls[0];
               log(false, roll);
               assert.ok(roll);
               if (roll.botches) {
@@ -146,7 +149,8 @@ export function registerRollTesting(quench) {
               actor.rollInfo.init(dataset, actor);
               const ageMod =
                 actor.rollInfo.getGenericFieldValue(1) + actor.rollInfo.getGenericFieldValue(2);
-              let roll = await simpleDie(actor, "crisis", null);
+              const msg = await simpleDie(actor, "crisis", null);
+              const roll = msg.rolls[0];
               log(false, roll);
               assert.ok(roll);
               if (roll.botches) {
