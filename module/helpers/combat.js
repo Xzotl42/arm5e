@@ -300,8 +300,8 @@ export async function rolledDamage(soakData, actor) {
   }
 
   actor.rollInfo.init(dataset, actor);
-  let roll = await stressDie(actor, "option", 16, null, 1);
-  soakData.roll = roll.total - roll.offset;
+  let message = await stressDie(actor, "option", 16, null, 1);
+  soakData.roll = message.rolls[0].total - message.rolls[0].offset;
   soakData.damageToApply -= soakData.roll;
 }
 export function buildDamageDataset(selector) {

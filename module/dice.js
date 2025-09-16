@@ -90,7 +90,7 @@ async function simpleDie(actor, type = "OPTION", callback, modes = 0) {
   }
   if (!(modes & 32)) await Arm5eChatMessage.create(message.toObject());
   // actor.rollInfo.reset();
-  return dieRoll;
+  return message;
 }
 
 // modes bitmask:
@@ -211,6 +211,7 @@ async function stressDie(actor, type = "OPTION", modes = 0, callback = undefined
         itemUuid: rollInfo.itemUuid,
         secondaryScore: rollInfo.secondaryScore,
         botchCheck: botchCheck,
+        botches: dieRoll.botches,
         details: rollInfo.details,
         divider: rollInfo.magic.divide,
         difficulty: rollInfo.difficulty,
@@ -236,6 +237,11 @@ async function stressDie(actor, type = "OPTION", modes = 0, callback = undefined
 
     message = new Arm5eChatMessage(messageData);
 
+    let testRoll = message.rolls[0];
+    log(
+      false,
+      `DBG: Stress die Roll total ${testRoll.total} * ${testRoll.divider} (divider) - (${testRoll.dice[0].total} (diceTotal) * ${testRoll.multiplier} (multiplier)) `
+    );
     message.system.enrichMessageData(actor);
   } else {
     if (game.modules.get("dice-so-nice")?.active) {
@@ -248,7 +254,7 @@ async function stressDie(actor, type = "OPTION", modes = 0, callback = undefined
   }
   if (!(modes & 32)) Arm5eChatMessage.create(message.toObject());
   // actor.rollInfo.reset();
-  return dieRoll;
+  return message;
 }
 
 async function getRollFormula(actor) {
@@ -702,9 +708,10 @@ async function CheckBotch(botchDice, roll) {
   const botchRoll = new ArsRoll(rollCommand);
   await botchRoll.roll();
   botchRoll.offset = roll.offset;
-  botchRoll.botches = botchRoll.total;
+  botchRoll.options.botches = botchRoll.total;
   botchRoll.botchDice = botchDice;
-  botchRoll.divider = roll.divider; // to keep the modifier getter consistent
+  botchRoll.options.divider = roll.divider; // to keep the modifier getter consistent
+  botchRoll.options.multiplier = roll.multiplier;
   return botchRoll;
   // return botchRoll.terms[0].total;
 }
@@ -876,11 +883,15 @@ export async function createRoll(rollFormula, multiplier, divide, options = {}) 
   if (Number.parseInt(divide) > 1) {
     rollInit = `( ${rollInit} ) / ${divide}`;
   }
+  options.multiplier = multiplier;
+  options.divider = divide;
+  options.botches = 0;
+  options.offset = rollFormula;
   let output_roll = new ArsRoll(rollInit, {}, options);
-  output_roll.offset = rollFormula;
-  output_roll.multiplier = multiplier;
-  output_roll.divider = divide;
-  output_roll.data = {};
+  // output_roll.offset = rollFormula;
+  // output_roll.multiplier = multiplier;
+  // output_roll.divider = divide;
+  // output_roll.data = {};
   //output_roll.roll({ options });
   await output_roll.evaluate(options);
 
@@ -901,8 +912,7 @@ async function noRoll(actor, modes, callback) {
   if (rollInfo.magic.divide > 1) {
     formula += ` / ${rollInfo.magic.divide}`;
   }
-  const dieRoll = new ArsRoll(formula, actor.system);
-  dieRoll.divider = rollInfo.magic.divide;
+  const dieRoll = new ArsRoll(formula, actor.system, { divider: rollInfo.magic.divide });
   let tmp = await dieRoll.roll();
   const system = {
     img: actor.img,
@@ -948,7 +958,7 @@ async function noRoll(actor, modes, callback) {
   }
   await Arm5eChatMessage.create(message.toObject());
   // actor.rollInfo.reset();
-  return dieRoll;
+  return message;
 }
 
 async function changeMight(actor, roll, message) {

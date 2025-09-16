@@ -61,35 +61,122 @@ export function registerOptionRollTesting(quench) {
       describe("Options rolls", function () {
         it("Personality roll", async function () {
           try {
-            let dataset = { roll: "option", name: "Loyal", option1: 1, txtoption1: "score" };
+            let dataset = {
+              roll: "option",
+              name: "Personality Loyal",
+              option1: 1,
+              txtoption1: "score",
+              difficulty: 6
+            };
             actor.rollInfo.init(dataset, actor);
-            let roll = await stressDie(actor, "option", 0, null, 10);
-            if (roll.botched) {
+            const message = await stressDie(actor, "option", 0, null, 10);
+            const roll = message.rolls[0];
+            const msgData = message.system;
+            if (roll.botches) {
               assert.equal(roll.total, 0, "botched");
-              return;
+              assert.equal(msgData.roll.botchCheck, true, "Check for botch missing");
+              assert.equal(msgData.roll.botches, roll.botches, "Wrong number of botches");
+            } else {
+              assert.equal(roll.modifier, 1, "bad modifier");
             }
             assert.ok(roll);
+            assert.equal(roll.modifier, 1, "bad modifier");
+            assert.ok(msgData, "system missing");
+            assert.equal(msgData.label, "Personality Loyal");
+            assert.equal(msgData.confidence.score, 1);
+            assert.equal(msgData.roll.type, "option");
+            assert.equal(msgData.roll.difficulty, 6);
+            assert.equal(msgData.roll.actorType, "player");
+            assert.equal(msgData.impact.fatigueLevelsLost, 0, "fatigue levels lost should be 0");
+            assert.equal(
+              msgData.impact.fatigueLevelsPending,
+              0,
+              "fatigue levels pending should be 0"
+            );
+            assert.equal(msgData.impact.woundGravity, 0, "wound gravity should be 0");
+            assert.equal(msgData.impact.applied, false, "shoud not be applied");
+            assert.equal(
+              msgData.roll.difficulty > message.rollTotal,
+              msgData.failedRoll(),
+              "failed roll incorrect"
+            );
           } catch (err) {
             console.error(`Error: ${err}`);
-            assert.ok(false);
+            assert.ok(false, err);
+          }
+        });
+        it("Personality roll doomed to fail", async function () {
+          try {
+            let dataset = {
+              roll: "option",
+              name: "Personality roll doomed to fail",
+              option1: 1,
+              txtoption1: "score",
+              difficulty: 99
+            };
+            actor.rollInfo.init(dataset, actor);
+            const botchNum = 10;
+            const msg = await stressDie(actor, "option", 0, null, botchNum);
+            const roll = msg.rolls[0];
+            assert.ok(roll);
+            const msgData = msg.system;
+            if (roll.botches) {
+              assert.equal(roll.total, 0, "botched");
+              assert.equal(msgData.roll.botchCheck, true, "Check for botch missing");
+              assert.equal(msgData.roll.botches, roll.botches, "Wrong number of botches");
+            } else {
+              assert.equal(roll.modifier, 1, "bad modifier");
+            }
+
+            assert.ok(msgData, "system missing");
+            assert.equal(msgData.label, "Personality roll doomed to fail");
+            assert.equal(msgData.confidence.score, 1);
+            assert.equal(msgData.roll.type, "option");
+            assert.equal(msgData.roll.difficulty, 99);
+            assert.equal(msgData.roll.actorType, "player");
+            assert.equal(msgData.impact.fatigueLevelsLost, 0, "fatigue levels lost should be 0");
+            assert.equal(
+              msgData.impact.fatigueLevelsPending,
+              0,
+              "fatigue levels pending should be 0"
+            );
+            assert.equal(msgData.impact.woundGravity, 0, "wound gravity should be 0");
+            assert.equal(msgData.impact.applied, false);
+            assert.equal(
+              msgData.roll.difficulty > msg.rollTotal,
+              msgData.failedRoll(),
+              "failed roll incorrect"
+            );
+          } catch (err) {
+            console.error(`Error: ${err}`);
+            assert.ok(false, err);
           }
         });
 
         it("Reputation roll", async function () {
           try {
-            let dataset = { roll: "option", name: "Dead", option1: 1, txtoption1: "score" };
+            let dataset = {
+              roll: "option",
+              name: "Dead reputation",
+              option1: 1,
+              txtoption1: "score"
+            };
             actor.rollInfo.init(dataset, actor);
-            let roll = await stressDie(actor, "char", 0, null, 10);
+            const msg = await stressDie(actor, "char", 0, null, 10);
+            const roll = msg.rolls[0];
             log(false, roll);
             assert.ok(roll);
-            if (roll.botched) {
+            const msgData = msg.system;
+            if (roll.botches) {
               assert.equal(roll.total, 0, "botched");
-              return;
+              assert.equal(msgData.roll.botchCheck, true, "Check for botch missing");
+              assert.equal(msgData.roll.botches, roll.botches, "Wrong number of botches");
+            } else {
+              assert.equal(roll.modifier, 1, "bad modifier");
             }
-            assert.equal(roll.modifier, 1, "bad modifier");
           } catch (err) {
             console.error(`Error: ${err}`);
-            assert.ok(false);
+            assert.ok(false, err);
           }
         });
 
@@ -110,14 +197,17 @@ export function registerOptionRollTesting(quench) {
               txtoption5: "score 5"
             };
             actor.rollInfo.init(dataset, actor);
-            let roll = await simpleDie(actor, "option", null);
+            const msg = await simpleDie(actor, "option", null);
+            const roll = msg.rolls[0];
+            const msgData = msg.system;
             log(false, roll);
+            assert.equal(msgData.roll.botchCheck, false, "Check for botch missing");
+            assert.equal(msgData.roll.botches, roll.botches, "Wrong number of botches");
             assert.ok(roll.total > 50);
-
             assert.equal(roll.modifier, 50, "modifier not correct");
           } catch (err) {
             console.error(`Error: ${err}`);
-            assert.ok(false);
+            assert.ok(false, err);
           }
         });
 
@@ -135,7 +225,8 @@ export function registerOptionRollTesting(quench) {
               txtoption3: "overload"
             };
             actor.rollInfo.init(dataset, actor);
-            let roll = await stressDie(actor, type, 0, null, 10);
+            const msg = await stressDie(actor, type, 0, null, 10);
+            const roll = msg.rolls[0];
             assert.ok(roll);
             if (roll.botches) {
               assert.equal(roll.total, 0, "botched");
@@ -149,7 +240,7 @@ export function registerOptionRollTesting(quench) {
             assert.equal(roll.modifier, tot, "modifier not correct");
           } catch (err) {
             console.error(`Error: ${err}`);
-            assert.ok(false);
+            assert.ok(false, err);
           }
         });
 
@@ -158,7 +249,7 @@ export function registerOptionRollTesting(quench) {
           try {
             let dataset = {
               roll: type,
-              name: "all options",
+              name: "combat attack",
               option1: actor.system.characteristics.dex.value,
               txtoption1: "dex",
               option2: actor.system.combat.ability,
@@ -167,7 +258,8 @@ export function registerOptionRollTesting(quench) {
               txtoption3: "attack"
             };
             actor.rollInfo.init(dataset, actor);
-            let roll = await stressDie(actor, type, 0, null, 10);
+            const msg = await stressDie(actor, type, 0, null, 10);
+            const roll = msg.rolls[0];
             log(false, roll);
             assert.ok(roll);
             if (roll.botches) {
@@ -181,7 +273,7 @@ export function registerOptionRollTesting(quench) {
             assert.equal(roll.modifier, tot);
           } catch (err) {
             console.error(`Error: ${err}`);
-            assert.ok(false);
+            assert.ok(false, err);
           }
         });
         it("Combat roll defense", async function () {
@@ -189,7 +281,7 @@ export function registerOptionRollTesting(quench) {
           try {
             let dataset = {
               roll: type,
-              name: "combat",
+              name: "combat defense",
               option1: actor.system.characteristics.qik.value,
               txtoption1: "quickness",
               option2: actor.system.combat.ability,
@@ -198,7 +290,8 @@ export function registerOptionRollTesting(quench) {
               txtoption3: "defense"
             };
             actor.rollInfo.init(dataset, actor);
-            let roll = await stressDie(actor, type, 0, null, 10);
+            const msg = await stressDie(actor, type, 0, null, 10);
+            const roll = msg.rolls[0];
             log(false, roll);
             assert.ok(roll);
             if (roll.botches) {
@@ -213,7 +306,7 @@ export function registerOptionRollTesting(quench) {
             );
           } catch (err) {
             console.error(`Error: ${err}`);
-            assert.ok(false);
+            assert.ok(false, err);
           }
         });
         it("Combat roll exertion", async function () {
@@ -221,7 +314,7 @@ export function registerOptionRollTesting(quench) {
           try {
             let dataset = {
               roll: type,
-              name: "combat",
+              name: "combat exertion",
               option1: actor.system.characteristics.dex.value,
               txtoption1: "dex",
               option2: actor.system.combat.ability,
@@ -231,7 +324,8 @@ export function registerOptionRollTesting(quench) {
             };
             actor.rollInfo.init(dataset, actor);
             actor.rollInfo.combat.exertion = true;
-            let roll = await stressDie(actor, type, 0, null, 10);
+            const msg = await stressDie(actor, type, 0, null, 10);
+            const roll = msg.rolls[0];
             log(false, roll);
             assert.ok(roll);
             if (roll.botches) {
@@ -245,7 +339,7 @@ export function registerOptionRollTesting(quench) {
             assert.equal(roll.modifier, tot);
           } catch (err) {
             console.error(`Error: ${err}`);
-            assert.ok(false);
+            assert.ok(false, err);
           }
         });
         it("Combat wounded", async function () {
@@ -254,7 +348,7 @@ export function registerOptionRollTesting(quench) {
           try {
             let dataset = {
               roll: type,
-              name: "combat",
+              name: "combat wounded",
               option1: actor.system.characteristics.dex.value,
               txtoption1: "dex",
               option2: actor.system.combat.ability,
@@ -263,7 +357,8 @@ export function registerOptionRollTesting(quench) {
               txtoption3: "attack"
             };
             actor.rollInfo.init(dataset, actor);
-            let roll = await stressDie(actor, type, 0, null, 10);
+            const msg = await stressDie(actor, type, 0, null, 10);
+            const roll = msg.rolls[0];
             log(false, roll);
             assert.ok(roll);
             if (roll.botches) {
@@ -278,7 +373,7 @@ export function registerOptionRollTesting(quench) {
             assert.equal(roll.modifier, tot);
           } catch (err) {
             console.error(`Error: ${err}`);
-            assert.ok(false);
+            assert.ok(false, err);
           }
         });
       });

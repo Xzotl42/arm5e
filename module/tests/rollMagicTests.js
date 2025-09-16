@@ -73,7 +73,9 @@ export function registerMagicRollTesting(quench) {
               fatigueOnUse: 1
             };
             magus.rollInfo.init(dataset, magus);
-            let roll = await stressDie(magus, type, 0, undefined, 10);
+            const msg = await stressDie(magus, type, 0, undefined, 10);
+            const roll = msg.rolls[0];
+
             log(false, roll);
             assert.ok(roll);
             if (roll.botches) {
@@ -108,7 +110,9 @@ export function registerMagicRollTesting(quench) {
               fatigueOnUse: 1
             };
             magus.rollInfo.init(dataset, magus);
-            let roll = await stressDie(magus, type, 0, undefined, 10);
+            const msg = await stressDie(magus, type, 0, undefined, 10);
+            const roll = msg.rolls[0];
+
             log(false, roll);
             assert.ok(roll);
             if (roll.botches) {
@@ -141,7 +145,9 @@ export function registerMagicRollTesting(quench) {
               fatigueOnUse: 1
             };
             magus.rollInfo.init(dataset, magus);
-            let roll = await stressDie(magus, type, 0, undefined, 100);
+            const msg = await stressDie(magus, type, 0, undefined, 100);
+            const roll = msg.rolls[0];
+
             log(false, roll);
             assert.ok(roll);
             if (roll.botches) {
@@ -175,7 +181,9 @@ export function registerMagicRollTesting(quench) {
               fatigueOnUse: 1
             };
             magus.rollInfo.init(dataset, magus);
-            let roll = await stressDie(magus, type, 0, undefined, 1);
+            const msg = await stressDie(magus, type, 0, undefined, 1);
+            const roll = msg.rolls[0];
+
             log(false, roll);
             assert.ok(roll);
             if (roll.botches) {
@@ -210,7 +218,9 @@ export function registerMagicRollTesting(quench) {
               // fatigueOnUse: 1
             };
             magus.rollInfo.init(dataset, magus);
-            let roll = await stressDie(magus, type, 0, undefined, 1);
+            const msg = await stressDie(magus, type, 0, undefined, 1);
+            const roll = msg.rolls[0];
+
             log(false, roll);
             assert.ok(roll);
             if (roll.botches) {
@@ -243,7 +253,9 @@ export function registerMagicRollTesting(quench) {
               id: Sp1._id
             };
             magus.rollInfo.init(dataset, magus);
-            let roll = await stressDie(magus, type, 0, undefined, 4);
+            const msg = await stressDie(magus, type, 0, undefined, 4);
+            const roll = msg.rolls[0];
+
             log(false, roll);
             assert.ok(roll);
             if (roll.botches) {
@@ -280,7 +292,9 @@ export function registerMagicRollTesting(quench) {
               id: Sp2._id
             };
             magus.rollInfo.init(dataset, magus);
-            let roll = await stressDie(magus, type, 0, undefined, 3);
+            const msg = await stressDie(magus, type, 0, undefined, 3);
+            const roll = msg.rolls[0];
+
             log(false, roll);
             assert.ok(roll);
             if (roll.botches) {
@@ -317,7 +331,9 @@ export function registerMagicRollTesting(quench) {
               id: Sp4._id
             };
             magus.rollInfo.init(dataset, magus);
-            let roll = await stressDie(magus, type, 0, undefined, 3);
+            const msg = await stressDie(magus, type, 0, undefined, 3);
+            const roll = msg.rolls[0];
+
             log(false, roll);
             assert.ok(roll);
             if (roll.botches) {
@@ -356,7 +372,9 @@ export function registerMagicRollTesting(quench) {
               id: Sp2._id
             };
             magus.rollInfo.init(dataset, magus);
-            let roll = await stressDie(magus, type, 0, undefined, 3);
+            const msg = await stressDie(magus, type, 0, undefined, 3);
+            const roll = msg.rolls[0];
+
             log(false, roll);
             assert.ok(roll);
             if (roll.botches) {
@@ -393,7 +411,9 @@ export function registerMagicRollTesting(quench) {
               id: Sp3._id
             };
             magus.rollInfo.init(dataset, magus);
-            let roll = await stressDie(magus, type, 0, undefined, 2);
+            const msg = await stressDie(magus, type, 0, undefined, 2);
+            const roll = msg.rolls[0];
+
             log(false, roll);
             assert.ok(roll);
             if (roll.botches) {
@@ -410,6 +430,7 @@ export function registerMagicRollTesting(quench) {
               magus.system.fatigueTotal +
               Sp3.system.finalScore +
               Sp3.system.bonus +
+              5 + // phylosophy and artes liberales
               aura.modifier;
             log(false, roll);
             assert.equal(roll.modifier, tot);

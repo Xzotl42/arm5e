@@ -2167,24 +2167,29 @@ export class ArM5eActorSheet extends ActorSheet {
     }
     let droppedActor = await fromUuid(data.uuid);
     // link both ways
+    const promiseArray = [];
     let updateArray = [];
     if (droppedActor.type === "covenant") {
       if (this.actor.system.covenant.linked) {
+        // unlink old cov if present
         delete this.actor.apps[this.actor.system.covenant.document.sheet?.appId];
         delete this.actor.system.covenant.document.apps[this.appId];
-        updateArray.push(...this.actor.system.covenant.document.sheet._unbindActor(this.actor));
-        updateArray.push(...droppedActor.sheet._bindActor(this.actor));
+        promiseArray.push(this.actor.system.covenant.document.sheet._unbindActor(this.actor));
       }
+      promiseArray.push(droppedActor.sheet._bindActor(this.actor));
     } else if (droppedActor.type === "laboratory") {
       if (this.actor.system.sanctum.linked) {
-        delete this.actor.apps[this.actor.system.owner.sanctum.sheet?.appId];
+        // unlink old lab if present
+        delete this.actor.apps[this.actor.system.sanctum.document.sheet?.appId];
         delete this.actor.system.sanctum.document.apps[this.appId];
         updateArray.push(this.actor.system.sanctum.document.sheet._unbindActor(this.actor));
       }
       updateArray.push(droppedActor.sheet._bindActor(this.actor));
     }
     updateArray.push(this._bindActor(droppedActor));
-    return await Actor.updateDocuments(await Promise.all(updateArray));
+    await Promise.all(promiseArray.flat());
+    const res = await Promise.all(updateArray);
+    return await Actor.updateDocuments(res);
   }
 
   _bindActor(actor) {
