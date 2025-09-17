@@ -319,6 +319,30 @@ export class DiaryEntrySchema extends foundry.abstract.TypeDataModel {
     }
   }
 
+  async applySchedule() {
+    await this.parent.update(_applySchedule());
+  }
+
+  _applySchedule() {
+    const dates = foundry.utils.deepClone(this.dates);
+    for (const date of dates) {
+      date.applied = true;
+    }
+    return { "system.dates": dates, "system.done": true };
+  }
+
+  async rollbackSchedule() {
+    await this.parent.update(_rollbackSchedule());
+  }
+
+  _rollbackSchedule() {
+    const dates = foundry.utils.deepClone(this.dates);
+    for (const date of dates) {
+      date.applied = false;
+    }
+    return { "system.dates": dates, "system.done": false };
+  }
+
   static buildSchedule(duration, year, season, date = "", applied = false) {
     let tmpDate = { season: season, year: year, date: date, applied: applied };
     let schedule = [tmpDate];

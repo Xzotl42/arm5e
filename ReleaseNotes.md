@@ -99,6 +99,7 @@
 - "Laboratory" activities won't prevent the application of future activities anymore.
 - It is again posssible to set requisites of enchantments in the lab.
 - Changing the realm of an entity is working again properly
+- Lab usage activities are applied and rollbacked when the associated activity is
 
 ## 2.3.2.28, Quendalon, more than just sparows and bunnies
 
