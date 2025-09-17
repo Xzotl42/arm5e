@@ -2669,7 +2669,7 @@ ARM5E.activities.generic = {
     secondaryFilter: null,
     scheduling: {
       duplicate: false,
-      conflict: true,
+      conflict: false,
       partial: true
     }
   },

@@ -1439,6 +1439,13 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
                   )
                 );
               }
+            } else if (dependency.flags == 2) {
+              let item = actor.items.get(dependency.itemId);
+              if (item.type === "diaryEntry") {
+                if (item.system.activity === "lab") {
+                  context.promises.dependencies.push(item.update(item.system._applySchedule(), {}));
+                }
+              }
             }
           }
         }
@@ -1640,6 +1647,13 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
                     { parent: actor }
                   )
                 );
+              } else if (dependency.flags == 2) {
+                let item = actor.items.get(dependency.itemId);
+                if (item.type === "diaryEntry") {
+                  if (item.system.activity === "lab") {
+                    promises.push(item.update(item.system._rollbackSchedule(), {}));
+                  }
+                }
               }
             }
           }
