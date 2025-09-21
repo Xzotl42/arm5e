@@ -318,24 +318,33 @@ export class SpellSchema extends MagicalEffectSchema {
   }
 
   static fatigueCost(actor, castingTotal, difficulty, ritual = false) {
-    // const res = { use: 0, partial: 0, fail: 0 };
-    const res = { use: 0, fail: 0 };
+    const res = { use: 0, partial: 0, fail: 0 };
     const delta = castingTotal - difficulty;
     if (ritual) {
       // Mythic blood
       res.use = Math.max(1 - actor.system.bonuses.arts.ritualFatigueCancelled, 0);
       if (delta < 0) {
-        res.fail = Math.max(
-          Math.ceil((difficulty - castingTotal) / 5) -
-            Math.max(actor.system.bonuses.arts.ritualFatigueCancelled - 1, 0),
-          0
+        let cnt = Math.ceil((difficulty - castingTotal) / 5);
+        const numberOfFatigueCancelled = Math.min(
+          Math.max(actor.system.bonuses.arts.ritualFatigueCancelled - 1, 0),
+          2
         );
+        if (cnt > 2) {
+          res.fail = cnt - 2;
+          res.partial = 2 - numberOfFatigueCancelled;
+        } else {
+          // remove partial fatigue levels with mythic blood
+          res.partial = Math.max(cnt - numberOfFatigueCancelled, 0);
+        }
       }
     } else {
       if (delta < -actor.system.bonuses.arts.spellFatigueThreshold) {
         res.fail = 1;
+      } else if (delta < 0) {
+        res.partial = 1;
       }
     }
+    log(false, "Spell fatigue cost", res);
     return res;
   }
 

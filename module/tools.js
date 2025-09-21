@@ -73,7 +73,7 @@ export function getUuidInfo(uuid) {
     info.type = matched.groups.type;
     info.id = matched.groups.id;
 
-    log(false, matched.groups);
+    // log(false, matched.groups);
   } else if (regex2.test(uuid)) {
     let matched = uuid.match(regex2);
     info.type = matched.groups.type;

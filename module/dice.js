@@ -60,7 +60,13 @@ async function simpleDie(actor, type = "OPTION", callback, modes = 0) {
         difficulty: rollInfo.difficulty,
         actorType: actor.type // for if the actor is deleted
       },
-      impact: { fatigueLevelsLost: 0, fatigueLevelsPending: 0, woundGravity: 0, applied: false }
+      impact: {
+        fatigueLevelsLost: 0,
+        fatigueLevelsPending: 0,
+        fatigueLevelsFail: 0,
+        woundGravity: 0,
+        applied: false
+      }
     };
 
     const messageData = await dieRoll.toMessage(
@@ -88,7 +94,7 @@ async function simpleDie(actor, type = "OPTION", callback, modes = 0) {
   if (callback) {
     await callback(actor, dieRoll, message, rollInfo);
   }
-  if (!(modes & 32)) await Arm5eChatMessage.create(message.toObject());
+  if (!(modes & 32)) return await Arm5eChatMessage.create(message.toObject());
   // actor.rollInfo.reset();
   return message;
 }
@@ -201,7 +207,7 @@ async function stressDie(actor, type = "OPTION", modes = 0, callback = undefined
       img: actor.img,
       label: rollInfo.label,
       confidence: {
-        allowed: confAllowed,
+        allowed: confAllowed && dieRoll.botches === 0,
         score: actor.system.con.score
       },
       roll: {
@@ -217,7 +223,13 @@ async function stressDie(actor, type = "OPTION", modes = 0, callback = undefined
         difficulty: rollInfo.difficulty,
         actorType: actor.type // for if the actor is deleted
       },
-      impact: { fatigueLevelsLost: 0, fatigueLevelsPending: 0, woundGravity: 0, applied: false }
+      impact: {
+        fatigueLevelsLost: 0,
+        fatigueLevelsPending: 0,
+        fatigueLevelsFail: 0,
+        woundGravity: 0,
+        applied: false
+      }
     };
 
     //   system.combat = { attacker: actor.uuid, defenders: [] };
@@ -252,7 +264,7 @@ async function stressDie(actor, type = "OPTION", modes = 0, callback = undefined
   if (callback) {
     await callback(actor, dieRoll, message, rollInfo);
   }
-  if (!(modes & 32)) Arm5eChatMessage.create(message.toObject());
+  if (!(modes & 32)) return await Arm5eChatMessage.create(message.toObject());
   // actor.rollInfo.reset();
   return message;
 }
@@ -933,7 +945,13 @@ async function noRoll(actor, modes, callback) {
       actorType: actor.type, // for if the actor is deleted
       difficulty: rollInfo.difficulty
     },
-    impact: { fatigueLevelsLost: 0, fatigueLevelsPending: 0, woundGravity: 0, applied: false }
+    impact: {
+      fatigueLevelsLost: 0,
+      fatigueLevelsPending: 0,
+      fatigueLevelsFail: 0,
+      woundGravity: 0,
+      applied: false
+    }
   };
 
   const messageData = await tmp.toMessage(
@@ -956,9 +974,8 @@ async function noRoll(actor, modes, callback) {
   if (callback) {
     await callback(actor, dieRoll, message, rollInfo);
   }
-  await Arm5eChatMessage.create(message.toObject());
+  return await Arm5eChatMessage.create(message.toObject());
   // actor.rollInfo.reset();
-  return message;
 }
 
 async function changeMight(actor, roll, message) {

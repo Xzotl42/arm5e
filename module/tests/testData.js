@@ -10,6 +10,10 @@ export const companionData = {
     dex: { value: 5, aging: 0 },
     qik: { value: 4, aging: 2 }
   },
+  con: {
+    score: 1,
+    points: 30
+  },
   description: {
     born: { value: "1200" },
     apprentice: { value: "10" },
@@ -566,6 +570,10 @@ export const magusData = {
     com: { value: -1, aging: 0 },
     dex: { value: -2, aging: 0 },
     qik: { value: -3, aging: 2 }
+  },
+  con: {
+    score: 2,
+    points: 20
   },
   description: {
     born: { value: "1200" },

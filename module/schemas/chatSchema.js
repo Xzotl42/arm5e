@@ -104,6 +104,7 @@ export class RollChatSchema extends BasicChatSchema {
           applied: boolOption(false),
           fatigueLevelsLost: basicIntegerField(0, 0),
           fatigueLevelsPending: basicIntegerField(0, 0),
+          fatigueLevelsFail: basicIntegerField(0, 0),
           woundGravity: new fields.NumberField({
             required: false,
             nullable: false,
@@ -114,7 +115,14 @@ export class RollChatSchema extends BasicChatSchema {
             max: 5
           })
         },
-        { initial: { fatigueLevelsLost: 0, fatigueLevelsPending: 0, woundGravity: 0 } }
+        {
+          initial: {
+            fatigueLevelsLost: 0,
+            fatigueLevelsPending: 0,
+            fatigueLevelsFail: 0,
+            woundGravity: 0
+          }
+        }
       )
     };
   }
@@ -332,23 +340,7 @@ export class RollChatSchema extends BasicChatSchema {
           ev.stopPropagation();
           const actorId = ev.currentTarget.dataset.actorId;
           const message = game.messages.get(ev.currentTarget.dataset.msgId);
-          const actor = game.actors.get(actorId);
-          const messageData = { "system.impact.applied": true };
-          const updateData = { "system.states.confidencePrompt": false };
-
-          actor._changeFatigueLevel(updateData, this.impact.fatigueLevelsPending, false);
-
-          messageData["system.impact.fatigueLevelsLost"] =
-            this.impact.fatigueLevelsLost + this.impact.fatigueLevelsPending;
-          messageData["system.impact.fatigueLevelsPending"] = 0;
-          const p0 = actor.update(updateData);
-          const p1 = actor.changeWound(
-            1,
-            CONFIG.ARM5E.recovery.rankMapping[this.impact.woundGravity],
-            game.i18n.localize("arm5e.sheet.fatigueOverflow")
-          );
-          const p2 = message.update(messageData);
-          await Promise.all([p0, p1, p2]);
+          await message.system.skipConfidenceUse(actorId);
         });
         buttonsArray.push(noConfButton);
       }
@@ -364,7 +356,50 @@ export class RollChatSchema extends BasicChatSchema {
 
   fatigueCost(actor) {
     // return { use: 0, partial: 0, fail: 0 };
-    return { use: 0, fail: 0 };
+    const res = {
+      use: this.impact.fatigueLevelsLost || 0,
+      partial: this.impact.fatigueLevelsPending || 0,
+      fail: this.impact.fatigueLevelsFail || 0
+    };
+    log(false, "fatigueCost", res);
+    return res;
+  }
+
+  async skipConfidenceUse(actorid) {
+    const actor = game.actors.get(actorid);
+    if (actor) {
+      const messageData = { "system.impact.applied": true };
+      const updateData = { "system.states.confidencePrompt": false };
+      let p0 = null;
+      let res = null;
+      if (this.failedRoll()) {
+        const totalFatigueLost = this.impact.fatigueLevelsPending + this.impact.fatigueLevelsFail;
+        res = actor._changeFatigueLevel(updateData, totalFatigueLost, false);
+
+        messageData["system.impact.fatigueLevelsLost"] =
+          this.impact.fatigueLevelsLost + totalFatigueLost;
+      } else {
+        res = actor._changeFatigueLevel(updateData, this.impact.fatigueLevelsPending, false);
+        messageData["system.impact.fatigueLevelsLost"] =
+          this.impact.fatigueLevelsLost + res.fatigueLevels;
+        // messageData["system.impact.woundGravity"] = this.impact.woundGravity;
+      }
+      p0 = actor.changeWound(
+        1,
+        CONFIG.ARM5E.recovery.rankMapping[this.impact.woundGravity],
+        game.i18n.localize("arm5e.sheet.fatigueOverflow")
+      );
+
+      messageData["system.confidence.allowed"] = false; // no more confidence allowed
+      messageData["system.impact.fatigueLevelsPending"] = 0;
+      messageData["system.impact.fatigueLevelsFail"] = 0;
+      const p1 = actor.update(updateData);
+      const p2 = this.parent.update(messageData);
+      await Promise.all([p0, p1, p2]);
+    } else {
+      log(false, "skipConfidenceUse: actor not found");
+    }
+    log(false, "skipConfidenceUse impact", this.impact);
   }
 
   async useConfidence(actorId) {
@@ -384,9 +419,16 @@ export class RollChatSchema extends BasicChatSchema {
       const updateData = {};
 
       actor._useConfidencePoint(updateData);
+      let res = null;
       // actor used its last confidence point or reached its maximum amount to spend.
       if (usedConf == actor.system.con.score || actor.system.con.points == 1) {
-        const res = actor._changeFatigueLevel(updateData, impact.fail, false);
+        let fatigueToApply = 0;
+        if (this.failedRoll()) {
+          fatigueToApply = impact.partial + impact.fail;
+        } else {
+          fatigueToApply = impact.partial;
+        }
+        res = actor._changeFatigueLevel(updateData, fatigueToApply, false);
         await actor.changeWound(
           1,
           CONFIG.ARM5E.recovery.rankMapping[res.woundGravity],
@@ -394,21 +436,48 @@ export class RollChatSchema extends BasicChatSchema {
         );
         msgData["system.impact.woundGravity"] = res.woundGravity;
         msgData["system.impact.applied"] = true;
+
         msgData["system.impact.fatigueLevelsLost"] =
-          this.impact.fatigueLevelsLost + res.fatigueLevelsPending;
+          this.impact.fatigueLevelsLost + res.fatigueLevels;
         msgData["system.impact.fatigueLevelsPending"] = 0;
+        msgData["system.impact.fatigueLevelsFail"] = 0;
+        msgData["system.confidence.allowed"] = false; // no more confidence allowed
         updateData["system.states.confidencePrompt"] = false;
       } else {
         const tmp = {}; // no update of actor needed, just recompute impact
+        let res = null;
+        if (this.failedRoll()) {
+          res = actor._changeFatigueLevel(tmp, impact.fail + impact.partial);
+          if (res.woundGravity) {
+            // wound overflow smaller than fail
+            if (res.woundGravity <= impact.fail) {
+              msgData["system.impact.fatigueLevelsFail"] = impact.fail - res.woundGravity;
+            } else {
+              msgData["system.impact.fatigueLevelsFail"] = 0;
+              const overflow = res.woundGravity - impact.fail;
+              if (overflow <= impact.partial) {
+                msgData["system.impact.fatigueLevelsPending"] = impact.partial - overflow;
+              } else {
+                msgData["system.impact.fatigueLevelsPending"] = 0;
+              }
+            }
+          } else {
+            msgData["system.impact.fatigueLevelsFail"] = impact.fail;
+            msgData["system.impact.fatigueLevelsPending"] = impact.partial;
+          }
+        } else {
+          res = actor._changeFatigueLevel(tmp, impact.partial);
+          msgData["system.impact.fatigueLevelsFail"] = 0;
+          msgData["system.impact.fatigueLevelsPending"] = res.fatigueLevels;
+        }
 
-        const res = actor._changeFatigueLevel(tmp, impact.fail);
-        msgData["system.impact.fatigueLevelsPending"] = res.fatigueLevelsPending;
         msgData["system.impact.applied"] = false;
         msgData["system.impact.woundGravity"] = res.woundGravity;
       }
       const p0 = actor.update(updateData);
       const p1 = this.parent.update(msgData);
       await Promise.all([p0, p1]);
+      log(false, "useConfidence impact", this.impact);
     }
   }
 
@@ -423,7 +492,10 @@ export class RollChatSchema extends BasicChatSchema {
   // }
 
   failedRoll() {
-    return this.parent.rollTotal + this.confidenceModifier - this.roll.difficulty < 0;
+    return (
+      this.roll.botches > 0 ||
+      this.parent.rollTotal + this.confidenceModifier - this.roll.difficulty < 0
+    );
   }
   getFailedMessage() {
     const showDataOfNPC = game.settings.get("arm5e", "showNPCMagicDetails") === "SHOW_ALL";
@@ -446,9 +518,9 @@ export class RollChatSchema extends BasicChatSchema {
         num: this.impact.fatigueLevelsLost
       })} `;
     }
-    if (this.impact.fatigueLevelsPending > 0) {
+    if (this.impact.fatigueLevelsPending + this.impact.fatigueLevelsFail > 0) {
       impactMessage += `<br/>${game.i18n.format("arm5e.messages.fatigueLost", {
-        num: this.impact.fatigueLevelsPending
+        num: this.impact.fatigueLevelsPending + this.impact.fatigueLevelsFail
       })} `;
       impactMessage += ` (${game.i18n.localize("arm5e.generic.pending")})`;
     }
@@ -459,11 +531,7 @@ export class RollChatSchema extends BasicChatSchema {
       if (!this.impact.applied)
         impactMessage += ` (${game.i18n.localize("arm5e.generic.pending")})`;
     }
-    if (this.roll.botchCheck && this.roll.botches > 0) {
-      impactMessage += `<br/>${game.i18n.format("arm5e.messages.die.warpGain", {
-        num: this.roll.botches
-      })} `;
-    }
+
     return impactMessage;
   }
 
@@ -575,7 +643,7 @@ export class CombatChatSchema extends RollChatSchema {
   }
 
   failedRoll() {
-    return false;
+    return this.roll.botches > 0 || false;
   }
 }
 export class MagicChatSchema extends RollChatSchema {
@@ -590,8 +658,8 @@ export class MagicChatSchema extends RollChatSchema {
             nullable: true,
             required: false,
             initial: null
-          }),
-          form: new fields.StringField({ nullable: true, initial: null, required: false })
+          })
+          // form: new fields.StringField({ nullable: true, initial: null, required: false })
         }),
         targets: new fields.ArrayField(
           new fields.SchemaField({
@@ -617,6 +685,16 @@ export class MagicChatSchema extends RollChatSchema {
     };
   }
 
+  getImpactMessage() {
+    let impactMessage = super.getImpactMessage();
+    if (this.roll.botchCheck && this.roll.botches > 0) {
+      impactMessage += `<br/>${game.i18n.format("arm5e.messages.die.warpGain", {
+        num: this.roll.botches
+      })} `;
+    }
+    return impactMessage;
+  }
+
   enrichMessageData(actor) {
     super.enrichMessageData(actor);
 
@@ -640,7 +718,8 @@ export class MagicChatSchema extends RollChatSchema {
       },
       targets: [],
       ritual: actor.rollInfo.magic.ritual,
-      realm: realm
+      realm: realm,
+      form: actor.rollInfo.magic.form.value
     };
 
     this.parent.updateSource({
@@ -651,7 +730,7 @@ export class MagicChatSchema extends RollChatSchema {
   }
 
   failedRoll() {
-    return this.failedCasting();
+    return this.roll.botches > 0 || this.failedCasting();
   }
 
   getTargetsHtml() {
@@ -773,8 +852,7 @@ export class MagicChatSchema extends RollChatSchema {
 
   //
   fatigueCost(actor) {
-    // let res = { use: 0, partial: 0, fail: 0 };
-    let res = { use: 0, fail: 0 };
+    let res = { use: 0, partial: 0, fail: 0 };
 
     if (this.roll.type == "spell") {
       res = SpellSchema.fatigueCost(
@@ -784,6 +862,7 @@ export class MagicChatSchema extends RollChatSchema {
         this.magic.ritual
       );
     }
+    log(false, "fatigueCost", res);
     return res;
   }
   failedCasting() {

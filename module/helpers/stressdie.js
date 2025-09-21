@@ -116,7 +116,7 @@ export class ArsRoll extends Roll {
       log(false, "ERROR: wrong number of dice");
       return 0;
     }
-    log(false, `DBG: modifier - options: ${JSON.stringify(this.options)}`);
+    // log(false, `DBG: modifier - options: ${JSON.stringify(this.options)}`);
 
     log(
       false,
@@ -138,10 +138,10 @@ export class ArsRoll extends Roll {
    *                                        true, or the Object of prepared chatData otherwise.
    */
   async toMessage(messageData = {}, { rollMode, create = true } = {}) {
-    log(
-      false,
-      `DBG: Roll total ${this.total} * ${this.divider} (divider) - (${this.dice[0].total} (diceTotal) * ${this.multiplier} (multiplier)) `
-    );
+    // log(
+    //   false,
+    //   `DBG: Roll total ${this.total} * ${this.divider} (divider) - (${this.dice[0].total} (diceTotal) * ${this.multiplier} (multiplier)) `
+    // );
     let msg = await super.toMessage(messageData, { rollMode, create: false });
     // add type and system data
     msg.type = this.getMessageType(messageData);

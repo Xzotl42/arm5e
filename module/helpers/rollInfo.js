@@ -38,14 +38,6 @@ export class ArM5eRollInfo {
       this.botchNumber = dataset.botchNumber;
     }
 
-    // fatigue lost if roll failed
-    if (dataset.fatigueOnFail) {
-      this.impact.fail.fatigue = parseInt(dataset.fatigueOnFail);
-    }
-    if (dataset.fatigueOnUse) {
-      this.impact.use.fatigue = parseInt(dataset.fatigueOnUse);
-    }
-
     this.properties = getRollTypeProperties(this.type);
 
     if (this.properties.MODIFIERS & ROLL_MODIFIERS.PHYSICAL) {
@@ -208,7 +200,7 @@ export class ArM5eRollInfo {
         break;
       case ROLL_PROPERTIES.MAGIC.VAL:
       case ROLL_PROPERTIES.SPONT.VAL:
-        this.impact.use.fatigue = 1;
+        this.impact.fatigue.use = 1;
 
         this.magic.divide = this._actor.system.bonuses.arts.spontDivider;
       case ROLL_PROPERTIES.SPELL.VAL:
@@ -418,10 +410,10 @@ export class ArM5eRollInfo {
 
     // fatigue lost if roll failed
     if (dataset.fatigueOnFail) {
-      this.impact.fail.fatigue = parseInt(dataset.fatigueOnFail);
+      this.impact.fatigue.fail = parseInt(dataset.fatigueOnFail);
     }
     if (dataset.fatigueOnUse) {
-      this.impact.use.fatigue = parseInt(dataset.fatigueOnUse);
+      this.impact.fatigue.use = parseInt(dataset.fatigueOnUse);
     }
 
     this.activeEffects = [];
@@ -689,14 +681,10 @@ export class ArM5eRollInfo {
     };
 
     this.impact = {
-      use: {
-        fatigue: 0
-      },
-      // partial: {
-      //   fatigue: 0
-      // },
-      fail: {
-        fatigue: 0
+      fatigue: {
+        use: 0,
+        partial: 0,
+        fail: 0
       }
     };
 
