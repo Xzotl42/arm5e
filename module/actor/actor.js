@@ -236,7 +236,7 @@ export class ArM5eActor extends Actor {
    */
   _prepareCharacterData() {
     const system = this.system;
-    log(false, `Preparing Actor ${this.name} data`);
+    // log(false, `Preparing Actor ${this.name} data`);
     // Initialize collections.
     system.weapons = [];
     system.armor = [];
@@ -723,8 +723,7 @@ export class ArM5eActor extends Actor {
         this.system.sanctum.linked = false;
       }
     }
-    log(false, "pc end of prepare actor data");
-    log(false, system);
+    log(false, "PC end of prepare actor data", system);
   }
 
   /**
@@ -947,14 +946,14 @@ export class ArM5eActor extends Actor {
   async recoverFatigueLevel(num) {
     const updateData = {};
     const res = this._changeFatigueLevel(updateData, -num, false);
-    if (res.fatigueLevelsPending) await this.update(updateData, {});
+    if (res.fatigueLevels) await this.update(updateData, {});
     return res;
   }
 
   async loseFatigueLevel(num, wound = true) {
     const updateData = {};
     const res = this._changeFatigueLevel(updateData, num, wound);
-    if (res.fatigueLevelsPending) await this.update(updateData, {});
+    if (res.fatigueLevels) await this.update(updateData, {});
     if (res.woundGravity) {
       await this.changeWound(
         1,
@@ -967,8 +966,7 @@ export class ArM5eActor extends Actor {
 
   _changeFatigueLevel(updateData, num, wound = true) {
     const res = {
-      fatigueLevelsLost: 0,
-      fatigueLevelsPending: 0,
+      fatigueLevels: 0,
       woundGravity: 0
     };
     if (!this.isCharacter() || (num <= 0 && this.system.fatigueCurrent == 0)) {
@@ -978,15 +976,15 @@ export class ArM5eActor extends Actor {
     let overflow = 0;
     if (tmp < 0) {
       // character cannot restore more fatigue levels than he/she has
-      res.fatigueLevelsPending = tmp;
+      res.fatigueLevels = tmp;
       updateData["system.fatigueCurrent"] = 0;
     } else if (tmp > this.system.fatigueMaxLevel) {
       // overflow to a wound
-      res.fatigueLevelsPending = this.system.fatigueMaxLevel - this.system.fatigueCurrent;
+      res.fatigueLevels = this.system.fatigueMaxLevel - this.system.fatigueCurrent;
       updateData["system.fatigueCurrent"] = this.system.fatigueMaxLevel;
       overflow = tmp - this.system.fatigueMaxLevel;
     } else {
-      res.fatigueLevelsPending = num;
+      res.fatigueLevels = num;
       updateData["system.fatigueCurrent"] = tmp;
     }
 

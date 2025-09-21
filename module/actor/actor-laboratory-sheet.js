@@ -110,7 +110,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
    * @returns {any}
    */
   async getData() {
-    log(false, "GET WORKBENCH DATA");
+    // log(false, "GET WORKBENCH DATA");
     let context = await super.getData();
     let isValid = true;
 
@@ -173,8 +173,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
       };
 
       // context.planning.modifiers.apprentice = 0;
-      log(false, "lab-sheet getData");
-      log(false, context);
+      log(false, "lab-sheet getData", context);
 
       return context;
     }
@@ -409,8 +408,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
     // Prepare items.
     this._prepareCharacterItems(context);
 
-    log(false, "lab-sheet getData");
-    log(false, context);
+    log(false, "lab-sheet getData", context);
     return context;
   }
 

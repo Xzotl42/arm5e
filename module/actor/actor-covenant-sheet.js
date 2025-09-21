@@ -179,8 +179,7 @@ export class ArM5eCovenantActorSheet extends ArM5eActorSheet {
       //   context.system.yearlySavings[save].canEdit = "readonly";
       // }
     }
-    log(false, "Covenant-sheet getData");
-    log(false, context);
+    log(false, "Covenant-sheet getData", context);
     return context;
   }
 

@@ -100,6 +100,7 @@ const ROLL_PROPERTIES = {
     VAL: "init",
     MODE: ROLL_MODES.STRESS,
     MODIFIERS: 3,
+    CALLBACK: applyImpact,
     TITLE: "arm5e.dialog.title.rolldie"
   },
   MAGIC: {
@@ -678,57 +679,87 @@ async function _applyImpact(actor, roll, message) {
   const updateData = {};
   const messageUpdate = {};
 
-  let fatigueUse = actor.rollInfo.impact.use.fatigue;
-  let fatigueFail = actor.rollInfo.impact.fail.fatigue;
-  // let fatiguePartial = actor.rollInfo.impact.partial.fatigue;
-
-  if (!fatigueUse && !fatigueFail) {
-    messageUpdate["system.impact"] = {
-      fatigueLevelsLost: 0,
-      fatigueLevelsPending: 0,
-      woundGravity: 0,
-      applied: false
-    };
-    return;
-  }
-  // remove fatigue on use
-  let impact = { fatigueLevelsLost: 0, fatigueLevelsPending: 0, woundGravity: 0, applied: false };
-  if (fatigueUse) {
-    let res = await actor.loseFatigueLevel(fatigueUse);
-    impact.fatigueLevelsLost = fatigueUse;
-  }
-
-  // check if the roll failed
-
-  // if (actor.rollInfo.rollFailed(roll)) {
-  if (fatigueFail) {
-    let res = actor._changeFatigueLevel(updateData, fatigueFail);
-    impact.fatigueLevelsPending = res.fatigueLevelsPending;
-    impact.woundGravity = res.woundGravity;
-  }
-  // }
-
-  // the actor can still change the situation by spending confidence.
-  if (actor.canUseConfidencePoint() && message.system.confidence.allowed && !roll.botches) {
-    // do not update fatigue yet.
-    delete updateData["system.fatigueCurrent"];
-    if (impact.fatigueLevelsPending || impact.woundGravity) {
-      updateData["system.states.confidencePrompt"] = true;
-    }
+  let fatigueUse = actor.rollInfo.impact.fatigue.use;
+  let fatigueFail = actor.rollInfo.impact.fatigue.fail;
+  let fatiguePartial = actor.rollInfo.impact.fatigue.partial;
+  let defaultImpact = {
+    fatigueLevelsLost: 0,
+    fatigueLevelsPending: 0,
+    fatigueLevelsFail: 0,
+    woundGravity: 0,
+    applied: false
+  };
+  if (!fatigueUse && !fatigueFail && !fatiguePartial) {
+    defaultImpact.applied = roll.botches > 0;
+    messageUpdate["system.impact"] = defaultImpact;
   } else {
-    if (impact.woundGravity) {
-      await actor.changeWound(
-        1,
-        CONFIG.ARM5E.recovery.rankMapping[impact.woundGravity],
-        game.i18n.localize("arm5e.sheet.fatigueOverflow")
-      );
+    // remove fatigue on use
+    if (fatigueUse) {
+      let res = await actor.loseFatigueLevel(fatigueUse);
+      defaultImpact.fatigueLevelsLost = fatigueUse;
     }
-    impact.fatigueLevelsLost += impact.fatigueLevelsPending;
-    impact.fatigueLevelsPending = 0;
-    impact.applied = true;
+
+    // check if the roll failed
+
+    // if (actor.rollInfo.rollFailed(roll)) {
+    if (fatigueFail || fatiguePartial) {
+      let res;
+      if (message.system.failedRoll()) {
+        res = actor._changeFatigueLevel(updateData, fatiguePartial + fatigueFail);
+        if (res.woundGravity) {
+          if (res.woundGravity <= fatigueFail) {
+            defaultImpact.fatigueLevelsFail = fatigueFail - res.woundGravity;
+          } else {
+            defaultImpact.fatigueLevelsFail = 0;
+            const overflow = res.woundGravity - fatigueFail;
+            if (overflow <= fatiguePartial) {
+              defaultImpact.fatigueLevelsPending = fatiguePartial - overflow;
+            } else {
+              defaultImpact.fatigueLevelsPending = 0;
+            }
+          }
+        } else {
+          defaultImpact.fatigueLevelsFail = fatigueFail;
+          defaultImpact.fatigueLevelsPending = fatiguePartial;
+        }
+      } else {
+        res = actor._changeFatigueLevel(updateData, fatiguePartial);
+        defaultImpact.fatigueLevelsFail = 0;
+        defaultImpact.fatigueLevelsPending = res.fatigueLevels;
+      }
+
+      defaultImpact.woundGravity = res.woundGravity;
+    }
+
+    // the actor can still change the situation by spending confidence.
+    if (actor.canUseConfidencePoint() && message.system.confidence.allowed && !roll.botches) {
+      // do not update fatigue yet.
+      delete updateData["system.fatigueCurrent"];
+      if (
+        defaultImpact.fatigueLevelsPending ||
+        defaultImpact.fatigueLevelsFail ||
+        defaultImpact.woundGravity
+      ) {
+        updateData["system.states.confidencePrompt"] = true;
+      }
+    } else {
+      if (defaultImpact.woundGravity) {
+        await actor.changeWound(
+          1,
+          CONFIG.ARM5E.recovery.rankMapping[defaultImpact.woundGravity],
+          game.i18n.localize("arm5e.sheet.fatigueOverflow")
+        );
+      }
+      defaultImpact.fatigueLevelsLost +=
+        defaultImpact.fatigueLevelsPending + defaultImpact.fatigueLevelsFail;
+      defaultImpact.fatigueLevelsPending = 0;
+      defaultImpact.fatigueLevelsFail = 0;
+      defaultImpact.applied = true;
+    }
+    messageUpdate["system.impact"] = defaultImpact;
   }
-  messageUpdate["system.impact"] = impact;
   message.updateSource(messageUpdate);
+  log(false, "_applyImpact impact", message.system.impact);
   return updateData;
 }
 
@@ -773,9 +804,7 @@ async function castSpell(actorCaster, roll, message) {
       levelOfSpell,
       actorCaster.rollInfo.magic.ritual
     );
-    actorCaster.rollInfo.impact.use.fatigue = res.use;
-    // actorCaster.rollInfo.impact.partial.fatigue = res.partial;
-    actorCaster.rollInfo.impact.fail.fatigue = res.fail;
+    actorCaster.rollInfo.impact.fatigue = res;
   }
   const updateImpact = await _applyImpact(actorCaster, roll, message);
   foundry.utils.mergeObject(updateData, updateImpact);
