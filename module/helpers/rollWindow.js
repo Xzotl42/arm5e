@@ -707,15 +707,16 @@ async function _applyImpact(actor, roll, message) {
       if (message.system.failedRoll()) {
         res = actor._changeFatigueLevel(updateData, fatiguePartial + fatigueFail);
         if (res.woundGravity) {
-          if (res.woundGravity <= fatigueFail) {
-            defaultImpact.fatigueLevelsFail = fatigueFail - res.woundGravity;
-          } else {
+          if (res.fatigueLevels <= fatiguePartial) {
+            // overflow absorbed by partial fatigue
+            defaultImpact.fatigueLevelsPending = fatiguePartial - res.fatigueLevels;
             defaultImpact.fatigueLevelsFail = 0;
-            const overflow = res.woundGravity - fatigueFail;
-            if (overflow <= fatiguePartial) {
-              defaultImpact.fatigueLevelsPending = fatiguePartial - overflow;
+          } else {
+            defaultImpact.fatigueLevelsPending = fatiguePartial;
+            if (res.fatigueLevels - fatiguePartial <= fatigueFail) {
+              defaultImpact.fatigueLevelsFail = fatigueFail - (res.fatigueLevels - fatiguePartial);
             } else {
-              defaultImpact.fatigueLevelsPending = 0;
+              defaultImpact.fatigueLevelsFail = fatigueFail;
             }
           }
         } else {
