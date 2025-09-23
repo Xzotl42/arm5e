@@ -97,7 +97,7 @@ export class RollChatSchema extends BasicChatSchema {
         }),
         secondaryScore: basicIntegerField(0),
         divider: basicIntegerField(1, 1),
-        difficulty: basicIntegerField(1, 0)
+        difficulty: basicIntegerField(0, 0)
       }),
       impact: new fields.SchemaField(
         {
@@ -172,7 +172,7 @@ export class RollChatSchema extends BasicChatSchema {
       formula += ` + ${toAppend}`;
     }
 
-    if (this.roll.difficulty) {
+    if (this.roll.difficulty && this.roll.botches === 0) {
       formula += ` versus ${this.roll.difficulty}`;
     }
     return formula;

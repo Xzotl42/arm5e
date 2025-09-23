@@ -731,34 +731,28 @@ async function _applyImpact(actor, roll, message) {
 
       defaultImpact.woundGravity = res.woundGravity;
     }
-
-    // the actor can still change the situation by spending confidence.
-    if (actor.canUseConfidencePoint() && message.system.confidence.allowed && !roll.botches) {
-      // do not update fatigue yet.
-      delete updateData["system.fatigueCurrent"];
-      if (
-        defaultImpact.fatigueLevelsPending ||
-        defaultImpact.fatigueLevelsFail ||
-        defaultImpact.woundGravity
-      ) {
-        updateData["system.states.confidencePrompt"] = true;
-      }
-    } else {
-      if (defaultImpact.woundGravity) {
-        await actor.changeWound(
-          1,
-          CONFIG.ARM5E.recovery.rankMapping[defaultImpact.woundGravity],
-          game.i18n.localize("arm5e.sheet.fatigueOverflow")
-        );
-      }
-      defaultImpact.fatigueLevelsLost +=
-        defaultImpact.fatigueLevelsPending + defaultImpact.fatigueLevelsFail;
-      defaultImpact.fatigueLevelsPending = 0;
-      defaultImpact.fatigueLevelsFail = 0;
-      defaultImpact.applied = true;
-    }
-    messageUpdate["system.impact"] = defaultImpact;
   }
+  // the actor can still change the situation by spending confidence.
+  if (actor.canUseConfidencePoint() && message.system.confidence.allowed && !roll.botches) {
+    // do not update fatigue yet.
+    delete updateData["system.fatigueCurrent"];
+    updateData["system.states.confidencePrompt"] = true;
+  } else {
+    if (defaultImpact.woundGravity) {
+      await actor.changeWound(
+        1,
+        CONFIG.ARM5E.recovery.rankMapping[defaultImpact.woundGravity],
+        game.i18n.localize("arm5e.sheet.fatigueOverflow")
+      );
+    }
+    defaultImpact.fatigueLevelsLost +=
+      defaultImpact.fatigueLevelsPending + defaultImpact.fatigueLevelsFail;
+    defaultImpact.fatigueLevelsPending = 0;
+    defaultImpact.fatigueLevelsFail = 0;
+    defaultImpact.applied = true;
+  }
+  messageUpdate["system.impact"] = defaultImpact;
+
   message.updateSource(messageUpdate);
   log(false, "_applyImpact impact", message.system.impact);
   return updateData;

@@ -25,6 +25,12 @@
                   arm5e.aging.crisis.tooltip"}}'><i class="icon-Icon_Aging_crisis"></i></a>
               </div>
             {{/if}}
+            {{#if system.states.confidencePrompt}}
+              <div class="flex0 padding10" style="width:36px"><a class="clear-confidencePrompt"
+                  title='{{localize "arm5e.sheet.states.confidencePrompt"}}' style="font-size: 20pt;"><i
+                    class="fas fa-user-plus"></i></a>
+              </div>
+            {{/if}}
             {{#if system.twilight.stage}}
               <div class="flex01" style="padding: 5px;">
                 <a class="twilight-episode clickable" data-year="{{datetime.year}}" data-season="{{datetime.season}}"
