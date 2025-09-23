@@ -1,3 +1,18 @@
+## 2.4.0.24, Radislav the guy with the accent
+
+### V13 compatibility
+
+- Fix Arcane implementation rolls
+- The V13 disclaimer at login is no longer persistent
+
+## Bug fixes
+
+- Default difficulty of a roll chat message is now 0 instead of 1
+- Removed the "versus <difficulty>" in the roll message in case of a botch.
+- Confidence prompt icon will now appear with all types of characters.
+- Confidence prompt icon will appear even if there is no consequence to the roll (fatigue, wounds,...)
+- The loss of warping points will appear only once on the chat message
+
 ## 2.4.0.23, Radislav am Polanach
 
 ### Compatibility

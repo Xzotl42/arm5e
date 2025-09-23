@@ -1624,6 +1624,9 @@
       "state": {
         "label": "State"
       },
+      "states": {
+        "confidencePrompt": "Confidence prompt pending"
+      },
       "story": "Story",
       "str": "Str",
       "strength": "Strength",
