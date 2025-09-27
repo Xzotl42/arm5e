@@ -321,10 +321,10 @@ ARM5E.virtueFlawTypes.covenant = {
 
 ARM5E.qualityTypes = {
   mundane: {
-    label: "arm5e.sheet.realm.mundane"
+    label: "arm5e.realm.mundane"
   },
   magic: {
-    label: "arm5e.sheet.realm.magic"
+    label: "arm5e.realm.magic"
   }
 };
 
@@ -1218,22 +1218,22 @@ ARM5E.REALM_TYPES = {
 // influence is the impact the aura has on powers of mundane (ie: none), magic, faery, divine and infernal respectively
 ARM5E.realms = {
   magic: {
-    label: "arm5e.sheet.realm.magic",
+    label: "arm5e.realm.magic",
     index: ARM5E.REALM_TYPES.MAGIC,
     influence: [0, 1, 0.5, 0, -1]
   },
   faeric: {
-    label: "arm5e.sheet.realm.faeric",
+    label: "arm5e.realm.faeric",
     index: ARM5E.REALM_TYPES.FAERIC,
     influence: [0, 0.5, 1, 0, -1]
   },
   divine: {
-    label: "arm5e.sheet.realm.divine",
+    label: "arm5e.realm.divine",
     index: ARM5E.REALM_TYPES.DIVINE,
     influence: [0, -3, -4, 1, -5]
   },
   infernal: {
-    label: "arm5e.sheet.realm.infernal",
+    label: "arm5e.realm.infernal",
     index: ARM5E.REALM_TYPES.INFERNAL,
     influence: [0, -1, -2, 0, 1]
   }
@@ -1243,7 +1243,7 @@ ARM5E.lookupRealm = ["mundane", "magic", "faeric", "divine", "infernal"];
 
 ARM5E.realmsExt = {
   mundane: {
-    label: "arm5e.sheet.realm.mundane",
+    label: "arm5e.realm.mundane",
     index: 0,
     influence: [0, 0, 0, 0, 0]
   },

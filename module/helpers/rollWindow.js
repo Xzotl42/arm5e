@@ -150,7 +150,7 @@ const ROLL_PROPERTIES = {
   },
   TWILIGHT_CONTROL: {
     VAL: "twilight_control",
-    MODE: 25, // STRESS  + NO_CONF + UNCONSCIOUS
+    MODE: 17, // STRESS + UNCONSCIOUS
     MODIFIERS: 1,
     TITLE: "arm5e.twilight.episode",
     ACTION_LABEL: "arm5e.twilight.control.avoid",
@@ -172,7 +172,7 @@ const ROLL_PROPERTIES = {
   },
   TWILIGHT_UNDERSTANDING: {
     VAL: "twilight_understanding",
-    MODE: 25, // STRESS  + NO_CONF + UNCONSCIOUS
+    MODE: 17, // STRESS  + UNCONSCIOUS
     MODIFIERS: 1,
     TITLE: "arm5e.twilight.episode",
     CALLBACK: twilightUnderstanding
@@ -804,9 +804,9 @@ async function castSpell(actorCaster, roll, message) {
   const updateImpact = await _applyImpact(actorCaster, roll, message);
   foundry.utils.mergeObject(updateData, updateImpact);
 
-  const form = CONFIG.ARM5E.magic.arts[actorCaster.rollInfo.magic.form.value]?.label ?? "NONE";
+  // const form = CONFIG.ARM5E.magic.arts[actorCaster.rollInfo.magic.form.value]?.label ?? "NONE";
   await actorCaster.update(updateData);
-  await handleTargetsOfMagic(actorCaster, form, message);
+  await handleTargetsOfMagic(actorCaster, actorCaster.rollInfo.magic.form.value, message);
   message.updateSource(messageUpdate);
   // Then do contest of magic
 }
@@ -844,8 +844,8 @@ async function castSupernaturalEffect(actorCaster, roll, message) {
 
   message.updateSource(messageUpdate);
   // Then do contest of magic
-  const form = CONFIG.ARM5E.magic.arts[actorCaster.rollInfo.magic.form.value]?.label ?? "NONE";
-  await handleTargetsOfMagic(actorCaster, form, message);
+  // const form = CONFIG.ARM5E.magic.arts[actorCaster.rollInfo.magic.form.value]?.label ?? "NONE";
+  await handleTargetsOfMagic(actorCaster, actorCaster.rollInfo.magic.form.value, message);
 }
 
 /**

@@ -79,7 +79,7 @@ export default class ArM5eActiveEffect extends ActiveEffect {
           }
         };
 
-        data.name = game.i18n.localize("arm5e.sheet.activeEffect.new");
+        data.name = game.i18n.localize("arm5e.activeEffect.new");
         data.img = "icons/svg/aura.svg";
 
         return await owner.createEmbeddedDocuments("ActiveEffect", [data]);
@@ -103,17 +103,17 @@ export default class ArM5eActiveEffect extends ActiveEffect {
     const categories = {
       temporary: {
         type: "temporary",
-        label: "arm5e.sheet.activeEffect.section.temporary",
+        label: "arm5e.activeEffect.section.temporary",
         effects: []
       },
       passive: {
         type: "passive",
-        label: "arm5e.sheet.activeEffect.section.passive",
+        label: "arm5e.activeEffect.section.passive",
         effects: []
       },
       inactive: {
         type: "inactive",
-        label: "arm5e.sheet.activeEffect.section.inactive",
+        label: "arm5e.activeEffect.section.inactive",
         effects: []
       }
     };
@@ -261,7 +261,7 @@ export default class ArM5eActiveEffect extends ActiveEffect {
               subtype = game.i18n.format(subtype, { option: effectOption[idx] });
             }
             descr +=
-              game.i18n.format("arm5e.sheet.activeEffect.multiply", {
+              game.i18n.format("arm5e.activeEffect.multiply", {
                 type: subtype
               }) +
               (c.value < 0 ? "" : "+") +
@@ -271,7 +271,7 @@ export default class ArM5eActiveEffect extends ActiveEffect {
             if (effectOption[idx]) {
               subtype = game.i18n.format(subtype, { option: effectOption[idx] });
             }
-            descr += game.i18n.format("arm5e.sheet.activeEffect.add", {
+            descr += game.i18n.format("arm5e.activeEffect.add", {
               score: (c.value < 0 ? "" : "+") + c.value,
               value: subtype
             });

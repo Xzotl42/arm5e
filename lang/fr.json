@@ -54,6 +54,125 @@
     }
   },
   "arm5e": {
+    "activeEffect": {
+      "add": "Ajouter {score} à {value}",
+      "bonuses": {
+        "penetration": "Bonus de Pénétration"
+      },
+      "changeMode": "Mode",
+      "changeValue": "Valeur de l'Effet",
+      "info": {
+        "noedit": "Remarque : la création d'un effet actif n'est pas possible si l'élément appartient à un acteur, modifiez l'original ou faites une copie dans votre monde pour le modifier."
+      },
+      "mode_0": "Personnalisé",
+      "mode_1": "Multiplier",
+      "mode_2": "Ajouter",
+      "mode_3": "Rétrograder",
+      "mode_4": "Améliorer",
+      "mode_5": "Remplacer",
+      "multiply": "Multiplier {type} par ",
+      "new": "Nouvel effet",
+      "section": {
+        "inactive": "Effets inactifs",
+        "passive": "Effets passifs",
+        "temporary": "Effets temporaires"
+      },
+      "subtypes": {
+        "attackRoll": "Jets d'attaque",
+        "auraLevel": "Niveau de l'aura",
+        "auraRealm": "Domaine de l'aura",
+        "buildings": "Bâtiments",
+        "combatRoll": "Jets de combat",
+        "consumables": "Fournitures",
+        "defRoll": "Jet de défense",
+        "fatigueTotal": "Total de Fatigue",
+        "formMagicRoll": "Jets de magie formulaïque",
+        "inhabitantPoints": "Inhabitant points",
+        "initRoll": "Jets d'initiative",
+        "inventSpell": "Invention de sort",
+        "labText": "Textes de laboratoire",
+        "laboratories": "Laboratoires",
+        "laborers": "Paysans",
+        "labs": "Laboratoires",
+        "learnSpell": "Apprentissage de sort",
+        "library": "Bibliothèque",
+        "magicItems": "Objets magiques",
+        "magicRoll": "Jets de magie",
+        "money": "Argent",
+        "none": "Aucun",
+        "provisions": "Provisions",
+        "ritualFatigueCancelled": "Niveaux de Fatigue rituelle annulés",
+        "servants": "Serviteurs",
+        "specialists": "Spécialistes",
+        "spellFatigueThreshold": "Seuil de Fatigue des sorts",
+        "spontDivider": "Diviseur de magie spontanée",
+        "spontDividerNoFatigue": "Diviseur de magie spontanée sans fatigue",
+        "spontMagicRoll": "Jets de magie spontanée",
+        "teamsters": "Manouvriers",
+        "turbula": "Turbula",
+        "vis": "Vis",
+        "wages": "Gages",
+        "weapons": "Armes & Armures",
+        "woundsTotal": "Total de Blessures",
+        "writingMaterials": "Matériel d'écriture",
+        "xpcoeff": "Multiplicateur d'XP",
+        "xpmod": "Bonus d'Xp"
+      },
+      "type": {
+        "covenantBuildPoint": "Points de construction de l'alliance",
+        "covenantInhabitants": "Les habitants de l'Alliance",
+        "spellcasting": "Lancement de Sorts",
+        "yearlyExpenses": "Dépenses de l'alliance",
+        "yearlySavings": {
+          "magic": "Economies de l'Alliance dûes à la magie",
+          "mundane": "Economies de l'alliance vulgaire"
+        }
+      },
+      "types": {
+        "AlternateArtBonus": "Bonus d'Arts alternatifs",
+        "academicAbilitiesAffinity": "Affinité Compétences Académiques (xp)",
+        "academicAbilitiesBonus": "Bonus aux Compétences Académiques",
+        "academicAbilitiesXPBonus": "Bonus d'XP aux compétences Académiques",
+        "affinityAlternateArt": "Affinité pour les arts alternatifs (xp)",
+        "arcaneAbilitiesAffinity": "Affinité Compétences Mystiques (xp)",
+        "arcaneAbilitiesBonus": "Bonus aux Compétences Mystiques",
+        "arcaneAbilitiesXPBonus": "Bonus d'XP aux compétences Arcanique",
+        "arts": {
+          "affinity": "Affinité pour un Art",
+          "deficiency": "Art déficient"
+        },
+        "characteristicBoost": "Augmentation de Caractéristique",
+        "characteristics": "Caractéristiques",
+        "fatigue": "Fatigue",
+        "formResistance": "Résistance naturelle",
+        "generalAbilitiesAffinity": "Affinité Compétences Générales (xp)",
+        "generalAbilitiesBonus": "Bonus aux Compétences Générales",
+        "generalAbilitiesXPBonus": "Bonus d'XP aux compétences Générales",
+        "labActivity": "Activité de laboratoire du personnage",
+        "laboratoryAttr": "Attributs de Laboratoires",
+        "laboratorySpec": "Spécialité de laboratoire",
+        "martialAbilitiesAffinity": "Affinité Compétences Martiales (xp)",
+        "martialAbilitiesBonus": "Bonus aux Compétences Martiales",
+        "martialAbilitiesXPBonus": "Bonus d'XP aux compétences Martiales",
+        "mysteryAbilitiesAffinity": "Affinité Compétences des Mystères (xp)",
+        "mysteryAbilitiesBonus": "Bonus aux Compétences des Mystères",
+        "mysteryAbilitiesXPBonus": "Bonus d'XP aux compétences des Mystères",
+        "nullEffect": "Aucun Effet",
+        "optional": "Bonus Optionnel",
+        "qualityAbilityBoost": "Qualité – Augmentation de Compétence",
+        "realmAlignment": "Alignement avec la Dimension",
+        "realmSusceptibility": "Vulnérabilité à la Dimension",
+        "roll": {
+          "optional": "Bonus optionnel au jet de dé"
+        },
+        "spellmastery": "Maitrise de sort",
+        "supernaturalAbilitiesAffinity": "Affinité Compétences Surnaturelles (xp)",
+        "supernaturalAbilitiesBonus": "Bonus aux Compétences Surnaturelles",
+        "supernaturalAbilitiesXPBonus": "Bonus d'XP aux compétences Supernaturelles",
+        "vitals": "Vitaux",
+        "wounds": "Blessure"
+      }
+    },
     "activity": {
       "activity": "Activité",
       "adventuring": "Aventure",
@@ -252,6 +371,10 @@
         "clearAura": "Réinitialisé l'Aura",
         "setAura": "Configure l'Aura"
       }
+    },
+    "chat": {
+      "contestOfMagic": "Concours de Magie",
+      "totalMagicResistance": "Total de Résistance Magique"
     },
     "combat": {
       "damage": {
@@ -713,6 +836,20 @@
         "name": "Compétences"
       }
     },
+    "realm": {
+      "divine": "Divin",
+      "faeric": "Féérique",
+      "infernal": "Infernal",
+      "label": "Dimension",
+      "magic": "Magique",
+      "mundane": "Vulgaire",
+      "nightModifier": "Modificateur nocturne",
+      "susceptible": {
+        "impact": "En raison d’une vulnérabilité au {realm}, divisée par {divisor}"
+      },
+      "visible": "Visible",
+      "visibleHint": "Afficher ou masquer le modificateur d'aura lors du lancer"
+    },
     "rolltables": {
       "experimentation": {
         "createJournal": "Créer un journal",
@@ -990,125 +1127,6 @@
         "update": "Mise à jours"
       },
       "actions": "Actions",
-      "activeEffect": {
-        "add": "Ajouter {score} à {value}",
-        "bonuses": {
-          "penetration": "Bonus de Pénétration"
-        },
-        "changeMode": "Mode",
-        "changeValue": "Valeur de l'Effet",
-        "info": {
-          "noedit": "Remarque : la création d'un effet actif n'est pas possible si l'élément appartient à un acteur, modifiez l'original ou faites une copie dans votre monde pour le modifier."
-        },
-        "mode_0": "Personnalisé",
-        "mode_1": "Multiplier",
-        "mode_2": "Ajouter",
-        "mode_3": "Rétrograder",
-        "mode_4": "Améliorer",
-        "mode_5": "Remplacer",
-        "multiply": "Multiplier {type} par ",
-        "new": "Nouvel effet",
-        "section": {
-          "inactive": "Effets inactifs",
-          "passive": "Effets passifs",
-          "temporary": "Effets temporaires"
-        },
-        "subtypes": {
-          "attackRoll": "Jets d'attaque",
-          "auraLevel": "Niveau de l'aura",
-          "auraRealm": "Domaine de l'aura",
-          "buildings": "Bâtiments",
-          "combatRoll": "Jets de combat",
-          "consumables": "Fournitures",
-          "defRoll": "Jet de défense",
-          "fatigueTotal": "Total de Fatigue",
-          "formMagicRoll": "Jets de magie formulaïque",
-          "inhabitantPoints": "Inhabitant points",
-          "initRoll": "Jets d'initiative",
-          "inventSpell": "Invention de sort",
-          "labText": "Textes de laboratoire",
-          "laboratories": "Laboratoires",
-          "laborers": "Paysans",
-          "labs": "Laboratoires",
-          "learnSpell": "Apprentissage de sort",
-          "library": "Bibliothèque",
-          "magicItems": "Objets magiques",
-          "magicRoll": "Jets de magie",
-          "money": "Argent",
-          "none": "Aucun",
-          "provisions": "Provisions",
-          "ritualFatigueCancelled": "Niveaux de Fatigue rituelle annulés",
-          "servants": "Serviteurs",
-          "specialists": "Spécialistes",
-          "spellFatigueThreshold": "Seuil de Fatigue des sorts",
-          "spontDivider": "Diviseur de magie spontanée",
-          "spontDividerNoFatigue": "Diviseur de magie spontanée sans fatigue",
-          "spontMagicRoll": "Jets de magie spontanée",
-          "teamsters": "Manouvriers",
-          "turbula": "Turbula",
-          "vis": "Vis",
-          "wages": "Gages",
-          "weapons": "Armes & Armures",
-          "woundsTotal": "Total de Blessures",
-          "writingMaterials": "Matériel d'écriture",
-          "xpcoeff": "Multiplicateur d'XP",
-          "xpmod": "Bonus d'Xp"
-        },
-        "type": {
-          "covenantBuildPoint": "Points de construction de l'alliance",
-          "covenantInhabitants": "Les habitants de l'Alliance",
-          "spellcasting": "Lancement de Sorts",
-          "yearlyExpenses": "Dépenses de l'alliance",
-          "yearlySavings": {
-            "magic": "Economies de l'Alliance dûes à la magie",
-            "mundane": "Economies de l'alliance vulgaire"
-          }
-        },
-        "types": {
-          "AlternateArtBonus": "Bonus d'Arts alternatifs",
-          "academicAbilitiesAffinity": "Affinité Compétences Académiques (xp)",
-          "academicAbilitiesBonus": "Bonus aux Compétences Académiques",
-          "academicAbilitiesXPBonus": "Bonus d'XP aux compétences Académiques",
-          "affinityAlternateArt": "Affinité pour les arts alternatifs (xp)",
-          "arcaneAbilitiesAffinity": "Affinité Compétences Mystiques (xp)",
-          "arcaneAbilitiesBonus": "Bonus aux Compétences Mystiques",
-          "arcaneAbilitiesXPBonus": "Bonus d'XP aux compétences Arcanique",
-          "arts": {
-            "affinity": "Affinité pour un Art",
-            "deficiency": "Art déficient"
-          },
-          "characteristicBoost": "Augmentation de Caractéristique",
-          "characteristics": "Caractéristiques",
-          "fatigue": "Fatigue",
-          "formResistance": "Résistance naturelle",
-          "generalAbilitiesAffinity": "Affinité Compétences Générales (xp)",
-          "generalAbilitiesBonus": "Bonus aux Compétences Générales",
-          "generalAbilitiesXPBonus": "Bonus d'XP aux compétences Générales",
-          "labActivity": "Activité de laboratoire du personnage",
-          "laboratoryAttr": "Attributs de Laboratoires",
-          "laboratorySpec": "Spécialité de laboratoire",
-          "martialAbilitiesAffinity": "Affinité Compétences Martiales (xp)",
-          "martialAbilitiesBonus": "Bonus aux Compétences Martiales",
-          "martialAbilitiesXPBonus": "Bonus d'XP aux compétences Martiales",
-          "mysteryAbilitiesAffinity": "Affinité Compétences des Mystères (xp)",
-          "mysteryAbilitiesBonus": "Bonus aux Compétences des Mystères",
-          "mysteryAbilitiesXPBonus": "Bonus d'XP aux compétences des Mystères",
-          "nullEffect": "Aucun Effet",
-          "optional": "Bonus Optionnel",
-          "qualityAbilityBoost": "Qualité – Augmentation de Compétence",
-          "realmAlignment": "Alignement avec la Dimension",
-          "realmSusceptibility": "Vulnérabilité à la Dimension",
-          "roll": {
-            "optional": "Bonus optionnel au jet de dé"
-          },
-          "spellmastery": "Maitrise de sort",
-          "supernaturalAbilitiesAffinity": "Affinité Compétences Surnaturelles (xp)",
-          "supernaturalAbilitiesBonus": "Bonus aux Compétences Surnaturelles",
-          "supernaturalAbilitiesXPBonus": "Bonus d'XP aux compétences Supernaturelles",
-          "vitals": "Vitaux",
-          "wounds": "Blessure"
-        }
-      },
       "actuals": "Actuel",
       "advanced": "Avancé",
       "advantage": "Avantage",
@@ -1196,7 +1214,6 @@
       "constructionPoints": "Points de construction",
       "consumables": "Consommables",
       "consumablesSumary": "2 livres pour 10 pts d'Habitants (20% par artisanat)",
-      "contestOfMagic": "Concours de Magie",
       "cord": "Cordes",
       "cost": "Coût",
       "costSavings": "Réduction de coût",
@@ -1491,20 +1508,6 @@
       "quickness": "Vivacitée",
       "range": "Portée",
       "rawVis": "Vis Brute",
-      "realm": {
-        "divine": "Divin",
-        "faeric": "Féérique",
-        "infernal": "Infernal",
-        "label": "Dimension",
-        "magic": "Magique",
-        "mundane": "Vulgaire",
-        "nightModifier": "Modificateur nocturne",
-        "susceptible": {
-          "impact": "En raison d’une vulnérabilité au {realm}, divisée par {divisor}"
-        },
-        "visible": "Visible",
-        "visibleHint": "Afficher ou masquer le modificateur d'aura lors du lancer"
-      },
       "refinement": "Raffinement",
       "religion": "Religion",
       "reputation": "Réputation",
@@ -1659,7 +1662,6 @@
       "totalExpenditure": "Dépense totale",
       "totalHabitants": "Total d'habitants",
       "totalIncome": "Revenus totaux",
-      "totalMagicResistance": "Total de Résistance Magique",
       "totalPenetration": "Total de Pénétration",
       "trainingRequired": "Entrainement Requis",
       "tribunal": "Tribunal",

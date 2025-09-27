@@ -14,15 +14,16 @@
     </div>
     <div class="flexrow flex-group-center">
       <label class="resource-label flex03">{{localize "arm5e.sheet.modifier"}}</label>
-      <input type="Number" name="system.roll.modifier" value="{{system.roll.modifier}}" data-dtype="Number"
+      <input type="number" name="system.roll.modifier" value="{{system.roll.modifier}}" data-dtype="Number"
         class="SelectedModifier resource-focus" />
     </div>
     <div class="flexrow flex-group-center">
       <label class="resource-label">+</label>
     </div>
     <div class="flexrow flex-group-center">
-      <label class="resource-label">{{ lookup system.roll.generic.txtOption 1 }} ({{lookup system.roll.generic.option 1
-        }})</label>
+      <label class="resource-label flex03">{{localize "arm5e.twilight.warpingPoints"}}</label>
+      <input type="number" name="system.roll.twilight.warpingPts" value="{{system.roll.twilight.warpingPts}}"
+        data-dtype="Number" class="SelectedWarpingPoints resource-focus" />
     </div>
     {{#if system.roll.twilight.enigma.score}}
       <div class="flexrow flex-group-center">

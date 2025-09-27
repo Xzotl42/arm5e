@@ -48,6 +48,68 @@
     "TypeWeapon": "Arma"
   },
   "arm5e": {
+    "activeEffect": {
+      "add": "Aggiungere ",
+      "bonuses": {
+        "penetration": "Bonus penetrazione"
+      },
+      "changeMode": "Cambiare modalità",
+      "changeValue": "Valore Effetto",
+      "info": {
+        "noedit": "Nota: la crezione di effetti attivi non è possibile quando un oggetto è posseduto da un attore. Modifica l'originale o creane una copia damodificare nel mondo."
+      },
+      "mode_0": "Personalizzata",
+      "mode_1": "Moltiplicare",
+      "mode_2": "Aggiungere",
+      "mode_3": "Ridurre",
+      "mode_4": "Potenziare",
+      "mode_5": "Bypassare",
+      "multiply": "Moltiplicare {type} per ",
+      "subtypes": {
+        "auraLevel": "Livello Aura",
+        "auraRealm": "Reame di aura",
+        "fatigueTotal": "Totale fatica",
+        "inventSpell": "Inventa incantesimo",
+        "learnSpell": "Impara incantesimo",
+        "none": "Nessuno",
+        "spontDivider": "Divisore magia spontanea",
+        "spontDividerNoFatigue": "Divisore magia spontanea senza fatica",
+        "woundsTotal": "Totale ferite"
+      },
+      "type": {
+        "spellcasting": "Lanciare incantesimi"
+      },
+      "types": {
+        "academicAbilitiesAffinity": "Affinità abilità Academiche (pe)",
+        "academicAbilitiesBonus": "Bonus abilità Academiche ",
+        "arcaneAbilitiesAffinity": "Affinità abilità Arcane (pe)",
+        "arcaneAbilitiesBonus": "Bonus abilità Arcane",
+        "arts": {
+          "affinity": "Affinità per Arte",
+          "deficiency": "Deficienza in Arte"
+        },
+        "characteristics": "Caratteristiche",
+        "fatigue": "Fatica",
+        "formResistance": "Resistenza Naturale",
+        "generalAbilitiesAffinity": "Affinità abilità Generali (pe)",
+        "generalAbilitiesBonus": "Bonus abilità Generali",
+        "labActivity": "Attività Laboratorio",
+        "laboratoryAttr": "Attributi Laboratorio",
+        "laboratorySpec": "Specialità Laboratorio",
+        "martialAbilitiesAffinity": "Affinità abilità Marziali (pe)",
+        "martialAbilitiesBonus": "Bonus abilità Marziali",
+        "mysteryAbilitiesAffinity": "Affinità abilità Mysteriche (pe)",
+        "mysteryAbilitiesBonus": "Bonus abilità Mysteriche",
+        "nullEffect": "Effetto nullo",
+        "optional": "Bonus opzionale",
+        "realmAlignment": "Allineamento Reame",
+        "supernaturalAbilitiesAffinity": "Affinità abilità Supernat. (pe)",
+        "supernaturalAbilitiesBonus": "Bonus abilità Supernat.",
+        "supernaturalAbilitiesXPBonus": "Bonus ad abilità Supernat. PE",
+        "vitals": "Segni vitali",
+        "wounds": "Ferite"
+      }
+    },
     "activity": {
       "activity": "Attività",
       "adventuring": "Avventurarsi",
@@ -211,6 +273,10 @@
         "clearAura": "Rimuovi Aura",
         "setAura": "Configura Aura"
       }
+    },
+    "chat": {
+      "contestOfMagic": "Contesa di magia",
+      "totalMagicResistance": "Totale resistenza magica"
     },
     "config": {
       "sourcebookFilter": "Filtro libro fonte"
@@ -489,6 +555,14 @@
         "name": "Abilità"
       }
     },
+    "realm": {
+      "divine": "Divino",
+      "faeric": "Fatato",
+      "infernal": "Infernale",
+      "label": "Reame",
+      "magic": "Magico",
+      "mundane": "Mondano"
+    },
     "sanatorium": {
       "labHealth": "Aiuto del Sanctum",
       "magicalHelp": "Aiuto magico",
@@ -540,68 +614,6 @@
         "rest": "Riposare",
         "rollback": "Ripristinare",
         "update": "Aggiornare"
-      },
-      "activeEffect": {
-        "add": "Aggiungere ",
-        "bonuses": {
-          "penetration": "Bonus penetrazione"
-        },
-        "changeMode": "Cambiare modalità",
-        "changeValue": "Valore Effetto",
-        "info": {
-          "noedit": "Nota: la crezione di effetti attivi non è possibile quando un oggetto è posseduto da un attore. Modifica l'originale o creane una copia damodificare nel mondo."
-        },
-        "mode_0": "Personalizzata",
-        "mode_1": "Moltiplicare",
-        "mode_2": "Aggiungere",
-        "mode_3": "Ridurre",
-        "mode_4": "Potenziare",
-        "mode_5": "Bypassare",
-        "multiply": "Moltiplicare {type} per ",
-        "subtypes": {
-          "auraLevel": "Livello Aura",
-          "auraRealm": "Reame di aura",
-          "fatigueTotal": "Totale fatica",
-          "inventSpell": "Inventa incantesimo",
-          "learnSpell": "Impara incantesimo",
-          "none": "Nessuno",
-          "spontDivider": "Divisore magia spontanea",
-          "spontDividerNoFatigue": "Divisore magia spontanea senza fatica",
-          "woundsTotal": "Totale ferite"
-        },
-        "type": {
-          "spellcasting": "Lanciare incantesimi"
-        },
-        "types": {
-          "academicAbilitiesAffinity": "Affinità abilità Academiche (pe)",
-          "academicAbilitiesBonus": "Bonus abilità Academiche ",
-          "arcaneAbilitiesAffinity": "Affinità abilità Arcane (pe)",
-          "arcaneAbilitiesBonus": "Bonus abilità Arcane",
-          "arts": {
-            "affinity": "Affinità per Arte",
-            "deficiency": "Deficienza in Arte"
-          },
-          "characteristics": "Caratteristiche",
-          "fatigue": "Fatica",
-          "formResistance": "Resistenza Naturale",
-          "generalAbilitiesAffinity": "Affinità abilità Generali (pe)",
-          "generalAbilitiesBonus": "Bonus abilità Generali",
-          "labActivity": "Attività Laboratorio",
-          "laboratoryAttr": "Attributi Laboratorio",
-          "laboratorySpec": "Specialità Laboratorio",
-          "martialAbilitiesAffinity": "Affinità abilità Marziali (pe)",
-          "martialAbilitiesBonus": "Bonus abilità Marziali",
-          "mysteryAbilitiesAffinity": "Affinità abilità Mysteriche (pe)",
-          "mysteryAbilitiesBonus": "Bonus abilità Mysteriche",
-          "nullEffect": "Effetto nullo",
-          "optional": "Bonus opzionale",
-          "realmAlignment": "Allineamento Reame",
-          "supernaturalAbilitiesAffinity": "Affinità abilità Supernat. (pe)",
-          "supernaturalAbilitiesBonus": "Bonus abilità Supernat.",
-          "supernaturalAbilitiesXPBonus": "Bonus ad abilità Supernat. PE",
-          "vitals": "Segni vitali",
-          "wounds": "Ferite"
-        }
       },
       "actuals": "Attuale",
       "advanced": "Avanzato",
@@ -676,7 +688,6 @@
       "constructionPoints": "Punti Costruzione",
       "consumables": "Consumabili",
       "consumablesSumary": "2 soldi per 10 pt Abitanti (20% per maestranza)",
-      "contestOfMagic": "Contesa di magia",
       "cord": "Corde",
       "cost": "Costo",
       "costSavings": "Risparmi sulle Spese",
@@ -940,14 +951,6 @@
       "quickness": "Rapidità",
       "range": "Gittata",
       "rawVis": "Vis grezzo",
-      "realm": {
-        "divine": "Divino",
-        "faeric": "Fatato",
-        "infernal": "Infernale",
-        "label": "Reame",
-        "magic": "Magico",
-        "mundane": "Mondano"
-      },
       "refinement": "Perfezionamento",
       "religion": "Religione",
       "reputation": "Reputazione",
@@ -1077,7 +1080,6 @@
       "totalExpenditure": "Spese Totali",
       "totalHabitants": "Totale Abitanti",
       "totalIncome": "Ricavi Totali",
-      "totalMagicResistance": "Totale resistenza magica",
       "totalPenetration": "Totale penetrazione",
       "trainingRequired": "Allenamento necessario",
       "tribunal": "Tribunale",

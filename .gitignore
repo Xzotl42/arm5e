@@ -18,6 +18,6 @@ packs/**
 website/UserGuide/.obsidian
 arm5e.lock
 CommitChangeNotes.md
-
+*.json.bak
 .vscode/settings.json
 *.code-workspace

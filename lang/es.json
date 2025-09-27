@@ -48,6 +48,68 @@
     "TypeWeapon": "Arma"
   },
   "arm5e": {
+    "activeEffect": {
+      "add": "Añadir",
+      "bonuses": {
+        "penetration": "Bono a Penetración"
+      },
+      "changeMode": "Cambiar de modo",
+      "changeValue": "Valor de efecto",
+      "info": {
+        "noedit": "Nota: la creación de efectos activos no es posible si el objeto está en posesión de un actor. Edita el original o haz una copia en tu mundo para editarlo."
+      },
+      "mode_0": "Personalizar",
+      "mode_1": "Multiplicar",
+      "mode_2": "Añadir",
+      "mode_3": "Reducir",
+      "mode_4": "Mejorar",
+      "mode_5": "Sobreescribir",
+      "multiply": "Multiplicar {type} por",
+      "subtypes": {
+        "auraLevel": "Nivel del aura",
+        "auraRealm": "Reino del aura",
+        "fatigueTotal": "Total por fatiga",
+        "inventSpell": "Inventar hechizo",
+        "learnSpell": "Aprender hechizos",
+        "none": "Ninguno",
+        "spontDivider": "Magia espontánea con división",
+        "spontDividerNoFatigue": "Magia espontánea sin fatiga",
+        "woundsTotal": "Total por heridas"
+      },
+      "type": {
+        "spellcasting": "Lanzamiento de hechizos"
+      },
+      "types": {
+        "academicAbilitiesAffinity": "Afinidad con Habilidades Académicas (px)",
+        "academicAbilitiesBonus": "Bono a Habilidades Académicas",
+        "arcaneAbilitiesAffinity": "Afinidad con Habilidades Arcanas (px)",
+        "arcaneAbilitiesBonus": "Bono a Habilidades Arcanas",
+        "arts": {
+          "affinity": "Afinidad con Arte",
+          "deficiency": "Deficiencia en Arte"
+        },
+        "characteristics": "Características",
+        "fatigue": "Fatiga",
+        "formResistance": "Resistencia natural",
+        "generalAbilitiesAffinity": "Afinidad con Habilidades Generales (px)",
+        "generalAbilitiesBonus": "Bono a Habilidades Generales",
+        "labActivity": "Actividad de laboratorio",
+        "laboratoryAttr": "Atributos del laboratorio",
+        "laboratorySpec": "Especialización del laboratorio",
+        "martialAbilitiesAffinity": "Afinidad con Habilidades Marciales  (px)",
+        "martialAbilitiesBonus": "Bono a Habilidades Marciales",
+        "mysteryAbilitiesAffinity": "Afinidad con Habilidades Mistéricas (px)",
+        "mysteryAbilitiesBonus": "Bono a Habilidades Mistéricas",
+        "nullEffect": "Sin efecto",
+        "optional": "Bono opcional",
+        "realmAlignment": "Alineamiento con Reino",
+        "supernaturalAbilitiesAffinity": "Afinidad con Habilidades Sobrenaturales (px)",
+        "supernaturalAbilitiesBonus": "Bono a Habilidades Sobrenaturales",
+        "supernaturalAbilitiesXPBonus": "Bono en PX a habilidades sobrenaturales",
+        "vitals": "Vitales",
+        "wounds": "Heridas"
+      }
+    },
     "activity": {
       "activity": "Actividad",
       "adventuring": "Aventuras",
@@ -210,6 +272,10 @@
         "clearAura": "Anular aura",
         "setAura": "Configurar aura"
       }
+    },
+    "chat": {
+      "contestOfMagic": "Enfrentamiento mágico",
+      "totalMagicResistance": "Total de resistencia mágica"
     },
     "config": {
       "sourcebookFilter": "Filtro por manuales",
@@ -486,6 +552,14 @@
         "name": "Habilidades"
       }
     },
+    "realm": {
+      "divine": "Divino",
+      "faeric": "Feérico",
+      "infernal": "Infernal",
+      "label": "Reino",
+      "magic": "Mágico",
+      "mundane": "Mundano"
+    },
     "sanatorium": {
       "button": {
         "endSeason": "Fin de la estación",
@@ -560,68 +634,6 @@
         "rollback": "Retroceder",
         "update": "Actualizar"
       },
-      "activeEffect": {
-        "add": "Añadir",
-        "bonuses": {
-          "penetration": "Bono a Penetración"
-        },
-        "changeMode": "Cambiar de modo",
-        "changeValue": "Valor de efecto",
-        "info": {
-          "noedit": "Nota: la creación de efectos activos no es posible si el objeto está en posesión de un actor. Edita el original o haz una copia en tu mundo para editarlo."
-        },
-        "mode_0": "Personalizar",
-        "mode_1": "Multiplicar",
-        "mode_2": "Añadir",
-        "mode_3": "Reducir",
-        "mode_4": "Mejorar",
-        "mode_5": "Sobreescribir",
-        "multiply": "Multiplicar {type} por",
-        "subtypes": {
-          "auraLevel": "Nivel del aura",
-          "auraRealm": "Reino del aura",
-          "fatigueTotal": "Total por fatiga",
-          "inventSpell": "Inventar hechizo",
-          "learnSpell": "Aprender hechizos",
-          "none": "Ninguno",
-          "spontDivider": "Magia espontánea con división",
-          "spontDividerNoFatigue": "Magia espontánea sin fatiga",
-          "woundsTotal": "Total por heridas"
-        },
-        "type": {
-          "spellcasting": "Lanzamiento de hechizos"
-        },
-        "types": {
-          "academicAbilitiesAffinity": "Afinidad con Habilidades Académicas (px)",
-          "academicAbilitiesBonus": "Bono a Habilidades Académicas",
-          "arcaneAbilitiesAffinity": "Afinidad con Habilidades Arcanas (px)",
-          "arcaneAbilitiesBonus": "Bono a Habilidades Arcanas",
-          "arts": {
-            "affinity": "Afinidad con Arte",
-            "deficiency": "Deficiencia en Arte"
-          },
-          "characteristics": "Características",
-          "fatigue": "Fatiga",
-          "formResistance": "Resistencia natural",
-          "generalAbilitiesAffinity": "Afinidad con Habilidades Generales (px)",
-          "generalAbilitiesBonus": "Bono a Habilidades Generales",
-          "labActivity": "Actividad de laboratorio",
-          "laboratoryAttr": "Atributos del laboratorio",
-          "laboratorySpec": "Especialización del laboratorio",
-          "martialAbilitiesAffinity": "Afinidad con Habilidades Marciales  (px)",
-          "martialAbilitiesBonus": "Bono a Habilidades Marciales",
-          "mysteryAbilitiesAffinity": "Afinidad con Habilidades Mistéricas (px)",
-          "mysteryAbilitiesBonus": "Bono a Habilidades Mistéricas",
-          "nullEffect": "Sin efecto",
-          "optional": "Bono opcional",
-          "realmAlignment": "Alineamiento con Reino",
-          "supernaturalAbilitiesAffinity": "Afinidad con Habilidades Sobrenaturales (px)",
-          "supernaturalAbilitiesBonus": "Bono a Habilidades Sobrenaturales",
-          "supernaturalAbilitiesXPBonus": "Bono en PX a habilidades sobrenaturales",
-          "vitals": "Vitales",
-          "wounds": "Heridas"
-        }
-      },
       "actuals": "Actual",
       "advanced": "Avanzado",
       "advantage": "Ventaja",
@@ -695,7 +707,6 @@
       "constructionPoints": "Puntos de Construcción",
       "consumables": "Consumibles",
       "consumablesSumary": "2 libras por 10 puntos de Habitantes (20% por manufactura)",
-      "contestOfMagic": "Enfrentamiento mágico",
       "cord": "Ligaduras",
       "cost": "Coste",
       "costSavings": "Ahorro de Costes",
@@ -956,14 +967,6 @@
       "quickness": "Rapidez",
       "range": "Alcance",
       "rawVis": "Vis en bruto",
-      "realm": {
-        "divine": "Divino",
-        "faeric": "Feérico",
-        "infernal": "Infernal",
-        "label": "Reino",
-        "magic": "Mágico",
-        "mundane": "Mundano"
-      },
       "refinement": "Perfeccionamiento",
       "religion": "Religión",
       "reputation": "Reputación",
@@ -1088,7 +1091,6 @@
       "totalExpenditure": "Gasto Final",
       "totalHabitants": "Habitantes totales",
       "totalIncome": "Ingresos Totales",
-      "totalMagicResistance": "Total de resistencia mágica",
       "totalPenetration": "Total de penetración",
       "trainingRequired": "Se necesita formación",
       "tribunal": "Tribunal",

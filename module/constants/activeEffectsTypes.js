@@ -24,6 +24,10 @@ export function addActiveEffectsDefinitions() {
     ...resistanceForms()
   };
 
+  ACTIVE_EFFECTS_TYPES.formMagicResistance.subtypes = {
+    ...magicResistanceForms()
+  };
+
   // Abilities related effects
 
   // Puissant abilities
@@ -529,6 +533,47 @@ export function addActiveEffectsDefinitions() {
       return a;
     }, {})
   };
+
+  ACTIVE_EFFECTS_TYPES.xpBonusAlternateArt.subtypes = {
+    ...Object.entries(ARM5E.ALT_TECHNIQUE_ABILITIES).reduce((a, current) => {
+      if (current[1].option) {
+        a[current[0]] = {
+          mnemonic: current[1].mnemonic,
+          key: `system.bonuses.skills.${current[0]}_#OPTION#.xpMod`,
+          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          default: 5,
+          option: current[1].optionDefault
+        };
+      } else {
+        a[current[0]] = {
+          mnemonic: current[1].mnemonic,
+          key: `system.bonuses.skills.${current[0]}.xpMod`,
+          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          default: 5
+        };
+      }
+      return a;
+    }, {}),
+    ...Object.entries(ARM5E.ALT_FORM_ABILITIES).reduce((a, current) => {
+      if (current[1].option) {
+        a[current[0]] = {
+          mnemonic: current[1].mnemonic,
+          key: `system.bonuses.skills.${current[0]}_#OPTION#.xpMod`,
+          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          default: 5,
+          option: current[1].optionDefault
+        };
+      } else {
+        a[current[0]] = {
+          mnemonic: current[1].mnemonic,
+          key: `system.bonuses.skills.${current[0]}.xpMod`,
+          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          default: 5
+        };
+      }
+      return a;
+    }, {})
+  };
 }
 
 const puissantTechniques = () => {
@@ -617,15 +662,27 @@ const resistanceForms = () => {
   }, {});
 };
 
+const magicResistanceForms = () => {
+  return Object.entries(ARM5E.magic.forms).reduce((a, current) => {
+    a[current[0]] = {
+      mnemonic: current[1].label,
+      key: `system.bonuses.magicResistance.${current[0]}`,
+      mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+      default: 0
+    };
+    return a;
+  }, {});
+};
+
 export const ACTIVE_EFFECTS_TYPES = {
   none: {
     category: "none",
     type: "none",
     tags: ["character", "covenant", "sanctum"],
-    mnemonic: "arm5e.sheet.activeEffect.types.nullEffect",
+    mnemonic: "arm5e.activeEffect.types.nullEffect",
     subtypes: {
       none: {
-        mnemonic: "arm5e.sheet.activeEffect.types.nullEffect",
+        mnemonic: "arm5e.activeEffect.types.nullEffect",
         key: "",
         mode: CONST.ACTIVE_EFFECT_MODES.CUSTOM
       }
@@ -635,7 +692,7 @@ export const ACTIVE_EFFECTS_TYPES = {
     category: "magic",
     type: "spellcasting",
     tags: ["character"],
-    mnemonic: "arm5e.sheet.activeEffect.type.spellcasting",
+    mnemonic: "arm5e.activeEffect.type.spellcasting",
     subtypes: {
       voiceLoud: {
         mnemonic: "arm5e.sheet.magic.voiceType.loud",
@@ -692,25 +749,31 @@ export const ACTIVE_EFFECTS_TYPES = {
         default: 2
       },
       spellFatigueThreshold: {
-        mnemonic: "arm5e.sheet.activeEffect.subtypes.spellFatigueThreshold",
+        mnemonic: "arm5e.activeEffect.subtypes.spellFatigueThreshold",
         key: "system.bonuses.arts.spellFatigueThreshold",
         mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
         default: 10
       },
       ritualFatigueCancelled: {
-        mnemonic: "arm5e.sheet.activeEffect.subtypes.ritualFatigueCancelled",
+        mnemonic: "arm5e.activeEffect.subtypes.ritualFatigueCancelled",
         key: "system.bonuses.arts.ritualFatigueCancelled",
         mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
         default: 0
+      },
+      magicResistance: {
+        mnemonic: "arm5e.activeEffect.subtypes.magicResistance",
+        key: "system.bonuses.arts.magicResistance",
+        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        default: 0
       }
       // spontDivider: {
-      //   mnemonic: "arm5e.sheet.activeEffect.subtypes.spontDivider",
+      //   mnemonic: "arm5e.activeEffect.subtypes.spontDivider",
       //   key: "system.bonuses.arts.spontDivider",
       //   mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
       //   default: 2
       // },
       // spontDividerNoFatigue: {
-      //   mnemonic: "arm5e.sheet.activeEffect.subtypes.spontDividerNoFatigue",
+      //   mnemonic: "arm5e.activeEffect.subtypes.spontDividerNoFatigue",
       //   key: "system.bonuses.arts.spontDividerNoFatigue",
       //   mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
       //   default: 5
@@ -723,7 +786,7 @@ export const ACTIVE_EFFECTS_TYPES = {
       //   // option: "mundane"
       // }
       // optional: {
-      //   mnemonic: "arm5e.sheet.activeEffect.types.optional",
+      //   mnemonic: "arm5e.activeEffect.types.optional",
       //   key: "system.bonuses.arts.spellcasting",
       //   mode: CONST.ACTIVE_EFFECT_MODES.ADD,
       //   default: 0,
@@ -804,16 +867,16 @@ export const ACTIVE_EFFECTS_TYPES = {
     category: "magic",
     type: "spellmastery",
     tags: ["character"],
-    mnemonic: "arm5e.sheet.activeEffect.types.spellmastery",
+    mnemonic: "arm5e.activeEffect.types.spellmastery",
     subtypes: {
       xpCoeff: {
-        mnemonic: "arm5e.sheet.activeEffect.subtypes.xpcoeff",
+        mnemonic: "arm5e.activeEffect.subtypes.xpcoeff",
         key: "system.bonuses.arts.masteryXpCoeff",
         mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
         default: 2.0
       },
       xpMod: {
-        mnemonic: "arm5e.sheet.activeEffect.subtypes.xpmod",
+        mnemonic: "arm5e.activeEffect.subtypes.xpmod",
         key: "system.bonuses.arts.masteryXpMod",
         mode: CONST.ACTIVE_EFFECT_MODES.ADD,
         default: 5
@@ -833,7 +896,7 @@ export const ACTIVE_EFFECTS_TYPES = {
     category: "magic",
     type: "affinity",
     tags: ["character"],
-    mnemonic: "arm5e.sheet.activeEffect.types.arts.affinity",
+    mnemonic: "arm5e.activeEffect.types.arts.affinity",
     subtypes: {
       // added dynamically
     }
@@ -842,7 +905,7 @@ export const ACTIVE_EFFECTS_TYPES = {
     category: "magic",
     type: "artDeficiency",
     tags: ["character"],
-    mnemonic: "arm5e.sheet.activeEffect.types.arts.deficiency",
+    mnemonic: "arm5e.activeEffect.types.arts.deficiency",
     subtypes: {
       // added dynamically
     }
@@ -851,7 +914,16 @@ export const ACTIVE_EFFECTS_TYPES = {
     category: "traits",
     type: "formResistance",
     tags: ["character"],
-    mnemonic: "arm5e.sheet.activeEffect.types.formResistance",
+    mnemonic: "arm5e.activeEffect.types.formResistance",
+    subtypes: {
+      // added dynamically
+    }
+  },
+  formMagicResistance: {
+    category: "traits",
+    type: "formMagicResistance",
+    tags: ["character"],
+    mnemonic: "arm5e.activeEffect.types.formMagicResistance",
     subtypes: {
       // added dynamically
     }
@@ -860,7 +932,7 @@ export const ACTIVE_EFFECTS_TYPES = {
     category: "traits",
     type: "vitals",
     tags: ["character"],
-    mnemonic: "arm5e.sheet.activeEffect.types.vitals",
+    mnemonic: "arm5e.activeEffect.types.vitals",
     subtypes: {
       size: {
         mnemonic: "arm5e.sheet.size",
@@ -910,7 +982,7 @@ export const ACTIVE_EFFECTS_TYPES = {
     category: "traits",
     type: "characteristics",
     tags: ["character"],
-    mnemonic: "arm5e.sheet.activeEffect.types.characteristics",
+    mnemonic: "arm5e.activeEffect.types.characteristics",
     subtypes: {
       int: {
         mnemonic: "arm5e.sheet.intelligence",
@@ -972,7 +1044,7 @@ export const ACTIVE_EFFECTS_TYPES = {
     category: "traits",
     type: "characteristics",
     tags: ["character"],
-    mnemonic: "arm5e.sheet.activeEffect.types.characteristicBoost",
+    mnemonic: "arm5e.activeEffect.types.characteristicBoost",
     subtypes: {
       int: {
         mnemonic: "arm5e.sheet.intelligence",
@@ -1034,10 +1106,10 @@ export const ACTIVE_EFFECTS_TYPES = {
     category: "traits",
     type: "fatigue",
     tags: ["character"],
-    mnemonic: "arm5e.sheet.activeEffect.types.fatigue",
+    mnemonic: "arm5e.activeEffect.types.fatigue",
     subtypes: {
       total: {
-        mnemonic: "arm5e.sheet.activeEffect.subtypes.fatigueTotal",
+        mnemonic: "arm5e.activeEffect.subtypes.fatigueTotal",
         key: "system.bonuses.traits.fatigue",
         mode: CONST.ACTIVE_EFFECT_MODES.ADD,
         default: 0
@@ -1096,10 +1168,10 @@ export const ACTIVE_EFFECTS_TYPES = {
     category: "traits",
     type: "wounds",
     tags: ["character"],
-    mnemonic: "arm5e.sheet.activeEffect.types.wounds",
+    mnemonic: "arm5e.activeEffect.types.wounds",
     subtypes: {
       total: {
-        mnemonic: "arm5e.sheet.activeEffect.subtypes.woundsTotal",
+        mnemonic: "arm5e.activeEffect.subtypes.woundsTotal",
         key: "system.bonuses.traits.wounds",
         mode: CONST.ACTIVE_EFFECT_MODES.ADD,
         default: 0
@@ -1128,28 +1200,28 @@ export const ACTIVE_EFFECTS_TYPES = {
     category: "magic",
     type: "realm",
     tags: ["character"],
-    mnemonic: "arm5e.sheet.activeEffect.types.realmAlignment",
+    mnemonic: "arm5e.activeEffect.types.realmAlignment",
     subtypes: {
       magic: {
-        mnemonic: "arm5e.sheet.realm.magic",
+        mnemonic: "arm5e.realm.magic",
         key: "system.realms.magic.aligned",
         mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
         default: true
       },
       faeric: {
-        mnemonic: "arm5e.sheet.realm.faeric",
+        mnemonic: "arm5e.realm.faeric",
         key: "system.realms.faeric.aligned",
         mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
         default: true
       },
       divine: {
-        mnemonic: "arm5e.sheet.realm.divine",
+        mnemonic: "arm5e.realm.divine",
         key: "system.realms.divine.aligned",
         mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
         default: true
       },
       infernal: {
-        mnemonic: "arm5e.sheet.realm.infernal",
+        mnemonic: "arm5e.realm.infernal",
         key: "system.realms.infernal.aligned",
         mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
         default: true
@@ -1160,28 +1232,28 @@ export const ACTIVE_EFFECTS_TYPES = {
     category: "magic",
     type: "realmSusceptibility",
     tags: ["character"],
-    mnemonic: "arm5e.sheet.activeEffect.types.realmSusceptibility",
+    mnemonic: "arm5e.activeEffect.types.realmSusceptibility",
     subtypes: {
       magic: {
-        mnemonic: "arm5e.sheet.realm.magic",
+        mnemonic: "arm5e.realm.magic",
         key: "system.realms.magic.susceptible",
         mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
         default: true
       },
       faeric: {
-        mnemonic: "arm5e.sheet.realm.faeric",
+        mnemonic: "arm5e.realm.faeric",
         key: "system.realms.faeric.susceptible",
         mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
         default: true
       },
       divine: {
-        mnemonic: "arm5e.sheet.realm.divine",
+        mnemonic: "arm5e.realm.divine",
         key: "system.realms.divine.susceptible",
         mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
         default: true
       },
       infernal: {
-        mnemonic: "arm5e.sheet.realm.infernal",
+        mnemonic: "arm5e.realm.infernal",
         key: "system.realms.infernal.susceptible",
         mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
         default: true
@@ -1219,7 +1291,7 @@ export const ACTIVE_EFFECTS_TYPES = {
     category: "abilities",
     type: "bonusGeneralAbility",
     tags: ["character"],
-    mnemonic: "arm5e.sheet.activeEffect.types.generalAbilitiesBonus",
+    mnemonic: "arm5e.activeEffect.types.generalAbilitiesBonus",
     subtypes: {
       // add dynamically
     }
@@ -1228,7 +1300,7 @@ export const ACTIVE_EFFECTS_TYPES = {
     category: "abilities",
     type: "bonusAcademicAbility",
     tags: ["character"],
-    mnemonic: "arm5e.sheet.activeEffect.types.academicAbilitiesBonus",
+    mnemonic: "arm5e.activeEffect.types.academicAbilitiesBonus",
     subtypes: {
       // add dynamically
     }
@@ -1237,7 +1309,7 @@ export const ACTIVE_EFFECTS_TYPES = {
     category: "abilities",
     type: "bonusArcaneAbility",
     tags: ["character"],
-    mnemonic: "arm5e.sheet.activeEffect.types.arcaneAbilitiesBonus",
+    mnemonic: "arm5e.activeEffect.types.arcaneAbilitiesBonus",
     subtypes: {
       // add dynamically
     }
@@ -1247,7 +1319,7 @@ export const ACTIVE_EFFECTS_TYPES = {
     category: "abilities",
     type: "bonusMartialAbility",
     tags: ["character"],
-    mnemonic: "arm5e.sheet.activeEffect.types.martialAbilitiesBonus",
+    mnemonic: "arm5e.activeEffect.types.martialAbilitiesBonus",
     subtypes: {
       // add dynamically
     }
@@ -1256,7 +1328,7 @@ export const ACTIVE_EFFECTS_TYPES = {
     category: "abilities",
     type: "bonusMysteryAbility",
     tags: ["character"],
-    mnemonic: "arm5e.sheet.activeEffect.types.mysteryAbilitiesBonus",
+    mnemonic: "arm5e.activeEffect.types.mysteryAbilitiesBonus",
     subtypes: {
       // add dynamically
     }
@@ -1265,7 +1337,7 @@ export const ACTIVE_EFFECTS_TYPES = {
     category: "abilities",
     type: "bonusSupernaturalAbility",
     tags: ["character"],
-    mnemonic: "arm5e.sheet.activeEffect.types.supernaturalAbilitiesBonus",
+    mnemonic: "arm5e.activeEffect.types.supernaturalAbilitiesBonus",
     subtypes: {
       // add dynamically
     }
@@ -1274,7 +1346,7 @@ export const ACTIVE_EFFECTS_TYPES = {
     category: "abilities",
     type: "bonusAlternateArt",
     tags: ["character"],
-    mnemonic: "arm5e.sheet.activeEffect.types.AlternateArtBonus",
+    mnemonic: "arm5e.activeEffect.types.AlternateArtBonus",
     subtypes: {
       // add dynamically
     }
@@ -1284,7 +1356,7 @@ export const ACTIVE_EFFECTS_TYPES = {
     category: "abilities",
     type: "xpBonusGeneralAbility",
     tags: ["character"],
-    mnemonic: "arm5e.sheet.activeEffect.types.generalAbilitiesXPBonus",
+    mnemonic: "arm5e.activeEffect.types.generalAbilitiesXPBonus",
     subtypes: {
       // add dynamically
     }
@@ -1294,7 +1366,7 @@ export const ACTIVE_EFFECTS_TYPES = {
     category: "abilities",
     type: "xpBonusAcademicAbility",
     tags: ["character"],
-    mnemonic: "arm5e.sheet.activeEffect.types.academicAbilitiesXPBonus",
+    mnemonic: "arm5e.activeEffect.types.academicAbilitiesXPBonus",
     subtypes: {
       // add dynamically
     }
@@ -1304,7 +1376,7 @@ export const ACTIVE_EFFECTS_TYPES = {
     category: "abilities",
     type: "xpBonusArcaneAbility",
     tags: ["character"],
-    mnemonic: "arm5e.sheet.activeEffect.types.arcaneAbilitiesXPBonus",
+    mnemonic: "arm5e.activeEffect.types.arcaneAbilitiesXPBonus",
     subtypes: {
       // add dynamically
     }
@@ -1314,7 +1386,7 @@ export const ACTIVE_EFFECTS_TYPES = {
     category: "abilities",
     type: "xpBonusMartialAbility",
     tags: ["character"],
-    mnemonic: "arm5e.sheet.activeEffect.types.martialAbilitiesXPBonus",
+    mnemonic: "arm5e.activeEffect.types.martialAbilitiesXPBonus",
     subtypes: {
       // add dynamically
     }
@@ -1324,7 +1396,7 @@ export const ACTIVE_EFFECTS_TYPES = {
     category: "abilities",
     type: "xpBonusSupernaturalAbility",
     tags: ["character"],
-    mnemonic: "arm5e.sheet.activeEffect.types.supernaturalAbilitiesXPBonus",
+    mnemonic: "arm5e.activeEffect.types.supernaturalAbilitiesXPBonus",
     subtypes: {
       // add dynamically
     }
@@ -1333,7 +1405,17 @@ export const ACTIVE_EFFECTS_TYPES = {
     category: "abilities",
     type: "xpBonusMysteryAbility",
     tags: ["character"],
-    mnemonic: "arm5e.sheet.activeEffect.types.mysteryAbilitiesXPBonus",
+    mnemonic: "arm5e.activeEffect.types.mysteryAbilitiesXPBonus",
+    subtypes: {
+      // add dynamically
+    }
+  },
+
+  xpBonusAlternateArt: {
+    category: "abilities",
+    type: "xpBonusAlternateArt",
+    tags: ["character"],
+    mnemonic: "arm5e.activeEffect.types.AlternateArtXPBonus",
     subtypes: {
       // add dynamically
     }
@@ -1342,7 +1424,7 @@ export const ACTIVE_EFFECTS_TYPES = {
   // xpBonusMysticalAbility: {
   //   category: "abilities",
   //   type: "xpBonusMysticalAbility",
-  //   mnemonic: "arm5e.sheet.activeEffect.types.supernaturalAbilitiesXPBonus",
+  //   mnemonic: "arm5e.activeEffect.types.supernaturalAbilitiesXPBonus",
   //   subtypes: {
   //     heartbeast: {
   //       mnemonic: "arm5e.skill.mystical.heartbeast",
@@ -1358,7 +1440,7 @@ export const ACTIVE_EFFECTS_TYPES = {
     category: "abilities",
     type: "qualityAbilityBoost",
     tags: ["character"],
-    mnemonic: "arm5e.sheet.activeEffect.types.qualityAbilityBoost",
+    mnemonic: "arm5e.activeEffect.types.qualityAbilityBoost",
     subtypes: {
       athletics: {
         mnemonic: "arm5e.skill.general.athletics",
@@ -1420,7 +1502,7 @@ export const ACTIVE_EFFECTS_TYPES = {
     category: "abilities",
     type: "affinityGeneralAbility",
     tags: ["character"],
-    mnemonic: "arm5e.sheet.activeEffect.types.generalAbilitiesAffinity",
+    mnemonic: "arm5e.activeEffect.types.generalAbilitiesAffinity",
     subtypes: {
       // add dynamically
     }
@@ -1429,7 +1511,7 @@ export const ACTIVE_EFFECTS_TYPES = {
     category: "abilities",
     type: "affinityArcaneAbility",
     tags: ["character"],
-    mnemonic: "arm5e.sheet.activeEffect.types.arcaneAbilitiesAffinity",
+    mnemonic: "arm5e.activeEffect.types.arcaneAbilitiesAffinity",
     subtypes: {
       // add dynamically
     }
@@ -1438,7 +1520,7 @@ export const ACTIVE_EFFECTS_TYPES = {
     category: "abilities",
     type: "affinityAcademicAbility",
     tags: ["character"],
-    mnemonic: "arm5e.sheet.activeEffect.types.academicAbilitiesAffinity",
+    mnemonic: "arm5e.activeEffect.types.academicAbilitiesAffinity",
     subtypes: {
       // add dynamically
     }
@@ -1447,7 +1529,7 @@ export const ACTIVE_EFFECTS_TYPES = {
     category: "abilities",
     type: "affinityMartialAbility",
     tags: ["character"],
-    mnemonic: "arm5e.sheet.activeEffect.types.martialAbilitiesAffinity",
+    mnemonic: "arm5e.activeEffect.types.martialAbilitiesAffinity",
     subtypes: {
       // add dynamically
     }
@@ -1456,7 +1538,7 @@ export const ACTIVE_EFFECTS_TYPES = {
     category: "abilities",
     type: "affinityMysteryAbility",
     tags: ["character"],
-    mnemonic: "arm5e.sheet.activeEffect.types.mysteryAbilitiesAffinity",
+    mnemonic: "arm5e.activeEffect.types.mysteryAbilitiesAffinity",
     subtypes: {
       // add dynamically
     }
@@ -1465,7 +1547,7 @@ export const ACTIVE_EFFECTS_TYPES = {
     category: "abilities",
     type: "affinitySupernaturalAbility",
     tags: ["character"],
-    mnemonic: "arm5e.sheet.activeEffect.types.supernaturalAbilitiesAffinity",
+    mnemonic: "arm5e.activeEffect.types.supernaturalAbilitiesAffinity",
     subtypes: {
       // add dynamicallyv
     }
@@ -1474,7 +1556,7 @@ export const ACTIVE_EFFECTS_TYPES = {
     category: "abilities",
     type: "affinityAlternateArt",
     tags: ["character"],
-    mnemonic: "arm5e.sheet.activeEffect.types.affinityAlternateArt",
+    mnemonic: "arm5e.activeEffect.types.affinityAlternateArt",
     subtypes: {
       // add dynamically
     }
@@ -1484,7 +1566,7 @@ export const ACTIVE_EFFECTS_TYPES = {
     category: "magic",
     type: "laboratory",
     tags: ["character"],
-    mnemonic: "arm5e.sheet.activeEffect.types.labActivity",
+    mnemonic: "arm5e.activeEffect.types.labActivity",
     subtypes: {
       learnSpell: {
         mnemonic: "arm5e.lab.activity.spellLearning",
@@ -1504,7 +1586,7 @@ export const ACTIVE_EFFECTS_TYPES = {
     category: "laboratory",
     type: "laboratorySpec",
     tags: ["sanctum"],
-    mnemonic: "arm5e.sheet.activeEffect.types.laboratorySpec",
+    mnemonic: "arm5e.activeEffect.types.laboratorySpec",
     subtypes: {
       texts: {
         mnemonic: "arm5e.lab.specialty.texts",
@@ -1644,7 +1726,7 @@ export const ACTIVE_EFFECTS_TYPES = {
     category: "laboratory",
     type: "laboratory",
     tags: ["sanctum"],
-    mnemonic: "arm5e.sheet.activeEffect.types.laboratoryAttr",
+    mnemonic: "arm5e.activeEffect.types.laboratoryAttr",
     subtypes: {
       size: {
         mnemonic: "arm5e.sheet.size",
@@ -1713,34 +1795,34 @@ export const ACTIVE_EFFECTS_TYPES = {
     category: "roll",
     type: "optionalRollBonus",
     tags: ["character"],
-    mnemonic: "arm5e.sheet.activeEffect.types.roll.optional",
+    mnemonic: "arm5e.activeEffect.types.roll.optional",
     subtypes: {
       spontMagic: {
-        mnemonic: "arm5e.sheet.activeEffect.subtypes.spontMagicRoll",
+        mnemonic: "arm5e.activeEffect.subtypes.spontMagicRoll",
         key: "spontMagic",
         mode: CONST.ACTIVE_EFFECT_MODES.ADD,
         default: 3
       },
       formulaicMagic: {
-        mnemonic: "arm5e.sheet.activeEffect.subtypes.formMagicRoll",
+        mnemonic: "arm5e.activeEffect.subtypes.formMagicRoll",
         key: "formulaicMagic",
         mode: CONST.ACTIVE_EFFECT_MODES.ADD,
         default: 3
       },
       init: {
-        mnemonic: "arm5e.sheet.activeEffect.subtypes.initRoll",
+        mnemonic: "arm5e.activeEffect.subtypes.initRoll",
         key: "init",
         mode: CONST.ACTIVE_EFFECT_MODES.ADD,
         default: 3
       },
       attack: {
-        mnemonic: "arm5e.sheet.activeEffect.subtypes.attackRoll",
+        mnemonic: "arm5e.activeEffect.subtypes.attackRoll",
         key: "attack",
         mode: CONST.ACTIVE_EFFECT_MODES.ADD,
         default: 3
       },
       defense: {
-        mnemonic: "arm5e.sheet.activeEffect.subtypes.defRoll",
+        mnemonic: "arm5e.activeEffect.subtypes.defRoll",
         key: "defense",
         mode: CONST.ACTIVE_EFFECT_MODES.ADD,
         default: 3
@@ -1751,46 +1833,46 @@ export const ACTIVE_EFFECTS_TYPES = {
     category: "covenant",
     type: "buildPoints",
     tags: ["covenant"],
-    mnemonic: "arm5e.sheet.activeEffect.type.covenantBuildPoint",
+    mnemonic: "arm5e.activeEffect.type.covenantBuildPoint",
     subtypes: {
       library: {
-        mnemonic: "arm5e.sheet.activeEffect.subtypes.library",
+        mnemonic: "arm5e.activeEffect.subtypes.library",
         key: "system.buildPoints.library.computed",
         mode: CONST.ACTIVE_EFFECT_MODES.ADD,
         default: 10
       },
       labText: {
-        mnemonic: "arm5e.sheet.activeEffect.subtypes.labText",
+        mnemonic: "arm5e.activeEffect.subtypes.labText",
         key: "system.buildPoints.labText.computed",
         mode: CONST.ACTIVE_EFFECT_MODES.ADD,
         default: 10
       },
       vis: {
-        mnemonic: "arm5e.sheet.activeEffect.subtypes.vis",
+        mnemonic: "arm5e.activeEffect.subtypes.vis",
         key: "system.buildPoints.vis.computed",
         mode: CONST.ACTIVE_EFFECT_MODES.ADD,
         default: 10
       },
       magicItems: {
-        mnemonic: "arm5e.sheet.activeEffect.subtypes.magicItems",
+        mnemonic: "arm5e.activeEffect.subtypes.magicItems",
         key: "system.buildPoints.magicItems.computed",
         mode: CONST.ACTIVE_EFFECT_MODES.ADD,
         default: 10
       },
       specialists: {
-        mnemonic: "arm5e.sheet.activeEffect.subtypes.specialists",
+        mnemonic: "arm5e.activeEffect.subtypes.specialists",
         key: "system.buildPoints.specialists.computed",
         mode: CONST.ACTIVE_EFFECT_MODES.ADD,
         default: 10
       },
       labs: {
-        mnemonic: "arm5e.sheet.activeEffect.subtypes.labs",
+        mnemonic: "arm5e.activeEffect.subtypes.labs",
         key: "system.buildPoints.labs.computed",
         mode: CONST.ACTIVE_EFFECT_MODES.ADD,
         default: 10
       },
       money: {
-        mnemonic: "arm5e.sheet.activeEffect.subtypes.money",
+        mnemonic: "arm5e.activeEffect.subtypes.money",
         key: "system.buildPoints.money.computed",
         mode: CONST.ACTIVE_EFFECT_MODES.ADD,
         default: 10
@@ -1801,52 +1883,52 @@ export const ACTIVE_EFFECTS_TYPES = {
     category: "covenant",
     type: "expenses",
     tags: ["covenant"],
-    mnemonic: "arm5e.sheet.activeEffect.type.yearlyExpenses",
+    mnemonic: "arm5e.activeEffect.type.yearlyExpenses",
     subtypes: {
       inhabitant: {
-        mnemonic: "arm5e.sheet.activeEffect.subtypes.inhabitantPoints",
+        mnemonic: "arm5e.activeEffect.subtypes.inhabitantPoints",
         key: "system.finances.inhabitantsPoints",
         mode: CONST.ACTIVE_EFFECT_MODES.ADD,
         default: 2
       },
       buildings: {
-        mnemonic: "arm5e.sheet.activeEffect.subtypes.buildings",
+        mnemonic: "arm5e.activeEffect.subtypes.buildings",
         key: "system.yearlyExpenses.buildings.amount",
         mode: CONST.ACTIVE_EFFECT_MODES.ADD,
         default: 2
       },
       consumables: {
-        mnemonic: "arm5e.sheet.activeEffect.subtypes.consumables",
+        mnemonic: "arm5e.activeEffect.subtypes.consumables",
         key: "system.yearlyExpenses.consumables.amount",
         mode: CONST.ACTIVE_EFFECT_MODES.ADD,
         default: 2
       },
       provisions: {
-        mnemonic: "arm5e.sheet.activeEffect.subtypes.provisions",
+        mnemonic: "arm5e.activeEffect.subtypes.provisions",
         key: "system.yearlyExpenses.provisions.amount",
         mode: CONST.ACTIVE_EFFECT_MODES.ADD,
         default: 2
       },
       wages: {
-        mnemonic: "arm5e.sheet.activeEffect.subtypes.wages",
+        mnemonic: "arm5e.activeEffect.subtypes.wages",
         key: "system.yearlyExpenses.wages.amount",
         mode: CONST.ACTIVE_EFFECT_MODES.ADD,
         default: 2
       },
       laboratories: {
-        mnemonic: "arm5e.sheet.activeEffect.subtypes.laboratories",
+        mnemonic: "arm5e.activeEffect.subtypes.laboratories",
         key: "system.yearlyExpenses.laboratories.amount",
         mode: CONST.ACTIVE_EFFECT_MODES.ADD,
         default: 2
       },
       books: {
-        mnemonic: "arm5e.sheet.activeEffect.subtypes.writingMaterials",
+        mnemonic: "arm5e.activeEffect.subtypes.writingMaterials",
         key: "system.yearlyExpenses.writingMaterials.amount",
         mode: CONST.ACTIVE_EFFECT_MODES.ADD,
         default: 2
       },
       weapons: {
-        mnemonic: "arm5e.sheet.activeEffect.subtypes.weapons",
+        mnemonic: "arm5e.activeEffect.subtypes.weapons",
         key: "system.yearlyExpenses.weapons.amount",
         mode: CONST.ACTIVE_EFFECT_MODES.ADD,
         default: 2
@@ -1857,46 +1939,46 @@ export const ACTIVE_EFFECTS_TYPES = {
     category: "covenant",
     type: "savingsMundane",
     tags: ["covenant"],
-    mnemonic: "arm5e.sheet.activeEffect.type.yearlySavings.mundane",
+    mnemonic: "arm5e.activeEffect.type.yearlySavings.mundane",
     subtypes: {
       buildings: {
-        mnemonic: "arm5e.sheet.activeEffect.subtypes.buildings",
+        mnemonic: "arm5e.activeEffect.subtypes.buildings",
         key: "system.yearlyExpenses.buildings.mod",
         mode: CONST.ACTIVE_EFFECT_MODES.ADD,
         default: 2
       },
       consumables: {
-        mnemonic: "arm5e.sheet.activeEffect.subtypes.consumables",
+        mnemonic: "arm5e.activeEffect.subtypes.consumables",
         key: "system.yearlyExpenses.consumables.mod",
         mode: CONST.ACTIVE_EFFECT_MODES.ADD,
         default: 2
       },
       provisions: {
-        mnemonic: "arm5e.sheet.activeEffect.subtypes.provisions",
+        mnemonic: "arm5e.activeEffect.subtypes.provisions",
         key: "system.yearlyExpenses.provisions.mod",
         mode: CONST.ACTIVE_EFFECT_MODES.ADD,
         default: 2
       },
       wages: {
-        mnemonic: "arm5e.sheet.activeEffect.subtypes.wages",
+        mnemonic: "arm5e.activeEffect.subtypes.wages",
         key: "system.yearlyExpenses.wages.mod",
         mode: CONST.ACTIVE_EFFECT_MODES.ADD,
         default: 2
       },
       laboratories: {
-        mnemonic: "arm5e.sheet.activeEffect.subtypes.laboratories",
+        mnemonic: "arm5e.activeEffect.subtypes.laboratories",
         key: "system.yearlyExpenses.laboratories.mod",
         mode: CONST.ACTIVE_EFFECT_MODES.ADD,
         default: 2
       },
       writingMaterials: {
-        mnemonic: "arm5e.sheet.activeEffect.subtypes.writingMaterials",
+        mnemonic: "arm5e.activeEffect.subtypes.writingMaterials",
         key: "system.yearlyExpenses.writingMaterials.mod",
         mode: CONST.ACTIVE_EFFECT_MODES.ADD,
         default: 2
       },
       weapons: {
-        mnemonic: "arm5e.sheet.activeEffect.subtypes.weapons",
+        mnemonic: "arm5e.activeEffect.subtypes.weapons",
         key: "system.yearlyExpenses.weapons.mod",
         mode: CONST.ACTIVE_EFFECT_MODES.ADD,
         default: 2
@@ -1907,46 +1989,46 @@ export const ACTIVE_EFFECTS_TYPES = {
     category: "covenant",
     type: "savingsMagic",
     tags: ["covenant"],
-    mnemonic: "arm5e.sheet.activeEffect.type.yearlySavings.magic",
+    mnemonic: "arm5e.activeEffect.type.yearlySavings.magic",
     subtypes: {
       buildings: {
-        mnemonic: "arm5e.sheet.activeEffect.subtypes.buildings",
+        mnemonic: "arm5e.activeEffect.subtypes.buildings",
         key: "system.yearlyExpenses.buildings.magicMod",
         mode: CONST.ACTIVE_EFFECT_MODES.ADD,
         default: 2
       },
       consumables: {
-        mnemonic: "arm5e.sheet.activeEffect.subtypes.consumables",
+        mnemonic: "arm5e.activeEffect.subtypes.consumables",
         key: "system.yearlyExpenses.consumables.magicMod",
         mode: CONST.ACTIVE_EFFECT_MODES.ADD,
         default: 2
       },
       provisions: {
-        mnemonic: "arm5e.sheet.activeEffect.subtypes.provisions",
+        mnemonic: "arm5e.activeEffect.subtypes.provisions",
         key: "system.yearlyExpenses.provisions.magicMod",
         mode: CONST.ACTIVE_EFFECT_MODES.ADD,
         default: 2
       },
       wages: {
-        mnemonic: "arm5e.sheet.activeEffect.subtypes.wages",
+        mnemonic: "arm5e.activeEffect.subtypes.wages",
         key: "system.yearlyExpenses.wages.magicMod",
         mode: CONST.ACTIVE_EFFECT_MODES.ADD,
         default: 2
       },
       laboratories: {
-        mnemonic: "arm5e.sheet.activeEffect.subtypes.laboratories",
+        mnemonic: "arm5e.activeEffect.subtypes.laboratories",
         key: "system.yearlyExpenses.laboratories.magicMod",
         mode: CONST.ACTIVE_EFFECT_MODES.ADD,
         default: 2
       },
       writingMaterials: {
-        mnemonic: "arm5e.sheet.activeEffect.subtypes.writingMaterials",
+        mnemonic: "arm5e.activeEffect.subtypes.writingMaterials",
         key: "system.yearlyExpenses.writingMaterials.magicMod",
         mode: CONST.ACTIVE_EFFECT_MODES.ADD,
         default: 2
       },
       weapons: {
-        mnemonic: "arm5e.sheet.activeEffect.subtypes.weapons",
+        mnemonic: "arm5e.activeEffect.subtypes.weapons",
         key: "system.yearlyExpenses.weapons.magicMod",
         mode: CONST.ACTIVE_EFFECT_MODES.ADD,
         default: 2
@@ -1957,28 +2039,28 @@ export const ACTIVE_EFFECTS_TYPES = {
     category: "covenant",
     type: "covenantInhabitants",
     tags: ["covenant"],
-    mnemonic: "arm5e.sheet.activeEffect.type.covenantInhabitants",
+    mnemonic: "arm5e.activeEffect.type.covenantInhabitants",
     subtypes: {
       turbula: {
-        mnemonic: "arm5e.sheet.activeEffect.subtypes.turbula",
+        mnemonic: "arm5e.activeEffect.subtypes.turbula",
         key: "system.census.turbula",
         mode: CONST.ACTIVE_EFFECT_MODES.ADD,
         default: 2
       },
       laborers: {
-        mnemonic: "arm5e.sheet.activeEffect.subtypes.laborers",
+        mnemonic: "arm5e.activeEffect.subtypes.laborers",
         key: "system.census.laborers",
         mode: CONST.ACTIVE_EFFECT_MODES.ADD,
         default: 2
       },
       teamsters: {
-        mnemonic: "arm5e.sheet.activeEffect.subtypes.teamsters",
+        mnemonic: "arm5e.activeEffect.subtypes.teamsters",
         key: "system.census.teamsters",
         mode: CONST.ACTIVE_EFFECT_MODES.ADD,
         default: 2
       },
       servants: {
-        mnemonic: "arm5e.sheet.activeEffect.subtypes.servants",
+        mnemonic: "arm5e.activeEffect.subtypes.servants",
         key: "system.census.servants",
         mode: CONST.ACTIVE_EFFECT_MODES.ADD,
         default: 2

@@ -1,3 +1,22 @@
+## 2.4.0.25, Radislav agrees with Quendalon
+
+### V13 compatibility
+
+### Features & changes
+
+- Various improvements to chat messages design.
+- New active effects:
+  - Alternate Arts XP bonus
+  - Specific form magic resistance (not cumulative with Parma)
+- [Technical] Mnemonics reorganization - WIP
+
+## Bug fixes
+
+- Parma is now properly multiplied by 5 when computing magic resistance during contest.
+- It is now possible to edit the number of warping points when triggering a Twilight manually
+- Confidence spending was not allowed for Twilight control and understanding.
+- Virtues and flaws icons were reduced to size 0
+
 ## 2.4.0.24, Radislav the guy with the accent
 
 ### V13 compatibility
