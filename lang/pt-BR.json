@@ -101,6 +101,115 @@
     }
   },
   "arm5e": {
+    "activeEffect": {
+      "add": "Adicionar {score} a(o) {value}",
+      "bonuses": {
+        "penetration": "Bônus de penetração"
+      },
+      "changeMode": "Mudar Modo",
+      "changeValue": "Valor do efeito",
+      "info": {
+        "noedit": "Nota: Criação de efeito ativo é impossível se o item é possuído por um Ator, edite o efeito original e faça uma cópia no seu mundo para editar."
+      },
+      "mode_0": "Customizado",
+      "mode_1": "Multiplicar",
+      "mode_2": "Adicionar",
+      "mode_3": "Involuir",
+      "mode_4": "Evoluir",
+      "mode_5": "Sobrescrever",
+      "multiply": "Multiplicar {type} por ",
+      "new": "Novo efeito",
+      "section": {
+        "inactive": "Efeitos inativos",
+        "passive": "Efeitos passivos",
+        "temporary": "Efeitos temporários"
+      },
+      "subtypes": {
+        "attackRoll": "Rolagens de ataque",
+        "auraLevel": "Nível da aura",
+        "auraRealm": "Reino da aura",
+        "buildings": "Construções",
+        "combatRoll": "Rolagens de combate",
+        "consumables": "Consumíveis",
+        "defRoll": "Rolagens de defesa",
+        "fatigueTotal": "Total de fadiga",
+        "formMagicRoll": "Rolagens de magia formulaica",
+        "inhabitantPoints": "Pontos de habitantes",
+        "initRoll": "Rolagens de iniciativa",
+        "inventSpell": "Inventar magia",
+        "labText": "Textos de Lab.",
+        "laboratories": "Laboratórios",
+        "laborers": "Operários",
+        "labs": "Laboratórios",
+        "learnSpell": "Aprender magia",
+        "library": "Biblioteca",
+        "magicItems": "Encantamentos",
+        "magicRoll": "Rolagens de magia",
+        "money": "Dinheiro",
+        "none": "Nenhum",
+        "provisions": "Provisões",
+        "servants": "Servos",
+        "specialists": "Especialistas",
+        "spontDivider": "Divisor de magia esp.",
+        "spontDividerNoFatigue": "Divisor de magia esp. sem fadiga",
+        "spontMagicRoll": "Rolagens de magia espontânea",
+        "teamsters": "Abastecedores",
+        "turbula": "Guardas",
+        "vis": "Vis",
+        "wages": "Salários",
+        "weapons": "Armas & Armaduras",
+        "woundsTotal": "Total de ferimentos",
+        "writingMaterials": "Materiais de escrita",
+        "xpcoeff": "Multiplicador de exp",
+        "xpmod": "Bônus de exp"
+      },
+      "type": {
+        "covenantBuildPoint": "Pontos de construção do concílio",
+        "covenantInhabitants": "Habitantes do concílio",
+        "spellcasting": "Conjuração",
+        "yearlyExpenses": "Despesas do concílio",
+        "yearlySavings": {
+          "magic": "Redução de custos mágica",
+          "mundane": "Redução de custos mundana"
+        }
+      },
+      "types": {
+        "AlternateArtBonus": "Bônus p/ Artes Alternativas",
+        "academicAbilitiesAffinity": "Afinidade c/ Hab. Acadêmicas (Exp)",
+        "academicAbilitiesBonus": "Bônus p/ Hab. Acadêmicas",
+        "affinityAlternateArt": "Afinidade c/ Artes Alternativas (Exp)",
+        "arcaneAbilitiesAffinity": "Afinidade c/ Hab. Arcanas (Exp)",
+        "arcaneAbilitiesBonus": "Bônus p/ Hab. Arcanas",
+        "arts": {
+          "affinity": "Afinidade com arte",
+          "deficiency": "Deficiência com arte"
+        },
+        "characteristics": "Características",
+        "fatigue": "Fadiga",
+        "formResistance": "Resistência natural",
+        "generalAbilitiesAffinity": "Afinidade c/ Hab. Gerais (Exp)",
+        "generalAbilitiesBonus": "Bônus p/ Hab. Gerais",
+        "labActivity": "Atividade de lab. do personagem",
+        "laboratoryAttr": "Características de Laboratório",
+        "laboratorySpec": "Especialidade de Laboratório",
+        "martialAbilitiesAffinity": "Afinidade c/ Hab. Marciais (Exp)",
+        "martialAbilitiesBonus": "Bônus p/ Hab. Marciais",
+        "mysteryAbilitiesAffinity": "Afinidade c/ Hab. de Mistério (Exp)",
+        "mysteryAbilitiesBonus": "Bônusp/ Hab. Mistério",
+        "nullEffect": "Efeito nulo",
+        "optional": "Bônus opcional",
+        "realmAlignment": "Alinhamento de Reino",
+        "roll": {
+          "optional": "Bônus de rolagem opcional"
+        },
+        "spellmastery": "Aperfeiçoamento de magia",
+        "supernaturalAbilitiesAffinity": "Afinidade c/ Hab. Sobrenaturais (Exp)",
+        "supernaturalAbilitiesBonus": "Bônus p/ Hab.Sobrenaturais",
+        "supernaturalAbilitiesXPBonus": "Bônus EXP de Hab. Sobrenaturais",
+        "vitals": "Vitas",
+        "wounds": "Ferimentos"
+      }
+    },
     "activity": {
       "activity": "Atividade",
       "adventuring": "Aventura",
@@ -279,6 +388,10 @@
         "clearAura": "Limpar Aura",
         "setAura": "Configurar Aura"
       }
+    },
+    "chat": {
+      "contestOfMagic": "Contestação de Magia",
+      "totalMagicResistance": "Total de resistência mágica"
     },
     "combat": {
       "damage": {
@@ -707,6 +820,17 @@
         "name": "Habilidades"
       }
     },
+    "realm": {
+      "divine": "Divino",
+      "faeric": "Feérico",
+      "infernal": "Infernal",
+      "label": "Reino",
+      "magic": "Mágico",
+      "mundane": "Mundano",
+      "nightModifier": "Modificador Noturno",
+      "visible": "Visível",
+      "visibleHint": "Mostrar ou esconder mod. de aura quando rolando"
+    },
     "rolltables": {
       "experimentation": ""
     },
@@ -835,115 +959,6 @@
         "rollback": "Reverter",
         "update": "Atualizar"
       },
-      "activeEffect": {
-        "add": "Adicionar {score} a(o) {value}",
-        "bonuses": {
-          "penetration": "Bônus de penetração"
-        },
-        "changeMode": "Mudar Modo",
-        "changeValue": "Valor do efeito",
-        "info": {
-          "noedit": "Nota: Criação de efeito ativo é impossível se o item é possuído por um Ator, edite o efeito original e faça uma cópia no seu mundo para editar."
-        },
-        "mode_0": "Customizado",
-        "mode_1": "Multiplicar",
-        "mode_2": "Adicionar",
-        "mode_3": "Involuir",
-        "mode_4": "Evoluir",
-        "mode_5": "Sobrescrever",
-        "multiply": "Multiplicar {type} por ",
-        "new": "Novo efeito",
-        "section": {
-          "inactive": "Efeitos inativos",
-          "passive": "Efeitos passivos",
-          "temporary": "Efeitos temporários"
-        },
-        "subtypes": {
-          "attackRoll": "Rolagens de ataque",
-          "auraLevel": "Nível da aura",
-          "auraRealm": "Reino da aura",
-          "buildings": "Construções",
-          "combatRoll": "Rolagens de combate",
-          "consumables": "Consumíveis",
-          "defRoll": "Rolagens de defesa",
-          "fatigueTotal": "Total de fadiga",
-          "formMagicRoll": "Rolagens de magia formulaica",
-          "inhabitantPoints": "Pontos de habitantes",
-          "initRoll": "Rolagens de iniciativa",
-          "inventSpell": "Inventar magia",
-          "labText": "Textos de Lab.",
-          "laboratories": "Laboratórios",
-          "laborers": "Operários",
-          "labs": "Laboratórios",
-          "learnSpell": "Aprender magia",
-          "library": "Biblioteca",
-          "magicItems": "Encantamentos",
-          "magicRoll": "Rolagens de magia",
-          "money": "Dinheiro",
-          "none": "Nenhum",
-          "provisions": "Provisões",
-          "servants": "Servos",
-          "specialists": "Especialistas",
-          "spontDivider": "Divisor de magia esp.",
-          "spontDividerNoFatigue": "Divisor de magia esp. sem fadiga",
-          "spontMagicRoll": "Rolagens de magia espontânea",
-          "teamsters": "Abastecedores",
-          "turbula": "Guardas",
-          "vis": "Vis",
-          "wages": "Salários",
-          "weapons": "Armas & Armaduras",
-          "woundsTotal": "Total de ferimentos",
-          "writingMaterials": "Materiais de escrita",
-          "xpcoeff": "Multiplicador de exp",
-          "xpmod": "Bônus de exp"
-        },
-        "type": {
-          "covenantBuildPoint": "Pontos de construção do concílio",
-          "covenantInhabitants": "Habitantes do concílio",
-          "spellcasting": "Conjuração",
-          "yearlyExpenses": "Despesas do concílio",
-          "yearlySavings": {
-            "magic": "Redução de custos mágica",
-            "mundane": "Redução de custos mundana"
-          }
-        },
-        "types": {
-          "AlternateArtBonus": "Bônus p/ Artes Alternativas",
-          "academicAbilitiesAffinity": "Afinidade c/ Hab. Acadêmicas (Exp)",
-          "academicAbilitiesBonus": "Bônus p/ Hab. Acadêmicas",
-          "affinityAlternateArt": "Afinidade c/ Artes Alternativas (Exp)",
-          "arcaneAbilitiesAffinity": "Afinidade c/ Hab. Arcanas (Exp)",
-          "arcaneAbilitiesBonus": "Bônus p/ Hab. Arcanas",
-          "arts": {
-            "affinity": "Afinidade com arte",
-            "deficiency": "Deficiência com arte"
-          },
-          "characteristics": "Características",
-          "fatigue": "Fadiga",
-          "formResistance": "Resistência natural",
-          "generalAbilitiesAffinity": "Afinidade c/ Hab. Gerais (Exp)",
-          "generalAbilitiesBonus": "Bônus p/ Hab. Gerais",
-          "labActivity": "Atividade de lab. do personagem",
-          "laboratoryAttr": "Características de Laboratório",
-          "laboratorySpec": "Especialidade de Laboratório",
-          "martialAbilitiesAffinity": "Afinidade c/ Hab. Marciais (Exp)",
-          "martialAbilitiesBonus": "Bônus p/ Hab. Marciais",
-          "mysteryAbilitiesAffinity": "Afinidade c/ Hab. de Mistério (Exp)",
-          "mysteryAbilitiesBonus": "Bônusp/ Hab. Mistério",
-          "nullEffect": "Efeito nulo",
-          "optional": "Bônus opcional",
-          "realmAlignment": "Alinhamento de Reino",
-          "roll": {
-            "optional": "Bônus de rolagem opcional"
-          },
-          "spellmastery": "Aperfeiçoamento de magia",
-          "supernaturalAbilitiesAffinity": "Afinidade c/ Hab. Sobrenaturais (Exp)",
-          "supernaturalAbilitiesBonus": "Bônus p/ Hab.Sobrenaturais",
-          "supernaturalAbilitiesXPBonus": "Bônus EXP de Hab. Sobrenaturais",
-          "vitals": "Vitas",
-          "wounds": "Ferimentos"
-        }
-      },
       "actuals": "Atual",
       "advanced": "Avançado",
       "advantage": "Vantagem",
@@ -1020,7 +1035,6 @@
       "constructionPoints": "Pontos de Construção",
       "consumables": "Consumíveis",
       "consumablesSumary": "2 libras p/ 10 pts de Habitantes (20% p/ ofício)",
-      "contestOfMagic": "Contestação de Magia",
       "cord": "Cordões",
       "cost": "Custo",
       "costSavings": "Reduções de Custos",
@@ -1307,17 +1321,6 @@
       "quickness": "Rapidez",
       "range": "Alcance",
       "rawVis": "Vis Bruto",
-      "realm": {
-        "divine": "Divino",
-        "faeric": "Feérico",
-        "infernal": "Infernal",
-        "label": "Reino",
-        "magic": "Mágico",
-        "mundane": "Mundano",
-        "nightModifier": "Modificador Noturno",
-        "visible": "Visível",
-        "visibleHint": "Mostrar ou esconder mod. de aura quando rolando"
-      },
       "refinement": "Refinamento",
       "religion": "Religião",
       "reputation": "Reputação",
@@ -1456,7 +1459,6 @@
       "totalExpenditure": "Despesas Totais",
       "totalHabitants": "Habitantes Totais",
       "totalIncome": "Renda Total",
-      "totalMagicResistance": "Total de resistência mágica",
       "totalPenetration": "Total de penetração",
       "trainingRequired": "Treinamento Necessário",
       "tribunal": "Tribunal",

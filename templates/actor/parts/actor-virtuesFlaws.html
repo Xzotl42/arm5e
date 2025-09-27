@@ -24,7 +24,9 @@
       {{#each system.virtues as |item id|}}
         {{#if item.system.visible }}
           <li class="item item-value flexrow" data-name="{{item.name}}" data-item-id="{{item._id}}">
-            <div class="item-image item-control item-edit"><img src="{{item.img}}" title="{{item.name}}" /></div>
+            <div class="item-image item-control item-edit">
+              <img src="{{item.img}}" width="45" height="45" title="{{item.name}}" />
+            </div>
             <div class="flexrow flex-center">
               <span class="flexrow item-title" {{{item.system.ui.style}}}>{{item.name}}</span>
             </div>
@@ -61,7 +63,9 @@
         {{#each system.qualities as |item id|}}
           {{#if item.system.visible }}
             <li class="item item-value flexrow" data-name="{{item.name}}" data-item-id="{{item._id}}">
-              <div class="item-image item-control item-edit"><img src="{{item.img}}" title="{{item.name}}" /></div>
+              <div class="item-image item-control item-edit">
+                <img src="{{item.img}}" width="45" height="45" title="{{item.name}}" />
+              </div>
               <div class="flexrow flex-center">
                 <span class="flexrow item-title" {{{item.system.ui.style}}}>{{item.name}}</span>
               </div>
@@ -104,7 +108,9 @@
       {{#each system.flaws as |item id|}}
         {{#if item.system.visible }}
           <li class="item item-value flexrow" data-name="{{item.name}}" data-item-id="{{item._id}}">
-            <div class="item-image item-control item-edit"><img src="{{item.img}}" title="{{item.name}}" /></div>
+            <div class="item-image item-control item-edit">
+              <img src="{{item.img}}" width="45" height="45" title="{{item.name}}" />
+            </div>
             <div class="flexrow flex-center">
               <span class="flexrow item-title" {{{item.system.ui.style}}}>{{item.name}} </span>
             </div>
@@ -144,7 +150,9 @@
         {{#each system.inferiorities as |item id|}}
           {{#if item.system.visible }}
             <li class="item item-value flexrow" data-name="{{item.name}}" data-item-id="{{item._id}}">
-              <div class="item-image item-control item-edit"><img src="{{item.img}}" title="{{item.name}}" /></div>
+              <div class="item-image item-control item-edit">
+                <img src="{{item.img}}" width="45" height="45" title="{{item.name}}" />
+              </div>
               <div class="flexrow flex-center">
                 <span class="flexrow item-title" {{{item.system.ui.style}}}>{{item.name}} </span>
               </div>

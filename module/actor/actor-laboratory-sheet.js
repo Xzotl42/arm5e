@@ -229,7 +229,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
       context.edition.aura = "readonly";
       // context.planning.modifiers.aura += context.system.auraBonus;
       context.tooltip = {
-        aura: game.i18n.format("arm5e.sheet.activeEffect.add", {
+        aura: game.i18n.format("arm5e.activeEffect.add", {
           score: (context.system.auraBonus < 0 ? "" : "+") + context.system.auraBonus,
           value: game.i18n.localize("arm5e.sheet.aura")
         })

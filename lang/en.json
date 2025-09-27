@@ -54,6 +54,128 @@
     }
   },
   "arm5e": {
+    "activeEffect": {
+      "add": "Add {score} to {value}",
+      "bonuses": {
+        "penetration": "Penetration bonus"
+      },
+      "changeMode": "Change Mode",
+      "changeValue": "Effect Value",
+      "info": {
+        "noedit": "Note: Active effect creation is not possible if the Item is owned by an Actor, edit the original or make a copy in your world to edit."
+      },
+      "mode_0": "Custom",
+      "mode_1": "Multiply",
+      "mode_2": "Add",
+      "mode_3": "Downgrade",
+      "mode_4": "Upgrade",
+      "mode_5": "Override",
+      "multiply": "Multiply {type} by ",
+      "new": "New effect",
+      "section": {
+        "inactive": "Inactive effects",
+        "passive": "Passive effects",
+        "temporary": "Temporary effects"
+      },
+      "subtypes": {
+        "attackRoll": "Attack rolls",
+        "auraLevel": "Aura's level",
+        "auraRealm": "Realm of aura",
+        "buildings": "Buildings",
+        "combatRoll": "Combat rolls",
+        "consumables": "Consumables",
+        "defRoll": "Defence rolls",
+        "fatigueTotal": "Fatigue total",
+        "formMagicRoll": "Formulaic magic rolls",
+        "inhabitantPoints": "Inhabitant points",
+        "initRoll": "Initiative rolls",
+        "inventSpell": "Invent spell",
+        "labText": "Laboratory texts",
+        "laboratories": "Laboratories",
+        "laborers": "Laborers",
+        "labs": "Laboratories",
+        "learnSpell": "Learn spell",
+        "library": "Library",
+        "magicItems": "MagicItems",
+        "magicResistance": "Magic resistance",
+        "magicRoll": "Magic rolls",
+        "money": "Money",
+        "none": "None",
+        "provisions": "Provisions",
+        "ritualFatigueCancelled": "Ritual fatigue levels cancelled",
+        "servants": "Servants",
+        "specialists": "Specialists",
+        "spellFatigueThreshold": "Spell fatigue threshold",
+        "spontDivider": "Spont. magic divider",
+        "spontDividerNoFatigue": "Spont. magic divider no fatigue",
+        "spontMagicRoll": "Spontaneous magic rolls",
+        "teamsters": "Teamsters",
+        "turbula": "Turbula",
+        "vis": "Vis",
+        "wages": "Wages",
+        "weapons": "Weapons & Armor",
+        "woundsTotal": "Wounds total",
+        "writingMaterials": "Writting materials",
+        "xpcoeff": "Xp multiplier",
+        "xpmod": "Xp bonus"
+      },
+      "type": {
+        "covenantBuildPoint": "Covenant's build points",
+        "covenantInhabitants": "Covenant's inhabitants",
+        "spellcasting": "Spellcasting",
+        "yearlyExpenses": "Covenant's expenses",
+        "yearlySavings": {
+          "magic": "Covenant's savings with magic",
+          "mundane": "Covenant's savings mundane"
+        }
+      },
+      "types": {
+        "AlternateArtBonus": "Bonus alternate Arts",
+        "AlternateArtXPBonus": "Bonus alternate Arts XP",
+        "academicAbilitiesAffinity": "Affinity Academic abilities (xp)",
+        "academicAbilitiesBonus": "Bonus Academic abilities",
+        "academicAbilitiesXPBonus": "Bonus to Academic abilities XP",
+        "affinityAlternateArt": "Affinity alternate arts (xp)",
+        "arcaneAbilitiesAffinity": "Affinity Arcane abilities (xp)",
+        "arcaneAbilitiesBonus": "Bonus Arcane abilities",
+        "arcaneAbilitiesXPBonus": "Bonus to Arcane abilities XP",
+        "arts": {
+          "affinity": "Art affinity",
+          "deficiency": "Art deficiency"
+        },
+        "characteristicBoost": "Characteristic's boost",
+        "characteristics": "Characteristics",
+        "fatigue": "Fatigue",
+        "formMagicResistance": "Magical resistance to Form",
+        "formResistance": "Natural resistance",
+        "generalAbilitiesAffinity": "Affinity General abilities (xp)",
+        "generalAbilitiesBonus": "Bonus General abilities",
+        "generalAbilitiesXPBonus": "Bonus to General abilities XP",
+        "labActivity": "Character laboratory activity",
+        "laboratoryAttr": "Laboratory's attributes",
+        "laboratorySpec": "Laboratory's specialty",
+        "martialAbilitiesAffinity": "Affinity Martial abilities (xp)",
+        "martialAbilitiesBonus": "Bonus Martial abilities",
+        "martialAbilitiesXPBonus": "Bonus to Martial abilities XP",
+        "mysteryAbilitiesAffinity": "Affinity Mysteries abilities (xp)",
+        "mysteryAbilitiesBonus": "Bonus Mysteries abilities",
+        "mysteryAbilitiesXPBonus": "Bonus to Mystery abilities XP",
+        "nullEffect": "Null effect",
+        "optional": "Optional bonus",
+        "qualityAbilityBoost": "Quality - Ability boost",
+        "realmAlignment": "Realm alignment",
+        "realmSusceptibility": "Realm susceptibility",
+        "roll": {
+          "optional": "Optional roll bonus"
+        },
+        "spellmastery": "Spell mastery",
+        "supernaturalAbilitiesAffinity": "Affinity Supernat. abil. (xp)",
+        "supernaturalAbilitiesBonus": "Bonus Supernat. abilities",
+        "supernaturalAbilitiesXPBonus": "Bonus to Supernat. abilities XP",
+        "vitals": "Vitals",
+        "wounds": "Wounds"
+      }
+    },
     "activity": {
       "activity": "Activity",
       "adventuring": "Adventuring",
@@ -252,6 +374,12 @@
         "clearAura": "Clear Aura",
         "setAura": "Configure Aura"
       }
+    },
+    "chat": {
+      "contestOfMagic": "Contest of magic",
+      "contestOfMagicWith": "Contest of magic with {name}",
+      "otherMagicResistance": "Other Magic resistance",
+      "totalMagicResistance": "Magic resistance total"
     },
     "combat": {
       "damage": {
@@ -713,6 +841,20 @@
         "name": "Abilities"
       }
     },
+    "realm": {
+      "divine": "Divine",
+      "faeric": "Faerie",
+      "infernal": "Infernal",
+      "label": "Realm",
+      "magic": "Magical",
+      "mundane": "Mundane",
+      "nightModifier": "Night Modifier",
+      "susceptible": {
+        "impact": "Due to susceptibility to {realm}, divided by {divisor}"
+      },
+      "visible": "Visible",
+      "visibleHint": "Show or hide the aura modifier when rolling"
+    },
     "rolltables": {
       "experimentation": {
         "createJournal": "Create Journal",
@@ -990,125 +1132,6 @@
         "update": "Update"
       },
       "actions": "Actions",
-      "activeEffect": {
-        "add": "Add {score} to {value}",
-        "bonuses": {
-          "penetration": "Penetration bonus"
-        },
-        "changeMode": "Change Mode",
-        "changeValue": "Effect Value",
-        "info": {
-          "noedit": "Note: Active effect creation is not possible if the Item is owned by an Actor, edit the original or make a copy in your world to edit."
-        },
-        "mode_0": "Custom",
-        "mode_1": "Multiply",
-        "mode_2": "Add",
-        "mode_3": "Downgrade",
-        "mode_4": "Upgrade",
-        "mode_5": "Override",
-        "multiply": "Multiply {type} by ",
-        "new": "New effect",
-        "section": {
-          "inactive": "Inactive effects",
-          "passive": "Passive effects",
-          "temporary": "Temporary effects"
-        },
-        "subtypes": {
-          "attackRoll": "Attack rolls",
-          "auraLevel": "Aura's level",
-          "auraRealm": "Realm of aura",
-          "buildings": "Buildings",
-          "combatRoll": "Combat rolls",
-          "consumables": "Consumables",
-          "defRoll": "Defence rolls",
-          "fatigueTotal": "Fatigue total",
-          "formMagicRoll": "Formulaic magic rolls",
-          "inhabitantPoints": "Inhabitant points",
-          "initRoll": "Initiative rolls",
-          "inventSpell": "Invent spell",
-          "labText": "Laboratory texts",
-          "laboratories": "Laboratories",
-          "laborers": "Laborers",
-          "labs": "Laboratories",
-          "learnSpell": "Learn spell",
-          "library": "Library",
-          "magicItems": "MagicItems",
-          "magicRoll": "Magic rolls",
-          "money": "Money",
-          "none": "None",
-          "provisions": "Provisions",
-          "ritualFatigueCancelled": "Ritual fatigue levels cancelled",
-          "servants": "Servants",
-          "specialists": "Specialists",
-          "spellFatigueThreshold": "Spell fatigue threshold",
-          "spontDivider": "Spont. magic divider",
-          "spontDividerNoFatigue": "Spont. magic divider no fatigue",
-          "spontMagicRoll": "Spontaneous magic rolls",
-          "teamsters": "Teamsters",
-          "turbula": "Turbula",
-          "vis": "Vis",
-          "wages": "Wages",
-          "weapons": "Weapons & Armor",
-          "woundsTotal": "Wounds total",
-          "writingMaterials": "Writting materials",
-          "xpcoeff": "Xp multiplier",
-          "xpmod": "Xp bonus"
-        },
-        "type": {
-          "covenantBuildPoint": "Covenant's build points",
-          "covenantInhabitants": "Covenant's inhabitants",
-          "spellcasting": "Spellcasting",
-          "yearlyExpenses": "Covenant's expenses",
-          "yearlySavings": {
-            "magic": "Covenant's savings with magic",
-            "mundane": "Covenant's savings mundane"
-          }
-        },
-        "types": {
-          "AlternateArtBonus": "Bonus alternate Arts",
-          "academicAbilitiesAffinity": "Affinity Academic abilities (xp)",
-          "academicAbilitiesBonus": "Bonus Academic abilities",
-          "academicAbilitiesXPBonus": "Bonus to Academic abilities XP",
-          "affinityAlternateArt": "Affinity alternate arts (xp)",
-          "arcaneAbilitiesAffinity": "Affinity Arcane abilities (xp)",
-          "arcaneAbilitiesBonus": "Bonus Arcane abilities",
-          "arcaneAbilitiesXPBonus": "Bonus to Arcane abilities XP",
-          "arts": {
-            "affinity": "Art affinity",
-            "deficiency": "Art deficiency"
-          },
-          "characteristicBoost": "Characteristic's boost",
-          "characteristics": "Characteristics",
-          "fatigue": "Fatigue",
-          "formResistance": "Natural resistance",
-          "generalAbilitiesAffinity": "Affinity General abilities (xp)",
-          "generalAbilitiesBonus": "Bonus General abilities",
-          "generalAbilitiesXPBonus": "Bonus to General abilities XP",
-          "labActivity": "Character laboratory activity",
-          "laboratoryAttr": "Laboratory's attributes",
-          "laboratorySpec": "Laboratory's specialty",
-          "martialAbilitiesAffinity": "Affinity Martial abilities (xp)",
-          "martialAbilitiesBonus": "Bonus Martial abilities",
-          "martialAbilitiesXPBonus": "Bonus to Martial abilities XP",
-          "mysteryAbilitiesAffinity": "Affinity Mysteries abilities (xp)",
-          "mysteryAbilitiesBonus": "Bonus Mysteries abilities",
-          "mysteryAbilitiesXPBonus": "Bonus to Mystery abilities XP",
-          "nullEffect": "Null effect",
-          "optional": "Optional bonus",
-          "qualityAbilityBoost": "Quality - Ability boost",
-          "realmAlignment": "Realm alignment",
-          "realmSusceptibility": "Realm susceptibility",
-          "roll": {
-            "optional": "Optional roll bonus"
-          },
-          "spellmastery": "Spell mastery",
-          "supernaturalAbilitiesAffinity": "Affinity Supernat. abil. (xp)",
-          "supernaturalAbilitiesBonus": "Bonus Supernat. abilities",
-          "supernaturalAbilitiesXPBonus": "Bonus to Supernat. abilities XP",
-          "vitals": "Vitals",
-          "wounds": "Wounds"
-        }
-      },
       "actuals": "Current",
       "advanced": "Advanced",
       "advantage": "Advantage",
@@ -1196,7 +1219,6 @@
       "constructionPoints": "Build Points",
       "consumables": "Consumables",
       "consumablesSumary": "2 pounds per 10 pts Inhabitants (20% per craft)",
-      "contestOfMagic": "Contest of magic",
       "cord": "Cords",
       "cost": "Cost",
       "costSavings": "Cost Savings",
@@ -1491,20 +1513,6 @@
       "quickness": "Quickness",
       "range": "Range",
       "rawVis": "Raw Vis",
-      "realm": {
-        "divine": "Divine",
-        "faeric": "Faerie",
-        "infernal": "Infernal",
-        "label": "Realm",
-        "magic": "Magical",
-        "mundane": "Mundane",
-        "nightModifier": "Night Modifier",
-        "susceptible": {
-          "impact": "Due to susceptibility to {realm}, divided by {divisor}"
-        },
-        "visible": "Visible",
-        "visibleHint": "Show or hide the aura modifier when rolling"
-      },
       "refinement": "Refinement",
       "religion": "Religion",
       "reputation": "Reputation",
@@ -1662,7 +1670,6 @@
       "totalExpenditure": "Total Expenditure",
       "totalHabitants": "Total Inhabitants",
       "totalIncome": "Total Income",
-      "totalMagicResistance": "Magic resistance total",
       "totalPenetration": "Penetration total",
       "trainingRequired": "Training Required",
       "tribunal": "Tribunal",

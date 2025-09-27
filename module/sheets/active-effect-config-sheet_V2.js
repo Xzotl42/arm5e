@@ -143,7 +143,7 @@ export class ArM5eActiveEffectConfigV2 extends ActiveEffectConfig {
         }
         subType.computedKey = tmp;
 
-        subType.modeStr = "arm5e.sheet.activeEffect.mode_" + subType.mode;
+        subType.modeStr = "arm5e.activeEffect.mode_" + subType.mode;
 
         subTypes.push(subType);
         if (k == context.selectedSubtypes[idx]) {

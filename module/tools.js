@@ -597,67 +597,67 @@ export function generateActiveEffectFromAbilities() {
     bonusArcaneAbility: {
       category: "abilities",
       type: "bonusArcaneAbility",
-      label: "arm5e.sheet.activeEffect.types.arcaneAbilitiesBonus",
+      label: "arm5e.activeEffect.types.arcaneAbilitiesBonus",
       subtypes: {}
     },
     bonusAcademicAbility: {
       category: "abilities",
       type: "bonusAcademicAbility",
-      label: "arm5e.sheet.activeEffect.types.academicAbilitiesBonus",
+      label: "arm5e.activeEffect.types.academicAbilitiesBonus",
       subtypes: {}
     },
     bonusMartialAbility: {
       category: "abilities",
       type: "bonusMartialAbility",
-      label: "arm5e.sheet.activeEffect.types.martialAbilitiesBonus",
+      label: "arm5e.activeEffect.types.martialAbilitiesBonus",
       subtypes: {}
     },
     bonusMysteryAbility: {
       category: "abilities",
       type: "bonusMysteryAbility",
-      label: "arm5e.sheet.activeEffect.types.mysteryAbilitiesBonus",
+      label: "arm5e.activeEffect.types.mysteryAbilitiesBonus",
       subtypes: {}
     },
     bonusSupernaturalAbility: {
       category: "abilities",
       type: "bonusSupernaturalAbility",
-      label: "arm5e.sheet.activeEffect.types.supernaturalAbilitiesBonus",
+      label: "arm5e.activeEffect.types.supernaturalAbilitiesBonus",
       subtypes: {}
     },
     affinityGeneralAbility: {
       category: "abilities",
       type: "affinityGeneralAbility",
-      label: "arm5e.sheet.activeEffect.types.generalAbilitiesAffinity",
+      label: "arm5e.activeEffect.types.generalAbilitiesAffinity",
       subtypes: {}
     },
     affinityArcaneAbility: {
       category: "abilities",
       type: "affinityArcaneAbility",
-      label: "arm5e.sheet.activeEffect.types.arcaneAbilitiesAffinity",
+      label: "arm5e.activeEffect.types.arcaneAbilitiesAffinity",
       subtypes: {}
     },
     affinityAcademicAbility: {
       category: "abilities",
       type: "affinityAcademicAbility",
-      label: "arm5e.sheet.activeEffect.types.academicAbilitiesAffinity",
+      label: "arm5e.activeEffect.types.academicAbilitiesAffinity",
       subtypes: {}
     },
     affinityMartialAbility: {
       category: "abilities",
       type: "affinityMartialAbility",
-      label: "arm5e.sheet.activeEffect.types.martialAbilitiesAffinity",
+      label: "arm5e.activeEffect.types.martialAbilitiesAffinity",
       subtypes: {}
     },
     affinityMysteryAbility: {
       category: "abilities",
       type: "affinityMysteryAbility",
-      label: "arm5e.sheet.activeEffect.types.mysteryAbilitiesAffinity",
+      label: "arm5e.activeEffect.types.mysteryAbilitiesAffinity",
       subtypes: {}
     },
     affinitySupernaturalAbility: {
       category: "abilities",
       type: "affinitySupernaturalAbility",
-      label: "arm5e.sheet.activeEffect.types.supernaturalAbilitiesAffinity",
+      label: "arm5e.activeEffect.types.supernaturalAbilitiesAffinity",
       subtypes: {}
     }
   };
