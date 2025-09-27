@@ -624,7 +624,7 @@ async function getRollFormula(actor) {
       msg += "<br/>";
       msg += game.i18n.localize("arm5e.messages.die.divideBy") + rollInfo.magic.divide;
       if (rollInfo.magic.technique.deficiency || rollInfo.magic.form.deficiency) {
-        msg += ` (${game.i18n.localize("arm5e.sheet.activeEffect.types.arts.deficiency")})`;
+        msg += ` (${game.i18n.localize("arm5e.activeEffect.types.arts.deficiency")})`;
       }
     }
 
@@ -979,15 +979,15 @@ async function noRoll(actor, modes, callback) {
 }
 
 async function changeMight(actor, roll, message) {
-  const form = CONFIG.ARM5E.magic.arts[actor.rollInfo.power.form]?.label ?? "NONE";
-  await handleTargetsOfMagic(actor, form, message);
+  // const form = CONFIG.ARM5E.magic.arts[actor.rollInfo.power.form]?.label ?? "NONE";
+  await handleTargetsOfMagic(actor, actor.rollInfo.power.form, message);
   await actor.changeMight(-actor.rollInfo.power.cost);
 }
 
 async function useItemCharge(actor, roll, message) {
-  const form = CONFIG.ARM5E.magic.arts[actor.rollInfo.item.form]?.label ?? "NONE";
+  // const form = CONFIG.ARM5E.magic.arts[actor.rollInfo.item.form]?.label ?? "NONE";
   const item = actor.items.get(actor.rollInfo.item.id);
-  await handleTargetsOfMagic(actor, form, message);
+  await handleTargetsOfMagic(actor, actor.rollInfo.item.form, message);
   await item.useItemCharge();
 }
 export { simpleDie, stressDie, noRoll, changeMight, useItemCharge };

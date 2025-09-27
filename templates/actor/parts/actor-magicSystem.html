@@ -1,4 +1,4 @@
-{{log "magicSystem templates" system.magicSystem.templates }}
+{{!-- log "magicSystem templates" system.magicSystem.templates --}}
 {{#each system.magicSystem.templates as |template tid|}}
   <div class="flexrow backSection margintop18">
     <ol class="items-list">
@@ -15,7 +15,7 @@
       </li>
       {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
       {{#each (lookup ../system.supernaturalEffectsTemplates tid) as |item id|}}
-        {{log "template "  @root.system.magicSystem.templates tid }}
+        {{!--log "template "  @root.system.magicSystem.templates tid --}}
         <li class="item item-value flexrow macro-ready" data-name="{{item.name}}" data-item-id="{{item._id}}">
 
           <div class="item-image item-control item-edit"><img src="{{item.img}}" title="{{item.name}}" /></div>
