@@ -1,3 +1,15 @@
+## 2.4.0.26, Radislav agrees with Quendalon
+
+### V13 compatibility
+
+### Features & changes
+
+- New setting to automatically skip confidence prompt on roll.
+
+## Bug fixes
+
+- Covenant description no longer overflow
+
 ## 2.4.0.25, Radislav agrees with Quendalon
 
 ### V13 compatibility
