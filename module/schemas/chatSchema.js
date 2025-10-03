@@ -742,39 +742,50 @@ export class MagicChatSchema extends RollChatSchema {
 
   getTargetsHtml() {
     let res = "";
+    const rollType = this.roll.type;
     for (let target of this.magic.targets) {
-      const title =
-        '<h3 class="ars-chat-title">' + game.i18n.localize("arm5e.sheet.contestOfMagic") + "</h3>";
-      const castingTotal = `${game.i18n.localize("arm5e.sheet.spellTotal")} (${
-        this.parent.rollTotal + this.confidenceModifier
-      })`;
+      const title = `<h3 class="ars-chat-title"> + ${game.i18n.format(
+        "arm5e.chat.contestOfMagicWith",
+        { name: target.name }
+      )} </h3>`;
+      let castingTotal = "";
+      if (!["item", "power"].includes(rollType)) {
+        castingTotal = `${game.i18n.localize("arm5e.sheet.spellTotal")} (${
+          this.parent.rollTotal + this.confidenceModifier
+        })`;
+      }
 
       const showDetails =
         game.user.isGM || game.settings.get("arm5e", "showNPCMagicDetails") === "SHOW_ALL";
       // penetration
       let flavorTotalSpell = "";
       let flavorTotalPenetration = "";
+      let magicLevel = "";
+      let penetration = "";
+      let penetrationSpec = "";
       if (showDetails || this.magic.caster.hasPlayerOwner) {
-        const magicLevel = `- ${game.i18n.localize("arm5e.sheet.spellLevel")} (${
-          this.roll.difficulty
-        })`;
-        const penetration = `+ ${game.i18n.localize("arm5e.sheet.penetration")} (${
-          this.magic.caster.penetration.total
-        })`;
-
-        const penetrationSpec = this.magic.caster.penetration.specApply
-          ? ` (${game.i18n.localize("arm5e.sheet.specialityBonus")}: +1 ${
-              this.magic.caster.penetration.specialty
-            })`
-          : "";
-
         const totalPenetration = `+ ${game.i18n.localize("arm5e.sheet.totalPenetration")} (${
           this.roll.secondaryScore + this.parent.rollTotal - this.roll.difficulty
         })`;
+        if (["item", "power"].includes(rollType)) {
+          flavorTotalPenetration = `<b>${totalPenetration}</b><br/>`;
+          flavorTotalSpell = "";
+        } else {
+          magicLevel = `- ${game.i18n.localize("arm5e.sheet.spellLevel")} (${
+            this.roll.difficulty
+          })`;
+          penetration = `+ ${game.i18n.localize("arm5e.sheet.penetration")} (${
+            this.magic.caster.penetration.total
+          })`;
 
-        flavorTotalPenetration = `${penetration}${penetrationSpec}<br/><b>${totalPenetration}</b><br/>`;
-
-        flavorTotalSpell = `${castingTotal}<br/> ${magicLevel}<br/>`;
+          penetrationSpec = this.magic.caster.penetration.specApply
+            ? ` (${game.i18n.localize("arm5e.sheet.specialityBonus")}: +1 ${
+                this.magic.caster.penetration.specialty
+              })`
+            : "";
+          flavorTotalSpell = `${castingTotal}<br/> ${magicLevel}<br/>`;
+          flavorTotalPenetration = `${penetration}${penetrationSpec}<br/><b>${totalPenetration}</b><br/>`;
+        }
       }
 
       let flavorTotalMagicResistance = "";
@@ -783,38 +794,52 @@ export class MagicChatSchema extends RollChatSchema {
         const might = target.magicResistance.might
           ? `${game.i18n.localize("arm5e.sheet.might")}: (${target.magicResistance.might})`
           : "";
-        const form =
-          target.magicResistance.form !== "NONE"
-            ? `+ ${game.i18n.format("arm5e.sheet.formScore", {
-                form: target.magicResistance.form
-              })}: (${target.magicResistance.formScore})`
-            : "";
+
+        let form = "";
+        if (target.magicResistance.formScore) {
+          if (target.magicResistance.form !== "NONE") {
+            form = `+ ${game.i18n.format("arm5e.sheet.formScore", {
+              form: target.magicResistance.form
+            })}: (${target.magicResistance.formScore})`;
+          }
+        }
 
         const aura =
           target.magicResistance.aura == 0
             ? ""
             : ` + ${game.i18n.localize("arm5e.sheet.aura")}: (${target.magicResistance.aura})`;
 
-        const parma = target.magicResistance?.parma?.score
-          ? `${game.i18n.localize("arm5e.sheet.parma")}: (${target.magicResistance.parma.score})`
+        // if there is another resistance, it i
+        const parma = target.magicResistance.parma
+          ? ` + ${game.i18n.localize("arm5e.sheet.parma")}: (${
+              target.magicResistance.parma.score * 5
+            })`
           : "";
 
-        const parmaSpecialty = target.magicResistance?.specialityIncluded
-          ? ` (${game.i18n.localize("arm5e.sheet.specialityBonus")}: +1 ${
+        const parmaSpecialty = target.magicResistance.specialityIncluded
+          ? ` (${game.i18n.localize("arm5e.sheet.specialityBonus")}: +5 ${
               target.magicResistance.specialityIncluded
             })`
           : "";
 
         const susceptibility = target.magicResistance.susceptible
-          ? `${game.i18n.format("arm5e.sheet.realm.susceptible.impact", {
+          ? `${game.i18n.format("arm5e.realm.susceptible.impact", {
               realm: game.i18n.localize(CONFIG.ARM5E.realms[this.magic.realm].label),
               divisor: 2
             })}<br>`
           : "";
-        const totalMagicResistance = `${game.i18n.localize("arm5e.sheet.totalMagicResistance")}: (${
+        const totalMagicResistance = `${game.i18n.localize("arm5e.chat.totalMagicResistance")}: (${
           target.magicResistance.total
         })`;
-        flavorTotalMagicResistance = `${might}${parma}${parmaSpecialty}${form}${aura}<br/>${susceptibility}<b>${totalMagicResistance}</b>`;
+        if (target.magicResistance.otherResistance) {
+          flavorTotalMagicResistance = `${game.i18n.localize(
+            "arm5e.chat.otherMagicResistance"
+          )} : ${
+            target.magicResistance.otherResistance
+          }<br/>${susceptibility}<b>${totalMagicResistance}</b>`;
+        } else {
+          flavorTotalMagicResistance = `${might}${parma}${parmaSpecialty}${form}${aura}<br/>${susceptibility}<b>${totalMagicResistance}</b>`;
+        }
       }
 
       const total =

@@ -2,24 +2,24 @@
   {{> "systems/arm5e/templates/roll/parts/roll-header.html" header="Inputs" }}
   <div class="marginsides32">
     <div class="form-group">
-      <label>{{localize "arm5e.sheet.realm.visible"}} <i class="fa-regular fa-circle-question"
+      <label>{{localize "arm5e.realm.visible"}} <i class="fa-regular fa-circle-question"
           data-tooltip="{{localize 'arm5e.sheet.realm.visibleHint'}}"></i></label>
       <input type="checkbox" name="visible" {{checked aura.visible}} />
     </div>
 
     {{#each aura.values}}
       <div class="form-group">
-        <label>{{localize (concat "arm5e.sheet.realm." @key)}}</label>
+        <label>{{localize (concat "arm5e.realm." @key)}}</label>
         <input type="number" name="{{@key}}" value="{{this}}" />
       </div>
     {{/each}}
 
     <fieldset>
-      <legend>{{localize "arm5e.sheet.realm.nightModifier"}}</legend>
+      <legend>{{localize "arm5e.realm.nightModifier"}}</legend>
 
       {{#each aura.nightModifier}}
         <div class="form-group">
-          <label>{{localize (concat "arm5e.sheet.realm." @key)}}</label>
+          <label>{{localize (concat "arm5e.realm." @key)}}</label>
           <input type="number" name="{{@key}}NightModifier" value="{{this}}" />
         </div>
       {{/each}}

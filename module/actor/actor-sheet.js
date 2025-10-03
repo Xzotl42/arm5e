@@ -497,14 +497,14 @@ export class ArM5eActorSheet extends ActorSheet {
           if (technique.deficient) {
             technique.ui = {
               style: UI.STYLES.DEFICIENT_ART,
-              title: game.i18n.localize("arm5e.sheet.activeEffect.types.arts.deficiency")
+              title: game.i18n.localize("arm5e.activeEffect.types.arts.deficiency")
             };
           } else if (!technique.bonus && technique.xpCoeff == 1.0) {
             technique.ui = { style: UI.STYLES.STANDARD_ART };
           } else if (!technique.bonus && technique.xpCoeff != 1.0) {
             technique.ui = {
               style: UI.STYLES.AFINITY_ART,
-              title: game.i18n.localize("arm5e.sheet.activeEffect.types.arts.affinity")
+              title: game.i18n.localize("arm5e.activeEffect.types.arts.affinity")
             };
           } else if (technique.bonus && technique.xpCoeff == 1.0) {
             technique.ui = {
@@ -514,7 +514,7 @@ export class ArM5eActorSheet extends ActorSheet {
           } else {
             technique.ui = {
               style: UI.STYLES.COMBO_ART,
-              title: game.i18n.localize("arm5e.sheet.activeEffect.types.arts.affinity")
+              title: game.i18n.localize("arm5e.activeEffect.types.arts.affinity")
             };
           }
         }
@@ -544,14 +544,14 @@ export class ArM5eActorSheet extends ActorSheet {
           if (form.deficient) {
             form.ui = {
               style: UI.STYLES.DEFICIENT_ART,
-              title: game.i18n.localize("arm5e.sheet.activeEffect.types.arts.deficiency")
+              title: game.i18n.localize("arm5e.activeEffect.types.arts.deficiency")
             };
           } else if (!form.bonus && form.xpCoeff == 1.0) {
             form.ui = { style: UI.STYLES.STANDARD_ART };
           } else if (!form.bonus && form.xpCoeff != 1.0) {
             form.ui = {
               style: UI.STYLES.AFINITY_ART,
-              title: game.i18n.localize("arm5e.sheet.activeEffect.types.arts.affinity")
+              title: game.i18n.localize("arm5e.activeEffect.types.arts.affinity")
             };
           } else if (form.bonus && form.xpCoeff == 1.0) {
             form.ui = {
@@ -561,7 +561,7 @@ export class ArM5eActorSheet extends ActorSheet {
           } else {
             form.ui = {
               style: UI.STYLES.COMBO_ART,
-              title: game.i18n.localize("arm5e.sheet.activeEffect.types.arts.affinity")
+              title: game.i18n.localize("arm5e.activeEffect.types.arts.affinity")
             };
           }
 
@@ -599,13 +599,13 @@ export class ArM5eActorSheet extends ActorSheet {
                 context.system.labTotals[key][
                   k2
                 ].ui = `style="box-shadow: 0 0 5px blue" title="${game.i18n.localize(
-                  "arm5e.sheet.activeEffect.types.laboratorySpec"
+                  "arm5e.activeEffect.types.laboratorySpec"
                 )}: ${specialtyMod}"`;
               } else if (specialtyMod < 0) {
                 context.system.labTotals[key][
                   k2
                 ].ui = `style="box-shadow: 0 0 5px red" title="${game.i18n.localize(
-                  "arm5e.sheet.activeEffect.types.laboratorySpec"
+                  "arm5e.activeEffect.types.laboratorySpec"
                 )}: ${specialtyMod}"`;
               }
 

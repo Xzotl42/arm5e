@@ -296,12 +296,7 @@ export class ArM5eRollInfo {
           enigma: this._actor.getAbilityStats("enigma")
         };
         this.twilight.enigma.specApply = false;
-        this.setGenericField(
-          game.i18n.localize("arm5e.twilight.warpingPoints"),
-          dataset.warpingPts ?? 2,
-          2,
-          "+"
-        );
+
         this.setGenericField(
           game.i18n.localize("arm5e.skill.mystery.enigma"),
           this.twilight.enigma.score,
@@ -508,7 +503,7 @@ export class ArM5eRollInfo {
     );
 
     this.selection.abilities = {
-      None: game.i18n.localize("arm5e.sheet.activeEffect.subtypes.none"),
+      None: game.i18n.localize("arm5e.activeEffect.subtypes.none"),
       ...Object.fromEntries(
         this._actor.system.abilities.map((a) => {
           return [a._id, `${a.name} (${a.system.finalScore})`];

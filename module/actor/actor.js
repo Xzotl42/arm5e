@@ -200,7 +200,21 @@ export class ArM5eActor extends Actor {
       adventuring: 0,
       visStudy: 0
     };
+
     this.system.bonuses.resistance = {
+      an: 0,
+      aq: 0,
+      au: 0,
+      co: 0,
+      he: 0,
+      ig: 0,
+      im: 0,
+      me: 0,
+      te: 0,
+      vi: 0
+    };
+
+    this.system.bonuses.magicResistance = {
       an: 0,
       aq: 0,
       au: 0,
@@ -1178,11 +1192,17 @@ export class ArM5eActor extends Actor {
 
     // TODO support magic resistance for hedge magic forms
 
+    const formLabel = CONFIG.ARM5E.magic.arts[form]?.label || "NONE";
+
     let specialityIncluded = "";
-    const parma = this.getAbilityStats("parma");
-    if (parma.speciality && parma.speciality.toUpperCase() === form.toUpperCase()) {
-      specialityIncluded = form;
-      magicResistance += 5;
+    let parma = null;
+    if (this.hasSkill("parma")) {
+      parma = this.getAbilityStats("parma");
+      magicResistance += parma.score * 5;
+      if (parma.speciality && parma.speciality.toUpperCase() === formLabel.toUpperCase()) {
+        specialityIncluded = formLabel;
+        magicResistance += 5;
+      }
     }
 
     const arts = this.system?.arts;
@@ -1196,12 +1216,21 @@ export class ArM5eActor extends Actor {
 
     let formScore = 0;
     if (arts) {
-      const formKey = Object.keys(arts.forms).filter(
-        (key) => arts.forms[key].label.toUpperCase() === form.toUpperCase()
-      )[0];
-      formScore = arts.forms[formKey]?.finalScore || 0;
+      formScore = arts.forms[form]?.finalScore || 0;
       magicResistance += formScore;
     }
+
+    let otherResistance = Math.max(
+      this.system.bonuses.magicResistance[form], // form specific
+      this.system.bonuses.arts.magicResistance // global
+    );
+    // not cumulative with Parma
+    if (otherResistance > 0 && otherResistance > magicResistance) {
+      magicResistance = otherResistance;
+      specialityIncluded = false;
+      parma = null;
+    }
+
     let susceptible = this.system.realms[realm].susceptible;
 
     if (susceptible) {
@@ -1211,8 +1240,9 @@ export class ArM5eActor extends Actor {
     return {
       might: this.system?.might?.value,
       specialityIncluded,
+      otherResistance: otherResistance,
       total: magicResistance,
-      form: form,
+      form: formLabel,
       formScore,
       susceptible,
       parma,
@@ -1464,7 +1494,7 @@ export class ArM5eActor extends Actor {
   }
 
   hasMagicResistance() {
-    return this.isMagus() || this.hasMight() || this.system.bonuses.magicResistance !== null;
+    return this.isMagus() || this.hasMight() || this.system.bonuses.arts.magicResistance !== null;
   }
 
   // getLabTotalForEffect(spell, options = {}) {
