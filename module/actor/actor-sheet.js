@@ -1883,10 +1883,12 @@ export class ArM5eActorSheet extends ActorSheet {
       promises.push(...tmp);
       await Promise.all(promises.flat());
     } else {
-      ui.notifications.info(game.i18n.localize("arm5e.notification.confidencePromptPending"), {
-        permanent: true
-      });
-      return false;
+      if (this.actor.system.states.confidencePrompt) {
+        ui.notifications.info(game.i18n.localize("arm5e.notification.confidencePromptPending"), {
+          permanent: true
+        });
+        return false;
+      }
     }
 
     if (this.actor.system.wounds.dead.length > 0) {
