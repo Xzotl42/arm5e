@@ -1916,15 +1916,32 @@ export class ArM5eActorSheet extends ActorSheet {
    */
   async _onRoll(event) {
     const dataset = getDataset(event);
-    if (this.actor.system.wounds.dead.length > 0) {
-      ui.notifications.info(game.i18n.localize("arm5e.notification.dead"), {
-        permanent: true
+
+    if (game.settings.get("arm5e", "passConfidencePromptOnRoll")) {
+      const promises = [];
+      if (this.actor.system.states.confidencePrompt) {
+        promises.push(this.actor.update({ "system.states.confidencePrompt": false }));
+      }
+      // find if there is indeed a message with a prompt with this actor.
+      let pendingConfMsg = game.messages.contents.filter((m) => {
+        return m.speaker?.actor === this.actor._id && m.system.confPrompt;
       });
-      return false;
+      const tmp = pendingConfMsg.map((e) => {
+        return e.system._skipConfidenceUse(this.actor._id);
+      });
+      promises.push(...tmp);
+      await Promise.all(promises.flat());
+    } else {
+      if (this.actor.system.states.confidencePrompt) {
+        ui.notifications.info(game.i18n.localize("arm5e.notification.confidencePromptPending"), {
+          permanent: true
+        });
+        return false;
+      }
     }
 
-    if (this.actor.system.states.confidencePrompt) {
-      ui.notifications.info(game.i18n.localize("arm5e.notification.confidencePromptPending"), {
+    if (this.actor.system.wounds.dead.length > 0) {
+      ui.notifications.info(game.i18n.localize("arm5e.notification.dead"), {
         permanent: true
       });
       return false;
@@ -1982,7 +1999,7 @@ export class ArM5eActorSheet extends ActorSheet {
 
     const template = chooseTemplate(dataset);
     await renderRollTemplate(dataset, template, this.actor);
-    log(false, `spell info: ${JSON.stringify(this.actor.rollInfo.magic)}`);
+    // log(false, `spell info: ${JSON.stringify(this.actor.rollInfo.magic)}`);
     return true;
   }
 

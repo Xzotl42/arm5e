@@ -294,17 +294,20 @@ export class RollChatSchema extends BasicChatSchema {
     }
   }
 
+  get confPrompt() {
+    return (
+      !this.impact.applied &&
+      this.confidence.allowed &&
+      this.roll.botches == 0 &&
+      (this.confidence.used ?? 0) < this.confidence.score
+    );
+  }
+
   addActionButtons(btnContainer, actor) {
     // confidence
     // confidence has been used already => no button
     let buttonsArray = [];
-    if (
-      !this.impact.applied &&
-      this.confidence.allowed &&
-      this.roll.botches == 0 &&
-      (this.confidence.used ?? 0) < this.confidence.score &&
-      actor.canUseConfidencePoint()
-    ) {
+    if (this.confPrompt && actor.canUseConfidencePoint()) {
       const useConfButton = $(
         `<button class="dice-confidence chat-button" data-msg-id="${
           this.parent._id
@@ -364,8 +367,11 @@ export class RollChatSchema extends BasicChatSchema {
     log(false, "fatigueCost", res);
     return res;
   }
-
   async skipConfidenceUse(actorid) {
+    return await Promise.all(this._skipConfidenceUse(actorid));
+  }
+
+  _skipConfidenceUse(actorid) {
     const actor = game.actors.get(actorid);
     if (actor) {
       const messageData = { "system.impact.applied": true };
@@ -395,11 +401,12 @@ export class RollChatSchema extends BasicChatSchema {
       messageData["system.impact.fatigueLevelsFail"] = 0;
       const p1 = actor.update(updateData);
       const p2 = this.parent.update(messageData);
-      await Promise.all([p0, p1, p2]);
+      log(false, "skipConfidenceUse impact", this.impact);
+      return Array(p0, p1, p2);
     } else {
       log(false, "skipConfidenceUse: actor not found");
+      return [];
     }
-    log(false, "skipConfidenceUse impact", this.impact);
   }
 
   async useConfidence(actorId) {

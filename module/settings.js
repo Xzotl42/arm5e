@@ -90,6 +90,15 @@ export function registerSettings() {
     default: "PLAYERS"
   });
 
+  game.settings.register(ARM5E.SYSTEM_ID, "passConfidencePromptOnRoll", {
+    name: "Automatic confidence prompt",
+    hint: "Any confidence prompt is skipped on another roll. Any pending fatigue levels or wound will be applied, which may prevent the roll to proceed.",
+    scope: "client",
+    config: true,
+    type: Boolean,
+    default: true
+  });
+
   /**
    * Show NPC magic details (cast, penetration and defense)
    */
