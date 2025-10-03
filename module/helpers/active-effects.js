@@ -32,13 +32,6 @@ export default class ArM5eActiveEffect extends ActiveEffect {
     this.isHidden = this.flags.arm5e?.hidden && !game.user.isGM;
   }
 
-  async getSource() {
-    if (this.target instanceof ArM5eActor && this.parent instanceof ArM5eItem) {
-      return this.parent;
-    }
-    return fromUuid(this.origin);
-  }
-
   /** @inheritdoc */
   apply(actor, change) {
     //  Here check that every effect is properly configured before applying
@@ -47,6 +40,23 @@ export default class ArM5eActiveEffect extends ActiveEffect {
     // if (check) return null;
 
     return super.apply(actor, change);
+  }
+
+  get sourceName() {
+    if (!this.origin) return game.i18n.localize("None");
+    let name;
+    try {
+      if (this.parent instanceof Item) {
+        if (this.parent.isOwned) {
+          name = fromUuidSync(this.parent.uuid)?.name;
+        } else {
+          name = fromUuidSync(this.origin)?.name;
+        }
+      } else {
+        name = fromUuidSync(this.origin)?.name;
+      }
+    } catch (e) {}
+    return name || game.i18n.localize("Unknown");
   }
 
   /**

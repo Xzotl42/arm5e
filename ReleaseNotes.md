@@ -1,3 +1,16 @@
+## 2.4.1.0, Radislav agrees with Quendalon
+
+### V13 compatibility
+
+### Features & changes
+
+- Right clicking on an inventory item with enchantments will display them below.
+
+## Bug fixes
+
+- Source of active effects is property retrieved
+- Covenant description no longer overflow
+
 ## 2.4.0.25, Radislav agrees with Quendalon
 
 ### V13 compatibility
