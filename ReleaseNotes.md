@@ -1,3 +1,16 @@
+## 2.4.0.27, Radislav, Faeries are the key
+
+### V13 compatibility
+
+- Verified for version 13.350
+
+### Features & changes
+
+### Bug fixes
+
+- On a roll, the check/skip for confidence prompt is done first, applying any pending fatigue levels or wounds which could prevent a roll (unconscious, incapacitated,...)
+- When resolving a confidence prompt, if the owner of a character is not the initiator of the roll, a proper error message will be displayed instead of failing mid-process.
+
 ## 2.4.0.26, Radislav agrees with Quendalon
 
 ### V13 compatibility

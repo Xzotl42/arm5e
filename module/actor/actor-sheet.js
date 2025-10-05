@@ -1919,17 +1919,19 @@ export class ArM5eActorSheet extends ActorSheet {
 
     if (game.settings.get("arm5e", "passConfidencePromptOnRoll")) {
       const promises = [];
-      if (this.actor.system.states.confidencePrompt) {
-        promises.push(this.actor.update({ "system.states.confidencePrompt": false }));
-      }
+
       // find if there is indeed a message with a prompt with this actor.
       let pendingConfMsg = game.messages.contents.filter((m) => {
         return m.speaker?.actor === this.actor._id && m.system.confPrompt;
       });
-      const tmp = pendingConfMsg.map((e) => {
-        return e.system._skipConfidenceUse(this.actor._id);
-      });
-      promises.push(...tmp);
+      if (pendingConfMsg.length) {
+        const tmp = pendingConfMsg.map((e) => {
+          return e.system._skipConfidenceUse(this.actor._id);
+        });
+        promises.push(...tmp);
+      } else if (this.actor.system.states.confidencePrompt) {
+        promises.push(this.actor.update({ "system.states.confidencePrompt": false }));
+      }
       await Promise.all(promises.flat());
     } else {
       if (this.actor.system.states.confidencePrompt) {
