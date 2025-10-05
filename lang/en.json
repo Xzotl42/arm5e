@@ -379,7 +379,10 @@
       "contestOfMagic": "Contest of magic",
       "contestOfMagicWith": "Contest of magic with {name}",
       "otherMagicResistance": "Other Magic resistance",
-      "totalMagicResistance": "Magic resistance total"
+      "totalMagicResistance": "Magic resistance total",
+      "notifications": {
+        "notInitiator": "Not authorized as you are not the initiator of the roll. Ask him/her or a GM"
+      }
     },
     "combat": {
       "damage": {

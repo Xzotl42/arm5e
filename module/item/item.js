@@ -1,7 +1,7 @@
 import { getDataset, log } from "../tools.js";
 import { ArM5eActor } from "../actor/actor.js";
 import { migrateItemData } from "../migration.js";
-import { IsMagicalEffect, computeLevel } from "../helpers/magic.js";
+import { GetEffectAttributesLabel, IsMagicalEffect, computeLevel } from "../helpers/magic.js";
 import { resetOwnerFields } from "./item-converter.js";
 import { PersonalityTraitSchema } from "../schemas/minorItemsSchemas.js";
 import { ARM5E } from "../config.js";
@@ -334,6 +334,33 @@ export class ArM5eItem extends Item {
         await this.update({ "system.enchantments.charges": chargesLeft - 1 });
       }
     }
+  }
+
+  getSummary() {
+    let res = `<div>${this.system.description}</div>`;
+    if (this.canBeEnchanted && this.system?.state === "enchanted") {
+      let idx = 0;
+      for (let effect of this.system.enchantments.effects) {
+        if (effect.system.hidden === false || game.user.isGM) {
+          res += `<div class="resource flexrow">
+                  <div class="item-image" data-index="${idx}" style="max-width: 32px"><img class="enchant-trigger item-img clickable "
+                      src="${effect.img}" title="${effect.name}" 
+                      title="${game.i18n.format("arm5e.hints.useMagicItem", { name: effect.name })}"
+                      style="height: 30px;width: 30px" /></div>
+                  <div class="padding2">
+                    <input type="text" readonly value="${effect.name}"
+                      data-dtype="String" style="min-width: 175px;" />
+                  </div>
+                  <div class="padding2">
+                    <label class="label-light">${GetEffectAttributesLabel(effect)}</label>
+                  </div>
+                  </div>`;
+        }
+        idx++;
+      }
+    }
+
+    return res;
   }
 
   /**

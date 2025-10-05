@@ -372,119 +372,140 @@ export class RollChatSchema extends BasicChatSchema {
   }
 
   _skipConfidenceUse(actorid) {
-    const actor = game.actors.get(actorid);
-    if (actor) {
-      const messageData = { "system.impact.applied": true };
-      const updateData = { "system.states.confidencePrompt": false };
-      let p0 = null;
-      let res = null;
-      if (this.failedRoll()) {
-        const totalFatigueLost = this.impact.fatigueLevelsPending + this.impact.fatigueLevelsFail;
-        res = actor._changeFatigueLevel(updateData, totalFatigueLost, false);
+    if (
+      // this.parent.ownership[game.user._id] === CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER ||
+      this.parent.isAuthor ||
+      game.user.isGM
+    ) {
+      const actor = game.actors.get(actorid);
+      if (actor) {
+        const messageData = { "system.impact.applied": true };
+        const updateData = { "system.states.confidencePrompt": false };
+        let p0 = null;
+        let res = null;
+        if (this.failedRoll()) {
+          const totalFatigueLost = this.impact.fatigueLevelsPending + this.impact.fatigueLevelsFail;
+          res = actor._changeFatigueLevel(updateData, totalFatigueLost, false);
 
-        messageData["system.impact.fatigueLevelsLost"] =
-          this.impact.fatigueLevelsLost + totalFatigueLost;
+          messageData["system.impact.fatigueLevelsLost"] =
+            this.impact.fatigueLevelsLost + totalFatigueLost;
+        } else {
+          res = actor._changeFatigueLevel(updateData, this.impact.fatigueLevelsPending, false);
+          messageData["system.impact.fatigueLevelsLost"] =
+            this.impact.fatigueLevelsLost + res.fatigueLevels;
+          // messageData["system.impact.woundGravity"] = this.impact.woundGravity;
+        }
+        p0 = actor.changeWound(
+          1,
+          CONFIG.ARM5E.recovery.rankMapping[this.impact.woundGravity],
+          game.i18n.localize("arm5e.sheet.fatigueOverflow")
+        );
+
+        messageData["system.confidence.allowed"] = false; // no more confidence allowed
+        messageData["system.impact.fatigueLevelsPending"] = 0;
+        messageData["system.impact.fatigueLevelsFail"] = 0;
+        const p1 = actor.update(updateData);
+        const p2 = this.parent.update(messageData);
+        log(false, "skipConfidenceUse impact", this.impact);
+        return Array(p0, p1, p2);
       } else {
-        res = actor._changeFatigueLevel(updateData, this.impact.fatigueLevelsPending, false);
-        messageData["system.impact.fatigueLevelsLost"] =
-          this.impact.fatigueLevelsLost + res.fatigueLevels;
-        // messageData["system.impact.woundGravity"] = this.impact.woundGravity;
+        log(false, "skipConfidenceUse: actor not found");
+        return [];
       }
-      p0 = actor.changeWound(
-        1,
-        CONFIG.ARM5E.recovery.rankMapping[this.impact.woundGravity],
-        game.i18n.localize("arm5e.sheet.fatigueOverflow")
-      );
-
-      messageData["system.confidence.allowed"] = false; // no more confidence allowed
-      messageData["system.impact.fatigueLevelsPending"] = 0;
-      messageData["system.impact.fatigueLevelsFail"] = 0;
-      const p1 = actor.update(updateData);
-      const p2 = this.parent.update(messageData);
-      log(false, "skipConfidenceUse impact", this.impact);
-      return Array(p0, p1, p2);
     } else {
-      log(false, "skipConfidenceUse: actor not found");
-      return [];
+      ui.notifications.info(game.i18n.localize("arm5e.chat.notifications.notInitiator"), {
+        permanent: true
+      });
     }
+    return [];
   }
 
   async useConfidence(actorId) {
-    const actor = game.actors.get(actorId);
+    if (
+      // this.parent.ownership[game.user._id] === CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER ||
+      this.parent.isAuthor ||
+      game.user.isGM
+    ) {
+      const actor = game.actors.get(actorId);
 
-    if (actor && (this.confidence.used ?? 0) < this.confidence.score) {
-      let usedConf = this.confidence.used + 1 || 1;
-      let msgData = { system: { confidence: {}, roll: {} } };
+      if (actor && (this.confidence.used ?? 0) < this.confidence.score) {
+        let usedConf = this.confidence.used + 1 || 1;
+        let msgData = { system: { confidence: {}, roll: {} } };
 
-      msgData.system.confidence.used = usedConf;
-      this.confidence.used = usedConf;
-      msgData.system.roll.formula = `${this.formula}`;
+        msgData.system.confidence.used = usedConf;
+        this.confidence.used = usedConf;
+        msgData.system.roll.formula = `${this.formula}`;
 
-      let impact = this.fatigueCost(actor);
+        let impact = this.fatigueCost(actor);
 
-      // Lost fatigue levels + wound if overflow
-      const updateData = {};
+        // Lost fatigue levels + wound if overflow
+        const updateData = {};
 
-      actor._useConfidencePoint(updateData);
-      let res = null;
-      // actor used its last confidence point or reached its maximum amount to spend.
-      if (usedConf == actor.system.con.score || actor.system.con.points == 1) {
-        let fatigueToApply = 0;
-        if (this.failedRoll()) {
-          fatigueToApply = impact.partial + impact.fail;
-        } else {
-          fatigueToApply = impact.partial;
-        }
-        res = actor._changeFatigueLevel(updateData, fatigueToApply, false);
-        await actor.changeWound(
-          1,
-          CONFIG.ARM5E.recovery.rankMapping[res.woundGravity],
-          game.i18n.localize("arm5e.sheet.fatigueOverflow")
-        );
-        msgData["system.impact.woundGravity"] = res.woundGravity;
-        msgData["system.impact.applied"] = true;
-
-        msgData["system.impact.fatigueLevelsLost"] =
-          this.impact.fatigueLevelsLost + res.fatigueLevels;
-        msgData["system.impact.fatigueLevelsPending"] = 0;
-        msgData["system.impact.fatigueLevelsFail"] = 0;
-        msgData["system.confidence.allowed"] = false; // no more confidence allowed
-        updateData["system.states.confidencePrompt"] = false;
-      } else {
-        const tmp = {}; // no update of actor needed, just recompute impact
+        actor._useConfidencePoint(updateData);
         let res = null;
-        if (this.failedRoll()) {
-          res = actor._changeFatigueLevel(tmp, impact.fail + impact.partial);
-          if (res.woundGravity) {
-            // wound overflow smaller than fail
-            if (res.woundGravity <= impact.fail) {
-              msgData["system.impact.fatigueLevelsFail"] = impact.fail - res.woundGravity;
-            } else {
-              msgData["system.impact.fatigueLevelsFail"] = 0;
-              const overflow = res.woundGravity - impact.fail;
-              if (overflow <= impact.partial) {
-                msgData["system.impact.fatigueLevelsPending"] = impact.partial - overflow;
+        // actor used its last confidence point or reached its maximum amount to spend.
+        if (usedConf == actor.system.con.score || actor.system.con.points == 1) {
+          let fatigueToApply = 0;
+          if (this.failedRoll()) {
+            fatigueToApply = impact.partial + impact.fail;
+          } else {
+            fatigueToApply = impact.partial;
+          }
+          res = actor._changeFatigueLevel(updateData, fatigueToApply, false);
+          await actor.changeWound(
+            1,
+            CONFIG.ARM5E.recovery.rankMapping[res.woundGravity],
+            game.i18n.localize("arm5e.sheet.fatigueOverflow")
+          );
+          msgData["system.impact.woundGravity"] = res.woundGravity;
+          msgData["system.impact.applied"] = true;
+
+          msgData["system.impact.fatigueLevelsLost"] =
+            this.impact.fatigueLevelsLost + res.fatigueLevels;
+          msgData["system.impact.fatigueLevelsPending"] = 0;
+          msgData["system.impact.fatigueLevelsFail"] = 0;
+          msgData["system.confidence.allowed"] = false; // no more confidence allowed
+          updateData["system.states.confidencePrompt"] = false;
+        } else {
+          const tmp = {}; // no update of actor needed, just recompute impact
+          let res = null;
+          if (this.failedRoll()) {
+            res = actor._changeFatigueLevel(tmp, impact.fail + impact.partial);
+            if (res.woundGravity) {
+              // wound overflow smaller than fail
+              if (res.woundGravity <= impact.fail) {
+                msgData["system.impact.fatigueLevelsFail"] = impact.fail - res.woundGravity;
               } else {
-                msgData["system.impact.fatigueLevelsPending"] = 0;
+                msgData["system.impact.fatigueLevelsFail"] = 0;
+                const overflow = res.woundGravity - impact.fail;
+                if (overflow <= impact.partial) {
+                  msgData["system.impact.fatigueLevelsPending"] = impact.partial - overflow;
+                } else {
+                  msgData["system.impact.fatigueLevelsPending"] = 0;
+                }
               }
+            } else {
+              msgData["system.impact.fatigueLevelsFail"] = impact.fail;
+              msgData["system.impact.fatigueLevelsPending"] = impact.partial;
             }
           } else {
-            msgData["system.impact.fatigueLevelsFail"] = impact.fail;
-            msgData["system.impact.fatigueLevelsPending"] = impact.partial;
+            res = actor._changeFatigueLevel(tmp, impact.partial);
+            msgData["system.impact.fatigueLevelsFail"] = 0;
+            msgData["system.impact.fatigueLevelsPending"] = res.fatigueLevels;
           }
-        } else {
-          res = actor._changeFatigueLevel(tmp, impact.partial);
-          msgData["system.impact.fatigueLevelsFail"] = 0;
-          msgData["system.impact.fatigueLevelsPending"] = res.fatigueLevels;
-        }
 
-        msgData["system.impact.applied"] = false;
-        msgData["system.impact.woundGravity"] = res.woundGravity;
+          msgData["system.impact.applied"] = false;
+          msgData["system.impact.woundGravity"] = res.woundGravity;
+        }
+        const p0 = actor.update(updateData);
+        const p1 = this.parent.update(msgData);
+        await Promise.all([p0, p1]);
+        log(false, "useConfidence impact", this.impact);
       }
-      const p0 = actor.update(updateData);
-      const p1 = this.parent.update(msgData);
-      await Promise.all([p0, p1]);
-      log(false, "useConfidence impact", this.impact);
+    } else {
+      ui.notifications.info(game.i18n.localize("arm5e.chat.notifications.notInitiator"), {
+        permanent: true
+      });
     }
   }
 
