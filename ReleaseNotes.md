@@ -6,6 +6,8 @@
 
 ### Features & changes
 
+- User sharing ownership with a character can resolve a confidence prompt
+
 ### Bug fixes
 
 - Formulaic spell with partial success makes you lose a fatigue level again.
