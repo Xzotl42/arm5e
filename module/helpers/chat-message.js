@@ -1,14 +1,42 @@
 import { log, putInFoldableLink, putInFoldableLinkWithAnimation } from "../tools.js";
+import { Mutex } from "../tools/concurency.js";
 import { ArsRoll } from "./stressdie.js";
 
 export class Arm5eChatMessage extends ChatMessage {
-  static async enrichChatMessage(message, html, data) {
-    // if (message.flags.arm5e === undefined && message.rolls.length) {
-    //   await message.setFlag("arm5e", {
-    //     type: type,
-    //     actorType: actor.type // for if the actor is deleted
-    //   });
-    // }
+  static async handleSocketMessages(action, payload) {
+    const mutex = new Mutex();
+    if (!payload.messageId) return;
+    switch (action) {
+      case "skipConfidence": {
+        mutex.acquire();
+        const msg = game.messages.get(payload.messageId);
+        if (msg) {
+          if (!msg.system.impact.applied) {
+            if (msg.author._id === game.userId) {
+              await msg.system.skipConfidenceUse(msg.speaker.actor);
+            }
+          }
+        }
+        mutex.release();
+        break;
+      }
+      case "useConfidence": {
+        const msg = game.messages.get(payload.messageId);
+        mutex.acquire();
+        if (msg) {
+          // if multiple people try to use confidence on a character they own
+          if (msg.system.confidence.used == payload.confidenceUsed) {
+            if (msg.author._id === game.userId) {
+              await msg.system.useConfidence(msg.speaker.actor);
+            }
+          }
+        }
+        mutex.release();
+        break;
+      }
+      default:
+        console.error(`Unknown chat socket message: ${action}`);
+    }
   }
 
   /** @inheritDoc */

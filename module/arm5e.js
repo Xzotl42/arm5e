@@ -87,12 +87,14 @@ Hooks.once("i18nInit", async function () {
 });
 
 Hooks.once("init", async function () {
+  const socketHandler = new Arm5eSocketHandler();
   game.arm5e = {
     ArsLayer,
     ArM5eActor,
     ArM5eItem,
     // ArtSchema,
     ArsApps,
+    socketHandler,
     rollItemMacro,
     migrateCompendium
   };
@@ -104,10 +106,6 @@ Hooks.once("init", async function () {
   CONFIG.ARM5E.ActorDataModels = CONFIG.Actor.dataModels;
 
   CONFIG.SC = { SEASONS: SimpleCalendarSeasons };
-
-  // Disabled for now
-  // const mySystem = game.systems.get("arm5e"); //
-  // myPackage.socketHandler = new Arm5eSocketHandler();
 
   registerSettings();
 
@@ -566,14 +564,6 @@ Hooks.on("renderDialog", (dialog, html) => {
     }
   });
 });
-
-// Hooks.on("renderChatMessage", (message, html, data) =>
-//   Arm5eChatMessage.addChatListeners(message, html, data)
-// );
-
-Hooks.on("createChatMessage", (message, html, data) =>
-  Arm5eChatMessage.enrichChatMessage(message, html, data)
-);
 
 // On Apply an ActiveEffect that uses a CUSTOM application mode.
 Hooks.on("applyActiveEffect", (actor, change, current, delta, changes) => {
