@@ -506,6 +506,60 @@ export const spellData4 = {
   masteryAbilities: ""
 };
 
+// to test partial success
+export const spellData5 = {
+  description: "",
+  source: "custom",
+  page: 0,
+  technique: {
+    value: "re"
+  },
+  "technique-req": {
+    cr: false,
+    in: false,
+    mu: false,
+    pe: false,
+    re: false
+  },
+  form: {
+    value: "au"
+  },
+  "form-req": {
+    an: false,
+    aq: false,
+    au: false,
+    co: false,
+    he: false,
+    ig: false,
+    im: false,
+    me: false,
+    te: false,
+    vi: false
+  },
+  range: {
+    value: "touch"
+  },
+  duration: {
+    value: "moon"
+  },
+  target: {
+    value: "ind"
+  },
+  targetSize: 1,
+  complexity: 1,
+  enhancingRequisite: 0,
+  general: false,
+  levelOffset: 0,
+  baseLevel: 4,
+  baseEffectDescription: "",
+  applyFocus: false,
+  ritual: false,
+  bonus: 4,
+  bonusDesc: "Talisman",
+  xp: 0,
+  masteryAbilities: ""
+};
+
 export const newSpell1 = {
   description: "",
   source: "custom",
@@ -908,6 +962,11 @@ export async function getMagus(magusName = "MerlinTheMagus", items = [], overrid
     name: "Spell with deficiency",
     type: "spell",
     system: spellData4
+  });
+  items.push({
+    name: "Spell partial failing",
+    type: "spell",
+    system: spellData5
   });
 
   await character.createEmbeddedDocuments("Item", items, {});

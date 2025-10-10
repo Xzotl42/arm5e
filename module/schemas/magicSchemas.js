@@ -338,9 +338,9 @@ export class SpellSchema extends MagicalEffectSchema {
         }
       }
     } else {
-      if (delta < -actor.system.bonuses.arts.spellFatigueThreshold) {
+      if (-delta > 10) {
         res.fail = 1;
-      } else if (delta < 0) {
+      } else if (delta + actor.system.bonuses.arts.spellFatigueThreshold < 0) {
         res.partial = 1;
       }
     }
