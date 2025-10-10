@@ -1,4 +1,4 @@
-## 2.4.0.27, Radislav, Faeries are the key
+## 2.4.0.28, Radislav, Faeries are the key
 
 ### V13 compatibility
 
@@ -6,8 +6,11 @@
 
 ### Features & changes
 
+- User sharing ownership with a character can resolve a confidence prompt
+
 ### Bug fixes
 
+- Formulaic spell with partial success makes you lose a fatigue level again.
 - On a roll, the check/skip for confidence prompt is done first, applying any pending fatigue levels or wounds which could prevent a roll (unconscious, incapacitated,...)
 - When resolving a confidence prompt, if the owner of a character is not the initiator of the roll, a proper error message will be displayed instead of failing mid-process.
 
