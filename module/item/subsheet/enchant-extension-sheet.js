@@ -650,7 +650,7 @@ export class ArM5eItemEnchantmentSheet {
       await this.sheet.item.update(updateData);
     });
 
-    html.find(".drag-enchant").click(async (e) => {
+    html.find(".trigger-enchant").click(async (e) => {
       const dataset = getDataset(e);
       const item = this.item;
       const enchantIdx = dataset.index;

@@ -21,6 +21,7 @@ export function registerMagicRollTesting(quench) {
       let Sp2;
       let Sp3;
       let Sp4;
+      let Sp5;
       let magusToken;
       let aura;
 
@@ -44,6 +45,7 @@ export function registerMagicRollTesting(quench) {
           Sp2 = magus.items.getName("Spell with focus");
           Sp3 = magus.items.getName("Ritual spell");
           Sp4 = magus.items.getName("Spell with deficiency");
+          Sp5 = magus.items.getName("Spell partial failing");
 
           await magus.addActiveEffect("Affinity Corpus", "affinity", "co", 2, null);
           await magus.addActiveEffect("Puissant Muto", "art", "mu", 3, null);
@@ -627,16 +629,16 @@ export function registerMagicRollTesting(quench) {
           it("Spell", async function () {
             let type = "spell";
             try {
-              await magus.rest();
               let dataset = {
                 roll: type,
                 bonusActiveEffects: magus.system.bonuses.arts.spellcasting,
                 id: Sp1._id
               };
-              let fatigueCurrent = magus.system.fatigueCurrent;
-              let currentWarping = magus.system.warping.points;
+
               magus.rollInfo.init(dataset, magus);
               await magus.rest();
+              let fatigueCurrent = magus.system.fatigueCurrent;
+              let currentWarping = magus.system.warping.points;
               const msg = await stressDie(magus, type, 0, magus.rollInfo.properties.CALLBACK, 4);
               const roll = msg.rolls[0];
 
@@ -907,9 +909,175 @@ export function registerMagicRollTesting(quench) {
               assert.ok(false);
             }
           });
+          it("Spell partial fail", async function () {
+            let type = "spell";
+            try {
+              await magus.rest();
+              let dataset = {
+                roll: type,
+                bonusActiveEffects: magus.system.bonuses.arts.spellcasting,
+                id: Sp5._id
+              };
+              let fatigueCurrent = magus.system.fatigueCurrent;
+              let currentWarping = magus.system.warping.points;
+              magus.rollInfo.init(dataset, magus);
+              const msg = await stressDie(magus, type, 0, magus.rollInfo.properties.CALLBACK, 3);
+              const roll = msg.rolls[0];
+
+              log(false, roll);
+              assert.ok(roll);
+
+              const aura = Aura.fromActor(magus);
+              aura.computeMaxAuraModifier(magus.system.realms);
+              // assert.equal(Sp1.system.masteryScore, magus.rollInfo.magic.mastery);
+              // assert.equal(Sp1.system.bonus, magus.rollInfo.magic.bonus);
+              let tot =
+                magus.system.arts.techniques.re.finalScore +
+                magus.system.arts.forms.au.finalScore +
+                magus.system.characteristics.sta.value +
+                magus.system.penalties.wounds.total +
+                magus.system.fatigueTotal +
+                Sp5.system.finalScore +
+                Sp5.system.bonus +
+                aura.modifier;
+              log(false, roll);
+
+              const msgData = msg.system;
+              assert.ok(msgData, "system missing");
+              // assert.equal(msgData.label, "Spontaneous");
+              assert.equal(msgData.confidence.score, 2, "confidence.score should be 2");
+              assert.ok(msgData.confidence.score >= 0, "confidence.score should be non-negative");
+              assert.equal(msgData.confidence.used, 0, "confidence.used should be 0");
+              assert.equal(msgData.roll.type, type, "roll.type should be spont");
+              assert.equal(
+                msgData.roll.difficulty,
+                Sp5.system.level,
+                "roll.difficulty should be 25"
+              );
+              assert.equal(msgData.roll.divider, 1, "divider should be 1");
+              assert.equal(msgData.roll.actorType, "player");
+
+              if (roll.botches) {
+                assert.equal(msgData.failedRoll(), true, "failed roll should be true");
+                assert.equal(msgData.impact.applied, true, "shoud be applied");
+                assert.equal(roll.total, 0, "botched");
+                assert.equal(msgData.roll.botchCheck, true, "Check for botch missing");
+                assert.equal(msgData.roll.botches, roll.botches, "Wrong number of botches");
+                assert.equal(msg.system.confidence.allowed, false, "confidence is not allowed");
+                assert.equal(
+                  msgData.impact.fatigueLevelsLost,
+                  1,
+                  "fatigue levels lost should be 1"
+                );
+                assert.equal(
+                  msgData.impact.fatigueLevelsPending,
+                  0,
+                  "fatigue levels pending should be 0"
+                );
+                assert.equal(
+                  currentWarping + roll.botches,
+                  magus.system.warping.points,
+                  "warping changed"
+                );
+                assert.equal(msgData.failedRoll(), true, "failed roll should be true");
+                if (roll.botches >= 2) {
+                  assert.equal(magus.system.twilight.stage, TWILIGHT_STAGES.PENDING_STRENGTH);
+                }
+              } else {
+                assert.equal(
+                  msgData.roll.difficulty - 10 > msg.rollTotal,
+                  msgData.failedRoll(),
+                  "failed roll incorrect"
+                );
+                // failed or partial success
+                if (msgData.failedRoll()) {
+                  assert.equal(
+                    msgData.impact.fatigueLevelsLost,
+                    0,
+                    "fatigue levels lost should be 0"
+                  );
+
+                  assert.equal(
+                    msgData.impact.fatigueLevelsPending,
+                    0,
+                    "fatigue levels pending should be 0"
+                  );
+                  assert.equal(
+                    msgData.impact.fatigueLevelsFail,
+                    1,
+                    "fatigue levels on fail should be 1"
+                  );
+                } else if (msg.rollTotal < msgData.roll.difficulty) {
+                  assert.equal(
+                    msgData.impact.fatigueLevelsLost,
+                    0,
+                    "fatigue levels lost should be 0"
+                  );
+
+                  assert.equal(
+                    msgData.impact.fatigueLevelsPending,
+                    1,
+                    "fatigue levels pending should be 1"
+                  );
+                  assert.equal(
+                    msgData.impact.fatigueLevelsFail,
+                    0,
+                    "fatigue levels on fail should be 0"
+                  );
+                } else {
+                  assert.equal(
+                    msgData.impact.fatigueLevelsLost,
+                    0,
+                    "fatigue levels lost should be 0"
+                  );
+                  assert.equal(
+                    msgData.impact.fatigueLevelsPending,
+                    0,
+                    "fatigue levels pending should be 0"
+                  );
+                }
+                assert.equal(msgData.impact.woundGravity, 0, "wound gravity should be 0");
+                assert.equal(fatigueCurrent, magus.system.fatigueCurrent, "fatigue not changed");
+                assert.ok(msg.system.magic, "magic data missing");
+                assert.ok(msg.system.magic.caster, "caster missing");
+                assert.equal(msg.system.magic.caster.form, null, "caster form is not null");
+                assert.ok(msg.system.magic.caster.penetration, "penetration missing");
+                assert.equal(
+                  msg.system.magic.caster.penetration.total,
+                  msg.system.magic.caster.penetration.score *
+                    msg.system.magic.caster.penetration.multiplier,
+                  "penetration total incorrect"
+                );
+                assert.ok(Array.isArray(msg.system.magic.targets), "targets should be array");
+                assert.equal(msg.system.magic.ritual, false, "ritual should be false");
+                assert.equal(msg.system.magic.realm, "magic", "realm is not magic");
+
+                assert.ok(
+                  ["magic", "faeric", "infernal", "divine"].includes(msg.system.magic.realm),
+                  "realm value unexpected"
+                );
+
+                assert.equal(msgData.impact.applied, false, "shoud not be applied");
+                assert.equal(msgData.confidence.allowed, true, "confidence is allowed");
+
+                assert.equal(roll.modifier, tot, "bad modifier");
+                await msgData.useConfidence(magus._id);
+                assert.equal(msg.system.confidence.used, 1, "confidence.used should be 1");
+                assert.equal(msg.system.confidence.allowed, true, "confidence is not allowed");
+
+                await msgData.useConfidence(magus._id);
+                assert.equal(msg.system.confidence.used, 2, "confidence.used should be 2");
+                assert.equal(msg.system.confidence.allowed, false, "confidence is allowed");
+              }
+            } catch (err) {
+              console.error(`Error: ${err}`);
+              assert.ok(false);
+            }
+          });
           it("Spell + deficiency", async function () {
             let type = "spell";
             try {
+              await magus.rest();
               let dataset = {
                 roll: type,
                 name: "Spell deficient",
@@ -919,7 +1087,7 @@ export function registerMagicRollTesting(quench) {
               let fatigueCurrent = magus.system.fatigueCurrent;
               let currentWarping = magus.system.warping.points;
               magus.rollInfo.init(dataset, magus);
-              await magus.rest();
+
               const msg = await stressDie(magus, type, 0, magus.rollInfo.properties.CALLBACK, 3);
               const roll = msg.rolls[0];
 
@@ -1093,7 +1261,6 @@ export function registerMagicRollTesting(quench) {
               let fatigueCurrent = magus.system.fatigueCurrent;
               let currentWarping = magus.system.warping.points;
               magus.rollInfo.init(dataset, magus);
-              await magus.rest();
               const msg = await stressDie(magus, type, 0, magus.rollInfo.properties.CALLBACK, 3);
               const roll = msg.rolls[0];
 
@@ -1264,7 +1431,6 @@ export function registerMagicRollTesting(quench) {
               let fatigueCurrent = magus.system.fatigueCurrent;
               let currentWarping = magus.system.warping.points;
               magus.rollInfo.init(dataset, magus);
-              await magus.rest();
               const aura = Aura.fromActor(magus);
               aura.computeMaxAuraModifier(magus.system.realms);
               let tot =

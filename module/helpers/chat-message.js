@@ -1,14 +1,42 @@
 import { log, putInFoldableLink, putInFoldableLinkWithAnimation } from "../tools.js";
+import { SMSG_FIELDS } from "./socket-messages.js";
 import { ArsRoll } from "./stressdie.js";
 
 export class Arm5eChatMessage extends ChatMessage {
-  static async enrichChatMessage(message, html, data) {
-    // if (message.flags.arm5e === undefined && message.rolls.length) {
-    //   await message.setFlag("arm5e", {
-    //     type: type,
-    //     actorType: actor.type // for if the actor is deleted
-    //   });
-    // }
+  static async handleSocketMessages(action, payload) {
+    const msgId = payload[SMSG_FIELDS.CHAT_MSG_ID];
+    if (!msgId) return;
+    switch (action) {
+      case "skipConfidence":
+        {
+          const msg = game.messages.get(msgId);
+          if (msg) {
+            if (msg.isAuthor || game.user.isGM) {
+              if (!msg.system.impact.applied) {
+                await msg.system._applyChatMessageUpdate(payload[SMSG_FIELDS.CHAT_MSG_DB_UPDATE]);
+                game.arm5e.socketHandler.acknowledgeMessage(payload[SMSG_FIELDS.ID]);
+              }
+            }
+          }
+        }
+
+        break;
+      case "useConfidence": {
+        const msg = game.messages.get(msgId);
+        if (msg) {
+          // if multiple people try to use confidence on a character they own
+          if (msg.isAuthor || game.user.isGM) {
+            if (!msg.system.impact.applied) {
+              await msg.system._applyChatMessageUpdate(payload[SMSG_FIELDS.CHAT_MSG_DB_UPDATE]);
+              game.arm5e.socketHandler.acknowledgeMessage(payload[SMSG_FIELDS.ID]);
+            }
+          }
+        }
+        break;
+      }
+      default:
+        console.error(`Unknown chat socket message: ${action}`);
+    }
   }
 
   /** @inheritDoc */

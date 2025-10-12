@@ -33,7 +33,8 @@ import {
   chooseTemplate,
   ROLL_MODES,
   getRollTypeProperties,
-  usePower
+  usePower,
+  useMagicItem
 } from "../helpers/rollWindow.js";
 
 import {
@@ -1336,11 +1337,27 @@ export class ArM5eActorSheet extends ActorSheet {
       item.sheet.render(true, { focus: true });
     });
 
+    // html.find(".enchant-trigger").click(async (ev) => {
+    //   ev.preventDefault();
+    //   const li = $(ev.currentTarget).parents(".item");
+    //   let itemId = li.data("itemId");
+
+    //   const item = this.actor.items.get(itemId);
+    //   // const enchantIdx = dataset.index;
+    //   if (item.isOwned) {
+    //     dataset.name = item.name;
+    //     dataset.roll = "item";
+    //     dataset.id = itemId;
+    //     dataset.physicalcondition = false;
+    //     await useMagicItem(dataset, item);
+    //   }
+    // });
+
     html.find(".item").contextmenu((ev) => {
       let li = ev.currentTarget;
       let item = this.document.items.get(li.dataset.itemId);
-      if (item && item.system.description) {
-        this._onDropdown($(ev.currentTarget), item.system.description);
+      if (item && (item.system.description || item.system.state === "enchanted")) {
+        this._onDropdown($(ev.currentTarget), item.getSummary());
       }
     });
 
@@ -1375,6 +1392,22 @@ export class ArM5eActorSheet extends ActorSheet {
     html.find(".resource-focus").focus((ev) => {
       ev.preventDefault();
       ev.currentTarget.select();
+    });
+
+    html.find(".enchant-trigger").click(async (ev) => {
+      ev.preventDefault();
+      const li = $(ev.currentTarget).parents(".item");
+      let itemId = li.data("itemId");
+
+      const item = this.actor.items.get(itemId);
+      // const enchantIdx = dataset.index;
+      if (item.isOwned) {
+        dataset.name = item.name;
+        dataset.roll = "item";
+        dataset.id = itemId;
+        dataset.physicalcondition = false;
+        await useMagicItem(dataset, item);
+      }
     });
 
     // Quick edit of Item from inside Actor sheet
@@ -1720,6 +1753,22 @@ export class ArM5eActorSheet extends ActorSheet {
       summary.hide();
       summary.insertAfter(element);
       summary.slideDown(200);
+      // WIP
+      // summary.on("click", async (ev) => {
+      //   ev.preventDefault();
+      //   const li = $(ev.currentTarget).parents(".item");
+      //   let itemId = li.data("itemId");
+
+      //   const item = this.actor.items.get(itemId);
+      //   // const enchantIdx = dataset.index;
+      //   if (item.isOwned) {
+      //     dataset.name = item.name;
+      //     dataset.roll = "item";
+      //     dataset.id = itemId;
+      //     dataset.physicalcondition = false;
+      //     await useMagicItem(dataset, item);
+      //   }
+      // });
     }
   }
 
@@ -1869,19 +1918,18 @@ export class ArM5eActorSheet extends ActorSheet {
     const dataset = getDataset(event);
 
     if (game.settings.get("arm5e", "passConfidencePromptOnRoll")) {
-      const promises = [];
-      if (this.actor.system.states.confidencePrompt) {
-        promises.push(this.actor.update({ "system.states.confidencePrompt": false }));
-      }
       // find if there is indeed a message with a prompt with this actor.
       let pendingConfMsg = game.messages.contents.filter((m) => {
         return m.speaker?.actor === this.actor._id && m.system.confPrompt;
       });
-      const tmp = pendingConfMsg.map((e) => {
-        return e.system._skipConfidenceUse(this.actor._id);
-      });
-      promises.push(...tmp);
-      await Promise.all(promises.flat());
+      if (pendingConfMsg.length) {
+        const promises = pendingConfMsg.map((e) => {
+          return e.system.skipConfidenceUse();
+        });
+        await Promise.all(promises);
+      } else if (this.actor.system.states.confidencePrompt) {
+        await this.actor.update({ "system.states.confidencePrompt": false });
+      }
     } else {
       if (this.actor.system.states.confidencePrompt) {
         ui.notifications.info(game.i18n.localize("arm5e.notification.confidencePromptPending"), {

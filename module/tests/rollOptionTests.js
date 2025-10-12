@@ -889,7 +889,7 @@ export function registerOptionRollTesting(quench) {
 
                 assert.equal(msgData.confidence.allowed, true, "confidence is allowed");
                 // skip confidence
-                await msgData.skipConfidenceUse(actor._id);
+                await msgData.skipConfidenceUse();
 
                 assert.equal(msg.system.confidence.used, 0, "confidence.used should be 0");
                 assert.equal(msg.system.confidence.allowed, false, "confidence is not allowed");
@@ -936,7 +936,7 @@ export function registerOptionRollTesting(quench) {
 
                 assert.equal(msg.system.confidence.allowed, true, "confidence is allowed");
                 // skip confidence
-                await msg.system.skipConfidenceUse(actor._id);
+                await msg.system.skipConfidenceUse();
                 assert.equal(msg.system.confidence.used, 0, "confidence.used should be 0");
                 assert.equal(msg.system.confidence.allowed, false, "confidence is not allowed");
                 assert.equal(
