@@ -737,7 +737,7 @@ export class ArM5eActor extends Actor {
         this.system.sanctum.linked = false;
       }
     }
-    log(false, "PC end of prepare actor data", system);
+    //log(false, "PC end of prepare actor data", system);
   }
 
   /**
