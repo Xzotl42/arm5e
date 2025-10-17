@@ -21,11 +21,13 @@ export class Semaphore {
 
   // Return resource
   release() {
-    this.inUse--;
-    if (this.waitQueue.length > 0 && this.inUse < this.maxConcurrent) {
-      this.inUse++;
-      const next = this.waitQueue.shift();
-      next();
+    if (this.inUse > 0) {
+      this.inUse--;
+      if (this.waitQueue.length > 0 && this.inUse < this.maxConcurrent) {
+        this.inUse++;
+        const next = this.waitQueue.shift();
+        next();
+      }
     }
   }
 }

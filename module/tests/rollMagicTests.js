@@ -629,16 +629,16 @@ export function registerMagicRollTesting(quench) {
           it("Spell", async function () {
             let type = "spell";
             try {
-              await magus.rest();
               let dataset = {
                 roll: type,
                 bonusActiveEffects: magus.system.bonuses.arts.spellcasting,
                 id: Sp1._id
               };
-              let fatigueCurrent = magus.system.fatigueCurrent;
-              let currentWarping = magus.system.warping.points;
+
               magus.rollInfo.init(dataset, magus);
               await magus.rest();
+              let fatigueCurrent = magus.system.fatigueCurrent;
+              let currentWarping = magus.system.warping.points;
               const msg = await stressDie(magus, type, 0, magus.rollInfo.properties.CALLBACK, 4);
               const roll = msg.rolls[0];
 
@@ -921,7 +921,6 @@ export function registerMagicRollTesting(quench) {
               let fatigueCurrent = magus.system.fatigueCurrent;
               let currentWarping = magus.system.warping.points;
               magus.rollInfo.init(dataset, magus);
-              await magus.rest();
               const msg = await stressDie(magus, type, 0, magus.rollInfo.properties.CALLBACK, 3);
               const roll = msg.rolls[0];
 
@@ -991,7 +990,24 @@ export function registerMagicRollTesting(quench) {
                   "failed roll incorrect"
                 );
                 // failed or partial success
-                if (msgData.failedRoll() || msg.rollTotal < msgData.roll.difficulty) {
+                if (msgData.failedRoll()) {
+                  assert.equal(
+                    msgData.impact.fatigueLevelsLost,
+                    0,
+                    "fatigue levels lost should be 0"
+                  );
+
+                  assert.equal(
+                    msgData.impact.fatigueLevelsPending,
+                    0,
+                    "fatigue levels pending should be 0"
+                  );
+                  assert.equal(
+                    msgData.impact.fatigueLevelsFail,
+                    1,
+                    "fatigue levels on fail should be 1"
+                  );
+                } else if (msg.rollTotal < msgData.roll.difficulty) {
                   assert.equal(
                     msgData.impact.fatigueLevelsLost,
                     0,
@@ -1002,6 +1018,11 @@ export function registerMagicRollTesting(quench) {
                     msgData.impact.fatigueLevelsPending,
                     1,
                     "fatigue levels pending should be 1"
+                  );
+                  assert.equal(
+                    msgData.impact.fatigueLevelsFail,
+                    0,
+                    "fatigue levels on fail should be 0"
                   );
                 } else {
                   assert.equal(
@@ -1056,6 +1077,7 @@ export function registerMagicRollTesting(quench) {
           it("Spell + deficiency", async function () {
             let type = "spell";
             try {
+              await magus.rest();
               let dataset = {
                 roll: type,
                 name: "Spell deficient",
@@ -1065,7 +1087,7 @@ export function registerMagicRollTesting(quench) {
               let fatigueCurrent = magus.system.fatigueCurrent;
               let currentWarping = magus.system.warping.points;
               magus.rollInfo.init(dataset, magus);
-              await magus.rest();
+
               const msg = await stressDie(magus, type, 0, magus.rollInfo.properties.CALLBACK, 3);
               const roll = msg.rolls[0];
 
@@ -1239,7 +1261,6 @@ export function registerMagicRollTesting(quench) {
               let fatigueCurrent = magus.system.fatigueCurrent;
               let currentWarping = magus.system.warping.points;
               magus.rollInfo.init(dataset, magus);
-              await magus.rest();
               const msg = await stressDie(magus, type, 0, magus.rollInfo.properties.CALLBACK, 3);
               const roll = msg.rolls[0];
 
@@ -1410,7 +1431,6 @@ export function registerMagicRollTesting(quench) {
               let fatigueCurrent = magus.system.fatigueCurrent;
               let currentWarping = magus.system.warping.points;
               magus.rollInfo.init(dataset, magus);
-              await magus.rest();
               const aura = Aura.fromActor(magus);
               aura.computeMaxAuraModifier(magus.system.realms);
               let tot =

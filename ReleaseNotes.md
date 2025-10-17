@@ -7,12 +7,14 @@
 ### Features & changes
 
 - User sharing ownership with a character can resolve a confidence prompt
+- Enchantments are now displayed in addition to the description on right-click on an item in character sheet.
 
 ### Bug fixes
 
 - Formulaic spell with partial success makes you lose a fatigue level again.
 - On a roll, the check/skip for confidence prompt is done first, applying any pending fatigue levels or wounds which could prevent a roll (unconscious, incapacitated,...)
-- When resolving a confidence prompt, if the owner of a character is not the initiator of the roll, a proper error message will be displayed instead of failing mid-process.
+- When resolving a confidence prompt, if the owner of a character is not the initiator of the roll and the owner or a GM is not present, a proper error message will be displayed instead of failing mid-process.
+- User can resolve a roll initiated by the GM
 
 ## 2.4.0.26, Radislav agrees with Quendalon
 

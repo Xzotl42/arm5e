@@ -1034,6 +1034,11 @@ export async function getTeacher(magusName = "Master", items = [], override = {}
     type: "spell",
     system: newSpell1
   });
+  items.push({
+    name: "Spell partial failing",
+    type: "spell",
+    system: spellData5
+  });
 
   await character.createEmbeddedDocuments("Item", items, {});
 

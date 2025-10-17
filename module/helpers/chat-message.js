@@ -1,37 +1,37 @@
 import { log, putInFoldableLink, putInFoldableLinkWithAnimation } from "../tools.js";
-import { Mutex } from "../tools/concurency.js";
+import { SMSG_FIELDS } from "./socket-messages.js";
 import { ArsRoll } from "./stressdie.js";
 
 export class Arm5eChatMessage extends ChatMessage {
   static async handleSocketMessages(action, payload) {
-    const mutex = new Mutex();
-    if (!payload.messageId) return;
+    const msgId = payload[SMSG_FIELDS.CHAT_MSG_ID];
+    if (!msgId) return;
     switch (action) {
-      case "skipConfidence": {
-        mutex.acquire();
-        const msg = game.messages.get(payload.messageId);
-        if (msg) {
-          if (!msg.system.impact.applied) {
-            if (msg.author._id === game.userId) {
-              await msg.system.skipConfidenceUse(msg.speaker.actor);
+      case "skipConfidence":
+        {
+          const msg = game.messages.get(msgId);
+          if (msg) {
+            if (msg.isAuthor || game.user.isGM) {
+              if (!msg.system.impact.applied) {
+                await msg.system._applyChatMessageUpdate(payload[SMSG_FIELDS.CHAT_MSG_DB_UPDATE]);
+                game.arm5e.socketHandler.acknowledgeMessage(payload[SMSG_FIELDS.ID]);
+              }
             }
           }
         }
-        mutex.release();
+
         break;
-      }
       case "useConfidence": {
-        const msg = game.messages.get(payload.messageId);
-        mutex.acquire();
+        const msg = game.messages.get(msgId);
         if (msg) {
           // if multiple people try to use confidence on a character they own
-          if (msg.system.confidence.used == payload.confidenceUsed) {
-            if (msg.author._id === game.userId) {
-              await msg.system.useConfidence(msg.speaker.actor);
+          if (msg.isAuthor || game.user.isGM) {
+            if (!msg.system.impact.applied) {
+              await msg.system._applyChatMessageUpdate(payload[SMSG_FIELDS.CHAT_MSG_DB_UPDATE]);
+              game.arm5e.socketHandler.acknowledgeMessage(payload[SMSG_FIELDS.ID]);
             }
           }
         }
-        mutex.release();
         break;
       }
       default:
