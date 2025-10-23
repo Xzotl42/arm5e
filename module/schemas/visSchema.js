@@ -145,7 +145,7 @@ export class VisSchema extends foundry.abstract.TypeDataModel {
   }
 
   async createDiaryEntryToStudyVis(actor) {
-    return await Promise.all(_createDiaryEntryToStudyVis(actor));
+    return (await this._createDiaryEntryToStudyVis(actor))[0];
   }
 
   _createDiaryEntryToStudyVis(actor) {
@@ -181,8 +181,7 @@ export class VisSchema extends foundry.abstract.TypeDataModel {
         }
       }
     ];
-    let entry = actor.createEmbeddedDocuments("Item", entryData, {});
-    return entry;
+    return actor.createEmbeddedDocuments("Item", entryData, {});
   }
 }
 
