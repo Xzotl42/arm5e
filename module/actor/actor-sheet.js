@@ -16,7 +16,8 @@ import {
   hermeticTopicFilter,
   diaryEntryFilter,
   getUuidInfo,
-  getLastCombatMessageOfType
+  getLastCombatMessageOfType,
+  slugify
 } from "../tools.js";
 import ArM5eActiveEffect from "../helpers/active-effects.js";
 import {
