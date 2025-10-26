@@ -68,8 +68,19 @@ export class CodexSchema extends foundry.abstract.TypeDataModel {
       let spellsCompendium = game.packs.get("arm5e-compendia.spells");
       for (let s of spellsCompendium.index) {
         if (s.type == "spell") this.spells.push(s);
-        else {
+        else if (s.type == "magicalEffect") {
+          this.magicalEffects.push(s);
+        } else if (s.type == "baseEffect") {
           this.baseEffects.push(s);
+        } else if (s.type == "enchantment") {
+          this.enchantments.push(s);
+        } else if (s.type == "power") {
+          // Ignore powers for codex
+          continue;
+        } else {
+          console.warn(
+            `CodexSchema: Unexpected item type ${s.type} in spells compendium : ${s.name}`
+          );
         }
       }
     }

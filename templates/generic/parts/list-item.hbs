@@ -1,0 +1,11 @@
+<div class="item-picker-entry flexrow {{#if item.selected}}selected{{/if}}" data-id="{{item.id}}">
+{{#if item.img}}
+<div class="item-image" style="max-width:30px; max-height:30px; margin-right:8px;">
+  <img title="{{item.name}}" src="{{item.img}}" width="30px" height="30px"/>
+</div>
+{{/if}}
+<h4 class="entry-name document-name"><a>{{item.name}}</a></h4>
+{{#if item.selected}}
+  <i class="fas fa-check item-picker-selected-icon"></i>
+{{/if}}
+</div>

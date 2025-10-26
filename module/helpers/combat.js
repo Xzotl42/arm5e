@@ -1,6 +1,7 @@
 import { calculateWound, log } from "../tools.js";
 import { stressDie } from "../dice.js";
 import { Arm5eChatMessage } from "./chat-message.js";
+import { ROLL_PROPERTIES } from "./rollWindow.js";
 
 // export function doubleAbility(actor) {
 //   actor.rollInfo.ability.score *= 2;
@@ -268,6 +269,65 @@ export async function nonCombatDamage(selector, actor) {
 
 export async function rolledDamage(soakData, actor) {
   const dataset = {
+    roll: "damage",
+    name: game.i18n.localize("arm5e.sheet.soakRoll"),
+    physicalcondition: false,
+    modifier: -soakData.modifier,
+    option1: soakData.damage,
+    txtoption1: game.i18n.localize("arm5e.sheet.damage"),
+    option4: soakData.prot,
+    txtoption4: game.i18n.localize("arm5e.sheet.protection"),
+    operator4: "-",
+    option5: soakData.stamina,
+    txtoption5: game.i18n.localize("arm5e.sheet.stamina"),
+    operator5: "-"
+  };
+
+  if (soakData.natRes) {
+    dataset.option2 = soakData.natRes;
+    dataset.txtoption2 = game.i18n.localize("arm5e.sheet.natRes");
+    dataset.operator2 = "-";
+  }
+  if (soakData.formRes) {
+    dataset.option3 = soakData.formRes;
+    dataset.txtoption3 = game.i18n.localize("arm5e.sheet.formRes");
+    dataset.operator3 = "-";
+  }
+
+  if (soakData.bonus) {
+    dataset.option6 = soakData.bonus;
+    dataset.txtoption6 = game.i18n.localize("arm5e.sheet.soakBonus");
+    dataset.operator6 = "-";
+  }
+
+  actor.rollInfo.init(dataset, actor);
+  let message = await stressDie(actor, "option", ROLL_PROPERTIES.DAMAGE.MODE, null, 1);
+  soakData.roll = message.rolls[0].total - message.rolls[0].offset;
+  soakData.damageToApply -= soakData.roll;
+}
+export function buildDamageDataset(selector) {
+  const dataset = {};
+
+  dataset.modifier = parseInt(selector.find('input[name$="modifier"]').val());
+  dataset.damage = parseInt(selector.find('input[name$="damage"]').val());
+  dataset.natRes = parseInt(selector.find('select[name$="natRes"]').val() || 0);
+  dataset.formRes = parseInt(selector.find('select[name$="formRes"]').val() || 0);
+  dataset.prot = parseInt(selector.find('label[name$="prot"]').attr("value") || 0);
+  dataset.bonus = parseInt(selector.find('label[name$="soak"]').attr("value") || 0);
+  dataset.stamina = parseInt(selector.find('label[name$="stamina"]').attr("value") || 0);
+  dataset.damageToApply =
+    dataset.damage -
+    dataset.modifier -
+    dataset.prot -
+    dataset.natRes -
+    dataset.formRes -
+    dataset.stamina -
+    dataset.bonus;
+  return dataset;
+}
+
+export async function rolledSoak(soakData, actor) {
+  const dataset = {
     roll: "option",
     name: game.i18n.localize("arm5e.sheet.soakRoll"),
     physicalcondition: false,
@@ -300,69 +360,9 @@ export async function rolledDamage(soakData, actor) {
   }
 
   actor.rollInfo.init(dataset, actor);
-  let message = await stressDie(actor, "option", 16, null, 1);
-  soakData.roll = message.rolls[0].total - message.rolls[0].offset;
+  let roll = await stressDie(actor, "option", 16, null, 1);
+  soakData.roll = roll.total - roll.offset;
   soakData.damageToApply -= soakData.roll;
-}
-export function buildDamageDataset(selector) {
-  const dataset = {};
-
-  // dataset.modifier = parseInt(selector.find('input[name$="modifier"]').val());
-  // dataset.damage = parseInt(selector.find('input[name$="damage"]').val());
-  // dataset.natRes = parseInt(selector.find('select[name$="natRes"]').val() || 0);
-  // dataset.formRes = parseInt(selector.find('select[name$="formRes"]').val() || 0);
-  // dataset.prot = parseInt(selector.find('label[name$="prot"]').attr("value") || 0);
-  // dataset.bonus = parseInt(selector.find('label[name$="soak"]').attr("value") || 0);
-  // dataset.stamina = parseInt(selector.find('label[name$="stamina"]').attr("value") || 0);
-  // dataset.damageToApply =
-  //   dataset.damage -
-  //   dataset.modifier -
-  //   dataset.prot -
-  //   dataset.natRes -
-  //   dataset.formRes -
-  //   dataset.stamina -
-  //   dataset.bonus;
-  return dataset;
-}
-
-rolledSoak;
-export async function rolledSoak(soakData, actor) {
-  const dataset = {
-    // roll: "option",
-    // name: game.i18n.localize("arm5e.sheet.soakRoll"),
-    // physicalcondition: false,
-    // modifier: -soakData.modifier,
-    // option1: soakData.damage,
-    // txtoption1: game.i18n.localize("arm5e.sheet.damage"),
-    // option4: soakData.prot,
-    // txtoption4: game.i18n.localize("arm5e.sheet.protection"),
-    // operator4: "-",
-    // option5: soakData.stamina,
-    // txtoption5: game.i18n.localize("arm5e.sheet.stamina"),
-    // operator5: "-"
-  };
-
-  // if (soakData.natRes) {
-  //   dataset.option2 = soakData.natRes;
-  //   dataset.txtoption2 = game.i18n.localize("arm5e.sheet.natRes");
-  //   dataset.operator2 = "-";
-  // }
-  // if (soakData.formRes) {
-  //   dataset.option3 = soakData.formRes;
-  //   dataset.txtoption3 = game.i18n.localize("arm5e.sheet.formRes");
-  //   dataset.operator3 = "-";
-  // }
-
-  // if (soakData.bonus) {
-  //   dataset.option6 = soakData.bonus;
-  //   dataset.txtoption6 = game.i18n.localize("arm5e.sheet.soakBonus");
-  //   dataset.operator6 = "-";
-  // }
-
-  // actor.rollInfo.init(dataset, actor);
-  // let roll = await stressDie(actor, "option", 16, null, 1);
-  // soakData.roll = roll.total - roll.offset;
-  // soakData.damageToApply -= soakData.roll;
 }
 export function buildSoakDataset(selector) {
   const dataset = {};
@@ -454,7 +454,7 @@ export async function setWounds(soakData, actor) {
 
   Arm5eChatMessage.create(message.toObject());
 
-  if (typeOfWound) {
+  if (typeOfWound !== "none") {
     await actor.changeWound(1, typeOfWound);
   }
 }

@@ -82,6 +82,7 @@ export class ArM5eActor extends Actor {
       incap: [],
       dead: []
     };
+
     if (this.system.realms) {
       this.system.realms["magic"].susceptible = false;
       this.system.realms["faeric"].susceptible = false;
@@ -362,7 +363,9 @@ export class ArM5eActor extends Actor {
       system.fatigueMaxLevel = lvl;
     }
 
+    ////////////////////
     // Resources
+    ////////////////////
     system.resource = {};
     // Fatigue as resource for token bar
 
@@ -1071,7 +1074,11 @@ export class ArM5eActor extends Actor {
   // }
 
   async changeWound(amount, wtype, description = "") {
-    if (!this.isCharacter() || (amount <= 0 && this.system.wounds[type].length == 0)) {
+    if (
+      !this.isCharacter() ||
+      wtype === "none" ||
+      (amount <= 0 && this.system.wounds[wtype].length == 0)
+    ) {
       return [];
     }
     let wounds = [];

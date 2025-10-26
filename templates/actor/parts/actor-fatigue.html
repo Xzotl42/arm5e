@@ -64,7 +64,7 @@
     </div>
 
     <ol>
-      {{#each health as |wounds key|}}
+      {{#each health as |level key|}}
 
         <li class="flexrow flex-group-left" data-attribute="{{key}}">
           <div class="flexrow flex-between">
@@ -77,18 +77,23 @@
                 style="display: flex;align-items: center;">{{localize label}}</label>
             {{/with}}
             <div class="flexrow" style="width:230px">
-              {{#each wounds}}
+              {{#each level.wounds}}
                 <img class="item wound-edit flexrow vignette" data-id="{{this._id}}" src="{{this.img}}"
                   title="{{this.system.title}}" {{{this.system.ui.style}}}>
               {{/each }}
             </div>
-            <div class="wound-field">
-              <input type="text" name="" value="{{wounds.length}}" data-dtype="Number" class="resource-focus"
-                style="text-align: center;" readonly />
-            </div>
-            <div class="wound-field">
-              <input type="text" value="{{lookup ../system.penalties.wounds key}}" data-dtype="Number" readonly
-                style="text-align: center;" />
+            <div class="flexrow flex-group-right" style="min-width: 150px;">
+              <div>
+                <span>{{level.range}}</span>
+              </div>
+              <div class="wound-field">
+                <input type="text" name="" value="{{level.wounds.length}}" data-dtype="Number" class="resource-focus"
+                  style="text-align: center;" readonly />
+              </div>
+              <div class="wound-field">
+                <input type="text" value="{{lookup ../system.penalties.wounds key}}" data-dtype="Number" readonly
+                  style="text-align: center;" />
+              </div>
             </div>
           </div>
         </li>

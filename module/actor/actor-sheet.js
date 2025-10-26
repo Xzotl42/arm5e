@@ -17,7 +17,8 @@ import {
   diaryEntryFilter,
   getUuidInfo,
   getLastCombatMessageOfType,
-  slugify
+  slugify,
+  getWoundRanges
 } from "../tools.js";
 import ArM5eActiveEffect from "../helpers/active-effects.js";
 import {
@@ -49,7 +50,7 @@ import {
   setWounds
 } from "../helpers/combat.js";
 import { quickMagic, spellFormLabel, spellTechniqueLabel } from "../helpers/magic.js";
-import { UI, getConfirmation } from "../constants/ui.js";
+import { UI } from "../constants/ui.js";
 import { Schedule } from "../tools/schedule.js";
 import {
   createAgingDiaryEntry,
@@ -64,6 +65,7 @@ import { MedicalHistory } from "../tools/med-history.js";
 import { ArM5eActorProfiles } from "./subsheets/actor-profiles.js";
 import { ArM5eMagicSystem } from "./subsheets/magic-system.js";
 import { getRefCompendium } from "../tools/compendia.js";
+import { getConfirmation } from "../ui/dialogs.js";
 
 export class ArM5eActorSheet extends ActorSheet {
   constructor(object, options) {
@@ -379,13 +381,15 @@ export class ArM5eActorSheet extends ActorSheet {
       for (let [key, v] of Object.entries(context.system.vitals)) {
         v.label = game.i18n.localize(CONFIG.ARM5E.character.vitals[key].label);
       }
+
       if (context.system.wounds) {
+        const ranges = getWoundRanges(this.actor.system.vitals?.siz?.value || 0);
         context.health = {
-          light: context.system.wounds.light,
-          medium: context.system.wounds.medium,
-          heavy: context.system.wounds.heavy,
-          incap: context.system.wounds.incap,
-          dead: context.system.wounds.dead
+          light: { wounds: context.system.wounds.light, range: ranges[0] },
+          medium: { wounds: context.system.wounds.medium, range: ranges[1] },
+          heavy: { wounds: context.system.wounds.heavy, range: ranges[2] },
+          incap: { wounds: context.system.wounds.incap, range: ranges[3] },
+          dead: { wounds: context.system.wounds.dead, range: ranges[4] }
         };
       }
       context.isDead = this.actor.system.wounds.dead.length > 0;
@@ -1354,9 +1358,13 @@ export class ArM5eActorSheet extends ActorSheet {
     //   }
     // });
 
-    html.find(".item").contextmenu((ev) => {
+    html.find(".item").contextmenu(async (ev) => {
       let li = ev.currentTarget;
       let item = this.document.items.get(li.dataset.itemId);
+      if (!item) {
+        // item is in a compendium
+        item = await fromUuid(li.dataset.uuid);
+      }
       if (item && (item.system.description || item.system.state === "enchanted")) {
         this._onDropdown($(ev.currentTarget), item.getSummary());
       }

@@ -1,0 +1,9 @@
+<form class="{{cssClass}} arm5eChooser" autocomplete="off">
+  {{> "systems/arm5e/templates/item/parts/item-header.html" header="Inputs"}}
+  <div class="flexrow backSection" style="padding: 8px">
+    <select class="SelectedItem" name="choice" data-type="String">
+      {{selectOptions list selected=choice labelAttr="name" nameAttr="id" valueAttr="id"}}
+    </select>
+  </div>
+  {{> "systems/arm5e/templates/item/parts/item-footer.html" footer="Inputs"}}
+</form>
