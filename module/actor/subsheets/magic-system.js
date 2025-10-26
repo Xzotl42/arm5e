@@ -1,5 +1,5 @@
-import { getConfirmation } from "../../constants/ui.js";
 import { getAbilityStats, getDataset, slugify } from "../../tools.js";
+import { getConfirmation } from "../../ui/dialogs.js";
 import { ArM5eActorSheet } from "../actor-sheet.js";
 
 export class ArM5eMagicSystem {

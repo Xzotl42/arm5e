@@ -1,10 +1,14 @@
 <form class="{{cssClass}} arm5eChooser" autocomplete="off">
-  <!-- TODOV10 Check-->
+  {{log this}}
   {{> "systems/arm5e/templates/item/parts/item-header.html" header="Inputs"}}
   <div class="flexrow backSection" style="padding: 8px">
-    <select class="SelectedItem" name="choice" data-type="String">
-      {{selectOptions list selected=choice labelAttr="name" nameAttr="id" valueAttr="id"}}
-    </select>
+    <ol style="width: 100%">
+      {{#each list}}
+        <li class="flexrow item flex-group-left">
+          {{> "systems/arm5e/templates/generic/parts/list-item.hbs" item=this selected=this.selected }}
+      {{/each}}
+      </li>
+    </ol>
   </div>
   {{> "systems/arm5e/templates/item/parts/item-footer.html" footer="Inputs"}}
 </form>

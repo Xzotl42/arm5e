@@ -6,7 +6,7 @@
 </li>
 {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
 {{#each system.filteredSpells as |spell id|}}
-  <li class="item spell-value flexrow" data-name="{{spell.name}}" data-item-id="{{spell.id}}" data-uuid="{{spell.uuid}}"
+  <li class="item spell-value flexrow" data-name="{{spell.name}}" data-item-id="{{spell._id}}" data-uuid="{{spell.uuid}}"
     data-item-type="{{spell.type}}" data-compendium="spells">
     {{#if spell.system.description}}
     <div class="item-image item-control item-edit" style="max-width:60px"><img src="{{spell.img}}" title="{{spell.name}}" style="max-height:50px"/></div>

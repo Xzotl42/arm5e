@@ -2,8 +2,8 @@ import { compareLabTexts, log, hermeticFilter, getUuidInfo, getDataset } from ".
 import { ArM5eActorSheet } from "./actor-sheet.js";
 import { HERMETIC_FILTER, TIME_FILTER, TOPIC_FILTER } from "../constants/userdata.js";
 import { effectToLabText, resetOwnerFields } from "../item/item-converter.js";
-import { getConfirmation } from "../constants/ui.js";
 import { ArM5eActor } from "./actor.js";
+import { getConfirmation } from "../ui/dialogs.js";
 
 /**
  * Extend the basic ArM5eActorSheet
