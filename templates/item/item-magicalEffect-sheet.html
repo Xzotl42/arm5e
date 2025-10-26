@@ -8,7 +8,8 @@
             placeholder="Name" />
           {{#if noRoll}}
             <div class="flex0 padding10 "><a class="rollable" data-roll="magic" data-id="{{item._id}}"
-                title='{{localize "arm5e.dialog.button.roll"}}'><img src="systems/arm5e/assets/dice.png"
+                data-fatigue-on-use="1" title='{{localize "arm5e.dialog.button.roll"}}'><img
+                  src="systems/arm5e/assets/dice.png"
                   style="border: 0px; height:30px; min-height:30px; min-width: 30px;"></a>
             </div>
           {{/if}}
@@ -31,6 +32,7 @@
       <div class="grid grid-2col">
         <div class="resource flexcol flex-center">
           <label class="header-label">{{localize "arm5e.sheet.Requisites"}}</label>
+          <label class="header-label">{{ui.requisites}}</label>
           <a class="item-control advanced-req" title="Advanced Requistes" data-flavor="{{ui.flavor}}"><i
               class="fas fa-gavel fa-lg"></i></a>
         </div>

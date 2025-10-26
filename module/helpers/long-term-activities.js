@@ -414,8 +414,8 @@ export async function twilightControl(actor, roll, message) {
     message.updateSource(msgUpdate);
     promises.push(actor.update(updateData, {}));
   }
-  await Promise.all(promises);
-  if (promises[0].result.type === "diaryEntry") promises[0].sheet.render(true);
+  const results = (await Promise.all(promises)).flat();
+  if (results[0].type === "diaryEntry") results[0].sheet.render(true);
 }
 
 export async function twilightUnderstanding(actor, roll, message) {

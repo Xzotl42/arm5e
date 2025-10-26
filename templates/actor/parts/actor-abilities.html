@@ -24,8 +24,8 @@
         {{#each abilitySet.abilities as |item id|}}
           <li class="item item-value flexrow flex-center macro-ready" data-name="{{item.name}}" data-attribute="{{id}}"
             data-item-id="{{item._id}}">
-            <div class="item-image item-control item-edit"><img src="{{item.img}}" width="45" height="45"
-                title="{{item.name}}" />
+            <div class="item-image item-control item-edit">
+              <img src="{{item.img}}" width="45" height="45" title="{{item.name}}" />
             </div>
             <div class="flexrow flex-center">
               <span class="flexrow item-title rollable width4" data-roll="ability" data-ability="{{item._id}}"

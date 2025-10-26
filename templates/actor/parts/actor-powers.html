@@ -20,6 +20,9 @@
             {{item.name}}
           </span>
           <span class="bold" name="item.name">
+            {{localize "arm5e.sheet.initiativeShort"}}: {{item.system.init}}
+          </span>
+          <span class="bold" name="item.name">
             {{#with (lookup @root.config.magic.forms item.system.form)~}}{{label~}}{{/with}}
           </span>
           <span class="bold" name="item.name"> {{item.system.cost }} {{localize "arm5e.sheet.points"}} </span>

@@ -15,10 +15,7 @@
     data-item-type="{{effect.type}}" data-uuid="{{effect.uuid}}">
     <div class="flexrow flex-center">
       <span class="flexrow spell-title design" data-name="{{effect.name}}">
-        <!--TODOV10 clean that mole below-->
-        {{effect.name}} ( {{#with (lookup @root.config.magic.arts effect.system.technique.value)~}}{{short~}}
-        {{/with}} {{#with (lookup @root.config.magic.arts effect.system.form.value)~}}{{short~}} {{/with}}
-        {{effect.system.baseLevel}} )
+        {{effect.name}} - {{system.artsLabel}} {{effect.system.baseLevel}} 
       </span>
     </div>
   {{#if effect.parent}}

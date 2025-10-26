@@ -242,13 +242,14 @@ export class Sanatorium extends FormApplication {
 
         patient.rollInfo.init(dataset, patient);
 
-        let roll = await stressDie(
+        const msg = await stressDie(
           patient,
           dataset.roll,
           CONFIG.ARM5E.recovery.rollMode,
           undefined,
           1 // one botch
         );
+        const roll = msg.rolls[0];
         if (!logDayAdded) {
           woundPeriodDescription += `<h4>${game.i18n.format("arm5e.sanatorium.msg.logDay", {
             day: this.object.nextRecoveryPeriod + 1
@@ -411,13 +412,14 @@ export class Sanatorium extends FormApplication {
 
             dataset.option5 = wound.bonus;
             patient.rollInfo.init(dataset, patient);
-            let roll = await stressDie(
+            const msg = await stressDie(
               patient,
               dataset.roll,
               CONFIG.ARM5E.recovery.rollMode,
               undefined,
               1
             );
+            const roll = msg.rolls[0];
             woundPeriodDescription +=
               `<li>${game.i18n.format("arm5e.sanatorium.msg.logWound", {
                 type: game.i18n.localize("arm5e.sheet." + newType)

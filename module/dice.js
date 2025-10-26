@@ -18,7 +18,7 @@ async function simpleDie(actor, type = "OPTION", callback, modes = 0) {
   // actor = getFormData(html, actor);
   actor = await getRollFormula(actor);
   const rollInfo = actor.rollInfo;
-  const rollProperties = getRollTypeProperties(type);
+  const rollProperties = rollInfo.properties;
   //console.log('simple die');
   let flavorTxt = `<p>${game.i18n.localize("arm5e.dialog.button.simpledie")}:</p>`;
   let formula = "1D10+" + rollInfo.formula;
@@ -39,47 +39,51 @@ async function simpleDie(actor, type = "OPTION", callback, modes = 0) {
     confAllowed = false;
   }
 
-  let message;
-  if (!(modes & 32)) {
-    const system = {
-      img: actor.img,
-      label: rollInfo.label,
-      confidence: {
-        allowed: confAllowed,
-        score: actor.system.con.score
-      },
-      roll: {
-        type: rollInfo.type,
-        img: rollInfo.img,
-        // name: rollInfo.name,
-        itemUuid: rollInfo.itemUuid,
-        secondaryScore: rollInfo.secondaryScore,
-        botchCheck: false,
-        details: rollInfo.details,
-        divider: rollInfo.magic.divide,
-        difficulty: 0,
-        actorType: actor.type // for if the actor is deleted
-      },
-      impact: { fatigueLevels: 0, woundGravity: 0, applied: false }
-    };
+  const system = {
+    img: actor.img,
+    label: rollInfo.label,
+    confidence: {
+      allowed: confAllowed,
+      score: actor.system.con.score
+    },
+    roll: {
+      type: rollInfo.type,
+      img: rollInfo.img,
+      // name: rollInfo.name,
+      itemUuid: rollInfo.itemUuid,
+      secondaryScore: rollInfo.secondaryScore,
+      botchCheck: false,
+      details: rollInfo.details,
+      divider: rollInfo.magic.divide,
+      difficulty: rollInfo.difficulty,
+      actorType: actor.type // for if the actor is deleted
+    },
+    impact: {
+      fatigueLevelsLost: 0,
+      fatigueLevelsPending: 0,
+      fatigueLevelsFail: 0,
+      woundGravity: 0,
+      applied: false
+    }
+  };
 
-    const messageData = await dieRoll.toMessage(
-      {
-        flavor: flavorTxt,
-        // flavor: chatTitle + flavorTxt + details,
-        speaker: ChatMessage.getSpeaker({
-          actor: actor
-        }),
-        system: system,
-        type: "roll"
-      },
-      { rollMode: rollMode, create: false }
-    );
+  const messageData = await dieRoll.toMessage(
+    {
+      flavor: flavorTxt,
+      // flavor: chatTitle + flavorTxt + details,
+      speaker: ChatMessage.getSpeaker({
+        actor: actor
+      }),
+      system: system,
+      type: "roll"
+    },
+    { rollMode: rollMode, create: false }
+  );
 
-    message = new Arm5eChatMessage(messageData);
+  const message = new Arm5eChatMessage(messageData);
 
-    message.system.addInfo(actor);
-  } else {
+  message.system.enrichMessageData(actor);
+  if (modes & 32) {
     if (game.modules.get("dice-so-nice")?.active) {
       await game.dice3d.showForRoll(dieRoll); //, user, synchronize, whisper, blind, chatMessageID, speaker)
     }
@@ -88,9 +92,9 @@ async function simpleDie(actor, type = "OPTION", callback, modes = 0) {
   if (callback) {
     await callback(actor, dieRoll, message, rollInfo);
   }
-  if (!(modes & 32)) await Arm5eChatMessage.create(message.toObject());
-  actor.rollInfo.reset();
-  return dieRoll;
+  if (!(modes & 32)) return await Arm5eChatMessage.create(message.toObject());
+  // actor.rollInfo.reset();
+  return message;
 }
 
 // modes bitmask:
@@ -114,7 +118,7 @@ async function stressDie(actor, type = "OPTION", modes = 0, callback = undefined
   iterations = 1;
   actor = await getRollFormula(actor);
   const rollInfo = actor.rollInfo;
-  const rollProperties = getRollTypeProperties(type);
+  const rollProperties = rollInfo.properties;
   let rollOptions = {
     minimize: false,
     maximize: false,
@@ -195,49 +199,60 @@ async function stressDie(actor, type = "OPTION", modes = 0, callback = undefined
   if (rollProperties.MODE & ROLL_MODES.PRIVATE && rollMode != CONST.DICE_ROLL_MODES.BLIND) {
     rollMode = CONST.DICE_ROLL_MODES.PRIVATE;
   }
-  let message;
-  if (!(modes & 32)) {
-    const system = {
-      img: actor.img,
-      label: rollInfo.label,
-      confidence: {
-        allowed: confAllowed,
-        score: actor.system.con.score
-      },
-      roll: {
-        type: rollInfo.type,
-        img: rollInfo.img,
-        // name: rollInfo.name,
-        itemUuid: rollInfo.itemUuid,
-        secondaryScore: rollInfo.secondaryScore,
-        botchCheck: botchCheck,
-        details: rollInfo.details,
-        divider: rollInfo.magic.divide,
-        difficulty: 0,
-        actorType: actor.type // for if the actor is deleted
-      },
-      impact: { fatigueLevels: 0, woundGravity: 0, applied: false }
-    };
 
-    //   system.combat = { attacker: actor.uuid, defenders: [] };
-    //   system.magic = { caster: actor.uuid, targets: [], ritual: rollInfo.magic.ritual };
-    const messageData = await dieRoll.toMessage(
-      {
-        flavor: flavorTxt,
-        // flavor: chatTitle + flavorTxt + details,
-        speaker: ChatMessage.getSpeaker({
-          actor: actor
-        }),
-        system: system,
-        type: "roll"
-      },
-      { rollMode: rollMode, create: false }
-    );
+  const system = {
+    img: actor.img,
+    label: rollInfo.label,
+    confidence: {
+      allowed: confAllowed && dieRoll.botches === 0,
+      score: actor.system.con.score
+    },
+    roll: {
+      type: rollInfo.type,
+      img: rollInfo.img,
+      // name: rollInfo.name,
+      itemUuid: rollInfo.itemUuid,
+      secondaryScore: rollInfo.secondaryScore,
+      botchCheck: botchCheck,
+      botches: dieRoll.botches,
+      details: rollInfo.details,
+      divider: rollInfo.magic.divide,
+      difficulty: rollInfo.difficulty,
+      actorType: actor.type // for if the actor is deleted
+    },
+    impact: {
+      fatigueLevelsLost: 0,
+      fatigueLevelsPending: 0,
+      fatigueLevelsFail: 0,
+      woundGravity: 0,
+      applied: false
+    }
+  };
 
-    message = new Arm5eChatMessage(messageData);
+  //   system.combat = { attacker: actor.uuid, defenders: [] };
+  //   system.magic = { caster: actor.uuid, targets: [], ritual: rollInfo.magic.ritual };
+  const messageData = await dieRoll.toMessage(
+    {
+      flavor: flavorTxt,
+      // flavor: chatTitle + flavorTxt + details,
+      speaker: ChatMessage.getSpeaker({
+        actor: actor
+      }),
+      system: system,
+      type: "roll"
+    },
+    { rollMode: rollMode, create: false }
+  );
 
-    message.system.addInfo(actor);
-  } else {
+  const message = new Arm5eChatMessage(messageData);
+
+  let testRoll = message.rolls[0];
+  log(
+    false,
+    `DBG: Stress die Roll total ${testRoll.total} * ${testRoll.divider} (divider) - (${testRoll.dice[0].total} (diceTotal) * ${testRoll.multiplier} (multiplier)) `
+  );
+  message.system.enrichMessageData(actor);
+  if (modes & 32) {
     if (game.modules.get("dice-so-nice")?.active) {
       await game.dice3d.showForRoll(dieRoll); //, user, synchronize, whisper, blind, chatMessageID, speaker)
     }
@@ -246,9 +261,9 @@ async function stressDie(actor, type = "OPTION", modes = 0, callback = undefined
   if (callback) {
     await callback(actor, dieRoll, message, rollInfo);
   }
-  if (!(modes & 32)) Arm5eChatMessage.create(message.toObject());
-  actor.rollInfo.reset();
-  return dieRoll;
+  if (!(modes & 32)) return await Arm5eChatMessage.create(message.toObject());
+  // actor.rollInfo.reset();
+  return message;
 }
 
 async function getRollFormula(actor) {
@@ -606,13 +621,13 @@ async function getRollFormula(actor) {
       msg += "<br/>";
       msg += game.i18n.localize("arm5e.messages.die.divideBy") + rollInfo.magic.divide;
       if (rollInfo.magic.technique.deficiency || rollInfo.magic.form.deficiency) {
-        msg += ` (${game.i18n.localize("arm5e.sheet.activeEffect.types.arts.deficiency")})`;
+        msg += ` (${game.i18n.localize("arm5e.activeEffect.types.arts.deficiency")})`;
       }
     }
 
-    if (rollInfo.useFatigue) {
-      await actor.loseFatigueLevel(1);
-    }
+    // if (rollInfo.useFatigue) {
+    //   await actor.loseFatigueLevel(1);
+    // }
 
     ///
     // after computing total
@@ -701,9 +716,11 @@ async function CheckBotch(botchDice, roll) {
   }
   const botchRoll = new ArsRoll(rollCommand);
   await botchRoll.roll();
-  botchRoll.offset = roll.offset;
-  botchRoll.botches = botchRoll.total;
+  botchRoll.options.offset = roll.offset;
+  botchRoll.options.botches = botchRoll.total;
   botchRoll.botchDice = botchDice;
+  botchRoll.options.divider = roll.divider; // to keep the modifier getter consistent
+  botchRoll.options.multiplier = roll.multiplier;
   return botchRoll;
   // return botchRoll.terms[0].total;
 }
@@ -875,11 +892,15 @@ export async function createRoll(rollFormula, multiplier, divide, options = {}) 
   if (Number.parseInt(divide) > 1) {
     rollInit = `( ${rollInit} ) / ${divide}`;
   }
+  options.multiplier = multiplier;
+  options.divider = divide;
+  options.botches = 0;
+  options.offset = rollFormula;
   let output_roll = new ArsRoll(rollInit, {}, options);
-  output_roll.offset = rollFormula;
-  output_roll.multiplier = multiplier;
-  output_roll.divider = divide;
-  output_roll.data = {};
+  // output_roll.offset = rollFormula;
+  // output_roll.multiplier = multiplier;
+  // output_roll.divider = divide;
+  // output_roll.data = {};
   //output_roll.roll({ options });
   await output_roll.evaluate(options);
 
@@ -889,7 +910,7 @@ export async function createRoll(rollFormula, multiplier, divide, options = {}) 
 async function noRoll(actor, modes, callback) {
   actor = await getRollFormula(actor);
   const rollInfo = actor.rollInfo;
-  const rollProperties = getRollTypeProperties(rollInfo.type);
+  const rollProperties = rollInfo.properties;
   let formula = `${rollInfo.formula}`;
 
   let rollMode = game.settings.get("core", "rollMode");
@@ -900,8 +921,7 @@ async function noRoll(actor, modes, callback) {
   if (rollInfo.magic.divide > 1) {
     formula += ` / ${rollInfo.magic.divide}`;
   }
-  const dieRoll = new ArsRoll(formula, actor.system);
-  dieRoll.divider = rollInfo.magic.divide;
+  const dieRoll = new ArsRoll(formula, actor.system, { divider: rollInfo.magic.divide });
   let tmp = await dieRoll.roll();
   const system = {
     img: actor.img,
@@ -919,9 +939,16 @@ async function noRoll(actor, modes, callback) {
       botchCheck: false,
       details: rollInfo.details,
       divider: rollInfo.magic.divide,
-      actorType: actor.type // for if the actor is deleted
+      actorType: actor.type, // for if the actor is deleted
+      difficulty: rollInfo.difficulty
     },
-    impact: { fatigueLevels: 0, woundGravity: 0, applied: false }
+    impact: {
+      fatigueLevelsLost: 0,
+      fatigueLevelsPending: 0,
+      fatigueLevelsFail: 0,
+      woundGravity: 0,
+      applied: false
+    }
   };
 
   const messageData = await tmp.toMessage(
@@ -939,26 +966,25 @@ async function noRoll(actor, modes, callback) {
 
   let message = new Arm5eChatMessage(messageData);
 
-  message.system.addInfo(actor);
+  message.system.enrichMessageData(actor);
 
   if (callback) {
     await callback(actor, dieRoll, message, rollInfo);
   }
-  await Arm5eChatMessage.create(message.toObject());
-  actor.rollInfo.reset();
-  return dieRoll;
+  return await Arm5eChatMessage.create(message.toObject());
+  // actor.rollInfo.reset();
 }
 
 async function changeMight(actor, roll, message) {
-  const form = CONFIG.ARM5E.magic.arts[actor.rollInfo.power.form]?.label ?? "NONE";
-  await handleTargetsOfMagic(actor, form, message);
+  // const form = CONFIG.ARM5E.magic.arts[actor.rollInfo.power.form]?.label ?? "NONE";
+  await handleTargetsOfMagic(actor, actor.rollInfo.power.form, message);
   await actor.changeMight(-actor.rollInfo.power.cost);
 }
 
 async function useItemCharge(actor, roll, message) {
-  const form = CONFIG.ARM5E.magic.arts[actor.rollInfo.item.form]?.label ?? "NONE";
+  // const form = CONFIG.ARM5E.magic.arts[actor.rollInfo.item.form]?.label ?? "NONE";
   const item = actor.items.get(actor.rollInfo.item.id);
-  await handleTargetsOfMagic(actor, form, message);
+  await handleTargetsOfMagic(actor, actor.rollInfo.item.form, message);
   await item.useItemCharge();
 }
 export { simpleDie, stressDie, noRoll, changeMight, useItemCharge };

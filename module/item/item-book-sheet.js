@@ -1,10 +1,11 @@
 import { getDataset, log } from "../tools.js";
 import { ArM5eItemSheet } from "./item-sheet.js";
-import { getConfirmation } from "../constants/ui.js";
 import { ArM5eActorSheet } from "../actor/actor-sheet.js";
 import { spellFormLabel, spellTechniqueLabel } from "../helpers/magic.js";
 import { BookSchema } from "../schemas/bookSchema.js";
 import { ArM5eItem } from "./item.js";
+import { getConfirmation } from "../ui/dialogs.js";
+import { FLAVORS } from "../constants/ui.js";
 /**
  * Extend the basic ItemSheet with some very simple modifications
  * @extends {ItemSheet}
@@ -191,7 +192,7 @@ export class ArM5eBookSheet extends ArM5eItemSheet {
     const idx = Number(dataset.index);
     topics.splice(idx, 1);
     let confirm = true;
-    let flavor = "Neutral";
+    let flavor = FLAVORS.NEUTRAL;
     if (this.item.isOwned) {
       flavor = ArM5eActorSheet.getFlavor(this.item.actor.type);
     }

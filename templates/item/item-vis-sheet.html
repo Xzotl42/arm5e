@@ -19,9 +19,7 @@
         {{/if}}
       </div>
       <div class="resource">
-        <label class="header-label">{{localize "arm5e.sheet.pawns"}}</label>
-        <input type="text" name="system.quantity" value="{{system.quantity}}" class="resource-focus" data-dtype="Number"
-          style="max-width: 100px;" />
+        {{>"systems/arm5e/templates/item/parts/cost.hbs" classes="fit"}}
       </div>
     </div>
   </header>

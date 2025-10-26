@@ -7,7 +7,7 @@
 {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
 {{#each system.filteredMagicEffects as |effect id|}}
   <li class="item spell-value flexrow flex-center" data-name="{{effect.name}}" data-item-id="{{effect.id}}"
-    data-item-type="{{effect.type}}">
+    data-item-type="{{effect.type}}" data-uuid="{{effect.uuid}}">
     <div class="item-image item-control item-edit" ><img src="{{effect.img}}" title="{{effect.name}}" style="max-height:50px"/></div>
     <div class="flexrow flex-center">
       <span class="flexrow spell-title design" data-name="{{effect.name}}">

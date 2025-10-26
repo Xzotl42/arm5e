@@ -1,30 +1,31 @@
 <div class="flexcol">
   <div class="flexrow " style="min-height: 260px;">
-    <div class="flexcol backSection" style="margin-right: 10px; margin-bottom: 5px;">
-      <label class="smallTitle padding4 flex0" stype="height: 32px;">{{localize "arm5e.sheet.specialities"}}</label>
+    <div class="backSection" style="margin-right: 10px; margin-bottom: 5px;">
+      <label class="smallTitle padding4 flex01"
+        stype="max-height: 32px;">{{localize "arm5e.sheet.specialities"}}</label>
       {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
-      <div class="flexrow padding4" style="border: 0px; height: auto; overflow-y: auto;max-height: 300px;">
+      <div class="flexrow padding4 flex08" style="border: 0px; height: auto; overflow-y: auto;max-height: 300px;">
         {{editor system.specialties target="system.specialties" button=true owner=owner engine="prosemirror" editable=editable}}
       </div>
     </div>
-    <div class="flexcol backSection" style="margin-right: 10px; margin-bottom: 5px;">
-      <label class="smallTitle padding4 flex0" stype="height: 32px;">{{localize "arm5e.sheet.personality"}}</label>
+    <div class="backSection" style="margin-right: 10px; margin-bottom: 5px;">
+      <label class="smallTitle padding4 flex01">{{localize "arm5e.sheet.personality"}}</label>
       {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
-      <div class="flexrow padding4" style="border: 0px; height: auto; overflow-y: auto;max-height: 300px;">
+      <div class="flexrow padding4 flex08" style="border: 0px; height: auto; overflow-y: auto;max-height: 300px;">
         {{editor system.personalities target="system.personalities" button=true owner=owner engine="prosemirror" editable=editable}}
       </div>
     </div>
   </div>
   <div class="flexrow" style="min-height: 260px;">
-    <div class="flexcol backSection" style="margin-right: 10px; margin-bottom: 5px;">
-      <label class="smallTitle padding4 flex0" stype="height: 32px;">{{localize "arm5e.sheet.features"}}</label>
+    <div class="backSection" style="margin-right: 10px; margin-bottom: 5px;">
+      <label class="smallTitle padding4 flex01">{{localize "arm5e.sheet.features"}}</label>
       {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
       <div class="flexrow padding4" style="border: 0px; height: auto; overflow-y: auto;max-height: 300px;">
         {{editor system.features target="system.features" button=true owner=owner engine="prosemirror" editable=editable}}
       </div>
     </div>
-    <div class="flexcol backSection" style="margin-right: 10px; margin-bottom: 5px;">
-      <label class="smallTitle padding4 flex0" stype="height: 32px;">{{localize "arm5e.sheet.rooms"}}</label>
+    <div class="backSection" style="margin-right: 10px; margin-bottom: 5px;">
+      <label class="smallTitle padding4 flex01">{{localize "arm5e.sheet.rooms"}}</label>
       {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
       <div class="flexrow padding4" style="border: 0px; height: auto; overflow-y: auto;max-height: 300px;">
         {{editor system.rooms target="system.rooms" button=true owner=owner engine="prosemirror" editable=editable}}

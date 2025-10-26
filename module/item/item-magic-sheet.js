@@ -56,6 +56,10 @@ export class ArM5eItemMagicSheet extends ArM5eItemSheet {
       context.noRoll = true;
     }
 
+    if (context.system["technique-req"] && context.system["form-req"]) {
+      context.ui.requisites = this.item.system.getRequisitesStr();
+    }
+
     // If settings were too restrictive, allow existing Items to keep their value.
     switch (this.item.type) {
       case "laboratoryText":

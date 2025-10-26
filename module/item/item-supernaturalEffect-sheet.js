@@ -80,7 +80,7 @@ export class ArM5eSupernaturalEffectSheet extends ArM5eItemMagicSheet {
       // }
       return context;
     }
-    context.dieType = template.rollType;
+    context.rollmode = template.rollType;
     for (let c of template.components) {
       switch (c.type) {
         case "verb":

@@ -32,7 +32,9 @@
       {{/if}}
       {{#if false}}
         <a class="item-control advanced-req-roll flex0" title="Advanced Requistes" data-flavor="NPC"
-          data-itemId="{{system.roll.itemId}}" data-actorId="{{_id}}"><i class="fas fa-gavel fa-lg"></i></a>
+          data-type="{{system.roll.type}}" data-itemId="{{system.roll.itemId}}" data-actorId="{{_id}}"><i
+            class="fas fa-gavel fa-lg"></i></a>
+
       {{/if}}
     </div>
     {{#if system.roll.ability.active}}

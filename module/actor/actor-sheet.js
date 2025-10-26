@@ -7,7 +7,6 @@ import { resetOwnerFields } from "../item/item-converter.js";
 import { ARM5E } from "../config.js";
 import {
   log,
-  getLastMessageByHeader,
   calculateWound,
   getDataset,
   hermeticFilter,
@@ -16,7 +15,10 @@ import {
   topicFilter,
   hermeticTopicFilter,
   diaryEntryFilter,
-  getUuidInfo
+  getUuidInfo,
+  getLastCombatMessageOfType,
+  slugify,
+  getWoundRanges
 } from "../tools.js";
 import ArM5eActiveEffect from "../helpers/active-effects.js";
 import {
@@ -33,19 +35,22 @@ import {
   chooseTemplate,
   ROLL_MODES,
   getRollTypeProperties,
-  usePower
+  usePower,
+  useMagicItem
 } from "../helpers/rollWindow.js";
 
 import {
+  buildDamageDataset,
   buildSoakDataset,
   combatDamage,
   computeCombatStats,
   quickCombat,
   quickVitals,
-  rolledDamage
+  rolledDamage,
+  setWounds
 } from "../helpers/combat.js";
 import { quickMagic, spellFormLabel, spellTechniqueLabel } from "../helpers/magic.js";
-import { UI, getConfirmation } from "../constants/ui.js";
+import { UI } from "../constants/ui.js";
 import { Schedule } from "../tools/schedule.js";
 import {
   createAgingDiaryEntry,
@@ -60,6 +65,7 @@ import { MedicalHistory } from "../tools/med-history.js";
 import { ArM5eActorProfiles } from "./subsheets/actor-profiles.js";
 import { ArM5eMagicSystem } from "./subsheets/magic-system.js";
 import { getRefCompendium } from "../tools/compendia.js";
+import { getConfirmation } from "../ui/dialogs.js";
 
 export class ArM5eActorSheet extends ActorSheet {
   constructor(object, options) {
@@ -101,8 +107,24 @@ export class ArM5eActorSheet extends ActorSheet {
     return this.isEditable;
   }
 
+  //@overloaded : added await to _onDropX calls AppV2 to remove
   async _onDrop(event) {
-    return await super._onDrop(event);
+    const data = TextEditor.getDragEventData(event);
+    const actor = this.actor;
+    const allowed = Hooks.call("dropActorSheetData", actor, this, data);
+    if (allowed === false) return;
+
+    // Handle different data types
+    switch (data.type) {
+      case "ActiveEffect":
+        return await this._onDropActiveEffect(event, data);
+      case "Actor":
+        return await this._onDropActor(event, data);
+      case "Item":
+        return await this._onDropItem(event, data);
+      case "Folder":
+        return await this._onDropFolder(event, data);
+    }
   }
 
   /* -------------------------------------------- */
@@ -359,13 +381,15 @@ export class ArM5eActorSheet extends ActorSheet {
       for (let [key, v] of Object.entries(context.system.vitals)) {
         v.label = game.i18n.localize(CONFIG.ARM5E.character.vitals[key].label);
       }
+
       if (context.system.wounds) {
+        const ranges = getWoundRanges(this.actor.system.vitals?.siz?.value || 0);
         context.health = {
-          light: context.system.wounds.light,
-          medium: context.system.wounds.medium,
-          heavy: context.system.wounds.heavy,
-          incap: context.system.wounds.incap,
-          dead: context.system.wounds.dead
+          light: { wounds: context.system.wounds.light, range: ranges[0] },
+          medium: { wounds: context.system.wounds.medium, range: ranges[1] },
+          heavy: { wounds: context.system.wounds.heavy, range: ranges[2] },
+          incap: { wounds: context.system.wounds.incap, range: ranges[3] },
+          dead: { wounds: context.system.wounds.dead, range: ranges[4] }
         };
       }
       context.isDead = this.actor.system.wounds.dead.length > 0;
@@ -479,14 +503,14 @@ export class ArM5eActorSheet extends ActorSheet {
           if (technique.deficient) {
             technique.ui = {
               style: UI.STYLES.DEFICIENT_ART,
-              title: game.i18n.localize("arm5e.sheet.activeEffect.types.arts.deficiency")
+              title: game.i18n.localize("arm5e.activeEffect.types.arts.deficiency")
             };
           } else if (!technique.bonus && technique.xpCoeff == 1.0) {
             technique.ui = { style: UI.STYLES.STANDARD_ART };
           } else if (!technique.bonus && technique.xpCoeff != 1.0) {
             technique.ui = {
               style: UI.STYLES.AFINITY_ART,
-              title: game.i18n.localize("arm5e.sheet.activeEffect.types.arts.affinity")
+              title: game.i18n.localize("arm5e.activeEffect.types.arts.affinity")
             };
           } else if (technique.bonus && technique.xpCoeff == 1.0) {
             technique.ui = {
@@ -496,7 +520,7 @@ export class ArM5eActorSheet extends ActorSheet {
           } else {
             technique.ui = {
               style: UI.STYLES.COMBO_ART,
-              title: game.i18n.localize("arm5e.sheet.activeEffect.types.arts.affinity")
+              title: game.i18n.localize("arm5e.activeEffect.types.arts.affinity")
             };
           }
         }
@@ -526,14 +550,14 @@ export class ArM5eActorSheet extends ActorSheet {
           if (form.deficient) {
             form.ui = {
               style: UI.STYLES.DEFICIENT_ART,
-              title: game.i18n.localize("arm5e.sheet.activeEffect.types.arts.deficiency")
+              title: game.i18n.localize("arm5e.activeEffect.types.arts.deficiency")
             };
           } else if (!form.bonus && form.xpCoeff == 1.0) {
             form.ui = { style: UI.STYLES.STANDARD_ART };
           } else if (!form.bonus && form.xpCoeff != 1.0) {
             form.ui = {
               style: UI.STYLES.AFINITY_ART,
-              title: game.i18n.localize("arm5e.sheet.activeEffect.types.arts.affinity")
+              title: game.i18n.localize("arm5e.activeEffect.types.arts.affinity")
             };
           } else if (form.bonus && form.xpCoeff == 1.0) {
             form.ui = {
@@ -543,7 +567,7 @@ export class ArM5eActorSheet extends ActorSheet {
           } else {
             form.ui = {
               style: UI.STYLES.COMBO_ART,
-              title: game.i18n.localize("arm5e.sheet.activeEffect.types.arts.affinity")
+              title: game.i18n.localize("arm5e.activeEffect.types.arts.affinity")
             };
           }
 
@@ -581,13 +605,13 @@ export class ArM5eActorSheet extends ActorSheet {
                 context.system.labTotals[key][
                   k2
                 ].ui = `style="box-shadow: 0 0 5px blue" title="${game.i18n.localize(
-                  "arm5e.sheet.activeEffect.types.laboratorySpec"
+                  "arm5e.activeEffect.types.laboratorySpec"
                 )}: ${specialtyMod}"`;
               } else if (specialtyMod < 0) {
                 context.system.labTotals[key][
                   k2
                 ].ui = `style="box-shadow: 0 0 5px red" title="${game.i18n.localize(
-                  "arm5e.sheet.activeEffect.types.laboratorySpec"
+                  "arm5e.activeEffect.types.laboratorySpec"
                 )}: ${specialtyMod}"`;
               }
 
@@ -1318,11 +1342,31 @@ export class ArM5eActorSheet extends ActorSheet {
       item.sheet.render(true, { focus: true });
     });
 
-    html.find(".item").contextmenu((ev) => {
+    // html.find(".enchant-trigger").click(async (ev) => {
+    //   ev.preventDefault();
+    //   const li = $(ev.currentTarget).parents(".item");
+    //   let itemId = li.data("itemId");
+
+    //   const item = this.actor.items.get(itemId);
+    //   // const enchantIdx = dataset.index;
+    //   if (item.isOwned) {
+    //     dataset.name = item.name;
+    //     dataset.roll = "item";
+    //     dataset.id = itemId;
+    //     dataset.physicalcondition = false;
+    //     await useMagicItem(dataset, item);
+    //   }
+    // });
+
+    html.find(".item").contextmenu(async (ev) => {
       let li = ev.currentTarget;
       let item = this.document.items.get(li.dataset.itemId);
-      if (item && item.system.description) {
-        this._onDropdown($(ev.currentTarget), item.system.description);
+      if (!item) {
+        // item is in a compendium
+        item = await fromUuid(li.dataset.uuid);
+      }
+      if (item && (item.system.description || item.system.state === "enchanted")) {
+        this._onDropdown($(ev.currentTarget), item.getSummary());
       }
     });
 
@@ -1357,6 +1401,22 @@ export class ArM5eActorSheet extends ActorSheet {
     html.find(".resource-focus").focus((ev) => {
       ev.preventDefault();
       ev.currentTarget.select();
+    });
+
+    html.find(".enchant-trigger").click(async (ev) => {
+      ev.preventDefault();
+      const li = $(ev.currentTarget).parents(".item");
+      let itemId = li.data("itemId");
+
+      const item = this.actor.items.get(itemId);
+      // const enchantIdx = dataset.index;
+      if (item.isOwned) {
+        dataset.name = item.name;
+        dataset.roll = "item";
+        dataset.id = itemId;
+        dataset.physicalcondition = false;
+        await useMagicItem(dataset, item);
+      }
     });
 
     // Quick edit of Item from inside Actor sheet
@@ -1570,6 +1630,11 @@ export class ArM5eActorSheet extends ActorSheet {
       ev.preventDefault();
       ev.currentTarget.select();
     });
+
+    html.find(".combatDamage").change((ev) => {
+      ev.preventDefault();
+      this.render(true);
+    });
   }
 
   async _increaseArt(type, art) {
@@ -1697,24 +1762,43 @@ export class ArM5eActorSheet extends ActorSheet {
       summary.hide();
       summary.insertAfter(element);
       summary.slideDown(200);
+      // WIP
+      // summary.on("click", async (ev) => {
+      //   ev.preventDefault();
+      //   const li = $(ev.currentTarget).parents(".item");
+      //   let itemId = li.data("itemId");
+
+      //   const item = this.actor.items.get(itemId);
+      //   // const enchantIdx = dataset.index;
+      //   if (item.isOwned) {
+      //     dataset.name = item.name;
+      //     dataset.roll = "item";
+      //     dataset.id = itemId;
+      //     dataset.physicalcondition = false;
+      //     await useMagicItem(dataset, item);
+      //   }
+      // });
     }
   }
 
   async _onSoakDamage(html, actor) {
-    const lastMessageDamage = getLastMessageByHeader(game, "arm5e.sheet.damage");
+    const lastMessageDamage = getLastCombatMessageOfType("damage");
     const damage = parseInt($(lastMessageDamage?.content).text()) || 0;
-    const extraData = {
+    var actor = this.actor;
+    const form = lastMessageDamage ? lastMessageDamage.system.combat.damageForm : "te";
+    const data = {
+      actor,
       damage,
-      modifier: 0
+      modifier: 0,
+      natRes: "",
+      formRes: "",
+      selection: { natRes: {}, formRes: {} }
     };
 
-    var actor = this.actor;
-
-    extraData.natRes = {};
     for (let [key, resist] of Object.entries(actor.system.bonuses.resistance)) {
       if (resist !== 0) {
-        extraData.hasResistance = true;
-        extraData.natRes[key] = {
+        data.hasResistance = true;
+        data.selection.natRes[key] = {
           res: resist,
           label: `${CONFIG.ARM5E.magic.arts[key].label} (${resist})`
         };
@@ -1722,27 +1806,24 @@ export class ArM5eActorSheet extends ActorSheet {
     }
 
     if (actor.isMagus()) {
-      extraData.isMagus = true;
-      extraData.formRes = {};
+      data.isMagus = true;
+      data.selection.formRes = {};
       for (let [key, form] of Object.entries(actor.system.arts.forms)) {
-        extraData.formRes[key] = {
+        data.selection.formRes[key] = {
           res: Math.ceil(form.finalScore / 5),
           label: `${form.label} (${Math.ceil(form.finalScore / 5)})`
         };
       }
+      data.formRes = data.selection.formRes[form].res;
     }
 
-    const data = {
-      actor,
-      extraData
-    };
     let template = "systems/arm5e/templates/actor/parts/actor-soak.html";
     const dialog = await renderTemplate(template, data);
     new Dialog(
       {
         title: game.i18n.localize("arm5e.dialog.woundCalculator"),
         content: dialog,
-        render: this.addListenersDialog,
+        render: (html) => this.addListenersDialog(html),
         buttons: {
           yes: {
             icon: "<i class='fas fa-check'></i>",
@@ -1752,14 +1833,14 @@ export class ArM5eActorSheet extends ActorSheet {
               await setWounds(soakData, actor);
             }
           },
-          roll: {
-            label: game.i18n.localize("arm5e.dialog.button.roll"),
-            callback: async (html) => {
-              const soakData = buildSoakDataset(html);
-              await rolledDamage(soakData, actor);
-              await setWounds(soakData, actor);
-            }
-          },
+          // roll: {
+          //   label: game.i18n.localize("arm5e.dialog.button.roll"),
+          //   callback: async (html) => {
+          //     const soakData = buildSoakDataset(html);
+          //     await rolledSoak(soakData, actor);
+          //     await setWounds(soakData, actor);
+          //   }
+          // },
           no: {
             icon: "<i class='fas fa-ban'></i>",
             label: game.i18n.localize("arm5e.dialog.button.cancel"),
@@ -1782,31 +1863,29 @@ export class ArM5eActorSheet extends ActorSheet {
   }
 
   async _onCalculateDamage(html, actor) {
-    const lastAttackMessage = getLastMessageByHeader(game, "arm5e.sheet.attack");
-    const lastDefenceMessage = getLastMessageByHeader(game, "arm5e.sheet.defense");
+    const lastAttackMessage = getLastCombatMessageOfType("attack");
+    const lastDefenseMessage = getLastCombatMessageOfType("defense");
     const attack = parseInt(lastAttackMessage?.content || "0");
-    const defense = parseInt(lastDefenceMessage?.content || "0");
+    const defense = parseInt(lastDefenseMessage?.content || "0");
     const advantage = attack - defense;
-
-    const extraData = {
-      advantage,
-      modifier: 0
-    };
 
     var actor = this.actor;
 
     const data = {
       actor,
-      extraData
+      advantage,
+      modifier: 0,
+      formDamage: "te",
+      selection: { forms: CONFIG.ARM5E.magic.forms }
     };
-    let template = "systems/arm5e/templates/actor/parts/actor-calculateDamage.html";
+    let template = "systems/arm5e/templates/generic/combat-damage.html";
     const dialog = await renderTemplate(template, data);
 
     new Dialog(
       {
         title: game.i18n.localize("arm5e.dialog.damageCalculator"),
         content: dialog,
-        render: this.addListenersDialog,
+        render: (html) => this.addListenersDialog(html),
         buttons: {
           apply: {
             icon: "<i class='fas fa-check'></i>",
@@ -1816,9 +1895,8 @@ export class ArM5eActorSheet extends ActorSheet {
           // roll: {
           //   label: game.i18n.localize("arm5e.dialog.button.roll"),
           //   callback: async (html) => {
-          //     const soakData = buildSoakDataset(html);
-          //     await rolledDamage(soakData, actor);
-          //     await setWounds(soakData, actor);
+          //     const damageData = buildDamageDataset(html);
+          //     await rolledDamage(damageData, actor);
           //   }
           // },
           no: {
@@ -1847,6 +1925,29 @@ export class ArM5eActorSheet extends ActorSheet {
    */
   async _onRoll(event) {
     const dataset = getDataset(event);
+
+    if (game.settings.get("arm5e", "passConfidencePromptOnRoll")) {
+      // find if there is indeed a message with a prompt with this actor.
+      let pendingConfMsg = game.messages.contents.filter((m) => {
+        return m.speaker?.actor === this.actor._id && m.system.confPrompt;
+      });
+      if (pendingConfMsg.length) {
+        const promises = pendingConfMsg.map((e) => {
+          return e.system.skipConfidenceUse();
+        });
+        await Promise.all(promises);
+      } else if (this.actor.system.states.confidencePrompt) {
+        await this.actor.update({ "system.states.confidencePrompt": false });
+      }
+    } else {
+      if (this.actor.system.states.confidencePrompt) {
+        ui.notifications.info(game.i18n.localize("arm5e.notification.confidencePromptPending"), {
+          permanent: true
+        });
+        return false;
+      }
+    }
+
     if (this.actor.system.wounds.dead.length > 0) {
       ui.notifications.info(game.i18n.localize("arm5e.notification.dead"), {
         permanent: true
@@ -1854,13 +1955,12 @@ export class ArM5eActorSheet extends ActorSheet {
       return false;
     }
 
-    if (this.actor.system.states.confidencePrompt) {
-      ui.notifications.info(game.i18n.localize("arm5e.notification.confidencePromptPending"), {
-        permanent: true
-      });
-      return false;
+    const rollProperties = getRollTypeProperties(dataset.roll);
+    if (dataset.mode) {
+      rollProperties.MODE = dataset.mode;
     }
-    if ((getRollTypeProperties(dataset.roll).MODE & ROLL_MODES.UNCONSCIOUS) == 0) {
+
+    if ((rollProperties.MODE & ROLL_MODES.UNCONSCIOUS) == 0) {
       // if (dataset.roll != "char" && dataset.roll != "aging" && dataset.roll != "crisis") {
       if (this.actor.system.states.pendingCrisis) {
         ui.notifications.info(game.i18n.localize("arm5e.notification.pendingCrisis"), {
@@ -1907,6 +2007,7 @@ export class ArM5eActorSheet extends ActorSheet {
 
     const template = chooseTemplate(dataset);
     await renderRollTemplate(dataset, template, this.actor);
+    // log(false, `spell info: ${JSON.stringify(this.actor.rollInfo.magic)}`);
     return true;
   }
 
@@ -2140,24 +2241,29 @@ export class ArM5eActorSheet extends ActorSheet {
     }
     let droppedActor = await fromUuid(data.uuid);
     // link both ways
+    const promiseArray = [];
     let updateArray = [];
     if (droppedActor.type === "covenant") {
       if (this.actor.system.covenant.linked) {
+        // unlink old cov if present
         delete this.actor.apps[this.actor.system.covenant.document.sheet?.appId];
         delete this.actor.system.covenant.document.apps[this.appId];
-        updateArray.push(...this.actor.system.covenant.document.sheet._unbindActor(this.actor));
-        updateArray.push(...droppedActor.sheet._bindActor(this.actor));
+        promiseArray.push(this.actor.system.covenant.document.sheet._unbindActor(this.actor));
       }
+      promiseArray.push(droppedActor.sheet._bindActor(this.actor));
     } else if (droppedActor.type === "laboratory") {
       if (this.actor.system.sanctum.linked) {
-        delete this.actor.apps[this.actor.system.owner.sanctum.sheet?.appId];
+        // unlink old lab if present
+        delete this.actor.apps[this.actor.system.sanctum.document.sheet?.appId];
         delete this.actor.system.sanctum.document.apps[this.appId];
         updateArray.push(this.actor.system.sanctum.document.sheet._unbindActor(this.actor));
       }
       updateArray.push(droppedActor.sheet._bindActor(this.actor));
     }
     updateArray.push(this._bindActor(droppedActor));
-    return await Actor.updateDocuments(await Promise.all(updateArray));
+    await Promise.all(promiseArray.flat());
+    const res = await Promise.all(updateArray);
+    return await Actor.updateDocuments(res);
   }
 
   _bindActor(actor) {
@@ -2255,64 +2361,5 @@ export class ArM5eActorSheet extends ActorSheet {
       formData = await this.twilight._updateObject(event, formData);
     }
     return await super._updateObject(event, formData);
-  }
-}
-export async function setWounds(soakData, actor) {
-  const size = actor?.system?.vitals?.siz?.value || 0;
-  const typeOfWound = calculateWound(soakData.damageToApply, size);
-  if (typeOfWound === false) {
-    ui.notifications.info(game.i18n.localize("arm5e.notification.notPossibleToCalculateWound"), {
-      permanent: true
-    });
-    return false;
-  }
-  // here toggle dead status if applicable
-
-  const messageDamage = `${game.i18n.localize("arm5e.sheet.damage")} (${soakData.damage})`;
-  const messageStamina = `${game.i18n.localize("arm5e.sheet.stamina")} (${soakData.stamina})`;
-  let messageBonus = "";
-  if (soakData.bonus) {
-    messageBonus = `${game.i18n.localize("arm5e.sheet.soakBonus")} (${soakData.bonus})<br/> `;
-  }
-  const messageProt = `${game.i18n.localize("arm5e.sheet.protection")} (${soakData.prot})`;
-  let messageModifier = "";
-  if (soakData.modifier) {
-    messageModifier += `${game.i18n.localize("arm5e.sheet.modifier")} (${soakData.modifier})<br/>`;
-  }
-  if (soakData.natRes) {
-    messageModifier += `${game.i18n.localize("arm5e.sheet.natRes")} (${soakData.natRes})<br/>`;
-  }
-  if (soakData.formRes) {
-    messageModifier += `${game.i18n.localize("arm5e.sheet.formRes")} (${soakData.formRes})<br/>`;
-  }
-  if (soakData.roll) {
-    messageModifier += `${game.i18n.localize("arm5e.dialog.button.roll")} (${soakData.roll})<br/>`;
-  }
-  const messageTotal = `${game.i18n.localize("arm5e.sheet.totalDamage")} = ${
-    soakData.damageToApply
-  }`;
-  const messageWound = typeOfWound
-    ? game.i18n.format("arm5e.messages.woundResult", {
-        typeWound: game.i18n.localize("arm5e.messages.wound." + typeOfWound.toLowerCase())
-      })
-    : game.i18n.localize("arm5e.messages.noWound");
-
-  const details = ` ${messageDamage}<br/> ${messageStamina}<br/> ${messageProt}<br/> ${messageBonus}${messageModifier}<b>${messageTotal}</b>`;
-  ChatMessage.create({
-    type: "combat",
-    system: {
-      label: game.i18n.localize("arm5e.sheet.soak"),
-      roll: {
-        details: putInFoldableLinkWithAnimation("arm5e.sheet.details", details)
-      }
-    },
-    content: `<h4 class="dice-total">${messageWound}</h4>`,
-    speaker: ChatMessage.getSpeaker({
-      actor
-    })
-  });
-
-  if (typeOfWound) {
-    await actor.changeWound(1, typeOfWound);
   }
 }

@@ -18,6 +18,7 @@
   line-height: 1;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  vertical-align: middle;
 }
 .icon-Icon_Ars:before {
   content: "\0041";
@@ -25,7 +26,7 @@
 .icon-Tool_Ars:before {
   content: "\0041";
   font-size: 19pt;
-  padding-top: 11px;
+  vertical-align: middle;
 }
 .icon-Icon_Details:before {
   content: "\0042";
@@ -55,7 +56,7 @@
 .icon-Tool_Auras:before {
   content: "\0047";
   font-size: 19pt;
-  padding-top: 11px;
+  vertical-align: middle;
 }
 .icon-Icon_Auras2:before {
   content: "\0048";
@@ -77,7 +78,7 @@
 }
 .icon-Icon_Edit:before {
   content: "\004e";
-  padding-top: 11px;
+  vertical-align: middle;
 }
 
 .icon-Icon_Delete_Big_Hand_Gesture:before {
@@ -87,7 +88,7 @@
 
 .icon-Icon_Delete_Hand_Gesture:before {
   content: "\004f";
-  padding-top: 11px;
+  vertical-align: middle;
 }
 
 .icon-SmallIcon_Delete_Hand_Gesture:before {
@@ -101,39 +102,42 @@
 
 .icon-Icon_Delete_Perdo2:before {
   content: "\0051";
+  vertical-align: middle;
 }
 .icon-Tool_Scriptorium:before {
   content: "\0057";
   font-size: 19pt;
-  padding-top: 11px;
+  vertical-align: middle;
 }
 .icon-Tool_Journals:before {
   content: "\0057";
+  vertical-align: middle;
 }
 
 .icon-Tool_Journals_sidebar:before {
   content: "\0057";
-  padding-top: 6px;
+  vertical-align: middle;
 }
 .icon-Tool_Delete_Perdo2:before {
   content: "\0051";
   font-size: 19pt;
-  padding-top: 11px;
+  vertical-align: middle;
 }
 .icon-Icon_Soak:before {
   content: "\0052";
 }
 .icon-Icon_Astrolab:before {
   content: "\0053";
+  vertical-align: middle;
 }
 .icon-Tool_Astrolab:before {
   content: "\0053";
   font-size: 19pt;
-  padding-top: 11px;
+  vertical-align: middle;
 }
 .icon-Tool_AstrolabBig:before {
   content: "\0053";
-  padding-top: 16px;
+  vertical-align: middle;
   font-size: 28pt;
 }
 .icon-Icon_Locked:before {
@@ -153,7 +157,7 @@
 }
 .icon-Icon_Read:before {
   font-size: 22pt;
-  padding-top: 0px;
+  vertical-align: middle;
   content: "\0058";
 }
 .icon-Icon_Copy:before {
@@ -167,7 +171,7 @@
 }
 .icon-Icon_magic-chest:before {
   content: "\0062";
-  padding-top: 6px;
+  vertical-align: middle;
 }
 .icon-Icon_Sanatorium:before {
   content: "\0063";

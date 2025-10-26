@@ -124,7 +124,7 @@ export class LabSchema extends foundry.abstract.TypeDataModel {
     this.diaryEntries = [];
     this.laboratoryTexts = [];
 
-    for (let [key, item] of this.items.entries()) {
+    for (let [key, item] of this.parent.items.entries()) {
       // TODO TMP
       if (item.type === "speciality") {
         this.specialities_old.push(item);
@@ -181,13 +181,13 @@ export class LabSchema extends foundry.abstract.TypeDataModel {
         this.items.push(item);
       } else if (item.type === "virtue") {
         this.virtues.push(item);
-        if (ARM5E.impacts[item.system.impact.value]) {
-          this.totalVirtues += ARM5E.impacts[item.system.impact.value].cost;
+        if (CONFIG.ARM5E.impacts[item.system.impact.value]) {
+          this.totalVirtues += CONFIG.ARM5E.impacts[item.system.impact.value].cost;
         }
       } else if (item.type === "flaw") {
         this.flaws.push(item);
-        if (ARM5E.impacts[item.system.impact.value]) {
-          this.totalFlaws += ARM5E.impacts[item.system.impact.value].cost;
+        if (CONFIG.ARM5E.impacts[item.system.impact.value]) {
+          this.totalFlaws += CONFIG.ARM5E.impacts[item.system.impact.value].cost;
         }
       } else if (item.type === "diaryEntry") {
         this.diaryEntries.push(item);

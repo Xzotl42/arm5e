@@ -1,12 +1,146 @@
-## 2.4.0.9, Radislav am Polanach
+## 2.4.0.31, Radislav, Enigmatic Faeries 2
 
-### Compatibility change
+### V13 compatibility
 
-- Foundry VTT V12+ only
+- Verified for version 13.350
 
 ### Features & changes
 
-- [Technical] Switch to V12
+- Damage ranges are now displayed for each wound gravity (based on size)
+- It now possible to right click on spells coming from compendium to display their description in the Codex
+- [technical] various refactoring
+
+### Bug fixes
+
+- Not receiving a wound when applying damage (ie: soak > damage) no longer raise an error.
+- Codex sheet displays properly again, ignoring powers added to the spells compendium
+- Some codex functionality was not working with spells coming from the compendium.
+
+## 2.4.0.30, Radislav, Enigmatic Faeries
+
+### V13 compatibility
+
+- Verified for version 13.350
+
+### Features & changes
+
+- Initiative is now displayed in the powers list.
+
+### Bug fixes
+
+- Build point for teacher inhabitants are computed properly
+- Index key slugification is working again on Actors
+- Vis study is no longer raising an error.
+- Rolls without chat message (eg: recovery) are no longer raising an error.
+- Roll modifier was not retrived properly and resulted in wrong display in some cases.
+
+## 2.4.0.28, Radislav, Faeries are the key
+
+### V13 compatibility
+
+- Verified for version 13.350
+
+### Features & changes
+
+- User sharing ownership with a character can resolve a confidence prompt
+- Enchantments are now displayed in addition to the description on right-click on an item in character sheet.
+
+### Bug fixes
+
+- Formulaic spell with partial success makes you lose a fatigue level again.
+- On a roll, the check/skip for confidence prompt is done first, applying any pending fatigue levels or wounds which could prevent a roll (unconscious, incapacitated,...)
+- When resolving a confidence prompt, if the owner of a character is not the initiator of the roll and the owner or a GM is not present, a proper error message will be displayed instead of failing mid-process.
+- User can resolve a roll initiated by the GM
+
+## 2.4.0.26, Radislav agrees with Quendalon
+
+### V13 compatibility
+
+### Features & changes
+
+- New setting to automatically skip confidence prompt on roll.
+
+## Bug fixes
+
+- Covenant description no longer overflow
+
+## 2.4.0.25, Radislav agrees with Quendalon
+
+### V13 compatibility
+
+### Features & changes
+
+- Various improvements to chat messages design.
+- New active effects:
+  - Alternate Arts XP bonus
+  - Specific form magic resistance (not cumulative with Parma)
+- [Technical] Mnemonics reorganization - WIP
+
+## Bug fixes
+
+- Parma is now properly multiplied by 5 when computing magic resistance during contest.
+- It is now possible to edit the number of warping points when triggering a Twilight manually
+- Confidence spending was not allowed for Twilight control and understanding.
+- Virtues and flaws icons were reduced to size 0
+
+## 2.4.0.24, Radislav the guy with the accent
+
+### V13 compatibility
+
+- Fix Arcane implementation rolls
+- The V13 disclaimer at login is no longer persistent
+
+## Bug fixes
+
+- Default difficulty of a roll chat message is now 0 instead of 1
+- Removed the "versus <difficulty>" in the roll message in case of a botch.
+- Confidence prompt icon will now appear with all types of characters.
+- Confidence prompt icon will appear even if there is no consequence to the roll (fatigue, wounds,...)
+- The loss of warping points will appear only once on the chat message
+
+## 2.4.0.23, Radislav am Polanach
+
+### Compatibility
+
+- Foundry VTT V12+ only
+
+### V13 compatibility
+
+- Fixed sidebar and canvas icons.
+- Missing Ars Magica buttons
+- Canvas buttons are now working
+- Fixed pause button
+- Fixed editors
+- Fixed journals
+- Fixed invisible unticked checkboxes on black background.
+- Active Effect config migrated to appV2
+
+### Features & changes
+
+- It is again possible to switch between spell invention and spell learning without resetting the spell's attributes.
+- Dropping a magical effect on a lab will switch the activity to spell invention.
+- Dropping a book's lab text topic from an Actor library on to a lab will now work
+- Gift type of magi inhabitants is set automatically if they have Gentle Gift or Blatant Gift.
+- Arts and abilities active effects definitions are generated dynamically
+- New active effects:
+  - Reading about Art (Study bonus)
+  - Susceptibility to <Realm>
+- It is possible to progress in alternate arts in seasonal activities (as abilities)
+- Added physical condition modifier (@physicalCondition) to rollData, to be used in inline rolls
+- Cosmetic changes:
+  - bigger icons
+  - better spacing
+- Codex has been migrated to V10 datamodel.
+- Codex now allows to browse and filter the content of ars-compendia base effects and spells without importing everything.
+- Arcane experimentation dialog.
+- Money management (or not)
+- Better display of requisites in spell sheet
+- Shift clicking an Item in the hotbar will display its sheet instead of rolling
+- Control clicking an Item in the hotbar will display its owner's sheet instead of rolling
+- Time to recover all fatigue is displayed on the rest button
+- Fatigue rolls (fail the roll you lose fatigue)
+- Added difficulty target to characteristics and abilities rolls.
+- [Technical] Switch to V12 only
   - Use of TypeDataModel instead of DataModel for Document types
   - Removed of V10 only code.
   - Removed V12 deprecation warnings
@@ -21,24 +155,9 @@
   - Improved confidence spending
   - New magic roll chat messages
 - [Technical] removal of some duplicate unused id attributes
-- [Technical] V13 compatibility (WIP)
-- Dropping a magical effect on a lab will switch the activity to spell invention.
-- Dropping a book's lab text topic from an Actor library on to a lab will now work
-- Gift type of magi inhabitants is set automatically if they have Gentle Gift or Blatant Gift.
-- Arts and abilities active effects definitions are generated dynamically
-- New active effects:
-  - Reading about Art (Study bonus)
-- [technical] Speed optimization all over the place - on going
-- It is again possible to switch between spell invention and spell learning without resetting the spell's attributes.
-- [technical] the Astrolabium is now a singleton (ie: only one window exists)
-- It is possible to progress in alternate arts in seasonal activities (as abilities)
-- Added physical condition modifier (@physicalCondition) to rollData, to be used in inline rolls
-- Cosmetic changes:
-  - bigger icons
-  - better spacing
-- Codex has been migrated to V10 datamodel.
-- Codex now allows to browse and filter the content of ars-compendia base effects and spells without importing everything.
-- Arcane experimentation dialog.
+- [Technical] Speed optimization all over the place - on going
+- [Technical] the Astrolabium is now a singleton (ie: only one window exists)
+- [Technical] Improved the roll framework so generic roll can be more customized
 
 ### Bug fixes
 
@@ -74,6 +193,13 @@
 - Roll icon doesn't appear anymore for spells not owned by a character
 - Chat rolls with stress die resulting in a botch are clearly indicated
 - Health attribute of the lab is taken into account for aging rolls.
+- Fixed the wrong lab description in diary when there is a magical focus involved.
+- dropping a spell on the covenant sheet will convert it into a labtext
+- dropping a spell on the lab sheet outside of the planning area will add it as a labtext to the library
+- "Laboratory" activities won't prevent the application of future activities anymore.
+- It is again posssible to set requisites of enchantments in the lab.
+- Changing the realm of an entity is working again properly
+- Lab usage activities are applied and rollbacked when the associated activity is
 
 ## 2.3.2.28, Quendalon, more than just sparows and bunnies
 

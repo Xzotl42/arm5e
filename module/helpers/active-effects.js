@@ -32,13 +32,6 @@ export default class ArM5eActiveEffect extends ActiveEffect {
     this.isHidden = this.flags.arm5e?.hidden && !game.user.isGM;
   }
 
-  async getSource() {
-    if (this.target instanceof ArM5eActor && this.parent instanceof ArM5eItem) {
-      return this.parent;
-    }
-    return fromUuid(this.origin);
-  }
-
   /** @inheritdoc */
   apply(actor, change) {
     //  Here check that every effect is properly configured before applying
@@ -47,6 +40,23 @@ export default class ArM5eActiveEffect extends ActiveEffect {
     // if (check) return null;
 
     return super.apply(actor, change);
+  }
+
+  get sourceName() {
+    if (!this.origin) return game.i18n.localize("None");
+    let name;
+    try {
+      if (this.parent instanceof Item) {
+        if (this.parent.isOwned) {
+          name = fromUuidSync(this.parent.uuid)?.name;
+        } else {
+          name = fromUuidSync(this.origin)?.name;
+        }
+      } else {
+        name = fromUuidSync(this.origin)?.name;
+      }
+    } catch (e) {}
+    return name || game.i18n.localize("Unknown");
   }
 
   /**
@@ -79,7 +89,7 @@ export default class ArM5eActiveEffect extends ActiveEffect {
           }
         };
 
-        data.name = game.i18n.localize("arm5e.sheet.activeEffect.new");
+        data.name = game.i18n.localize("arm5e.activeEffect.new");
         data.img = "icons/svg/aura.svg";
 
         return await owner.createEmbeddedDocuments("ActiveEffect", [data]);
@@ -103,17 +113,17 @@ export default class ArM5eActiveEffect extends ActiveEffect {
     const categories = {
       temporary: {
         type: "temporary",
-        label: "arm5e.sheet.activeEffect.section.temporary",
+        label: "arm5e.activeEffect.section.temporary",
         effects: []
       },
       passive: {
         type: "passive",
-        label: "arm5e.sheet.activeEffect.section.passive",
+        label: "arm5e.activeEffect.section.passive",
         effects: []
       },
       inactive: {
         type: "inactive",
-        label: "arm5e.sheet.activeEffect.section.inactive",
+        label: "arm5e.activeEffect.section.inactive",
         effects: []
       }
     };
@@ -261,7 +271,7 @@ export default class ArM5eActiveEffect extends ActiveEffect {
               subtype = game.i18n.format(subtype, { option: effectOption[idx] });
             }
             descr +=
-              game.i18n.format("arm5e.sheet.activeEffect.multiply", {
+              game.i18n.format("arm5e.activeEffect.multiply", {
                 type: subtype
               }) +
               (c.value < 0 ? "" : "+") +
@@ -271,7 +281,7 @@ export default class ArM5eActiveEffect extends ActiveEffect {
             if (effectOption[idx]) {
               subtype = game.i18n.format(subtype, { option: effectOption[idx] });
             }
-            descr += game.i18n.format("arm5e.sheet.activeEffect.add", {
+            descr += game.i18n.format("arm5e.activeEffect.add", {
               score: (c.value < 0 ? "" : "+") + c.value,
               value: subtype
             });

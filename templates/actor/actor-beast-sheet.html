@@ -22,6 +22,12 @@
                   arm5e.aging.crisis.tooltip"}}'><i class="icon-Icon_Aging_crisis"></i></a>
               </div>
             {{/if}}
+            {{#if system.states.confidencePrompt}}
+              <div class="flex0 padding10" style="width:36px"><a class="clear-confidencePrompt"
+                  title='{{localize "arm5e.sheet.states.confidencePrompt"}}' style="font-size: 20pt;"><i
+                    class="fas fa-user-plus"></i></a>
+              </div>
+            {{/if}}
             {{#if devMode}}
               <div class="flex0 padding10" style="width:24px"><a class="migrate" title="Migrate actor"><i
                     class="fas fa-arrow-up"></i></a></div>
@@ -108,7 +114,7 @@
           <a class="item posRelative" data-tab="wounds" data-group="desc-secondary">
             <div class="navItem-right-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
             <div class="navItem-left-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
-            {{localize "arm5e.sheet.vitals"}} & {{localize "arm5e.sheet.combat"}}
+            {{localize "arm5e.sheet.vitals"}} & {{localize "arm5e.sheet.combat.label"}}
           </a>
         </nav>
         <section class="desc-body">

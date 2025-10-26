@@ -1,6 +1,5 @@
 import { getDataset, log } from "../../tools.js";
 import { ARM5E } from "../../config.js";
-import { getConfirmation } from "../../constants/ui.js";
 import { ArM5eActorSheet } from "../../actor/actor-sheet.js";
 import { EnchantmentExtension, EnchantmentSchema } from "../../schemas/enchantmentSchema.js";
 import {
@@ -12,6 +11,8 @@ import {
   computeLevel
 } from "../../helpers/magic.js";
 import { useMagicItem } from "../../helpers/rollWindow.js";
+import { getConfirmation } from "../../ui/dialogs.js";
+import { FLAVORS } from "../../constants/ui.js";
 // import { ArM5eItemMagicSheet } from "../item-magic-sheet.js";
 /**
  */
@@ -80,7 +81,7 @@ export class ArM5eItemEnchantmentSheet {
     enchants.ui = {};
     enchants.invalidMsg = [];
     context.ui = this.getUserCache();
-    context.ui.flavor = "Neutral";
+    context.ui.flavor = FLAVORS.NEUTRAL;
     enchants.totalCapa = 0;
     enchants.states = foundry.utils.duplicate(ARM5E.lab.enchantment.state);
     if (!context.selection) {
@@ -650,7 +651,7 @@ export class ArM5eItemEnchantmentSheet {
       await this.sheet.item.update(updateData);
     });
 
-    html.find(".drag-enchant").click(async (e) => {
+    html.find(".trigger-enchant").click(async (e) => {
       const dataset = getDataset(e);
       const item = this.item;
       const enchantIdx = dataset.index;

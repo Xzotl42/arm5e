@@ -4,11 +4,7 @@
     <div class="header-fields">
       <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name" /></h1>
       <div class="grid grid-2col">
-        <div class="resource">
-          <label class="header-label">{{localize "arm5e.sheet.quantity"}}</label>
-          <input type="number" name="system.quantity" value="{{system.quantity}}" class=" modifier resource-focus"
-            data-dtype="Number" />
-        </div>
+        {{>"systems/arm5e/templates/item/parts/cost.hbs" classes="fit"}}
         <div class="resource">
           <label class="header-label">{{localize "arm5e.sheet.weight"}}</label>
           <input type="number" name="system.weight" value="{{system.weight}}" class="modifier resource-focus"

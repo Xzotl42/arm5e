@@ -21,6 +21,10 @@ export class ArM5eRollInfo {
       this.label = dataset.name;
     }
 
+    if (dataset.title) {
+      this.title = dataset.title;
+    }
+
     if (dataset.chatFlavor) {
       this.flavor = dataset.chatFlavor;
     }
@@ -30,13 +34,13 @@ export class ArM5eRollInfo {
       this.img = dataset.img;
     }
 
-    if (dataset.botchNumber) {
+    if (dataset.botchnumber) {
       this.botchNumber = dataset.botchNumber;
     }
 
-    this.rollProperties = getRollTypeProperties(this.type);
+    this.properties = getRollTypeProperties(this.type);
 
-    if (this.rollProperties.MODIFIERS & ROLL_MODIFIERS.PHYSICAL) {
+    if (this.properties.MODIFIERS & ROLL_MODIFIERS.PHYSICAL) {
       this.physicalCondition = true;
     } else {
       this.physicalCondition = false;
@@ -46,8 +50,17 @@ export class ArM5eRollInfo {
       this.physicalCondition = dataset.physicalcondition;
     }
 
+    if (dataset.difficulty) {
+      this.difficulty = parseInt(dataset.difficulty);
+    }
+
+    if (dataset.mode) {
+      // this.mode =  ;
+      this.properties.MODE = parseInt(dataset.mode);
+    }
+
     this.prepareRollFields(dataset);
-    if (this.rollProperties.MODIFIERS & ROLL_MODIFIERS.ENCUMBRANCE) {
+    if (this.properties.MODIFIERS & ROLL_MODIFIERS.ENCUMBRANCE) {
       this.setGenericField(
         game.i18n.localize("arm5e.sheet.encumbrance"),
         actorSystemData.combat.overload,
@@ -67,6 +80,9 @@ export class ArM5eRollInfo {
         this.itemUuid = actorSystemData.combat.itemUuid;
         this.name = actorSystemData.combat.name;
 
+        break;
+      case ROLL_PROPERTIES.DAMAGE.VAL:
+      case ROLL_PROPERTIES.SOAK.VAL:
         break;
       case ROLL_PROPERTIES.CHAR.VAL:
         this.characteristic = dataset.characteristic;
@@ -125,6 +141,7 @@ export class ArM5eRollInfo {
           } else {
             this.power.form = power.system.form;
           }
+          this.power.realm = actorSystemData.realm;
 
           this.label += ` (${ARM5E.magic.arts[this.power.form].short})`;
           if (this.img === "") this.img = power.img;
@@ -177,14 +194,13 @@ export class ArM5eRollInfo {
           this.ability.score = effect.system.bonusAbility.score;
 
           const template = actorSystemData.magicSystem.templates[effect.system.template];
-          this.useFatigue = template.useFatigue;
-          this.dieType = template.rollType;
+          this.mode = template.rollType;
         }
         this.initPenetrationVariables();
         break;
       case ROLL_PROPERTIES.MAGIC.VAL:
       case ROLL_PROPERTIES.SPONT.VAL:
-        this.useFatigue = true;
+        this.impact.fatigue.use = 1;
 
         this.magic.divide = this._actor.system.bonuses.arts.spontDivider;
       case ROLL_PROPERTIES.SPELL.VAL:
@@ -216,7 +232,9 @@ export class ArM5eRollInfo {
           } else {
             this.magic.focus = spell.system.applyFocus;
           }
+
           this.magic.ritual = spell.system.ritual ?? false;
+
           this.magic.level = spell.system.level;
           this.magic.masteryScore = spell.system.finalScore ?? 0;
           this.bonuses = this.magic.bonus;
@@ -278,12 +296,7 @@ export class ArM5eRollInfo {
           enigma: this._actor.getAbilityStats("enigma")
         };
         this.twilight.enigma.specApply = false;
-        this.setGenericField(
-          game.i18n.localize("arm5e.twilight.warpingPoints"),
-          dataset.warpingPts ?? 2,
-          2,
-          "+"
-        );
+
         this.setGenericField(
           game.i18n.localize("arm5e.skill.mystery.enigma"),
           this.twilight.enigma.score,
@@ -340,7 +353,7 @@ export class ArM5eRollInfo {
         }
         // Health attribute of the lab.
         if (actorSystemData.sanctum?.linked) {
-          const lab = actorSystemData.covenant.document;
+          const lab = actorSystemData.sanctum.document;
           livingMod += Math.floor(lab.system.health.total / 2);
         }
 
@@ -385,12 +398,19 @@ export class ArM5eRollInfo {
         break;
     }
 
+    // starting here, dataset can override type specific parameter.
     if (dataset.divide != undefined) {
       this.magic.divide = dataset.divide;
     }
-    if (dataset.usefatigue != undefined) {
-      this.useFatigue = dataset.usefatigue;
+
+    // fatigue lost if roll failed
+    if (dataset.fatigueOnFail) {
+      this.impact.fatigue.fail = parseInt(dataset.fatigueOnFail);
     }
+    if (dataset.fatigueOnUse) {
+      this.impact.fatigue.use = parseInt(dataset.fatigueOnUse);
+    }
+
     this.activeEffects = [];
     if (["magic", "power", "spont", "spell", "supernatural"].includes(this.type)) {
       this.getSpellcastingModifiers();
@@ -400,6 +420,50 @@ export class ArM5eRollInfo {
     this.getAuraModifier();
 
     this.cleanBooleans();
+  }
+
+  rollFailed(roll) {
+    const total = Math.round(roll._total);
+    log(false, `rollFailed  : Roll total : ${total}`);
+    switch (this.type) {
+      //open rolls, no failure
+      case ROLL_PROPERTIES.INIT.VAL:
+      case ROLL_PROPERTIES.ATTACK.VAL:
+      case ROLL_PROPERTIES.DEFENSE.VAL:
+      case ROLL_PROPERTIES.DAMAGE.VAL:
+      case ROLL_PROPERTIES.SOAK.VAL:
+      case "item": // No roll here, no failure
+      case "power": // No roll here, no failure
+        return false;
+
+      case ROLL_PROPERTIES.CHAR.VAL:
+      case ROLL_PROPERTIES.ABILITY.VAL:
+      case ROLL_PROPERTIES.OPTION.VAL:
+        // if difficulty set
+        if (this.difficulty) {
+          return this.difficulty > total;
+        } else {
+          return false;
+        }
+      case ROLL_PROPERTIES.SUPERNATURAL.VAL:
+      case ROLL_PROPERTIES.MAGIC.VAL:
+      case ROLL_PROPERTIES.SPONT.VAL:
+        if (this.magic.level) {
+          return this.magic.level > total;
+        }
+      case ROLL_PROPERTIES.SPELL.VAL:
+        return this.magic.level - 10 > total;
+      // below rolls have special impacts handled elsewhere
+      case ROLL_PROPERTIES.TWILIGHT_CONTROL.VAL:
+      case ROLL_PROPERTIES.TWILIGHT_STRENGTH.VAL:
+      case ROLL_PROPERTIES.TWILIGHT_COMPLEXITY.VAL:
+      case ROLL_PROPERTIES.TWILIGHT_UNDERSTANDING.VAL:
+      case ROLL_PROPERTIES.AGING.VAL:
+      case ROLL_PROPERTIES.CRISIS.VAL:
+        return false;
+      default:
+        break;
+    }
   }
 
   initPenetrationVariables() {
@@ -439,7 +503,7 @@ export class ArM5eRollInfo {
     );
 
     this.selection.abilities = {
-      None: game.i18n.localize("arm5e.sheet.activeEffect.subtypes.none"),
+      None: game.i18n.localize("arm5e.activeEffect.subtypes.none"),
       ...Object.fromEntries(
         this._actor.system.abilities.map((a) => {
           return [a._id, `${a.name} (${a.system.finalScore})`];
@@ -553,11 +617,6 @@ export class ArM5eRollInfo {
 
   cleanBooleans() {
     // Clean booleans
-    if (this.useFatigue === "false") {
-      this.useFatigue = false;
-    } else if (this.useFatigue === "true") {
-      this.useFatigue = true;
-    }
 
     if (this.physicalCondition === "false") {
       this.physicalCondition = false;
@@ -567,6 +626,8 @@ export class ArM5eRollInfo {
   }
 
   reset() {
+    this.mode = 0;
+    this.difficulty = 0;
     this.magic = {
       technique: {
         active: true,
@@ -606,11 +667,20 @@ export class ArM5eRollInfo {
       divide: 1,
       level: 0
     };
-    this.rollProperties = {};
+    this.properties = {};
     this.power = {
       cost: 0,
       penetrationPenalty: 0,
-      form: ""
+      form: "",
+      realm: "magic"
+    };
+
+    this.impact = {
+      fatigue: {
+        use: 0,
+        partial: 0,
+        fail: 0
+      }
     };
 
     this.twilight = {
@@ -655,6 +725,7 @@ export class ArM5eRollInfo {
     this.optionalBonuses = [];
     this.type = "";
     this.label = "";
+    this.title = ""; // title of the roll window
     this.details = "";
     // Roll formula
     this.formula = "";
@@ -668,7 +739,6 @@ export class ArM5eRollInfo {
 
     // Arbitrary bonus
     this.modifier = 0;
-    this.useFatigue = false;
     // Whether physical condition impact the roll
     this.physicalCondition = true;
     this.secondaryScore = 0;
@@ -685,7 +755,7 @@ export class ArM5eRollInfo {
       this.ability.realm != "mundane";
     const noRollWithAura = ["power", "item"].includes(this.type);
     const auraApply =
-      superNatAbility || noRollWithAura || this.rollProperties.MODIFIERS & ROLL_MODIFIERS.AURA;
+      superNatAbility || noRollWithAura || this.properties.MODIFIERS & ROLL_MODIFIERS.AURA;
     if (auraApply) {
       this.environment.aura = Aura.fromActor(this._actor);
       if (this.type === "supernatural") {

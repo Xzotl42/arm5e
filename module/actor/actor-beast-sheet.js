@@ -53,8 +53,7 @@ export class ArM5eBeastActorSheet extends ArM5eActorSheet {
     //}
 
     context.ui.qualities = { display: true };
-    log(false, "Beast-sheet getData");
-    log(false, context);
+    log(false, "Beast-sheet getData", context);
 
     return context;
   }

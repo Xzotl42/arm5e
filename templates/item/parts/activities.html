@@ -161,7 +161,6 @@
               class="progress-art flex02" {{@root.system.disabled}} style="min-width: 150px;">
               {{selectOptions @root.system.ownedArts selected=art.key labelAttr="label" nameAttr="key" valueAttr="key"}}
             </select>
-            {{log "TOTO02"}}
             <div class="xp">
               {{#unless ../ui.showTeacher}}
                 <input type="number" name="system.progress.arts.{{idx}}.xp" value="{{art.xp}}" data-dtype="Number"

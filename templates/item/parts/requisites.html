@@ -10,7 +10,7 @@
               <div class="flexrow marginbot4">
                 {{#with (lookup @root.config.magic.techniques key)~}}
                   <span class="checkbox-label fontSize10" name="technique.label"> {{label~}} </span>
-                  <input type="checkbox" {{@root.noSelect}} name="system.technique-req.{{key}}"
+                  <input type="checkbox" {{@root.noSelect}} name="{{@root.config.updatePath}}.technique-req.{{key}}"
                     class="Selected{{label}}" {{checked technique}} {{@root.edition}} />
                 {{/with}}
               </div>
@@ -28,8 +28,8 @@
               <div class="flexrow marginbot4">
                 {{#with (lookup @root.config.magic.forms key)~}}
                   <span class="checkbox-label fontSize10" name="form.label"> {{label~}} </span>
-                  <input type="checkbox" {{@root.noSelect}} name="system.form-req.{{key}}" class="Selected{{label}}"
-                    {{checked form}} {{@root.edition}} />
+                  <input type="checkbox" {{@root.noSelect}} name="{{@root.config.updatePath}}.form-req.{{key}}"
+                    class="Selected{{label}}" {{checked form}} {{@root.edition}} />
                 {{/with}}
               </div>
             </div>

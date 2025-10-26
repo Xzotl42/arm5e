@@ -1,7 +1,5 @@
 import { ARM5E } from "./config.js";
 
-import { DEFAULT_WOUND, SIZES_AND_WOUNDS } from "./constants/wounds.js";
-
 /**
  *
  * @param force
@@ -73,7 +71,7 @@ export function getUuidInfo(uuid) {
     info.type = matched.groups.type;
     info.id = matched.groups.id;
 
-    log(false, matched.groups);
+    // log(false, matched.groups);
   } else if (regex2.test(uuid)) {
     let matched = uuid.match(regex2);
     info.type = matched.groups.type;
@@ -497,21 +495,11 @@ export function compareLabTexts(e1, e2) {
   }
 }
 
-/**
- *
- * @param game
- * @param key
- */
-export function getLastMessageByHeader(game, key) {
-  const searchString = `${game.i18n.localize(key).toLowerCase()} </h2>`;
-  const messages = game.messages.filter((msg) => {
-    const flavor = (msg?.flavor || "").toLowerCase();
-    return flavor.indexOf(searchString) > -1;
+export function getLastCombatMessageOfType(type) {
+  return game.messages.contents.findLast((msg) => {
+    return msg.type == "combat" && msg.system.roll.type == type;
   });
-  if (messages.length) return messages.pop();
-  return false;
 }
-
 /**
  *
  * @param damage
@@ -519,14 +507,13 @@ export function getLastMessageByHeader(game, key) {
  */
 export function calculateWound(damage, size) {
   if (damage <= 0) {
-    return "";
+    return "none";
   }
   const typeOfWoundsBySize = getWoundType(size);
-  // SIZES_AND_WOUNDS[size.toString()];
   if (typeOfWoundsBySize === undefined) return false;
   const wounds = Object.keys(typeOfWoundsBySize);
 
-  let typeOfWound = DEFAULT_WOUND;
+  let typeOfWound = "none";
   wounds.forEach((wound) => {
     if (Number(wound) <= damage) {
       typeOfWound = typeOfWoundsBySize[wound];
@@ -571,7 +558,20 @@ function getWoundType(size) {
   result[1 + 3 * increment] = "incap";
   result[1 + 4 * increment] = "dead";
 
-  // Console.log(result);
+  return result;
+}
+
+export function getWoundRanges(size) {
+  if (size <= -4) {
+    return ["(1-1)", "(2-2)", "(3-3)", "(4-4)", "(5-5)"];
+  }
+  let increment = size + 5;
+  const result = [`(1-${1 + increment - 1})`];
+
+  result.push(`(${1 + increment}-${1 + 2 * increment - 1})`);
+  result.push(`(${1 + 2 * increment}-${1 + 3 * increment - 1})`);
+  result.push(`(${1 + 3 * increment}-${1 + 4 * increment - 1})`);
+  result.push(`(${1 + 4 * increment}+)`);
   return result;
 }
 
@@ -607,67 +607,67 @@ export function generateActiveEffectFromAbilities() {
     bonusArcaneAbility: {
       category: "abilities",
       type: "bonusArcaneAbility",
-      label: "arm5e.sheet.activeEffect.types.arcaneAbilitiesBonus",
+      label: "arm5e.activeEffect.types.arcaneAbilitiesBonus",
       subtypes: {}
     },
     bonusAcademicAbility: {
       category: "abilities",
       type: "bonusAcademicAbility",
-      label: "arm5e.sheet.activeEffect.types.academicAbilitiesBonus",
+      label: "arm5e.activeEffect.types.academicAbilitiesBonus",
       subtypes: {}
     },
     bonusMartialAbility: {
       category: "abilities",
       type: "bonusMartialAbility",
-      label: "arm5e.sheet.activeEffect.types.martialAbilitiesBonus",
+      label: "arm5e.activeEffect.types.martialAbilitiesBonus",
       subtypes: {}
     },
     bonusMysteryAbility: {
       category: "abilities",
       type: "bonusMysteryAbility",
-      label: "arm5e.sheet.activeEffect.types.mysteryAbilitiesBonus",
+      label: "arm5e.activeEffect.types.mysteryAbilitiesBonus",
       subtypes: {}
     },
     bonusSupernaturalAbility: {
       category: "abilities",
       type: "bonusSupernaturalAbility",
-      label: "arm5e.sheet.activeEffect.types.supernaturalAbilitiesBonus",
+      label: "arm5e.activeEffect.types.supernaturalAbilitiesBonus",
       subtypes: {}
     },
     affinityGeneralAbility: {
       category: "abilities",
       type: "affinityGeneralAbility",
-      label: "arm5e.sheet.activeEffect.types.generalAbilitiesAffinity",
+      label: "arm5e.activeEffect.types.generalAbilitiesAffinity",
       subtypes: {}
     },
     affinityArcaneAbility: {
       category: "abilities",
       type: "affinityArcaneAbility",
-      label: "arm5e.sheet.activeEffect.types.arcaneAbilitiesAffinity",
+      label: "arm5e.activeEffect.types.arcaneAbilitiesAffinity",
       subtypes: {}
     },
     affinityAcademicAbility: {
       category: "abilities",
       type: "affinityAcademicAbility",
-      label: "arm5e.sheet.activeEffect.types.academicAbilitiesAffinity",
+      label: "arm5e.activeEffect.types.academicAbilitiesAffinity",
       subtypes: {}
     },
     affinityMartialAbility: {
       category: "abilities",
       type: "affinityMartialAbility",
-      label: "arm5e.sheet.activeEffect.types.martialAbilitiesAffinity",
+      label: "arm5e.activeEffect.types.martialAbilitiesAffinity",
       subtypes: {}
     },
     affinityMysteryAbility: {
       category: "abilities",
       type: "affinityMysteryAbility",
-      label: "arm5e.sheet.activeEffect.types.mysteryAbilitiesAffinity",
+      label: "arm5e.activeEffect.types.mysteryAbilitiesAffinity",
       subtypes: {}
     },
     affinitySupernaturalAbility: {
       category: "abilities",
       type: "affinitySupernaturalAbility",
-      label: "arm5e.sheet.activeEffect.types.supernaturalAbilitiesAffinity",
+      label: "arm5e.activeEffect.types.supernaturalAbilitiesAffinity",
       subtypes: {}
     }
   };

@@ -319,6 +319,30 @@ export class DiaryEntrySchema extends foundry.abstract.TypeDataModel {
     }
   }
 
+  async applySchedule() {
+    await this.parent.update(_applySchedule());
+  }
+
+  _applySchedule() {
+    const dates = foundry.utils.deepClone(this.dates);
+    for (const date of dates) {
+      date.applied = true;
+    }
+    return { "system.dates": dates, "system.done": true };
+  }
+
+  async rollbackSchedule() {
+    await this.parent.update(_rollbackSchedule());
+  }
+
+  _rollbackSchedule() {
+    const dates = foundry.utils.deepClone(this.dates);
+    for (const date of dates) {
+      date.applied = false;
+    }
+    return { "system.dates": dates, "system.done": false };
+  }
+
   static buildSchedule(duration, year, season, date = "", applied = false) {
     let tmpDate = { season: season, year: year, date: date, applied: applied };
     let schedule = [tmpDate];
@@ -367,7 +391,7 @@ export class DiaryEntrySchema extends foundry.abstract.TypeDataModel {
       for (let entry of Object.values(actor.system.diaryEntries)) {
         // the entry is not the current entry
         if (entry._id != this.parent._id) {
-          if (entry.system.done || entry.system.activity === "none") {
+          if (entry.system.done || ["lab", "none"].includes(entry.system.activity)) {
             continue;
           }
           if (

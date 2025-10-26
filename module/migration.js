@@ -398,6 +398,13 @@ export const migrateActorData = async function (actorDoc, actorItems) {
       if (actor.system.charType && actor.system.charType.value === undefined) {
         updateData["system.charType"] = { value: actor.system.charType };
       }
+      if (actor.system.states === undefined) {
+        updateData["system.states"] = {
+          pendingCrisis: false,
+          creationMode: false,
+          confidencePrompt: false
+        };
+      }
 
       if (actor.system.pendingCrisis) {
         updateData["system.states.pendingCrisis"] = true;

@@ -10,6 +10,10 @@ export const companionData = {
     dex: { value: 5, aging: 0 },
     qik: { value: 4, aging: 2 }
   },
+  con: {
+    score: 1,
+    points: 30
+  },
   description: {
     born: { value: "1200" },
     apprentice: { value: "10" },
@@ -442,7 +446,7 @@ export const spellData3 = {
   baseLevel: 4,
   baseEffectDescription: "",
   applyFocus: false,
-  ritual: false,
+  ritual: true,
   bonus: 3,
   bonusDesc: "Talisman",
   xp: 30,
@@ -499,6 +503,60 @@ export const spellData4 = {
   bonus: 3,
   bonusDesc: "Talisman",
   xp: 30,
+  masteryAbilities: ""
+};
+
+// to test partial success
+export const spellData5 = {
+  description: "",
+  source: "custom",
+  page: 0,
+  technique: {
+    value: "re"
+  },
+  "technique-req": {
+    cr: false,
+    in: false,
+    mu: false,
+    pe: false,
+    re: false
+  },
+  form: {
+    value: "au"
+  },
+  "form-req": {
+    an: false,
+    aq: false,
+    au: false,
+    co: false,
+    he: false,
+    ig: false,
+    im: false,
+    me: false,
+    te: false,
+    vi: false
+  },
+  range: {
+    value: "touch"
+  },
+  duration: {
+    value: "moon"
+  },
+  target: {
+    value: "ind"
+  },
+  targetSize: 1,
+  complexity: 1,
+  enhancingRequisite: 0,
+  general: false,
+  levelOffset: 0,
+  baseLevel: 4,
+  baseEffectDescription: "",
+  applyFocus: false,
+  ritual: false,
+  bonus: 4,
+  bonusDesc: "Talisman",
+  xp: 0,
   masteryAbilities: ""
 };
 
@@ -566,6 +624,10 @@ export const magusData = {
     com: { value: -1, aging: 0 },
     dex: { value: -2, aging: 0 },
     qik: { value: -3, aging: 2 }
+  },
+  con: {
+    score: 2,
+    points: 20
   },
   description: {
     born: { value: "1200" },
@@ -901,6 +963,11 @@ export async function getMagus(magusName = "MerlinTheMagus", items = [], overrid
     type: "spell",
     system: spellData4
   });
+  items.push({
+    name: "Spell partial failing",
+    type: "spell",
+    system: spellData5
+  });
 
   await character.createEmbeddedDocuments("Item", items, {});
 
@@ -966,6 +1033,11 @@ export async function getTeacher(magusName = "Master", items = [], override = {}
     name: "Teached spell",
     type: "spell",
     system: newSpell1
+  });
+  items.push({
+    name: "Spell partial failing",
+    type: "spell",
+    system: spellData5
   });
 
   await character.createEmbeddedDocuments("Item", items, {});

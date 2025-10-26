@@ -1,6 +1,8 @@
+import { getWoundStr } from "../config.js";
 import { ROLL_PROPERTIES } from "../helpers/rollWindow.js";
-import { log, putInFoldableLinkWithAnimation } from "../tools.js";
-import { basicIntegerField, boolOption } from "./commonSchemas.js";
+import { SMSG_FIELDS, SMSG_TYPES } from "../helpers/socket-messages.js";
+import { getLastCombatMessageOfType, log, putInFoldableLinkWithAnimation } from "../tools.js";
+import { basicIntegerField, boolOption, hermeticForm } from "./commonSchemas.js";
 import { SpellSchema } from "./magicSchemas.js";
 const fields = foundry.data.fields;
 export class BasicChatSchema extends foundry.abstract.TypeDataModel {
@@ -53,6 +55,10 @@ export class BasicChatSchema extends foundry.abstract.TypeDataModel {
   getTargetsHtml() {
     return "";
   }
+
+  failedRoll() {
+    return false;
+  }
 }
 
 export class RollChatSchema extends BasicChatSchema {
@@ -92,12 +98,14 @@ export class RollChatSchema extends BasicChatSchema {
         }),
         secondaryScore: basicIntegerField(0),
         divider: basicIntegerField(1, 1),
-        difficulty: basicIntegerField(1, 0)
+        difficulty: basicIntegerField(0, 0)
       }),
       impact: new fields.SchemaField(
         {
           applied: boolOption(false),
-          fatigueLevels: basicIntegerField(0, 0),
+          fatigueLevelsLost: basicIntegerField(0, 0),
+          fatigueLevelsPending: basicIntegerField(0, 0),
+          fatigueLevelsFail: basicIntegerField(0, 0),
           woundGravity: new fields.NumberField({
             required: false,
             nullable: false,
@@ -108,7 +116,14 @@ export class RollChatSchema extends BasicChatSchema {
             max: 5
           })
         },
-        { initial: { fatigueLevels: 0, woundGravity: 0 } }
+        {
+          initial: {
+            fatigueLevelsLost: 0,
+            fatigueLevelsPending: 0,
+            fatigueLevelsFail: 0,
+            woundGravity: 0
+          }
+        }
       )
     };
   }
@@ -122,6 +137,8 @@ export class RollChatSchema extends BasicChatSchema {
 
     return updateData;
   }
+
+  enrichMessageData(actor) {}
 
   // standard roll chat message doesn't have targets;
   getTargetsHtml() {
@@ -146,14 +163,18 @@ export class RollChatSchema extends BasicChatSchema {
   }
 
   get formula() {
-    const formula = this.parent.rolls[0].formula;
+    let formula = this.parent.rolls[0].formula;
     if (this.confidence.used) {
       let toAppend = this.confidence.used * 3;
       const divider = this.roll?.divider ?? 1;
       if (divider > 1) {
         toAppend = `(${toAppend} / ${divider})`;
       }
-      return formula + ` + ${toAppend}`;
+      formula += ` + ${toAppend}`;
+    }
+
+    if (this.roll.difficulty && this.roll.botches === 0) {
+      formula += ` versus ${this.roll.difficulty}`;
     }
     return formula;
   }
@@ -196,12 +217,13 @@ export class RollChatSchema extends BasicChatSchema {
     }
     `;
 
-    if (this.getFailedMessage && this.failedCasting()) {
-      res += this.getFailedMessage();
-    } else {
-      res += this.getTargetsHtml();
+    if (showItem) {
+      if (this.getFailedMessage && this.failedRoll()) {
+        res += this.getFailedMessage();
+      } else {
+        res += this.getTargetsHtml();
+      }
     }
-
     return res;
   }
 
@@ -273,24 +295,20 @@ export class RollChatSchema extends BasicChatSchema {
     }
   }
 
-  // _applyImpact(actor, updateData) {
-  //   if (actor) {
-  //     actor._changeFatigueLevel(updateData, this.impact.fatigueLevels, false);
-
-  //   }
-  // }
+  get confPrompt() {
+    return (
+      !this.impact.applied &&
+      this.confidence.allowed &&
+      this.roll.botches == 0 &&
+      (this.confidence.used ?? 0) < this.confidence.score
+    );
+  }
 
   addActionButtons(btnContainer, actor) {
     // confidence
     // confidence has been used already => no button
-    let btnCnt = 0;
-    if (
-      !this.impact.applied &&
-      this.confidence.allowed &&
-      this.roll.botches == 0 &&
-      (this.confidence.used ?? 0) < this.confidence.score &&
-      actor.canUseConfidencePoint()
-    ) {
+    let buttonsArray = [];
+    if (this.confPrompt && actor.canUseConfidencePoint()) {
       const useConfButton = $(
         `<button class="dice-confidence chat-button" data-msg-id="${
           this.parent._id
@@ -302,13 +320,16 @@ export class RollChatSchema extends BasicChatSchema {
       // Handle button clicks
       useConfButton.on("click", async (ev) => {
         ev.stopPropagation();
-        const actorId = ev.currentTarget.dataset.actorId;
         const message = game.messages.get(ev.currentTarget.dataset.msgId);
-        await message.system.useConfidence(actorId);
+        await message.system.useConfidence();
       });
-      btnContainer.append(useConfButton);
-      btnCnt++;
-      if (this.impact.fatigueLevels || this.impact.woundGravity) {
+
+      buttonsArray.push(useConfButton);
+      if (
+        this.impact.fatigueLevelsPending ||
+        this.impact.woundGravity ||
+        ((this.confidence.used ?? 0) < this.confidence.score && actor.canUseConfidencePoint())
+      ) {
         const noConfButton = $(
           `<button class="dice-no-confidence chat-button" data-msg-id="${
             this.parent._id
@@ -320,36 +341,142 @@ export class RollChatSchema extends BasicChatSchema {
 
         noConfButton.on("click", async (ev) => {
           ev.stopPropagation();
-          const actorId = ev.currentTarget.dataset.actorId;
           const message = game.messages.get(ev.currentTarget.dataset.msgId);
-          const actor = game.actors.get(actorId);
-
-          const updateData = { "system.states.confidencePrompt": false };
-          actor._changeFatigueLevel(updateData, this.impact.fatigueLevels, false);
-          const p0 = actor.update(updateData);
-          const p1 = actor.changeWound(
-            1,
-            CONFIG.ARM5E.recovery.rankMapping[this.impact.woundGravity],
-            game.i18n.localize("arm5e.sheet.fatigueOverflow")
-          );
-          const p2 = message.update({ "system.impact.applied": true });
-          await Promise.all([p0, p1, p2]);
+          await message.system.skipConfidenceUse();
         });
-        btnContainer.append(noConfButton);
-        btnCnt++;
+        buttonsArray.push(noConfButton);
       }
     }
-    return btnCnt;
+    if (buttonsArray.length === 0) return 0;
+    const btnRow = $('<div class="flexrow"></div>');
+    for (let b of buttonsArray) {
+      btnRow.append(b);
+    }
+    btnContainer.append(btnRow);
+    return buttonsArray.length;
   }
 
   fatigueCost(actor) {
-    return 0;
+    // return { use: 0, partial: 0, fail: 0 };
+    const res = {
+      use: this.impact.fatigueLevelsLost || 0,
+      partial: this.impact.fatigueLevelsPending || 0,
+      fail: this.impact.fatigueLevelsFail || 0
+    };
+    log(false, "fatigueCost", res);
+    return res;
+  }
+  async skipConfidenceUse() {
+    if (this.parent.actor) {
+      const res = this._skipConfidenceUse();
+      if (res) {
+        if (this.parent.isAuthor || game.user.isGM) {
+          await Promise.all(this._applyChatMessageUpdate(res));
+        } else if (this.parent.actor.isOwner) {
+          // Not the author, but owner of the actor rolling
+          game.arm5e.socketHandler.emitAwaited(SMSG_TYPES.CHAT, "skipConfidence", {
+            [SMSG_FIELDS.CHAT_MSG_ID]: this.parent._id,
+            [SMSG_FIELDS.SENDER]: game.user._id,
+            [SMSG_FIELDS.CHAT_MSG_DB_UPDATE]: res
+          });
+        } else {
+          ui.notifications.info(game.i18n.localize("arm5e.chat.notifications.notInitiator"), {
+            permanent: true
+          });
+        }
+      }
+    } else {
+      log(false, "skipConfidenceUse: actor not found");
+    }
   }
 
-  async useConfidence(actorId) {
-    const actor = game.actors.get(actorId);
+  _applySkipConfidenceUse(data) {
+    const promises = [];
+    promises.push(this.parent.actor.update(data.actorUpdate ?? {}));
+    promises.push(this.parent.update(data.msgUpdate ?? {}));
+    promises.push(
+      this.parent.actor.changeWound(
+        1,
+        // CONFIG.ARM5E.recovery.rankMapping[this.impact.woundGravity],
+        CONFIG.ARM5E.recovery.rankMapping[data.msgUpdate["system.impact.woundGravity"]],
+        game.i18n.localize("arm5e.sheet.fatigueOverflow")
+      )
+    );
+    return promises;
+  }
 
-    if (actor && (this.confidence.used ?? 0) < this.confidence.score) {
+  _skipConfidenceUse() {
+    const dbUpdate = {};
+
+    const messageData = { "system.impact.applied": true };
+    const updateData = { "system.states.confidencePrompt": false };
+    let res = null;
+    if (this.failedRoll()) {
+      const totalFatigueLost = this.impact.fatigueLevelsPending + this.impact.fatigueLevelsFail;
+      res = this.parent.actor._changeFatigueLevel(updateData, totalFatigueLost, false);
+
+      messageData["system.impact.fatigueLevelsLost"] =
+        this.impact.fatigueLevelsLost + totalFatigueLost;
+    } else {
+      res = this.parent.actor._changeFatigueLevel(
+        updateData,
+        this.impact.fatigueLevelsPending,
+        false
+      );
+      messageData["system.impact.fatigueLevelsLost"] =
+        this.impact.fatigueLevelsLost + res.fatigueLevels;
+    }
+    messageData["system.impact.woundGravity"] = res.woundGravity;
+    messageData["system.confidence.allowed"] = false; // no more confidence allowed
+    messageData["system.impact.fatigueLevelsPending"] = 0;
+    messageData["system.impact.fatigueLevelsFail"] = 0;
+    dbUpdate.actorUpdate = updateData;
+    dbUpdate.msgUpdate = messageData;
+    return dbUpdate;
+  }
+
+  async useConfidence() {
+    if (this.parent.actor) {
+      const res = this._useConfidence();
+      if (res) {
+        if (this.parent.isAuthor || game.user.isGM) {
+          await Promise.all(this._applyChatMessageUpdate(res));
+        } else if (this.parent.actor.isOwner) {
+          // Not the author, but owner of the actor rolling
+          game.arm5e.socketHandler.emitAwaited(SMSG_TYPES.CHAT, "useConfidence", {
+            [SMSG_FIELDS.CHAT_MSG_ID]: this.parent._id,
+            [SMSG_FIELDS.SENDER]: game.user._id,
+            [SMSG_FIELDS.CHAT_MSG_DB_UPDATE]: res
+          });
+        } else {
+          ui.notifications.info(game.i18n.localize("arm5e.chat.notifications.notInitiator"), {
+            permanent: true
+          });
+        }
+      }
+    } else {
+      log(false, "skipConfidenceUse: actor not found");
+    }
+  }
+
+  _applyChatMessageUpdate(data) {
+    const promises = [];
+    promises.push(this.parent.actor.update(data.actorUpdate ?? {}));
+    promises.push(this.parent.update(data.msgUpdate ?? {}));
+    promises.push(
+      this.parent.actor.changeWound(
+        1,
+        // CONFIG.ARM5E.recovery.rankMapping[this.impact.woundGravity],
+        CONFIG.ARM5E.recovery.rankMapping[data.msgUpdate["system.impact.woundGravity"]],
+        game.i18n.localize("arm5e.sheet.fatigueOverflow")
+      )
+    );
+    return promises;
+  }
+
+  _useConfidence() {
+    const dbUpdate = {};
+    if ((this.confidence.used ?? 0) < this.confidence.score) {
       let usedConf = this.confidence.used + 1 || 1;
       let msgData = { system: { confidence: {}, roll: {} } };
 
@@ -357,56 +484,135 @@ export class RollChatSchema extends BasicChatSchema {
       this.confidence.used = usedConf;
       msgData.system.roll.formula = `${this.formula}`;
 
-      let fatigue = this.fatigueCost(actor);
+      let impact = this.fatigueCost(this.parent.actor);
 
       // Lost fatigue levels + wound if overflow
       const updateData = {};
 
-      actor._useConfidencePoint(updateData);
-      if (usedConf == actor.system.con.score || actor.system.con.points == 1) {
-        await actor.changeWound(
-          1,
-          CONFIG.ARM5E.recovery.rankMapping[this.impact.woundGravity],
-          game.i18n.localize("arm5e.sheet.fatigueOverflow")
-        );
-        actor._changeFatigueLevel(updateData, this.impact.fatigueLevels, false);
+      this.parent.actor._useConfidencePoint(updateData);
+      let res = null;
+      // actor used its last confidence point or reached its maximum amount to spend.
+      if (
+        usedConf == this.parent.actor.system.con.score ||
+        this.parent.actor.system.con.points == 1
+      ) {
+        let fatigueToApply = 0;
+        if (this.failedRoll()) {
+          fatigueToApply = impact.partial + impact.fail;
+        } else {
+          fatigueToApply = impact.partial;
+        }
+        res = this.parent.actor._changeFatigueLevel(updateData, fatigueToApply, false);
+        // await actor.changeWound(
+        //   1,
+        //   CONFIG.ARM5E.recovery.rankMapping[res.woundGravity],
+        //   game.i18n.localize("arm5e.sheet.fatigueOverflow")
+        // );
+        msgData["system.impact.woundGravity"] = res.woundGravity;
         msgData["system.impact.applied"] = true;
+
+        msgData["system.impact.fatigueLevelsLost"] =
+          this.impact.fatigueLevelsLost + res.fatigueLevels;
+        msgData["system.impact.fatigueLevelsPending"] = 0;
+        msgData["system.impact.fatigueLevelsFail"] = 0;
+        msgData["system.confidence.allowed"] = false; // no more confidence allowed
         updateData["system.states.confidencePrompt"] = false;
       } else {
         const tmp = {}; // no update of actor needed, just recompute impact
-        msgData.system.impact = actor._changeFatigueLevel(tmp, fatigue);
+        let res = null;
+        if (this.failedRoll()) {
+          res = this.parent.actor._changeFatigueLevel(tmp, impact.fail + impact.partial);
+          if (res.woundGravity) {
+            // wound overflow smaller than fail
+            if (res.woundGravity <= impact.fail) {
+              msgData["system.impact.fatigueLevelsFail"] = impact.fail - res.woundGravity;
+            } else {
+              msgData["system.impact.fatigueLevelsFail"] = 0;
+              const overflow = res.woundGravity - impact.fail;
+              if (overflow <= impact.partial) {
+                msgData["system.impact.fatigueLevelsPending"] = impact.partial - overflow;
+              } else {
+                msgData["system.impact.fatigueLevelsPending"] = 0;
+              }
+            }
+          } else {
+            msgData["system.impact.fatigueLevelsFail"] = impact.fail;
+            msgData["system.impact.fatigueLevelsPending"] = impact.partial;
+          }
+        } else {
+          res = this.parent.actor._changeFatigueLevel(tmp, impact.partial);
+          msgData["system.impact.fatigueLevelsFail"] = 0;
+          msgData["system.impact.fatigueLevelsPending"] = res.fatigueLevels;
+        }
+
+        msgData["system.impact.applied"] = false;
+        msgData["system.impact.woundGravity"] = res.woundGravity;
       }
-      const p0 = actor.update(updateData);
-      const p1 = this.parent.update(msgData);
-      await Promise.all([p0, p1]);
+      dbUpdate.actorUpdate = updateData;
+      dbUpdate.msgUpdate = msgData;
+      return dbUpdate;
     }
+    return null;
+  }
+
+  // getFlavor() {
+  //   let res = super.getFlavor();
+  //   if (this.getFailedMessage && this.failedRoll()) {
+  //     res += this.getFailedMessage();
+  //   } else {
+  //     res += this.getTargetsHtml();
+  //   }
+  //   return res;
+  // }
+
+  failedRoll() {
+    return (
+      this.roll.botches > 0 ||
+      this.parent.rollTotal + this.confidenceModifier - this.roll.difficulty < 0
+    );
+  }
+  getFailedMessage() {
+    const showDataOfNPC = game.settings.get("arm5e", "showNPCMagicDetails") === "SHOW_ALL";
+    let messageFlavor = "";
+
+    if (showDataOfNPC || this.parent.originatorOrGM) {
+      const title =
+        '<h2 class="ars-chat-title">' + game.i18n.localize("arm5e.sheet.rollFailed") + "</h2>";
+
+      let flavorForGM = `${title}`;
+      messageFlavor = flavorForGM;
+    }
+    return messageFlavor;
   }
 
   getImpactMessage() {
     let impactMessage = "";
-    if (this.impact.fatigueLevels > 0) {
+    if (this.impact.fatigueLevelsLost > 0) {
       impactMessage += `<br/>${game.i18n.format("arm5e.messages.fatigueLost", {
-        num: this.impact.fatigueLevels
+        num: this.impact.fatigueLevelsLost
       })} `;
-      if (!this.impact.applied)
-        impactMessage += ` (${game.i18n.localize("arm5e.generic.pending")})`;
     }
-    if (this.impact.wound) {
+    if (this.impact.fatigueLevelsPending + this.impact.fatigueLevelsFail > 0) {
+      impactMessage += `<br/>${game.i18n.format("arm5e.messages.fatigueLost", {
+        num: this.impact.fatigueLevelsPending + this.impact.fatigueLevelsFail
+      })} `;
+      impactMessage += ` (${game.i18n.localize("arm5e.generic.pending")})`;
+    }
+    if (this.impact.woundGravity) {
       impactMessage += `<br/>${game.i18n.format("arm5e.messages.woundResult", {
-        typeWound: this.impact.woundGravity
+        typeWound: getWoundStr(this.impact.woundGravity)
       })}`;
       if (!this.impact.applied)
         impactMessage += ` (${game.i18n.localize("arm5e.generic.pending")})`;
     }
-    if (this.roll.botchCheck && this.roll.botches > 0) {
-      impactMessage += `<br/>${game.i18n.format("arm5e.messages.die.warpGain", {
-        num: this.roll.botches
-      })} `;
-    }
+
     return impactMessage;
   }
 
-  addInfo(actor) {}
+  enrichMessageData(actor) {
+    // this.parent.updateSource({
+    // });
+  }
 }
 
 export class CombatChatSchema extends RollChatSchema {
@@ -415,14 +621,89 @@ export class CombatChatSchema extends RollChatSchema {
       ...super.defineSchema(),
       combat: new fields.SchemaField({
         attacker: new fields.DocumentUUIDField(),
-        defenders: new fields.ArrayField(new fields.DocumentUUIDField())
+        defenders: new fields.ArrayField(new fields.DocumentUUIDField()),
+        damageForm: hermeticForm("te")
       })
     };
   }
 
-  addInfo(actor) {
-    this.combat = { attacker: actor.uuid, defenders: [] };
-    this.parent.updateSource({ "system.combat": this.combat });
+  enrichMessageData(actor) {
+    super.enrichMessageData(actor);
+    const updateData = {};
+    switch (this.roll.type) {
+      case "attack":
+        const targetedTokens = Array.from(game.user.targets);
+        updateData["system.combat"] = {
+          attacker: actor.uuid,
+          defenders: targetedTokens.map((e) => e.sourceId)
+        };
+        updateData.flavor =
+          `<p>${game.i18n.format("arm5e.sheet.combat.flavor.attack", {
+            attacker: actor.name,
+            target: this.combat.defenders.length
+              ? targetedTokens.map((e) => e.name).join(", ")
+              : "",
+            weapon: actor.system.combat.name
+              ? actor.system.combat.name
+              : game.i18n.localize("arm5e.sheet.combat.flavor.noWeapon")
+          })}</p>` + this.parent.flavor;
+
+        break;
+      case "defense":
+        {
+          const lastAttackMessage = getLastCombatMessageOfType("attack");
+          if (lastAttackMessage) {
+            const attacker = fromUuidSync(lastAttackMessage.system.combat.attacker);
+            updateData.flavor =
+              `<p>${game.i18n.format("arm5e.sheet.combat.flavor.defense", {
+                defender: actor.name,
+                attacker: attacker?.name ?? game.i18n.localize("arm5e.generic.unknown"),
+                weapon: actor.system.combat.name
+                  ? actor.system.combat.name
+                  : game.i18n.localize("arm5e.sheet.combat.flavor.noWeapon")
+              })}</p>` + this.parent.flavor;
+            updateData["system.combat"] = { attacker: attacker?.uuid ?? null, defenders: [] };
+          } else {
+            updateData.flavor =
+              `<p>${game.i18n.format("arm5e.sheet.combat.flavor.defenseNoAttacker", {
+                defender: actor.name,
+                weapon: actor.system.combat.name
+                  ? actor.system.combat.name
+                  : game.i18n.localize("arm5e.sheet.combat.flavor.noWeapon")
+              })}</p>` + this.parent.flavor;
+            updateData["system.combat"] = { attacker: null, defenders: [] };
+          }
+        }
+        break;
+      case "damage":
+        updateData.flavor = `<p>${game.i18n.format("arm5e.sheet.combat.flavor.damage", {
+          attacker: actor.name
+        })}</p>`;
+        updateData["system.combat"] = {
+          attacker: actor.uuid,
+          defenders: []
+        };
+        break;
+      case "soak":
+        {
+          const lastAttackMessage = getLastCombatMessageOfType("attack");
+          const attacker = fromUuidSync(lastAttackMessage.system.combat.attacker);
+          if (lastAttackMessage) {
+            updateData.flavor = `<p>${game.i18n.format("arm5e.sheet.combat.flavor.soak", {
+              target: actor.name
+            })}</p>`;
+            updateData["system.combat"] = {
+              attacker: attacker?.uuid ?? null,
+              defenders: []
+            };
+          }
+        }
+        break;
+      default:
+        break;
+    }
+
+    this.parent.updateSource(updateData);
   }
 
   static migrateData(data) {}
@@ -434,9 +715,10 @@ export class CombatChatSchema extends RollChatSchema {
 
     return updateData;
   }
-  // getFlavor() {
-  //   return super.getFlavor()
-  // }
+
+  failedRoll() {
+    return this.roll.botches > 0 || false;
+  }
 }
 export class MagicChatSchema extends RollChatSchema {
   static defineSchema() {
@@ -450,8 +732,8 @@ export class MagicChatSchema extends RollChatSchema {
             nullable: true,
             required: false,
             initial: null
-          }),
-          form: new fields.StringField({ nullable: true, initial: null, required: false })
+          })
+          // form: new fields.StringField({ nullable: true, initial: null, required: false })
         }),
         targets: new fields.ArrayField(
           new fields.SchemaField({
@@ -465,12 +747,37 @@ export class MagicChatSchema extends RollChatSchema {
             })
           })
         ),
-        ritual: boolOption(false)
+        ritual: boolOption(false),
+        realm: new fields.StringField({
+          required: false,
+          blank: false,
+          initial: "magic",
+          choices: CONFIG.ARM5E.realmsExt
+        }),
+        form: hermeticForm("te")
       })
     };
   }
 
-  addInfo(actor) {
+  getImpactMessage() {
+    let impactMessage = super.getImpactMessage();
+    if (this.roll.botchCheck && this.roll.botches > 0) {
+      impactMessage += `<br/>${game.i18n.format("arm5e.messages.die.warpGain", {
+        num: this.roll.botches
+      })} `;
+    }
+    return impactMessage;
+  }
+
+  enrichMessageData(actor) {
+    super.enrichMessageData(actor);
+
+    let realm = "magic";
+    if (actor.rollInfo.type == "power") {
+      realm = actor.rollInfo.power.realm;
+    } else if (actor.rollInfo.type == "supernatural") {
+      realm = actor.rollInfo.ability.realm;
+    }
     this.magic = {
       caster: {
         uuid: actor.uuid,
@@ -484,52 +791,68 @@ export class MagicChatSchema extends RollChatSchema {
         }
       },
       targets: [],
-      ritual: actor.rollInfo.magic.ritual
+      ritual: actor.rollInfo.magic.ritual,
+      realm: realm,
+      form: actor.rollInfo.magic.form.value
     };
-    this.roll.difficulty = actor.rollInfo.magic.level;
-    this.roll.divider = actor.rollInfo.magic.divide;
+
     this.parent.updateSource({
       "system.magic": this.magic,
-      "system.roll.difficulty": this.roll.difficulty,
-      "system.roll.divider": this.roll.divider
+      "system.roll.difficulty": actor.rollInfo.magic.level,
+      "system.roll.divider": actor.rollInfo.magic.divide
     });
+  }
+
+  failedRoll() {
+    return this.roll.botches > 0 || this.failedCasting();
   }
 
   getTargetsHtml() {
     let res = "";
+    const rollType = this.roll.type;
     for (let target of this.magic.targets) {
-      const title =
-        '<h3 class="ars-chat-title">' + game.i18n.localize("arm5e.sheet.contestOfMagic") + "</h3>";
-      const castingTotal = `${game.i18n.localize("arm5e.sheet.spellTotal")} (${
-        this.parent.rollTotal + this.confidenceModifier
-      })`;
+      const title = `<h3 class="ars-chat-title"> + ${game.i18n.format(
+        "arm5e.chat.contestOfMagicWith",
+        { name: target.name }
+      )} </h3>`;
+      let castingTotal = "";
+      if (!["item", "power"].includes(rollType)) {
+        castingTotal = `${game.i18n.localize("arm5e.sheet.spellTotal")} (${
+          this.parent.rollTotal + this.confidenceModifier
+        })`;
+      }
 
       const showDetails =
         game.user.isGM || game.settings.get("arm5e", "showNPCMagicDetails") === "SHOW_ALL";
       // penetration
       let flavorTotalSpell = "";
       let flavorTotalPenetration = "";
+      let magicLevel = "";
+      let penetration = "";
+      let penetrationSpec = "";
       if (showDetails || this.magic.caster.hasPlayerOwner) {
-        const magicLevel = `- ${game.i18n.localize("arm5e.sheet.spellLevel")} (${
-          this.roll.difficulty
-        })`;
-        const penetration = `+ ${game.i18n.localize("arm5e.sheet.penetration")} (${
-          this.magic.caster.penetration.total
-        })`;
-
-        const penetrationSpec = this.magic.caster.penetration.specApply
-          ? ` (${game.i18n.localize("arm5e.sheet.specialityBonus")}: +1 ${
-              this.magic.caster.penetration.specialty
-            })`
-          : "";
-
         const totalPenetration = `+ ${game.i18n.localize("arm5e.sheet.totalPenetration")} (${
           this.roll.secondaryScore + this.parent.rollTotal - this.roll.difficulty
         })`;
+        if (["item", "power"].includes(rollType)) {
+          flavorTotalPenetration = `<b>${totalPenetration}</b><br/>`;
+          flavorTotalSpell = "";
+        } else {
+          magicLevel = `- ${game.i18n.localize("arm5e.sheet.spellLevel")} (${
+            this.roll.difficulty
+          })`;
+          penetration = `+ ${game.i18n.localize("arm5e.sheet.penetration")} (${
+            this.magic.caster.penetration.total
+          })`;
 
-        flavorTotalPenetration = `${penetration}${penetrationSpec}<br/><b>${totalPenetration}</b><br/>`;
-
-        flavorTotalSpell = `${castingTotal}<br/> ${magicLevel}<br/>`;
+          penetrationSpec = this.magic.caster.penetration.specApply
+            ? ` (${game.i18n.localize("arm5e.sheet.specialityBonus")}: +1 ${
+                this.magic.caster.penetration.specialty
+              })`
+            : "";
+          flavorTotalSpell = `${castingTotal}<br/> ${magicLevel}<br/>`;
+          flavorTotalPenetration = `${penetration}${penetrationSpec}<br/><b>${totalPenetration}</b><br/>`;
+        }
       }
 
       let flavorTotalMagicResistance = "";
@@ -538,31 +861,52 @@ export class MagicChatSchema extends RollChatSchema {
         const might = target.magicResistance.might
           ? `${game.i18n.localize("arm5e.sheet.might")}: (${target.magicResistance.might})`
           : "";
-        const form =
-          target.magicResistance.form !== "NONE"
-            ? `+ ${game.i18n.format("arm5e.sheet.formScore", {
-                form: target.magicResistance.form
-              })}: (${target.magicResistance.formScore})`
-            : "";
+
+        let form = "";
+        if (target.magicResistance.formScore) {
+          if (target.magicResistance.form !== "NONE") {
+            form = `+ ${game.i18n.format("arm5e.sheet.formScore", {
+              form: target.magicResistance.form
+            })}: (${target.magicResistance.formScore})`;
+          }
+        }
 
         const aura =
           target.magicResistance.aura == 0
             ? ""
             : ` + ${game.i18n.localize("arm5e.sheet.aura")}: (${target.magicResistance.aura})`;
 
-        const parma = target.magicResistance?.parma?.score
-          ? `${game.i18n.localize("arm5e.sheet.parma")}: (${target.magicResistance.parma.score})`
+        // if there is another resistance, it i
+        const parma = target.magicResistance.parma
+          ? ` + ${game.i18n.localize("arm5e.sheet.parma")}: (${
+              target.magicResistance.parma.score * 5
+            })`
           : "";
 
-        const parmaSpecialty = target.magicResistance?.specialityIncluded
-          ? ` (${game.i18n.localize("arm5e.sheet.specialityBonus")}: +1 ${
+        const parmaSpecialty = target.magicResistance.specialityIncluded
+          ? ` (${game.i18n.localize("arm5e.sheet.specialityBonus")}: +5 ${
               target.magicResistance.specialityIncluded
             })`
           : "";
-        const totalMagicResistance = `${game.i18n.localize("arm5e.sheet.totalMagicResistance")}: (${
+
+        const susceptibility = target.magicResistance.susceptible
+          ? `${game.i18n.format("arm5e.realm.susceptible.impact", {
+              realm: game.i18n.localize(CONFIG.ARM5E.realms[this.magic.realm].label),
+              divisor: 2
+            })}<br>`
+          : "";
+        const totalMagicResistance = `${game.i18n.localize("arm5e.chat.totalMagicResistance")}: (${
           target.magicResistance.total
         })`;
-        flavorTotalMagicResistance = `${might}${parma}${parmaSpecialty}${form}${aura}<br/><b>${totalMagicResistance}</b>`;
+        if (target.magicResistance.otherResistance) {
+          flavorTotalMagicResistance = `${game.i18n.localize(
+            "arm5e.chat.otherMagicResistance"
+          )} : ${
+            target.magicResistance.otherResistance
+          }<br/>${susceptibility}<b>${totalMagicResistance}</b>`;
+        } else {
+          flavorTotalMagicResistance = `${might}${parma}${parmaSpecialty}${form}${aura}<br/>${susceptibility}<b>${totalMagicResistance}</b>`;
+        }
       }
 
       const total =
@@ -607,12 +951,18 @@ export class MagicChatSchema extends RollChatSchema {
 
   //
   fatigueCost(actor) {
-    return SpellSchema.fatigueCost(
-      actor,
-      this.parent.rollTotal + this.confidenceModifier,
-      this.roll.difficulty,
-      this.magic.ritual
-    );
+    let res = { use: 0, partial: 0, fail: 0 };
+
+    if (this.roll.type == "spell") {
+      res = SpellSchema.fatigueCost(
+        actor,
+        this.parent.rollTotal + this.confidenceModifier,
+        this.roll.difficulty,
+        this.magic.ritual
+      );
+    }
+    log(false, "fatigueCost", res);
+    return res;
   }
   failedCasting() {
     if (this.roll.type == "spell")

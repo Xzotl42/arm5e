@@ -12,6 +12,7 @@
           <input type="checkbox" {{checked system.draft}} data-dtype="Boolean" {{noSelect}} name="system.draft"
             style="position: relative; bottom: 5px;" />
         </div>
+        {{>"systems/arm5e/templates/item/parts/cost.hbs" classes="fit"}}
       </div>
       {{#if locked}}
         <i class="icon-Icon_Locked"></i>

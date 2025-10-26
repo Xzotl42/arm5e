@@ -138,13 +138,14 @@ export class InvestigationRoll extends FormApplication {
     );
     let desc = this.object.diaryDescription;
     let failed = false;
-    const res = await stressDie(
+    const msg = await stressDie(
       this.actor,
       dataset.roll,
       16,
       undefined,
       this.object.botchDice ?? 0
     );
+    const res = msg.rolls[0];
     desc += `<li>${game.i18n.format("arm5e.lab.planning.investigation.rolled", {
       total: res._total,
       labTotal: labTotal

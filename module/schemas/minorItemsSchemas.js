@@ -34,7 +34,7 @@ export class VirtueFlawSchema extends foundry.abstract.TypeDataModel {
             required: false,
             blank: false,
             initial: "free",
-            choices: Object.keys(ARM5E.impacts).concat("Special")
+            choices: Object.keys(ARM5E.impacts)
           })
         },
         { required: false, blank: false, initial: { value: "free" } }
@@ -44,7 +44,7 @@ export class VirtueFlawSchema extends foundry.abstract.TypeDataModel {
     };
   }
 
-  get cost() {
+  get pointCost() {
     if (this.impact == "Special") {
       return 0;
     }
@@ -148,7 +148,7 @@ export class QualityInferioritySchema extends foundry.abstract.TypeDataModel {
             required: false,
             blank: false,
             initial: "free",
-            choices: Object.keys(ARM5E.impacts).concat("Special")
+            choices: Object.keys(ARM5E.impacts)
           })
         },
         { required: false, blank: false, initial: { value: "free" } }
@@ -158,12 +158,12 @@ export class QualityInferioritySchema extends foundry.abstract.TypeDataModel {
     };
   }
 
-  get cost() {
-    if (this.impact == "Special") {
-      return 0;
-    }
-    return CONFIG.ARM5E.impacts[this.impact].cost;
-  }
+  // get pointCost() {
+  //   if (this.impact == "Special") {
+  //     return 0;
+  //   }
+  //   return CONFIG.ARM5E.impacts[this.impact].cost;
+  // }
 
   static getIcon(item, newValue = null) {
     if (newValue != null) {

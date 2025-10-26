@@ -7,11 +7,11 @@ import {
 } from "../helpers/long-term-activities.js";
 import { ArM5eItem } from "./item.js";
 import { ActivitySchedule } from "../tools/activity-schedule.js";
-import { UI, getConfirmation } from "../constants/ui.js";
 import { DiaryEntrySchema } from "../schemas/diarySchema.js";
 import { ArM5eActorSheet } from "../actor/actor-sheet.js";
 import { getAbilityFromCompendium } from "../tools/compendia.js";
 import { spellFormLabel, spellTechniqueLabel } from "../helpers/magic.js";
+import { getConfirmation } from "../ui/dialogs.js";
 
 /**
  * Extend the basic ItemSheet with some very simple modifications
@@ -1406,7 +1406,8 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
       spells: [],
       masteries: [],
       achievements: [],
-      dependencies: []
+      dependencies: [],
+      resources: []
     };
 
     // if the first date is not applied and in the past, remove any activity costs (vis, ...)
@@ -1437,6 +1438,13 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
                     this.item.system.dates[0]
                   )
                 );
+              }
+            } else if (dependency.flags == 2) {
+              let item = actor.items.get(dependency.itemId);
+              if (item.type === "diaryEntry") {
+                if (item.system.activity === "lab") {
+                  context.promises.dependencies.push(item.update(item.system._applySchedule(), {}));
+                }
               }
             }
           }
@@ -1639,6 +1647,13 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
                     { parent: actor }
                   )
                 );
+              } else if (dependency.flags == 2) {
+                let item = actor.items.get(dependency.itemId);
+                if (item.type === "diaryEntry") {
+                  if (item.system.activity === "lab") {
+                    promises.push(item.update(item.system._rollbackSchedule(), {}));
+                  }
+                }
               }
             }
           }
@@ -1786,8 +1801,9 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
   async addNewSpell(spell) {
     let newSpells = this.item.system.progress.newSpells;
     newSpells.push(ArM5eItemDiarySheet._addNewSpell(spell));
+    const updateData = {};
     updateData["system.progress.newSpells"] = newSpells;
-    await this.item.update();
+    await this.item.update(updateData);
   }
 
   static _addNewSpell(spell) {

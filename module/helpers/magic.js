@@ -1,6 +1,4 @@
-import { getActorsFromTargetedTokens } from "./tokens.js";
 import { log } from "../tools.js";
-import Aura from "./aura.js";
 
 const VOICE_AND_GESTURES_ICONS = {
   voice: "icons/skills/trades/music-singing-voice-blue.webp",
@@ -132,12 +130,13 @@ export function GetEnchantmentSelectOptions(context) {
  * @param flavor
  * @param editable
  */
-export async function PickRequisites(spelldata, flavor, editable) {
+export async function PickRequisites(spelldata, flavor, editable, updatePath = "system") {
   spelldata.config = {
     magic: {
       techniques: CONFIG.ARM5E.magic.techniques,
       forms: CONFIG.ARM5E.magic.forms
-    }
+    },
+    updatePath: updatePath
   };
   spelldata.edition = editable;
   spelldata.ui = { flavor: flavor };
@@ -156,7 +155,7 @@ export async function PickRequisites(spelldata, flavor, editable) {
             icon: "<i class='fas fa-check'></i>",
             label: game.i18n.localize("arm5e.dialog.button.save"),
             callback: async (html) => {
-              resolve(_setRequisites(html));
+              resolve(_setRequisites(html, updatePath));
             }
           },
           no: {
@@ -178,16 +177,16 @@ export async function PickRequisites(spelldata, flavor, editable) {
  *
  * @param selector
  */
-function _setRequisites(selector) {
+function _setRequisites(selector, updatePath) {
   let itemUpdate = {};
 
   for (const tech of Object.entries(CONFIG.ARM5E.magic.techniques)) {
     let found = selector.find(`.Selected${tech[1].label}`);
     if (found.length > 0) {
       if (found[0].checked === true) {
-        itemUpdate[`system.technique-req.${tech[0]}`] = true;
+        itemUpdate[`${updatePath}.technique-req.${tech[0]}`] = true;
       } else {
-        itemUpdate[`system.technique-req.${tech[0]}`] = false;
+        itemUpdate[`${updatePath}.technique-req.${tech[0]}`] = false;
       }
     }
   }
@@ -197,9 +196,9 @@ function _setRequisites(selector) {
     let found = selector.find(`.Selected${form[1].label}`);
     if (found.length > 0) {
       if (found[0].checked === true) {
-        itemUpdate[`system.form-req.${form[0]}`] = true;
+        itemUpdate[`${updatePath}.form-req.${form[0]}`] = true;
       } else {
-        itemUpdate[`system.form-req.${form[0]}`] = false;
+        itemUpdate[`${updatePath}.form-req.${form[0]}`] = false;
       }
     }
   }
@@ -379,6 +378,21 @@ export function addSpellMagnitude(base, num) {
   }
 }
 
+export function getRequisitesLabel(requisites) {
+  let result = "";
+  if (requisites.length == 0) {
+    return result;
+  }
+  result += "(";
+  requisites.forEach((key) => {
+    result += CONFIG.ARM5E.magic.arts[key[0]].short + " ";
+  });
+  // remove last whitespace
+  result = result.substring(0, result.length - 1);
+  result += ")";
+  return result;
+}
+
 /**
  *
  * @param item
@@ -387,15 +401,8 @@ export function addSpellMagnitude(base, num) {
 export function spellTechniqueLabel(item, short = false) {
   let label = CONFIG.ARM5E.magic.techniques[item.technique.value][short ? "short" : "label"];
   let techReq = Object.entries(item["technique-req"]).filter((r) => r[1] === true);
-  if (techReq.length > 0) {
-    label += " (";
-    techReq.forEach((key) => {
-      label += `${CONFIG.ARM5E.magic.arts[key[0]].short} `;
-    });
-    // Remove last whitespace
-    label = label.substring(0, label.length - 1);
-    label += ")";
-  }
+  label += getRequisitesLabel(techReq);
+
   return label;
 }
 
@@ -406,16 +413,8 @@ export function spellTechniqueLabel(item, short = false) {
  */
 export function spellFormLabel(item, short = false) {
   let label = CONFIG.ARM5E.magic.forms[item.form.value][short ? "short" : "label"];
-  let techReq = Object.entries(item["form-req"]).filter((r) => r[1] === true);
-  if (techReq.length > 0) {
-    label += " (";
-    techReq.forEach((key) => {
-      label += `${CONFIG.ARM5E.magic.arts[key[0]].short} `;
-    });
-    // Remove last whitespace
-    label = label.substring(0, label.length - 1);
-    label += ")";
-  }
+  let formReq = Object.entries(item["form-req"]).filter((r) => r[1] === true);
+  label += getRequisitesLabel(formReq);
   return label;
 }
 
@@ -614,9 +613,9 @@ export function computeRawCastingTotal(effect, owner, options = {}) {
   if (effectData.applyFocus || options.focus) {
     res += tech + form + Math.min(tech, form);
     if (tech >= form) {
-      techlabel = `(${techlabel} x 2) : ${2 * tech}`;
+      formlabel = `(${formlabel} x 2) : ${2 * form}`;
     } else {
-      formlabel += `(${formlabel} x 2) : ${2 * form}`;
+      techlabel += `(${techlabel} x 2) : ${2 * tech}`;
     }
   } else {
     res += tech + form;
@@ -634,9 +633,9 @@ export function computeRawCastingTotal(effect, owner, options = {}) {
  *
  * @param actor
  */
-async function noFatigue(actor) {
+function noFatigue(actor) {
   if (actor.isMagus()) {
-    actor.rollInfo.useFatigue = false;
+    actor.rollInfo.impact.fail.fatigue = 0;
     actor.rollInfo.magic.divide = actor.system.bonuses.arts.spontDividerNoFatigue;
   }
 }
@@ -658,7 +657,7 @@ async function handleTargetsOfMagic(actorCaster, form, message) {
     const target = {
       uuid: tokenTarget.actor.uuid,
       name: tokenTarget.name, // use the token name instead of the actor's if possible
-      magicResistance: tokenTarget.actor.magicResistance(form),
+      magicResistance: tokenTarget.actor.magicResistance(form, message.system.magic.realm),
       hasPlayerOwner: tokenTarget.actor.hasPlayerOwner
     };
     targets.push(target);

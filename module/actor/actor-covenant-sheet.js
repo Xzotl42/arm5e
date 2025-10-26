@@ -2,8 +2,8 @@ import { compareLabTexts, log, hermeticFilter, getUuidInfo, getDataset } from ".
 import { ArM5eActorSheet } from "./actor-sheet.js";
 import { HERMETIC_FILTER, TIME_FILTER, TOPIC_FILTER } from "../constants/userdata.js";
 import { effectToLabText, resetOwnerFields } from "../item/item-converter.js";
-import { getConfirmation } from "../constants/ui.js";
 import { ArM5eActor } from "./actor.js";
+import { getConfirmation } from "../ui/dialogs.js";
 
 /**
  * Extend the basic ArM5eActorSheet
@@ -179,8 +179,7 @@ export class ArM5eCovenantActorSheet extends ArM5eActorSheet {
       //   context.system.yearlySavings[save].canEdit = "readonly";
       // }
     }
-    log(false, "Covenant-sheet getData");
-    log(false, context);
+    log(false, "Covenant-sheet getData", context);
     return context;
   }
 
@@ -399,6 +398,17 @@ export class ArM5eCovenantActorSheet extends ArM5eActorSheet {
     let updateArray = [];
     // covenant can have a 1:N relationship with others, no need to remove existing links
     await this._bindActor(droppedActor);
+    if (droppedActor.isCharacter() && droppedActor.system.covenant.linked) {
+      // unlink old cov of the dropper actor if present
+      delete droppedActor.apps[droppedActor.system.covenant.document.sheet?.appId];
+      delete droppedActor.system.covenant.document.apps[this.appId];
+      await droppedActor.system.covenant.document.sheet._unbindActor(droppedActor);
+    } else if (droppedActor.type === "laboratory" && droppedActor.system.covenant.linked) {
+      // unlink old cov of the dropper actor if present
+      delete droppedActor.apps[droppedActor.system.covenant.document.sheet?.appId];
+      delete droppedActor.system.covenant.document.apps[this.appId];
+      await droppedActor.system.covenant.document.sheet._unbindActor(droppedActor);
+    }
     updateArray.push(await droppedActor.sheet._bindActor(this.actor));
     return await Actor.updateDocuments(updateArray);
   }
@@ -542,14 +552,14 @@ export class ArM5eCovenantActorSheet extends ArM5eActorSheet {
     if (actor.isMagus()) {
       let hab = targetActor.system.inhabitants.magi.filter((h) => h.system.actorId == actor._id);
       if (hab.length) {
-        return await this.actor.deleteEmbeddedDocuments("Item", [hab[0]._id], { render: true });
+        return this.actor.deleteEmbeddedDocuments("Item", [hab[0]._id], { render: true });
       }
     } else if (actor.isCompanion()) {
       let hab = targetActor.system.inhabitants.companion.filter(
         (h) => h.system.actorId == actor._id
       );
       if (hab.length) {
-        return await this.actor.deleteEmbeddedDocuments("Item", [hab[0]._id], { render: true });
+        return this.actor.deleteEmbeddedDocuments("Item", [hab[0]._id], { render: true });
       }
     } else if (
       actor.isGrog() ||
@@ -559,13 +569,13 @@ export class ArM5eCovenantActorSheet extends ArM5eActorSheet {
         (h) => h.system.actorId == actor._id
       );
       if (hab.length) {
-        return await this.actor.deleteEmbeddedDocuments("Item", [hab[0]._id], { render: true });
+        return this.actor.deleteEmbeddedDocuments("Item", [hab[0]._id], { render: true });
       }
     } else if (actor.type == "laboratory") {
       // check if it is already bound
       let lab = targetActor.system.labs.filter((l) => l.system.sanctumId == actor._id);
       if (lab.length) {
-        return await this.actor.deleteEmbeddedDocuments("Item", [lab[0]._id], { render: true });
+        return this.actor.deleteEmbeddedDocuments("Item", [lab[0]._id], { render: true });
       }
     }
   }

@@ -44,7 +44,8 @@ export function register__TEMPLATE__Testing(quench) {
           try {
             let dataset = { roll: "char", characteristic: c };
             actor.rollInfo.init(dataset, actor);
-            let roll = await stressDie(actor, "char", 0, null, 10);
+            const msg = await stressDie(actor, "char", 0, null, 10);
+            const roll = msg.rolls[0];
             log(false, roll);
             assert.ok(roll);
             if (roll.botches) {

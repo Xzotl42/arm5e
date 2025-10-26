@@ -298,7 +298,11 @@ export class BookSchema extends foundry.abstract.TypeDataModel {
     // console.log(`Migrate book: ${JSON.stringify(itemData)}`);
     const updateData = {};
 
-    if (itemData.system.topic !== null && itemData.system.topics.length === 0) {
+    if (
+      itemData.system.topic !== undefined &&
+      itemData.system.topic !== null &&
+      itemData.system.topics.length === 0
+    ) {
       console.log(`DEBUG Migrate monotopic book 2: ${JSON.stringify(itemData)}`);
       const topic = itemData.system.topic;
       // topic.quality = itemData.system.quality;

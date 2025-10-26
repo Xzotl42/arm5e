@@ -13,7 +13,7 @@
                 placeholder="Name" />
               {{#if (and item.isOwned system.valid)}}
                 <div class="flex0 padding10 "><a class="rollable" data-roll="supernatural" data-id="{{item._id}}"
-                    data-name="{{item.name}}" data-die-type="{{dieType}}"
+                    data-name="{{item.name}}" data-mode="{{rollmode}}"
                     title='{{localize "arm5e.dialog.button.roll"}}'><img src="systems/arm5e/assets/dice.png"
                       style="border: 0px; height:30px; min-height:30px; min-width: 30px;"></a>
                 </div>
@@ -28,7 +28,6 @@
       <div class="header-fields">
         <div class="flexcol">
           <div class="flexrow">
-
             {{#if system.verb.active}}
               <div class="resource flexcol flex-center">
                 <label for="system.verb.value" class="header-label">{{localize "arm5e.sheet.verb"}}</label>

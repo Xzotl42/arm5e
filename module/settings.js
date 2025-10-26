@@ -90,6 +90,15 @@ export function registerSettings() {
     default: "PLAYERS"
   });
 
+  game.settings.register(ARM5E.SYSTEM_ID, "passConfidencePromptOnRoll", {
+    name: "Automatic confidence prompt",
+    hint: "Any confidence prompt is skipped on another roll. Any pending fatigue levels or wound will be applied, which may prevent the roll to proceed.",
+    scope: "client",
+    config: true,
+    type: Boolean,
+    default: true
+  });
+
   /**
    * Show NPC magic details (cast, penetration and defense)
    */
@@ -255,6 +264,37 @@ export function registerSettings() {
     config: true,
     type: Boolean,
     default: false
+  });
+
+  game.settings.register(ARM5E.SYSTEM_ID, "moneyManagementLevel", {
+    name: "Money management level",
+    hint: "The level of detail for the price of items.",
+    scope: "world",
+    config: true,
+    choices: {
+      NONE: "Don't bother with it",
+      QUALIFIER: "Only a qualifier like cheap, standard, expensive",
+      TO_THE_COIN: "Everything priced to the coin."
+    },
+    default: "NONE"
+  });
+
+  game.settings.register(ARM5E.SYSTEM_ID, "currency", {
+    name: "Currency's name",
+    hint: "Name of the local currency",
+    default: "Silver coins", //game.i18n.localize("arm5e.config.currency.name"), // no idea why it doesn't work
+    type: String,
+    scope: "world",
+    config: true
+  });
+
+  game.settings.register(ARM5E.SYSTEM_ID, "currencyCoeff", {
+    name: "Currency coefficient",
+    hint: "How much of the local currency is needed to make a Mythic Pound.",
+    scope: "world",
+    config: true,
+    type: Number,
+    default: 240
   });
 }
 

@@ -83,16 +83,19 @@ export class ArM5eActor extends Actor {
       dead: []
     };
 
-    this.system.combat = {
-      load: 0,
-      overload: 0,
-      init: 0,
-      atk: 0,
-      dfn: 0,
-      dam: 0,
-      prot: 0,
-      ability: 0
-    };
+    if (this.system.realms) {
+      this.system.realms["magic"].susceptible = false;
+      this.system.realms["faeric"].susceptible = false;
+      this.system.realms["divine"].susceptible = false;
+      this.system.realms["infernal"].susceptible = false;
+      // } else {
+      //   this.system.realms = {
+      //     magic: { susceptible: false },
+      //     faeric: { susceptible: false },
+      //     divine: { susceptible: false },
+      //     infernal: { susceptible: false }
+      //   };
+    }
 
     // // CHARACTER FEATURES
     if (this.system.features == undefined) {
@@ -198,7 +201,21 @@ export class ArM5eActor extends Actor {
       adventuring: 0,
       visStudy: 0
     };
+
     this.system.bonuses.resistance = {
+      an: 0,
+      aq: 0,
+      au: 0,
+      co: 0,
+      he: 0,
+      ig: 0,
+      im: 0,
+      me: 0,
+      te: 0,
+      vi: 0
+    };
+
+    this.system.bonuses.magicResistance = {
       an: 0,
       aq: 0,
       au: 0,
@@ -234,7 +251,7 @@ export class ArM5eActor extends Actor {
    */
   _prepareCharacterData() {
     const system = this.system;
-    log(false, `Preparing Actor ${this.name} data`);
+    // log(false, `Preparing Actor ${this.name} data`);
     // Initialize collections.
     system.weapons = [];
     system.armor = [];
@@ -273,7 +290,11 @@ export class ArM5eActor extends Actor {
     system.totalXPMasteries = 0;
 
     let soak = system.characteristics.sta.value + system.bonuses.traits.soak;
-    system.combat = {
+    this.system.combat = {
+      img: "",
+      name: "",
+      itemId: "",
+      itemUuid: "",
       load: 0,
       overload: 0,
       init: 0,
@@ -318,6 +339,7 @@ export class ArM5eActor extends Actor {
     // Fatigue management
     if (system.fatigue) {
       system.fatigueTotal = 0;
+      system.fatigueTime = 0;
       let lvl = 0;
       for (let [key, item] of Object.entries(system.fatigue)) {
         let fatigueArray = [];
@@ -325,6 +347,7 @@ export class ArM5eActor extends Actor {
         for (let ii = 0; ii < item.amount; ii++) {
           if (lvl < system.fatigueCurrent) {
             fatigueArray.push(true);
+            system.fatigueTime += CONFIG.ARM5E.character.fatigueLevels[key].time;
             system.fatigueTotal = item.number > 0 ? 0 : item.number;
           } else {
             fatigueArray.push(false);
@@ -340,7 +363,9 @@ export class ArM5eActor extends Actor {
       system.fatigueMaxLevel = lvl;
     }
 
+    ////////////////////
     // Resources
+    ////////////////////
     system.resource = {};
     // Fatigue as resource for token bar
 
@@ -624,8 +649,8 @@ export class ArM5eActor extends Actor {
         system.combat.atk += weapon.system.atk;
         system.combat.dfn += weapon.system.dfn;
         system.combat.dam += weapon.system.dam;
-        system.combat.img = weapon.img;
-        system.combat.name = weapon.name;
+        system.combat.img = system.combat.img ? system.combat.img : weapon.img;
+        system.combat.name = system.combat.name ? system.combat.name : weapon.name;
         system.combat.itemId = weapon.id;
         system.combat.itemUuid = weapon.uuid;
 
@@ -715,8 +740,7 @@ export class ArM5eActor extends Actor {
         this.system.sanctum.linked = false;
       }
     }
-    log(false, "pc end of prepare actor data");
-    log(false, system);
+    //log(false, "PC end of prepare actor data", system);
   }
 
   /**
@@ -950,7 +974,7 @@ export class ArM5eActor extends Actor {
     if (res.woundGravity) {
       await this.changeWound(
         1,
-        ARM5E.recovery.rankMapping[woundGravity],
+        ARM5E.recovery.rankMapping[res.woundGravity],
         game.i18n.localize("arm5e.sheet.fatigueOverflow")
       );
     }
@@ -1050,7 +1074,11 @@ export class ArM5eActor extends Actor {
   // }
 
   async changeWound(amount, wtype, description = "") {
-    if (!this.isCharacter() || (amount <= 0 && this.system.wounds[type].length == 0)) {
+    if (
+      !this.isCharacter() ||
+      wtype === "none" ||
+      (amount <= 0 && this.system.wounds[wtype].length == 0)
+    ) {
       return [];
     }
     let wounds = [];
@@ -1161,7 +1189,7 @@ export class ArM5eActor extends Actor {
     return true;
   }
 
-  magicResistance(form) {
+  magicResistance(form, realm) {
     if (!this.isCharacter()) return null;
 
     let magicResistance =
@@ -1171,11 +1199,17 @@ export class ArM5eActor extends Actor {
 
     // TODO support magic resistance for hedge magic forms
 
+    const formLabel = CONFIG.ARM5E.magic.arts[form]?.label || "NONE";
+
     let specialityIncluded = "";
-    const parma = this.getAbilityStats("parma");
-    if (parma.speciality && parma.speciality.toUpperCase() === form.toUpperCase()) {
-      specialityIncluded = form;
-      magicResistance += 5;
+    let parma = null;
+    if (this.hasSkill("parma")) {
+      parma = this.getAbilityStats("parma");
+      magicResistance += parma.score * 5;
+      if (parma.speciality && parma.speciality.toUpperCase() === formLabel.toUpperCase()) {
+        specialityIncluded = formLabel;
+        magicResistance += 5;
+      }
     }
 
     const arts = this.system?.arts;
@@ -1189,18 +1223,35 @@ export class ArM5eActor extends Actor {
 
     let formScore = 0;
     if (arts) {
-      const formKey = Object.keys(arts.forms).filter(
-        (key) => arts.forms[key].label.toUpperCase() === form.toUpperCase()
-      )[0];
-      formScore = arts.forms[formKey]?.finalScore || 0;
+      formScore = arts.forms[form]?.finalScore || 0;
+      magicResistance += formScore;
+    }
+
+    let otherResistance = Math.max(
+      this.system.bonuses.magicResistance[form], // form specific
+      this.system.bonuses.arts.magicResistance // global
+    );
+    // not cumulative with Parma
+    if (otherResistance > 0 && otherResistance > magicResistance) {
+      magicResistance = otherResistance;
+      specialityIncluded = false;
+      parma = null;
+    }
+
+    let susceptible = this.system.realms[realm].susceptible;
+
+    if (susceptible) {
+      magicResistance = Math.round(magicResistance / 2);
     }
 
     return {
       might: this.system?.might?.value,
       specialityIncluded,
-      total: magicResistance + formScore,
-      form: form,
+      otherResistance: otherResistance,
+      total: magicResistance,
+      form: formLabel,
       formScore,
+      susceptible,
       parma,
       aura: auraMod
     };
@@ -1450,7 +1501,7 @@ export class ArM5eActor extends Actor {
   }
 
   hasMagicResistance() {
-    return this.isMagus() || this.hasMight() || this.system.bonuses.magicResistance !== null;
+    return this.isMagus() || this.hasMight() || this.system.bonuses.arts.magicResistance !== null;
   }
 
   // getLabTotalForEffect(spell, options = {}) {

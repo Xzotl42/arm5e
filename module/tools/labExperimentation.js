@@ -5,7 +5,7 @@ import { privateMessage } from "../helpers/chat-message.js";
 export class LabExperimentation extends FormApplication {
   constructor(
     data = {
-      experimenter: game.user.character.name,
+      experimenter: game.user.character?.name || "Anonymous",
       subject: "",
       riskModifier: 0,
       aura: 0,
@@ -165,7 +165,12 @@ export class LabExperimentation extends FormApplication {
           reportBody += await this._rollForExperimentation(risk, aura, discovery);
         }
       } else {
-        const tableRef = res.find((e) => e.type == "pack");
+        let tableRef;
+        if (CONFIG.ISV13) {
+          tableRef = res.find((e) => e.type == "document");
+        } else {
+          tableRef = res.find((e) => e.type == "pack");
+        }
         const subRt = docs.find((e) => tableRef.documentId === e._id);
         const subTitle = res.find((e) => e.type == "text").text;
         reportBody += this._getTableResult("extraordinaryResults", subTitle);

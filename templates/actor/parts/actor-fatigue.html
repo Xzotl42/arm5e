@@ -1,12 +1,22 @@
 <div class="flexcol grid grid-2col margintop18">
   <div class="flex-group-left backSection padding12">
-    <div class="grid grid-3col">
-      <label class="smallTitle">{{localize "arm5e.sheet.fatigue"}} ({{ system.fatigueTotal }})</label>
-      <div>
+    <div class="flexrow" style="max-height: 32px;">
+      <div style="margin-top: 12px;">
+        <label class="smallTitle">{{localize "arm5e.sheet.fatigue"}} ({{ system.fatigueTotal }})</label>
+      </div>
+      <div style="margin-top: 12px;">
         <a class="item-control removeFatigue" title="Remove fatigue level"><i class="fas fa-minus fa-lg"></i></a>
         <a class="item-control addFatigue" title="Add fatigue level"> <i class="fas fa-plus fa-lg"></i></a>
       </div>
-      <button class="arm5e rest" style="font-family: blackmoor">{{localize "arm5e.sheet.action.rest"}}</button>
+      <div> <img class="fatigueRoll rollable tinyimg" data-roll="option" data-physicalcondition="true"
+          data-title="{{localize 'arm5e.sheet.fatigueRoll'}}" data-name="{{localize 'arm5e.sheet.fatigueRoll'}}"
+          data-mode="1" data-difficulty="6" data-option1="{{ system.characteristics.sta.value }}"
+          data-fatigue-on-fail="1" data-txtoption1="{{ localize config.character.characteristics.sta.label }}"
+          src="systems/arm5e/assets/icons/fatigue.svg" title="{{localize 'arm5e.sheet.fatigueRoll' }}">
+      </div>
+
+      <button class="arm5e rest" style="max-height: 32px; font-family: blackmoor">{{localize "arm5e.sheet.action.rest"}}
+        {{system.fatigueTime}} {{localize "arm5e.generic.minutesShort" }}</button>
     </div>
 
     <ol>
@@ -25,8 +35,7 @@
           <input type="text" name="system.fatigue.{{key}}.number"
             value="{{numberFormat fatigue.number decimals=0 sign=true}}" data-dtype="Number" readonly />
           {{#with (lookup @root.config.character.fatigueLevels key)}}
-            <input type="text" name="config.character.fatigueLevels.{{key}}.time" value="{{time}}" data-dtype="String"
-              readonly />
+            <input type="text" value="{{timeLabel}} {{localize timeUnits}}" data-dtype="String" readonly />
           {{/with}}
         </span>
       {{/each}}
@@ -55,7 +64,7 @@
     </div>
 
     <ol>
-      {{#each health as |wounds key|}}
+      {{#each health as |level key|}}
 
         <li class="flexrow flex-group-left" data-attribute="{{key}}">
           <div class="flexrow flex-between">
@@ -68,18 +77,23 @@
                 style="display: flex;align-items: center;">{{localize label}}</label>
             {{/with}}
             <div class="flexrow" style="width:230px">
-              {{#each wounds}}
+              {{#each level.wounds}}
                 <img class="item wound-edit flexrow vignette" data-id="{{this._id}}" src="{{this.img}}"
                   title="{{this.system.title}}" {{{this.system.ui.style}}}>
               {{/each }}
             </div>
-            <div class="wound-field">
-              <input type="text" name="" value="{{wounds.length}}" data-dtype="Number" class="resource-focus"
-                style="text-align: center;" readonly />
-            </div>
-            <div class="wound-field">
-              <input type="text" value="{{lookup ../system.penalties.wounds key}}" data-dtype="Number" readonly
-                style="text-align: center;" />
+            <div class="flexrow flex-group-right" style="min-width: 150px;">
+              <div>
+                <span>{{level.range}}</span>
+              </div>
+              <div class="wound-field">
+                <input type="text" name="" value="{{level.wounds.length}}" data-dtype="Number" class="resource-focus"
+                  style="text-align: center;" readonly />
+              </div>
+              <div class="wound-field">
+                <input type="text" value="{{lookup ../system.penalties.wounds key}}" data-dtype="Number" readonly
+                  style="text-align: center;" />
+              </div>
             </div>
           </div>
         </li>

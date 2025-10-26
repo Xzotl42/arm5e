@@ -110,7 +110,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
    * @returns {any}
    */
   async getData() {
-    log(false, "GET WORKBENCH DATA");
+    // log(false, "GET WORKBENCH DATA");
     let context = await super.getData();
     let isValid = true;
 
@@ -173,8 +173,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
       };
 
       // context.planning.modifiers.apprentice = 0;
-      log(false, "lab-sheet getData");
-      log(false, context);
+      log(false, "lab-sheet getData", context);
 
       return context;
     }
@@ -230,7 +229,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
       context.edition.aura = "readonly";
       // context.planning.modifiers.aura += context.system.auraBonus;
       context.tooltip = {
-        aura: game.i18n.format("arm5e.sheet.activeEffect.add", {
+        aura: game.i18n.format("arm5e.activeEffect.add", {
           score: (context.system.auraBonus < 0 ? "" : "+") + context.system.auraBonus,
           value: game.i18n.localize("arm5e.sheet.aura")
         })
@@ -409,8 +408,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
     // Prepare items.
     this._prepareCharacterItems(context);
 
-    log(false, "lab-sheet getData");
-    log(false, context);
+    log(false, "lab-sheet getData", context);
     return context;
   }
 
@@ -425,10 +423,17 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
     if (!this.options.editable) return;
     html.find(".advanced-req").click(async () => {
       let planning = this.actor.getFlag(ARM5E.SYSTEM_ID, "planning");
+      let updatePath = "system";
+      let spellData = planning.data.system;
+      if (["minorEnchantment", "chargedItem"].includes(planning.type)) {
+        spellData = planning.data.enchantment.system;
+        updatePath = "enchantment.system";
+      }
       let update = await PickRequisites(
-        planning.data.system,
+        spellData,
         "Lab",
-        planning.type === "learnSpell" ? "disabled" : ""
+        planning.type === "learnSpell" ? "disabled" : "",
+        updatePath
       );
       if (update) {
         let tmp = foundry.utils.mergeObject(planning.data, update);
@@ -703,188 +708,195 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
     return entry[0]; // for test purposes
   }
 
-  async _onDrop(event) {
-    event.stopPropagation();
-    const dropData = TextEditor.getDragEventData(event);
-    if (dropData.type === "Item") {
-      let dropTarget;
-      if (event.currentTarget) {
-        dropTarget = event.currentTarget.dataset.drop;
-      } else {
-        dropTarget = event.target[0].closest("drop");
+  async _onDropItem(event, data) {
+    let dropTarget;
+    if (event.currentTarget) {
+      dropTarget = event.currentTarget.dataset.drop;
+    } else {
+      dropTarget = event.target[0].closest("drop");
+    }
+    let item = await Item.implementation.fromDropData(data);
+    let planning = this.actor.getFlag(ARM5E.SYSTEM_ID, "planning");
+    if (item.type === "book") {
+      let topicIdx = Number(data.topicIdx);
+      const topic = item.system.topics[topicIdx];
+      if (topic.category == "labText") {
+        item = new ArM5eItem(
+          { name: topic.name, type: "laboratoryText", system: topic.system.toObject() },
+          { temporary: true }
+        );
       }
-      // If (this.item.system.activity === "teaching" || this.item.system.activity === "training") {
-      let item = await Item.implementation.fromDropData(dropData);
-      let planning = this.actor.getFlag(ARM5E.SYSTEM_ID, "planning");
-      if (item.type === "book") {
-        let topicIdx = Number(dropData.topicIdx);
-        const topic = item.system.topics[topicIdx];
-        if (topic.category == "labText") {
-          item = new ArM5eItem(
-            { name: topic.name, type: "laboratoryText", system: topic.system.toObject() },
-            { temporary: true }
-          );
+    }
+    if (dropTarget === "spell") {
+      event.stopImmediatePropagation();
+      switch (item.type) {
+        case "laboratoryText": {
+          if (item.system.type !== "spell") {
+            break;
+          }
+          if (item.system.draft && item.system.author !== this.actor.system.owner.value) {
+            ui.notifications.info(game.i18n.localize("arm5e.lab.planning.msg.draftLabText"));
+            return false;
+          }
+          const labSpell = item.toObject();
+          labSpell.type = "spell";
+          let newSpell = new ArM5eItem(labSpell, { temporary: true });
+          planning.type = "learnSpell";
+          let data = newSpell.toObject();
+          planning.data = resetOwnerFields(data);
+          await this.submit({
+            preventClose: true,
+            updateData: { "flags.arm5e.planning": planning }
+          });
+          this.render();
+          return true;
         }
+        case "magicalEffect":
+          let newEffect = new ArM5eItem(item.toObject(), { temporary: true });
+          planning.type = "inventSpell";
+          planning.data = newEffect.toObject();
+          await this.submit({
+            preventClose: true,
+            updateData: { "flags.arm5e.planning": planning }
+          });
+          this.render();
+          return true;
+        case "spell": {
+          let newSpell = new ArM5eItem(item.toObject(), { temporary: true });
+          planning.type = "learnSpell";
+          let data = newSpell.toObject();
+          planning.data = resetOwnerFields(data);
+          await this.submit({
+            preventClose: true,
+            updateData: { "flags.arm5e.planning": planning }
+          });
+          this.render();
+          return true;
+        }
+        case "enchantment": {
+          let newEnchant = new ArM5eItem(item.toObject(), { temporary: true });
+          planning.type = "learnSpell";
+          let data = newEnchant.toObject();
+          planning.data = resetOwnerFields(data);
+          await this.submit({
+            preventClose: true,
+            updateData: { "flags.arm5e.planning": planning }
+          });
+          this.render();
+          return true;
+        }
+        default:
+          return await super._onDropItem(event, data);
       }
-      if (dropTarget === "spell") {
-        // event.stopPropagation();
-        switch (item.type) {
-          case "laboratoryText": {
-            if (item.system.type !== "spell") {
-              break;
-            }
-            if (item.system.draft && item.system.author !== this.actor.system.owner.value) {
-              ui.notifications.info(game.i18n.localize("arm5e.lab.planning.msg.draftLabText"));
-              return false;
-            }
-            const labSpell = item.toObject();
-            labSpell.type = "spell";
-            let newSpell = new ArM5eItem(labSpell, { temporary: true });
-            planning.type = "learnSpell";
-            let data = newSpell.toObject();
-            planning.data = resetOwnerFields(data);
-            await this.submit({
-              preventClose: true,
-              updateData: { "flags.arm5e.planning": planning }
-            });
-            this.render();
-            return true;
+    } else if (dropTarget === "enchant") {
+      event.stopImmediatePropagation();
+      switch (item.type) {
+        case "laboratoryText": {
+          if (!["enchantment", "spell"].includes(item.system.type)) {
+            break;
           }
-          case "magicalEffect":
-            let newEffect = new ArM5eItem(item.toObject(), { temporary: true });
-            planning.type = "inventSpell";
-            planning.data = newEffect.toObject();
-            await this.submit({
-              preventClose: true,
-              updateData: { "flags.arm5e.planning": planning }
-            });
-            this.render();
-            return true;
-          case "spell": {
-            let newSpell = new ArM5eItem(item.toObject(), { temporary: true });
-            planning.type = "learnSpell";
-            let data = newSpell.toObject();
-            planning.data = resetOwnerFields(data);
-            await this.submit({
-              preventClose: true,
-              updateData: { "flags.arm5e.planning": planning }
-            });
-            this.render();
-            return true;
+          if (item.system.draft && item.system.author !== this.actor.system.owner.value) {
+            ui.notifications.info(game.i18n.localize("arm5e.lab.planning.msg.draftLabText"));
+            return false;
           }
-          case "enchantment": {
-            let newEnchant = new ArM5eItem(item.toObject(), { temporary: true });
-            planning.type = "learnSpell";
-            let data = newEnchant.toObject();
-            planning.data = resetOwnerFields(data);
-            await this.submit({
-              preventClose: true,
-              updateData: { "flags.arm5e.planning": planning }
-            });
-            this.render();
-            return true;
-          }
-          default:
-            return await super._onDrop(event);
-        }
-      } else if (dropTarget === "enchant") {
-        // event.stopPropagation();
-        switch (item.type) {
-          case "laboratoryText": {
-            if (!["enchantment", "spell"].includes(item.system.type)) {
-              break;
-            }
-            if (item.system.draft && item.system.author !== this.actor.system.owner.value) {
-              ui.notifications.info(game.i18n.localize("arm5e.lab.planning.msg.draftLabText"));
-              return false;
-            }
 
-            const effect = item.toObject();
-            effect.type = item.system.type;
-            let data = new ArM5eItem(effect, { temporary: true });
-            resetOwnerFields(data);
-            planning.data.enchantment = {
-              name: data.name,
-              img: data.img,
-              type: "enchantment",
-              system: data.system
-            };
-            await this.submit({
-              preventClose: true,
-              updateData: { "flags.arm5e.planning": planning }
-            });
-            this.render();
-            return true;
-          }
-          case "magicalEffect":
-          case "spell": {
-            let newSpell = new ArM5eItem(item.toObject(), { temporary: true });
-            let data = newSpell.toObject();
-            resetOwnerFields(data);
-            planning.data.enchantment = {
-              name: data.name,
-              img: data.img,
-              type: "enchantment",
-              system: data.system
-            };
-            await this.submit({
-              preventClose: true,
-              updateData: { "flags.arm5e.planning": planning }
-            });
-            this.render();
-            return true;
-          }
-          case "enchantment": {
-            let newEnchant = new ArM5eItem(item.toObject(), { temporary: true });
-            let data = newEnchant.toObject();
-            resetOwnerFields(data);
-            planning.data.enchantment = {
-              name: data.name,
-              img: data.img,
-              type: "enchantment",
-              system: data.system
-            };
-            await this.submit({
-              preventClose: true,
-              updateData: { "flags.arm5e.planning": planning }
-            });
-            this.render();
-            return true;
-          }
-          case "item": {
-          }
-        }
-      } else if (dropTarget === "magic-item") {
-        // event.stopPropagation();
-        if (
-          Object.keys(ARM5E.lab.enchantment.enchantableTypes).includes(item.type) &&
-          item.system.state == "enchanted"
-        ) {
-          planning.data.receptacle = {
-            uuid: item.uuid
-            // name: item.name,
-            // img: item.img,
-            // type: item.type,
-            // system: item.system.toObject()
+          const effect = item.toObject();
+          effect.type = item.system.type;
+          let data = new ArM5eItem(effect, { temporary: true });
+          resetOwnerFields(data);
+          planning.data.enchantment = {
+            name: data.name,
+            img: data.img,
+            type: "enchantment",
+            system: data.system
           };
           await this.submit({
             preventClose: true,
             updateData: { "flags.arm5e.planning": planning }
           });
           this.render();
-        } else {
-          return false;
+          return true;
         }
+        case "magicalEffect":
+        case "spell": {
+          let newSpell = new ArM5eItem(item.toObject(), { temporary: true });
+          let data = newSpell.toObject();
+          resetOwnerFields(data);
+          planning.data.enchantment = {
+            name: data.name,
+            img: data.img,
+            type: "enchantment",
+            system: data.system
+          };
+          await this.submit({
+            preventClose: true,
+            updateData: { "flags.arm5e.planning": planning }
+          });
+          this.render();
+          return true;
+        }
+        case "enchantment": {
+          let newEnchant = new ArM5eItem(item.toObject(), { temporary: true });
+          let data = newEnchant.toObject();
+          resetOwnerFields(data);
+          planning.data.enchantment = {
+            name: data.name,
+            img: data.img,
+            type: "enchantment",
+            system: data.system
+          };
+          await this.submit({
+            preventClose: true,
+            updateData: { "flags.arm5e.planning": planning }
+          });
+          this.render();
+          return true;
+        }
+        case "item": {
+        }
+        default: {
+          return await super._onDropItem(event, data);
+        }
+      }
+    } else if (dropTarget === "magic-item") {
+      event.stopImmediatePropagation();
+      if (
+        Object.keys(ARM5E.lab.enchantment.enchantableTypes).includes(item.type) &&
+        item.system.state == "enchanted"
+      ) {
+        planning.data.receptacle = {
+          uuid: item.uuid
+          // name: item.name,
+          // img: item.img,
+          // type: item.type,
+          // system: item.system.toObject()
+        };
+        await this.submit({
+          preventClose: true,
+          updateData: { "flags.arm5e.planning": planning }
+        });
+        this.render();
       } else {
-        const res = await super._onDrop(event);
-        return res;
+        return await super._onDropItem(event, data);
       }
     } else {
-      // event.stopPropagation();
-      const res = await super._onDrop(event);
-      //await this._resetPlanning();
+      const type = item.type;
+
+      // transform input into labText
+      if (type == "spell" || type == "magicalEffect" || type == "enchantment") {
+        log(false, "Valid drop");
+        // create a labText data:
+        return await super._onDropItemCreate(effectToLabText(item.toObject()));
+      }
+      const res = await super._onDropItem(event, data);
       return res;
     }
+  }
+
+  async _onDrop(event) {
+    event.preventDefault();
+    const res = await super._onDrop(event);
+    return res;
   }
 
   /**

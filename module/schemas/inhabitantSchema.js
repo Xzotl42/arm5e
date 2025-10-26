@@ -155,7 +155,7 @@ export class InhabitantSchema extends foundry.abstract.TypeDataModel {
   get buildPoints() {
     if (this.category == "specialists") {
       if (this.specialistType == "teacher") {
-        return this.specialistChar ?? 0 + this.score ?? 0 + this.teacherScore ?? 0;
+        return (this.specialistChar ?? 0) + (this.score ?? 0) + (this.teacherScore ?? 0);
       } else {
         return this.score ?? 0;
       }

@@ -1,7 +1,7 @@
 /* eslint-disable jsdoc/require-returns-type */
 import { ArM5eActor } from "../actor/actor.js";
 import { ARM5E } from "../config.js";
-import { computeLevel, IsMagicalEffect } from "../helpers/magic.js";
+import { computeLevel, getRequisitesLabel, IsMagicalEffect } from "../helpers/magic.js";
 import { convertToNumber, log } from "../tools.js";
 import {
   authorship,
@@ -30,6 +30,438 @@ export const baseLevel = () =>
     initial: 1,
     step: 1
   });
+
+class AbstractMagicEntity extends foundry.abstract.TypeDataModel {
+  static defineSchema() {
+    return {
+      ...itemBase()
+    };
+  }
+
+  getRequisitesStr() {
+    const req = Object.entries({
+      ...this["technique-req"],
+      ...this["form-req"]
+    }).filter((r) => r[1] === true);
+    return getRequisitesLabel(req);
+  }
+}
+
+export class BaseEffectSchema extends AbstractMagicEntity {
+  static defineSchema() {
+    return {
+      ...super.defineSchema(),
+      ...TechniquesForms(),
+      baseLevel: baseLevel(),
+      baseEffectDescription: baseDescription()
+    };
+  }
+
+  static migrateData(data) {
+    return data;
+  }
+
+  static migrate(itemData) {
+    const updateData = migrateMagicalItem(itemData);
+
+    if (typeof itemData.system.page !== "number") {
+      updateData["system.page"] = convertToNumber(itemData.system.page, 0);
+    }
+    return updateData;
+  }
+}
+
+export class MagicalEffectSchema extends AbstractMagicEntity {
+  static defineSchema() {
+    return {
+      ...super.defineSchema(),
+      ...TechniquesForms(),
+      ...SpellAttributes(),
+      baseLevel: baseLevel(),
+      baseEffectDescription: baseDescription(),
+      applyFocus: boolOption(false, true)
+    };
+  }
+  prepareOwnerData() {
+    this.castingTotal = this._computeCastingTotal(this.parent.actor, { char: "sta" });
+  }
+  static migrate(itemData) {
+    const updateData = migrateMagicalItem(itemData);
+
+    if (typeof itemData.system.page !== "number") {
+      updateData["system.page"] = convertToNumber(itemData.system.page, 0);
+    }
+    if (typeof itemData.system.complexity !== "number") {
+      updateData["system.complexity"] = convertToNumber(itemData.system.complexity, 0);
+    }
+
+    return updateData;
+  }
+
+  getTechniqueData(actor = null) {
+    if (!IsMagicalEffect(this.parent)) return ["", 0, false];
+    const actorSystemData = actor ? actor.system : this.parent.actor.system;
+    let label = CONFIG.ARM5E.magic.techniques[this.technique.value].label;
+    let tech = 1000;
+    let techReq = Object.entries(this["technique-req"]).filter((r) => r[1] === true);
+    let techDeficient = false;
+    if (techReq.length > 0) {
+      techReq.forEach((key) => {
+        if (actorSystemData.arts.techniques[key[0]].deficient) {
+          techDeficient = true;
+        }
+        tech = Math.min(tech, actorSystemData.arts.techniques[key[0]].finalScore);
+      });
+      tech = Math.min(actorSystemData.arts.techniques[this.technique.value].finalScore, tech);
+      label += " " + getRequisitesLabel(techReq);
+    } else {
+      tech = actorSystemData.arts.techniques[this.technique.value].finalScore;
+    }
+
+    techDeficient =
+      techDeficient || actorSystemData.arts.techniques[this.technique.value].deficient;
+    return [label, tech, techDeficient];
+  }
+
+  getFormData(actor = null) {
+    if (!IsMagicalEffect(this.parent)) return ["", 0, false];
+    const actorSystemData = actor ? actor.system : this.parent.actor.system;
+    let label = CONFIG.ARM5E.magic.forms[this.form.value].label;
+    let form = 1000;
+    let formDeficient = false;
+    let formReq = Object.entries(this["form-req"]).filter((r) => r[1] === true);
+    if (formReq.length > 0) {
+      formReq.forEach((key) => {
+        if (actorSystemData.arts.forms[key[0]].deficient) {
+          formDeficient = true;
+        }
+        form = Math.min(form, actorSystemData.arts.forms[key[0]].finalScore);
+      });
+      form = Math.min(actorSystemData.arts.forms[this.form.value].finalScore, form);
+      label += " " + getRequisitesLabel(formReq);
+    } else {
+      form = actorSystemData.arts.forms[this.form.value].finalScore;
+    }
+    formDeficient = formDeficient || actorSystemData.arts.forms[this.form.value].deficient;
+    return [label, form, formDeficient];
+  }
+
+  _computeCastingTotal(owner, options = {}) {
+    if (owner.type != "player" && owner.type != "npc") {
+      return 0;
+    }
+    let res = owner.system.characteristics[options.char].value;
+    let tech = 1000;
+    let form = 1000;
+    let deficiencyDivider = 1;
+    let deficientTech = false;
+    let deficientForm = false;
+    let techReq = Object.entries(this["technique-req"]).filter((r) => r[1] === true);
+    let formReq = Object.entries(this["form-req"]).filter((r) => r[1] === true);
+    if (owner.system.arts.techniques[this.technique.value].deficient) {
+      deficientTech = true;
+    }
+    if (owner.system.arts.forms[this.form.value].deficient) {
+      deficientForm = true;
+    }
+    if (techReq.length > 0) {
+      techReq.forEach((key) => {
+        if (owner.system.arts.techniques[key[0]].deficient) {
+          deficientTech = true;
+        }
+        tech = Math.min(tech, owner.system.arts.techniques[key[0]].finalScore);
+      });
+
+      tech = Math.min(owner.system.arts.techniques[this.technique.value].finalScore, tech);
+    } else {
+      tech = owner.system.arts.techniques[this.technique.value].finalScore;
+    }
+    if (formReq.length > 0) {
+      formReq.forEach((key) => {
+        if (owner.system.arts.forms[key[0]].deficient) {
+          deficientForm = true;
+        }
+        form = Math.min(tech, owner.system.arts.forms[key[0]].finalScore);
+      });
+      form = Math.min(owner.system.arts.forms[this.form.value].finalScore, form);
+    } else {
+      form = owner.system.arts.forms[this.form.value].finalScore;
+    }
+    if (this.applyFocus || options.focus) {
+      res += tech + form + Math.min(tech, form);
+    } else {
+      res += tech + form;
+    }
+    // Mastery
+    if (this.finalScore) {
+      res += this.finalScore;
+    }
+
+    if (this.ritual) {
+      res += owner.system.laboratory.abilitiesSelected.artesLib.value;
+      res += owner.system.laboratory.abilitiesSelected.philosophy.value;
+    }
+    if (deficientTech && deficientForm) {
+      deficiencyDivider = 4;
+    } else if (deficientTech || deficientForm) {
+      deficiencyDivider = 2;
+    }
+
+    // log(false, `Casting total: ${res}`)
+    return Math.round(res / deficiencyDivider);
+  }
+}
+
+export class SpellParamsSchema extends foundry.abstract.DataModel {
+  static defineSchema() {
+    return SpellSchema.defineSchema();
+  }
+
+  static migrateData(data) {
+    return SpellSchema.migrateData(data);
+  }
+
+  static migrate(itemData) {
+    return SpellSchema.migrate(itemData);
+  }
+}
+
+export class SpellSchema extends MagicalEffectSchema {
+  static defineSchema() {
+    return {
+      ...super.defineSchema(),
+      ritual: boolOption(),
+      bonus: ModifierField(),
+      bonusDesc: baseDescription(),
+      xp: XpField(),
+      masteryAbilities: baseDescription(),
+      general: boolOption(),
+      levelOffset: ModifierField(),
+      level: baseLevel()
+    };
+  }
+
+  /**
+   * @description update Item fields with data from the owner
+   * @returns void
+   */
+  prepareOwnerData() {
+    const owner = this.parent.actor;
+
+    this.xpCoeff = owner.system.bonuses.arts.masteryXpCoeff;
+    this.xpBonus = owner.system.bonuses.arts.masteryXpMod;
+    this.derivedScore = ArM5eActor.getAbilityScoreFromXp(
+      Math.round((this.xp + this.xpBonus) * this.xpCoeff)
+    );
+
+    this.xpNextLevel = Math.round(ArM5eActor.getAbilityXp(this.derivedScore + 1) / this.xpCoeff);
+    this.remainingXp = this.xp + this.xpBonus;
+
+    this.finalScore = this.derivedScore;
+    this.castingTotal = this._computeCastingTotal(this.parent.actor, { char: "sta" });
+  }
+
+  static getIcon(item, newValue = null) {
+    if (newValue !== null) {
+      return `systems/arm5e/assets/magic/${newValue}.png`;
+    } else {
+      let init = "an";
+      if (item.system?.form?.value !== undefined) {
+        init = item.system.form.value;
+      }
+      return `systems/arm5e/assets/magic/${init}.png`;
+    }
+  }
+
+  async increaseScore() {
+    let xpMod = this.parent.parent.system.bonuses.arts.masteryXpMod;
+    let oldXp = this.xp;
+    let newXp = Math.round(
+      (((this.derivedScore + 1) * (this.derivedScore + 2) * 5) / 2 - xpMod) / this.xpCoeff
+    );
+
+    await this.parent.update(
+      {
+        system: {
+          xp: newXp
+        }
+      },
+      {}
+    );
+    let delta = newXp - oldXp;
+    console.log(`Added ${delta} xps from ${oldXp} to ${newXp}`);
+  }
+
+  async decreaseScore(item) {
+    let xpMod = this.parent.parent.system.bonuses.arts.masteryXpMod;
+    let futureXp = Math.round(
+      ((this.derivedScore - 1) * this.derivedScore * 5) / (2 * this.xpCoeff)
+    );
+    let newXp = 0;
+    if (futureXp >= Math.round(xpMod * this.xpCoeff)) {
+      newXp = Math.round(
+        (((this.derivedScore - 1) * this.derivedScore * 5) / 2 - xpMod) / this.xpCoeff
+      );
+    }
+    if (newXp !== this.xp) {
+      await this.parent.update(
+        {
+          system: {
+            xp: newXp
+          }
+        },
+        {}
+      );
+      let delta = newXp - this.xp;
+      console.log(`Removed ${delta} xps from ${this.xp} to ${newXp} total`);
+    }
+  }
+
+  static fatigueCost(actor, castingTotal, difficulty, ritual = false) {
+    const res = { use: 0, partial: 0, fail: 0 };
+    const delta = castingTotal - difficulty;
+    if (ritual) {
+      // Mythic blood
+      res.use = Math.max(1 - actor.system.bonuses.arts.ritualFatigueCancelled, 0);
+      if (delta < 0) {
+        let cnt = Math.ceil((difficulty - castingTotal) / 5);
+        const numberOfFatigueCancelled = Math.min(
+          Math.max(actor.system.bonuses.arts.ritualFatigueCancelled - 1, 0),
+          2
+        );
+        if (cnt > 2) {
+          res.fail = cnt - 2;
+          res.partial = 2 - numberOfFatigueCancelled;
+        } else {
+          // remove partial fatigue levels with mythic blood
+          res.partial = Math.max(cnt - numberOfFatigueCancelled, 0);
+        }
+      }
+    } else {
+      if (-delta > 10) {
+        res.fail = 1;
+      } else if (delta + actor.system.bonuses.arts.spellFatigueThreshold < 0) {
+        res.partial = 1;
+      }
+    }
+    log(false, "Spell fatigue cost", res);
+    return res;
+  }
+
+  static migrateData(data) {
+    return data;
+  }
+
+  static migrate(itemData) {
+    const updateData = migrateMagicalItem(itemData);
+    if (typeof itemData.system.page !== "number") {
+      updateData["system.page"] = convertToNumber(itemData.system.page, 0);
+    }
+
+    if (typeof itemData.system.xp !== "number") {
+      updateData["system.xp"] = convertToNumber(itemData.system.xp, 0);
+    }
+
+    if (typeof itemData.system.complexity !== "number") {
+      updateData["system.complexity"] = convertToNumber(itemData.system.complexity, 0);
+    }
+    // Else if (itemData.system.complexity < 0) {
+    //   updateData["system.complexity"] = 0;
+    //   ChatMessage.create({
+    //     content:
+    //       "<b>Migration notice</b><br/>" +
+    //       `The Item of type: ${itemData.type} named ${itemData.name}` +
+    //       ` had a negative complexity of ${itemData.system.complexity}, ` +
+    //       `please review its new level (original: ${itemData.system.level}) and ` +
+    //       ` use rather the levelOffset field for general spells<br/>`
+    //   });
+    // }
+
+    if (typeof itemData.system.bonus !== "number") {
+      updateData["system.bonus"] = convertToNumber(itemData.system.bonus, 0);
+    }
+
+    return updateData;
+  }
+}
+export class LabTextTopicSchema extends foundry.abstract.DataModel {
+  static defineSchema() {
+    return LabTextSchema.defineSchema();
+  }
+
+  static migrate(itemData) {
+    return LabTextSchema.migrate(itemData);
+  }
+}
+
+export class LabTextSchema extends AbstractMagicEntity {
+  static defineSchema() {
+    return {
+      ...super.defineSchema(),
+      ...authorship(),
+      type: new fields.StringField({
+        required: false,
+        blank: false,
+        initial: "spell",
+        choices: Object.keys(ARM5E.lab.labTextType)
+      }),
+      ...TechniquesForms(),
+      ...SpellAttributes(),
+      ...EnchantmentAttributes(),
+      baseLevel: baseLevel(),
+      level: baseLevel(),
+      baseEffectDescription: baseDescription(),
+      ritual: boolOption(),
+      cost: CostField("priceless"),
+      quantity: new fields.NumberField({
+        required: false,
+        nullable: false,
+        integer: true,
+        min: 0, // Allow quantity of 0 to keep an eye on what is missing
+        initial: 1,
+        step: 1
+      }),
+      img: new fields.StringField({
+        required: false,
+        blank: true,
+        initial: ""
+      }),
+      draft: boolOption(false)
+    };
+  }
+
+  sanitize() {
+    return LabTextSchema.sanitizeData(this.toObject());
+  }
+
+  get buildPoints() {
+    return Math.ceil(this.level / 5) * this.quantity;
+  }
+
+  static sanitizeData(data) {
+    if (data.type !== "raw") {
+      data.description = "";
+    }
+    return data;
+  }
+
+  static migrate(itemData) {
+    // Console.log(`Migrate book: ${JSON.stringify(itemData)}`);
+    const updateData = migrateMagicalItem(itemData);
+
+    if (itemData.system.year == null) {
+      updateData["system.year"] = 1220;
+    }
+    if (typeof itemData.system.complexity !== "number") {
+      updateData["system.complexity"] = convertToNumber(itemData.system.complexity, 0);
+    }
+    return updateData;
+  }
+}
+
+//////////
+// LEGACY migrations functions
+/////////
 
 const migrateMagicalItem = (itemData) => {
   const updateData = {};
@@ -224,415 +656,6 @@ const migrateMagicalItem = (itemData) => {
   }
   return updateData;
 };
-
-export class BaseEffectSchema extends foundry.abstract.TypeDataModel {
-  static defineSchema() {
-    return {
-      ...itemBase(),
-      ...TechniquesForms(),
-      baseLevel: baseLevel(),
-      baseEffectDescription: baseDescription()
-    };
-  }
-
-  static migrateData(data) {
-    return data;
-  }
-
-  static migrate(itemData) {
-    const updateData = migrateMagicalItem(itemData);
-
-    if (typeof itemData.system.page !== "number") {
-      updateData["system.page"] = convertToNumber(itemData.system.page, 0);
-    }
-    return updateData;
-  }
-}
-
-export class MagicalEffectSchema extends foundry.abstract.TypeDataModel {
-  static defineSchema() {
-    return {
-      ...itemBase(),
-      ...TechniquesForms(),
-      ...SpellAttributes(),
-      baseLevel: baseLevel(),
-      baseEffectDescription: baseDescription(),
-      applyFocus: boolOption(false, true)
-    };
-  }
-  prepareOwnerData() {
-    this.castingTotal = this._computeCastingTotal(this.parent.actor, { char: "sta" });
-  }
-  static migrate(itemData) {
-    const updateData = migrateMagicalItem(itemData);
-
-    if (typeof itemData.system.page !== "number") {
-      updateData["system.page"] = convertToNumber(itemData.system.page, 0);
-    }
-    if (typeof itemData.system.complexity !== "number") {
-      updateData["system.complexity"] = convertToNumber(itemData.system.complexity, 0);
-    }
-
-    return updateData;
-  }
-
-  getTechniqueData() {
-    if (!IsMagicalEffect(this.parent)) return ["", 0, false];
-    const actorSystemData = this.parent.actor.system;
-    let label = CONFIG.ARM5E.magic.techniques[this.technique.value].label;
-    let tech = 1000;
-    let techReq = Object.entries(this["technique-req"]).filter((r) => r[1] === true);
-    let techDeficient = false;
-    if (techReq.length > 0) {
-      label += " (";
-      techReq.forEach((key) => {
-        if (actorSystemData.arts.techniques[key[0]].deficient) {
-          techDeficient = true;
-        }
-        tech = Math.min(tech, actorSystemData.arts.techniques[key[0]].finalScore);
-        label += CONFIG.ARM5E.magic.arts[key[0]].short + " ";
-      });
-      // remove last whitespace
-      label = label.substring(0, label.length - 1);
-      label += ")";
-      tech = Math.min(actorSystemData.arts.techniques[this.technique.value].finalScore, tech);
-    } else {
-      tech = actorSystemData.arts.techniques[this.technique.value].finalScore;
-    }
-    techDeficient =
-      techDeficient || actorSystemData.arts.techniques[this.technique.value].deficient;
-    return [label, tech, techDeficient];
-  }
-
-  getFormData() {
-    if (!IsMagicalEffect(this.parent)) return ["", 0, false];
-    const actorSystemData = this.parent.actor.system;
-    let label = CONFIG.ARM5E.magic.forms[this.form.value].label;
-    let form = 1000;
-    let formDeficient = false;
-    let formReq = Object.entries(this["form-req"]).filter((r) => r[1] === true);
-    if (formReq.length > 0) {
-      label += " (";
-      formReq.forEach((key) => {
-        if (actorSystemData.arts.forms[key[0]].deficient) {
-          formDeficient = true;
-        }
-        form = Math.min(form, actorSystemData.arts.forms[key[0]].finalScore);
-        label += CONFIG.ARM5E.magic.arts[key[0]].short + " ";
-      });
-      // remove last comma
-      label = label.substring(0, label.length - 1);
-      label += ")";
-      form = Math.min(actorSystemData.arts.forms[this.form.value].finalScore, form);
-    } else {
-      form = actorSystemData.arts.forms[this.form.value].finalScore;
-    }
-    formDeficient = formDeficient || actorSystemData.arts.forms[this.form.value].deficient;
-    return [label, form, formDeficient];
-  }
-
-  _computeCastingTotal(owner, options = {}) {
-    if (owner.type != "player" && owner.type != "npc") {
-      return 0;
-    }
-    let res = owner.system.characteristics[options.char].value;
-    let tech = 1000;
-    let form = 1000;
-    let deficiencyDivider = 1;
-    let deficientTech = false;
-    let deficientForm = false;
-    let techReq = Object.entries(this["technique-req"]).filter((r) => r[1] === true);
-    let formReq = Object.entries(this["form-req"]).filter((r) => r[1] === true);
-    if (owner.system.arts.techniques[this.technique.value].deficient) {
-      deficientTech = true;
-    }
-    if (owner.system.arts.forms[this.form.value].deficient) {
-      deficientForm = true;
-    }
-    if (techReq.length > 0) {
-      techReq.forEach((key) => {
-        if (owner.system.arts.techniques[key[0]].deficient) {
-          deficientTech = true;
-        }
-        tech = Math.min(tech, owner.system.arts.techniques[key[0]].finalScore);
-      });
-
-      tech = Math.min(owner.system.arts.techniques[this.technique.value].finalScore, tech);
-    } else {
-      tech = owner.system.arts.techniques[this.technique.value].finalScore;
-    }
-    if (formReq.length > 0) {
-      formReq.forEach((key) => {
-        if (owner.system.arts.forms[key[0]].deficient) {
-          deficientForm = true;
-        }
-        form = Math.min(tech, owner.system.arts.forms[key[0]].finalScore);
-      });
-      form = Math.min(owner.system.arts.forms[this.form.value].finalScore, form);
-    } else {
-      form = owner.system.arts.forms[this.form.value].finalScore;
-    }
-    if (this.applyFocus || options.focus) {
-      res += tech + form + Math.min(tech, form);
-    } else {
-      res += tech + form;
-    }
-    // Mastery
-    if (this.finalScore) {
-      res += this.finalScore;
-    }
-
-    if (this.ritual) {
-      res += owner.system.laboratory.abilitiesSelected.artesLib.value;
-      res += owner.system.laboratory.abilitiesSelected.philosophy.value;
-    }
-    if (deficientTech && deficientForm) {
-      deficiencyDivider = 4;
-    } else if (deficientTech || deficientForm) {
-      deficiencyDivider = 2;
-    }
-
-    // log(false, `Casting total: ${res}`)
-    return Math.round(res / deficiencyDivider);
-  }
-}
-
-export class SpellParamsSchema extends foundry.abstract.DataModel {
-  static defineSchema() {
-    return SpellSchema.defineSchema();
-  }
-
-  static migrateData(data) {
-    return SpellSchema.migrateData(data);
-  }
-
-  static migrate(itemData) {
-    return SpellSchema.migrate(itemData);
-  }
-}
-
-export class SpellSchema extends MagicalEffectSchema {
-  static defineSchema() {
-    return {
-      ...super.defineSchema(),
-      ritual: boolOption(),
-      bonus: ModifierField(),
-      bonusDesc: baseDescription(),
-      xp: XpField(),
-      masteryAbilities: baseDescription(),
-      general: boolOption(),
-      levelOffset: ModifierField(),
-      level: baseLevel()
-    };
-  }
-
-  /**
-   * @description update Item fields with data from the owner
-   * @returns void
-   */
-  prepareOwnerData() {
-    const owner = this.parent.actor;
-
-    this.xpCoeff = owner.system.bonuses.arts.masteryXpCoeff;
-    this.xpBonus = owner.system.bonuses.arts.masteryXpMod;
-    this.derivedScore = ArM5eActor.getAbilityScoreFromXp(
-      Math.round((this.xp + this.xpBonus) * this.xpCoeff)
-    );
-
-    this.xpNextLevel = Math.round(ArM5eActor.getAbilityXp(this.derivedScore + 1) / this.xpCoeff);
-    this.remainingXp = this.xp + this.xpBonus;
-
-    this.finalScore = this.derivedScore;
-    this.castingTotal = this._computeCastingTotal(this.parent.actor, { char: "sta" });
-  }
-
-  static getIcon(item, newValue = null) {
-    if (newValue !== null) {
-      return `systems/arm5e/assets/magic/${newValue}.png`;
-    } else {
-      let init = "an";
-      if (item.system?.form?.value !== undefined) {
-        init = item.system.form.value;
-      }
-      return `systems/arm5e/assets/magic/${init}.png`;
-    }
-  }
-
-  async increaseScore() {
-    let xpMod = this.parent.parent.system.bonuses.arts.masteryXpMod;
-    let oldXp = this.xp;
-    let newXp = Math.round(
-      (((this.derivedScore + 1) * (this.derivedScore + 2) * 5) / 2 - xpMod) / this.xpCoeff
-    );
-
-    await this.parent.update(
-      {
-        system: {
-          xp: newXp
-        }
-      },
-      {}
-    );
-    let delta = newXp - oldXp;
-    console.log(`Added ${delta} xps from ${oldXp} to ${newXp}`);
-  }
-
-  async decreaseScore(item) {
-    let xpMod = this.parent.parent.system.bonuses.arts.masteryXpMod;
-    let futureXp = Math.round(
-      ((this.derivedScore - 1) * this.derivedScore * 5) / (2 * this.xpCoeff)
-    );
-    let newXp = 0;
-    if (futureXp >= Math.round(xpMod * this.xpCoeff)) {
-      newXp = Math.round(
-        (((this.derivedScore - 1) * this.derivedScore * 5) / 2 - xpMod) / this.xpCoeff
-      );
-    }
-    if (newXp !== this.xp) {
-      await this.parent.update(
-        {
-          system: {
-            xp: newXp
-          }
-        },
-        {}
-      );
-      let delta = newXp - this.xp;
-      console.log(`Removed ${delta} xps from ${this.xp} to ${newXp} total`);
-    }
-  }
-
-  static fatigueCost(actor, castingTotal, difficulty, ritual = false) {
-    const delta = castingTotal - difficulty;
-    if (ritual) {
-      if (delta < 0) {
-        return Math.max(
-          1 +
-            Math.ceil((levelOfSpell - totalOfSpell) / 5) -
-            actor.system.bonuses.arts.ritualFatigueCancelled,
-          0
-        );
-      } else {
-        return Math.max(1 - actorCaster.system.bonuses.arts.ritualFatigueCancelled, 0);
-      }
-    } else {
-      if (delta < -actor.system.bonuses.arts.spellFatigueThreshold) {
-        return 1;
-      }
-    }
-    return 0;
-  }
-
-  static migrateData(data) {
-    return data;
-  }
-
-  static migrate(itemData) {
-    const updateData = migrateMagicalItem(itemData);
-    if (typeof itemData.system.page !== "number") {
-      updateData["system.page"] = convertToNumber(itemData.system.page, 0);
-    }
-
-    if (typeof itemData.system.xp !== "number") {
-      updateData["system.xp"] = convertToNumber(itemData.system.xp, 0);
-    }
-
-    if (typeof itemData.system.complexity !== "number") {
-      updateData["system.complexity"] = convertToNumber(itemData.system.complexity, 0);
-    }
-    // Else if (itemData.system.complexity < 0) {
-    //   updateData["system.complexity"] = 0;
-    //   ChatMessage.create({
-    //     content:
-    //       "<b>Migration notice</b><br/>" +
-    //       `The Item of type: ${itemData.type} named ${itemData.name}` +
-    //       ` had a negative complexity of ${itemData.system.complexity}, ` +
-    //       `please review its new level (original: ${itemData.system.level}) and ` +
-    //       ` use rather the levelOffset field for general spells<br/>`
-    //   });
-    // }
-
-    if (typeof itemData.system.bonus !== "number") {
-      updateData["system.bonus"] = convertToNumber(itemData.system.bonus, 0);
-    }
-
-    return updateData;
-  }
-}
-export class LabTextTopicSchema extends foundry.abstract.DataModel {
-  static defineSchema() {
-    return LabTextSchema.defineSchema();
-  }
-
-  static migrate(itemData) {
-    return LabTextSchema.migrate(itemData);
-  }
-}
-
-export class LabTextSchema extends foundry.abstract.TypeDataModel {
-  static defineSchema() {
-    return {
-      ...itemBase(),
-      ...authorship(),
-      type: new fields.StringField({
-        required: false,
-        blank: false,
-        initial: "spell",
-        choices: Object.keys(ARM5E.lab.labTextType)
-      }),
-      ...TechniquesForms(),
-      ...SpellAttributes(),
-      ...EnchantmentAttributes(),
-      baseLevel: baseLevel(),
-      level: baseLevel(),
-      baseEffectDescription: baseDescription(),
-      ritual: boolOption(),
-      cost: CostField("priceless"),
-      quantity: new fields.NumberField({
-        required: false,
-        nullable: false,
-        integer: true,
-        min: 0, // Allow quantity of 0 to keep an eye on what is missing
-        initial: 1,
-        step: 1
-      }),
-      img: new fields.StringField({
-        required: false,
-        blank: true,
-        initial: ""
-      }),
-      draft: boolOption(false)
-    };
-  }
-
-  sanitize() {
-    return LabTextSchema.sanitizeData(this.toObject());
-  }
-
-  get buildPoints() {
-    return Math.ceil(this.level / 5) * this.quantity;
-  }
-
-  static sanitizeData(data) {
-    if (data.type !== "raw") {
-      data.description = "";
-    }
-    return data;
-  }
-
-  static migrate(itemData) {
-    // Console.log(`Migrate book: ${JSON.stringify(itemData)}`);
-    const updateData = migrateMagicalItem(itemData);
-
-    if (itemData.system.year == null) {
-      updateData["system.year"] = 1220;
-    }
-    if (typeof itemData.system.complexity !== "number") {
-      updateData["system.complexity"] = convertToNumber(itemData.system.complexity, 0);
-    }
-    return updateData;
-  }
-}
 
 // Unfortunately, since the duration was a free input field, it has to be guessed
 /**
