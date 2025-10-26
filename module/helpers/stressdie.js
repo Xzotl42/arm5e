@@ -6,13 +6,6 @@ export class ArsRoll extends Roll {
     super(formula, data, options);
     this.originalFormula = formula;
   }
-  // number of botches
-  // botches = 0;
-  // for calculating modifier
-  // divider = 1;
-  // multiplier = 1;
-  //
-  offset = 0;
 
   get botchDice() {
     if (!this._evaluated) return 0;
@@ -20,14 +13,7 @@ export class ArsRoll extends Roll {
       return 0;
     }
     const theDie = this.dice[0];
-    // if (
-    //   theDie instanceof StressDie ||
-    //   theDie instanceof StressDieInternal ||
-    //   theDie instanceof AlternateStressDie
-    // ) {
     return theDie.options.botchDice;
-    // }
-    // return 0;
   }
 
   set botchDice(val) {
@@ -245,39 +231,6 @@ export class StressDie extends foundry.dice.terms.Die {
     log(false, "GetTooltipdata");
     return super.getTooltipData();
   }
-
-  /** @inheritdoc */
-  //   static MODIFIERS = {};
-
-  /** @inheritdoc */
-  //   static REGEXP = new RegExp(
-  //     `^([0-9]+)?sd([A-z]|[0-9]+)${DiceTerm.MODIFIERS_REGEXP_STRING}?${DiceTerm.FLAVOR_REGEXP_STRING}?$`
-  //   );
-
-  /** @inheritdoc */
-  //   get total() {
-  //     return super.total();
-  //   }
-
-  //   roll({ minimize = false, maximize = false } = {}) {
-  //     const roll = { result: 1, active: true };
-  //     let res = 0;
-  //     if (minimize) res = 1;
-  //     else if (maximize) res = this.faces;
-  //     else res = Math.ceil(CONFIG.Dice.randomUniform() * this.faces);
-
-  //     if (res == 0) {
-  //       roll.result = 0;
-  //     } else {
-  //       while (res === 1) {
-  //         roll.result *= 2;
-  //         res = Math.ceil(CONFIG.Dice.randomUniform() * this.faces);
-  //       }
-  //       roll.result *= res;
-  //     }
-
-  //     return roll;
-  //   }
 }
 export class StressDieInternal extends foundry.dice.terms.Die {
   constructor(termData = {}) {
@@ -382,37 +335,4 @@ export class AlternateStressDie extends foundry.dice.terms.Die {
     log(false, "GetTooltipdata");
     return super.getTooltipData();
   }
-
-  /** @inheritdoc */
-  //   static MODIFIERS = {};
-
-  /** @inheritdoc */
-  //   static REGEXP = new RegExp(
-  //     `^([0-9]+)?sd([A-z]|[0-9]+)${DiceTerm.MODIFIERS_REGEXP_STRING}?${DiceTerm.FLAVOR_REGEXP_STRING}?$`
-  //   );
-
-  /** @inheritdoc */
-  //   get total() {
-  //     return super.total();
-  //   }
-
-  //   roll({ minimize = false, maximize = false } = {}) {
-  //     const roll = { result: 1, active: true };
-  //     let res = 0;
-  //     if (minimize) res = 1;
-  //     else if (maximize) res = this.faces;
-  //     else res = Math.ceil(CONFIG.Dice.randomUniform() * this.faces);
-
-  //     if (res == 0) {
-  //       roll.result = 0;
-  //     } else {
-  //       while (res === 1) {
-  //         roll.result *= 2;
-  //         res = Math.ceil(CONFIG.Dice.randomUniform() * this.faces);
-  //       }
-  //       roll.result *= res;
-  //     }
-
-  //     return roll;
-  //   }
 }

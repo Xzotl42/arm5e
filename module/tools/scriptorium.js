@@ -1,4 +1,5 @@
 import { ArM5eActor } from "../actor/actor.js";
+import { FLAVORS } from "../constants/ui.js";
 import ArM5eActiveEffect from "../helpers/active-effects.js";
 import { computeLevel, spellFormLabel, spellTechniqueLabel } from "../helpers/magic.js";
 import { getTopicDescription } from "../item/item-book-sheet.js";
@@ -8,6 +9,7 @@ import { BookSchema } from "../schemas/bookSchema.js";
 import { boolOption } from "../schemas/commonSchemas.js";
 import { DiaryEntrySchema } from "../schemas/diarySchema.js";
 import { compareTopics, debug, getDataset, log } from "../tools.js";
+import { selectItemDialog } from "../ui/dialogs.js";
 
 export class ScriptoriumObject {
   seasons = CONFIG.ARM5E.seasons;
@@ -134,6 +136,12 @@ export class ScriptoriumObject {
 export class Scriptorium extends FormApplication {
   constructor(data, options) {
     super(data, options);
+    data.lists = {
+      books: game.items.filter((i) => i.type === "book"),
+      labTexts: game.items.filter((i) => i.type === "laboratoryText"),
+      characters: game.actors.filter((a) => a.type === "player" || a.type === "npc")
+    };
+    data.selected = null;
     // Hooks.on("closeApplication", (app, html) => this.onClose(app));
   }
 
@@ -866,6 +874,23 @@ export class Scriptorium extends FormApplication {
     html.find(".remove-book").click(async (event) => this._removeBook(event));
 
     html.find(".language-writer").change(async (e) => this._changeWritenLanguage(e));
+
+    // html.find(".drop-book").click(this.pickItem.bind(this, "book"));
+    // html.find(".drop-reader").click(this.pickItem.bind(this, "character"));
+    // html.find(".drop-scribe").click(this.pickItem.bind(this, "character"));
+    // html.find(".drop-writer").click(this.pickItem.bind(this, "character"));
+    // html.find(".append-book").click(this.pickItem.bind(this, "book"));
+    // html.find(".add-labtext").click(this.pickItem.bind(this, "laboratoryText"));
+  }
+
+  async pickItem(type) {
+    if (type === "book") {
+      await selectItemDialog(this.object.lists.books, FLAVORS.LABORATORY);
+    } else if (type === "character") {
+      await selectItemDialog(this.object.lists.characters, FLAVORS.LABORATORY);
+    } else if (type === "laboratoryText") {
+      await selectItemDialog(this.object.lists.labTexts, FLAVORS.LABORATORY);
+    }
   }
 
   async _changeWritenLanguage(event) {

@@ -39,53 +39,51 @@ async function simpleDie(actor, type = "OPTION", callback, modes = 0) {
     confAllowed = false;
   }
 
-  let message;
-  if (!(modes & 32)) {
-    const system = {
-      img: actor.img,
-      label: rollInfo.label,
-      confidence: {
-        allowed: confAllowed,
-        score: actor.system.con.score
-      },
-      roll: {
-        type: rollInfo.type,
-        img: rollInfo.img,
-        // name: rollInfo.name,
-        itemUuid: rollInfo.itemUuid,
-        secondaryScore: rollInfo.secondaryScore,
-        botchCheck: false,
-        details: rollInfo.details,
-        divider: rollInfo.magic.divide,
-        difficulty: rollInfo.difficulty,
-        actorType: actor.type // for if the actor is deleted
-      },
-      impact: {
-        fatigueLevelsLost: 0,
-        fatigueLevelsPending: 0,
-        fatigueLevelsFail: 0,
-        woundGravity: 0,
-        applied: false
-      }
-    };
+  const system = {
+    img: actor.img,
+    label: rollInfo.label,
+    confidence: {
+      allowed: confAllowed,
+      score: actor.system.con.score
+    },
+    roll: {
+      type: rollInfo.type,
+      img: rollInfo.img,
+      // name: rollInfo.name,
+      itemUuid: rollInfo.itemUuid,
+      secondaryScore: rollInfo.secondaryScore,
+      botchCheck: false,
+      details: rollInfo.details,
+      divider: rollInfo.magic.divide,
+      difficulty: rollInfo.difficulty,
+      actorType: actor.type // for if the actor is deleted
+    },
+    impact: {
+      fatigueLevelsLost: 0,
+      fatigueLevelsPending: 0,
+      fatigueLevelsFail: 0,
+      woundGravity: 0,
+      applied: false
+    }
+  };
 
-    const messageData = await dieRoll.toMessage(
-      {
-        flavor: flavorTxt,
-        // flavor: chatTitle + flavorTxt + details,
-        speaker: ChatMessage.getSpeaker({
-          actor: actor
-        }),
-        system: system,
-        type: "roll"
-      },
-      { rollMode: rollMode, create: false }
-    );
+  const messageData = await dieRoll.toMessage(
+    {
+      flavor: flavorTxt,
+      // flavor: chatTitle + flavorTxt + details,
+      speaker: ChatMessage.getSpeaker({
+        actor: actor
+      }),
+      system: system,
+      type: "roll"
+    },
+    { rollMode: rollMode, create: false }
+  );
 
-    message = new Arm5eChatMessage(messageData);
+  const message = new Arm5eChatMessage(messageData);
 
-    message.system.enrichMessageData(actor);
-  } else {
+  message.system.enrichMessageData(actor);
+  if (modes & 32) {
     if (game.modules.get("dice-so-nice")?.active) {
       await game.dice3d.showForRoll(dieRoll); //, user, synchronize, whisper, blind, chatMessageID, speaker)
     }
@@ -201,61 +199,60 @@ async function stressDie(actor, type = "OPTION", modes = 0, callback = undefined
   if (rollProperties.MODE & ROLL_MODES.PRIVATE && rollMode != CONST.DICE_ROLL_MODES.BLIND) {
     rollMode = CONST.DICE_ROLL_MODES.PRIVATE;
   }
-  let message;
-  if (!(modes & 32)) {
-    const system = {
-      img: actor.img,
-      label: rollInfo.label,
-      confidence: {
-        allowed: confAllowed && dieRoll.botches === 0,
-        score: actor.system.con.score
-      },
-      roll: {
-        type: rollInfo.type,
-        img: rollInfo.img,
-        // name: rollInfo.name,
-        itemUuid: rollInfo.itemUuid,
-        secondaryScore: rollInfo.secondaryScore,
-        botchCheck: botchCheck,
-        botches: dieRoll.botches,
-        details: rollInfo.details,
-        divider: rollInfo.magic.divide,
-        difficulty: rollInfo.difficulty,
-        actorType: actor.type // for if the actor is deleted
-      },
-      impact: {
-        fatigueLevelsLost: 0,
-        fatigueLevelsPending: 0,
-        fatigueLevelsFail: 0,
-        woundGravity: 0,
-        applied: false
-      }
-    };
 
-    //   system.combat = { attacker: actor.uuid, defenders: [] };
-    //   system.magic = { caster: actor.uuid, targets: [], ritual: rollInfo.magic.ritual };
-    const messageData = await dieRoll.toMessage(
-      {
-        flavor: flavorTxt,
-        // flavor: chatTitle + flavorTxt + details,
-        speaker: ChatMessage.getSpeaker({
-          actor: actor
-        }),
-        system: system,
-        type: "roll"
-      },
-      { rollMode: rollMode, create: false }
-    );
+  const system = {
+    img: actor.img,
+    label: rollInfo.label,
+    confidence: {
+      allowed: confAllowed && dieRoll.botches === 0,
+      score: actor.system.con.score
+    },
+    roll: {
+      type: rollInfo.type,
+      img: rollInfo.img,
+      // name: rollInfo.name,
+      itemUuid: rollInfo.itemUuid,
+      secondaryScore: rollInfo.secondaryScore,
+      botchCheck: botchCheck,
+      botches: dieRoll.botches,
+      details: rollInfo.details,
+      divider: rollInfo.magic.divide,
+      difficulty: rollInfo.difficulty,
+      actorType: actor.type // for if the actor is deleted
+    },
+    impact: {
+      fatigueLevelsLost: 0,
+      fatigueLevelsPending: 0,
+      fatigueLevelsFail: 0,
+      woundGravity: 0,
+      applied: false
+    }
+  };
 
-    message = new Arm5eChatMessage(messageData);
+  //   system.combat = { attacker: actor.uuid, defenders: [] };
+  //   system.magic = { caster: actor.uuid, targets: [], ritual: rollInfo.magic.ritual };
+  const messageData = await dieRoll.toMessage(
+    {
+      flavor: flavorTxt,
+      // flavor: chatTitle + flavorTxt + details,
+      speaker: ChatMessage.getSpeaker({
+        actor: actor
+      }),
+      system: system,
+      type: "roll"
+    },
+    { rollMode: rollMode, create: false }
+  );
 
-    let testRoll = message.rolls[0];
-    log(
-      false,
-      `DBG: Stress die Roll total ${testRoll.total} * ${testRoll.divider} (divider) - (${testRoll.dice[0].total} (diceTotal) * ${testRoll.multiplier} (multiplier)) `
-    );
-    message.system.enrichMessageData(actor);
-  } else {
+  const message = new Arm5eChatMessage(messageData);
+
+  let testRoll = message.rolls[0];
+  log(
+    false,
+    `DBG: Stress die Roll total ${testRoll.total} * ${testRoll.divider} (divider) - (${testRoll.dice[0].total} (diceTotal) * ${testRoll.multiplier} (multiplier)) `
+  );
+  message.system.enrichMessageData(actor);
+  if (modes & 32) {
     if (game.modules.get("dice-so-nice")?.active) {
       await game.dice3d.showForRoll(dieRoll); //, user, synchronize, whisper, blind, chatMessageID, speaker)
     }
@@ -719,7 +716,7 @@ async function CheckBotch(botchDice, roll) {
   }
   const botchRoll = new ArsRoll(rollCommand);
   await botchRoll.roll();
-  botchRoll.offset = roll.offset;
+  botchRoll.options.offset = roll.offset;
   botchRoll.options.botches = botchRoll.total;
   botchRoll.botchDice = botchDice;
   botchRoll.options.divider = roll.divider; // to keep the modifier getter consistent

@@ -5,13 +5,13 @@ import { compareBaseEffects, compareSpells, hermeticFilter, log } from "../tools
 import { labTextToEffect } from "../item/item-converter.js";
 import { ArM5eItem } from "../item/item.js";
 import { HERMETIC_FILTER } from "../constants/userdata.js";
-import { getConfirmation } from "../constants/ui.js";
 import {
   GetEffectAttributesLabel,
   GetFilteredAspects,
   spellFormLabel,
   spellTechniqueLabel
 } from "../helpers/magic.js";
+import { getConfirmation } from "../ui/dialogs.js";
 /**
  * Extend the basic ActorSheet with some very simple modifications
  * @extends {ActorSheet}
@@ -307,7 +307,7 @@ export class ArM5eMagicCodexSheet extends ArM5eActorSheet {
     event.preventDefault();
     const li = $(event.currentTarget).parents(".item");
     const itemDataset = li[0].dataset;
-    let itemId = itemDataset.itemId;
+    let uuid = itemDataset.uuid;
     let type = itemDataset.itemType;
     let mnemo;
     switch (type) {
@@ -328,13 +328,12 @@ export class ArM5eMagicCodexSheet extends ArM5eActorSheet {
     const question = game.i18n.localize(mnemo);
     const confirm = await getConfirmation(dataset.name, question, "Codex");
     if (confirm) {
-      this._onDesignEffect(itemId, false);
+      this._onDesignEffect(uuid, false);
     }
   }
 
-  async _onDesignEffect(id, alt) {
-    const item = this.actor.items.get(id);
-    // const itemdata = item.data;
+  async _onDesignEffect(uuid, alt) {
+    const item = await fromUuid(uuid);
     const dataset = item.system;
     let newItemData;
     if (item.type == "baseEffect") {

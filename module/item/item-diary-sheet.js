@@ -7,11 +7,11 @@ import {
 } from "../helpers/long-term-activities.js";
 import { ArM5eItem } from "./item.js";
 import { ActivitySchedule } from "../tools/activity-schedule.js";
-import { UI, getConfirmation } from "../constants/ui.js";
 import { DiaryEntrySchema } from "../schemas/diarySchema.js";
 import { ArM5eActorSheet } from "../actor/actor-sheet.js";
 import { getAbilityFromCompendium } from "../tools/compendia.js";
 import { spellFormLabel, spellTechniqueLabel } from "../helpers/magic.js";
+import { getConfirmation } from "../ui/dialogs.js";
 
 /**
  * Extend the basic ItemSheet with some very simple modifications

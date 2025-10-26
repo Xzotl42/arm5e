@@ -109,6 +109,9 @@ Hooks.once("init", async function () {
 
   registerSettings();
 
+  // UI elements
+  // CONFIG.ui.actors = ArsActorDirectory;
+
   // Game.tours.register(
   //   ARM5E.SYSTEM_ID,
   //   "userguide",

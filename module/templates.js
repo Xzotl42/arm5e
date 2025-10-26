@@ -142,7 +142,8 @@ export const ArM5ePreloadHandlebarsTemplates = async function () {
     "systems/arm5e/templates/generic/calendar-grid.html",
     "systems/arm5e/templates/generic/group-schedule-grid.html",
     "systems/arm5e/templates/generic/schedule-grid.html",
-    "systems/arm5e/templates/generic/simpleListPicker.html",
+    "systems/arm5e/templates/generic/itemPickerDialog.html",
+    "systems/arm5e/templates/generic/selectDialog.html",
     "systems/arm5e/templates/generic/textInput.html",
     "systems/arm5e/templates/generic/numberInput.html",
     "systems/arm5e/templates/generic/auraInput.html",
@@ -160,6 +161,7 @@ export const ArM5ePreloadHandlebarsTemplates = async function () {
     "systems/arm5e/templates/generic/confirmation.html",
     "systems/arm5e/templates/generic/parts/scriptorium-reading.html",
     "systems/arm5e/templates/generic/parts/scriptorium-writing.html",
-    "systems/arm5e/templates/generic/parts/scriptorium-copying.html"
+    "systems/arm5e/templates/generic/parts/scriptorium-copying.html",
+    "systems/arm5e/templates/generic/parts/list-item.hbs"
   ]);
 };

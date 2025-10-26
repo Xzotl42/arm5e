@@ -1,3 +1,39 @@
+## 2.4.0.31, Radislav, Enigmatic Faeries 2
+
+### V13 compatibility
+
+- Verified for version 13.350
+
+### Features & changes
+
+- Damage ranges are now displayed for each wound gravity (based on size)
+- It now possible to right click on spells coming from compendium to display their description in the Codex
+- [technical] various refactoring
+
+### Bug fixes
+
+- Not receiving a wound when applying damage (ie: soak > damage) no longer raise an error.
+- Codex sheet displays properly again, ignoring powers added to the spells compendium
+- Some codex functionality was not working with spells coming from the compendium.
+
+## 2.4.0.30, Radislav, Enigmatic Faeries
+
+### V13 compatibility
+
+- Verified for version 13.350
+
+### Features & changes
+
+- Initiative is now displayed in the powers list.
+
+### Bug fixes
+
+- Build point for teacher inhabitants are computed properly
+- Index key slugification is working again on Actors
+- Vis study is no longer raising an error.
+- Rolls without chat message (eg: recovery) are no longer raising an error.
+- Roll modifier was not retrived properly and resulted in wrong display in some cases.
+
 ## 2.4.0.28, Radislav, Faeries are the key
 
 ### V13 compatibility

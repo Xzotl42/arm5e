@@ -1,12 +1,13 @@
 import { getDataset, log, slugify } from "../tools.js";
 import ArM5eActiveEffect from "../helpers/active-effects.js";
-import { ARM5E_DEFAULT_ICONS, getConfirmation } from "../constants/ui.js";
 import { ArM5eActorSheet } from "../actor/actor-sheet.js";
 import { EnchantmentExtension } from "../schemas/enchantmentSchema.js";
 import { ArM5eItemEnchantmentSheet } from "./subsheet/enchant-extension-sheet.js";
 import { ARM5E } from "../config.js";
 import { effectToLabText } from "./item-converter.js";
 import { Sanatorium } from "../tools/sanatorium.js";
+import { getConfirmation } from "../ui/dialogs.js";
+import { FLAVORS } from "../constants/ui.js";
 /**
  * Extend the basic ItemSheet with some very simple modifications
  * @extends {ItemSheet}
@@ -150,7 +151,7 @@ export class ArM5eItemSheet extends ItemSheet {
     context.subsheet = this.subsheetTemplate;
     context.rollData = this.item.getRollData();
     context.ui = this.getUserCache();
-    context.ui.flavor = "Neutral";
+    context.ui.flavor = FLAVORS.NEUTRAL;
     context.selection = {};
     // Add the item's data to context.system for easier access, as well as flags.
     context.system = itemData.system;
@@ -184,7 +185,7 @@ export class ArM5eItemSheet extends ItemSheet {
     }
 
     context.flags = itemData.flags;
-    // context.ui.flavor = "Neutral";
+    // context.ui.flavor = FLAVORS.NEUTRAL;
     context.config = CONFIG.ARM5E;
     if (itemData.type == "weapon" && this.item.isOwned && this.item.actor.isCharacter()) {
       context.system.abilities = this.actor.system.abilities.map((v) => {
@@ -231,22 +232,22 @@ export class ArM5eItemSheet extends ItemSheet {
     if (context.isOwned) {
       switch (this.actor.type) {
         case "player":
-          context.ui.flavor = "PC";
+          context.ui.flavor = FLAVORS.PLAYER;
           break;
         case "npc":
-          context.ui.flavor = "NPC";
+          context.ui.flavor = FLAVORS.NPC;
           break;
         case "beast":
-          context.ui.flavor = "Beast";
+          context.ui.flavor = FLAVORS.BEAST;
           break;
         case "covenant":
-          context.ui.flavor = "covenant";
+          context.ui.flavor = FLAVORS.COVENANT;
           break;
         case "magicCodex":
-          context.ui.flavor = "codex";
+          context.ui.flavor = FLAVORS.CODEX;
           break;
         case "laboratory":
-          context.ui.flavor = "Lab";
+          context.ui.flavor = FLAVORS.LABORATORY;
           break;
         default:
           break;

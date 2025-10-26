@@ -1,7 +1,5 @@
 import { ARM5E } from "./config.js";
 
-import { DEFAULT_WOUND, SIZES_AND_WOUNDS } from "./constants/wounds.js";
-
 /**
  *
  * @param force
@@ -512,11 +510,10 @@ export function calculateWound(damage, size) {
     return "none";
   }
   const typeOfWoundsBySize = getWoundType(size);
-  // SIZES_AND_WOUNDS[size.toString()];
   if (typeOfWoundsBySize === undefined) return false;
   const wounds = Object.keys(typeOfWoundsBySize);
 
-  let typeOfWound = DEFAULT_WOUND;
+  let typeOfWound = "none";
   wounds.forEach((wound) => {
     if (Number(wound) <= damage) {
       typeOfWound = typeOfWoundsBySize[wound];
@@ -561,7 +558,20 @@ function getWoundType(size) {
   result[1 + 3 * increment] = "incap";
   result[1 + 4 * increment] = "dead";
 
-  // Console.log(result);
+  return result;
+}
+
+export function getWoundRanges(size) {
+  if (size <= -4) {
+    return ["(1-1)", "(2-2)", "(3-3)", "(4-4)", "(5-5)"];
+  }
+  let increment = size + 5;
+  const result = [`(1-${1 + increment - 1})`];
+
+  result.push(`(${1 + increment}-${1 + 2 * increment - 1})`);
+  result.push(`(${1 + 2 * increment}-${1 + 3 * increment - 1})`);
+  result.push(`(${1 + 3 * increment}-${1 + 4 * increment - 1})`);
+  result.push(`(${1 + 4 * increment}+)`);
   return result;
 }
 
