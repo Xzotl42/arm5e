@@ -85,6 +85,7 @@
         "combatRoll": "Combat rolls",
         "consumables": "Consumables",
         "defRoll": "Defence rolls",
+        "fatigueRolls": "Fatigue rolls modifier",
         "fatigueTotal": "Fatigue total",
         "formMagicRoll": "Formulaic magic rolls",
         "inhabitantPoints": "Inhabitant points",

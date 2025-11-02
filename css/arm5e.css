@@ -2518,6 +2518,30 @@ input[type="checkbox"]::before {
   background-color: rgb(112, 15, 15);
 }
 
+input[type="checkbox"].crossed::before {
+  content: "";
+  width: 1rem;
+  height: 1rem;
+  padding: 1px;
+  /* clip-path: polygon(0 20%, 0 60%, 29% 100%, 100% 29%, 100% 1%, 35% 61%); */
+  clip-path: polygon(
+    11% 6%,
+    0% 20%,
+    30% 50%,
+    0 70%,
+    20% 100%,
+    48% 65%,
+    80% 100%,
+    100% 80%,
+    61% 49%,
+    98% 9%,
+    80% 4%,
+    45% 32%
+  );
+  transform: scale(0);
+  background-color: rgb(0, 0, 0);
+}
+
 input[type="checkbox"]:checked::before {
   transform: scale(1);
 }

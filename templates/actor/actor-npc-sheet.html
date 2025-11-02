@@ -51,7 +51,6 @@
             {{/if}}
           </div>
         </h1>
-
         <div class="flexrow">
           <span class="flex0" style="padding-top: 4px">
             <label for="system.charType.value" class="header-label"
@@ -106,12 +105,11 @@
             </span>
           {{/if}}
         </div>
-
         <div class="resources grid grid-4col">
           <div class="resource flex-group-center backSection">
             <label for="system.age.value" class="smallTitle">{{localize "arm5e.sheet.age"}}</label>
             <div class="resource-content flexrow flex-center flex-between margintop6">
-              <input type="number" name="system.age.value" value="{{numberFormat system.age.value decimals=0 }}"
+              <input type="number" name="system.age.value" value="{{formatOptionalNumber system.age.value decimals=0 }}"
                 data-dtype="Number" {{ui.creationMode.edit}} class="resource-focus" />
               <span> ( </span>
               <input type="number" name="system.apparent.value"

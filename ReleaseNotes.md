@@ -1,3 +1,15 @@
+## 2.4.1.0, Radislav, Cognizant Wisdom
+
+### Features & changes
+
+- New active effects:
+  - Fatigue roll modifier
+- New formated "Number" field that accept empty value
+
+### Bug fixes
+
+- [Simple Calendar] Fixed a bug where changing the date wasn't working anymore.
+
 ## 2.4.0.31, Radislav, Enigmatic Faeries 2
 
 ### V13 compatibility

@@ -12,7 +12,9 @@
           data-title="{{localize 'arm5e.sheet.fatigueRoll'}}" data-name="{{localize 'arm5e.sheet.fatigueRoll'}}"
           data-mode="1" data-difficulty="6" data-option1="{{ system.characteristics.sta.value }}"
           data-fatigue-on-fail="1" data-txtoption1="{{ localize config.character.characteristics.sta.label }}"
-          src="systems/arm5e/assets/icons/fatigue.svg" title="{{localize 'arm5e.sheet.fatigueRoll' }}">
+          data-txtoption2="{{ localize 'arm5e.activeEffect.subtypes.fatigueRolls' }}"
+          data-option2="{{ system.bonuses.rolls.fatigue }}" src="systems/arm5e/assets/icons/fatigue.svg"
+          title="{{localize 'arm5e.sheet.fatigueRoll' }}">
       </div>
 
       <button class="arm5e rest" style="max-height: 32px; font-family: blackmoor">{{localize "arm5e.sheet.action.rest"}}
@@ -29,7 +31,7 @@
           <li class="flexrow" data-attribute="{{key}}">
             {{#each fatigue.levels}}
               <!-- <input type="checkbox" name="system.fatigue.{{key}}.level.value" {{checked fatigue.level.value}} /> -->
-              <input type="checkbox" disabled="disabled" name="" {{checked this }} />
+              <input type="checkbox" disabled="disabled" name="" {{checked this.state }} class="{{this.lt}}" />
             {{/each}}
           </li>
           <input type="text" name="system.fatigue.{{key}}.number"

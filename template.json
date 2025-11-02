@@ -175,6 +175,7 @@
       "fatigue": {
         "fatigueTotal": 0,
         "fatigueCurrent": 0,
+        "longTermFatigue": 0,
         "fatigue": {
           "fresh": {
             "amount": 0,

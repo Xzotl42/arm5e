@@ -64,7 +64,8 @@ export class ArM5eActor extends Actor {
     }
     const datetime = game.settings.get("arm5e", "currentDate");
     if (this.system.states.creationMode) {
-      this.system.description.born.value = Number(datetime.year) - this.system.age.value;
+      this.system.description.born.value =
+        Number(datetime.year) - (this.system.age.value ? this.system.age.value : 0);
     } else {
       this.system.age.value = this.system.description?.born?.value
         ? Number(datetime.year) - this.system.description.born.value
@@ -179,6 +180,10 @@ export class ArM5eActor extends Actor {
         incap: CONFIG.ARM5E.recovery.wounds.incap.penalty,
         dead: 0
       }
+    };
+
+    this.system.bonuses.rolls = {
+      fatigue: 0
     };
 
     this.system.bonuses.traits = {
@@ -340,17 +345,22 @@ export class ArM5eActor extends Actor {
     if (system.fatigue) {
       system.fatigueTotal = 0;
       system.fatigueTime = 0;
+      system.fatigueLongTerm = system.fatigueLongTerm ?? 0;
       let lvl = 0;
+      let longTerm = "";
       for (let [key, item] of Object.entries(system.fatigue)) {
         let fatigueArray = [];
-
+        if (lvl >= system.fatigueCurrent - system.fatigueLongTerm) {
+          longTerm = "crossed";
+        }
         for (let ii = 0; ii < item.amount; ii++) {
           if (lvl < system.fatigueCurrent) {
-            fatigueArray.push(true);
-            system.fatigueTime += CONFIG.ARM5E.character.fatigueLevels[key].time;
+            fatigueArray.push({ state: true, lt: longTerm });
+            system.fatigueTime +=
+              longTerm == "" ? CONFIG.ARM5E.character.fatigueLevels[key].time : 0;
             system.fatigueTotal = item.number > 0 ? 0 : item.number;
           } else {
-            fatigueArray.push(false);
+            fatigueArray.push({ state: false, lt: "" });
           }
           lvl++;
         }

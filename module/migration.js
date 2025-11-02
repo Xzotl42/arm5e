@@ -875,6 +875,9 @@ export const migrateActorData = async function (actorDoc, actorItems) {
       if (currentFatigue > 0 && actor.system.fatigueCurrent == 0) {
         updateData["system.fatigueCurrent"] = currentFatigue;
       }
+      if (!actor.system.fatigueLongTerm) {
+        updateData["system.fatigueLongTerm"] = 0;
+      }
     }
 
     if (!actor.system.twilight && actor.type !== "beast") {
