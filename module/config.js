@@ -1025,7 +1025,7 @@ ARM5E.familiar.labels = {
     label: "arm5e.sheet.soak"
   },
   fatigue: {
-    label: "arm5e.sheet.fatigue"
+    label: "arm5e.sheet.fatigue.label"
   },
   initiative: {
     label: "arm5e.sheet.initiative"

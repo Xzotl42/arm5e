@@ -1114,6 +1114,12 @@ export const ACTIVE_EFFECTS_TYPES = {
         mode: CONST.ACTIVE_EFFECT_MODES.ADD,
         default: 0
       },
+      fatigueRolls: {
+        mnemonic: "arm5e.activeEffect.subtypes.fatigueRolls",
+        key: "system.bonuses.rolls.fatigue",
+        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        default: 0
+      },
       winded: {
         mnemonic: "arm5e.sheet.winded",
         key: "system.fatigue.winded.number",

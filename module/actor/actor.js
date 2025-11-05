@@ -64,7 +64,8 @@ export class ArM5eActor extends Actor {
     }
     const datetime = game.settings.get("arm5e", "currentDate");
     if (this.system.states.creationMode) {
-      this.system.description.born.value = Number(datetime.year) - this.system.age.value;
+      this.system.description.born.value =
+        Number(datetime.year) - (this.system.age.value ? this.system.age.value : 0);
     } else {
       this.system.age.value = this.system.description?.born?.value
         ? Number(datetime.year) - this.system.description.born.value
@@ -179,6 +180,10 @@ export class ArM5eActor extends Actor {
         incap: CONFIG.ARM5E.recovery.wounds.incap.penalty,
         dead: 0
       }
+    };
+
+    this.system.bonuses.rolls = {
+      fatigue: 0
     };
 
     this.system.bonuses.traits = {
@@ -340,21 +345,34 @@ export class ArM5eActor extends Actor {
     if (system.fatigue) {
       system.fatigueTotal = 0;
       system.fatigueTime = 0;
+      system.fatigueLongTerm = system.fatigueLongTerm ?? 0;
+
       let lvl = 0;
+      let longTerm = "crossed";
       for (let [key, item] of Object.entries(system.fatigue)) {
         let fatigueArray = [];
 
         for (let ii = 0; ii < item.amount; ii++) {
           if (lvl < system.fatigueCurrent) {
-            fatigueArray.push(true);
-            system.fatigueTime += CONFIG.ARM5E.character.fatigueLevels[key].time;
+            if (lvl >= system.fatigueLongTerm) {
+              longTerm = "";
+              system.fatigueTime += CONFIG.ARM5E.character.fatigueLevels[key].time;
+            }
+            fatigueArray.push({ state: true, lt: longTerm });
+
             system.fatigueTotal = item.number > 0 ? 0 : item.number;
           } else {
-            fatigueArray.push(false);
+            fatigueArray.push({ state: false, lt: "" });
           }
           lvl++;
         }
         item.levels = fatigueArray;
+      }
+      if (system.fatigueCurrent > 0 && system.fatigueCurrent == system.fatigueLongTerm) {
+        system.fatigueTime = 8;
+        system.fatigueRestUnit = game.i18n.localize("arm5e.generic.hoursShort");
+      } else {
+        system.fatigueRestUnit = game.i18n.localize("arm5e.generic.minutesShort");
       }
       system.fatigueTotal =
         system.fatigueTotal + system.bonuses.traits.fatigue > 0
@@ -960,28 +978,28 @@ export class ArM5eActor extends Actor {
 
   // Vitals management
 
-  async recoverFatigueLevel(num) {
+  async recoverFatigueLevel(num, longTerm = false) {
     const updateData = {};
-    const res = this._changeFatigueLevel(updateData, -num, false);
+    const res = this._changeFatigueLevel(updateData, -num, false, longTerm);
     if (res.fatigueLevels) await this.update(updateData, {});
     return res;
   }
 
-  async loseFatigueLevel(num, wound = true) {
+  async loseFatigueLevel(num, wound = true, longTerm = false) {
     const updateData = {};
-    const res = this._changeFatigueLevel(updateData, num, wound);
+    const res = this._changeFatigueLevel(updateData, num, wound, longTerm);
     if (res.fatigueLevels) await this.update(updateData, {});
     if (res.woundGravity) {
       await this.changeWound(
         1,
         ARM5E.recovery.rankMapping[res.woundGravity],
-        game.i18n.localize("arm5e.sheet.fatigueOverflow")
+        game.i18n.localize("arm5e.sheet.fatigue.overflow")
       );
     }
     return res;
   }
 
-  _changeFatigueLevel(updateData, num, wound = true) {
+  _changeFatigueLevel(updateData, num, wound = true, longTerm = false) {
     const res = {
       fatigueLevels: 0,
       woundGravity: 0
@@ -989,20 +1007,45 @@ export class ArM5eActor extends Actor {
     if (!this.isCharacter() || (num <= 0 && this.system.fatigueCurrent == 0)) {
       return res;
     }
-    let tmp = this.system.fatigueCurrent + num;
+    let futureLvl = this.system.fatigueCurrent + num;
     let overflow = 0;
-    if (tmp < 0) {
+    if (futureLvl < 0) {
       // character cannot restore more fatigue levels than he/she has
-      res.fatigueLevels = tmp;
-      updateData["system.fatigueCurrent"] = 0;
-    } else if (tmp > this.system.fatigueMaxLevel) {
+      if (longTerm) {
+        res.fatigueLevels = -this.system.fatigueCurrent;
+        updateData["system.fatigueLongTerm"] = 0;
+        updateData["system.fatigueCurrent"] = 0;
+      } else {
+        res.fatigueLevels = futureLvl + this.system.fatigueLongTerm;
+        updateData["system.fatigueCurrent"] = this.system.fatigueLongTerm;
+      }
+    } else if (futureLvl > this.system.fatigueMaxLevel) {
       // overflow to a wound
-      res.fatigueLevels = this.system.fatigueMaxLevel - this.system.fatigueCurrent;
-      updateData["system.fatigueCurrent"] = this.system.fatigueMaxLevel;
-      overflow = tmp - this.system.fatigueMaxLevel;
+      if (longTerm) {
+        res.fatigueLevels = this.system.fatigueMaxLevel - this.system.fatigueCurrent;
+        updateData["system.fatigueCurrent"] = this.system.fatigueMaxLevel;
+        updateData["system.fatigueLongTerm"] = this.system.fatigueLongTerm + res.fatigueLevels;
+      } else {
+        res.fatigueLevels = this.system.fatigueMaxLevel - this.system.fatigueCurrent;
+        updateData["system.fatigueCurrent"] = this.system.fatigueMaxLevel;
+      }
+      overflow = futureLvl - this.system.fatigueMaxLevel;
     } else {
       res.fatigueLevels = num;
-      updateData["system.fatigueCurrent"] = tmp;
+
+      if (longTerm) {
+        const newLongTerm = this.system.fatigueLongTerm + num;
+        if (newLongTerm > 0) {
+          updateData["system.fatigueLongTerm"] = newLongTerm;
+          updateData["system.fatigueCurrent"] = futureLvl;
+        } else {
+          updateData["system.fatigueLongTerm"] = 0;
+          updateData["system.fatigueCurrent"] =
+            this.system.fatigueCurrent - this.system.fatigueLongTerm;
+        }
+      } else {
+        updateData["system.fatigueCurrent"] = Math.max(futureLvl, this.system.fatigueLongTerm);
+      }
     }
 
     if (wound && overflow > 0) {
@@ -1158,16 +1201,31 @@ export class ArM5eActor extends Actor {
     return ["player", "beast", "covenant", "npc"].includes(this.type);
   }
 
-  async rest() {
+  async rest(longTerm = false) {
     const updateData = {};
-    if (this._rest(updateData)) await this.update(updateData, {});
+    if (this._rest(updateData, longTerm)) await this.update(updateData, {});
   }
 
-  _rest(updateData) {
+  _rest(updateData, longTerm = false) {
     if (!this.isCharacter()) {
       return false;
     }
-    updateData["system.fatigueCurrent"] = 0;
+    if (longTerm) {
+      updateData["system.fatigueLongTerm"] = 0;
+      updateData["system.fatigueCurrent"] = 0;
+    } else {
+      // first reduce short-term fatigue
+      if (this.system.fatigueCurrent > this.system.fatigueLongTerm) {
+        updateData["system.fatigueCurrent"] = this.system.fatigueLongTerm;
+      } else {
+        // then reduce long-term fatigue by 1
+        let fatigueLongTerm =
+          this.system.fatigueLongTerm - 1 >= 0 ? this.system.fatigueLongTerm - 1 : 0;
+        updateData["system.fatigueCurrent"] = fatigueLongTerm;
+        updateData["system.fatigueLongTerm"] = fatigueLongTerm;
+      }
+    }
+
     return true;
   }
 

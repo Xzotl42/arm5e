@@ -85,6 +85,7 @@
         "combatRoll": "Combat rolls",
         "consumables": "Consumables",
         "defRoll": "Defence rolls",
+        "fatigueRolls": "Fatigue rolls modifier",
         "fatigueTotal": "Fatigue total",
         "formMagicRoll": "Formulaic magic rolls",
         "inhabitantPoints": "Inhabitant points",
@@ -378,11 +379,11 @@
     "chat": {
       "contestOfMagic": "Contest of magic",
       "contestOfMagicWith": "Contest of magic with {name}",
-      "otherMagicResistance": "Other Magic resistance",
-      "totalMagicResistance": "Magic resistance total",
       "notifications": {
         "notInitiator": "Not authorized as you are not the initiator of the roll. Ask him/her or a GM"
-      }
+      },
+      "otherMagicResistance": "Other Magic resistance",
+      "totalMagicResistance": "Magic resistance total"
     },
     "combat": {
       "damage": {
@@ -1284,9 +1285,13 @@
       "fastCastingSpeed": {
         "label": "Fast Casting Speed"
       },
-      "fatigue": "Fatigue",
-      "fatigueOverflow": "Fatigue overflow",
-      "fatigueRoll": "Fatigue roll",
+      "fatigue": {
+        "add": "Add a fatigue level + SHIFT for long term.",
+        "label": "Fatigue",
+        "overflow": "Fatigue overflow",
+        "recover": "Recover a fatigue level + SHIFT for long term.",
+        "roll": "Fatigue roll"
+      },
       "features": "Features",
       "fieldOfWork": "Field of work",
       "filters": "Filters",

@@ -764,7 +764,9 @@
       "fastCastingSpeed": {
         "label": "Lanzamiento Rápido"
       },
-      "fatigue": "Fatiga",
+      "fatigue": {
+        "label": "Fatiga"
+      },
       "features": "Rasgos",
       "filters": "Filtros",
       "flaws": "Defectos",

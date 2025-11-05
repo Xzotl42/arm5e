@@ -2,21 +2,25 @@
   <div class="flex-group-left backSection padding12">
     <div class="flexrow" style="max-height: 32px;">
       <div style="margin-top: 12px;">
-        <label class="smallTitle">{{localize "arm5e.sheet.fatigue"}} ({{ system.fatigueTotal }})</label>
+        <label class="smallTitle">{{localize "arm5e.sheet.fatigue.label"}} ({{ system.fatigueTotal }})</label>
       </div>
       <div style="margin-top: 12px;">
-        <a class="item-control removeFatigue" title="Remove fatigue level"><i class="fas fa-minus fa-lg"></i></a>
-        <a class="item-control addFatigue" title="Add fatigue level"> <i class="fas fa-plus fa-lg"></i></a>
+        <a class="item-control removeFatigue" title="{{localize 'arm5e.sheet.fatigue.recover'}}"><i
+            class="fas fa-minus fa-lg"></i></a>
+        <a class="item-control addFatigue" title="{{localize 'arm5e.sheet.fatigue.add'}}"> <i
+            class="fas fa-plus fa-lg"></i></a>
       </div>
       <div> <img class="fatigueRoll rollable tinyimg" data-roll="option" data-physicalcondition="true"
-          data-title="{{localize 'arm5e.sheet.fatigueRoll'}}" data-name="{{localize 'arm5e.sheet.fatigueRoll'}}"
+          data-title="{{localize 'arm5e.sheet.fatigue.roll'}}" data-name="{{localize 'arm5e.sheet.fatigue.roll'}}"
           data-mode="1" data-difficulty="6" data-option1="{{ system.characteristics.sta.value }}"
           data-fatigue-on-fail="1" data-txtoption1="{{ localize config.character.characteristics.sta.label }}"
-          src="systems/arm5e/assets/icons/fatigue.svg" title="{{localize 'arm5e.sheet.fatigueRoll' }}">
+          data-txtoption2="{{ localize 'arm5e.activeEffect.subtypes.fatigueRolls' }}"
+          data-option2="{{ system.bonuses.rolls.fatigue }}" src="systems/arm5e/assets/icons/fatigue.svg"
+          title="{{localize 'arm5e.sheet.fatigue.roll' }}">
       </div>
 
       <button class="arm5e rest" style="max-height: 32px; font-family: blackmoor">{{localize "arm5e.sheet.action.rest"}}
-        {{system.fatigueTime}} {{localize "arm5e.generic.minutesShort" }}</button>
+        {{system.fatigueTime}} {{system.fatigueRestUnit }}</button>
     </div>
 
     <ol>
@@ -29,7 +33,7 @@
           <li class="flexrow" data-attribute="{{key}}">
             {{#each fatigue.levels}}
               <!-- <input type="checkbox" name="system.fatigue.{{key}}.level.value" {{checked fatigue.level.value}} /> -->
-              <input type="checkbox" disabled="disabled" name="" {{checked this }} />
+              <input type="checkbox" disabled="disabled" name="" {{checked this.state }} class="{{this.lt}}" />
             {{/each}}
           </li>
           <input type="text" name="system.fatigue.{{key}}.number"

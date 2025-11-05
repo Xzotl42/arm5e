@@ -236,6 +236,23 @@ Hooks.once("init", async function () {
   Handlebars.registerHelper("isGM", function () {
     return game.user.isGM;
   });
+
+  Handlebars.registerHelper("formatOptionalNumber", function (value, options) {
+    const originalValue = value;
+    const dec = options.hash.decimals ?? 0;
+    const sign = options.hash.sign || false;
+    if (value == null) return new Handlebars.SafeString("");
+    if (typeof value === "string") value = parseFloat(value);
+    if (Number.isNaN(value)) {
+      console.warn("An invalid value was passed to formatOptionalNumber:", {
+        originalValue,
+        valueType: typeof originalValue,
+        options
+      });
+    }
+    let strVal = sign && value >= 0 ? `+${value.toFixed(dec)}` : value.toFixed(dec);
+    return new Handlebars.SafeString(strVal);
+  });
 });
 
 Hooks.once("ready", async function () {
