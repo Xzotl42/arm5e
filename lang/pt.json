@@ -91,7 +91,9 @@
       "fastCastingSpeed": {
         "label": "Velocidade de lançamento rápida"
       },
-      "fatigue": "Fadiga",
+      "fatigue": {
+        "label": "Fadiga"
+      },
       "finesse": "Finesse",
       "flaws": "Imperfeições",
       "focus": "Foco",

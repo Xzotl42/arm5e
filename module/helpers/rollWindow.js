@@ -742,7 +742,7 @@ async function _applyImpact(actor, roll, message) {
       await actor.changeWound(
         1,
         CONFIG.ARM5E.recovery.rankMapping[defaultImpact.woundGravity],
-        game.i18n.localize("arm5e.sheet.fatigueOverflow")
+        game.i18n.localize("arm5e.sheet.fatigue.overflow")
       );
     }
     defaultImpact.fatigueLevelsLost +=

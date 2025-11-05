@@ -1094,7 +1094,9 @@
       "fastCastingSpeed": {
         "label": "Velocidade de Magia Acelerada"
       },
-      "fatigue": "Fadiga",
+      "fatigue": {
+        "label": "Fadiga"
+      },
       "features": "Equipamentos",
       "fieldOfWork": "Área de Atuação",
       "filters": "Filtros",

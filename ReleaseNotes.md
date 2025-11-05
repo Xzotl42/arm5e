@@ -5,6 +5,7 @@
 - New active effects:
   - Fatigue roll modifier
 - New formated "Number" field that accept empty value
+- Long term fatigue management.
 
 ### Bug fixes
 

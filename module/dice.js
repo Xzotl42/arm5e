@@ -599,7 +599,7 @@ async function getRollFormula(actor) {
     if (rollInfo.physicalCondition == true) {
       if (actorSystemData.fatigueTotal != 0) {
         total += actorSystemData.fatigueTotal;
-        msg += "+" + game.i18n.localize("arm5e.sheet.fatigue");
+        msg += "+" + game.i18n.localize("arm5e.sheet.fatigue.label");
         msg += " (" + actorSystemData.fatigueTotal + ")<br/>";
       }
       if (actorSystemData.penalties.wounds.total != 0) {

@@ -1468,7 +1468,11 @@ export class ArM5eActorSheet extends ActorSheet {
 
     html.find(".rest").click((ev) => {
       if (this.actor.type === "player" || this.actor.type === "npc" || this.actor.type == "beast") {
-        this.actor.rest();
+        let longTerm = false;
+        if (ev.shiftKey) {
+          longTerm = true;
+        }
+        this.actor.rest(longTerm);
       }
     });
 
@@ -1484,8 +1488,21 @@ export class ArM5eActorSheet extends ActorSheet {
     html.find(".soak-damage").click(this._onSoakDamage.bind(this));
     html.find(".damage").click(this._onCalculateDamage.bind(this));
     html.find(".power-use").click(this._onUsePower.bind(this));
-    html.find(".addFatigue").click(async (event) => this.actor.loseFatigueLevel(1));
-    html.find(".removeFatigue").click(async (event) => this.actor.recoverFatigueLevel(1));
+    html.find(".addFatigue").click(async (event) => {
+      let longTerm = false;
+      if (event.shiftKey) {
+        longTerm = true;
+      }
+      this.actor.loseFatigueLevel(1, false, longTerm);
+    });
+
+    html.find(".removeFatigue").click(async (event) => {
+      let longTerm = false;
+      if (event.shiftKey) {
+        longTerm = true;
+      }
+      this.actor.recoverFatigueLevel(1, longTerm);
+    });
     html.find(".add-wound").click(async (event) => {
       const dataset = getDataset(event);
       await this.actor.changeWound(1, dataset.type);

@@ -85,17 +85,12 @@ export class Astrolab extends FormApplication {
     event.preventDefault();
     const dataset = event.currentTarget.dataset;
     const updateData = {
-      "system.fatigueCurrent": 0
+      "system.fatigueCurrent": 0,
+      "system.fatigueLongTerm": 0
     };
     await game.actors.updateAll(updateData, (e) => {
       return e.type === "player" || e.type === "npc" || e.type === "beast";
     });
-    // ui.notifications.info(
-    //   game.i18n.format("arm5e.notification.synchActors", {
-    //     year: dataset.year,
-    //     season: game.i18n.localize(CONFIG.ARM5E.seasons[dataset.season].label)
-    //   })
-    // );
   }
 
   async _updateObject(event, formData) {

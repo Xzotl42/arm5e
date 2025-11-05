@@ -399,7 +399,7 @@ export class RollChatSchema extends BasicChatSchema {
         1,
         // CONFIG.ARM5E.recovery.rankMapping[this.impact.woundGravity],
         CONFIG.ARM5E.recovery.rankMapping[data.msgUpdate["system.impact.woundGravity"]],
-        game.i18n.localize("arm5e.sheet.fatigueOverflow")
+        game.i18n.localize("arm5e.sheet.fatigue.overflow")
       )
     );
     return promises;
@@ -468,7 +468,7 @@ export class RollChatSchema extends BasicChatSchema {
         1,
         // CONFIG.ARM5E.recovery.rankMapping[this.impact.woundGravity],
         CONFIG.ARM5E.recovery.rankMapping[data.msgUpdate["system.impact.woundGravity"]],
-        game.i18n.localize("arm5e.sheet.fatigueOverflow")
+        game.i18n.localize("arm5e.sheet.fatigue.overflow")
       )
     );
     return promises;
@@ -506,7 +506,7 @@ export class RollChatSchema extends BasicChatSchema {
         // await actor.changeWound(
         //   1,
         //   CONFIG.ARM5E.recovery.rankMapping[res.woundGravity],
-        //   game.i18n.localize("arm5e.sheet.fatigueOverflow")
+        //   game.i18n.localize("arm5e.sheet.fatigue.overflow")
         // );
         msgData["system.impact.woundGravity"] = res.woundGravity;
         msgData["system.impact.applied"] = true;

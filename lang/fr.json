@@ -1276,9 +1276,11 @@
       "fastCastingSpeed": {
         "label": "Vitesse d'Incantation Rapide"
       },
-      "fatigue": "Fatigue",
-      "fatigueOverflow": "Excès de fatigue",
-      "fatigueRoll": "Jet de fatigue",
+      "fatigue": {
+        "label": "Fatigue",
+        "overflow": "Excès de fatigue",
+        "roll": "Jet de fatigue"
+      },
       "features": "Traits distinctifs",
       "fieldOfWork": "Domaine d'activité",
       "filters": "Filtres",

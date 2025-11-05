@@ -745,7 +745,9 @@
       "fastCastingSpeed": {
         "label": "Velocità di Lancio Rapido"
       },
-      "fatigue": "Fatica",
+      "fatigue": {
+        "label": "Fatica"
+      },
       "features": "Caratteristiche",
       "filters": "Filtri",
       "flaws": "Difetti",
