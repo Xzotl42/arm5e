@@ -1,4 +1,4 @@
-## 2.4.1.0, Radislav, Cognizant Wisdom
+## 2.4.1.1, Radislav, Cognizant Wisdom
 
 ### Features & changes
 
@@ -10,6 +10,7 @@
 ### Bug fixes
 
 - [Simple Calendar] Fixed a bug where changing the date wasn't working anymore.
+- Fix the casting of Hedge magic effects
 
 ## 2.4.0.31, Radislav, Enigmatic Faeries 2
 

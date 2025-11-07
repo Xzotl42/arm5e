@@ -189,7 +189,7 @@ const ROLL_PROPERTIES = {
     MODE: ROLL_MODES.NONE, // use dataset.mode
     MODIFIERS: 7,
     TITLE: "arm5e.dialog.title.rolldie",
-    ACTION_LABEL: "arm5e.dialog.powerUse",
+    // ACTION_LABEL: "arm5e.dialog.powerUse",
     CALLBACK: castSupernaturalEffect
   },
   POWER: {
