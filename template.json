@@ -41,7 +41,8 @@
         "states": {
           "pendingCrisis": false,
           "creationMode": true,
-          "confidencePrompt": false
+          "confidencePrompt": false,
+          "pendingDamage": false
         },
         "biography": "Character biography, notes, &c.",
         "characteristics": {
@@ -839,7 +840,8 @@
       "states": {
         "pendingCrisis": false,
         "creationMode": true,
-        "confidencePrompt": false
+        "confidencePrompt": false,
+        "pendingDamage": false
       },
       "characteristics": {
         "int": {

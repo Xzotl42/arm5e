@@ -483,6 +483,34 @@ export const migrateActorData = async function (actorDoc, actorItems) {
         }
       }
 
+      if (actor.system.magicSystem) {
+        let updatedTemplates = false;
+        for (let template of Object.values(actor.system.magicSystem.templates ?? {})) {
+          if (template.rollType && typeof template.rollType === "string") {
+            switch (template.rollType) {
+              case "STRESS":
+                template.rollType = 1;
+                break;
+              case "SIMPLE":
+                template.rollType = 2;
+                break;
+              case "STRESS_OR_SIMPLE":
+                template.rollType = 3;
+                break;
+              default:
+                template.rollType = 64;
+                break;
+            }
+            updatedTemplates = true;
+          } else if (template.rollType == undefined) {
+            template.rollType = 64;
+            updatedTemplates = true;
+          }
+        }
+        if (updatedTemplates) {
+          updateData["system.magicSystem.templates"] = actor.system.magicSystem.templates;
+        }
+      }
       // if (actor.system.)
 
       // if (actor.system?.roll != undefined) {

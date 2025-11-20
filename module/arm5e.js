@@ -71,8 +71,10 @@ import { PowerSchema } from "./schemas/powerSchemas.js";
 import {
   BasicChatSchema,
   CombatChatSchema,
-  RollChatSchema,
-  MagicChatSchema
+  RollChatSchema
+  // ,
+  // MagicChatSchema,
+  // DamageChatSchema
 } from "./schemas/chatSchema.js";
 import { Arm5eChatMessage } from "./helpers/chat-message.js";
 import { addActiveEffectsDefinitions } from "./constants/activeEffectsTypes.js";
@@ -206,6 +208,11 @@ Hooks.once("init", async function () {
 
   // Preload handlebars templates
   ArM5ePreloadHandlebarsTemplates();
+
+  document.documentElement.style.setProperty(
+    "--font-header",
+    `"${game.settings.get("arm5e", "headerFont")}", serif`
+  );
 
   // /////////
   // HANDLEBARS HELPERS
@@ -642,6 +649,7 @@ function setDatamodels() {
   CONFIG.ChatMessage.dataModels.roll = RollChatSchema;
   CONFIG.ChatMessage.dataModels.combat = CombatChatSchema;
   CONFIG.ChatMessage.dataModels.magic = MagicChatSchema;
+  // CONFIG.ChatMessage.dataModels.damage = DamageChatSchema;
   // Deprecated types
   CONFIG.ARM5E.ItemDataModels.visStockCovenant = VisSchema;
 }

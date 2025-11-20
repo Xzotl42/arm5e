@@ -378,7 +378,7 @@ export const hermeticArtScore = () =>
     nullable: true,
     integer: true,
     min: 0,
-    max: 40,
+    max: 100,
     initial: 0,
     step: 1
   });

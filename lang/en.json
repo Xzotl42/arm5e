@@ -424,6 +424,15 @@
         "pension": "Pension"
       }
     },
+    "damage": {
+      "form": "Damage Form",
+      "ignoreArmor": "Ignore armor",
+      "label": "Damage",
+      "roll": "Damage roll",
+      "source": "Source of damage",
+      "sourcePlaceHolder": "A damage source",
+      "chatflavor": "{amount} of damage to be soaked from {source}"
+    },
     "dialog": {
       "botch": {
         "num": "Number of botch dice:",
@@ -514,6 +523,7 @@
       "base": "Base",
       "begins": "Begins",
       "clear": "Clear",
+      "cancelled": "Cancelled",
       "config": "Configuration",
       "current": "Current",
       "custom": "Custom",
@@ -789,6 +799,7 @@
       "noConf": "Pass confidence use",
       "noWound": "No wound inflicted",
       "useConf": "Use confidence point",
+      "soak": "Soak roll",
       "wound": {
         "dead": "deadly",
         "heavy": "heavy",
@@ -815,6 +826,7 @@
           }
         }
       },
+      "damagePending": "There is a damage roll pending for this character. You may want to soak it before rolling something else.",
       "dead": "This character is dead...",
       "doubleAbility": "That character already have the ability",
       "effectLinked": "Deletion impossible. An effect is linked to that capacity.",
@@ -1205,7 +1217,6 @@
         "flavor": {
           "attack": "{attacker} attacks {target} with {weapon}.",
           "damage": "{attacker} tries to inflict damage.",
-          "damageSource": "Source of damage",
           "defense": "{defender} defends against {attacker} with {weapon}.",
           "defenseNoAttacker": "{defender} defends with {weapon}.",
           "noWeapon": "no weapon",
@@ -1240,8 +1251,6 @@
       "cun": "Cun",
       "cunning": "Cunning",
       "currentYear": "Current Year",
-      "damage": "Damage",
-      "damageRoll": "Damage roll",
       "date": "Date",
       "dazed": "Dazed",
       "dazedLvl": "Dazed level",
@@ -1299,7 +1308,6 @@
       "fo": "Fo",
       "focus": "Focus",
       "form": "Form",
-      "formDamage": "Form damage",
       "formRequisite": "Form Requisite",
       "formRes": "Form resistance",
       "formScore": "Form score ({form})",

@@ -126,6 +126,10 @@
 .icon-Icon_Soak:before {
   content: "\0052";
 }
+.icon-Icon_Soak_Big:before {
+  font-size: 30pt;
+  content: "\0052";
+}
 .icon-Icon_Astrolab:before {
   content: "\0053";
   vertical-align: middle;

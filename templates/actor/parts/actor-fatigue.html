@@ -53,21 +53,24 @@
         <label
           class="smallTitle clickable view-med-history"><i>{{localize "arm5e.sanatorium.viewMedicalHistory"}}</i></label>
       </div>
-      <!-- <img class="clickable recovery-start" src="systems/arm5e/assets/icons/recovery.svg" title="Wounds recovery"
-        style="max-width:30px" /> -->
+      <div class=" soak-icon" title="">
+        <a class="damage-roll clickable" title="{{localize 'Damage roll'}}" style="text-align: right; font-size: 16pt;">
+          <i class=" icon-Icon_Soak_Big"></i></a>
+      </div>
       {{#unless isDead}}
-        <a class="recovery-start clickable" title="Wounds recovery" style="text-align: right; font-size: 16pt;">
-          <i class="icon-Icon_Sanatorium2"></i>
-        </a>
+        <div>
+          <a class="recovery-start clickable" title="Wounds recovery" style="text-align: right; font-size: 16pt;">
+            <i class="icon-Icon_Sanatorium2"></i>
+          </a>
+        </div>
       {{/unless}}
     </div>
-    <div class="flexrow flex-group-left">
-      <div style="min-width: 215px;"></div>
-      <div class="wound-field">{{localize config.character.wounds.labels.number}}</div>
-      <div class="wound-field">{{localize config.character.wounds.labels.penalty}}</div>
-    </div>
-
     <ol>
+      <li class="flexrow flex-group-left">
+        <div style="min-width: 180px;"></div>
+        <div class="wound-field">{{localize config.character.wounds.labels.number}}</div>
+        <div class="wound-field">{{localize config.character.wounds.labels.penalty}}</div>
+      </li>
       {{#each health as |level key|}}
 
         <li class="flexrow flex-group-left" data-attribute="{{key}}">
@@ -88,7 +91,7 @@
             </div>
             <div class="flexrow flex-group-right" style="min-width: 150px;">
               <div>
-                <span>{{level.range}}</span>
+                <span>{{level.range}} </span>
               </div>
               <div class="wound-field">
                 <input type="text" name="" value="{{level.wounds.length}}" data-dtype="Number" class="resource-focus"

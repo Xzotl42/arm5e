@@ -39,6 +39,17 @@ ARM5E.genericOptions = {
   ]
 };
 
+ARM5E.fontfaces = {
+  almendra: "Almendra",
+  blackmoor: "Blackmoor (original)",
+  bokor: "Bokor",
+  eagleLake: "Eagle Lake",
+  germaniaOne: "Germania One",
+  grenzeGotisch: "Grenze Gotisch",
+  medievalSharp: "Medieval Sharp",
+  metamorphous: "Metamorphous"
+};
+
 ARM5E.character.charTypes = {
   magus: {
     label: "arm5e.sheet.magus",
@@ -1037,7 +1048,7 @@ ARM5E.familiar.labels = {
     label: "arm5e.sheet.defense"
   },
   damage: {
-    label: "arm5e.sheet.damage"
+    label: "arm5e.damage.label"
   }
 };
 
@@ -3372,7 +3383,7 @@ ARM5E.recovery = {
     }
   },
   daysInSeason: 92,
-  rollMode: 56 // no chat message, no confidence, non-interactive
+  rollMode: 40 // no chat message, no confidence
 };
 
 export function getWoundStr(gravity = 0) {

@@ -754,7 +754,11 @@ export class MagicChatSchema extends RollChatSchema {
           initial: "magic",
           choices: CONFIG.ARM5E.realmsExt
         }),
-        form: hermeticForm("te")
+        form: new fields.StringField({
+          required: false,
+          blank: true,
+          initial: "te"
+        })
       })
     };
   }
