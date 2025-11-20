@@ -281,6 +281,9 @@
       "sourcebookFilter": "Filtro por manuales",
       "special": "Especial"
     },
+    "damage": {
+      "label": "Daño"
+    },
     "dialog": {
       "botch": {
         "num": "Número de dados de pifia:",
@@ -725,7 +728,6 @@
       "cun": "Ast",
       "cunning": "Astucia",
       "currentYear": "Año actual",
-      "damage": "Daño",
       "date": "Fecha",
       "dazed": "Extenuado",
       "dazedLvl": "Nivel extenuado",

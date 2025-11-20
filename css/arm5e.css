@@ -1,16 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Martel:wght@400;800&family=Roboto:wght@300;400;500&display=swap");
 
 @font-face {
-  font-family: "Goudy Text MT";
-  src: url("../assets/fonts/goudy-text-mt.ttf");
-}
-
-@font-face {
-  font-family: "vinque";
-  src: url("../assets/fonts/vinque_rg.ttf");
-}
-
-@font-face {
   font-family: "bookAntiqua";
   src: url("../assets/fonts/book-antiqua.woff2") format("woff2");
   font-weight: 400;
@@ -18,20 +8,54 @@
 }
 
 @font-face {
-  font-family: "bookAntiqua";
-  src: url("../assets/fonts/book-antiqua-bold.woff2") format("woff2");
-  font-weight: 700;
-  font-style: normal;
-}
-
-@font-face {
   font-family: "bookAntiquaBold";
-  src: url("../assets/fonts/book-antiqua-bold.ttf");
+  src: url("../assets/fonts/book-antiqua-bold.ttf") format("truetype");
+  src: url("../assets/fonts/book-antiqua-bold.woff2") format("woff2");
 }
 
 @font-face {
   font-family: "blackmoor";
   src: url("../assets/fonts/BlackmoorLetPlain.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "metamorphous";
+  src: url("../assets/fonts/Metamorphous/Metamorphous-Regular.ttf") format("truetype");
+  size-adjust: 80%;
+  font-weight: bolder;
+}
+
+@font-face {
+  font-family: "medievalSharp";
+  src: url("../assets/fonts/MedievalSharp/MedievalSharp-Regular.ttf") format("truetype");
+  size-adjust: 90%;
+}
+
+@font-face {
+  font-family: "grenzeGotisch";
+  src: url("../assets/fonts/Grenze_Gotisch/static/GrenzeGotisch-Bold.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "almendra";
+  src: url("../assets/fonts/Almendra/Almendra-Bold.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "germaniaOne";
+  src: url("../assets/fonts/Germania_One/GermaniaOne-Regular.ttf") format("truetype");
+  size-adjust: 105%;
+}
+
+@font-face {
+  font-family: "bokor";
+  src: url("../assets/fonts/Bokor/Bokor-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "eagleLake";
+  src: url("../assets/fonts/Eagle_Lake/EagleLake-Regular.ttf") format("truetype");
+  size-adjust: 75%;
 }
 
 * {
@@ -50,6 +74,24 @@
   }
 }
 
+/* Factor: central theme variables */
+:root {
+  --font-book: "bookAntiqua", serif;
+  --font-book-bold: "bookAntiquaBold", serif;
+  --font-header: "blackmoor", serif;
+  /* --font-header: "medievalSharp", serif; */
+
+  --parchment: url("../assets/compendium/parchment.png") repeat;
+  --dialog-bg: url("../assets/dialog/Dialog_Background.png") repeat-y;
+  --border-main: #6f6c66;
+  --accent-danger: rgb(135 38 22 / 100%);
+  --accent-success: rgb(51 120 34 / 100%);
+  --accent-busy: rgb(20 55 175 / 100%);
+  --accent-muted: rgba(169 159 134 / 50%);
+  --radius-small: 4px;
+  --shadow-inset: inset 0px 2px 3px #bbb;
+}
+
 /* Intro chat fonts */
 
 p.nue {
@@ -57,7 +99,7 @@ p.nue {
 }
 
 h3.nue {
-  font-family: Blackmoor;
+  font-family: var(--font-header);
   font-size: 18px;
 }
 
@@ -96,11 +138,11 @@ button.arm5e {
 }
 
 button.create-folder {
-  font-family: Blackmoor;
+  font-family: var(--font-header);
 }
 
 button.create-document {
-  font-family: Blackmoor;
+  font-family: var(--font-header);
 }
 
 .directory .action-buttons button {
@@ -109,17 +151,21 @@ button.create-document {
 }
 
 button.create-compendium {
-  font-family: Blackmoor;
+  font-family: var(--font-header);
 }
 
 a.item {
-  font-family: Blackmoor;
+  font-family: var(--font-header);
   font-size: 18px;
 }
 
 label {
   font-family: bookAntiquaBold;
   font-size: 14px;
+}
+
+label.fit {
+  max-width: fit-content;
 }
 
 .label-light {
@@ -144,24 +190,24 @@ p.notes {
 }
 
 h2.module-header {
-  font-family: Blackmoor;
+  font-family: var(--font-header);
 }
 
 h2 {
-  font-family: Blackmoor;
+  font-family: var(--font-header);
   font-size: 18px;
   font-weight: normal;
 }
 
 h2.ars-chat-title {
-  font-family: Blackmoor;
+  font-family: var(--font-header);
   font-size: 16pt;
   font-weight: normal;
   margin-top: 3px;
 }
 
 h3 {
-  font-family: Blackmoor;
+  font-family: var(--font-header);
   font-size: 18px;
 }
 
@@ -182,7 +228,7 @@ li.modules {
 }
 
 li.macro.inactive {
-  font-family: Blackmoor;
+  font-family: var(--font-header);
 }
 
 a {
@@ -198,7 +244,7 @@ input {
 }
 
 a.scene-name {
-  font-family: Blackmoor;
+  font-family: var(--font-header);
   font-size: 18px;
 }
 
@@ -295,7 +341,7 @@ span.player-name {
   background: rgba(0, 0, 0, 0.1);
 
   font-size: var(--font-size-32);
-  font-family: Blackmoor;
+  font-family: var(--font-header);
   color: #000;
   height: 50px;
   line-height: 50px;
@@ -417,12 +463,12 @@ a.content-link i.fa-book-open {
 }
 
 h4.window-title {
-  font-family: Blackmoor;
+  font-family: var(--font-header);
   font-size: 20px;
 }
 .arm5e .sanatorium.button,
 .arm5e .astrolab.button {
-  font-family: "blackmoor";
+  font-family: var(--font-header);
   font-size: 13pt;
   padding: 5px;
   width: 140px;
@@ -458,12 +504,12 @@ h4.window-title {
 }
 
 .arm5e.button {
-  font-family: "blackmoor";
+  font-family: var(--font-header);
   padding: 10px;
 }
 
 .arm5e.button.ui {
-  font-family: "blackmoor";
+  font-family: var(--font-header);
   padding: 5px;
 }
 
@@ -582,7 +628,7 @@ img.clickable2:hover {
 }
 
 .ars-chat-title {
-  font-family: "blackmoor";
+  font-family: var(--font-header);
   border-bottom: 1px solid #8e7759;
   line-height: 24px;
   margin-bottom: 5px;
@@ -605,7 +651,7 @@ img.clickable2:hover {
 }
 
 .chat-message .message-header .ars-chat-title {
-  font-family: "blackmoor";
+  font-family: var(--font-header);
   border-bottom: 1px solid #8e7759;
   font-weight: normal;
 }
@@ -906,7 +952,7 @@ img.clickable2:hover {
 
 .arm5e .sanatorium-title {
   text-align: center;
-  font-family: "blackmoor";
+  font-family: var(--font-header);
   font-size: 32pt;
   height: 35px;
   border: none;
@@ -957,7 +1003,7 @@ img.clickable2:hover {
 
 .arm5e .medhistory-title {
   text-align: center;
-  font-family: "blackmoor";
+  font-family: var(--font-header);
   font-size: 24pt;
   height: 35px;
   border: none;
@@ -993,7 +1039,7 @@ img.clickable2:hover {
 }
 .arm5e .scriptorium-title {
   text-align: center;
-  font-family: "blackmoor";
+  font-family: var(--font-header);
   font-size: 32pt;
   height: 45px;
   border: none;
@@ -1002,7 +1048,7 @@ img.clickable2:hover {
 
 .arm5e .astrolab-title {
   text-align: center;
-  font-family: "blackmoor";
+  font-family: var(--font-header);
   font-size: 32pt;
   height: 35px;
   border: none;
@@ -1195,7 +1241,7 @@ img.clickable2:hover {
   outline-offset: 0;
 }
 
-.arm5e input[type="text"],
+input[type="text"],
 input[type="number"],
 input[type="password"],
 input[type="date"],
@@ -1248,6 +1294,53 @@ input[type="time"] {
   background-image: none;
   max-width: 190px;
 }
+
+input[type="number"].resource-focus {
+  max-width: 70px;
+  text-align: center;
+}
+
+input[type="text"].resource-focus.slim,
+input[type="number"].resource-focus.slim {
+  max-width: 50px;
+  text-align: center;
+}
+
+input[type="text"].resource-focus {
+  max-width: 70px;
+  text-align: center;
+}
+
+input[type="text"].resource-focus.wide {
+  max-width: none;
+  width: calc(100% - 2px);
+  text-align: center;
+  font-size: 9pt;
+}
+
+input[type="number"].resource-focus.summary {
+  background: rgba(0, 0, 0, 0.15);
+  box-shadow: 3px 3px 3px rgb(0 0 0 / 28%);
+}
+
+input[type="text"].resource-focus-slim.editable,
+input[type="text"].resource-focus.editable,
+input[type="number"].resource-focus-slim.editable,
+input[type="number"].resource-focus.editable {
+  background-color: rgb(208 182 130 / 50%);
+}
+
+input[type="text"].magic-total,
+input[type="text"].combat-total,
+input[type="text"].wound-level,
+input[type="number"].art-score,
+input[type="number"].design-level {
+  font-size: 13pt;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.15);
+  box-shadow: 3px 3px 3px rgb(0 0 0 / 28%);
+}
+
 .arm5eRoll select,
 .arm5e select {
   height: 20px;
@@ -1413,13 +1506,13 @@ input[type="time"] {
 .arm5e .sheet-header-codex {
   -ms-flex: 0 0 80px;
   flex: 0 0 80px;
-  font-family: "blackmoor";
+  font-family: var(--font-header);
   font-size: 18px;
 }
 
 .arm5e .codex-title {
   text-align: center;
-  font-family: "blackmoor";
+  font-family: var(--font-header);
   font-size: 35px;
   height: 45px;
   color: #581845;
@@ -1510,8 +1603,7 @@ img.tinyimg {
   margin: 0;
   /*padding-top: 30px;
   line-height: 30;*/
-  /*font-family: "vinque";*/
-  font-family: "blackmoor";
+  font-family: var(--font-header);
   /*letter-spacing: 1px;*/
 }
 
@@ -1530,8 +1622,7 @@ fieldset .arm5e {
   margin: 0;
   /*padding-top: 25px;
   line-height: 50;*/
-  /*font-family: "vinque";*/
-  font-family: "blackmoor";
+  font-family: var(--font-header);
   /*letter-spacing: 1px;*/
 }
 
@@ -1546,8 +1637,7 @@ fieldset .arm5e {
   margin: 0;
   /*padding-top: 25px;
   line-height: 50;*/
-  /*font-family: "vinque";*/
-  font-family: "blackmoor";
+  font-family: var(--font-header);
   /*letter-spacing: 1px;*/
 }
 
@@ -1825,7 +1915,7 @@ div[class*="foldable-section"] {
 }
 
 .techLabel {
-  font-family: "blackmoor";
+  font-family: var(--font-header);
   font-size: 14pt;
   font-weight: normal;
   align-items: center;
@@ -1833,7 +1923,7 @@ div[class*="foldable-section"] {
 }
 
 .formLabel {
-  font-family: "blackmoor";
+  font-family: var(--font-header);
   font-size: 14pt;
   font-weight: normal;
   align-items: center;
@@ -1878,8 +1968,7 @@ div[class*="foldable-section"] {
 
 .arm5e .tabs .item {
   /*line-height: 60px;*/
-  /*font-family: "vinque";*/
-  font-family: "blackmoor";
+  font-family: var(--font-header);
   font-size: 14pt;
 }
 
@@ -1890,51 +1979,6 @@ div[class*="foldable-section"] {
 
 .posRelative {
   position: relative;
-}
-
-input[type="number"].resource-focus {
-  max-width: 70px;
-  text-align: center;
-}
-
-input[type="text"].resource-focus.slim,
-input[type="number"].resource-focus.slim {
-  max-width: 50px;
-  text-align: center;
-}
-
-input[type="text"].resource-focus {
-  max-width: 70px;
-  text-align: center;
-}
-
-input[type="text"].resource-focus.wide {
-  width: 100%;
-  text-align: center;
-  font-size: 9pt;
-}
-
-input[type="number"].resource-focus.summary {
-  background: rgba(0, 0, 0, 0.15);
-  box-shadow: 3px 3px 3px rgb(0 0 0 / 28%);
-}
-
-input[type="text"].resource-focus-slim.editable,
-input[type="text"].resource-focus.editable,
-input[type="number"].resource-focus-slim.editable,
-input[type="number"].resource-focus.editable {
-  background-color: rgb(208 182 130 / 50%);
-}
-
-input[type="text"].magic-total,
-input[type="text"].combat-total,
-input[type="text"].wound-level,
-input[type="number"].art-score,
-input[type="number"].design-level {
-  font-size: 13pt;
-  text-align: center;
-  background: rgba(0, 0, 0, 0.15);
-  box-shadow: 3px 3px 3px rgb(0 0 0 / 28%);
 }
 
 .navItem-right-ball {
@@ -2075,15 +2119,14 @@ img.art-icon {
 }
 
 .arm5e .item-name {
-  /*font-family: "vinque";*/
-  font-family: "blackmoor";
+  font-family: var(--font-header);
   margin-bottom: 4px;
   font-size: 12pt;
   /*font-weight: bold;*/
 }
 
 .arm5e .codex-name {
-  font-family: "blackmoor";
+  font-family: var(--font-header);
   margin-bottom: 6px;
   padding-top: 5px;
   font-size: 13pt;
@@ -2376,11 +2419,9 @@ img.art-icon {
 }
 
 .arm5e .smallTitle {
-  /*font-family: "vinque";*/
-  font-family: "blackmoor";
+  font-family: var(--font-header);
   margin-bottom: 0px;
   font-size: 12pt;
-  /*font-weight: bold;*/
 }
 
 .arm5e .bold {

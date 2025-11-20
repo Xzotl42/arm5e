@@ -1,5 +1,8 @@
 {
   "arm5e": {
+    "damage": {
+      "label": "Dano"
+    },
     "sheet": {
       "abilities": "Habilidades",
       "ability": "Habilidade",
@@ -61,7 +64,6 @@
       "craftsmenRareSumary": "Libras de habilidade por temporada",
       "creator": "O Criador",
       "currentYear": "Ano atual",
-      "damage": "Dano",
       "date": "Encontro",
       "dazed": "Atordoado",
       "dead": "Morto",

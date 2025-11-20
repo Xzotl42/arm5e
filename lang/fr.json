@@ -415,6 +415,11 @@
         "pension": "Pension"
       }
     },
+    "damage": {
+      "form": "Dommage de forme",
+      "label": "Dommages",
+      "roll": "Jet de dommage"
+    },
     "dialog": {
       "botch": {
         "num": "Nombre de dé(s) de Désastre:",
@@ -1231,8 +1236,6 @@
       "cun": "Rus",
       "cunning": "Ruse",
       "currentYear": "Année actuelle",
-      "damage": "Dommages",
-      "damageRoll": "Jet de dommage",
       "date": "Date",
       "dazed": "Hagard",
       "dazedLvl": "Niveaux Hagards",
@@ -1288,7 +1291,6 @@
       "fo": "Fo",
       "focus": "Focus",
       "form": "Forme",
-      "formDamage": "Dommage de forme",
       "formRequisite": "Complément Forme",
       "formRes": "Résistance de forme",
       "formScore": "Score de Forme ({form})",

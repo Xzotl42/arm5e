@@ -429,6 +429,10 @@
         "pension": "Pensão"
       }
     },
+    "damage": {
+      "label": "Dano",
+      "roll": "Rolagem de dano"
+    },
     "dialog": {
       "botch": {
         "num": "Número de dados de falha:",
@@ -1052,8 +1056,6 @@
       "cun": "Ins",
       "cunning": "Instinto",
       "currentYear": "Ano Atual",
-      "damage": "Dano",
-      "damageRoll": "Rolagem de dano",
       "date": "Data",
       "dazed": "Atordoado",
       "dazedLvl": "Nível Atordoado",
