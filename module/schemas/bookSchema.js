@@ -9,7 +9,7 @@ import {
   authorship
 } from "./commonSchemas.js";
 import { EnchantmentExtension, ItemState } from "./enchantmentSchema.js";
-import { LabTextTopicSchema } from "./magicSchemas.js";
+import { LabTextTopicSchema } from "./labTextSchema.js";
 const fields = foundry.data.fields;
 export class BookSchema extends foundry.abstract.TypeDataModel {
   static defineSchema() {

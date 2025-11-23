@@ -1,5 +1,6 @@
 import { stressDie } from "../dice.js";
 import { GetEffectAttributesLabel, computeLevel } from "../helpers/magic.js";
+import { ROLL_MODES } from "../helpers/rollWindow.js";
 import { log } from "../tools.js";
 
 export class InvestigationRoll extends FormApplication {
@@ -127,6 +128,7 @@ export class InvestigationRoll extends FormApplication {
       name: game.i18n.format("arm5e.lab.planning.investigation.diaryTitle", {
         name: this.object.name
       }),
+      mode: ROLL_MODES.NO_CONF,
       physicalcondition: false
     };
     this.actor.rollInfo.init(dataset, this.actor);
@@ -138,13 +140,7 @@ export class InvestigationRoll extends FormApplication {
     );
     let desc = this.object.diaryDescription;
     let failed = false;
-    const msg = await stressDie(
-      this.actor,
-      dataset.roll,
-      16,
-      undefined,
-      this.object.botchDice ?? 0
-    );
+    const msg = await stressDie(this.actor, dataset.roll, 0, undefined, this.object.botchDice ?? 0);
     const res = msg.rolls[0];
     desc += `<li>${game.i18n.format("arm5e.lab.planning.investigation.rolled", {
       total: res._total,

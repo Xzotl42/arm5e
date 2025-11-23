@@ -1,9 +1,10 @@
 import { getWoundStr } from "../config.js";
+import { createRoll } from "../dice.js";
+import { fatigueCost } from "../helpers/magic.js";
 import { ROLL_PROPERTIES } from "../helpers/rollWindow.js";
 import { SMSG_FIELDS, SMSG_TYPES } from "../helpers/socket-messages.js";
 import { getLastCombatMessageOfType, log, putInFoldableLinkWithAnimation } from "../tools.js";
 import { basicIntegerField, boolOption, hermeticForm } from "./commonSchemas.js";
-import { SpellSchema } from "./magicSchemas.js";
 const fields = foundry.data.fields;
 export class BasicChatSchema extends foundry.abstract.TypeDataModel {
   static defineSchema() {
@@ -38,11 +39,7 @@ export class BasicChatSchema extends foundry.abstract.TypeDataModel {
   }
 
   addListeners(html) {
-    // TEMPORARY until chat rework
     html.find(".clickable").click((ev) => {
-      $(ev.currentTarget).next().toggleClass("hide");
-    });
-    html.find(".clickable2").click((ev) => {
       $(ev.currentTarget).next().toggleClass("hide");
     });
   }
@@ -52,7 +49,7 @@ export class BasicChatSchema extends foundry.abstract.TypeDataModel {
   }
 
   // standard chat message doesn't have targets;
-  getTargetsHtml() {
+  formatTargets(html) {
     return "";
   }
 
@@ -65,6 +62,7 @@ export class RollChatSchema extends BasicChatSchema {
   static defineSchema() {
     return {
       ...super.defineSchema(),
+      targets: new fields.ArrayField(new fields.DocumentUUIDField()),
       confidence: new fields.SchemaField({
         allowed: boolOption(true),
         score: basicIntegerField(0, 0),
@@ -141,7 +139,7 @@ export class RollChatSchema extends BasicChatSchema {
   enrichMessageData(actor) {}
 
   // standard roll chat message doesn't have targets;
-  getTargetsHtml() {
+  formatTargets(html) {
     return "";
   }
 
@@ -162,8 +160,8 @@ export class RollChatSchema extends BasicChatSchema {
     }
   }
 
-  get formula() {
-    let formula = this.parent.rolls[0].formula;
+  formula(idx = 0) {
+    let formula = this.parent.rolls[idx].formula;
     if (this.confidence.used) {
       let toAppend = this.confidence.used * 3;
       const divider = this.roll?.divider ?? 1;
@@ -220,10 +218,9 @@ export class RollChatSchema extends BasicChatSchema {
     if (showItem) {
       if (this.getFailedMessage && this.failedRoll()) {
         res += this.getFailedMessage();
-      } else {
-        res += this.getTargetsHtml();
       }
     }
+
     return res;
   }
 
@@ -269,29 +266,33 @@ export class RollChatSchema extends BasicChatSchema {
   }
 
   // Hide parts of the message based on settings and permissions
-  obfuscate(html, actor) {
-    let rollFormula = html.find(".dice-formula");
+  obfuscate(roll, actor, idx = 0) {
+    let rollFormula = roll.getElementsByClassName("dice-formula");
     if (this.showRollFormulas(actor, this.roll.actorType ?? "npc")) {
-      rollFormula.text(this.cleanupFormula(this.formula));
-      const partf = html.find(".part-formula");
-      partf.text(this.cleanupFormula(partf.text()));
-    } else {
-      rollFormula.remove();
-      html.find(".dice-tooltip").remove();
-    }
-
-    let rollResult = html.find(".dice-total");
-    if (this.showRollResults(actor, this.roll.actorType)) {
-      let rollRes = this.parent.rollTotal + this.confidenceModifier;
-      if (this.roll.secondaryScore) {
-        let newValue = Math.round(this.roll.secondaryScore + rollRes - this.roll.difficulty);
-
-        rollResult.text(Math.round(rollRes) + ` ( ${(newValue < 0 ? "" : "+") + newValue} ) `);
-      } else {
-        rollResult.text(Math.round(rollRes));
+      rollFormula[0].innerText = this.cleanupFormula(this.formula(idx));
+      const partf = roll.getElementsByClassName("part-formula")[0];
+      if (partf) {
+        partf.innerText = this.cleanupFormula(partf.innerText);
       }
     } else {
-      rollResult.remove();
+      rollFormula.remove();
+      roll.find(".dice-tooltip").remove();
+    }
+    const item = roll.getElementsByClassName("dice-total")[0];
+    if (this.showRollResults(actor, this.roll.actorType)) {
+      const original = parseInt(item.innerText);
+      if (!isNaN(original)) {
+        let rollRes = this.parent.rollTotal(idx) + this.confidenceModifier;
+        if (this.roll.secondaryScore) {
+          let newValue = Math.round(this.roll.secondaryScore + rollRes - this.roll.difficulty);
+
+          item.innerText = Math.round(rollRes) + ` ( ${(newValue < 0 ? "" : "+") + newValue} ) `;
+        } else {
+          item.innerText = Math.round(rollRes);
+        }
+      }
+    } else {
+      item.remove();
     }
   }
 
@@ -560,7 +561,7 @@ export class RollChatSchema extends BasicChatSchema {
   //   if (this.getFailedMessage && this.failedRoll()) {
   //     res += this.getFailedMessage();
   //   } else {
-  //     res += this.getTargetsHtml();
+  //     res += this.formatTargets(html);
   //   }
   //   return res;
   // }
@@ -568,7 +569,7 @@ export class RollChatSchema extends BasicChatSchema {
   failedRoll() {
     return (
       this.roll.botches > 0 ||
-      this.parent.rollTotal + this.confidenceModifier - this.roll.difficulty < 0
+      this.parent.rollTotal(0) + this.confidenceModifier - this.roll.difficulty < 0
     );
   }
   getFailedMessage() {
@@ -625,6 +626,43 @@ export class CombatChatSchema extends RollChatSchema {
         damageForm: hermeticForm("te")
       })
     };
+  }
+
+  formatTargets(html) {
+    if (this.roll.type === "combatSoak") {
+      const diceTotal = html[0].getElementsByClassName("dice-total")[0];
+      diceTotal.innerHTML =
+        this.impact.woundGravity !== 0
+          ? game.i18n.format("arm5e.messages.woundResult", {
+              typeWound: game.i18n.localize(
+                "arm5e.messages.wound." +
+                  CONFIG.ARM5E.recovery.rankMapping[this.impact.woundGravity]
+              )
+            })
+          : game.i18n.localize("arm5e.messages.noWound");
+    } else {
+      if (this.parent.rolls.length < 2) return html;
+      let ii = 0;
+      const contentDiv = html[0].getElementsByClassName("message-content")[0];
+      for (let diceRoll of contentDiv.getElementsByClassName("dice-roll")) {
+        if (ii == 0) {
+          // first is attack roll
+          ii++;
+          continue;
+        }
+        const div = document.createElement("div");
+        const title = document.createElement("h3");
+        title.classList.add("ars-chat-title");
+        title.innerHTML = game.i18n.format("arm5e.messages.soak");
+        div.append(title);
+
+        this.obfuscate(diceRoll, this.parent.rolls[ii].actor, ii);
+        diceRoll.insertAdjacentElement("beforebegin", div);
+
+        ii++;
+      }
+    }
+    return html;
   }
 
   enrichMessageData(actor) {
@@ -686,12 +724,13 @@ export class CombatChatSchema extends RollChatSchema {
         break;
       case "soak":
         {
+          updateData.flavor = `<p>${game.i18n.format("arm5e.sheet.combat.flavor.soak", {
+            target: actor.name
+          })}</p>`;
           const lastAttackMessage = getLastCombatMessageOfType("attack");
-          const attacker = fromUuidSync(lastAttackMessage.system.combat.attacker);
           if (lastAttackMessage) {
-            updateData.flavor = `<p>${game.i18n.format("arm5e.sheet.combat.flavor.soak", {
-              target: actor.name
-            })}</p>`;
+            const attacker = fromUuidSync(lastAttackMessage.system.combat.attacker);
+
             updateData["system.combat"] = {
               attacker: attacker?.uuid ?? null,
               defenders: []
@@ -811,18 +850,25 @@ export class MagicChatSchema extends RollChatSchema {
     return this.roll.botches > 0 || this.failedCasting();
   }
 
-  getTargetsHtml() {
-    let res = "";
+  formatTargets(html) {
     const rollType = this.roll.type;
+    const contentDiv = html[0].getElementsByClassName("message-content")[0];
+
     for (let target of this.magic.targets) {
-      const title = `<h3 class="ars-chat-title"> + ${game.i18n.format(
-        "arm5e.chat.contestOfMagicWith",
-        { name: target.name }
-      )} </h3>`;
+      let res = document.createElement("div");
+
+      const title = document.createElement("h3");
+      title.classList.add("ars-chat-title");
+      title.innerHTML = game.i18n.format("arm5e.chat.contestOfMagicWith", { name: target.name });
+      const titleWrapper = document.createElement("div");
+      titleWrapper.classList.add("margintop4");
+      titleWrapper.appendChild(title);
+      res.append(titleWrapper);
+
       let castingTotal = "";
       if (!["item", "power"].includes(rollType)) {
         castingTotal = `${game.i18n.localize("arm5e.sheet.spellTotal")} (${
-          this.parent.rollTotal + this.confidenceModifier
+          this.parent.rollTotal(0) + this.confidenceModifier
         })`;
       }
 
@@ -836,7 +882,7 @@ export class MagicChatSchema extends RollChatSchema {
       let penetrationSpec = "";
       if (showDetails || this.magic.caster.hasPlayerOwner) {
         const totalPenetration = `+ ${game.i18n.localize("arm5e.sheet.totalPenetration")} (${
-          this.roll.secondaryScore + this.parent.rollTotal - this.roll.difficulty
+          this.roll.secondaryScore + this.parent.rollTotal(0) - this.roll.difficulty
         })`;
         if (["item", "power"].includes(rollType)) {
           flavorTotalPenetration = `<b>${totalPenetration}</b><br/>`;
@@ -915,7 +961,7 @@ export class MagicChatSchema extends RollChatSchema {
 
       const total =
         this.roll.secondaryScore +
-        this.parent.rollTotal +
+        this.parent.rollTotal(0) +
         this.confidenceModifier -
         this.roll.difficulty -
         target.magicResistance.total;
@@ -945,12 +991,23 @@ export class MagicChatSchema extends RollChatSchema {
       }
 
       const finalFlavor = `${flavorTotalSpell}${flavorTotalPenetration}${flavorTotalMagicResistance}`;
-      res +=
-        title +
-        flavorTarget +
-        putInFoldableLinkWithAnimation("arm5e.sheet.details", finalFlavor, true, "clickable2");
+
+      const targetHtml = document.createElement("div");
+      targetHtml.classList.add("flavor-text");
+      targetHtml.innerHTML = flavorTarget;
+      res.append(targetHtml);
+      const contentHtml = document.createElement("div");
+      contentHtml.innerHTML = putInFoldableLinkWithAnimation(
+        "arm5e.sheet.details",
+        finalFlavor,
+        true,
+        "clickable"
+      );
+
+      res.append(contentHtml);
+      contentDiv.append(res);
     }
-    return res;
+    return html;
   }
 
   //
@@ -958,9 +1015,9 @@ export class MagicChatSchema extends RollChatSchema {
     let res = { use: 0, partial: 0, fail: 0 };
 
     if (this.roll.type == "spell") {
-      res = SpellSchema.fatigueCost(
+      res = fatigueCost(
         actor,
-        this.parent.rollTotal + this.confidenceModifier,
+        this.parent.rollTotal(0) + this.confidenceModifier,
         this.roll.difficulty,
         this.magic.ritual
       );
@@ -970,8 +1027,8 @@ export class MagicChatSchema extends RollChatSchema {
   }
   failedCasting() {
     if (this.roll.type == "spell")
-      return this.parent.rollTotal + this.confidenceModifier - this.roll.difficulty < -10;
-    else return this.parent.rollTotal + this.confidenceModifier - this.roll.difficulty < 0;
+      return this.parent.rollTotal(0) + this.confidenceModifier - this.roll.difficulty < -10;
+    else return this.parent.rollTotal(0) + this.confidenceModifier - this.roll.difficulty < 0;
   }
 
   getFailedMessage() {
@@ -980,7 +1037,7 @@ export class MagicChatSchema extends RollChatSchema {
 
     if (showDataOfNPC || this.parent.originatorOrGM) {
       const levelOfSpell = this.roll.difficulty;
-      const totalOfSpell = this.parent.rollTotal + this.confidenceModifier;
+      const totalOfSpell = this.parent.rollTotal(0) + this.confidenceModifier;
       const title =
         '<h2 class="ars-chat-title">' + game.i18n.localize("arm5e.sheet.spellFailed") + "</h2>";
       const messageTotalOfSpell = `${game.i18n.localize(
@@ -1008,4 +1065,212 @@ export class MagicChatSchema extends RollChatSchema {
 
     return updateData;
   }
+}
+
+export class DamageChatSchema extends RollChatSchema {
+  static defineSchema() {
+    return {
+      ...super.defineSchema(),
+
+      damage: new fields.SchemaField({
+        modifier: basicIntegerField(0, 0),
+        source: new fields.StringField({ required: true, blank: true, initial: "" }),
+        ignoreArmor: boolOption(),
+        form: new fields.StringField({
+          required: false,
+          blank: true,
+          initial: "te"
+        }),
+        target: new fields.SchemaField({
+          uuid: new fields.DocumentUUIDField(),
+          name: new fields.StringField({ required: true, blank: false, initial: "target" }),
+          flavor: new fields.StringField({ required: false, blank: true, initial: "" }),
+          details: new fields.StringField({ required: false, blank: true, initial: "" }),
+          natRes: basicIntegerField(0, -9999),
+          formRes: basicIntegerField(0, 0)
+          // details: new fields.StringField({ required: false, blank: true, initial: "" })
+        })
+      })
+    };
+  }
+
+  enrichMessageData(actor) {
+    const rollInfo = actor.rollInfo;
+    const updateData = {};
+    let flavorText = "";
+    if (rollInfo.type == "damage") {
+      updateData["system.damage"] = {
+        modifier: rollInfo.modifier,
+        source: rollInfo.damage.source,
+        form: rollInfo.damage.form,
+        ignoreArmor: rollInfo.damage.ignoreArmor
+      };
+      flavorText = `<p>${game.i18n.format("arm5e.damage.damageflavor", {
+        amount: this.parent.rollTotal(0),
+        source: rollInfo.damage.source
+      })}`;
+      if (this.damage.form != "") {
+        flavorText += `<br/>${game.i18n.format("arm5e.damage.form")} : ${
+          CONFIG.ARM5E.magic.forms[rollInfo.damage.form].label
+        }`;
+      }
+      if (rollInfo.damage.ignoreArmor) {
+        flavorText += `<br/><i>${game.i18n.localize("arm5e.damage.ignoreArmor")}</i>`;
+      }
+      flavorText += `</p>`;
+
+      updateData["flavor"] = flavorText;
+    } else if (rollInfo.type == "soak") {
+      updateData["system.damage"] = {
+        source: rollInfo.damage.source,
+        modifier: rollInfo.modifier,
+        form: rollInfo.damage.form,
+        formRes: rollInfo.damage.formRes,
+        natRes: rollInfo.damage.natRes,
+        ignoreArmor: rollInfo.damage.ignoreArmor
+      };
+      flavorText = `<p>${game.i18n.format("arm5e.damage.soakFlavor", {
+        amount: rollInfo.difficulty - this.parent.rollTotal(0),
+        source: rollInfo.damage.source
+      })}`;
+      if (rollInfo.damage.ignoreArmor) {
+        flavorText += `<br/><i>${game.i18n.localize("arm5e.damage.ignoreArmor")}</i>`;
+      }
+      flavorText += `</p>`;
+    }
+    updateData["flavor"] = flavorText;
+
+    this.parent.updateSource(updateData);
+  }
+
+  failedRoll() {
+    return false;
+  }
+
+  formatTargets(html) {
+    if (this.parent.rolls.length < 2) return html;
+    let ii = 0;
+    const contentDiv = html[0].getElementsByClassName("message-content")[0];
+    for (let diceRoll of contentDiv.getElementsByClassName("dice-roll")) {
+      if (ii == 0) {
+        // first is attack roll
+        ii++;
+        continue;
+      }
+      const div = document.createElement("div");
+      const title = document.createElement("h3");
+      title.classList.add("ars-chat-title");
+      title.innerHTML = game.i18n.format("arm5e.messages.soak");
+      div.append(title);
+      const flavorText = document.createElement("div");
+      flavorText.innerHTML = this.damage.target.flavor;
+      div.append(flavorText);
+      const details = document.createElement("div");
+      details.innerHTML = putInFoldableLinkWithAnimation(
+        "arm5e.sheet.details",
+        this.damage.target.details
+      );
+      div.append(details);
+      const diceTotal = diceRoll.getElementsByClassName("dice-total")[0];
+      diceTotal.innerHTML =
+        this.impact.woundGravity !== 0
+          ? game.i18n.format("arm5e.messages.woundResult", {
+              typeWound: game.i18n.localize(
+                "arm5e.messages.wound." +
+                  CONFIG.ARM5E.recovery.rankMapping[this.impact.woundGravity]
+              )
+            })
+          : game.i18n.localize("arm5e.messages.noWound");
+      this.obfuscate(diceRoll, this.parent.rolls[1].actor, 1);
+      diceRoll.insertAdjacentElement("beforebegin", div);
+
+      ii++;
+    }
+    return html;
+  }
+
+  addActionButtons(btnContainer, actor) {
+    // confidence
+    // confidence has been used already => no button
+    let buttonsArray = [];
+    if (!this.impact.applied) {
+      // const rollSoakBtn = $(
+      //   `<button class="chat-button" data-msg-id="${this.parent._id}" data-actor-id="${actor.id}">
+      //   <i class="icon-Icon_Soak" title="${game.i18n.localize(
+      //     "arm5e.messages.soak"
+      //   )}" ></i></button>`
+      // );
+      const rollSoakBtn = createChatButton(
+        this,
+        actor,
+        "icon-Icon_Soak",
+        "arm5e.messages.soak",
+        this.rollSoak
+      );
+      // Handle button clicks
+      rollSoakBtn.on("click", async (ev) => {
+        ev.stopPropagation();
+        const message = game.messages.get(ev.currentTarget.dataset.msgId);
+        await message.system.rollSoak(actor);
+      });
+
+      buttonsArray.push(rollSoakBtn);
+      if (game.user.isGM) {
+        const cancelBtn = createChatButton(
+          this,
+          actor,
+          "fas fa-ban",
+          "arm5e.dialog.button.cancel",
+          this.cancelDamageRoll
+        );
+        cancelBtn.on("click", async (ev) => {
+          ev.stopPropagation();
+          const message = game.messages.get(ev.currentTarget.dataset.msgId);
+          await message.system.cancelDamageRoll(actor);
+        });
+        buttonsArray.push(cancelBtn);
+      }
+    }
+    if (buttonsArray.length === 0) return 0;
+    const btnRow = $('<div class="flexrow"></div>');
+    for (let b of buttonsArray) {
+      btnRow.append(b);
+    }
+    btnContainer.append(btnRow);
+    return buttonsArray.length;
+  }
+
+  async rollSoak(actor) {
+    await actor.sheet.roll({
+      roll: "soak",
+      source: this.damage.source,
+      difficulty: this.parent.rollTotal(0),
+      damageForm: this.damage.form,
+      ignoreArmor: this.damage.ignoreArmor,
+      rootMessage: this.parent._id
+    });
+  }
+
+  async cancelDamageRoll(actor) {
+    const promises = [];
+    let newFlavor =
+      this.originalFlavor +
+      `<p style="text-align:center;"><b>${game.i18n.localize("arm5e.generic.cancelled")}</b></p>`;
+    promises.push(
+      this.parent.update({ "system.impact.applied": true, "system.originalFlavor": newFlavor })
+    );
+    promises.push(actor.update({ "system.states.pendingDamage": false }));
+    await Promise.all(promises);
+  }
+}
+
+function createChatButton(msg, actor, icon, title, onClick) {
+  const btn = $(
+    `<button class="chat-button" data-msg-id="${msg.parent._id}" data-actor-id="${
+      actor.id
+    }" data-msg-id="${msg._id}">
+        <i class="${icon}" title="${game.i18n.localize(title)}" ></i></button>`
+  );
+  // btn.on("click", onClick);
+  return btn;
 }

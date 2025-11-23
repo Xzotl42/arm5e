@@ -1,6 +1,12 @@
 import { ARM5E } from "../config.js";
 import { convertToNumber, log } from "../tools.js";
-import { boolOption, CostField, itemBase, NullableDocumentIdField } from "./commonSchemas.js";
+import {
+  boolOption,
+  CostField,
+  hermeticForm,
+  itemBase,
+  NullableDocumentIdField
+} from "./commonSchemas.js";
 import { EnchantmentExtension, ItemState } from "./enchantmentSchema.js";
 const fields = foundry.data.fields;
 export class ArmorSchema extends foundry.abstract.TypeDataModel {
@@ -166,6 +172,7 @@ export class WeaponSchema extends foundry.abstract.TypeDataModel {
       weaponExpert: boolOption(false, true),
       equipped: boolOption(false, true),
       horse: boolOption(false, true),
+      formDamage: hermeticForm("te"),
       ability: new fields.SchemaField(
         {
           key: new fields.StringField({ required: false, blank: true, initial: "brawl" }),

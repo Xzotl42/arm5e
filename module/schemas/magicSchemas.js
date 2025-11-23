@@ -4,18 +4,14 @@ import { ARM5E } from "../config.js";
 import { computeLevel, getRequisitesLabel, IsMagicalEffect } from "../helpers/magic.js";
 import { convertToNumber, log } from "../tools.js";
 import {
-  authorship,
   baseDescription,
   boolOption,
-  CostField,
   itemBase,
   ModifierField,
   SpellAttributes,
   TechniquesForms,
   XpField
 } from "./commonSchemas.js";
-
-import { EnchantmentAttributes } from "./enchantmentSchema.js";
 
 const fields = foundry.data.fields;
 
@@ -31,7 +27,7 @@ export const baseLevel = () =>
     step: 1
   });
 
-class AbstractMagicEntity extends foundry.abstract.TypeDataModel {
+export class AbstractMagicEntity extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     return {
       ...itemBase()
@@ -317,37 +313,6 @@ export class SpellSchema extends MagicalEffectSchema {
     }
   }
 
-  static fatigueCost(actor, castingTotal, difficulty, ritual = false) {
-    const res = { use: 0, partial: 0, fail: 0 };
-    const delta = castingTotal - difficulty;
-    if (ritual) {
-      // Mythic blood
-      res.use = Math.max(1 - actor.system.bonuses.arts.ritualFatigueCancelled, 0);
-      if (delta < 0) {
-        let cnt = Math.ceil((difficulty - castingTotal) / 5);
-        const numberOfFatigueCancelled = Math.min(
-          Math.max(actor.system.bonuses.arts.ritualFatigueCancelled - 1, 0),
-          2
-        );
-        if (cnt > 2) {
-          res.fail = cnt - 2;
-          res.partial = 2 - numberOfFatigueCancelled;
-        } else {
-          // remove partial fatigue levels with mythic blood
-          res.partial = Math.max(cnt - numberOfFatigueCancelled, 0);
-        }
-      }
-    } else {
-      if (-delta > 10) {
-        res.fail = 1;
-      } else if (delta + actor.system.bonuses.arts.spellFatigueThreshold < 0) {
-        res.partial = 1;
-      }
-    }
-    log(false, "Spell fatigue cost", res);
-    return res;
-  }
-
   static migrateData(data) {
     return data;
   }
@@ -384,86 +349,12 @@ export class SpellSchema extends MagicalEffectSchema {
     return updateData;
   }
 }
-export class LabTextTopicSchema extends foundry.abstract.DataModel {
-  static defineSchema() {
-    return LabTextSchema.defineSchema();
-  }
-
-  static migrate(itemData) {
-    return LabTextSchema.migrate(itemData);
-  }
-}
-
-export class LabTextSchema extends AbstractMagicEntity {
-  static defineSchema() {
-    return {
-      ...super.defineSchema(),
-      ...authorship(),
-      type: new fields.StringField({
-        required: false,
-        blank: false,
-        initial: "spell",
-        choices: Object.keys(ARM5E.lab.labTextType)
-      }),
-      ...TechniquesForms(),
-      ...SpellAttributes(),
-      ...EnchantmentAttributes(),
-      baseLevel: baseLevel(),
-      level: baseLevel(),
-      baseEffectDescription: baseDescription(),
-      ritual: boolOption(),
-      cost: CostField("priceless"),
-      quantity: new fields.NumberField({
-        required: false,
-        nullable: false,
-        integer: true,
-        min: 0, // Allow quantity of 0 to keep an eye on what is missing
-        initial: 1,
-        step: 1
-      }),
-      img: new fields.StringField({
-        required: false,
-        blank: true,
-        initial: ""
-      }),
-      draft: boolOption(false)
-    };
-  }
-
-  sanitize() {
-    return LabTextSchema.sanitizeData(this.toObject());
-  }
-
-  get buildPoints() {
-    return Math.ceil(this.level / 5) * this.quantity;
-  }
-
-  static sanitizeData(data) {
-    if (data.type !== "raw") {
-      data.description = "";
-    }
-    return data;
-  }
-
-  static migrate(itemData) {
-    // Console.log(`Migrate book: ${JSON.stringify(itemData)}`);
-    const updateData = migrateMagicalItem(itemData);
-
-    if (itemData.system.year == null) {
-      updateData["system.year"] = 1220;
-    }
-    if (typeof itemData.system.complexity !== "number") {
-      updateData["system.complexity"] = convertToNumber(itemData.system.complexity, 0);
-    }
-    return updateData;
-  }
-}
 
 //////////
 // LEGACY migrations functions
 /////////
 
-const migrateMagicalItem = (itemData) => {
+export const migrateMagicalItem = (itemData) => {
   const updateData = {};
 
   if (typeof itemData.system.baseLevel !== "number") {

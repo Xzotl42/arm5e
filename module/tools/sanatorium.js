@@ -210,7 +210,8 @@ export class Sanatorium extends FormApplication {
       option4: this.object.modifiers.labHealth,
       txtoption5: game.i18n.localize("arm5e.messages.die.bonus"),
       option5: 0,
-      physicalcondition: false
+      physicalcondition: false,
+      mode: CONFIG.ARM5E.recovery.rollMode
     };
     let tmpPeriod = 1000;
     let incapacited = false;
@@ -245,7 +246,7 @@ export class Sanatorium extends FormApplication {
         const msg = await stressDie(
           patient,
           dataset.roll,
-          CONFIG.ARM5E.recovery.rollMode,
+          4, // Non interactive
           undefined,
           1 // one botch
         );
@@ -415,7 +416,7 @@ export class Sanatorium extends FormApplication {
             const msg = await stressDie(
               patient,
               dataset.roll,
-              CONFIG.ARM5E.recovery.rollMode,
+              4 /* Non interactive*/,
               undefined,
               1
             );

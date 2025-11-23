@@ -992,7 +992,7 @@ export class ArM5eActor extends Actor {
     if (res.woundGravity) {
       await this.changeWound(
         1,
-        ARM5E.recovery.rankMapping[res.woundGravity],
+        CONFIG.ARM5E.recovery.rankMapping[res.woundGravity],
         game.i18n.localize("arm5e.sheet.fatigue.overflow")
       );
     }

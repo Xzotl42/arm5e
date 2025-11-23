@@ -431,7 +431,8 @@
       "roll": "Damage roll",
       "source": "Source of damage",
       "sourcePlaceHolder": "A damage source",
-      "chatflavor": "{amount} of damage to be soaked from {source}"
+      "damageflavor": "{amount} of damage to be soaked from {source}",
+      "soakFlavor": "Soak {amount} of damage from {source}"
     },
     "dialog": {
       "botch": {

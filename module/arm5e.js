@@ -29,12 +29,7 @@ import { migrateSettings, registerSettings } from "./settings.js";
 import { registerTestSuites } from "./tests/tests.js";
 import { AlternateStressDie, ArsRoll, StressDie, StressDieInternal } from "./helpers/stressdie.js";
 import { UserguideTour } from "./tours/userguide-tour.js";
-import {
-  BaseEffectSchema,
-  MagicalEffectSchema,
-  SpellSchema,
-  LabTextSchema
-} from "./schemas/magicSchemas.js";
+import { BaseEffectSchema, MagicalEffectSchema, SpellSchema } from "./schemas/magicSchemas.js";
 import { AbilitySchema } from "./schemas/abilitySchema.js";
 import { BookSchema } from "./schemas/bookSchema.js";
 import { DiaryEntrySchema } from "./schemas/diarySchema.js";
@@ -71,15 +66,15 @@ import { PowerSchema } from "./schemas/powerSchemas.js";
 import {
   BasicChatSchema,
   CombatChatSchema,
-  RollChatSchema
-  // ,
-  // MagicChatSchema,
-  // DamageChatSchema
+  RollChatSchema,
+  MagicChatSchema,
+  DamageChatSchema
 } from "./schemas/chatSchema.js";
 import { Arm5eChatMessage } from "./helpers/chat-message.js";
 import { addActiveEffectsDefinitions } from "./constants/activeEffectsTypes.js";
 import { Astrolab } from "./tools/astrolab.js";
 import { ArsApps } from "./tools/apps.js";
+import { LabTextSchema } from "./schemas/labTextSchema.js";
 
 Hooks.once("i18nInit", async function () {
   CONFIG.ARM5E.LOCALIZED_ABILITIES = localizeAbilities();
@@ -649,7 +644,7 @@ function setDatamodels() {
   CONFIG.ChatMessage.dataModels.roll = RollChatSchema;
   CONFIG.ChatMessage.dataModels.combat = CombatChatSchema;
   CONFIG.ChatMessage.dataModels.magic = MagicChatSchema;
-  // CONFIG.ChatMessage.dataModels.damage = DamageChatSchema;
+  CONFIG.ChatMessage.dataModels.damage = DamageChatSchema;
   // Deprecated types
   CONFIG.ARM5E.ItemDataModels.visStockCovenant = VisSchema;
 }

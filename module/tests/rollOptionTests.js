@@ -1,10 +1,10 @@
-import { log, sleep } from "../tools.js";
 import { getCompanion, getMagus } from "./testData.js";
 import { ArsLayer } from "../ui/ars-layer.js";
 import { ARM5E } from "../config.js";
 import { simpleDie, stressDie } from "../dice.js";
 import Aura from "../helpers/aura.js";
 import { ROLL_PROPERTIES } from "../helpers/rollWindow.js";
+import { log } from "../tools.js";
 
 export function registerOptionRollTesting(quench) {
   quench.registerBatch(
@@ -90,7 +90,7 @@ export function registerOptionRollTesting(quench) {
             assert.equal(msgData.impact.woundGravity, 0, "wound gravity should be 0");
 
             assert.equal(
-              msgData.roll.difficulty > msg.rollTotal,
+              msgData.roll.difficulty > msg.rollTotal(),
               msgData.failedRoll(),
               "failed roll incorrect"
             );
@@ -152,7 +152,7 @@ export function registerOptionRollTesting(quench) {
             );
             assert.equal(msgData.impact.woundGravity, 0, "wound gravity should be 0");
             assert.equal(
-              msgData.roll.difficulty > msg.rollTotal,
+              msgData.roll.difficulty > msg.rollTotal(0),
               msgData.failedRoll(),
               "failed roll incorrect"
             );
@@ -234,7 +234,7 @@ export function registerOptionRollTesting(quench) {
               );
             } else {
               assert.equal(
-                msgData.roll.difficulty > msg.rollTotal,
+                msgData.roll.difficulty > msg.rollTotal(0),
                 msgData.failedRoll(),
                 "failed roll incorrect"
               );
@@ -320,7 +320,7 @@ export function registerOptionRollTesting(quench) {
               assert.equal(msgData.impact.woundGravity, 0, "wound gravity should be 0");
               assert.equal(msgData.impact.applied, true, "shoud be applied");
               assert.equal(
-                msgData.roll.difficulty > msg.rollTotal,
+                msgData.roll.difficulty > msg.rollTotal(0),
                 msgData.failedRoll(),
                 "failed roll incorrect"
               );
@@ -334,7 +334,7 @@ export function registerOptionRollTesting(quench) {
               assert.equal(msgData.impact.woundGravity, 0, "wound gravity should be 0");
               assert.equal(msgData.impact.applied, false, "shoud not be applied");
               assert.equal(
-                msgData.roll.difficulty > msg.rollTotal,
+                msgData.roll.difficulty > msg.rollTotal(0),
                 msgData.failedRoll(),
                 "failed roll incorrect"
               );
@@ -400,7 +400,7 @@ export function registerOptionRollTesting(quench) {
               assert.equal(msgData.failedRoll(), true, "failed roll should be true");
             } else {
               assert.equal(
-                msgData.roll.difficulty > msg.rollTotal,
+                msgData.roll.difficulty > msg.rollTotal(0),
                 msgData.failedRoll(),
                 "failed roll incorrect"
               );
@@ -461,7 +461,7 @@ export function registerOptionRollTesting(quench) {
             assert.equal(msgData.impact.woundGravity, 0, "wound gravity should be 0");
             assert.equal(msgData.impact.applied, false, "shoud not be applied");
             assert.equal(
-              msgData.roll.difficulty > msg.rollTotal,
+              msgData.roll.difficulty > msg.rollTotal(0),
               msgData.failedRoll(),
               "failed roll incorrect"
             );
@@ -519,7 +519,7 @@ export function registerOptionRollTesting(quench) {
               assert.equal(msg.system.confidence.allowed, false, "confidence is not allowed");
             } else {
               assert.equal(
-                msgData.roll.difficulty > msg.rollTotal,
+                msgData.roll.difficulty > msg.rollTotal(0),
                 msgData.failedRoll(),
                 "failed roll incorrect"
               );
@@ -586,7 +586,7 @@ export function registerOptionRollTesting(quench) {
               assert.equal(msg.system.confidence.allowed, false, "confidence is not allowed");
             } else {
               assert.equal(
-                msgData.roll.difficulty > msg.rollTotal,
+                msgData.roll.difficulty > msg.rollTotal(0),
                 msgData.failedRoll(),
                 "failed roll incorrect"
               );
@@ -654,7 +654,7 @@ export function registerOptionRollTesting(quench) {
               assert.equal(msg.system.confidence.allowed, false, "confidence is not allowed");
             } else {
               assert.equal(
-                msgData.roll.difficulty > msg.rollTotal,
+                msgData.roll.difficulty > msg.rollTotal(0),
                 msgData.failedRoll(),
                 "failed roll incorrect"
               );
@@ -721,7 +721,7 @@ export function registerOptionRollTesting(quench) {
               assert.equal(msg.system.confidence.allowed, false, "confidence is not allowed");
             } else {
               assert.equal(
-                msgData.roll.difficulty > msg.rollTotal,
+                msgData.roll.difficulty > msg.rollTotal(0),
                 msgData.failedRoll(),
                 "failed roll incorrect"
               );
@@ -787,7 +787,7 @@ export function registerOptionRollTesting(quench) {
               assert.equal(msg.system.confidence.allowed, false, "confidence is not allowed");
             } else {
               assert.equal(
-                msgData.roll.difficulty > msg.rollTotal,
+                msgData.roll.difficulty > msg.rollTotal(0),
                 msgData.failedRoll(),
                 "failed roll incorrect"
               );
@@ -863,7 +863,7 @@ export function registerOptionRollTesting(quench) {
               );
             } else {
               assert.equal(
-                msgData.roll.difficulty > msg.rollTotal,
+                msgData.roll.difficulty > msg.rollTotal(0),
                 msgData.failedRoll(),
                 "failed roll incorrect"
               );

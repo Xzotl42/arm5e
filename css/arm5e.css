@@ -60,6 +60,7 @@
 
 * {
   scrollbar-color: initial;
+  user-select: text;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -619,12 +620,15 @@ img.clickable2:hover {
   background: rgba(0, 0, 0, 0.1);
 }
 
-.chat-message .message-header {
+.chat-message .message-header,
+.chat-message .message-content {
   font-family: "bookAntiqua";
+  font-size: var(--font-size-12);
 }
 
 .chat-message .message-content {
   overflow-wrap: break-word;
+  line-height: 20px;
 }
 
 .ars-chat-title {
@@ -1601,8 +1605,8 @@ img.tinyimg {
 .arm5e .sheet-header h1.charname input {
   width: 100%;
   margin: 0;
-  /*padding-top: 30px;
-  line-height: 30;*/
+  /* padding-top: 30px; */
+  line-height: fit-content;
   font-family: var(--font-header);
   /*letter-spacing: 1px;*/
 }
@@ -2365,9 +2369,14 @@ img.art-icon {
   text-align: center;
 }
 
-.arm5e .padding2 {
+.padding2 {
   padding: 2px;
 }
+
+.margintop4 {
+  margin-top: 4px;
+}
+
 .arm5e .padding4 {
   padding: 4px;
 }

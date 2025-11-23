@@ -7,10 +7,12 @@
     </div>
     {{> "systems/arm5e/templates/actor/parts/actor-voice-and-gestures.html" }}
     <div class="flexrow flex-group-center">
-      <label class="resource-label flex03">{{ system.roll.magic.technique.label }} ({{ system.roll.magic.technique.score
+      <label class="technique-label resource-label">{{ system.roll.magic.technique.label }} ({{
+        system.roll.magic.technique.score
         }})</label>
       <label class="resource-label flex0"> + </label>
-      <label class="resource-label flex03">{{ system.roll.magic.form.label }} ({{ system.roll.magic.form.score
+      <label class="form-label resource-label">{{ system.roll.magic.form.label }} ({{
+        system.roll.magic.form.score
         }})</label>
       <a class="item-control advanced-req-roll flex0" title="Advanced Requistes" data-flavor="NPC"
         data-type="{{system.roll.type}}" data-itemId="{{system.roll.itemId}}" data-actorId="{{_id}}"><i
@@ -135,6 +137,22 @@
     </div>
     {{> "systems/arm5e/templates/roll/parts/penetration-options.html" }}
   </div>
+  <!-- HIDDEN PART -->
+  <div hidden>
+    {{#each system.roll.technique-req as |technique key|}}
+      {{#with (lookup @root.config.magic.techniques key)~}}
+        <input type="checkbox" name="system.roll.magic.technique-req.{{key}}" class="Selected{{label}}" {{checked
+          technique}} />
+      {{/with}}
+    {{/each}}
+    {{#each system.roll.form-req as |form key|}}
+      {{#with (lookup @root.config.magic.forms key)~}}
+        <input type="checkbox" name="system.roll.magic.form-req.{{key}}" class="Selected{{label}}" {{checked form}} />
+      {{/with}}
+    {{/each}}
+  </div>
+
+
 
   {{> "systems/arm5e/templates/roll/parts/roll-footer.html" footer="Rolls" }}
 </form>
