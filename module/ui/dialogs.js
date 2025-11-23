@@ -1,3 +1,7 @@
+import { PickRequisites } from "../helpers/magic.js";
+import { ArM5eItem } from "../item/item.js";
+import { getDataset } from "../tools.js";
+
 export async function getConfirmation(
   title,
   question,
@@ -87,5 +91,90 @@ export async function selectItemDialog(
         classes: ["arm5e-dialog", "dialog"]
       }
     ).render(true);
+  });
+}
+
+export function addCommonListenersDialog(html) {
+  html.find(".clickable").click((ev) => {
+    $(ev.currentTarget).next().toggleClass("hide");
+  });
+
+  html.find(".resource-focus").focus((ev) => {
+    ev.preventDefault();
+    ev.currentTarget.select();
+  });
+}
+
+export function addPowersListenersDialog(html) {
+  addCommonListenersDialog(html);
+
+  // Power specific
+  html.find(".power-cost").change(async (event) => {
+    const dataset = getDataset(event);
+    const val = Number(event.target.value);
+    const e = html[0].getElementsByClassName("power-level")[0];
+    e.innerHTML = game.i18n.format("arm5e.sheet.powerLevel", { res: 5 * val });
+  });
+
+  html.find(".power-form").change(async (event) => {
+    const dataset = getDataset(event);
+    const val = event.target.value;
+    const e = html[0].getElementsByClassName("power-label")[0];
+    e.value = e.value.replace(/\((.+)\)/i, `(${CONFIG.ARM5E.magic.arts[val].short})`);
+  });
+}
+
+export function addMagicListenersDialog(html) {
+  addCommonListenersDialog(html);
+
+  // Magic specific
+  html.find(".advanced-req-roll").click(async (e) => {
+    const dataset = getDataset(e);
+    const actor = game.actors.get(dataset.actorid);
+    let newSpell;
+    let newSpellData = {
+      technique: { value: actor.rollInfo.magic.technique.value },
+      form: { value: actor.rollInfo.magic.form.value },
+      ["technique-req"]: actor.rollInfo.magic["technique-req"],
+      ["form-req"]: actor.rollInfo.magic["form-req"]
+    };
+    if (dataset.type == "spont") {
+      newSpell = new ArM5eItem({
+        name: "SpontSpell",
+        type: "magicalEffect",
+        system: newSpellData
+      });
+    } else {
+      const item = actor.items.get(dataset.itemid);
+      newSpellData = item.toObject();
+      newSpellData.system["technique-req"] = actor.rollInfo.magic["technique-req"];
+      newSpellData.system["form-req"] = actor.rollInfo.magic["form-req"];
+      // Create a tmp Item in memory
+      newSpell = new ArM5eItem(newSpellData);
+    }
+
+    let update = await PickRequisites(newSpell.system, dataset.flavor);
+    await newSpell.updateSource(update);
+    let techData = newSpell.system.getTechniqueData(actor);
+    actor.rollInfo.magic.technique.label = techData[0];
+    actor.rollInfo.magic.technique.score = techData[1];
+    actor.rollInfo.magic.technique.deficiency = techData[2];
+    let formData = newSpell.system.getFormData(actor);
+    actor.rollInfo.magic.form.label = formData[0];
+    actor.rollInfo.magic.form.score = formData[1];
+    actor.rollInfo.magic.form.deficiency = formData[2];
+    actor.rollInfo.magic["technique-req"] = newSpell.system["technique-req"];
+    actor.rollInfo.magic["form-req"] = newSpell.system["form-req"];
+    const e1 = html[0].getElementsByClassName("technique-label")[0];
+    e1.innerHTML = `${actor.rollInfo.magic.technique.label} (${actor.rollInfo.magic.technique.score})`;
+    const e2 = html[0].getElementsByClassName("form-label")[0];
+    e2.innerHTML = `${actor.rollInfo.magic.form.label} (${actor.rollInfo.magic.form.score})`;
+  });
+
+  html.find(".voice-and-gestures").change(async (event) => {
+    const dataset = getDataset(event);
+    const actor = game.actors.get(dataset.actorid);
+    const name = $(event.target).attr("effect");
+    await actor.selectVoiceAndGestures(name, $(event.target).val());
   });
 }

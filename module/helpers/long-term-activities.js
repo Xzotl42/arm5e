@@ -274,7 +274,7 @@ export class TwilightEpisode {
       return game.i18n.localize(durations[0]);
     }
     if (score === 9) {
-      let roll = new ArsRoll("0di", {}, {});
+      let roll = new ArsRoll("0di", {}, { actor: this.actor.uuid });
       await roll.evaluate();
       return game.i18n.format("arm5e.twilight.durations.decades", { num: 7 + roll.total });
     }

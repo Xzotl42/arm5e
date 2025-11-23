@@ -5,6 +5,11 @@ import { log } from "../tools.js";
 import { getRollTypeProperties, ROLL_MODIFIERS, ROLL_PROPERTIES } from "./rollWindow.js";
 import Aura from "./aura.js";
 import { computeLevel, spellFormLabel, spellTechniqueLabel } from "./magic.js";
+import {
+  addCommonListenersDialog,
+  addMagicListenersDialog,
+  addPowersListenersDialog
+} from "../ui/dialogs.js";
 
 export class ArM5eRollInfo {
   constructor(actor) {
@@ -54,6 +59,10 @@ export class ArM5eRollInfo {
       this.difficulty = parseInt(dataset.difficulty);
     }
 
+    if (dataset.rootMessage) {
+      this.rootMessageId = dataset.rootMessage;
+    }
+
     if (dataset.mode) {
       // this.mode =  ;
       this.properties.MODE = parseInt(dataset.mode);
@@ -68,6 +77,8 @@ export class ArM5eRollInfo {
         "-"
       );
     }
+
+    this.dialogListeners;
     this.selection = {};
     this.addSelectObjects();
     switch (this.type) {
@@ -82,7 +93,58 @@ export class ArM5eRollInfo {
 
         break;
       case ROLL_PROPERTIES.DAMAGE.VAL:
+        if (dataset.damageSource) {
+          this.damage.source = dataset.damageSource;
+        }
+        if (dataset.damageForm) {
+          this.damage.form = dataset.damageForm;
+        }
+        this.label = game.i18n.localize("arm5e.damage.roll");
+        this.selection = { forms: CONFIG.ARM5E.magic.forms };
+
+        break;
       case ROLL_PROPERTIES.SOAK.VAL:
+        if (dataset.damageForm) {
+          this.damage.form = dataset.damageForm;
+        }
+
+        if (dataset.source) {
+          this.damage.source = dataset.source;
+        }
+        this.characteristic = "sta";
+        this.damage.ignoreArmor = dataset.ignoreArmor;
+        this.label = game.i18n.localize("arm5e.messages.soak");
+
+        this.selection = { formRes: {}, natRes: {} };
+        if (this.damage.form !== "") {
+          this.damage.natRes = actorSystemData.bonuses.resistance[this.damage.form];
+        }
+        for (let [key, resist] of Object.entries(actorSystemData.bonuses.resistance)) {
+          if (resist !== 0) {
+            this.damage.hasResistance = true;
+            this.selection.natRes[key] = {
+              res: resist,
+              label: `${CONFIG.ARM5E.magic.arts[key].label} (${resist})`
+            };
+          }
+        }
+        if (this._actor.isMagus()) {
+          if (this.damage.form !== "") {
+            this.damage.formRes = Math.ceil(
+              actorSystemData.arts.forms[this.damage.form].finalScore / 5
+            );
+          }
+          this.isMagus = true;
+          for (let [key, form] of Object.entries(actorSystemData.arts.forms)) {
+            this.selection.formRes[key] = {
+              res: Math.ceil(form.finalScore / 5),
+              label: `${form.label} (${Math.ceil(form.finalScore / 5)})`
+            };
+          }
+
+          // data.formRes = data.selection.formRes[form].res;
+        }
+
         break;
       case ROLL_PROPERTIES.CHAR.VAL:
         this.characteristic = dataset.characteristic;
@@ -151,6 +213,7 @@ export class ArM5eRollInfo {
           this.power.penetrationPenalty = this.power.cost * 5;
         }
         this.initPenetrationVariables();
+        this.listeners = addPowersListenersDialog;
         break;
       case ROLL_PROPERTIES.SUPERNATURAL.VAL:
         if (dataset.id) {
@@ -197,12 +260,13 @@ export class ArM5eRollInfo {
           this.mode = template.rollType;
         }
         this.initPenetrationVariables();
+        this.listeners = addMagicListenersDialog;
         break;
       case ROLL_PROPERTIES.MAGIC.VAL:
       case ROLL_PROPERTIES.SPONT.VAL:
         this.impact.fatigue.use = 1;
-
         this.magic.divide = this._actor.system.bonuses.arts.spontDivider;
+
       case ROLL_PROPERTIES.SPELL.VAL:
         this.initPenetrationVariables();
         this.characteristic = "sta";
@@ -227,6 +291,9 @@ export class ArM5eRollInfo {
           this.magic.form.value = spell.system.form.value;
           this.magic.bonus = spell.system.bonus ?? 0;
           this.magic.bonusDesc = spell.system.bonusDesc ?? "";
+
+          this.magic["technique-req"] = spell.system["technique-req"];
+          this.magic["form-req"] = spell.system["form-req"];
           if (dataset.applyfocus != undefined) {
             this.magic.focus = dataset.applyfocus;
           } else {
@@ -257,7 +324,7 @@ export class ArM5eRollInfo {
           }
           this.magic.masteryScore = 0;
         }
-
+        this.listeners = addMagicListenersDialog;
         break;
       case ROLL_PROPERTIES.TWILIGHT_CONTROL.VAL:
         this.characteristic = "sta";
@@ -628,6 +695,7 @@ export class ArM5eRollInfo {
   reset() {
     this.mode = 0;
     this.difficulty = 0;
+    this.rootMessageId = null;
     this.magic = {
       technique: {
         active: true,
@@ -647,7 +715,25 @@ export class ArM5eRollInfo {
         specialty: "",
         specApply: false
       },
-
+      "technique-req": {
+        cr: false,
+        in: false,
+        mu: false,
+        pe: false,
+        re: false
+      },
+      "form-req": {
+        an: false,
+        aq: false,
+        au: false,
+        co: false,
+        he: false,
+        ig: false,
+        im: false,
+        me: false,
+        te: false,
+        vi: false
+      },
       // technique.active: true,
       // technique: "",
       // technique.score: 0,
@@ -711,6 +797,15 @@ export class ArM5eRollInfo {
 
     this.combat = { exertion: false, advantage: 0 };
 
+    this.damage = {
+      source: game.i18n.localize("arm5e.damage.sourcePlaceHolder"),
+      ignoreArmor: false,
+      form: "",
+      hasResistance: false,
+      formRes: 0,
+      natRes: 0
+    };
+
     this.generic = {
       option: [0, 0, 0, 0, 0, 0],
       txtOption: ["", "", "", "", "", ""],
@@ -746,6 +841,7 @@ export class ArM5eRollInfo {
     this.additionalData = {};
 
     this.botchNumber = -1;
+    this.listeners = addCommonListenersDialog;
   }
 
   getAuraModifier() {

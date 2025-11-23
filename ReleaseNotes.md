@@ -1,4 +1,4 @@
-## 2.4.1.2, Radislav, Cognizant Wisdom
+## 2.4.1.3, Radislav, Cognizant Wisdom
 
 ### Features & changes
 
@@ -8,6 +8,8 @@
 - Long term fatigue management.
 - Confidence can now be used on rolled supernatural effect (Hedge magic)
 - New parameter to set the font used for headers
+- By default you can select any text in the interface now (as a test for now)
+- Damage rolls (limited)
 
 ### Bug fixes
 

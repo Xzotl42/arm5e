@@ -1,7 +1,8 @@
 import { calculateWound, log } from "../tools.js";
-import { stressDie } from "../dice.js";
+import { createRoll, stressDie } from "../dice.js";
 import { Arm5eChatMessage } from "./chat-message.js";
-import { ROLL_PROPERTIES } from "./rollWindow.js";
+import { _applyImpact, ROLL_PROPERTIES } from "./rollWindow.js";
+import { getWoundStr } from "../config.js";
 
 // export function doubleAbility(actor) {
 //   actor.rollInfo.ability.score *= 2;
@@ -206,7 +207,7 @@ export async function combatDamage(selector, actor) {
   const formDam = selector.find('select[name$="formDamage"]').val() || "";
 
   const messageStrength = `${game.i18n.localize("arm5e.sheet.strength")} (${strength})`;
-  const messageWeapon = `${game.i18n.localize("arm5e.sheet.damage")} (${weapon})`;
+  const messageWeapon = `${game.i18n.localize("arm5e.damage.label")} (${weapon})`;
   const messageAdvantage = `${game.i18n.localize("arm5e.sheet.advantage")} (${advantage})`;
   damage += strength + weapon + advantage;
   details = ` ${messageStrength}<br/> ${messageWeapon}<br/> ${messageAdvantage}<br/> ${messageModifier}<br/>`;
@@ -221,7 +222,7 @@ export async function combatDamage(selector, actor) {
       actor
     }),
     system: {
-      label: game.i18n.localize("arm5e.sheet.damage"),
+      label: game.i18n.localize("arm5e.damage.label"),
       roll: { details: details, type: "damage" },
       confidence: {
         allowed: false
@@ -244,7 +245,7 @@ export async function nonCombatDamage(selector, actor) {
   const weapon = parseInt(selector.find('label[name$="weapon"]').attr("value") || 0);
   const advantage = parseInt(selector.find('input[name$="advantage"]').val());
   const messageStrength = `${game.i18n.localize("arm5e.sheet.strength")} (${strength})`;
-  const messageWeapon = `${game.i18n.localize("arm5e.sheet.damage")} (${weapon})`;
+  const messageWeapon = `${game.i18n.localize("arm5e.damage.label")} (${weapon})`;
   const messageAdvantage = `${game.i18n.localize("arm5e.sheet.advantage")} (${advantage})`;
   damage += strength + weapon + advantage;
   details = ` ${messageStrength}<br/> ${messageWeapon}<br/> ${messageAdvantage}<br/> ${messageModifier}<br/>`;
@@ -258,7 +259,7 @@ export async function nonCombatDamage(selector, actor) {
       actor
     }),
     system: {
-      label: game.i18n.localize("arm5e.sheet.damage"),
+      label: game.i18n.localize("arm5e.damage.label"),
       roll: { details: details },
       confidence: {
         allowed: false
@@ -267,103 +268,83 @@ export async function nonCombatDamage(selector, actor) {
   });
 }
 
-export async function rolledDamage(soakData, actor) {
-  const dataset = {
-    roll: "damage",
-    name: game.i18n.localize("arm5e.sheet.soakRoll"),
-    physicalcondition: false,
-    modifier: -soakData.modifier,
-    option1: soakData.damage,
-    txtoption1: game.i18n.localize("arm5e.sheet.damage"),
-    option4: soakData.prot,
-    txtoption4: game.i18n.localize("arm5e.sheet.protection"),
-    operator4: "-",
-    option5: soakData.stamina,
-    txtoption5: game.i18n.localize("arm5e.sheet.stamina"),
-    operator5: "-"
-  };
+// export async function rolledDamage(soakData, actor) {
+//   const dataset = {
+//     roll: "damage",
+//     name: game.i18n.localize("arm5e.sheet.soakRoll"),
+//     physicalcondition: false,
+//     modifier: -soakData.modifier,
+//     option1: soakData.damage,
+//     txtoption1: game.i18n.localize("arm5e.damage.label"),
+//     option4: soakData.prot,
+//     txtoption4: game.i18n.localize("arm5e.sheet.protection"),
+//     operator4: "-",
+//     option5: soakData.stamina,
+//     txtoption5: game.i18n.localize("arm5e.sheet.stamina"),
+//     operator5: "-"
+//   };
 
-  if (soakData.natRes) {
-    dataset.option2 = soakData.natRes;
-    dataset.txtoption2 = game.i18n.localize("arm5e.sheet.natRes");
-    dataset.operator2 = "-";
-  }
-  if (soakData.formRes) {
-    dataset.option3 = soakData.formRes;
-    dataset.txtoption3 = game.i18n.localize("arm5e.sheet.formRes");
-    dataset.operator3 = "-";
-  }
+//   if (soakData.natRes) {
+//     dataset.option2 = soakData.natRes;
+//     dataset.txtoption2 = game.i18n.localize("arm5e.sheet.natRes");
+//     dataset.operator2 = "-";
+//   }
+//   if (soakData.formRes) {
+//     dataset.option3 = soakData.formRes;
+//     dataset.txtoption3 = game.i18n.localize("arm5e.sheet.formRes");
+//     dataset.operator3 = "-";
+//   }
 
-  if (soakData.bonus) {
-    dataset.option6 = soakData.bonus;
-    dataset.txtoption6 = game.i18n.localize("arm5e.sheet.soakBonus");
-    dataset.operator6 = "-";
-  }
+//   if (soakData.bonus) {
+//     dataset.option6 = soakData.bonus;
+//     dataset.txtoption6 = game.i18n.localize("arm5e.sheet.soakBonus");
+//     dataset.operator6 = "-";
+//   }
 
-  actor.rollInfo.init(dataset, actor);
-  let message = await stressDie(actor, "option", ROLL_PROPERTIES.DAMAGE.MODE, null, 1);
-  soakData.roll = message.rolls[0].total - message.rolls[0].offset;
-  soakData.damageToApply -= soakData.roll;
-}
-export function buildDamageDataset(selector) {
-  const dataset = {};
+//   actor.rollInfo.init(dataset, actor);
+//   let message = await stressDie(actor, "option", ROLL_PROPERTIES.DAMAGE.MODE, null, 1);
+//   soakData.roll = message.rolls[0].total - message.rolls[0].offset;
+//   soakData.damageToApply -= soakData.roll;
+// }
 
-  dataset.modifier = parseInt(selector.find('input[name$="modifier"]').val());
-  dataset.damage = parseInt(selector.find('input[name$="damage"]').val());
-  dataset.natRes = parseInt(selector.find('select[name$="natRes"]').val() || 0);
-  dataset.formRes = parseInt(selector.find('select[name$="formRes"]').val() || 0);
-  dataset.prot = parseInt(selector.find('label[name$="prot"]').attr("value") || 0);
-  dataset.bonus = parseInt(selector.find('label[name$="soak"]').attr("value") || 0);
-  dataset.stamina = parseInt(selector.find('label[name$="stamina"]').attr("value") || 0);
-  dataset.damageToApply =
-    dataset.damage -
-    dataset.modifier -
-    dataset.prot -
-    dataset.natRes -
-    dataset.formRes -
-    dataset.stamina -
-    dataset.bonus;
-  return dataset;
-}
+// export async function rolledSoak(soakData, actor) {
+//   const dataset = {
+//     roll: "option",
+//     name: game.i18n.localize("arm5e.sheet.soakRoll"),
+//     physicalcondition: false,
+//     modifier: -soakData.modifier,
+//     option1: soakData.damage,
+//     txtoption1: game.i18n.localize("arm5e.damage.label"),
+//     option4: soakData.prot,
+//     txtoption4: game.i18n.localize("arm5e.sheet.protection"),
+//     operator4: "-",
+//     option5: soakData.stamina,
+//     txtoption5: game.i18n.localize("arm5e.sheet.stamina"),
+//     operator5: "-"
+//   };
 
-export async function rolledSoak(soakData, actor) {
-  const dataset = {
-    roll: "option",
-    name: game.i18n.localize("arm5e.sheet.soakRoll"),
-    physicalcondition: false,
-    modifier: -soakData.modifier,
-    option1: soakData.damage,
-    txtoption1: game.i18n.localize("arm5e.sheet.damage"),
-    option4: soakData.prot,
-    txtoption4: game.i18n.localize("arm5e.sheet.protection"),
-    operator4: "-",
-    option5: soakData.stamina,
-    txtoption5: game.i18n.localize("arm5e.sheet.stamina"),
-    operator5: "-"
-  };
+//   if (soakData.natRes) {
+//     dataset.option2 = soakData.natRes;
+//     dataset.txtoption2 = game.i18n.localize("arm5e.sheet.natRes");
+//     dataset.operator2 = "-";
+//   }
+//   if (soakData.formRes) {
+//     dataset.option3 = soakData.formRes;
+//     dataset.txtoption3 = game.i18n.localize("arm5e.sheet.formRes");
+//     dataset.operator3 = "-";
+//   }
 
-  if (soakData.natRes) {
-    dataset.option2 = soakData.natRes;
-    dataset.txtoption2 = game.i18n.localize("arm5e.sheet.natRes");
-    dataset.operator2 = "-";
-  }
-  if (soakData.formRes) {
-    dataset.option3 = soakData.formRes;
-    dataset.txtoption3 = game.i18n.localize("arm5e.sheet.formRes");
-    dataset.operator3 = "-";
-  }
+//   if (soakData.bonus) {
+//     dataset.option6 = soakData.bonus;
+//     dataset.txtoption6 = game.i18n.localize("arm5e.sheet.soakBonus");
+//     dataset.operator6 = "-";
+//   }
 
-  if (soakData.bonus) {
-    dataset.option6 = soakData.bonus;
-    dataset.txtoption6 = game.i18n.localize("arm5e.sheet.soakBonus");
-    dataset.operator6 = "-";
-  }
-
-  actor.rollInfo.init(dataset, actor);
-  let roll = await stressDie(actor, "option", 16, null, 1);
-  soakData.roll = roll.total - roll.offset;
-  soakData.damageToApply -= soakData.roll;
-}
+//   actor.rollInfo.init(dataset, actor);
+//   let roll = await stressDie(actor, "option", 16, null, 1);
+//   soakData.roll = roll.total - roll.offset;
+//   soakData.damageToApply -= soakData.roll;
+// }
 export function buildSoakDataset(selector) {
   const dataset = {};
 
@@ -386,75 +367,147 @@ export function buildSoakDataset(selector) {
 }
 
 export async function setWounds(soakData, actor) {
+  const woundInfo = getMessageDamageDetails(soakData, actor);
+  const roll = await createRoll(`${soakData.damageToApply}`, 1, 1, {
+    actor: actor,
+    deterministic: true
+  });
+
+  const messageData = await roll.toMessage(
+    {
+      type: "combat",
+      // content: `<h4 class="dice-total">${woundInfo.messageWound}</h4>`,
+      flavor: game.i18n.format("arm5e.sheet.combat.flavor.soak", {
+        target: actor.name,
+        amount: soakData.damageToApply
+      }),
+      speaker: ChatMessage.getSpeaker({
+        actor
+      }),
+      system: {
+        label: game.i18n.localize("arm5e.sheet.soak"),
+        roll: { details: woundInfo.details, type: ROLL_PROPERTIES.COMBAT_SOAK.VAL },
+        confidence: {
+          allowed: false
+        },
+        impact: { woundGravity: woundInfo.typeOfWound, applied: true }
+      }
+    },
+    { create: false }
+  );
+
+  if (woundInfo.typeOfWound) {
+    await actor.changeWound(1, CONFIG.ARM5E.recovery.rankMapping[woundInfo.typeOfWound]);
+  }
+  const message = new Arm5eChatMessage(messageData);
+  message.system.enrichMessageData(actor);
+
+  Arm5eChatMessage.create(message.toObject());
+}
+
+function getMessageDamageDetails(soakData, actor) {
   const size = actor?.system?.vitals?.siz?.value || 0;
   const typeOfWound = calculateWound(soakData.damageToApply, size);
-  if (typeOfWound === false) {
-    ui.notifications.info(game.i18n.localize("arm5e.notification.notPossibleToCalculateWound"), {
-      permanent: true
-    });
-    return false;
-  }
+  // if (typeOfWound === 0) {
+  //   ui.notifications.info(game.i18n.localize("arm5e.notification.notPossibleToCalculateWound"), {
+  //     permanent: true
+  //   });
+  //   return false;
+  // }
   // if (typeOfWound === "none") {
 
   // }
   // here toggle dead status if applicable
 
-  const messageDamage = `${game.i18n.localize("arm5e.sheet.damage")} (${soakData.damage})`;
-  const messageStamina = `${game.i18n.localize("arm5e.sheet.stamina")} (${soakData.stamina})`;
+  const messageDamage = `${game.i18n.localize("arm5e.damage.label")} (${soakData.damage})`;
+  const messageStamina = `- ${game.i18n.localize("arm5e.sheet.stamina")} (${soakData.stamina})`;
   let messageBonus = "";
   if (soakData.bonus) {
-    messageBonus = `${game.i18n.localize("arm5e.sheet.soakBonus")} (${soakData.bonus})<br/> `;
+    messageBonus = `- ${game.i18n.localize("arm5e.sheet.soakBonus")} (${soakData.bonus})<br/> `;
   }
-  const messageProt = `${game.i18n.localize("arm5e.sheet.protection")} (${soakData.prot})`;
+  const messageProt = `- ${game.i18n.localize("arm5e.sheet.protection")} (${soakData.prot})`;
   let messageModifier = "";
   if (soakData.modifier) {
-    messageModifier += `${game.i18n.localize("arm5e.sheet.modifier")} (${soakData.modifier})<br/>`;
+    messageModifier += `- ${game.i18n.localize("arm5e.sheet.modifier")} (${
+      soakData.modifier
+    })<br/>`;
   }
   if (soakData.natRes) {
-    messageModifier += `${game.i18n.localize("arm5e.sheet.natRes")} (${soakData.natRes})<br/>`;
+    messageModifier += `- ${game.i18n.localize("arm5e.sheet.natRes")} (${soakData.natRes})<br/>`;
   }
   if (soakData.formRes) {
-    messageModifier += `${game.i18n.localize("arm5e.sheet.formRes")} (${soakData.formRes})<br/>`;
+    messageModifier += `- ${game.i18n.localize("arm5e.sheet.formRes")} (${soakData.formRes})<br/>`;
   }
   if (soakData.roll) {
-    messageModifier += `${game.i18n.localize("arm5e.dialog.button.roll")} (${soakData.roll})<br/>`;
+    messageModifier += `- ${game.i18n.localize("arm5e.dialog.button.roll")} (${
+      soakData.roll
+    })<br/>`;
   }
   const messageTotal = `${game.i18n.localize("arm5e.sheet.totalDamage")} = ${
     soakData.damageToApply
   }`;
-  const messageWound =
-    typeOfWound !== "none"
-      ? game.i18n.format("arm5e.messages.woundResult", {
-          typeWound: game.i18n.localize("arm5e.messages.wound." + typeOfWound.toLowerCase())
-        })
-      : game.i18n.localize("arm5e.messages.noWound");
-
-  const details = ` ${messageDamage}<br/> ${messageStamina}<br/> ${messageProt}<br/> ${messageBonus}${messageModifier}<b>${messageTotal}</b>`;
-
-  const messageData = {
-    type: "combat",
-    content: `<h4 class="dice-total">${messageWound}</h4>`,
-    flavor: game.i18n.format("arm5e.sheet.combat.flavor.soak", {
-      target: actor.name,
-      amount: soakData.damageToApply
-    }),
-    speaker: ChatMessage.getSpeaker({
-      actor
-    }),
-    system: {
-      label: game.i18n.localize("arm5e.sheet.soak"),
-      roll: { details: details, type: "soak" },
-      confidence: {
-        allowed: false
-      }
-    }
+  return {
+    typeOfWound: typeOfWound,
+    messageWound:
+      typeOfWound !== 0
+        ? game.i18n.format("arm5e.messages.woundResult", {
+            typeWound: game.i18n.localize(
+              "arm5e.messages.wound." + CONFIG.ARM5E.recovery.rankMapping[typeOfWound]
+            )
+          })
+        : game.i18n.localize("arm5e.messages.noWound"),
+    details: ` ${messageDamage}<br/> ${messageStamina}<br/> ${messageProt}<br/> ${messageBonus}${messageModifier}<b>${messageTotal}</b>`
   };
-  const message = new Arm5eChatMessage(messageData);
-  message.system.enrichMessageData(actor);
+}
 
-  Arm5eChatMessage.create(message.toObject());
-
-  if (typeOfWound !== "none") {
-    await actor.changeWound(1, typeOfWound);
+export async function damageRoll(actor, roll, message) {
+  const targetedTokens = game.user.targets; //getActorsFromTargetedTokens(actorCaster);
+  if (!targetedTokens) {
+    return;
   }
+
+  const targets = [];
+  for (let tokenTarget of targetedTokens) {
+    targets.push(tokenTarget.actor.uuid);
+  }
+
+  message.updateSource({
+    "system..target": targets
+  });
+  await actor.update({ "system.states.pendingDamage": true });
+}
+
+export async function soakRoll(actor, roll, message) {
+  const rollInfo = actor.rollInfo;
+
+  const rootMessage = game.messages.get(rollInfo.rootMessageId);
+  const damage = rollInfo.difficulty;
+  const details = `${game.i18n.localize("arm5e.damage.label")} (${damage}) -<br/>(${
+    message.system.roll.details
+  }  <br/>+ ${game.i18n.localize("arm5e.dialog.button.roll")} (${roll.total - roll.modifier}))
+  <br/><b>${game.i18n.localize("arm5e.sheet.totalDamage")} = ${damage - roll.total}</b>`;
+
+  const target = {
+    uuid: actor.uuid,
+    name: actor.name,
+    flavor: message.flavor,
+    details: details,
+    natRes: rollInfo.damage.natRes,
+    formRes: rollInfo.damage.formRes,
+    ignoreArmor: rollInfo.damage.ignoreArmor
+  };
+
+  const size = actor?.system?.vitals?.siz?.value || 0;
+  const typeOfWound = calculateWound(damage - roll.total, size);
+
+  const rolls = rootMessage.rolls;
+  rolls.push(roll);
+  await rootMessage.update({
+    rolls: rolls,
+    "system.damage.target": target,
+    "system.impact": { applied: true, woundGravity: typeOfWound }
+  });
+  const updateImpact = await _applyImpact(actor, roll, message);
+  updateImpact["system.states.pendingDamage"] = false;
+  await actor.update(updateImpact);
 }

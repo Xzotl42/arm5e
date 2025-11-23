@@ -147,7 +147,7 @@ export function registerMagicRollTesting(quench) {
                 }
               } else {
                 assert.equal(
-                  msgData.roll.difficulty > msg.rollTotal,
+                  msgData.roll.difficulty > msg.rollTotal(0),
                   msgData.failedRoll(),
                   "failed roll incorrect"
                 );
@@ -266,7 +266,7 @@ export function registerMagicRollTesting(quench) {
                 }
               } else {
                 assert.equal(
-                  msgData.roll.difficulty > msg.rollTotal,
+                  msgData.roll.difficulty > msg.rollTotal(0),
                   msgData.failedRoll(),
                   "failed roll incorrect"
                 );
@@ -379,7 +379,7 @@ export function registerMagicRollTesting(quench) {
                 }
               } else {
                 assert.equal(
-                  msgData.roll.difficulty > msg.rollTotal,
+                  msgData.roll.difficulty > msg.rollTotal(0),
                   msgData.failedRoll(),
                   "failed roll incorrect"
                 );
@@ -454,7 +454,7 @@ export function registerMagicRollTesting(quench) {
               );
               assert.equal(msgData.impact.woundGravity, 0, "wound gravity should be 0");
               assert.equal(
-                msgData.roll.difficulty > msg.rollTotal,
+                msgData.roll.difficulty > msg.rollTotal(0),
                 msgData.failedRoll(),
                 "failed roll incorrect"
               );
@@ -606,7 +606,7 @@ export function registerMagicRollTesting(quench) {
                 assert.equal(msgData.failedRoll(), true, "failed roll should be true");
               } else {
                 assert.equal(
-                  msgData.roll.difficulty > msg.rollTotal,
+                  msgData.roll.difficulty > msg.rollTotal(0),
                   msgData.failedRoll(),
                   "failed roll incorrect"
                 );
@@ -698,12 +698,12 @@ export function registerMagicRollTesting(quench) {
                 }
               } else {
                 assert.equal(
-                  msgData.roll.difficulty - 10 > msg.rollTotal,
+                  msgData.roll.difficulty - 10 > msg.rollTotal(0),
                   msgData.failedRoll(),
                   "failed roll incorrect"
                 );
                 // failed or partial success
-                if (msgData.failedRoll() || msg.rollTotal < msgData.roll.difficulty) {
+                if (msgData.failedRoll() || msg.rollTotal(0) < msgData.roll.difficulty) {
                   assert.equal(
                     msgData.impact.fatigueLevelsLost,
                     0,
@@ -842,12 +842,12 @@ export function registerMagicRollTesting(quench) {
                 }
               } else {
                 assert.equal(
-                  msgData.roll.difficulty - 10 > msg.rollTotal,
+                  msgData.roll.difficulty - 10 > msg.rollTotal(0),
                   msgData.failedRoll(),
                   "failed roll incorrect"
                 );
                 // failed or partial success
-                if (msgData.failedRoll() || msg.rollTotal < msgData.roll.difficulty) {
+                if (msgData.failedRoll() || msg.rollTotal(0) < msgData.roll.difficulty) {
                   assert.equal(
                     msgData.impact.fatigueLevelsLost,
                     0,
@@ -985,7 +985,7 @@ export function registerMagicRollTesting(quench) {
                 }
               } else {
                 assert.equal(
-                  msgData.roll.difficulty - 10 > msg.rollTotal,
+                  msgData.roll.difficulty - 10 > msg.rollTotal(0),
                   msgData.failedRoll(),
                   "failed roll incorrect"
                 );
@@ -1007,7 +1007,7 @@ export function registerMagicRollTesting(quench) {
                     1,
                     "fatigue levels on fail should be 1"
                   );
-                } else if (msg.rollTotal < msgData.roll.difficulty) {
+                } else if (msg.rollTotal(0) < msgData.roll.difficulty) {
                   assert.equal(
                     msgData.impact.fatigueLevelsLost,
                     0,
@@ -1150,7 +1150,7 @@ export function registerMagicRollTesting(quench) {
                 }
               } else {
                 assert.equal(
-                  msgData.roll.difficulty - 10 > msg.rollTotal,
+                  msgData.roll.difficulty - 10 > msg.rollTotal(0),
                   msgData.failedRoll(),
                   "failed roll incorrect"
                 );
@@ -1172,7 +1172,7 @@ export function registerMagicRollTesting(quench) {
                     1,
                     "fatigue levels on fail should be 1"
                   );
-                } else if (msg.rollTotal < msgData.roll.difficulty) {
+                } else if (msg.rollTotal(0) < msgData.roll.difficulty) {
                   assert.equal(
                     msgData.impact.fatigueLevelsLost,
                     0,
@@ -1298,7 +1298,7 @@ export function registerMagicRollTesting(quench) {
               assert.equal(msgData.roll.actorType, "player");
 
               assert.equal(
-                msgData.roll.difficulty - 10 > msg.rollTotal,
+                msgData.roll.difficulty - 10 > msg.rollTotal(0),
                 msgData.failedRoll(),
                 "failed roll incorrect"
               );
@@ -1346,7 +1346,7 @@ export function registerMagicRollTesting(quench) {
                     1,
                     "fatigue levels on fail should be 1"
                   );
-                } else if (msg.rollTotal < msgData.roll.difficulty) {
+                } else if (msg.rollTotal(0) < msgData.roll.difficulty) {
                   assert.equal(
                     msgData.impact.fatigueLevelsLost,
                     0,
@@ -1491,12 +1491,12 @@ export function registerMagicRollTesting(quench) {
                 }
               } else {
                 assert.equal(
-                  msgData.roll.difficulty - 10 > msg.rollTotal,
+                  msgData.roll.difficulty - 10 > msg.rollTotal(0),
                   msgData.failedRoll(),
                   "failed roll incorrect"
                 );
 
-                let cnt = Math.ceil((msgData.roll.difficulty - msg.rollTotal) / 5);
+                let cnt = Math.ceil((msgData.roll.difficulty - msg.rollTotal(0)) / 5);
                 // failed or partial success
                 if (msgData.failedRoll()) {
                   assert.equal(
@@ -1522,7 +1522,7 @@ export function registerMagicRollTesting(quench) {
                       `fatigue levels pending should be ${cnt}`
                     );
                   }
-                } else if (msg.rollTotal < msgData.roll.difficulty) {
+                } else if (msg.rollTotal(0) < msgData.roll.difficulty) {
                   assert.equal(
                     msgData.impact.fatigueLevelsLost,
                     1,
@@ -1691,12 +1691,12 @@ export function registerMagicRollTesting(quench) {
                 }
               } else {
                 assert.equal(
-                  msgData.roll.difficulty - 10 > msg.rollTotal,
+                  msgData.roll.difficulty - 10 > msg.rollTotal(0),
                   msgData.failedRoll(),
                   "failed roll incorrect"
                 );
 
-                let cnt = Math.ceil((msgData.roll.difficulty - msg.rollTotal) / 5);
+                let cnt = Math.ceil((msgData.roll.difficulty - msg.rollTotal(0)) / 5);
                 // failed or partial success
                 if (msgData.failedRoll()) {
                   assert.equal(
@@ -1730,7 +1730,7 @@ export function registerMagicRollTesting(quench) {
                     magus.system.fatigueCurrent,
                     "fatigue not changed"
                   );
-                } else if (msg.rollTotal < msgData.roll.difficulty) {
+                } else if (msg.rollTotal(0) < msgData.roll.difficulty) {
                   assert.equal(
                     msgData.impact.fatigueLevelsLost,
                     1,
@@ -1886,12 +1886,12 @@ export function registerMagicRollTesting(quench) {
           //       }
           //     } else {
           //       assert.equal(
-          //         msgData.roll.difficulty - 10 > msg.rollTotal,
+          //         msgData.roll.difficulty - 10 > msg.rollTotal(0),
           //         msgData.failedRoll(),
           //         "failed roll incorrect"
           //       );
 
-          //       let cnt = Math.ceil((msgData.roll.difficulty - msg.rollTotal) / 5);
+          //       let cnt = Math.ceil((msgData.roll.difficulty - msg.rollTotal(0)) / 5);
           //       // failed or partial success
           //       if (msgData.failedRoll()) {
           //         assert.equal(
@@ -1917,7 +1917,7 @@ export function registerMagicRollTesting(quench) {
           //             `fatigue levels pending should be ${cnt}`
           //           );
           //         }
-          //       } else if (msg.rollTotal < msgData.roll.difficulty) {
+          //       } else if (msg.rollTotal(0) < msgData.roll.difficulty) {
           //         assert.equal(
           //           msgData.impact.fatigueLevelsLost,
           //           1,

@@ -17,6 +17,18 @@ export function registerSettings() {
     default: ""
   });
 
+  game.settings.register(ARM5E.SYSTEM_ID, "headerFont", {
+    name: "Font used for headers",
+    hint: "Font used for headers in sheets and dialogs.",
+    scope: "world",
+    config: true,
+    type: String,
+    choices: ARM5E.fontfaces,
+    default: "blackmoor",
+    onChange: (value) =>
+      document.documentElement.style.setProperty("--font-header", `"${value}", serif`)
+  });
+
   /**
    * 2 Different sets of default icons for new documents
    */

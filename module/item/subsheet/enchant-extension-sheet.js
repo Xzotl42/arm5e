@@ -8,9 +8,9 @@ import {
   GetFilteredAspects,
   GetFilteredMagicalAttributes,
   PickRequisites,
-  computeLevel
+  computeLevel,
+  useMagicItem
 } from "../../helpers/magic.js";
-import { useMagicItem } from "../../helpers/rollWindow.js";
 import { getConfirmation } from "../../ui/dialogs.js";
 import { FLAVORS } from "../../constants/ui.js";
 // import { ArM5eItemMagicSheet } from "../item-magic-sheet.js";

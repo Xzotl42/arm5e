@@ -7,6 +7,16 @@ export class ArsRoll extends Roll {
     this.originalFormula = formula;
   }
 
+  get actor() {
+    if (this.options.actor) {
+      if (typeof this.options.actor === "string") {
+        return fromUuidSync(this.options.actor);
+      } else {
+        return this.options.actor;
+      }
+    }
+  }
+
   get botchDice() {
     if (!this._evaluated) return 0;
     if (this.dice.length > 1) {
@@ -154,8 +164,10 @@ export class ArsRoll extends Roll {
     }
     if (["magic", "spont", "spell", "supernatural", "item", "power"].includes(rollType)) {
       return "magic";
-    } else if (["init", "attack", "defense"].includes(rollType)) {
+    } else if (["init", "attack", "defense", "combatDamage", "combatSoak"].includes(rollType)) {
       return "combat";
+    } else if (["damage", "soak"].includes(rollType)) {
+      return "damage";
     } else {
       return "roll";
     }

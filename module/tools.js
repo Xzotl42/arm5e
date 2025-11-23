@@ -507,13 +507,13 @@ export function getLastCombatMessageOfType(type) {
  */
 export function calculateWound(damage, size) {
   if (damage <= 0) {
-    return "none";
+    return 0;
   }
   const typeOfWoundsBySize = getWoundType(size);
   if (typeOfWoundsBySize === undefined) return false;
   const wounds = Object.keys(typeOfWoundsBySize);
 
-  let typeOfWound = "none";
+  let typeOfWound = 0;
   wounds.forEach((wound) => {
     if (Number(wound) <= damage) {
       typeOfWound = typeOfWoundsBySize[wound];
@@ -543,20 +543,20 @@ export function getDataset(obj) {
 function getWoundType(size) {
   if (size <= -4) {
     return {
-      1: "light",
-      2: "medium",
-      3: "heavy",
-      4: "incap",
-      5: "dead"
+      1: 1, //"light",
+      2: 2, //"medium",
+      3: 3, //"heavy",
+      4: 4, //"incap",
+      5: 5 //"dead"
     };
   }
   let increment = size + 5;
-  const result = { 1: "light" };
+  const result = { 1: 1 }; //"light"
 
-  result[1 + increment] = "medium";
-  result[1 + 2 * increment] = "heavy";
-  result[1 + 3 * increment] = "incap";
-  result[1 + 4 * increment] = "dead";
+  result[1 + increment] = 2; // "medium";
+  result[1 + 2 * increment] = 3; //"heavy";
+  result[1 + 3 * increment] = 4; //"incap";
+  result[1 + 4 * increment] = 5; //"dead";
 
   return result;
 }
@@ -816,8 +816,8 @@ export function putInFoldableLink(label, content, startHidden = true) {
  * @param startHidden
  */
 export function putInFoldableLinkWithAnimation(
-  label,
   content,
+  details,
   startHidden = true,
   classes = "clickable"
 ) {
@@ -826,8 +826,8 @@ export function putInFoldableLinkWithAnimation(
     hidden = "hide";
   }
   return `<div class="arm5e ${classes} toggleCollapse"><p style="text-align:center">${game.i18n.localize(
-    label
-  )}</p></div><div class="${hidden} details">${content}</div>`;
+    content
+  )}</p></div><div class="${hidden} details">${details}</div>`;
 }
 
 /**

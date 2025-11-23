@@ -1,4 +1,7 @@
+import { SpellSchema } from "../schemas/magicSchemas.js";
 import { log } from "../tools.js";
+import { TWILIGHT_STAGES } from "./long-term-activities.js";
+import { _applyImpact } from "./rollWindow.js";
 
 const VOICE_AND_GESTURES_ICONS = {
   voice: "icons/skills/trades/music-singing-voice-blue.webp",
@@ -640,6 +643,122 @@ function noFatigue(actor) {
   }
 }
 
+function fatigueCost(actor, castingTotal, difficulty, ritual = false) {
+  const res = { use: 0, partial: 0, fail: 0 };
+  const delta = castingTotal - difficulty;
+  if (ritual) {
+    // Mythic blood
+    res.use = Math.max(1 - actor.system.bonuses.arts.ritualFatigueCancelled, 0);
+    if (delta < 0) {
+      let cnt = Math.ceil((difficulty - castingTotal) / 5);
+      const numberOfFatigueCancelled = Math.min(
+        Math.max(actor.system.bonuses.arts.ritualFatigueCancelled - 1, 0),
+        2
+      );
+      if (cnt > 2) {
+        res.fail = cnt - 2;
+        res.partial = 2 - numberOfFatigueCancelled;
+      } else {
+        // remove partial fatigue levels with mythic blood
+        res.partial = Math.max(cnt - numberOfFatigueCancelled, 0);
+      }
+    }
+  } else {
+    if (-delta > 10) {
+      res.fail = 1;
+    } else if (delta + actor.system.bonuses.arts.spellFatigueThreshold < 0) {
+      res.partial = 1;
+    }
+  }
+  log(false, "Spell fatigue cost", res);
+  return res;
+}
+
+/**
+ *
+ * @param actorCaster
+ * @param roll
+ * @param message
+ */
+async function castSpell(actorCaster, roll, message) {
+  // message.system.magic = { caster: actor.uuid, targets: [] };
+  // message.system.magic.targets =
+
+  // First check that the spell succeeds
+  const levelOfSpell = actorCaster.rollInfo.magic.level;
+  const totalOfSpell = Math.round(roll._total);
+  const messageUpdate = {};
+  messageUpdate["system.roll.difficulty"] = levelOfSpell;
+  // messageUpdate["type"] = "magic";
+  const updateData = {};
+  if (roll.botches > 0) {
+    if (roll.botches >= actorCaster.system.bonuses.arts.warpingThreshold) {
+      // twilight pending
+      updateData["system.twilight.pointsGained"] = roll.botches;
+      updateData["system.twilight.stage"] = TWILIGHT_STAGES.PENDING_STRENGTH;
+      updateData["system.twilight.year"] = actorCaster.rollInfo.environment.year;
+      updateData["system.twilight.season"] = actorCaster.rollInfo.environment.season;
+    }
+    updateData["system.warping.points"] = actorCaster.system.warping.points + roll.botches;
+    // await actorCaster.update(updateData);
+  }
+  if (actorCaster.rollInfo.type == "spell") {
+    const res = fatigueCost(
+      actorCaster,
+      totalOfSpell,
+      levelOfSpell,
+      actorCaster.rollInfo.magic.ritual
+    );
+    actorCaster.rollInfo.impact.fatigue = res;
+  }
+  const updateImpact = await _applyImpact(actorCaster, roll, message);
+  foundry.utils.mergeObject(updateData, updateImpact);
+
+  // const form = CONFIG.ARM5E.magic.arts[actorCaster.rollInfo.magic.form.value]?.label ?? "NONE";
+  await actorCaster.update(updateData);
+  await handleTargetsOfMagic(actorCaster, actorCaster.rollInfo.magic.form.value, message);
+  message.updateSource(messageUpdate);
+  // Then do contest of magic
+}
+
+/**
+ *
+ * @param actorCaster
+ * @param roll
+ * @param message
+ */
+async function castSupernaturalEffect(actorCaster, roll, message) {
+  // First check that the spell succeeds
+  const levelOfSpell = actorCaster.rollInfo.magic.level;
+  const totalOfSpell = Math.round(roll._total);
+  const messageUpdate = {};
+  const updateData = {};
+  messageUpdate["system.roll.difficulty"] = levelOfSpell;
+  messageUpdate["type"] = "magic";
+  if (roll.botches > 0) {
+    const updateData = {};
+    if (roll.botches >= actorCaster.system.bonuses.arts.warpingThreshold) {
+      // twilight pending
+      updateData["system.twilight.pointsGained"] = roll.botches;
+      updateData["system.twilight.stage"] = 1;
+      updateData["system.twilight.year"] = actorCaster.rollInfo.environment.year;
+      updateData["system.twilight.season"] = actorCaster.rollInfo.environment.season;
+    }
+    updateData["system.warping.points"] = actorCaster.system.warping.points + roll.botches;
+  }
+  if (actorCaster.rollInfo.mode & ROLL_MODES.NO_ROLL) {
+    messageUpdate["system.impact.applied"] = true;
+  }
+  const updateImpact = await _applyImpact(actorCaster, roll, message);
+  foundry.utils.mergeObject(updateData, updateImpact);
+  await actorCaster.update(updateData);
+
+  message.updateSource(messageUpdate);
+  // Then do contest of magic
+  // const form = CONFIG.ARM5E.magic.arts[actorCaster.rollInfo.magic.form.value]?.label ?? "NONE";
+  await handleTargetsOfMagic(actorCaster, actorCaster.rollInfo.magic.form.value, message);
+}
+
 /**
  *
  * @param actorCaster
@@ -679,4 +798,114 @@ function magicalAttributesHelper(attributes, options) {
   return HandlebarsHelpers.selectOptions(attributes, options);
 }
 
-export { handleTargetsOfMagic, noFatigue, magicalAttributesHelper };
+/**
+ *
+ * @param dataset
+ * @param item
+ */
+async function useMagicItem(dataset, item) {
+  if (item.system.enchantments.charges == 0) {
+    ui.notifications.warn(game.i18n.localize("arm5e.notification.noChargesLeft"));
+    return;
+  }
+  prepareRollVariables(dataset, item.actor);
+  // log(false, `Roll variables: ${JSON.stringify(item.actor.system.roll)}`);
+  let template = "systems/arm5e/templates/actor/parts/actor-itemUse.html";
+  item.actor.system.roll = item.actor.rollInfo;
+  item.actor.config = CONFIG.ARM5E;
+  const renderedTemplate = await renderTemplate(template, item.actor);
+
+  const dialog = new Dialog(
+    {
+      title: game.i18n.localize("arm5e.dialog.magicItemUse"),
+      content: renderedTemplate,
+      render: actor.rollInfo.listeners,
+      buttons: {
+        yes: {
+          icon: "<i class='fas fa-check'></i>",
+          label: game.i18n.localize(),
+          callback: async (html) => {
+            getFormData(html, item.actor);
+            await noRoll(item.actor, 1, useItemCharge);
+          }
+        },
+        no: {
+          icon: "<i class='fas fa-ban'></i>",
+          label: game.i18n.localize("arm5e.dialog.button.cancel"),
+          callback: null
+        }
+      }
+    },
+    {
+      jQuery: true,
+      height: "600px",
+      width: "400px",
+      classes: ["roll-dialog", "arm5e-dialog", "dialog"]
+    }
+  );
+  dialog.render(true);
+}
+
+/**
+ *
+ * @param dataset
+ * @param actor
+ */
+async function usePower(dataset, actor) {
+  if (Number(dataset.cost) > actor.system.might.points) {
+    ui.notifications.warn(game.i18n.localize("arm5e.notification.noMightPoints"));
+    return;
+  }
+  prepareRollVariables(dataset, actor);
+  const rollProperties = actor.rollInfo.properties;
+  // log(false, `Roll variables: ${JSON.stringify(actor.system.roll)}`);
+  let template = "systems/arm5e/templates/actor/parts/actor-powerUse.html";
+  actor.system.roll = actor.rollInfo;
+  actor.config = { magic: CONFIG.ARM5E.magic };
+  const renderedTemplate = await renderTemplate(template, actor);
+
+  const dialog = new Dialog(
+    {
+      title: dataset.name,
+      content: renderedTemplate,
+      render: actor.rollInfo.listeners,
+      buttons: {
+        yes: {
+          icon: "<i class='fas fa-check'></i>",
+          label: game.i18n.localize(rollProperties.ACTION_LABEL),
+          callback: async (html) => {
+            getFormData(html, actor);
+            if (actor.system.features.hasMight) {
+              await noRoll(actor, 1, changeMight);
+            } else {
+              await noRoll(actor, 1, actor.loseFatigueLevel);
+            }
+          }
+        },
+        no: {
+          icon: "<i class='fas fa-ban'></i>",
+          label: game.i18n.localize("arm5e.dialog.button.cancel"),
+          callback: null
+        }
+      }
+    },
+    {
+      jQuery: true,
+      height: "600px",
+      width: "400px",
+      classes: ["roll-dialog", "arm5e-dialog", "dialog"]
+    }
+  );
+  dialog.render(true);
+}
+
+export {
+  handleTargetsOfMagic,
+  noFatigue,
+  fatigueCost,
+  magicalAttributesHelper,
+  castSpell,
+  castSupernaturalEffect,
+  useMagicItem,
+  usePower
+};

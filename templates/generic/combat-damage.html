@@ -12,7 +12,7 @@
       <label class="resource-label">+</label>
     </div>
     <div class="flexrow flex-group-center">
-      <label class="resource-label" name="weapon" value="{{actor.system.combat.dam}}">{{localize "arm5e.sheet.damage" }}
+      <label class="resource-label" name="weapon" value="{{actor.system.combat.dam}}">{{localize "arm5e.damage.label" }}
         ({{ numberFormat
         actor.system.combat.dam decimals=0 sign=true }})</label>
     </div>
@@ -39,7 +39,7 @@
           style="border :0px" /></label>
     </div>
     <div class="flexrow flex-group-center">
-      <label class="header-label fit">{{localize "arm5e.sheet.formDamage"}}</label>
+      <label class="header-label fit">{{localize "arm5e.damage.form"}}</label>
       <select name="formDamage" data-type="String" style="max-width: fit-content;">
         {{selectOptions selection.forms selected=formDamage  labelAttr="label"  }}
       </select>

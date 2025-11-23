@@ -34,6 +34,11 @@ export class Arm5eChatMessage extends ChatMessage {
         }
         break;
       }
+      case "rollSoak":
+        const msg = game.messages.get(msgId);
+        if (msg) {
+          game.arm5e.socketHandler.acknowledgeMessage(payload[SMSG_FIELDS.ID]);
+        }
       default:
         console.error(`Unknown chat socket message: ${action}`);
     }
@@ -95,22 +100,12 @@ export class Arm5eChatMessage extends ChatMessage {
 
     if (this.isRoll) {
       if (this.system.obfuscate) {
-        this.system.obfuscate(html, actor);
+        // obfuscate the first roll
+        const roll = html[0].getElementsByClassName("dice-roll")[0];
+        this.system.obfuscate(roll, actor);
       }
     }
 
-    if (this.system.addListeners) {
-      this.system.addListeners(html);
-    }
-
-    const originatorOrGM = this.originatorOrGM;
-
-    // let msg = html.find(".chat-message");
-    // var details = html[0].getElementsByClassName("clickable");
-    if (!originatorOrGM) {
-      html.find(".clickable").remove();
-      html.find(".clickable2").remove();
-    }
     // legacy chat messages, ignore them
     // if (data.message.flags.arm5e) {
     //   return;
@@ -158,6 +153,19 @@ export class Arm5eChatMessage extends ChatMessage {
     const flavor = html.find(".flavor-text");
     flavor.append(this.addActionButtons(html, actor));
 
+    // format any additional rolls
+    this.system.formatTargets(html);
+
+    if (this.system.addListeners) {
+      this.system.addListeners(html);
+    }
+
+    const originatorOrGM = this.originatorOrGM;
+
+    if (!originatorOrGM) {
+      html.find(".clickable").remove();
+    }
+
     return html;
   }
 
@@ -176,8 +184,8 @@ export class Arm5eChatMessage extends ChatMessage {
     return btnContainer;
   }
 
-  get rollTotal() {
-    return this.rolls[0].total;
+  rollTotal(index = 0) {
+    return this.rolls[index].total;
   }
 }
 

@@ -131,7 +131,7 @@ export class LabExperimentation extends FormApplication {
   async _rollForExperimentation(risk, aura, discovery = false) {
     const rollFormula = `${Math.abs(risk) + aura}ds + ${risk}`;
 
-    const roll = new ArsRoll(rollFormula, {});
+    const roll = new ArsRoll(rollFormula, {}, { actor: this.object.experimenter.uuid });
 
     await roll.evaluate();
 
@@ -197,7 +197,7 @@ export class LabExperimentation extends FormApplication {
           }
         }
         if (!(subTitle === "discovery" && discovery)) {
-          let subRoll = new ArsRoll(subFormula, {});
+          let subRoll = new ArsRoll(subFormula, {}, { actor: this.object.experimenter.uuid });
           await subRoll.evaluate();
 
           let subTotal = subRoll.total;
@@ -210,12 +210,20 @@ export class LabExperimentation extends FormApplication {
             flavor += `<i>${this._getTableResult(subTitle, subRes[0].text)}</i>`;
             await subRoll.toMessage({ flavor: flavor });
             for (let i = 0; i < 2; i++) {
-              let discoveryRoll = new ArsRoll(subFormula, {});
+              let discoveryRoll = new ArsRoll(
+                subFormula,
+                {},
+                { actor: this.object.experimenter.uuid }
+              );
               await discoveryRoll.evaluate();
               let discoveryRes = await subRt.getResultsForRoll(discoveryRoll.total);
               while (discoveryRes[0].text == "rollTwice") {
                 log(false, "RollTwice only once, reroll");
-                discoveryRoll = new ArsRoll(subFormula, {});
+                discoveryRoll = new ArsRoll(
+                  subFormula,
+                  {},
+                  { actor: this.object.experimenter.uuid }
+                );
                 await discoveryRoll.evaluate();
                 discoveryRes = await subRt.getResultsForRoll(discoveryRoll.total);
               }

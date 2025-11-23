@@ -1,9 +1,10 @@
 <form class="{{cssClass}} arm5eRoll" autocomplete="off">
   {{> "systems/arm5e/templates/roll/parts/roll-header.html" header="Damage_Soak" }}
   <div class="roll-options">
+    {{log this}}
     <div class="flexrow flex-group-center">
       <label class="resource-label flex0">{{localize "arm5e.damage.label" }}</label>
-      <input type="number" name="damage" value="{{damage}}" data-dtype="Number"
+      <input type="number" name="rollInfo.difficulty" value="{{rollInfo.difficulty}}" data-dtype="Number"
         class="SelectedDamage resource-focus modifier" />
     </div>
     <div class="flexrow flex-group-center">
@@ -11,64 +12,60 @@
     </div>
     <div class="flexrow flex-group-center">
       <label class="resource-label" name="stamina"
-        value="{{actor.system.characteristics.sta.value}}">{{localize "arm5e.sheet.stamina" }} ({{ numberFormat
-        actor.system.characteristics.sta.value decimals=0
+        value="{{system.characteristics.sta.value}}">{{localize "arm5e.sheet.stamina" }} ({{ numberFormat
+        system.characteristics.sta.value decimals=0
         sign=true }})</label>
     </div>
-    {{#if actor.system.bonuses.traits.soak}}
+    {{#if system.bonuses.traits.soak}}
       <div class="flexrow flex-group-center">
         <label class="resource-label">-</label>
       </div>
       <div class="flexrow flex-group-center">
         <label class="resource-label" name="soak"
-          value="{{actor.system.bonuses.traits.soak}}">{{localize "arm5e.sheet.soakBonus" }} ({{ numberFormat
-          actor.system.bonuses.traits.soak decimals=0 sign=true
+          value="{{system.bonuses.traits.soak}}">{{localize "arm5e.sheet.soakBonus" }} ({{ numberFormat
+          system.bonuses.traits.soak decimals=0 sign=true
           }})</label>
       </div>
     {{/if}}
-    {{#if isMagus}}
+    {{#if rollInfo.isMagus}}
       <div class="flexrow flex-group-center">
         <label class="resource-label">-</label>
       </div>
       <div class="flexrow flex-group-center">
         <label class="header-label">{{localize "arm5e.sheet.formRes"}}</label>
         <select name="formRes" data-type="String">
-          {{selectOptions selection.formRes selected=formRes nameAttr="res" valueAttr="res" labelAttr="label" blank="" }}
+          {{selectOptions rollInfo.selection.formRes selected=rollInfo.damage.form labelAttr="label" blank="" }}
         </select>
       </div>
     {{/if}}
-    {{#if hasResistance}}
+    {{#if rollInfo.damage.hasResistance}}
       <div class="flexrow flex-group-center">
         <label class="resource-label">-</label>
       </div>
       <div class="flexrow flex-group-center">
         <label class="header-label">{{localize "arm5e.sheet.natRes"}}</label>
         <select name="natRes" data-type="String">
-          {{selectOptions selection.natRes selected=natRes nameAttr="res" valueAttr="res" labelAttr="label" blank="" }}
+          {{selectOptions rollInfo.selection.natRes selected=rollInfo.damage.form labelAttr="label" blank="" }}
         </select>
       </div>
     {{/if}}
-
-
+    {{log "rollInfo.damage: " rollInfo.damage}}
     <div class="flexrow flex-group-center">
-      <label class="resource-label">-</label>
+      <label class="resource-label flex0">{{localize "arm5e.damage.ignoreArmor" }} </label>
+      <input type="checkbox" name="rollInfo.damage.ignoreArmor" {{checked rollInfo.damage.ignoreArmor}}
+        data-dtype="Boolean" class="ignoreArmor" />
     </div>
-    <div class="flexrow flex-group-center">
-      <label class="resource-label" name="prot"
-        value="{{actor.system.combat.prot}}">{{localize "arm5e.sheet.protection" }} ({{ numberFormat
-        actor.system.combat.prot decimals=0 sign=true
-        }})</label>
-    </div>
-
-    <div class="flexrow flex-group-center">
-      <label class="resource-label">-</label>
-    </div>
-
-    <div class="flexrow flex-group-center">
-      <label class="resource-label flex0">{{localize "arm5e.sheet.modifier" }}</label>
-      <input type="number" name="modifier" value="{{modifier}}" data-dtype="Number"
-        class="SelectedModifier resource-focus modifier" />
-    </div>
+    {{#unless rollInfo.damage.ignoreArmor}}
+      <div class="flexrow flex-group-center">
+        <label class="resource-label">-</label>
+      </div>
+      <div class="flexrow flex-group-center">
+        <label class="resource-label" name="prot" value="{{system.combat.prot}}">{{localize "arm5e.sheet.protection" }}
+          ({{ numberFormat
+          system.combat.prot decimals=0 sign=true
+          }})</label>
+      </div>
+    {{/unless}}
   </div>
   {{> "systems/arm5e/templates/roll/parts/roll-footer.html" footer="Damage_Soak"}}
 </form>

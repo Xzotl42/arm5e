@@ -7,7 +7,6 @@ import { resetOwnerFields } from "../item/item-converter.js";
 import { ARM5E } from "../config.js";
 import {
   log,
-  calculateWound,
   getDataset,
   hermeticFilter,
   putInFoldableLinkWithAnimation,
@@ -34,22 +33,24 @@ import {
   renderRollTemplate,
   chooseTemplate,
   ROLL_MODES,
-  getRollTypeProperties,
-  usePower,
-  useMagicItem
+  getRollTypeProperties
 } from "../helpers/rollWindow.js";
 
 import {
-  buildDamageDataset,
   buildSoakDataset,
   combatDamage,
   computeCombatStats,
   quickCombat,
   quickVitals,
-  rolledDamage,
   setWounds
 } from "../helpers/combat.js";
-import { quickMagic, spellFormLabel, spellTechniqueLabel } from "../helpers/magic.js";
+import {
+  quickMagic,
+  spellFormLabel,
+  spellTechniqueLabel,
+  useMagicItem,
+  usePower
+} from "../helpers/magic.js";
 import { UI } from "../constants/ui.js";
 import { Schedule } from "../tools/schedule.js";
 import {
@@ -1909,13 +1910,6 @@ export class ArM5eActorSheet extends ActorSheet {
             label: game.i18n.localize("arm5e.generic.yes"),
             callback: (html) => combatDamage(html, actor)
           },
-          // roll: {
-          //   label: game.i18n.localize("arm5e.dialog.button.roll"),
-          //   callback: async (html) => {
-          //     const damageData = buildDamageDataset(html);
-          //     await rolledDamage(damageData, actor);
-          //   }
-          // },
           no: {
             icon: "<i class='fas fa-ban'></i>",
             label: game.i18n.localize("arm5e.dialog.button.cancel"),
@@ -1972,9 +1966,15 @@ export class ArM5eActorSheet extends ActorSheet {
       return false;
     }
 
+    if (this.actor.system.states.pendingDamage && dataset.roll != "soak") {
+      ui.notifications.warn(game.i18n.localize("arm5e.notification.damagePending"), {
+        permanent: true
+      });
+    }
+
     const rollProperties = getRollTypeProperties(dataset.roll);
     if (dataset.mode) {
-      rollProperties.MODE = dataset.mode;
+      rollProperties.MODE = parseInt(dataset.mode);
     }
 
     if ((rollProperties.MODE & ROLL_MODES.UNCONSCIOUS) == 0) {
@@ -2017,14 +2017,10 @@ export class ArM5eActorSheet extends ActorSheet {
     }
 
     prepareRollVariables(dataset, this.actor);
-
-    // var actor = this.actor;
     this.actor.system.charmetadata = ARM5E.character.characteristics;
     updateCharacteristicDependingOnRoll(dataset, this.actor);
-
     const template = chooseTemplate(dataset);
     await renderRollTemplate(dataset, template, this.actor);
-    // log(false, `spell info: ${JSON.stringify(this.actor.rollInfo.magic)}`);
     return true;
   }
 

@@ -53,8 +53,9 @@
         <label
           class="smallTitle clickable view-med-history"><i>{{localize "arm5e.sanatorium.viewMedicalHistory"}}</i></label>
       </div>
-      <div class=" soak-icon" title="">
-        <a class="damage-roll clickable" title="{{localize 'Damage roll'}}" style="text-align: right; font-size: 16pt;">
+      <div class="soak-icon" title="">
+        <a class="damage-roll rollable" data-roll="damage" title="{{localize 'Damage roll'}}"
+          style="text-align: right; font-size: 16pt;">
           <i class=" icon-Icon_Soak_Big"></i></a>
       </div>
       {{#unless isDead}}
