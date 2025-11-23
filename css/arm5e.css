@@ -1605,8 +1605,8 @@ img.tinyimg {
 .arm5e .sheet-header h1.charname input {
   width: 100%;
   margin: 0;
-  /*padding-top: 30px;
-  line-height: 30;*/
+  /* padding-top: 30px; */
+  line-height: fit-content;
   font-family: var(--font-header);
   /*letter-spacing: 1px;*/
 }

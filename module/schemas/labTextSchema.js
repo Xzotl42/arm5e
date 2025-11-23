@@ -6,7 +6,7 @@ import {
   SpellAttributes,
   TechniquesForms
 } from "./commonSchemas.js";
-import { AbstractMagicEntity, baseLevel } from "./magicSchemas.js";
+import { AbstractMagicEntity, baseLevel, migrateMagicalItem } from "./magicSchemas.js";
 import { ARM5E } from "../config.js";
 import { EnchantmentAttributes } from "./enchantmentSchema.js";
 const fields = foundry.data.fields;

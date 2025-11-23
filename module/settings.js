@@ -20,7 +20,7 @@ export function registerSettings() {
   game.settings.register(ARM5E.SYSTEM_ID, "headerFont", {
     name: "Font used for headers",
     hint: "Font used for headers in sheets and dialogs.",
-    scope: "world",
+    scope: "client",
     config: true,
     type: String,
     choices: ARM5E.fontfaces,

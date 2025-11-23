@@ -354,7 +354,7 @@ export class SpellSchema extends MagicalEffectSchema {
 // LEGACY migrations functions
 /////////
 
-const migrateMagicalItem = (itemData) => {
+export const migrateMagicalItem = (itemData) => {
   const updateData = {};
 
   if (typeof itemData.system.baseLevel !== "number") {
