@@ -550,7 +550,7 @@ function rollItemMacro(itemId, actorId, event = undefined) {
   } else if (item.type == "power") {
     actor.sheet._onUsePower(dataset);
   } else {
-    actor.sheet._onRoll(dataset);
+    actor.sheet.roll(dataset);
   }
 }
 

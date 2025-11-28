@@ -452,7 +452,7 @@ export class ArM5eItemSheet extends ItemSheet {
     html.find(".rollable").click(async (event) => {
       const dataset = getDataset(event);
 
-      await this.object.actor.sheet._onRoll(dataset);
+      await this.object.actor.sheet.roll(dataset);
     });
 
     html.find(".create-labtext").click(async (event) => {

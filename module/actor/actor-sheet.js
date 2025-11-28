@@ -1478,12 +1478,12 @@ export class ArM5eActorSheet extends ActorSheet {
     });
 
     // Rollable abilities.
-    html.find(".rollable").click(this._onRoll.bind(this));
+    html.find(".rollable").click(this.roll.bind(this));
 
     html.find(".rollable-aging").click(async (event) => {
       if (event.shiftKey) {
         this._editAging(event);
-      } else this._onRoll(event);
+      } else this.roll(event);
     });
 
     html.find(".soak-damage").click(this._onSoakDamage.bind(this));
@@ -1926,17 +1926,14 @@ export class ArM5eActorSheet extends ActorSheet {
     ).render(true);
   }
 
-  async roll(parameters) {
-    await this._onRoll(parameters);
-  }
-  /**
-   * Handle clickable rolls.
-   * @param {Event} event   The originating click event
-   * @private
-   */
-  async _onRoll(event) {
+  async roll(event) {
     const dataset = getDataset(event);
+    if (this.isRollPossible(dataset)) {
+      return await this._roll(dataset);
+    }
+  }
 
+  async isRollPossible(dataset) {
     if (game.settings.get("arm5e", "passConfidencePromptOnRoll")) {
       // find if there is indeed a message with a prompt with this actor.
       let pendingConfMsg = game.messages.contents.filter((m) => {
@@ -2016,12 +2013,23 @@ export class ArM5eActorSheet extends ActorSheet {
       }
     }
 
+    return true;
+  }
+  /**
+   * Handle clickable rolls.
+   * @param {Event} event   The originating click event
+   * @private
+   */
+  async _roll(event) {
+    const dataset = getDataset(event);
+
     prepareRollVariables(dataset, this.actor);
     this.actor.system.charmetadata = ARM5E.character.characteristics;
     updateCharacteristicDependingOnRoll(dataset, this.actor);
     const template = chooseTemplate(dataset);
-    await renderRollTemplate(dataset, template, this.actor);
-    return true;
+
+    const res = await renderRollTemplate(dataset, template, this.actor);
+    return res;
   }
 
   async quickCombat(name) {

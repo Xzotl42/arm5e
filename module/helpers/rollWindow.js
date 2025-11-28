@@ -359,47 +359,75 @@ function getDebugButtonsIfNeeded(actor, callback) {
  * @param html
  * @param actor
  */
-function getDialogData(dataset, html, actor) {
+async function getDialog(dataset, html, actor) {
   const rollInfo = actor.rollInfo;
   const rollProperties = rollInfo.properties;
   const callback = rollProperties.CALLBACK;
-  let btns = {};
-  let mode = 0;
-  const altAction = rollProperties.ALT_ACTION;
-  let altBtn;
-  if (altAction) {
-    const btnLabel = rollProperties.ALT_ACTION_LABEL;
-    const rollAlteration = rollProperties.ALTER_ROLL;
-    altBtn = {
-      icon: "<i class='fas fa-check'></i>",
-      label: game.i18n.localize(btnLabel),
-      callback: async (html) => {
-        getFormData(html, actor);
-        if (rollAlteration) {
-          rollAlteration(actor);
-        }
-        await altAction(actor, mode, callback);
-      }
-    };
-  }
-  const title = rollInfo.title ? rollInfo.title : rollProperties.TITLE;
-  const rollMode = rollProperties.MODE;
-  if (rollMode & ROLL_MODES.STRESS) {
-    btns.yes = {
-      icon: "<i class='fas fa-check'></i>",
-      label: game.i18n.localize(
-        rollProperties.ACTION_LABEL ? rollProperties.ACTION_LABEL : "arm5e.dialog.button.stressdie"
-      ),
-      callback: async (html) => {
-        getFormData(html, actor);
-        await stressDie(actor, rollProperties.type, mode, callback, rollInfo.botchNumber);
-      }
-    };
+  return await new Promise((resolve) => {
+    let btns = {};
+    let mode = 0;
+    const altAction = rollProperties.ALT_ACTION;
+    let altBtn;
     if (altAction) {
-      btns.alt = altBtn;
+      const btnLabel = rollProperties.ALT_ACTION_LABEL;
+      const rollAlteration = rollProperties.ALTER_ROLL;
+      altBtn = {
+        icon: "<i class='fas fa-check'></i>",
+        label: game.i18n.localize(btnLabel),
+        callback: async (html) => {
+          getFormData(html, actor);
+          if (rollAlteration) {
+            rollAlteration(actor);
+          }
+          resolve(await altAction(actor, mode, callback));
+        }
+      };
     }
-    if (rollMode & ROLL_MODES.SIMPLE) {
-      btns.no = {
+    const title = rollInfo.title ? rollInfo.title : rollProperties.TITLE;
+    const rollMode = rollProperties.MODE;
+    if (rollMode & ROLL_MODES.STRESS) {
+      btns.yes = {
+        icon: "<i class='fas fa-check'></i>",
+        label: game.i18n.localize(
+          rollProperties.ACTION_LABEL
+            ? rollProperties.ACTION_LABEL
+            : "arm5e.dialog.button.stressdie"
+        ),
+        callback: async (html) => {
+          getFormData(html, actor);
+          resolve(
+            await stressDie(actor, rollProperties.type, mode, callback, rollInfo.botchNumber)
+          );
+        }
+      };
+      if (altAction) {
+        btns.alt = altBtn;
+      }
+      if (rollMode & ROLL_MODES.SIMPLE) {
+        btns.no = {
+          icon: "<i class='fas fa-check'></i>",
+          label: game.i18n.localize(
+            rollProperties.ACTION_LABEL
+              ? rollProperties.ACTION_LABEL
+              : "arm5e.dialog.button.simpledie"
+          ),
+          callback: async (html) => {
+            getFormData(html, actor);
+            resolve(await simpleDie(actor, rollProperties.type, callback));
+          }
+        };
+      } else {
+        btns.no = {
+          icon: "<i class='fas fa-ban'></i>",
+          label: game.i18n.localize("arm5e.dialog.button.cancel"),
+          callback: async (html) => {
+            await rollInfo.reset();
+          }
+        };
+      }
+    } else if (rollMode & ROLL_MODES.SIMPLE) {
+      // Simple die only
+      btns.yes = {
         icon: "<i class='fas fa-check'></i>",
         label: game.i18n.localize(
           rollProperties.ACTION_LABEL
@@ -408,67 +436,56 @@ function getDialogData(dataset, html, actor) {
         ),
         callback: async (html) => {
           getFormData(html, actor);
-          await simpleDie(actor, rollProperties.type, callback);
+          resolve(await simpleDie(actor, rollProperties.type, callback));
         }
       };
-    } else {
+      if (altAction) {
+        btns.alt = altBtn;
+      }
       btns.no = {
         icon: "<i class='fas fa-ban'></i>",
         label: game.i18n.localize("arm5e.dialog.button.cancel"),
         callback: async (html) => {
-          await rollInfo.reset();
+          rollInfo.reset();
         }
       };
+    } else {
+      //no roll
+      btns.yes = {
+        icon: "<i class='fas fa-check'></i>",
+        label: game.i18n.localize(
+          rollProperties.ACTION_LABEL ? rollProperties.ACTION_LABEL : "arm5e.dialog.powerUse"
+        ),
+        callback: async (html) => {
+          getFormData(html, actor);
+          resolve(await noRoll(actor, 1, null));
+        }
+      };
+      btns.no = {
+        icon: "<i class='fas fa-ban'></i>",
+        label: game.i18n.localize("arm5e.dialog.button.cancel"),
+        callback: null
+      };
     }
-  } else if (rollMode & ROLL_MODES.SIMPLE) {
-    // Simple die only
-    btns.yes = {
-      icon: "<i class='fas fa-check'></i>",
-      label: game.i18n.localize(
-        rollProperties.ACTION_LABEL ? rollProperties.ACTION_LABEL : "arm5e.dialog.button.simpledie"
-      ),
-      callback: async (html) => {
-        getFormData(html, actor);
-        await simpleDie(actor, rollProperties.type, callback);
+
+    new Dialog(
+      {
+        title: game.i18n.localize(title),
+        content: html,
+        render: actor.rollInfo.listeners,
+        buttons: {
+          ...btns
+          // ...getDebugButtonsIfNeeded(actor, callback)
+        },
+        render: actor.rollInfo.listeners
+      },
+      {
+        classes: ["arm5e-dialog", "dialog"],
+        height: "780px",
+        width: "400px"
       }
-    };
-    if (altAction) {
-      btns.alt = altBtn;
-    }
-    btns.no = {
-      icon: "<i class='fas fa-ban'></i>",
-      label: game.i18n.localize("arm5e.dialog.button.cancel"),
-      callback: async (html) => {
-        await rollInfo.reset();
-      }
-    };
-  } else {
-    //no roll
-    btns.yes = {
-      icon: "<i class='fas fa-check'></i>",
-      label: game.i18n.localize(
-        rollProperties.ACTION_LABEL ? rollProperties.ACTION_LABEL : "arm5e.dialog.powerUse"
-      ),
-      callback: async (html) => {
-        getFormData(html, actor);
-        await noRoll(actor, 1, null);
-      }
-    };
-    btns.no = {
-      icon: "<i class='fas fa-ban'></i>",
-      label: game.i18n.localize("arm5e.dialog.button.cancel"),
-      callback: null
-    };
-  }
-  return {
-    title: game.i18n.localize(title),
-    content: html,
-    render: actor.rollInfo.listeners,
-    buttons: {
-      ...btns
-      // ...getDebugButtonsIfNeeded(actor, callback)
-    }
-  };
+    ).render(true);
+  });
 }
 
 /**
@@ -479,26 +496,14 @@ function getDialogData(dataset, html, actor) {
  */
 async function renderRollTemplate(dataset, template, actor) {
   if (!template) {
-    return;
+    return false;
   }
   actor.system.roll = actor.rollInfo;
   actor.config = CONFIG.ARM5E;
   actor.selection = actor.rollInfo.selection;
   const renderedTemplate = await renderTemplate(template, actor);
-  const dialogData = getDialogData(dataset, renderedTemplate, actor);
-  const dialog = new Dialog(
-    {
-      ...dialogData,
-      render: actor.rollInfo.listeners
-    },
-    {
-      classes: ["arm5e-dialog", "dialog"],
-      height: "780px",
-      width: "400px"
-    }
-  );
-  dialog.render(true);
-  return dialog;
+  const message = await getDialog(dataset, renderedTemplate, actor);
+  return message;
 }
 
 /**
@@ -771,6 +776,11 @@ export function getFormData(html, actor) {
       actor.rollInfo.power.form = find[0].value ?? actor.rollInfo.power.form;
     }
   } else if ([ROLL_PROPERTIES.DAMAGE.VAL, ROLL_PROPERTIES.SOAK.VAL].includes(actor.rollInfo.type)) {
+    find = html.find(".SelectedDamage");
+    if (find.length > 0) {
+      actor.rollInfo.difficulty = find[0].value;
+    }
+
     find = html.find(".SelectedSource");
     if (find.length > 0) {
       actor.rollInfo.damage.source = find[0].value;
