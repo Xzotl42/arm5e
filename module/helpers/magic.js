@@ -291,7 +291,7 @@ export class QuickMagic extends FormApplication {
       let dataset = event.currentTarget.dataset;
       dataset.technique = this.object.technique;
       dataset.form = this.object.form;
-      await this.object.actor.sheet._onRoll(dataset);
+      await this.object.actor.sheet.roll(dataset);
     });
     html.find(".voice-and-gestures").change(async (event) => {
       event.preventDefault();

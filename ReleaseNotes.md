@@ -1,4 +1,4 @@
-## 2.4.1.3, Radislav, Cognizant Wisdom
+## 2.4.1.4, Radislav, Cognizant Wisdom
 
 ### Features & changes
 
@@ -9,12 +9,13 @@
 - Confidence can now be used on rolled supernatural effect (Hedge magic)
 - New parameter to set the font used for headers
 - By default you can select any text in the interface now (as a test for now)
-- Damage rolls (limited)
+- Damage rolls with socket messages
 
 ### Bug fixes
 
 - [Simple Calendar] Fixed a bug where changing the date wasn't working anymore.
 - Fix the casting of Hedge magic effects.
+- Chat action buttons will only appear if the player owns the actor.
 
 ## 2.4.0.31, Radislav, Enigmatic Faeries 2
 

@@ -37,8 +37,14 @@ export class Arm5eChatMessage extends ChatMessage {
       case "rollSoak":
         const msg = game.messages.get(msgId);
         if (msg) {
-          game.arm5e.socketHandler.acknowledgeMessage(payload[SMSG_FIELDS.ID]);
+          if (msg.isAuthor || game.user.isGM) {
+            if (!msg.system.impact.applied) {
+              await msg.system._applyChatMessageUpdate(payload[SMSG_FIELDS.CHAT_MSG_DB_UPDATE]);
+              game.arm5e.socketHandler.acknowledgeMessage(payload[SMSG_FIELDS.ID]);
+            }
+          }
         }
+        break;
       default:
         console.error(`Unknown chat socket message: ${action}`);
     }
@@ -173,13 +179,15 @@ export class Arm5eChatMessage extends ChatMessage {
     const btnContainer = $('<div class="btn-container"></div>');
 
     let btnCnt = 0;
-    if (this.system.addActionButtons) {
-      btnCnt = this.system.addActionButtons(btnContainer, actor);
-    }
-    if (btnCnt) {
-      btnContainer.prepend(
-        '<h3 class="ars-chat-title">' + game.i18n.localize("arm5e.sheet.actions") + "</h3>"
-      );
+    if (actor.isOwner) {
+      if (this.system.addActionButtons) {
+        btnCnt = this.system.addActionButtons(btnContainer, actor);
+      }
+      if (btnCnt) {
+        btnContainer.prepend(
+          '<h3 class="ars-chat-title">' + game.i18n.localize("arm5e.sheet.actions") + "</h3>"
+        );
+      }
     }
     return btnContainer;
   }

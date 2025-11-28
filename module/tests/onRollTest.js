@@ -12,7 +12,7 @@ export function registerOnRollTesting(quench) {
         actor = await getCompanion();
       });
 
-      describe("_onRoll", () => {
+      describe("roll", () => {
         // The objective of this test is to verify that when the roll type has the SIMPLE flag, the roll is marked as a simple roll.
         it("should mark the roll as a simple roll when the roll type has the SIMPLE flag", async () => {
           const event = {
@@ -20,7 +20,7 @@ export function registerOnRollTesting(quench) {
           };
           const expectedRollMode = ROLL_MODES.SIMPLE;
 
-          const result = await actor.sheet._onRoll(event);
+          const result = await actor.sheet.roll(event);
 
           expect(result).to.be.true;
           expect(actor.system.roll.mode).to.equal(expectedRollMode);
@@ -33,7 +33,7 @@ export function registerOnRollTesting(quench) {
           };
           const expectedRollMode = ROLL_MODES.NO_BOTCH;
 
-          const result = await actor.sheet._onRoll(event);
+          const result = await actor.sheet.roll(event);
 
           expect(result).to.be.true;
           expect(actor.system.roll.mode).to.equal(expectedRollMode);
@@ -46,7 +46,7 @@ export function registerOnRollTesting(quench) {
           };
           const expectedRollMode = ROLL_MODES.NO_CONF;
 
-          const result = await actor.sheet._onRoll(event);
+          const result = await actor.sheet.roll(event);
 
           expect(result).to.be.true;
           expect(actor.system.roll.mode).to.equal(expectedRollMode);
@@ -72,7 +72,7 @@ export function registerOnRollTesting(quench) {
               fatigueMaxLevel: 10
             }
           };
-          const result = await actor.sheet._onRoll(event);
+          const result = await actor.sheet.roll(event);
           expect(result).to.be.true;
         });
 
@@ -96,7 +96,7 @@ export function registerOnRollTesting(quench) {
               fatigueMaxLevel: 10
             }
           };
-          const result = await actor.sheet._onRoll(event);
+          const result = await actor.sheet.roll(event);
           expect(result).to.be.true;
         });
 
@@ -120,7 +120,7 @@ export function registerOnRollTesting(quench) {
               fatigueMaxLevel: 10
             }
           };
-          const result = await actor.sheet._onRoll(event);
+          const result = await actor.sheet.roll(event);
           expect(result).to.be.true;
         });
 
@@ -135,7 +135,7 @@ export function registerOnRollTesting(quench) {
             isStress: true
           };
 
-          const result = actor.sheet._onRoll(event);
+          const result = actor.sheet.roll(event);
 
           expect(result).to.be.true;
           expect(actor.rollInfo).to.deep.equal(expectedRollData);
@@ -152,7 +152,7 @@ export function registerOnRollTesting(quench) {
             isNoBotch: true
           };
 
-          const result = actor.sheet._onRoll(event);
+          const result = actor.sheet.roll(event);
 
           expect(result).to.be.true;
           expect(actor.rollInfo).to.deep.equal(expectedRollData);
@@ -169,13 +169,13 @@ export function registerOnRollTesting(quench) {
             isNoConfidence: true
           };
 
-          const result = actor.sheet._onRoll(event);
+          const result = actor.sheet.roll(event);
 
           expect(result).to.be.true;
           expect(actor.rollInfo).to.deep.equal(expectedRollData);
         });
       });
     },
-    { displayName: "ARS : ArM5eActorSheet._onRoll" }
+    { displayName: "ARS : ArM5eActorSheet.roll" }
   );
 }

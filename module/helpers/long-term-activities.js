@@ -134,7 +134,7 @@ export async function agingRoll(item) {
     season: item.system.dates[0].season,
     moredata: { diaryId: item._id }
   };
-  await item.actor.sheet._onRoll(input);
+  await item.actor.sheet.roll(input);
 }
 
 export async function agingCrisis(actor, roll, message) {
@@ -325,11 +325,11 @@ export async function twilightUnderstandingRoll(item) {
     moredata: { diaryId: item._id },
     botchNumber: item.actor.system.twilight.pointsGained + 1
   };
-  await item.actor.sheet._onRoll(input);
+  await item.actor.sheet.roll(input);
 }
 
 export async function twilightRoll(actor, data) {
-  await actor.sheet._onRoll(data);
+  await actor.sheet.roll(data);
 }
 
 export async function applyTwilightStrength(actor, roll, message) {

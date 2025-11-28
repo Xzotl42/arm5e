@@ -89,7 +89,7 @@ export class QuickCombat extends FormApplication {
 
   activateListeners(html) {
     super.activateListeners(html);
-    html.find(".rollable").click(async (event) => await this.object.actor.sheet._onRoll(event));
+    html.find(".rollable").click(async (event) => await this.object.actor.sheet.roll(event));
     html
       .find(".soak-damage")
       .click(async (event) => await this.object.actor.sheet._onSoakDamage(event));
@@ -499,15 +499,8 @@ export async function soakRoll(actor, roll, message) {
 
   const size = actor?.system?.vitals?.siz?.value || 0;
   const typeOfWound = calculateWound(damage - roll.total, size);
-
-  const rolls = rootMessage.rolls;
-  rolls.push(roll);
-  await rootMessage.update({
-    rolls: rolls,
+  message.updateSource({
     "system.damage.target": target,
     "system.impact": { applied: true, woundGravity: typeOfWound }
   });
-  const updateImpact = await _applyImpact(actor, roll, message);
-  updateImpact["system.states.pendingDamage"] = false;
-  await actor.update(updateImpact);
 }
