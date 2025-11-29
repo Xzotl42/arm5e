@@ -166,7 +166,7 @@ export class ArM5ePCActorSheet extends ArM5eActorSheet {
         ev.currentTarget.value = parseInt(ev.currentTarget.max);
     });
 
-    html.find(".resource-focus").focus((ev) => {
+    html.find(".select-on-focus").focus((ev) => {
       ev.preventDefault();
       ev.currentTarget.select();
     });

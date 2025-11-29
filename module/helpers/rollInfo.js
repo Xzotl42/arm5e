@@ -8,7 +8,8 @@ import { computeLevel, spellFormLabel, spellTechniqueLabel } from "./magic.js";
 import {
   addCommonListenersDialog,
   addMagicListenersDialog,
-  addPowersListenersDialog
+  addPowersListenersDialog,
+  addSoakListenersDialog
 } from "../ui/dialogs.js";
 
 export class ArM5eRollInfo {
@@ -80,6 +81,7 @@ export class ArM5eRollInfo {
 
     this.dialogListeners;
     this.selection = {};
+    this.visibility = {};
     this.addSelectObjects();
     switch (this.type) {
       case ROLL_PROPERTIES.INIT.VAL:
@@ -107,27 +109,24 @@ export class ArM5eRollInfo {
         if (dataset.damageForm) {
           this.damage.form = dataset.damageForm;
         }
-
+        this.selection = { forms: CONFIG.ARM5E.magic.forms };
         if (dataset.source) {
           this.damage.source = dataset.source;
         }
         this.characteristic = "sta";
         this.damage.ignoreArmor = dataset.ignoreArmor;
-        this.label = game.i18n.localize("arm5e.messages.soak");
 
-        this.selection = { formRes: {}, natRes: {} };
+        this.visibility.protection = dataset.ignoreArmor ? "hidden" : "";
+
+        this.label = game.i18n.localize("arm5e.messages.soak");
+        this.visibility.natRes = "hidden";
         if (this.damage.form !== "") {
           this.damage.natRes = actorSystemData.bonuses.resistance[this.damage.form];
-        }
-        for (let [key, resist] of Object.entries(actorSystemData.bonuses.resistance)) {
-          if (resist !== 0) {
-            this.damage.hasResistance = true;
-            this.selection.natRes[key] = {
-              res: resist,
-              label: `${CONFIG.ARM5E.magic.arts[key].label} (${resist})`
-            };
+          if (this.damage.natRes !== 0) {
+            this.visibility.natRes = "";
           }
         }
+
         if (this._actor.isMagus()) {
           if (this.damage.form !== "") {
             this.damage.formRes = Math.ceil(
@@ -135,16 +134,8 @@ export class ArM5eRollInfo {
             );
           }
           this.isMagus = true;
-          for (let [key, form] of Object.entries(actorSystemData.arts.forms)) {
-            this.selection.formRes[key] = {
-              res: Math.ceil(form.finalScore / 5),
-              label: `${form.label} (${Math.ceil(form.finalScore / 5)})`
-            };
-          }
-
-          // data.formRes = data.selection.formRes[form].res;
         }
-
+        this.listeners = addSoakListenersDialog;
         break;
       case ROLL_PROPERTIES.CHAR.VAL:
         this.characteristic = dataset.characteristic;
@@ -801,7 +792,7 @@ export class ArM5eRollInfo {
       source: game.i18n.localize("arm5e.damage.sourcePlaceHolder"),
       ignoreArmor: false,
       form: "",
-      hasResistance: false,
+      hasResistance: "hidden",
       formRes: 0,
       natRes: 0
     };

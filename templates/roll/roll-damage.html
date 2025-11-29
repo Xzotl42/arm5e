@@ -2,21 +2,21 @@
   {{> "systems/arm5e/templates/roll/parts/roll-header.html" header="Damage_Soak" }}
   <div class="roll-options">
     <div class="flexcol flex-group-center">
-      <label class="resource-label flex0">{{localize "arm5e.damage.source" }}</label>
+      <label class=" flex0">{{localize "arm5e.damage.source" }}</label>
       <input type="text" name="system.roll.damage.source" value="{{system.roll.damage.source}}" data-dtype="String"
-        class="SelectedSource resource-focus wide" />
+        class="SelectedSource select-on-focus wide" />
     </div>
     <div class="flexrow flex-group-center">
-      <label class="resource-label flex0">{{localize "arm5e.damage.label" }} </label>
+      <label class=" flex0">{{localize "arm5e.damage.label" }} </label>
       <input type="number" name="system.roll.modifier" value="{{system.roll.modifier}}" data-dtype="Number"
-        class="SelectedModifier resource-focus modifier" />
+        class="SelectedModifier select-on-focus modifier" />
     </div>
     <div class="flexrow flex-group-center">
-      <label class="resource-label"><img src="systems/arm5e/assets/ballSilver.png" width="20" height="20"
+      <label class=""><img src="systems/arm5e/assets/ballSilver.png" width="20" height="20"
           style="border :0px" /></label>
     </div>
     <div class="flexrow flex-group-center">
-      <label class="resource-label fit">{{localize "arm5e.damage.form"}} </label>
+      <label class=" fit">{{localize "arm5e.damage.form"}} </label>
       <div style="max-width: fit-content;">
         <select name="system.roll.damage.form" class="SelectedFormDamage" data-type="String"
           style="max-width: fit-content;">
@@ -25,7 +25,7 @@
       </div>
     </div>
     <div class="flexrow flex-group-center">
-      <label class="resource-label flex0">{{localize "arm5e.damage.ignoreArmor" }} </label>
+      <label class=" flex0">{{localize "arm5e.damage.ignoreArmor" }} </label>
       <input type="checkbox" name="system.roll.damage.ignoreArmor" {{checked system.roll.damage.ignoreArmor}}
         data-dtype="Boolean" class="ignoreArmor" />
     </div>

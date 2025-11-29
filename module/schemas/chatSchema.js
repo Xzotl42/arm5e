@@ -1263,7 +1263,9 @@ export class DamageChatSchema extends RollChatSchema {
         const messageData = { "system.impact.applied": true };
         messageData["system.damage"] = message.system.damage;
         messageData["system.impact"] = message.system.impact;
+        // adjust message content
         message.system.roll.type = "damage";
+        delete message.system.roll.details;
         messageData["system.roll"] = message.system.roll;
         messageData["roll"] = message.rolls[0].toJSON(); // soak roll only
 

@@ -13,9 +13,9 @@
     {{>"systems/arm5e/templates/generic/simpleFieldBacksection.html" label="arm5e.sanatorium.recoveryBonus"
     name="recoveryBonus" attributes="readonly" value=modifiers.activeEffect type="number" dtype="Number" classes="wide"}}
     {{>"systems/arm5e/templates/generic/simpleFieldBacksection.html" label="arm5e.sanatorium.mundaneHelp" 
-        name="modifiers.mundaneHelp" attributes="" value=modifiers.mundaneHelp type="number" dtype="Number" classes="wide resource-focus change-mundane-help"}}
+        name="modifiers.mundaneHelp" attributes="" value=modifiers.mundaneHelp type="number" dtype="Number" classes="wide select-on-focus change-mundane-help"}}
     {{>"systems/arm5e/templates/generic/simpleFieldBacksection.html" label="arm5e.sanatorium.magicalHelp" 
-        name="modifiers.magicalHelp" attributes="" value=modifiers.magicalHelp type="number" dtype="Number" classes="wide resource-focus change-magical-help"}}
+        name="modifiers.magicalHelp" attributes="" value=modifiers.magicalHelp type="number" dtype="Number" classes="wide select-on-focus change-magical-help"}}
     {{>"systems/arm5e/templates/generic/simpleFieldBacksection.html" label="arm5e.sanatorium.labHealth" 
         name="modifiers.labHealth" attributes="readonly" value=modifiers.labHealth type="number" dtype="Number" classes="wide"}}
   </div>
@@ -34,7 +34,7 @@
         <div class="resource-content flexrow flex-center flex-between margintop6">
           <label for="curYear" class="smallTitle" style="font-size:16pt">{{localize "arm5e.sheet.year"}}</label>
           <input type="number" name="curYear" readonly value="{{curYear}}" data-dtype="Number"
-            class="sanatorium change-year resource-focus" style="
+            class="sanatorium change-year select-on-focus" style="
         font-size: 18pt;" />
         </div>
       </div>
@@ -66,7 +66,7 @@
           style="font-size:14pt">{{localize "arm5e.sanatorium.daysAvailbable"}}</label>
 
         <input type="number" name="availableDays" {{dateChange}} value="{{availableDays}}" data-dtype="Number"
-          class="sanatorium change-available-days resource-focus" style="
+          class="sanatorium change-available-days select-on-focus" style="
         font-size: 14pt;" />
       </div>
       <div class="flex-center marginsides10" style="padding-top: 16px;">

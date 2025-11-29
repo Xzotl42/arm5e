@@ -12,13 +12,13 @@
       </h1>
       <div class="grid grid-2col">
         <div class="resource flexcol">
-          <label for="system.art" class="header-label">{{localize "arm5e.sheet.art"}}</label>
+          <label for="system.art" class="">{{localize "arm5e.sheet.art"}}</label>
           <select name="system.art" data-type="String">
             {{selectOptions config.magic.arts selected=system.art labelAttr="label"}}
           </select>
         </div>
         <div class="resource flexcol">
-          <label for="system.season" class="header-label">{{localize "arm5e.sheet.season"}}</label>
+          <label for="system.season" class="">{{localize "arm5e.sheet.season"}}</label>
           <select name="system.season" data-type="String">
             {{selectOptions config.seasons selected=system.season labelAttr="label" localize=true }}
           </select>
@@ -26,18 +26,18 @@
       </div>
       <div class="resource flexrow">
         <div class="resource">
-          <label class="header-label">{{localize "arm5e.sheet.pawns"}}</label>
-          <input type="number" class="modifier resource-focus" name="system.pawns" value="{{system.pawns}}"
+          <label class="">{{localize "arm5e.sheet.pawns"}}</label>
+          <input type="number" class="modifier select-on-focus" name="system.pawns" value="{{system.pawns}}"
             data-dtype="Number" />
         </div>
         <div class="resource">
-          <label class="header-label">{{localize "arm5e.sheet.visLabel"}}</label>
+          <label class="">{{localize "arm5e.sheet.visLabel"}}</label>
           <input type="text" name="system.visLabel" value="{{system.visLabel}}" data-dtype="String" />
         </div>
       </div>
 
       <div class="resource">
-        <label class="header-label">{{localize "arm5e.sheet.location"}}</label>
+        <label class="">{{localize "arm5e.sheet.location"}}</label>
         <input type="text" name="system.place" value="{{system.place}}" data-dtype="String" />
       </div>
 
@@ -63,7 +63,7 @@
   <section class="sheet-body">
     {{!-- Attributes Tab --}}
     <div class="tab attributes" data-group="primary" data-tab="attributes">
-      <label for="system.form" class="header-label">{{localize "arm5e.sheet.physicalForm"}}</label>
+      <label for="system.form" class="">{{localize "arm5e.sheet.physicalForm"}}</label>
       {{editor enrichedForm target="system.form" button=true owner=owner engine="prosemirror" editable=editable}}
     </div>
 

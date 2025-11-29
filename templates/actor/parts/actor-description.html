@@ -116,7 +116,7 @@
           {{#if (eq key "born")}}
             <span><input type="number" name="system.description.{{key}}.value"
                 value="{{numberFormat description.value decimals=0 }}" {{ui.storyMode.edit}} data-dtype="Number"
-                class="resource-focus wide" /></span>
+                class="select-on-focus wide" /></span>
           {{else}}
             <span><input type="text" name="system.description.{{key}}.value" value="{{description.value}}"
                 data-dtype="String" /></span>

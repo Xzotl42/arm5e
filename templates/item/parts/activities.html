@@ -47,23 +47,23 @@
     <section class="progress-teacher flexrow flex-group-left backSection" data-tab="teacher"
       style="height: 200px; margin: 5px;">
       <div class="flexcol">
-        <label class="header-label">{{localize "arm5e.activity.teacher.name"}}</label>
+        <label class="">{{localize "arm5e.activity.teacher.name"}}</label>
         <input type="text" name="system.teacher.name" value="{{system.teacher.name}}" data-dtype="String"
-          style="max-width: 220px;" {{system.canEditTeacher}} class="resource-focus">
-        {{#if (eq system.activity "teaching")}} <label class="header-label">{{localize "arm5e.sheet.com"}}</label>
+          style="max-width: 220px;" {{system.canEditTeacher}} class="select-on-focus">
+        {{#if (eq system.activity "teaching")}} <label class="">{{localize "arm5e.sheet.com"}}</label>
           <input type="number" name="system.teacher.com" value="{{system.teacher.com}}" data-dtype="Number"
-            style="max-width: 50px;" {{system.canEditTeacher}} class="resource-focus">
-          <label class="header-label">{{localize "arm5e.skill.general.teaching"}}</label>
+            style="max-width: 50px;" {{system.canEditTeacher}} class="select-on-focus">
+          <label class="">{{localize "arm5e.skill.general.teaching"}}</label>
           <input type="number" name="system.teacher.teaching" value="{{system.teacher.teaching}}" data-dtype="Number"
-            style="max-width: 50px;" {{system.canEditTeacher}} class="resource-focus">
-          <label class="header-label">{{localize "arm5e.sheet.speciality"}} ({{system.teacher.speciality}})</label>
+            style="max-width: 50px;" {{system.canEditTeacher}} class="select-on-focus">
+          <label class="">{{localize "arm5e.sheet.speciality"}} ({{system.teacher.speciality}})</label>
           <input type="checkbox" name="system.teacher.applySpec" {{checked system.teacher.applySpec}}
             data-dtype="Boolean" {{system.disabled}} />
         {{/if}}
         {{#unless system.teacherLinked}}
-          <label class="header-label">{{localize "arm5e.sheet.score"}}</label>
+          <label class="">{{localize "arm5e.sheet.score"}}</label>
           <input type="number" class="score-teacher" name="system.teacher.score" value="{{system.teacher.score}}"
-            data-dtype="Number" style="max-width: 50px;" {{system.canEditTeacher}} class="resource-focus">
+            data-dtype="Number" style="max-width: 50px;" {{system.canEditTeacher}} class="select-on-focus">
         {{/unless}}
       </div>
       <div class="flexcol" style="text-align: center;">
@@ -116,7 +116,7 @@
               {{#unless ../ui.showTeacher}}
                 <input type="number" name="system.progress.abilities.{{idx}}.xp" value="{{ability.xp}}"
                   data-dtype="Number" data-index="{{idx}}" data-type="abilities" {{@root.system.canEdit}}
-                  class="progress-xp flex0 resource-focus" style="width:50px" min="0" step="1" />
+                  class="progress-xp flex0 select-on-focus" style="width:50px" min="0" step="1" />
               {{else}}
                 <input type="number" name="system.progress.abilities.{{idx}}.teacherScore"
                   value="{{ability.teacherScore}}" data-dtype="Number" data-index="{{idx}}" data-type="abilities"
@@ -165,7 +165,7 @@
               {{#unless ../ui.showTeacher}}
                 <input type="number" name="system.progress.arts.{{idx}}.xp" value="{{art.xp}}" data-dtype="Number"
                   data-index="{{idx}}" data-type="arts" {{@root.system.canEdit}}
-                  class="progress-xp flex0 resource-focus" style="width:50px" min="0" step="1" />
+                  class="progress-xp flex0 select-on-focus" style="width:50px" min="0" step="1" />
               {{else}}
                 <input type="number" name="system.progress.arts.{{idx}}.teacherScore" value="{{art.teacherScore}}"
                   data-dtype="Number" data-index="{{idx}}" data-type="arts" readonly class="flex0" style="width:50px"
@@ -220,7 +220,7 @@
               {{#unless ../ui.showTeacher}}
                 <input type="number" name="system.progress.spells.{{idx}}.xp" value="{{spell.xp}}" data-dtype="Number"
                   data-index="{{idx}}" data-type="spells" {{@root.system.canEdit}}
-                  class="progress-xp flex0 resource-focus" style="width:50px" min="0" step="1" />
+                  class="progress-xp flex0 select-on-focus" style="width:50px" min="0" step="1" />
               {{else}}
                 <input type="number" name="system.progress.spells.{{idx}}.teacherScore" value="{{spell.teacherScore}}"
                   data-dtype="Number" data-index="{{idx}}" data-type="spells" readonly class="flex0" style="width:50px"
@@ -250,7 +250,7 @@
           {{#each system.progress.newSpells as |spell idx|}}
             <li class="item diary-progress flexrow">
               <div class="resource flexrow">
-                <label for="system.progress.newSpells.{{idx}}.name" class="header-label"
+                <label for="system.progress.newSpells.{{idx}}.name" class=""
                   style="font-size: 9pt">{{spell.label}}</label>
                 <div class="flex01 flexrow">
                   <a class="item-control show-details flex0" title='{{localize "arm5e.generic.details"}}'

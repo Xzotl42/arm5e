@@ -8,7 +8,7 @@
 - Long term fatigue management.
 - Confidence can now be used on rolled supernatural effect (Hedge magic)
 - New parameter to set the font used for headers
-- By default you can select any text in the interface now (as a test for now)
+- Text in chat is selectable
 - Damage rolls with socket messages
 
 ### Bug fixes
@@ -16,6 +16,7 @@
 - [Simple Calendar] Fixed a bug where changing the date wasn't working anymore.
 - Fix the casting of Hedge magic effects.
 - Chat action buttons will only appear if the player owns the actor.
+- Rollbacking aging rolls properly update the lost stats.
 
 ## 2.4.0.31, Radislav, Enigmatic Faeries 2
 

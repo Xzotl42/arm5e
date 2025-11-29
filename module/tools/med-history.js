@@ -63,7 +63,7 @@ export class MedicalHistory extends FormApplication {
 
   activateListeners(html) {
     super.activateListeners(html);
-    html.find(".resource-focus").focus((ev) => {
+    html.find(".select-on-focus").focus((ev) => {
       ev.preventDefault();
       ev.currentTarget.select();
     });

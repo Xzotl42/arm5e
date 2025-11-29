@@ -778,7 +778,7 @@ export function getFormData(html, actor) {
   } else if ([ROLL_PROPERTIES.DAMAGE.VAL, ROLL_PROPERTIES.SOAK.VAL].includes(actor.rollInfo.type)) {
     find = html.find(".SelectedDamage");
     if (find.length > 0) {
-      actor.rollInfo.difficulty = find[0].value;
+      actor.rollInfo.difficulty = parseInt(find[0].value);
     }
 
     find = html.find(".SelectedSource");
@@ -797,12 +797,12 @@ export function getFormData(html, actor) {
 
     find = html.find(".formRes");
     if (find.length > 0) {
-      actor.rollInfo.damage.formRes = find[0].value;
+      actor.rollInfo.damage.formRes = parseInt(find[0].value);
     }
 
     find = html.find(".natRes");
     if (find.length > 0) {
-      actor.rollInfo.damage.natRes = find[0].value;
+      actor.rollInfo.damage.natRes = parseInt(find[0].value);
     }
   }
   let idx = 0;

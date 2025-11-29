@@ -1,6 +1,6 @@
 <div class="backSection padding12">
-  <div class="resources flexrow">
-    <div class="resources flexcol">
+  <div class="flexrow">
+    <div class="flexcol">
       <span class="resource">
         <label for="system.governForm" class="bold">{{localize "arm5e.sheet.governForm"}}</label>
         <input type="text" name="system.governForm" value="{{system.governForm}}" data-dtype="String" />
@@ -9,29 +9,29 @@
       <span class="resource flexrow">
         <label for="system.loyalty.points.base"
           class="label-medium">{{localize "arm5e.sheet.loyaltyPoints.base"}}</label>
-        <input type="number" value="{{system.loyalty.points.base}}" data-dtype="Number" class="resource-focus"
+        <input type="number" value="{{system.loyalty.points.base}}" data-dtype="Number" class="select-on-focus"
           readonly />
       </span>
       <span class="resource flexrow">
         <label for="system.loyalty.points.base"
           class="label-medium">{{localize "arm5e.sheet.loyaltyPoints.modifiersTotal"}}</label>
         <input type="number" value="{{system.loyalty.points.modifiersTotal}}" data-dtype="Number"
-          class="resource-focus" />
+          class="select-on-focus" />
       </span>
       <span class="resource flexrow">
         <label for="system.loyalty.points.actuals"
           class="label-medium">{{localize "arm5e.sheet.loyaltyPoints.actuals"}}</label>
         <input type="number" name="system.loyalty.points.actuals" value="{{system.loyalty.points.actuals}}" readonly
-          data-dtype="Number" class="resource-focus" />
+          data-dtype="Number" class="select-on-focus" />
       </span>
       <span class="resource flexrow">
         <label for="system.loyalty.points.predominant"
           class="label-medium">{{localize "arm5e.sheet.loyaltyPoints.predominant"}}</label>
         <input type="number" name="system.loyalty.points.prevailing" value="{{system.loyalty.points.prevailing}}"
-          data-dtype="Number" class="resource-focus summary" />
+          data-dtype="Number" class="select-on-focus summary" />
       </span>
     </div>
-    <div class="resources flexcol">
+    <div class="flexcol">
       <span class="resource">
         <label for="system.governForm" class="bold">{{localize "arm5e.sheet.loyaltyModifiers.header"}} :
         </label>
@@ -40,7 +40,7 @@
         <label for="system.loyalty.modifiers.livingConditions"
           class="label-medium">{{localize "arm5e.sheet.loyaltyModifiers.livingConditions"}}</label>
         <input type="number" name="system.loyalty.modifiers.livingConditions"
-          value="{{system.loyalty.modifiers.livingConditions}}" data-dtype="Number" class="resource-focus" />
+          value="{{system.loyalty.modifiers.livingConditions}}" data-dtype="Number" class="select-on-focus" />
       </span>
       <span class="resource flexrow">
         <label for="system.loyalty.modifiers.equipment"
@@ -53,7 +53,7 @@
         </select>
         <input type="number"
           value="{{lookup (lookup config.covenant.loyalty.equipment system.loyalty.modifiers.equipment) 'mod'}}"
-          data-dtype="Number" readonly class="resource-focus" />
+          data-dtype="Number" readonly class="select-on-focus" />
       </span>
       <span class="resource flexrow">
         <label for="system.loyalty.modifiers.wages"
@@ -65,25 +65,25 @@
         </select>
         <input type="number"
           value="{{lookup (lookup config.covenant.loyalty.wages system.loyalty.modifiers.wages) 'mod'}}"
-          data-dtype="Number" readonly class="resource-focus" />
+          data-dtype="Number" readonly class="select-on-focus" />
       </span>
       <span class="resource flexrow">
         <label for="system.loyalty.modifiers.specialists"
           class="label-medium">{{localize "arm5e.sheet.loyaltyModifiers.specialists"}}</label>
         <input type="number" name="system.loyalty.modifiers.specialists"
-          value="{{system.loyalty.modifiers.specialists}}" data-dtype="Number" class="resource-focus" />
+          value="{{system.loyalty.modifiers.specialists}}" data-dtype="Number" class="select-on-focus" />
       </span>
       <span class="resource flexrow">
         <label for="system.loyalty.modifiers.familiarity"
           class="label-medium">{{localize "arm5e.sheet.loyaltyModifiers.familiarity"}}</label>
         <input type="number" name="system.loyalty.modifiers.familiarity"
-          value="{{system.loyalty.modifiers.familiarity}}" data-dtype="Number" class="resource-focus editable" />
+          value="{{system.loyalty.modifiers.familiarity}}" data-dtype="Number" class="select-on-focus editable" />
       </span>
       <span class="resource flexrow">
         <label for="system.loyalty.modifiers.events"
           class="label-medium">{{localize "arm5e.sheet.loyaltyModifiers.events"}}</label>
         <input type="number" name="system.loyalty.modifiers.events" value="{{system.loyalty.modifiers.events}}"
-          data-dtype="Number" class="resource-focus editable" />
+          data-dtype="Number" class="select-on-focus editable" />
       </span>
     </div>
   </div>
@@ -104,23 +104,23 @@
       <label class="label-medium">{{localize "arm5e.generic.numberOf" thing=(localize "arm5e.sheet.teamsters")}} /
         {{localize "arm5e.generic.needed"}}</label>
       <input type="text" readonly value="{{ system.census.teamsters }} / {{system.census.teamstersNeeded}}"
-        data-dtype="Number" class="resource-focus" />
+        data-dtype="Number" class="select-on-focus" />
     </span>
     <span class="flexcol">
       <label class="label-medium">{{localize "arm5e.generic.numberOf" thing=(localize "arm5e.sheet.servants")}} /
         {{localize "arm5e.generic.needed"}}</label>
       <input type="text" readonly value="{{ system.census.servants }} / {{system.census.servantsNeeded}}"
-        data-dtype="Number" class="resource-focus" />
+        data-dtype="Number" class="select-on-focus" />
     </span>
     <span class="flexcol">
       <label for="system.npcInhabitants" class="label-medium">{{localize "arm5e.sheet.npcgrogs"}}</label>
       <input type="number" name="system.npcInhabitants" value="{{ system.inhabitants.npcgrogs }}" data-dtype="Number"
-        class="resource-focus editable" />
+        class="select-on-focus editable" />
     </span>
     <span class="flexcol">
       <label for="system.census.total" class="bold">{{localize "arm5e.sheet.totalHabitants"}}</label>
       <input type="number" readonly value="{{ system.census.total }}" data-dtype="Number"
-        class="resource-focus summary" />
+        class="select-on-focus summary" />
     </span>
   </div>
 </div>
@@ -256,8 +256,9 @@
   <li class="item flexrow item-header inhabitants" data-category="inhabitants-turbula">
     <div class="item-image"></div>
     <div class="item-name">{{localize "arm5e.sheet.turbula"}} ({{ system.census.turbula}})</div>
-    <div class="">{{localize "arm5e.sheet.equipmentMaintenance"}} : <input type="number" class="resource-focus editable"
-        name=system.finances.averageEquipMaintenance value="{{system.finances.averageEquipMaintenance}}"></div>
+    <div class="">{{localize "arm5e.sheet.equipmentMaintenance"}} : <input type="number"
+        class="select-on-focus editable" name=system.finances.averageEquipMaintenance
+        value="{{system.finances.averageEquipMaintenance}}"></div>
     <div class="item-controls">
       <a class="item-control item-create" title="Add Grog" data-type="inhabitant" data-category="turbula"><i
           class="fas fa-plus"></i>{{localize "arm5e.sheet.action.Create"}}</a>

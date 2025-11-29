@@ -16,7 +16,7 @@
   </div>
   <div class="flexcol">
     <div class="flexrow flex01" style="margin-bottom: 5px;">
-      <label class="header-label flex01" style="padding-right: 5px;">{{localize "arm5e.activity.activity"}}</label>
+      <label class=" flex01" style="padding-right: 5px;">{{localize "arm5e.activity.activity"}}</label>
       <select class="lab-activity flex01" data-dtype="String" data-activity="{{planning.type}}">
         {{selectOptions
           config.activities.lab
@@ -32,27 +32,27 @@
       <div class="flexrow flex01">
         <div class="flexcol" style="margin-top: 10px; margin-right: 10px;">
           <div class="padding4 flexrow flex-group-left">
-            <label class="section-handle header-label clickable" data-section="options"
+            <label class="section-handle  clickable" data-section="options"
               data-category="planning">{{localize "arm5e.generic.options"}}</label>
           </div>
           <div class="foldable-section backSection {{@root.ui.sections.visibility.planning.options}}"
             id="planning-options-{{@root.actor._id}}">
             <div class="flexrow">
               <div class="resource flexcol flex-center">
-                <label class="header-label">{{localize "arm5e.spell.applyFocus" }}</label>
+                <label class="">{{localize "arm5e.spell.applyFocus" }}</label>
                 <input type="checkbox" name="flags.arm5e.planning.applyFocus" {{checked planning.applyFocus}} />
               </div>
               {{!--#unless (eq planning.type "spellLearning")}}
                 <div class="resource flexcol flex-center">
-                  <label class="header-label">{{localize "arm5e.lab.specialty.experimentation" }}</label>
+                  <label class="">{{localize "arm5e.lab.specialty.experimentation" }}</label>
                   <input type="checkbox" name="flags.arm5e.planning.experimentation" {{checked
                     planning.experimentation}} />
-                  <input type="number" class="resource-focus slim" name="flags.arm5e.planning.experimentationBonus"
+                  <input type="number" class="select-on-focus slim" name="flags.arm5e.planning.experimentationBonus"
                     value="{{planning.experimentationBonus}}" />
                 </div>
               {{/unless--}}
               <div class="resource flexcol flex-center">
-                <label class="header-label ">{{localize "arm5e.skill.arcane.magicTheory"}}
+                <label class=" ">{{localize "arm5e.skill.arcane.magicTheory"}}
                   {{localize "arm5e.sheet.speciality"}}</label>
                 <input class="flex01" title="{{system.owner.magicTheory.speciality}}" type="text"
                   value="{{system.owner.magicTheory.speciality}}" readonly style="max-width: 150px" />
@@ -61,12 +61,12 @@
               </div>
               {{#if (eq planning.type "chargedItem")}}
                 <div class="resource flexcol flex-center">
-                  <label class="header-label ">{{localize "arm5e.lab.option.oneCharge"}}</label>
+                  <label class=" ">{{localize "arm5e.lab.option.oneCharge"}}</label>
                   <input type="checkbox" name="flags.arm5e.planning.oneCharge" {{checked planning.oneCharge}} />
                 </div>
               {{/if}}
               <div class="resource flexcol flex-center flex01">
-                <label class="header-label ">{{localize "arm5e.lab.distraction.label"}}
+                <label class=" ">{{localize "arm5e.lab.distraction.label"}}
                 </label>
                 <select name="flags.arm5e.planning.distractions" data-dtype="String" style="max-height: 22px">
                   {{selectOptions

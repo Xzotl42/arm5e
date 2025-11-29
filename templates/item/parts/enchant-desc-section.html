@@ -11,21 +11,21 @@
     </div>
     <div class="padding4 flexrow">
       <div class="resource">
-        <label class="header-label">{{localize "arm5e.sheet.creator"}}</label>
+        <label class="">{{localize "arm5e.sheet.creator"}}</label>
         <input type="text" {{noEdit}} name="system.enchantments.author" value="{{system.enchantments.author}}"
           data-dtype="String" style="max-width: 200px;" />
       </div>
       <div class="flexrow">
         <div class="resource">
-          <label class="header-label">{{localize "arm5e.sheet.season"}}</label>
+          <label class="">{{localize "arm5e.sheet.season"}}</label>
           <select {{noSelect}} name="system.enchantments.season" data-dtype="String">
             {{selectOptions config.seasons selected=system.enchantments.season labelAttr="label" localize=true }}
           </select>
         </div>
         <div class="resource">
-          <label class="header-label">{{localize "arm5e.sheet.year"}}</label>
+          <label class="">{{localize "arm5e.sheet.year"}}</label>
           <input type="number" {{noEdit}} name="system.enchantments.year" value="{{system.enchantments.year}}"
-            data-dtype="Number" class="resource-focus" style="width:60px" />
+            data-dtype="Number" class="select-on-focus" style="width:60px" />
         </div>
       </div>
     </div>

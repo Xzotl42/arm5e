@@ -12,13 +12,13 @@
 
       <div class="grid grid-2col">
         <div class="resource flexcol flexrow">
-          <label for="system.technique.value" class="header-label">{{localize "arm5e.sheet.technique"}}</label>
+          <label for="system.technique.value" class="">{{localize "arm5e.sheet.technique"}}</label>
           <select name="system.technique.value" {{noSelect}} data-type="String">
             {{selectOptions config.magic.techniques selected=system.technique.value labelAttr="label"}}
           </select>
         </div>
         <div class="resource flexcol flexrow">
-          <label for="system.form.value" class="header-label">{{localize "arm5e.sheet.form"}}</label>
+          <label for="system.form.value" class="">{{localize "arm5e.sheet.form"}}</label>
           <select name="system.form.value" {{noSelect}} data-type="String">
             {{selectOptions config.magic.forms selected=system.form.value labelAttr="label"}}
           </select>
@@ -30,7 +30,7 @@
           <div class="flex0">{{{masteryHint}}}</div>
         </div>
         <div class="resource flexcol flex-center">
-          <label class="header-label">{{localize "arm5e.sheet.level"}}</label>
+          <label class="">{{localize "arm5e.sheet.level"}}</label>
           <input type="text" {{noEdit}} name="system.level" value="{{system.level}}" data-dtype="Number" />
         </div>
       </div>

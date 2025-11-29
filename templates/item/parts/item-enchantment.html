@@ -1,34 +1,34 @@
 <div class="grid grid-2col">
     <div class="resource">
-        <label class="header-label">{{localize "arm5e.lab.enchantment.effectFrequency" }}</label>
+        <label class="">{{localize "arm5e.lab.enchantment.effectFrequency" }}</label>
         {{#with (lookup config.lab.enchantment.effectUses system.effectfrequency)}}
-            <label class="header-label">: {{this}} {{localize "arm5e.lab.enchantment.uses-per-day"}}</label>
+            <label class="">: {{this}} {{localize "arm5e.lab.enchantment.uses-per-day"}}</label>
         {{/with}}
         </select>
     </div>
     <div class="resource">
-        <label class="header-label">{{localize "arm5e.lab.enchantment.penetration"}}</label>
+        <label class="">{{localize "arm5e.lab.enchantment.penetration"}}</label>
         <input type="number" name="system.penetration" value="{{system.penetration}}" data-dtype="Number" readonly />
     </div>
     <div class="resource">
-        <label class="header-label">{{localize "arm5e.lab.enchantment.maintainConc" }}</label>
+        <label class="">{{localize "arm5e.lab.enchantment.maintainConc" }}</label>
         {{#if system.maintainConc }}
-            <label class="header-label">{{localize "arm5e.dialog.button.yes" }}</label>
+            <label class="">{{localize "arm5e.dialog.button.yes" }}</label>
         {{else}}
-            <label class="header-label">{{localize "arm5e.dialog.button.no" }}</label>
+            <label class="">{{localize "arm5e.dialog.button.no" }}</label>
         {{/if}}
     </div>
     <div class=" resource">
-        <label class="header-label">{{localize "arm5e.lab.enchantment.envTrigger"}}</label>
+        <label class="">{{localize "arm5e.lab.enchantment.envTrigger"}}</label>
         <input type="text" name="system.environmentalTrigger" value="{{system.environmentalTrigger}}"
             data-dtype="String" readonly />
     </div>
     <div class="resource">
-        <label class="header-label">{{localize "arm5e.lab.enchantment.restrictedUse"}}</label>
+        <label class="">{{localize "arm5e.lab.enchantment.restrictedUse"}}</label>
         <input type="text" name="system.restrictedUse" value="{{system.restrictedUse}}" data-dtype="String" readonly />
     </div>
     <div class="resource">
-        <label class="header-label">{{localize "arm5e.lab.enchantment.linkTrigger"}}</label>
+        <label class="">{{localize "arm5e.lab.enchantment.linkTrigger"}}</label>
         <input type="text" name="system.linkedTrigger" value="{{system.linkedTrigger}}" data-dtype="String" readonly />
     </div>
 </div>

@@ -2,44 +2,44 @@
   {{> "systems/arm5e/templates/roll/parts/roll-header.html" header="Damage_Soak" }}
   <div class="roll-options">
     <div class="flexrow flex-group-center">
-      <label class="resource-label" name="strength"
+      <label class="" name="strength"
         value="{{actor.system.characteristics.str.value}}">{{localize "arm5e.sheet.strength" }} ({{ numberFormat
         actor.system.characteristics.str.value decimals=0
         sign=true }})</label>
     </div>
 
     <div class="flexrow flex-group-center">
-      <label class="resource-label">+</label>
+      <label class="">+</label>
     </div>
     <div class="flexrow flex-group-center">
-      <label class="resource-label" name="weapon" value="{{actor.system.combat.dam}}">{{localize "arm5e.damage.label" }}
+      <label class="" name="weapon" value="{{actor.system.combat.dam}}">{{localize "arm5e.damage.label" }}
         ({{ numberFormat
         actor.system.combat.dam decimals=0 sign=true }})</label>
     </div>
 
     <div class="flexrow flex-group-center">
-      <label class="resource-label">+</label>
+      <label class="">+</label>
     </div>
     <div class="flexrow flex-group-center">
-      <label class="resource-label flex0">{{localize "arm5e.sheet.advantage" }}</label>
+      <label class=" flex0">{{localize "arm5e.sheet.advantage" }}</label>
       <input type="number" name="advantage" value="{{advantage}}" data-dtype="Number"
-        class="SelectedAdvantage resource-focus modifier" />
+        class="SelectedAdvantage select-on-focus modifier" />
     </div>
 
     <div class="flexrow flex-group-center">
-      <label class="resource-label">+</label>
+      <label class="">+</label>
     </div>
     <div class="flexrow flex-group-center">
-      <label class="resource-label flex0">{{localize "arm5e.sheet.modifier" }}</label>
+      <label class=" flex0">{{localize "arm5e.sheet.modifier" }}</label>
       <input type="number" name="modifier" value="{{modifier}}" data-dtype="Number"
-        class="SelectedModifier resource-focus modifier" />
+        class="SelectedModifier select-on-focus modifier" />
     </div>
     <div class="flexrow flex-group-center">
-      <label class="resource-label"><img src="systems/arm5e/assets/ballSilver.png" width="20" height="20"
+      <label class=""><img src="systems/arm5e/assets/ballSilver.png" width="20" height="20"
           style="border :0px" /></label>
     </div>
     <div class="flexrow flex-group-center">
-      <label class="header-label fit">{{localize "arm5e.damage.form"}}</label>
+      <label class=" fit">{{localize "arm5e.damage.form"}}</label>
       <select name="formDamage" data-type="String" style="max-width: fit-content;">
         {{selectOptions selection.forms selected=formDamage  labelAttr="label"  }}
       </select>

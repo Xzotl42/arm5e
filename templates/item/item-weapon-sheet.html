@@ -7,7 +7,7 @@
           <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name" /></h1>
           {{#if system.canEquip}}
             <div class="resource flexcol flexrow">
-              <label for="system.ability" class="header-label">{{localize "arm5e.sheet.ability"}} </label>
+              <label for="system.ability" class="">{{localize "arm5e.sheet.ability"}} </label>
               <select name="system.ability" data-type="String" class="weapon-ability ability-key">
                 {{selectOptions system.abilities selected=system.ability.id labelAttr="name" 
                 valueAttr="id" nameAttr="id"}}
@@ -17,45 +17,45 @@
           <div class="grid grid-2col">
             {{#if system.canEquip}}
               <div class="resource flexrow">
-                <label class="header-label">{{localize "arm5e.sheet.equipped"}}</label>
+                <label class="">{{localize "arm5e.sheet.equipped"}}</label>
                 <input type="checkbox" name="system.equipped" class="toggle" data-item-id="{{item.id}}"
                   data-attr="equipped" {{checked system.equipped}} />
               </div>
               <div class="resource flexrow">
-                <label class="header-label">{{localize "arm5e.sheet.weaponExpert"}}</label>
+                <label class="">{{localize "arm5e.sheet.weaponExpert"}}</label>
                 <input type="checkbox" name="system.weaponExpert" {{checked system.weaponExpert}} />
               </div>
             {{/if}}
           </div>
           <div class="grid grid-3col">
             <div class="resource flex-group-right">
-              <label class="header-label">{{localize "arm5e.sheet.initiative"}}</label>
-              <input type="number" name="system.init" value="{{system.init}}" class="modifier resource-focus"
+              <label class="">{{localize "arm5e.sheet.initiative"}}</label>
+              <input type="number" name="system.init" value="{{system.init}}" class="modifier select-on-focus"
                 data-dtype="Number" />
             </div>
             <div class="resource flex-group-right">
-              <label class="header-label">{{localize "arm5e.sheet.attack"}}</label>
-              <input type="number" name="system.atk" value="{{system.atk}}" class="modifier resource-focus"
+              <label class="">{{localize "arm5e.sheet.attack"}}</label>
+              <input type="number" name="system.atk" value="{{system.atk}}" class="modifier select-on-focus"
                 data-dtype="Number" />
             </div>
             <div class="resource flex-group-right">
-              <label class="header-label">{{localize "arm5e.sheet.defense"}}</label>
-              <input type="number" name="system.dfn" value="{{system.dfn}}" class="modifier resource-focus"
+              <label class="">{{localize "arm5e.sheet.defense"}}</label>
+              <input type="number" name="system.dfn" value="{{system.dfn}}" class="modifier select-on-focus"
                 data-dtype="Number" />
             </div>
             <div class="resource flex-group-right">
-              <label class="header-label">{{localize "arm5e.damage.label"}}</label>
-              <input type="number" name="system.dam" value="{{system.dam}}" class="modifier resource-focus"
+              <label class="">{{localize "arm5e.damage.label"}}</label>
+              <input type="number" name="system.dam" value="{{system.dam}}" class="modifier select-on-focus"
                 data-dtype="Number" />
             </div>
             <div class="resource flex-group-right">
-              <label class="header-label">{{localize "arm5e.sheet.range"}}</label>
-              <input type="number" name="system.range" value="{{system.range}}" class="modifier resource-focus"
+              <label class="">{{localize "arm5e.sheet.range"}}</label>
+              <input type="number" name="system.range" value="{{system.range}}" class="modifier select-on-focus"
                 data-dtype="Number" />
             </div>
             <div class="resource flex-group-right">
-              <label class="header-label">{{localize "arm5e.sheet.load"}}</label>
-              <input type="number" name="system.load" value="{{system.load}}" class="modifier resource-focus"
+              <label class="">{{localize "arm5e.sheet.load"}}</label>
+              <input type="number" name="system.load" value="{{system.load}}" class="modifier select-on-focus"
                 data-dtype="Number" />
             </div>
           </div>
@@ -68,7 +68,7 @@
           {{#if isGM}}
             <div class="flexrow">
               <div class="resource" style="max-width: 200px;">
-                <label class="header-label">{{localize "arm5e.sheet.state.label"}}</label>
+                <label class="">{{localize "arm5e.sheet.state.label"}}</label>
                 <input type="text" value="{{localize (lookup config.lab.enchantment.receptacle.state system.state)}}"
                   data-dtype="String" readonly>
               </div>
@@ -81,8 +81,8 @@
           {{/if}}
           <div class="flexrow">
             <div class="resource flexrow">
-              <label class="header-label">{{localize "arm5e.sheet.strengthNeeded"}}</label>
-              <input type="number" name="system.str" value="{{system.str}}" class="modifier resource-focus"
+              <label class="">{{localize "arm5e.sheet.strengthNeeded"}}</label>
+              <input type="number" name="system.str" value="{{system.str}}" class="modifier select-on-focus"
                 data-dtype="Number" />
             </div>
             <div class="resource flexrow" style="min-width: 100px;">

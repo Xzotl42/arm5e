@@ -1399,7 +1399,7 @@ export class ArM5eActorSheet extends ActorSheet {
       this._deccreaseArt("forms", element[0].dataset.attribute);
     });
 
-    html.find(".resource-focus").focus((ev) => {
+    html.find(".select-on-focus").focus((ev) => {
       ev.preventDefault();
       ev.currentTarget.select();
     });
@@ -1644,7 +1644,7 @@ export class ArM5eActorSheet extends ActorSheet {
     ).render(true);
   }
   addListenersDialog(html) {
-    html.find(".resource-focus").focus((ev) => {
+    html.find(".select-on-focus").focus((ev) => {
       ev.preventDefault();
       ev.currentTarget.select();
     });

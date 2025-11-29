@@ -1,71 +1,75 @@
 <form class="{{cssClass}} arm5eRoll" autocomplete="off">
   {{> "systems/arm5e/templates/roll/parts/roll-header.html" header="Damage_Soak" }}
   <div class="roll-options">
-    {{log this}}
     <div class="flexrow flex-group-center">
-      <label class="resource-label flex0">{{localize "arm5e.damage.label" }}</label>
-      <input type="number" name="rollInfo.difficulty" value="{{rollInfo.difficulty}}" data-dtype="Number"
-        class="SelectedDamage resource-focus modifier" />
+      <label class=" flex0">{{localize "arm5e.damage.label" }}</label>
+      <input type="number" name="rollInfo.difficulty" value="{{rollInfo.difficulty}}" data-dtype="Number" readonly
+        class="SelectedDamage select-on-focus modifier" />
     </div>
     <div class="flexrow flex-group-center">
-      <label class="resource-label">-</label>
+      <label class="">-</label>
     </div>
     <div class="flexrow flex-group-center">
-      <label class="resource-label" name="stamina"
-        value="{{system.characteristics.sta.value}}">{{localize "arm5e.sheet.stamina" }} ({{ numberFormat
+      <label class="" name="stamina" value="{{system.characteristics.sta.value}}">{{localize "arm5e.sheet.stamina" }}
+        ({{ numberFormat
         system.characteristics.sta.value decimals=0
         sign=true }})</label>
     </div>
     {{#if system.bonuses.traits.soak}}
       <div class="flexrow flex-group-center">
-        <label class="resource-label">-</label>
+        <label class="">-</label>
       </div>
       <div class="flexrow flex-group-center">
-        <label class="resource-label" name="soak"
-          value="{{system.bonuses.traits.soak}}">{{localize "arm5e.sheet.soakBonus" }} ({{ numberFormat
+        <label class="" name="soak" value="{{system.bonuses.traits.soak}}">{{localize "arm5e.sheet.soakBonus" }} ({{
+          numberFormat
           system.bonuses.traits.soak decimals=0 sign=true
           }})</label>
       </div>
     {{/if}}
+
+    <div class="flexrow flex-group-center">
+      <label class=" fit">{{localize "arm5e.damage.form"}} </label>
+      <div style="max-width: fit-content;">
+        <select name="system.roll.damage.form" class="SelectedFormDamage" data-dtype="String" data-actorid="{{_id}}"
+          style="max-width: fit-content;">
+          {{selectOptions selection.forms selected=rollInfo.damage.form  labelAttr="label"  blank="" }}
+        </select>
+      </div>
+    </div>
     {{#if rollInfo.isMagus}}
       <div class="flexrow flex-group-center">
-        <label class="resource-label">-</label>
+        <label class="">-</label>
       </div>
       <div class="flexrow flex-group-center">
-        <label class="header-label">{{localize "arm5e.sheet.formRes"}}</label>
-        <select name="formRes" data-type="String">
-          {{selectOptions rollInfo.selection.formRes selected=rollInfo.damage.form labelAttr="label" blank="" }}
-        </select>
+        <label class="flex04 ">{{localize "arm5e.sheet.formRes"}}</label>
+        <input class="formRes modifier" type="number" data-dtype="Number" readonly value="{{rollInfo.damage.form}}">
       </div>
     {{/if}}
-    {{#if rollInfo.damage.hasResistance}}
+    <div class="natural-resistance {{rollInfo.visibility.natRes}}">
       <div class="flexrow flex-group-center">
-        <label class="resource-label">-</label>
+        <label class="">-</label>
       </div>
       <div class="flexrow flex-group-center">
-        <label class="header-label">{{localize "arm5e.sheet.natRes"}}</label>
-        <select name="natRes" data-type="String">
-          {{selectOptions rollInfo.selection.natRes selected=rollInfo.damage.form labelAttr="label" blank="" }}
-        </select>
+        <label class="flex04 ">{{localize "arm5e.sheet.natRes"}}</label>
+        <input class="natRes modifier" type="number" data-dtype="Number" readonly value="{{rollInfo.damage.natRes}}">
       </div>
-    {{/if}}
-    {{log "rollInfo.damage: " rollInfo.damage}}
-    <div class="flexrow flex-group-center">
-      <label class="resource-label flex0">{{localize "arm5e.damage.ignoreArmor" }} </label>
-      <input type="checkbox" name="rollInfo.damage.ignoreArmor" {{checked rollInfo.damage.ignoreArmor}}
-        data-dtype="Boolean" class="ignoreArmor" />
     </div>
-    {{#unless rollInfo.damage.ignoreArmor}}
+    <div class=" flexrow flex-group-center">
+      <label class=" flex0">{{localize "arm5e.damage.ignoreArmor" }} </label>
+      <input type="checkbox" name="rollInfo.damage.ignoreArmor" {{checked rollInfo.damage.ignoreArmor}}
+        data-dtype="Boolean" class="ignoreArmor" data-actorid="{{_id}}" />
+    </div>
+    <div class="protection {{rollInfo.visibility.protection}}">
       <div class="flexrow flex-group-center">
-        <label class="resource-label">-</label>
+        <label class="">-</label>
       </div>
       <div class="flexrow flex-group-center">
-        <label class="resource-label" name="prot" value="{{system.combat.prot}}">{{localize "arm5e.sheet.protection" }}
+        <label class="" name="prot" value="{{system.combat.prot}}">{{localize "arm5e.sheet.protection" }}
           ({{ numberFormat
           system.combat.prot decimals=0 sign=true
           }})</label>
       </div>
-    {{/unless}}
+    </div>
   </div>
   {{> "systems/arm5e/templates/roll/parts/roll-footer.html" footer="Damage_Soak"}}
 </form>

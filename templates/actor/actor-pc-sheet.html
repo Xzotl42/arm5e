@@ -51,7 +51,7 @@
           </div>
         </h1>
 
-        <div class="resources flexrow flex-between">
+        <div class="flexrow flex-between">
           <div class="flexrow">
             <span class="covenantname flexrow" style="padding-top: 4px">
               <h2 class="covenantname" style="max-width: 365px;">
@@ -77,16 +77,16 @@
           </span>
         </div>
 
-        <div class="resources grid grid-4col">
+        <div class="grid grid-4col">
           <div class="resource flex-group-center backSection">
             <label for="system.age.value" class="smallTitle marginbot6">{{localize "arm5e.sheet.age"}}</label>
             <div class="resource-content flexrow flex-center flex-between margintop6">
               <input type="text" name="system.age.value" value="{{numberFormat system.age.value decimals=0 }}"
                 data-dtype="Number" {{ui.creationMode.edit}} style="flex: 0.6; margin-left: 8px; margin-right: 24px"
-                class="resource-focus slim" />
+                class="select-on-focus slim" />
               (<input type="text" name="system.apparent.value"
                 value="{{numberFormat system.apparent.value decimals=0 }}" data-dtype="Number" style="flex: 0.6"
-                class="resource-focus slim" />)
+                class="select-on-focus slim" />)
             </div>
           </div>
 
