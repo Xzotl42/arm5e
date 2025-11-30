@@ -141,6 +141,8 @@ export class RollChatSchema extends BasicChatSchema {
     return updateData;
   }
 
+  // update the schema with missing data specific to the roll before the message creation.
+  // finish with an updateSource
   enrichMessageData(actor) {}
 
   // standard roll chat message doesn't have targets;

@@ -260,6 +260,7 @@ export class ArM5eActorSheet extends ActorSheet {
       selection: "disabled"
     };
     context.isGM = game.user.isGM;
+    context.isOwner = this.document.isOwner;
     context.metagame = {
       view: game.settings.get("arm5e", "metagame"),
       edit: context.isGM ? "" : "readonly"
@@ -2324,6 +2325,17 @@ export class ArM5eActorSheet extends ActorSheet {
         relativeTo: this.actor
       });
     }
+    if (this.actor.system.secrets) {
+      context.enrichedSecrets = await TextEditor.enrichHTML(this.actor.system.secrets, {
+        // Whether to show secret blocks in the finished html
+        secrets: this.document.isOwner,
+        // Data to fill in for inline rolls
+        rollData: context.rollData,
+        // Relative UUID resolution
+        relativeTo: this.actor
+      });
+    }
+
     if (this.actor.system.sigil?.value) {
       context.enrichedSigil = await TextEditor.enrichHTML(this.actor.system.sigil.value, {
         // Whether to show secret blocks in the finished html

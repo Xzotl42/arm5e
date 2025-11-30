@@ -49,11 +49,63 @@
 
 
 <div class="flexcol grid grid-2col margintop18">
-  <div class="flex-group-left padding12 backSection">
-    <label class="smallTitle">{{localize "arm5e.sheet.biography"}}</label>
-    {{editor enrichedBiography target="system.biography" button=true owner=owner engine="prosemirror" editable=editable}}
-  </div>
+  <div class="flexcol">
+    <div class="flex-group-left padding12 backSection">
+      <label class="smallTitle">{{localize "arm5e.sheet.biography"}}</label>
+      {{editor enrichedBiography target="system.biography" button=true owner=owner engine="prosemirror" editable=editable}}
+    </div>
+    {{#if (or isGM isOwner)}}
+      <div class="flex-group-left padding12 backSection">
+        <label class="smallTitle">{{localize "arm5e.sheet.secrets"}}</label>
+        {{editor enrichedSecrets target="system.secrets" button=true owner=owner engine="prosemirror" editable=editable}}
+      </div>
+    {{/if}}
 
+    {{#if system.isCharacter}}
+      <div class="flex-group-left padding12 backSection">
+        {{#unless system.states.pendingCrisis }}
+          <a class="schedule-aging clickable" title="Aging roll" data-year="{{datetime.year}}"
+            data-season="{{datetime.season}}" style="font-size: 16pt;">
+            <i class="icon-Icon_Aging2"></i>
+          </a>
+        {{/unless}}
+        <label class="smallTitle padding12">
+          {{localize "arm5e.sheet.aging"}} & {{localize "arm5e.sheet.decrepitude"}}
+
+        </label>
+        <div class="flexrow marginbot6 margintop6">
+          <label for="system.decrepitude.finalScore" class="bold">{{localize "arm5e.sheet.score"}}</label>
+          <span class="marginbot6" style="margin-right: 24px"><input type="text" name="system.decrepitude.finalScore"
+              value="{{system.decrepitude.finalScore}}" data-dtype="Number" readonly /></span>
+          <label for="system.decrepitude.points" class="bold flex06">{{localize "arm5e.sheet.points"}}</label>
+          <span class="marginbot6">
+            <input type="text" name="system.decrepitude.points" value="{{system.decrepitude.points}}"
+              data-dtype="Number" style="width: 50px" />&nbsp;/&nbsp;({{system.decrepitude.experienceNextLevel }})
+          </span>
+        </div>
+
+        <div class="flexrow">
+          <label for="system.decrepitude.effects" class="bold">{{localize "arm5e.sheet.effects"}}</label>
+        </div>
+        <div class="flex-group-left marginbot6" style="height: auto; overflow-y: auto;">
+          {{editor enrichedDecrepitude target="system.decrepitude.effects" button=true owner=owner engine="prosemirror"
+      editable=editable}}
+        </div>
+        <div class="flexrow">
+          <div class="flexrow flex-group-center">
+            <label for="system.laboratory.longevityRitual.labTotal">{{localize "arm5e.sheet.labTotal"}}</label>
+            <input type="number" name="system.laboratory.longevityRitual.labTotal"
+              value="{{system.laboratory.longevityRitual.labTotal }}" data-dtype="Number" />
+          </div>
+          <div class="flexrow flex-group-center">
+            <label for="system.bonuses.traits.aging">{{localize "arm5e.sheet.longevityModifier"}}</label>
+            <input type="number" readonly name="system.bonuses.traits.aging" value="{{system.bonuses.traits.aging }}"
+              data-dtype="Number" />
+          </div>
+        </div>
+      </div>
+    {{/if}}
+  </div>
   <div>
     {{#if (eq actor.type "player")}}
       <div class="flex-group-left padding12 backSection">
@@ -161,94 +213,54 @@
         {{/each}}
       </ol>
     </div>
+
+    {{#if system.isCharacter}}
+      <!-- <div class="flexcol grid grid-2col"> -->
+      <div class="flex-group-left padding12 backSection">
+        <div class="flexrow marginbot6 margintop6">
+          {{#if system.isMagus}}
+            <div class="flex01">
+              <a class="twilight-episode clickable" title="{{system.twilight.tooltip}}" data-year="{{datetime.year}}"
+                data-season="{{datetime.season}}" style="font-size: 16pt; ">
+                <img class="twilight-icon" src="systems/arm5e/assets/icons/Icon_Warping.png"
+                  style="width:25px; border:none; "></i>
+                {{#if system.twilight.stage}}
+                  <div class="twilight-icon"
+                    style="position: relative; top: -30px;left: 9px; font-size: 12pt; font-weight: bold; pointer-events: none;">
+                    {{system.twilight.stage}}
+                  </div>
+                {{/if}}
+              </a>
+            </div>
+          {{/if}}
+          <label class="smallTitle">
+            {{localize "arm5e.sheet.warping"}}
+          </label>
+        </div>
+        <div class="flexrow marginbot6 margintop6">
+          <label for="system.warping.finalScore" class="bold">{{localize "arm5e.sheet.score"}}</label>
+          <span class="marginbot6" style="margin-right: 24px"><input type="number" name="system.warping.finalScore"
+              value="{{system.warping.finalScore}}" data-dtype="Number" /></span>
+          <label for="system.warping.points" class="bold flex06">{{localize "arm5e.sheet.points"}}</label>
+          <span class="marginbot6">
+            <input type="number" name="system.warping.points" value="{{system.warping.points}}" data-dtype="Number"
+              style="width: 50px" />&nbsp;/&nbsp;({{ system.warping.experienceNextLevel }})
+          </span>
+        </div>
+
+        <div class="flexrow">
+          <label for="system.warping.effects" class="bold">{{localize "arm5e.sheet.effects"}}</label>
+        </div>
+        <div class="flex-group-left">
+          {{editor enrichedWarping target="system.warping.effects" button=true owner=owner engine="prosemirror" editable=editable}}
+        </div>
+      </div>
+    {{/if}}
   </div>
+
+
 </div>
-{{#if system.isCharacter}}
-  <div class="flexcol grid grid-2col">
-    <div class="flex-group-left padding12 backSection">
-      <div class="flexrow marginbot6 margintop6">
-        {{#if system.isMagus}}
-          <div class="flex01">
-            <a class="twilight-episode clickable" title="{{system.twilight.tooltip}}" data-year="{{datetime.year}}"
-              data-season="{{datetime.season}}" style="font-size: 16pt; ">
-              <img class="twilight-icon" src="systems/arm5e/assets/icons/Icon_Warping.png"
-                style="width:25px; border:none; "></i>
-              {{#if system.twilight.stage}}
-                <div class="twilight-icon"
-                  style="position: relative; top: -30px;left: 9px; font-size: 12pt; font-weight: bold; pointer-events: none;">
-                  {{system.twilight.stage}}
-                </div>
-              {{/if}}
-            </a>
-          </div>
-        {{/if}}
-        <label class="smallTitle">
-          {{localize "arm5e.sheet.warping"}}
-        </label>
-      </div>
-      <div class="flexrow marginbot6 margintop6">
-        <label for="system.warping.finalScore" class="bold">{{localize "arm5e.sheet.score"}}</label>
-        <span class="marginbot6" style="margin-right: 24px"><input type="number" name="system.warping.finalScore"
-            value="{{system.warping.finalScore}}" data-dtype="Number" /></span>
-        <label for="system.warping.points" class="bold flex06">{{localize "arm5e.sheet.points"}}</label>
-        <span class="marginbot6">
-          <input type="number" name="system.warping.points" value="{{system.warping.points}}" data-dtype="Number"
-            style="width: 50px" />&nbsp;/&nbsp;({{ system.warping.experienceNextLevel }})
-        </span>
-      </div>
 
-      <div class="flexrow">
-        <label for="system.warping.effects" class="bold">{{localize "arm5e.sheet.effects"}}</label>
-      </div>
-      <div class="flex-group-left">
-        {{editor enrichedWarping target="system.warping.effects" button=true owner=owner engine="prosemirror" editable=editable}}
-      </div>
-    </div>
-
-    <div class="flex-group-left padding12 backSection">
-      {{#unless system.states.pendingCrisis }}
-        <a class="schedule-aging clickable" title="Aging roll" data-year="{{datetime.year}}"
-          data-season="{{datetime.season}}" style="font-size: 16pt;">
-          <i class="icon-Icon_Aging2"></i>
-        </a>
-      {{/unless}}
-      <label class="smallTitle padding12">
-        {{localize "arm5e.sheet.aging"}} & {{localize "arm5e.sheet.decrepitude"}}
-
-      </label>
-      <div class="flexrow marginbot6 margintop6">
-        <label for="system.decrepitude.finalScore" class="bold">{{localize "arm5e.sheet.score"}}</label>
-        <span class="marginbot6" style="margin-right: 24px"><input type="text" name="system.decrepitude.finalScore"
-            value="{{system.decrepitude.finalScore}}" data-dtype="Number" readonly /></span>
-        <label for="system.decrepitude.points" class="bold flex06">{{localize "arm5e.sheet.points"}}</label>
-        <span class="marginbot6">
-          <input type="text" name="system.decrepitude.points" value="{{system.decrepitude.points}}" data-dtype="Number"
-            style="width: 50px" />&nbsp;/&nbsp;({{system.decrepitude.experienceNextLevel }})
-        </span>
-      </div>
-
-      <div class="flexrow">
-        <label for="system.decrepitude.effects" class="bold">{{localize "arm5e.sheet.effects"}}</label>
-      </div>
-      <div class="flex-group-left marginbot6" style="height: auto; overflow-y: auto;">
-        {{editor enrichedDecrepitude target="system.decrepitude.effects" button=true owner=owner engine="prosemirror"
-      editable=editable}}
-      </div>
-      <div class="flexrow">
-        <div class="flexrow flex-group-center">
-          <label for="system.laboratory.longevityRitual.labTotal">{{localize "arm5e.sheet.labTotal"}}</label>
-          <input type="number" name="system.laboratory.longevityRitual.labTotal"
-            value="{{system.laboratory.longevityRitual.labTotal }}" data-dtype="Number" />
-        </div>
-        <div class="flexrow flex-group-center">
-          <label for="system.bonuses.traits.aging">{{localize "arm5e.sheet.longevityModifier"}}</label>
-          <input type="number" readonly name="system.bonuses.traits.aging" value="{{system.bonuses.traits.aging }}"
-            data-dtype="Number" />
-        </div>
-      </div>
-    </div>
-  </div>
-{{/if}}
 {{#if metagame.view }}
   {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
   {{> "systems/arm5e/templates/generic/source.html" }}

@@ -82,8 +82,8 @@ export class ArM5eMagicCodexSheet extends ArM5eActorSheet {
     context.system.spellsCount = context.system.filteredSpells.length;
     context.system.filteredSpells = context.system.filteredSpells.sort(compareSpells);
     const filterBySettingAspects = await GetFilteredAspects();
-    const searchStr = context.ui.filters.aspects.searchString;
-    if (searchStr && searchStr.length < 3) {
+    const searchStr = context.ui.filters.aspects.searchString ?? "";
+    if (searchStr.length < 3) {
       context.system.filteredAspects = Object.values(filterBySettingAspects).map((e) => {
         return { ...e, source: game.i18n.localize(CONFIG.ARM5E.generic.sourcesTypes[e.src].label) };
       });

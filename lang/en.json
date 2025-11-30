@@ -1187,6 +1187,7 @@
         "label": "Basic Lab Total"
       },
       "biography": "Biography",
+      "secrets": "Secrets",
       "birthName": "Birth Name",
       "birthplace": "Place of Origin",
       "blankBook": "Blank book",

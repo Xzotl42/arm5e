@@ -9,6 +9,7 @@
         "diaryEntries": [],
         "resource": { "fatigue": { "value": 0, "max": 5 } },
         "description": "",
+        "secrets": "",
         "source": "custom",
         "page": 0,
         "indexKey": "",

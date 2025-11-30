@@ -157,36 +157,34 @@ async function stressDie(
 
   let botchCheck = false;
   if (iterations > 1) {
-    flavorTxt = `<h2 class="dice-msg">${game.i18n.localize(
-      "arm5e.messages.die.exploding"
-    )}</h3><br/>`;
+    flavorTxt = `<h3 class="dice-msg">${game.i18n.localize("arm5e.messages.die.exploding")}</h3>`;
   } else if (iterations === 0) {
     if (dieRoll.botches === 0) {
       if (rollProperties.MODE & ROLL_MODES.NO_BOTCH) {
         flavorTxt = `<p>${game.i18n.localize("arm5e.dialog.button.stressdieNoBotch")}:</p>`;
       } else {
-        flavorTxt = `<h2 class="dice-msg">${game.i18n.format("arm5e.messages.die.noBotch", {
+        flavorTxt = `<h3 class="dice-msg">${game.i18n.format("arm5e.messages.die.noBotch", {
           dicenum: dieRoll.botchDice
-        })}</h2><br/>`;
+        })}</h3>`;
       }
     } else if (dieRoll._total == 1) {
       confAllowed = false;
-      flavorTxt = `<h2 class="dice-msg">${game.i18n.localize("arm5e.messages.die.botch")}</h2>`;
+      flavorTxt = `<h3 class="dice-msg">${game.i18n.localize("arm5e.messages.die.botch")}</h3>`;
       if (rollInfo.isMagic) {
-        flavorTxt += `<br/>${game.i18n.format("arm5e.messages.die.warpGain", {
+        flavorTxt += `<p>${game.i18n.format("arm5e.messages.die.warpGain", {
           num: dieRoll.botches
-        })} `;
+        })}</p>`;
       }
       dieRoll._total = 0;
     } else if (dieRoll._total > 1) {
       confAllowed = false;
-      flavorTxt = `<h2 class="dice-msg">${game.i18n.format("arm5e.messages.die.botches", {
+      flavorTxt = `<h3 class="dice-msg">${game.i18n.format("arm5e.messages.die.botches", {
         num: dieRoll._total
-      })}</h2>`;
+      })}</h3>`;
       if (rollInfo.isMagic) {
-        flavorTxt += `<br/>${game.i18n.format("arm5e.messages.die.warpGain", {
+        flavorTxt += `<p>${game.i18n.format("arm5e.messages.die.warpGain", {
           num: dieRoll.botches
-        })} `;
+        })}</p>`;
       }
       dieRoll._total = 0;
     }

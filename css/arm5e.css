@@ -71,8 +71,8 @@
 }
 
 /* Theme variables */
-:root {
-  /* .application.arm5e.themed.theme-light { */
+:root,
+.application.arm5e.themed.theme-light {
   --font-book: "bookAntiqua", serif;
   --font-book-bold: "bookAntiquaBold", serif;
   --font-header: "blackmoor", serif;
@@ -92,7 +92,7 @@
 
   --border-main: #6f6c66;
   --border-muted: #7a7971;
-  /* --color-text-dark-primary: #191813; */
+  --color-text-dark-primary: #191813;
 
   --arm5e-c-conflict: rgb(135 38 22);
   --arm5e-c-free: rgb(51 120 34);
@@ -110,7 +110,7 @@
   --z-index-tooltip: 9999;
 }
 
-/* .theme-dark,
+.theme-dark,
 .application.arm5e.themed.theme-dark {
   --arm5e-c-dark: #c9c7b8;
   --arm5e-c-faint: #191813;
@@ -121,7 +121,8 @@
   --arm5e-c-groove: #11121f;
   --arm5e-c-item-header-bg: #28232f;
   --arm5e-c-item-alternating-bg: rgba(255, 255, 255, 0.05);
-} */
+  --color-text-dark-primary: #b5b3a4;
+}
 
 /* Base typography & grouping to avoid repeated font-family declarations */
 .arm5e,
@@ -162,7 +163,10 @@ label,
 }
 
 /* Window / dialog baseline */
-.window-app .window-content,
+.window-app .window-content {
+  padding-left: 8px;
+  padding-right: 8px;
+}
 .arm5e .window-content,
 .arm5e-dialog .window-content {
   padding: 0;
@@ -265,6 +269,11 @@ img.clickable:hover {
   border-radius: 3px;
   box-shadow: inset 0 0 2px #fff;
   word-break: break-all;
+}
+h2.dice-msg,
+h3.dice-msg {
+  font-size: 12pt;
+  font-weight: bold;
 }
 
 /* Grid utilities (fixed grid-6col) */
@@ -405,7 +414,7 @@ input[type="time"],
   background: rgba(0, 0, 0, 0.05);
   /* padding: 1px 3px; */
   margin: 3px;
-  color: #191813;
+  color: var(--color-text-dark-primary);
   font-family: inherit;
   font-size: inherit;
   font-weight: bold;

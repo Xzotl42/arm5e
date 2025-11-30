@@ -73,7 +73,7 @@ const ROLL_PROPERTIES = {
 
   DAMAGE: {
     VAL: "damage",
-    MODE: 25, // STRESS + NO_CONF + UNCONSCIOUS
+    MODE: ROLL_MODES.STRESS + ROLL_MODES.NO_CONF + ROLL_MODES.UNCONSCIOUS, // 25 STRESS + NO_CONF + UNCONSCIOUS
     TITLE: "arm5e.dialog.title.rolldie",
     MODIFIERS: 0,
     CALLBACK: damageRoll
@@ -81,7 +81,7 @@ const ROLL_PROPERTIES = {
   },
   SOAK: {
     VAL: "soak",
-    MODE: 57, // STRESS + NO_CONF + UNCONSCIOUS + NO CHAT
+    MODE: ROLL_MODES.STRESS + ROLL_MODES.NO_CONF + ROLL_MODES.UNCONSCIOUS + ROLL_MODES.NO_CHAT, // 57, // STRESS + NO_CONF + UNCONSCIOUS + NO CHAT
     TITLE: "arm5e.dialog.title.rolldie",
     MODIFIERS: 0,
     CALLBACK: soakRoll
@@ -143,7 +143,12 @@ const ROLL_PROPERTIES = {
   },
   AGING: {
     VAL: "aging",
-    MODE: 157, // STRESS + NO_BOTCH + NO_CONF + UNCONSCIOUS + PRIVATE
+    MODE:
+      ROLL_MODES.STRESS +
+      ROLL_MODES.NO_BOTCH +
+      ROLL_MODES.NO_CONF +
+      ROLL_MODES.UNCONSCIOUS +
+      ROLL_MODES.PRIVATE, // 157, // STRESS + NO_BOTCH + NO_CONF + UNCONSCIOUS + PRIVATE
     MODIFIERS: 0,
     TITLE: "arm5e.aging.roll.label",
     CALLBACK: setAgingEffects,
@@ -151,7 +156,7 @@ const ROLL_PROPERTIES = {
   },
   TWILIGHT_CONTROL: {
     VAL: "twilight_control",
-    MODE: 17, // STRESS + UNCONSCIOUS
+    MODE: ROLL_MODES.STRESS + ROLL_MODES.UNCONSCIOUS,
     MODIFIERS: 1,
     TITLE: "arm5e.twilight.episode",
     ACTION_LABEL: "arm5e.twilight.control.avoid",
@@ -159,28 +164,33 @@ const ROLL_PROPERTIES = {
   },
   TWILIGHT_STRENGTH: {
     VAL: "twilight_strength",
-    MODE: 157, // STRESS + NO_BOTCH + NO_CONF + UNCONSCIOUS + PRIVATE
+    MODE:
+      ROLL_MODES.STRESS +
+      ROLL_MODES.NO_BOTCH +
+      ROLL_MODES.NO_CONF +
+      ROLL_MODES.UNCONSCIOUS +
+      ROLL_MODES.PRIVATE, // STRESS + NO_BOTCH + NO_CONF + UNCONSCIOUS + PRIVATE
     MODIFIERS: 0,
     TITLE: "arm5e.twilight.episode",
     CALLBACK: applyTwilightStrength
   },
   TWILIGHT_COMPLEXITY: {
     VAL: "twilight_complexity",
-    MODE: 153, // STRESS + NO_CONF + UNCONSCIOUS + PRIVATE
+    MODE: ROLL_MODES.STRESS + ROLL_MODES.NO_CONF + ROLL_MODES.UNCONSCIOUS + ROLL_MODES.PRIVATE, // STRESS + NO_CONF + UNCONSCIOUS + PRIVATE
     MODIFIERS: 0,
     TITLE: "arm5e.twilight.episode",
     CALLBACK: applyTwilightComplexity
   },
   TWILIGHT_UNDERSTANDING: {
     VAL: "twilight_understanding",
-    MODE: 17, // STRESS  + UNCONSCIOUS
+    MODE: ROLL_MODES.STRESS + ROLL_MODES.UNCONSCIOUS,
     MODIFIERS: 1,
     TITLE: "arm5e.twilight.episode",
     CALLBACK: twilightUnderstanding
   },
   CRISIS: {
     VAL: "crisis",
-    MODE: 154, // SIMPLE + NO_CONF + UNCONSCIOUS + PRIVATE
+    MODE: ROLL_MODES.SIMPLE + ROLL_MODES.NO_CONF + ROLL_MODES.UNCONSCIOUS + ROLL_MODES.PRIVATE, // SIMPLE + NO_CONF + UNCONSCIOUS + PRIVATE
     MODIFIERS: 0,
     TITLE: "arm5e.aging.crisis.label",
     CALLBACK: agingCrisis
@@ -195,7 +205,7 @@ const ROLL_PROPERTIES = {
   },
   COMBAT_DAMAGE: {
     VAL: "combatDamage",
-    MODE: 64, // use dataset.mode
+    MODE: ROLL_MODES.NO_ROLL, // use dataset.mode
     MODIFIERS: 0,
     TITLE: "arm5e.dialog.damageCalculator",
     ACTION_LABEL: "arm5e.dialog.woundCalculator"
@@ -203,7 +213,7 @@ const ROLL_PROPERTIES = {
   },
   COMBAT_SOAK: {
     VAL: "combatSoak",
-    MODE: 64, // use dataset.mode
+    MODE: ROLL_MODES.NO_ROLL, // use dataset.mode
     MODIFIERS: 0,
     TITLE: "arm5e.dialog.woundCalculator",
     ACTION_LABEL: "arm5e.dialog.woundCalculator"
@@ -211,7 +221,7 @@ const ROLL_PROPERTIES = {
   },
   POWER: {
     VAL: "power",
-    MODE: 64, // use dataset.mode
+    MODE: ROLL_MODES.NO_ROLL, // use dataset.mode
     MODIFIERS: 7,
     TITLE: "arm5e.dialog.powerUse",
     ACTION_LABEL: "arm5e.dialog.powerUse"
@@ -219,7 +229,7 @@ const ROLL_PROPERTIES = {
   },
   ITEM: {
     VAL: "item",
-    MODE: 72, // no die roll and no confidence
+    MODE: ROLL_MODES.NO_ROLL + ROLL_MODES.NO_CONF, // no die roll and no confidence
     MODIFIERS: 4, // only impacted by aura
     TITLE: "arm5e.dialog.magicItemUse",
     ACTION_LABEL: "arm5e.dialog.powerUse"

@@ -1,4 +1,8 @@
-## 2.4.1.4, Radislav, Cognizant Wisdom
+## 2.4.1.5, Radislav, Cognizant Wisdom
+
+### V13 compatibility
+
+- Verified for version 13.351
 
 ### Features & changes
 
@@ -10,6 +14,7 @@
 - New parameter to set the font used for headers
 - Text in chat is selectable
 - Damage rolls with socket messages
+- New Secrets field for characters
 
 ### Bug fixes
 
