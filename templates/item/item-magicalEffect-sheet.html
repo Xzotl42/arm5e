@@ -17,13 +17,13 @@
       </h1>
       <div class="grid grid-2col">
         <div class="resource flexcol flexrow">
-          <label for="system.technique.value" class="header-label">{{localize "arm5e.sheet.technique"}}</label>
+          <label for="system.technique.value" class="">{{localize "arm5e.sheet.technique"}}</label>
           <select name="system.technique.value" data-type="String">
             {{selectOptions config.magic.techniques selected=system.technique.value labelAttr="label"}}
           </select>
         </div>
         <div class="resource flexcol flexrow">
-          <label for="system.form.value" class="header-label">{{localize "arm5e.sheet.form"}}</label>
+          <label for="system.form.value" class="">{{localize "arm5e.sheet.form"}}</label>
           <select name="system.form.value" data-type="String">
             {{selectOptions config.magic.forms selected=system.form.value labelAttr="label"}}
           </select>
@@ -31,13 +31,13 @@
       </div>
       <div class="grid grid-2col">
         <div class="resource flexcol flex-center">
-          <label class="header-label">{{localize "arm5e.sheet.Requisites"}}</label>
-          <label class="header-label">{{ui.requisites}}</label>
+          <label class="">{{localize "arm5e.sheet.Requisites"}}</label>
+          <label class="">{{ui.requisites}}</label>
           <a class="item-control advanced-req" title="Advanced Requistes" data-flavor="{{ui.flavor}}"><i
               class="fas fa-gavel fa-lg"></i></a>
         </div>
         <div class="resource flexcol flex-center">
-          <label class="header-label">{{localize "arm5e.sheet.level"}}</label>
+          <label class="">{{localize "arm5e.sheet.level"}}</label>
           <input class="design-level" readonly type="number" name="system.level" value="{{system.level}}"
             style="max-width: 60px;" data-dtype="Number" />
         </div>

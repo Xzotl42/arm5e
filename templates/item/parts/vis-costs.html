@@ -7,7 +7,7 @@
   class="foldable-section backSection enchantment padding4 {{lookup @root.ui.sections.visibility.planning 'vis-cost'}}"
   id="planning-vis-cost-{{@root.actor._id}}">
   <div class="padding4 flexrow flex-group-left">
-    <label class="section-handle header-label clickable" data-category="planning"
+    <label class="section-handle  clickable" data-category="planning"
       data-section="magus-vis">{{localize "arm5e.lab.visCosts.magusStock"}}</label>
   </div>
   <div
@@ -15,20 +15,20 @@
     id="planning-magus-vis-{{@root.actor._id}}">
     {{#each planning.data.visCost.magus as |vis id|}}
       <div class="padding4 flexrow flex-group-left">
-        <label class="header-label ">{{vis.label}}</label>
-        <label class="header-label modifier">{{vis.art}}</label>
+        <label class=" ">{{vis.label}}</label>
+        <label class=" modifier">{{vis.art}}</label>
         <div class="padding2 modifier">
           <input type="number" readonly value="{{vis.amount}}" data-dtype="Number" />
         </div>
         <div class="padding2 modifier">
-          <input class="vis-use resource-focus" type="number" name="{{../prefix}}visCost.magus.{{id}}.used"
+          <input class="vis-use select-on-focus" type="number" name="{{../prefix}}visCost.magus.{{id}}.used"
             value="{{vis.used}}" data-dtype="Number" data-id="{{id}}" data-stock="magus" data-amount="{{vis.amount}}" />
         </div>
       </div>
     {{/each}}
   </div>
   <div class="padding4 flexrow flex-group-left">
-    <label class="section-handle header-label clickable" data-category="planning"
+    <label class="section-handle  clickable" data-category="planning"
       data-section="lab-vis">{{localize "arm5e.lab.visCosts.labStock"}}</label>
   </div>
 
@@ -37,13 +37,13 @@
     id="planning-lab-vis-{{@root.actor._id}}">
     {{#each planning.data.visCost.lab as | vis id |}}
       <div class="padding4 flexrow flex-group-left">
-        <label class="header-label ">{{vis.label}}</label>
-        <label class="header-label modifier">{{vis.art}}</label>
+        <label class=" ">{{vis.label}}</label>
+        <label class=" modifier">{{vis.art}}</label>
         <div class="padding2 modifier">
           <input type="number" readonly value="{{vis.amount}}" data-dtype="Number" />
         </div>
         <div class="padding2 modifier">
-          <input class="vis-use resource-focus" type="number" name="{{../prefix}}visCost.lab.{{id}}.used"
+          <input class="vis-use select-on-focus" type="number" name="{{../prefix}}visCost.lab.{{id}}.used"
             value="{{vis.used}}" data-dtype="Number" data-id="{{id}}" data-stock="lab" data-amount="{{vis.amount}}" />
         </div>
       </div>

@@ -1,6 +1,6 @@
 <div class="flexcol flex0">
   <div class="padding4 flexrow flex-group-left">
-    <label class="section-handle header-label clickable" data-category="{{container}}" data-section="desc"
+    <label class="section-handle  clickable" data-category="{{container}}" data-section="desc"
       data-index="{{index}}">{{localize "arm5e.spell.description"}}</label>
   </div>
   <div class="foldable-section-small {{lookup visibility 'desc' }}" id="{{container}}-desc{{index}}-{{docId}}">
@@ -12,48 +12,48 @@
 </div>
 <div class="flexcol flex0" style="margin-top: 10px;">
   <div class="padding4 flexrow flex-group-left">
-    <label class="section-handle header-label clickable" data-category="{{container}}" data-section="attributes"
+    <label class="section-handle  clickable" data-category="{{container}}" data-section="attributes"
       data-index="{{index}}">{{localize "arm5e.spell.attributes"}}</label>
   </div>
   <div class="foldable-section backSection {{lookup visibility 'attributes'}}"
     id="{{container}}-attributes{{index}}-{{docId}}">
     <div class="flexrow flex02">
       <div class="resource flexcol flex01">
-        <label for="{{prefix}}system.technique.value" class="header-label">{{localize "arm5e.sheet.technique"}}</label>
+        <label for="{{prefix}}system.technique.value" class="">{{localize "arm5e.sheet.technique"}}</label>
         <select name="{{prefix}}system.technique.value" data-type="String" {{edition.spellCombobox}}>
           {{selectOptions @root.config.magic.techniques selected=spelldata.system.technique.value labelAttr="label"}}
         </select>
       </div>
       <div class="resource flexcol flex01">
-        <label for="system.form.value" class="header-label">{{localize "arm5e.sheet.form"}}</label>
+        <label for="system.form.value" class="">{{localize "arm5e.sheet.form"}}</label>
         <select name="{{prefix}}system.form.value" data-type="String" {{edition.spellCombobox}}>
           {{selectOptions @root.config.magic.forms selected=spelldata.system.form.value labelAttr="label"}}
         </select>
       </div>
       <div class="resource flexcol flex-center flex01">
-        <label class="header-label ">{{localize "arm5e.sheet.Requisites"}}</label>
+        <label class=" ">{{localize "arm5e.sheet.Requisites"}}</label>
         <a class="item-control advanced-req" data-index="{{index}}" title="Advanced Requistes"
           data-flavor="{{@root.ui.flavor}}"><i class="fas fa-gavel fa-lg"></i></a>
       </div>
       <div class="resource flex-group-center " style="min-width: 75px; max-width: 140px; margin-top: 10px;">
-        <label class="header-label">Base level</label>
+        <label class="">Base level</label>
         <input style="max-width: 35px;" type="number" name="{{prefix}}system.baseLevel" size="4"
-          value="{{spelldata.system.baseLevel}}" class="resource-focus" data-dtype="Number" {{edition.spellField}} />
+          value="{{spelldata.system.baseLevel}}" class="select-on-focus" data-dtype="Number" {{edition.spellField}} />
       </div>
       <div class="resource flex-group-center" style="margin-top: 10px;">
-        <label class="header-label flex01" style="max-width: 100px">{{localize "arm5e.sheet.level"}}</label>
+        <label class=" flex01" style="max-width: 100px">{{localize "arm5e.sheet.level"}}</label>
         <input type="number" name="{{prefix}}system.level" value="{{spelldata.system.level}}" class="design-level"
           style="background: rgba(0, 0, 0, 0.15); max-width: 60px" data-dtype="Number" {{edition.spellField}} />
       </div>
       {{#if ritual}}
         <div class="resource flexcol flex-group-center ">
-          <label class="header-label">{{localize "arm5e.sheet.ritual"}}</label>
+          <label class="">{{localize "arm5e.sheet.ritual"}}</label>
           <input type="checkbox" name="{{prefix}}system.ritual" {{checked spelldata.system.ritual}}
             {{edition.spellCombobox}} />
         </div>
       {{/if}}
       <div class="resource flexcol flex-center">
-        <label class="header-label">{{localize "arm5e.sheet.general"}}</label>
+        <label class="">{{localize "arm5e.sheet.general"}}</label>
         <input type="checkbox" name="{{prefix}}system.general" size="4" {{checked spelldata.system.general}}
           {{edition.spellCombobox}} />
       </div>
@@ -62,37 +62,37 @@
 
       <div class="resource">
         <div class="">
-          <label class="header-label">{{localize "arm5e.spell.effect.description"}}</label>
+          <label class="">{{localize "arm5e.spell.effect.description"}}</label>
           <input type="text" name="{{prefix}}system.baseEffectDescription"
             value="{{spelldata.system.baseEffectDescription}}" title="{{spelldata.system.baseEffectDescription}}"
             data-dtype="String" {{edition.spellField}} />
         </div>
         {{#if spelldata.system.general}}
           <div class="flex-group-center" style="max-width: 100px;">
-            <label class="header-label">{{localize "arm5e.spell.effect.levelOffset"}}</label>
+            <label class="">{{localize "arm5e.spell.effect.levelOffset"}}</label>
             <input type="number" name="{{prefix}}system.levelOffset" value="{{spelldata.system.levelOffset}}"
-              class="resource-focus" data-dtype="Number" style="max-width: 50px;" {{edition.spellField}} />
+              class="select-on-focus" data-dtype="Number" style="max-width: 50px;" {{edition.spellField}} />
           </div>
         {{/if}}
       </div>
     </div>
     <div class="flexrow flex02">
       <div class="resource flex-group-center">
-        <label class="header-label">{{localize "arm5e.sheet.range"}}</label>
+        <label class="">{{localize "arm5e.sheet.range"}}</label>
         <select name="{{prefix}}system.range.value" data-type="String" class="spell-attribute"
           {{edition.spellCombobox}}>
           {{magicalAttributesHelper @root.selection.ranges selected=spelldata.system.range.value  labelAttr="label"}}
         </select>
       </div>
       <div class="resource flex-group-center">
-        <label class="header-label">{{localize "arm5e.sheet.duration"}}</label>
+        <label class="">{{localize "arm5e.sheet.duration"}}</label>
         <select name="{{prefix}}system.duration.value" data-type="String" class="spell-attribute"
           {{edition.spellCombobox}}>
           {{magicalAttributesHelper @root.selection.durations selected=spelldata.system.duration.value labelAttr="label"}}
         </select>
       </div>
       <div class="resource flex-group-center">
-        <label class="header-label">{{localize "arm5e.sheet.target"}}</label>
+        <label class="">{{localize "arm5e.sheet.target"}}</label>
         <select name="{{prefix}}system.target.value" data-type="String" class="spell-attribute"
           {{edition.spellCombobox}}>
           {{magicalAttributesHelper @root.selection.targets selected=spelldata.system.target.value  labelAttr="label"}}
@@ -103,31 +103,31 @@
     <div class="flexrow">
       <div class="flexrow ">
         <div class="resource flex-group-center">
-          <label class="header-label">{{localize "arm5e.spell.targets.targetSize"}}</label>
+          <label class="">{{localize "arm5e.spell.targets.targetSize"}}</label>
           <input type="number" name="{{prefix}}system.targetSize" value="{{spelldata.system.targetSize}}"
-            class="resource-focus" data-dtype="Number" {{edition.spellField}} style="max-width: 70px;" />
+            class="select-on-focus" data-dtype="Number" {{edition.spellField}} style="max-width: 70px;" />
         </div>
         <div class="resource flex-group-center">
-          <label class="header-label">{{localize "arm5e.spell.targets.complexity"}}</label>
+          <label class="">{{localize "arm5e.spell.targets.complexity"}}</label>
           <input type="number" name="{{prefix}}system.complexity" value="{{spelldata.system.complexity}}"
-            class="resource-focus" data-dtype="Number" {{edition.spellField}} style="max-width: 70px;" />
+            class="select-on-focus" data-dtype="Number" {{edition.spellField}} style="max-width: 70px;" />
         </div>
         <div class="resource flex-group-center">
-          <label class="header-label">{{localize "arm5e.spell.targets.enhancingReq"}}</label>
+          <label class="">{{localize "arm5e.spell.targets.enhancingReq"}}</label>
           <input type="number" name="{{prefix}}system.enhancingRequisite"
-            value="{{spelldata.system.enhancingRequisite}}" class="resource-focus" data-dtype="Number"
+            value="{{spelldata.system.enhancingRequisite}}" class="select-on-focus" data-dtype="Number"
             {{edition.spellField}} style="max-width: 70px;" />
         </div>
       </div>
       {{#unless noApplyFocus}}
         <div class="resource flex-group-center" style="min-width: 150px;max-width: 190px;margin-top: 6px;">
-          <label class="header-label">{{localize "arm5e.spell.applyFocus" }}</label>
+          <label class="">{{localize "arm5e.spell.applyFocus" }}</label>
           <input type="checkbox" name="{{prefix}}system.applyFocus" {{checked spelldata.system.applyFocus}} />
         </div>
       {{/unless}}
     </div>
     <div class="resource flex-group-center">
-      <label class="header-label"><b>{{localize "arm5e.spell.targets.baseSize.label" }}: </b></label>
+      <label class=""><b>{{localize "arm5e.spell.targets.baseSize.label" }}: </b></label>
       {{#with (lookup config.magic.forms spelldata.system.form.value)}}
         <label class="label-light">{{localize baseSize}}</label>
       {{/with}}

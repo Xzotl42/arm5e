@@ -3,30 +3,26 @@
     <div class="flexcol resource">
       <div class="resource flexrow flex-group-left">
         <div class="resource flex01">
-          <label for="system.magicSystem.templates.{{id}}.name"
-            class="header-label">{{localize "Template name"}}</label>
+          <label for="system.magicSystem.templates.{{id}}.name" class="">{{localize "Template name"}}</label>
 
           <input type="text" class="template-name" name="system.magicSystem.templates.{{id}}.name" data-dtype="String"
             value="{{name}}" style="min-width: 250px;" data-id="{{id}}">
 
         </div>
-        <div class="resource flex01">
-          <label for="system.magicSystem.templates.{{id}}.targetLevel"
-            class="header-label">{{localize "Target type"}}</label>
+        <div class="resource flex04">
+          <label for="system.magicSystem.templates.{{id}}.targetLevel" class="">{{localize "Target type"}}</label>
           <select name="system.magicSystem.templates.{{id}}.targetLevel" disabled>
             {{selectOptions selection.targetType selected=targetType}}
           </select>
         </div>
-        <div class="resource flex01">
-          <label for="system.magicSystem.templates.{{id}}.rollType"
-            class="header-label">{{localize "Roll type"}}</label>
+        <div class="resource flex05">
+          <label for="system.magicSystem.templates.{{id}}.rollType" class="">{{localize "Roll type"}}</label>
           <select name="system.magicSystem.templates.{{id}}.rollType">
             {{selectOptions selection.rollType selected=rollType labelAttr="label" nameAttr="value" valueAttr="value" }}
           </select>
         </div>
         <div class="resource flexrow">
-          <label for="system.magicSystem.templates.{{id}}.useFatigue"
-            class="header-label flex02">{{localize "Use fatigue"}}</label>
+          <label for="system.magicSystem.templates.{{id}}.useFatigue" class=" flex02">{{localize "Use fatigue"}}</label>
           <input type="checkbox" name="system.magicSystem.templates.{{id}}.useFatigue" {{checked useFatigue}}>
         </div>
         <div class="resource flex0">

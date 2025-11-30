@@ -24,12 +24,12 @@
   </ol>
   <div class="characteristics grid grid-3col">
     <div class="flexrow flex-group-center" style="border: 0px">
-      <label class="header-label">{{localize "arm5e.spell.applyFocus" }}</label>
+      <label class="">{{localize "arm5e.spell.applyFocus" }}</label>
       <input type="checkbox" name="system.castingtotal.applyFocus" {{checked system.castingtotal.applyFocus}} />
     </div>
     <div class="flexrow flex-group-center" style="border: 0px">
-      <label class="header-label">{{localize "arm5e.sheet.aura" }}</label>
-      {{numberInput system.castingtotal.aura name="system.castingtotal.aura" step=1 class="resource-focus"}}
+      <label class="">{{localize "arm5e.sheet.aura" }}</label>
+      {{numberInput system.castingtotal.aura name="system.castingtotal.aura" step=1 class="select-on-focus"}}
       <!-- <input
         type="number"
         name="system.castingtotal.aura"
@@ -37,7 +37,7 @@
       /> -->
     </div>
     <div class="flexrow flex-group-center" style="border: 0px">
-      <label class="header-label">{{localize "arm5e.sheet.divider"}}</label>
+      <label class="">{{localize "arm5e.sheet.divider"}}</label>
       <select name="system.castingtotal.divider" data-type="number" class="divider">
         {{selectOptions
           spellCastingDividers
@@ -49,8 +49,8 @@
 
     </div>
     <div class="flexrow flex-group-center" style="border: 0px">
-      <label class="header-label">{{localize "arm5e.sheet.modifier" }}</label>
-      {{numberInput system.castingtotal.modifier name="system.castingtotal.modifier" step=1 class="resource-focus"}}
+      <label class="">{{localize "arm5e.sheet.modifier" }}</label>
+      {{numberInput system.castingtotal.modifier name="system.castingtotal.modifier" step=1 class="select-on-focus"}}
       <!-- <input
         type="number"
         name="system.castingtotal.modifier"

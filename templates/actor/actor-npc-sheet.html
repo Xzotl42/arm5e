@@ -53,7 +53,7 @@
         </h1>
         <div class="flexrow">
           <span class="flex0" style="padding-top: 4px">
-            <label for="system.charType.value" class="header-label"
+            <label for="system.charType.value" class=""
               style="padding-top: 4px">{{localize "arm5e.sheet.charType"}}</label>
             <select name="system.charType.value" data-type="String">
               {{selectOptions config.npc.types selected=system.charType.value labelAttr="label" localize=true}}
@@ -62,14 +62,14 @@
           {{#if (eq system.charType.value "entity")}}
             <div class="flexrow">
 
-              <label for="system.might.value" class="header-label flex0 title"
+              <label for="system.might.value" class=" flex0 title"
                 style="font-size: 13pt;  padding-top: 15px; padding-left: 5px;padding-right: 5px;">{{localize "arm5e.sheet.might"}}</label>
               <div style="padding-top: 15px">
                 <input type="number" name="system.might.points" value="{{system.might.points}}" data-dtype="Number"
-                  style="width: 36px; text-align: center;" class="resource-focus" />
+                  style="width: 36px; text-align: center;" class="select-on-focus" />
                 {{localize "arm5e.sheet.pointsShort"}} /
                 <input type="number" name="system.might.value" value="{{system.might.value}}" data-dtype="Number"
-                  style="width: 40px; text-align: center; " class="resource-focus" />
+                  style="width: 40px; text-align: center; " class="select-on-focus" />
               </div>
               <div style="padding-top: 15px; padding-left: 5px;">
                 <select class="change-realm" name="" data-type="String" data-realm="{{system.realm}}">
@@ -105,15 +105,16 @@
             </span>
           {{/if}}
         </div>
-        <div class="resources grid grid-4col">
+        <div class="grid grid-4col">
           <div class="resource flex-group-center backSection">
             <label for="system.age.value" class="smallTitle">{{localize "arm5e.sheet.age"}}</label>
             <div class="resource-content flexrow flex-center flex-between margintop6">
               <input type="number" name="system.age.value" value="{{formatOptionalNumber system.age.value decimals=0 }}"
-                data-dtype="Number" {{ui.creationMode.edit}} class="resource-focus" />
+                data-dtype="Number" {{ui.creationMode.edit}} class="select-on-focus" />
               <span> ( </span>
               <input type="number" name="system.apparent.value"
-                value="{{numberFormat system.apparent.value decimals=0 }}" data-dtype="Number" class="resource-focus" />
+                value="{{numberFormat system.apparent.value decimals=0 }}" data-dtype="Number"
+                class="select-on-focus" />
               <span> ) </span>
             </div>
           </div>

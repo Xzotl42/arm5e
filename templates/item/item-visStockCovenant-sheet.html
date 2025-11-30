@@ -5,14 +5,14 @@
       <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name" /></h1>
       <div class="grid grid-2col">
         <div class="resource flexcol">
-          <label for="system.art" class="header-label">{{localize "arm5e.sheet.art"}}</label>
+          <label for="system.art" class="">{{localize "arm5e.sheet.art"}}</label>
           <select name="system.art" data-type="String">
             {{selectOptions config.magic.arts selected=system.art labelAttr="label"}}
           </select>
         </div>
       </div>
       <div class="resource">
-        <label class="header-label">{{localize "arm5e.sheet.pawns"}}</label>
+        <label class="">{{localize "arm5e.sheet.pawns"}}</label>
         <input type="text" name="system.quantity" value="{{system.quantity}}" data-dtype="Number" />
       </div>
     </div>
@@ -36,7 +36,7 @@
   <section class="sheet-body">
     {{!-- Attributes Tab --}}
     <div class="tab attributes" data-group="primary" data-tab="attributes">
-      <label for="system.form" class="header-label">{{localize "arm5e.sheet.physicalForm"}}</label>
+      <label for="system.form" class="">{{localize "arm5e.sheet.physicalForm"}}</label>
       {{editor system.enrichedForm target="system.form" button=true owner=owner engine="prosemirror" editable=editable}}
     </div>
 

@@ -5,13 +5,13 @@
       <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name" /></h1>
       <div class="flexrow">
         <div class="resource" style=" max-width: 115px; ">
-          <label class="header-label">{{localize "arm5e.sheet.protection"}}</label>
-          <input type="number" name="system.prot" value="{{system.prot}}" class="modifier resource-focus"
+          <label class="">{{localize "arm5e.sheet.protection"}}</label>
+          <input type="number" name="system.prot" value="{{system.prot}}" class="modifier select-on-focus"
             data-dtype="Number" />
         </div>
         <div class="resource" style="max-width: 110px; ">
-          <label class="header-label">{{localize "arm5e.sheet.load"}}</label>
-          <input type="number" name="system.load" value="{{system.load}}" class="modifier resource-focus"
+          <label class="">{{localize "arm5e.sheet.load"}}</label>
+          <input type="number" name="system.load" value="{{system.load}}" class="modifier select-on-focus"
             data-dtype="Number" />
         </div>
         <div class="resource">
@@ -34,7 +34,7 @@
       <div class="flexrow">
         {{#if isGM}}
           <div class="resource">
-            <label class="header-label">{{localize "arm5e.sheet.state.label"}}</label>
+            <label class="">{{localize "arm5e.sheet.state.label"}}</label>
             <input type="text" value="{{localize (lookup config.lab.enchantment.receptacle.state system.state)}}"
               data-dtype="String" readonly>
           </div>

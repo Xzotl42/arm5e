@@ -1753,7 +1753,7 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
 
         let effects = this.item.getFlag("arm5e", "effect");
         if (effects.apparent) {
-          actorUpdate.system.apparent = { value: actor.system.apparent.value - 1 };
+          actorUpdate["system.apparent"] = { value: actor.system.apparent.value - 1 };
         }
         if (effects.charac) {
           actorUpdate.system.characteristics = {};

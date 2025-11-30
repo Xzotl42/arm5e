@@ -2,7 +2,7 @@
   <div style="min-height: 418px;">
     <div class="flexcol marginsides32">
       <div class="padding4 flexrow flex-group-left">
-        <label class="section-handle header-label clickable" data-section="writer"
+        <label class="section-handle  clickable" data-section="writer"
           data-category="scriptorium">{{localize "arm5e.scriptorium.writer.title"}}</label>
       </div>
       <div
@@ -24,12 +24,12 @@
         {{/if}}
         {{#unless (eq writing.writer.id null)}}
           <div class="scriptorium resource">
-            <label class="header-label">{{localize "arm5e.scriptorium.writer.name"}}</label>
+            <label class="">{{localize "arm5e.scriptorium.writer.name"}}</label>
             <input type="text" name="writing.writer.name" value="{{writing.writer.name}}" data-dtype="String"
               style="max-width: 220px;" readonly>
           </div>
           <div class="scriptorium resource">
-            <label for="writing.writer.language" class="header-label">{{localize "arm5e.scriptorium.languages"}}</label>
+            <label for="writing.writer.language" class="">{{localize "arm5e.scriptorium.languages"}}</label>
             <select name="writing.writer.language" data-dtype="String" class="ability-key language-writer">
               {{selectOptions writing.writer.languages selected=writing.writer.language labelAttr="label" 
               valueAttr="id" nameAttr="id"}}
@@ -41,26 +41,26 @@
           </div>
 
           <div class="scriptorium item-header resource">
-            <label class="header-label">{{localize "arm5e.sheet.bookTopic"}}</label>
+            <label class="">{{localize "arm5e.sheet.bookTopic"}}</label>
             <select class="book-topic-change writing" name="writing.book.system.topics.{{newTopicIndex}}.category"
               data-activity="writing" data-index="{{newTopicIndex}}" data-dtype="String" {{ui.disabledBook}}>
               {{selectOptions bookTopics selected=writing.book.newTopic.category localize=true}}
             </select>
             {{#unless (eq writing.book.newTopic.category "labText")}}
               <label for="writing.book.system.topics.{{newTopicIndex}}.type"
-                class="header-label">{{localize "arm5e.sheet.bookType"}}</label>
+                class="">{{localize "arm5e.sheet.bookType"}}</label>
               <select name="writing.book.system.topics.{{newTopicIndex}}.type" data-type="String"
                 data-index="{{topicIndex}}" {{ui.disabledBook}} {{ui.writing.disableType}}>
                 {{selectOptions @root.bookTypes selected=writing.book.newTopic.type  }}
               </select>
               <div class="scriptorium item-header" style="padding-top: 5px;">
                 <label for="writing.writer.writingBonus"
-                  class="header-label">{{localize "arm5e.sheet.genericModifier" mod=(localize "arm5e.sheet.quality")}}:
+                  class="">{{localize "arm5e.sheet.genericModifier" mod=(localize "arm5e.sheet.quality")}}:
                   {{writing.writer.writingBonus}}</label>
               </div>
             {{/unless}}
             <div class="scriptorium item-header" style="padding-top: 5px;">
-              <label for="writing.writer.writingScore" class="header-label">{{writing.writer.writingScoreLabel}}:
+              <label for="writing.writer.writingScore" class="">{{writing.writer.writingScoreLabel}}:
                 {{writing.writer.writingScore}}</label>
             </div>
 
@@ -69,7 +69,7 @@
         {{/unless}}
       </div>
       <div class="padding4 flexrow flex-group-left">
-        <label class="section-handle header-label clickable" data-section="book-write"
+        <label class="section-handle  clickable" data-section="book-write"
           data-category="scriptorium">{{localize "arm5e.sheet.book"}}</label>
       </div>
       <div
@@ -77,10 +77,10 @@
         id="scriptorium-book-write">
 
         <div class="scriptorium item-header resource">
-          <label class="header-label">{{localize "arm5e.activity.book.title"}}</label>
+          <label class="">{{localize "arm5e.activity.book.title"}}</label>
           <input type="text" name="writing.book.name" value="{{writing.book.name}}" data-dtype="String"
             {{ui.canEditTitle}}>
-          <label class="header-label">{{localize "arm5e.sheet.authorship.author"}}</label>
+          <label class="">{{localize "arm5e.sheet.authorship.author"}}</label>
           <input type="text" name="writing.book.system.topics.{{newTopicIndex}}.author" value="{{writing.writer.name}}"
             data-dtype="String" readonly>
 
@@ -88,7 +88,7 @@
         {{#unless (eq writing.writer.id null)}}
           {{#if (eq writing.book.newTopic.category "ability")}}
             <div class="scriptorium resource">
-              <label for="writing.writer.ability" class="header-label">{{localize "arm5e.sheet.abilities"}}</label>
+              <label for="writing.writer.ability" class="">{{localize "arm5e.sheet.abilities"}}</label>
               <select name="writing.writer.ability" data-dtype="String" class="ability-key" {{ui.editItem}}>
                 {{selectOptions writing.filteredAbilities selected=writing.writer.ability 
                   valueAttr="id" nameAttr="id" labelAttr="label"  }}
@@ -100,7 +100,7 @@
 
           {{#if (eq writing.book.newTopic.category "art")}}
             <div class="scriptorium resource">
-              <label for="writing.writer.art" class="header-label">{{localize "arm5e.sheet.arts"}}</label>
+              <label for="writing.writer.art" class="">{{localize "arm5e.sheet.arts"}}</label>
               <select name="writing.writer.art" data-dtype="String" class="ability-key" {{ui.editItem}}>
                 {{selectOptions writing.filteredArts selected=writing.writer.art 
                   valueAttr="id" nameAttr="id" labelAttr="label"}}
@@ -110,7 +110,7 @@
           {{/if}}
           {{#if (eq writing.book.newTopic.category "mastery")}}
             <div class="scriptorium resource">
-              <label for="writing.book.system.spell" class="header-label">{{localize "arm5e.sheet.spells"}}</label>
+              <label for="writing.book.system.spell" class="">{{localize "arm5e.sheet.spells"}}</label>
               <select name="writing.writer.spell" data-dtype="String" class="ability-key" {{ui.editItem}}>
                 {{selectOptions writing.writer.filteredSpells selected=writing.writer.spell 
                   valueAttr="id" nameAttr="id" labelAttr="label"}}
@@ -120,15 +120,15 @@
           {{#unless (eq writing.book.newTopic.category "labText")}}
             <div class="scriptorium item-header resource">
               {{#if (eq writing.book.newTopic.type "Summa")}}
-                <label class="header-label">{{localize "arm5e.sheet.level"}}</label>
+                <label class="">{{localize "arm5e.sheet.level"}}</label>
                 <input type="number" name="" value='{{writing.book.newTopic.level}}' data-dtype="Number"
                   style="max-width: 50px;" readonly>
                 <input type="range" name="writing.book.system.topics.{{newTopicIndex}}.level"
                   value='{{writing.book.newTopic.level}}' min="1" max="{{writing.book.newTopic.maxLevel}}"
                   data-dtype="Number" style="max-width: 150px;align-items: end;">
-                <label class="header-label">{{writing.book.newTopic.maxLevel}}</label>
+                <label class="">{{writing.book.newTopic.maxLevel}}</label>
               {{/if}}
-              <label class="header-label">{{localize "arm5e.sheet.quality"}}</label>
+              <label class="">{{localize "arm5e.sheet.quality"}}</label>
               <input type="number" name="" value='{{writing.book.newTopic.quality}}' data-dtype="Number"
                 style="max-width: 50px;" readonly>
               <input type="number" name="writing.book.system.topics.{{newTopicIndex}}.quality"
@@ -159,12 +159,12 @@
 
           {{#unless (eq writing.book.newTopic.category "labText")}}
             <div class="scriptorium item-header" style="padding-top: 5px;">
-              <label class="header-label">{{localize "arm5e.sheet.duration"}}:
+              <label class="">{{localize "arm5e.sheet.duration"}}:
                 {{writing.writer.duration}}</label>
             </div>
           {{else}}
             <div class="scriptorium item-header" style="padding-top: 5px;">
-              <label class="header-label">{{localize "arm5e.generic.total"}}:
+              <label class="">{{localize "arm5e.generic.total"}}:
                 {{writing.labTextTotal}}</label>
             </div>
           {{/unless}}
@@ -183,7 +183,7 @@
       </div>
       <ul>
         {{#each ui.writing.warning }}
-          <div class="scriptorium resource"><label class="header-label"
+          <div class="scriptorium resource"><label class=""
               style="color:red; padding: 10px; text-align: center;">{{this}}</label>
           </div>
         {{/each}}

@@ -8,17 +8,17 @@
     <h1 class="codex-title width: 100%;" text-align="center">Codex Hermeticum</h1>
     <br />
     <header class="sheet-header-codex">
-      <div class="header-label">{{localize "arm5e.sheet.filters"}}</div>
+      <div class="">{{localize "arm5e.sheet.filters"}}</div>
       <div class="header-fields">
-        <div class="resources flexrow flex-between">
+        <div class="flexrow flex-between">
           <span class="codexname flexrow" style="padding-top: 4px">
             <div class="resource flexrow">
-              <label for="system.technique.value" class="header-label">{{localize "arm5e.sheet.withCompendium"}}</label>
+              <label for="system.technique.value" class="">{{localize "arm5e.sheet.withCompendium"}}</label>
               <input type="checkbox" name="system.withCompendia" {{checked system.withCompendia}}>
             </div>
           </span>
           <span class="codexname flexrow" style="padding-top: 4px">
-            <label for="techniqueFilter" class="header-label"
+            <label for="techniqueFilter" class=""
               style="padding-right: 10px; text-align: right;">{{localize "arm5e.sheet.technique"}}</label>
             <select name="techniqueFilter" class="technique-filter" data-type="String" data-list="filter"
               data-category="hermetic" style="flex: 0 0 80px; font-size: 11pt">
@@ -26,7 +26,7 @@
             </select>
           </span>
           <span class="codexname flexrow" style="padding-top: 4px">
-            <label for="formFilter" class="header-label"
+            <label for="formFilter" class=""
               style="padding-right: 10px; text-align: right;">{{localize "arm5e.sheet.form"}}</label>
             <select name="formFilter" data-type="String" class="form-filter" data-list="filter" data-category="hermetic"
               style="flex: 0 0 ; font-size: 11pt">
@@ -34,8 +34,7 @@
             </select>
           </span>
           <span class="codexname flexrow" style="padding-top: 4px">
-            <label for="levelFilter" class="header-label"
-              style="padding-left: 24px">{{localize "arm5e.sheet.level"}}</label>
+            <label for="levelFilter" class="" style="padding-left: 24px">{{localize "arm5e.sheet.level"}}</label>
             <select name="levelOperator" data-type="Number" data-list="filter" data-category="hermetic"
               style="flex: 0 0; font-family: bookAntiqua" class="levelOperator-filter">
               {{selectOptions config.genericOptions.filterOperator selected=ui.filters.hermetic.filter.levelOperator

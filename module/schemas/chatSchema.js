@@ -141,6 +141,8 @@ export class RollChatSchema extends BasicChatSchema {
     return updateData;
   }
 
+  // update the schema with missing data specific to the roll before the message creation.
+  // finish with an updateSource
   enrichMessageData(actor) {}
 
   // standard roll chat message doesn't have targets;
@@ -1263,7 +1265,9 @@ export class DamageChatSchema extends RollChatSchema {
         const messageData = { "system.impact.applied": true };
         messageData["system.damage"] = message.system.damage;
         messageData["system.impact"] = message.system.impact;
+        // adjust message content
         message.system.roll.type = "damage";
+        delete message.system.roll.details;
         messageData["system.roll"] = message.system.roll;
         messageData["roll"] = message.rolls[0].toJSON(); // soak roll only
 

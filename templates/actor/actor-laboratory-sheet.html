@@ -9,7 +9,7 @@
       <div class="header-fields">
         <h1 class="charname"><input name="name" type="text" value="{{actor.name}}" placeholder="Name" /></h1>
 
-        <div class="resources flexrow flex-between" style="margin-top: 8px">
+        <div class="flexrow flex-between" style="margin-top: 8px">
           <span class="covenantname flexrow">
             <label for="system.owner.value" class="bold"
               style="padding-top: 4px; padding-left: 24px; flex: 0.4">{{localize "arm5e.sheet.owner"}}</label>
@@ -37,7 +37,7 @@
             </div>
           </span>
         </div>
-        <div class="resources flexrow flex-between" style="margin-top: 8px">
+        <div class="flexrow flex-between" style="margin-top: 8px">
           <span class="covenantname flexrow width4">
             <label for="system.location" class="bold"
               style="padding-top: 4px; padding-left: 24px; flex: 0.2">{{localize "arm5e.sheet.location"}}</label>
@@ -50,8 +50,7 @@
           </span>
         </div>
 
-        <div class="resources grid grid-2col backSection"
-          style="grid-row-gap: 0px; padding-top: 8px; padding-bottom: 8px">
+        <div class="grid grid-2col backSection" style="grid-row-gap: 0px; padding-top: 8px; padding-bottom: 8px">
           <div class="flexrow flex-group-center">
             <label class="bold">{{localize "arm5e.sheet.size"}}</label>
             <input type="text" name="system.size.description" value="{{system.size.description}}" data-dtype="String" />
@@ -137,8 +136,7 @@
             {{/if}}
           </div>
         </div>
-        <div class="resources grid grid-3col backSection"
-          style="grid-row-gap: 0px; padding-top: 8px; padding-bottom: 8px">
+        <div class="grid grid-3col backSection" style="grid-row-gap: 0px; padding-top: 8px; padding-bottom: 8px">
           <div class="flexrow flex-group-center">
             <label class="bold">{{localize "arm5e.sheet.occupiedSize"}}</label>
             <span class="flex02">{{numberFormat system.occupiedSize}}</span>

@@ -2,9 +2,9 @@
   <li class="filter-item toggle-display flexrow" draggable="false" style="padding-bottom: 8px;">
     <!--style=" {{lookup display list}}"-->
     <div class="header-fields">
-      <div class="resources flexrow flex-between padding12x5">
+      <div class="flexrow flex-between padding12x5">
         <span class="flex06">
-          <label for="typeFilter" class="header-label flex01" style="padding-left: 10px">{{localize
+          <label for="typeFilter" class=" flex01" style="padding-left: 10px">{{localize
               "arm5e.activity.eventType"
             }}</label>
           <select            
@@ -28,7 +28,7 @@
         </span>
 
         <span class="flex03">
-          <label for="system.minYearFilter" class="header-label">
+          <label for="system.minYearFilter" class="">
             {{localize "arm5e.time.minYear"}}</label>
           {{#with (lookup ui.filters.events list)}}
             <input
@@ -37,14 +37,14 @@
               value="{{minYearFilter}}"
               data-dtype="Number"
               style="margin-right: 4px; max-width:40px"
-              class="minyear-filter resource-focus"
+              class="minyear-filter select-on-focus"
               data-list="{{../list}}"
               data-category="events"
             />
           {{/with}}
         </span>
         <span class="flex03">
-          <label for="system.maxYearFilter" class="header-label">
+          <label for="system.maxYearFilter" class="">
             {{localize "arm5e.time.maxYear"}}</label>
           {{#with (lookup ui.filters.events list)}}
             <input
@@ -53,7 +53,7 @@
               value="{{maxYearFilter}}"
               data-dtype="Number"
               style="margin-right: 4px; max-width:40px"
-              class="maxyear-filter resource-focus"
+              class="maxyear-filter select-on-focus"
               data-list="{{../list}}"
               data-category="events"
             />

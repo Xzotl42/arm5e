@@ -29,13 +29,13 @@
       {{/if}}
       <div class="grid grid-2col">
         <div class="resource flexcol flexrow">
-          <label for="system.technique.value" class="header-label">{{localize "arm5e.sheet.technique"}}</label>
+          <label for="system.technique.value" class="">{{localize "arm5e.sheet.technique"}}</label>
           <select {{noSelect}} name="system.technique.value" data-type="String">
             {{selectOptions config.magic.techniques selected=system.technique.value labelAttr="label"}}
           </select>
         </div>
         <div class="resource flexcol flexrow">
-          <label for="system.form.value" class="header-label">{{localize "arm5e.sheet.form"}}</label>
+          <label for="system.form.value" class="">{{localize "arm5e.sheet.form"}}</label>
           <select {{noSelect}} name="system.form.value" data-type="String" class="select-form">
             {{selectOptions config.magic.forms selected=system.form.value labelAttr="label"}}
           </select>
@@ -43,17 +43,17 @@
       </div>
       <div class="grid grid-3col">
         <div class="resource flexcol flex-center">
-          <label class="header-label">{{localize "arm5e.sheet.Requisites"}}</label>
-          <label class="header-label">{{ui.requisites}}</label>
+          <label class="">{{localize "arm5e.sheet.Requisites"}}</label>
+          <label class="">{{ui.requisites}}</label>
           <a class="item-control advanced-req" data-flavor="{{ui.flavor}}" title="Advanced Requistes"><i
               class="fas fa-gavel fa-lg"></i></a>
         </div>
         <div class="resource flexcol flex-center">
-          <label class="header-label">{{localize "arm5e.sheet.ritual"}}</label>
+          <label class="">{{localize "arm5e.sheet.ritual"}}</label>
           <input type="checkbox" {{noSelect}} name="system.ritual" {{checked system.ritual}} />
         </div>
         <div class="resource flexcol flex-center">
-          <label class="header-label">{{localize "arm5e.sheet.level"}}</label>
+          <label class="">{{localize "arm5e.sheet.level"}}</label>
           <input class="design-level" type="number" readonly name="system.level" value="{{system.level}}"
             data-dtype="Number" style="max-width: 60px;" />
         </div>
@@ -80,19 +80,19 @@
     <div class="tab attributes" data-group="primary" data-tab="attributes" style="min-height: 266px">
       <div class="flexrow">
         <div class="resource">
-          <label class="header-label">{{localize "arm5e.sheet.range"}}</label>
+          <label class="">{{localize "arm5e.sheet.range"}}</label>
           <select {{noSelect}} name="system.range.value" data-dtype="String" class="spell-attribute">
             {{magicalAttributesHelper selection.ranges selected=system.range.value  labelAttr="label"}}
           </select>
         </div>
         <div class="resource">
-          <label class="header-label">{{localize "arm5e.sheet.duration"}}</label>
+          <label class="">{{localize "arm5e.sheet.duration"}}</label>
           <select {{noSelect}} name="system.duration.value" data-dtype="String" class="spell-attribute">
             {{magicalAttributesHelper selection.durations selected=system.duration.value  labelAttr="label"}}
           </select>
         </div>
         <div class="resource">
-          <label class="header-label">{{localize "arm5e.sheet.target"}}</label>
+          <label class="">{{localize "arm5e.sheet.target"}}</label>
           <select {{noSelect}} name="system.target.value" data-dtype="String" style="min-width: 95%"
             class="spell-attribute">
             {{magicalAttributesHelper selection.targets selected=system.target.value  labelAttr="label"}}
@@ -103,22 +103,22 @@
       {{#if item.parent}} {{#if (ne item.parent.type "magicCodex")}}
           <div class="flexrow">
             <div class="resource">
-              <label class="header-label">{{localize "arm5e.spell.applyFocus" }}</label>
+              <label class="">{{localize "arm5e.spell.applyFocus" }}</label>
               <input type="checkbox" {{noSelect}} name="system.applyFocus" {{checked system.applyFocus}} />
             </div>
             <div class="resource">
-              <label class="header-label">{{localize "arm5e.sheet.bonus.label"}}</label>
+              <label class="">{{localize "arm5e.sheet.bonus.label"}}</label>
               <input type="number" name="system.bonus" value="{{system.bonus}}" data-dtype="Number"
-                class="resource-focus" />
+                class="select-on-focus" />
             </div>
             <div class="resource">
-              <label class="header-label">{{localize "arm5e.sheet.bonusDesc"}}</label>
+              <label class="">{{localize "arm5e.sheet.bonusDesc"}}</label>
               <input type="text" {{noEdit}} name="system.bonusDesc" value="{{system.bonusDesc}}" data-dtype="String" />
             </div>
           </div>
           <div class="resource flexrow">
             <div class="flexrow">
-              <label class="header-label flex0">{{localize "arm5e.sheet.mastery"}}
+              <label class=" flex0">{{localize "arm5e.sheet.mastery"}}
                 <input type="number" class="modifier flex01" name="" value="{{system.finalScore}}" data-dtype="Number"
                   readonly /></label>
               <div class="ressource flex0" style="padding-top: 8px; padding-left: 8px; padding-right: 8px;">
@@ -126,11 +126,11 @@
                 <a class="item-control decrease-score" title="Decrease mastery"><i class="fas fa-minus"></i></a>
               </div>
               <label class="flex01">{{localize "arm5e.sheet.experience"}}<input type="number"
-                  class="modifier resource-focus" name="system.xp" value="{{system.xp}}" data-dtype="Number" /></label>
+                  class="modifier select-on-focus" name="system.xp" value="{{system.xp}}" data-dtype="Number" /></label>
               <label style="padding-top: 16px;"> / {{ system.xpNextLevel }} </label>
             </div>
             <div class="ressource">
-              <label class="header-label">{{localize "arm5e.sheet.masteryAbilities"}}</label>
+              <label class="">{{localize "arm5e.sheet.masteryAbilities"}}</label>
               <input type="text" {{noEdit}} name="system.masteryAbilities" value="{{system.masteryAbilities}}"
                 data-dtype="String" />
             </div>
@@ -141,48 +141,48 @@
 
       <div class="resource flexrow">
         <div class="resource">
-          <label class="header-label">{{localize "arm5e.spell.effect.baseLevel"}}</label>
+          <label class="">{{localize "arm5e.spell.effect.baseLevel"}}</label>
           <input type="number" name="system.baseLevel" size="4" value="{{system.baseLevel}}"
-            class="resource-focus modifier" data-dtype="Number" />
+            class="select-on-focus modifier" data-dtype="Number" />
         </div>
         <div class="resource flexrow">
           <div class="flexcol">
-            <label class="header-label">{{localize "arm5e.sheet.general"}}</label>
+            <label class="">{{localize "arm5e.sheet.general"}}</label>
             <input type="checkbox" {{noSelect}} name="system.general" size="4" {{checked system.general}} />
           </div>
           {{#if system.general}}
             <div class="flexrow">
-              <label class="header-label">{{localize "arm5e.spell.effect.levelOffset"}}</label>
-              <input type="number" name="system.levelOffset" value="{{system.levelOffset}}" class="resource-focus"
+              <label class="">{{localize "arm5e.spell.effect.levelOffset"}}</label>
+              <input type="number" name="system.levelOffset" value="{{system.levelOffset}}" class="select-on-focus"
                 data-dtype="Number" style="max-width: 40px;" />
             </div>
           {{/if}}
         </div>
       </div>
       <div class="resource">
-        <label class="header-label">{{localize "arm5e.spell.effect.description"}}</label>
+        <label class="">{{localize "arm5e.spell.effect.description"}}</label>
         <input type="text" {{noEdit}} name="system.baseEffectDescription" value="{{system.baseEffectDescription}}"
           data-dtype="String" />
       </div>
       <div class="flexrow">
         <div class="resource flex-group-center">
-          <label class="header-label">{{localize "arm5e.spell.targets.targetSize"}}</label>
-          <input type="number" {{noEdit}} name="system.targetSize" value="{{system.targetSize}}" class="resource-focus"
+          <label class="">{{localize "arm5e.spell.targets.targetSize"}}</label>
+          <input type="number" {{noEdit}} name="system.targetSize" value="{{system.targetSize}}" class="select-on-focus"
             data-dtype="Number" style="max-width: 70px;" />
         </div>
         <div class="resource flex-group-center">
-          <label class="header-label">{{localize "arm5e.spell.targets.complexity"}}</label>
-          <input type="number" {{noEdit}} name="system.complexity" value="{{system.complexity}}" class="resource-focus"
+          <label class="">{{localize "arm5e.spell.targets.complexity"}}</label>
+          <input type="number" {{noEdit}} name="system.complexity" value="{{system.complexity}}" class="select-on-focus"
             data-dtype="Number" style="max-width: 70px;" />
         </div>
         <div class="resource ">
-          <label class="header-label">{{localize "arm5e.spell.targets.enhancingReq"}}</label>
+          <label class="">{{localize "arm5e.spell.targets.enhancingReq"}}</label>
           <input type="number" {{noEdit}} name="system.enhancingRequisite" value="{{system.enhancingRequisite}}"
-            class="resource-focus" data-dtype="Number" style="max-width: 70px;" />
+            class="select-on-focus" data-dtype="Number" style="max-width: 70px;" />
         </div>
       </div>
       <div class="resource flex-group-center">
-        <label class="header-label"><b>{{localize "arm5e.spell.targets.baseSize.label" }}: </b></label>
+        <label class=""><b>{{localize "arm5e.spell.targets.baseSize.label" }}: </b></label>
         {{#with (lookup config.magic.forms system.form.value)}}
           <label class="label-light">{{localize baseSize}}</label>
         {{/with}}

@@ -99,7 +99,7 @@ export function addCommonListenersDialog(html) {
     $(ev.currentTarget).next().toggleClass("hide");
   });
 
-  html.find(".resource-focus").focus((ev) => {
+  html.find(".select-on-focus").focus((ev) => {
     ev.preventDefault();
     ev.currentTarget.select();
   });
@@ -176,5 +176,41 @@ export function addMagicListenersDialog(html) {
     const actor = game.actors.get(dataset.actorid);
     const name = $(event.target).attr("effect");
     await actor.selectVoiceAndGestures(name, $(event.target).val());
+  });
+}
+
+export function addSoakListenersDialog(html) {
+  addCommonListenersDialog(html);
+
+  //html.querySelector(".SelectedFormDamage");
+  html.find(".SelectedFormDamage").change(async (event) => {
+    const dataset = getDataset(event);
+    const val = event.target.value;
+    const actor = game.actors.get(dataset.actorid);
+    const classes = html[0].querySelector(".natural-resistance").classList;
+    if (actor.system.bonuses.resistance[val]) {
+      html[0].querySelector(".natRes").value = actor.system.bonuses.resistance[val];
+      classes.remove("hidden");
+    } else {
+      classes.add("hidden");
+    }
+
+    if (actor.isMagus()) {
+      if (val === "") {
+        html[0].querySelector(".formRes").value = 0;
+      } else {
+        const resist = Math.ceil(actor.system.arts.forms[val].finalScore / 5);
+        html[0].querySelector(".formRes").value = resist;
+      }
+    }
+    actor.rollInfo.damage.form = val;
+  });
+
+  html.find(".ignoreArmor").change(async (event) => {
+    const dataset = getDataset(event);
+    const val = event.target.checked;
+    const actor = game.actors.get(dataset.actorid);
+    actor.rollInfo.damage.ignoreArmor = val;
+    html[0].querySelector(".protection").classList.toggle("hidden");
   });
 }

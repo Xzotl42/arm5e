@@ -260,6 +260,7 @@ export class ArM5eActorSheet extends ActorSheet {
       selection: "disabled"
     };
     context.isGM = game.user.isGM;
+    context.isOwner = this.document.isOwner;
     context.metagame = {
       view: game.settings.get("arm5e", "metagame"),
       edit: context.isGM ? "" : "readonly"
@@ -1399,7 +1400,7 @@ export class ArM5eActorSheet extends ActorSheet {
       this._deccreaseArt("forms", element[0].dataset.attribute);
     });
 
-    html.find(".resource-focus").focus((ev) => {
+    html.find(".select-on-focus").focus((ev) => {
       ev.preventDefault();
       ev.currentTarget.select();
     });
@@ -1644,7 +1645,7 @@ export class ArM5eActorSheet extends ActorSheet {
     ).render(true);
   }
   addListenersDialog(html) {
-    html.find(".resource-focus").focus((ev) => {
+    html.find(".select-on-focus").focus((ev) => {
       ev.preventDefault();
       ev.currentTarget.select();
     });
@@ -2324,6 +2325,17 @@ export class ArM5eActorSheet extends ActorSheet {
         relativeTo: this.actor
       });
     }
+    if (this.actor.system.secrets) {
+      context.enrichedSecrets = await TextEditor.enrichHTML(this.actor.system.secrets, {
+        // Whether to show secret blocks in the finished html
+        secrets: this.document.isOwner,
+        // Data to fill in for inline rolls
+        rollData: context.rollData,
+        // Relative UUID resolution
+        relativeTo: this.actor
+      });
+    }
+
     if (this.actor.system.sigil?.value) {
       context.enrichedSigil = await TextEditor.enrichHTML(this.actor.system.sigil.value, {
         // Whether to show secret blocks in the finished html

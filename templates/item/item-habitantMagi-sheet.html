@@ -14,7 +14,7 @@
       <div class="grid grid-2col" style="margin-top: 8px">
         <div class="resource flexcol flexrow">
           <label for="system.yearBorn" class="bold">{{localize "arm5e.sheet.yearBorn"}}</label>
-          <input class="resource-focus" type="number" name="system.yearBorn" value="{{system.yearBorn}}"
+          <input class="select-on-focus" type="number" name="system.yearBorn" value="{{system.yearBorn}}"
             data-dtype="String" {{canEdit}} />
         </div>
         <label class="bold">{{localize "arm5e.sheet.giftType"}}</label>
@@ -25,13 +25,13 @@
       <div class="flexrow" style="margin: 8px">
         <div class="resource flexcol flexrow">
           <label for="system.loyalty" class="bold">{{localize "arm5e.sheet.loyalty"}}</label>
-          <input class="resource-focus" type="number" name="system.loyalty" value="{{system.loyalty}}"
+          <input class="select-on-focus" type="number" name="system.loyalty" value="{{system.loyalty}}"
             data-dtype="String" />
         </div>
         <div class="resource flexcol flexrow">
           <label for="system.points" class="bold">{{localize "arm5e.sheet.points"}}</label>
-          <input class="resource-focus" type="number" name="system.points" value="{{system.points}}" data-dtype="Number"
-            readonly />
+          <input class="select-on-focus" type="number" name="system.points" value="{{system.points}}"
+            data-dtype="Number" readonly />
         </div>
         <div class="resource flexcol flexrow">
           <label for="system.category" class="bold">{{localize "arm5e.skill.category.label"}}</label>

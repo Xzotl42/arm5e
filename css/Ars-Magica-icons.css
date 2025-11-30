@@ -27,6 +27,7 @@
   content: "\0041";
   font-size: 19pt;
   vertical-align: middle;
+  margin-bottom: 3px;
 }
 .icon-Icon_Details:before {
   content: "\0042";
@@ -138,6 +139,7 @@
   content: "\0053";
   font-size: 19pt;
   vertical-align: middle;
+  margin-bottom: 3px;
 }
 .icon-Tool_AstrolabBig:before {
   content: "\0053";

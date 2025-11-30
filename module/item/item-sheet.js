@@ -444,7 +444,7 @@ export class ArM5eItemSheet extends ItemSheet {
     //   await Sanatorium.createDialog(this.actor, this.item);
     // });
 
-    html.find(".resource-focus").focus((ev) => {
+    html.find(".select-on-focus").focus((ev) => {
       ev.preventDefault();
       ev.currentTarget.select();
     });

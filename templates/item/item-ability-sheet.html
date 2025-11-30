@@ -34,7 +34,7 @@
           </div>
           <div class="flexrow">
             <label style="padding-right: 10px;" class="flex01">{{localize "arm5e.sheet.experience"}}</label>
-            <input style="min-width: 60px;" class="resource-focus flex02" type="number" name="system.xp"
+            <input style="min-width: 60px;" class="select-on-focus flex02" type="number" name="system.xp"
               value="{{system.xp}}" data-dtype="Number" />
             <label style="padding-left: 10px; padding-top:4px; " class="flex02">{{#if (ne system.xpBonus 0) }}
                 {{numberFormat system.xpBonus decimals=0 sign=true}}{{/if}}</label>
@@ -84,14 +84,13 @@
     <div class="tab">
       <div class="resource flexrow">
         {{#unless system.altArt}}
-          <label for="system.key" class="header-label">{{localize "arm5e.sheet.skill.abilityKey"}}</label>
+          <label for="system.key" class="">{{localize "arm5e.sheet.skill.abilityKey"}}</label>
           <select class="change-abilitykey ability-key" name="system.key" data-dtype="String">
             {{selectOptions abilityKeysList selected=system.key labelAttr="label"}}
           </select>
         {{/unless}}
         {{#if ui.hasOption}}
-          <label for="system.option"
-            class="header-label padding2">{{localize "arm5e.sheet.skill.abilityOption"}}</label>
+          <label for="system.option" class=" padding2">{{localize "arm5e.sheet.skill.abilityOption"}}</label>
           <input type="text" class="ability-option" name="system.option" value="{{system.option}}"
             title="{{system.option}}" style="width: 150px" {{ui.optionLocked}} />
           <div style="padding-top: 3px; padding-left: 3px; max-width:15px;">
@@ -103,8 +102,7 @@
             {{/if}}
           </div>
         {{else}}
-          <label for="system.option" class="header-label"
-            style="color: gray">{{localize "arm5e.sheet.skill.abilityOption"}}</label>
+          <label for="system.option" class="" style="color: gray">{{localize "arm5e.sheet.skill.abilityOption"}}</label>
           <input type="text" name="system.option" data-dtype="String" value="" readonly style="width: 150px" />
         {{/if}}
       </div>

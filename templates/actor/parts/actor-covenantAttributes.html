@@ -46,12 +46,12 @@
             {{/with}}
           </span>
           <span class="flex03" style="margin-right: 6px">
-            <input type="text" name="system.buildPoints.{{key}}.value" class="resource-focus"
-              value="{{numberFormat data.value decimals=0 sign=true}}" class="resource-focus" data-dtype="Number" />
+            <input type="text" name="system.buildPoints.{{key}}.value" class="select-on-focus"
+              value="{{numberFormat data.value decimals=0 sign=true}}" class="select-on-focus" data-dtype="Number" />
           </span>
           <span class="flex03" style="margin-right: 6px">
             <input type="text" name="system.buildPoints.{{key}}.computed"
-              value="{{numberFormat data.computed decimals=0 sign=true}}" readonly class="resource-focus"
+              value="{{numberFormat data.computed decimals=0 sign=true}}" readonly class="select-on-focus"
               data-dtype="Number" />
           </span>
           <span class="flex2">

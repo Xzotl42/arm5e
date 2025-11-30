@@ -10,7 +10,7 @@
         </div>
         <div class="resource">
           <label>{{localize "arm5e.sheet.year"}}<input type="number" name="system.dates.0.year"
-              value="{{firstSeason.year}}" class="resource-focus change-year" data-dtype="Number"
+              value="{{firstSeason.year}}" class="select-on-focus change-year" data-dtype="Number"
               {{@root.ui.editDate}} /></label>
         </div>
         <div class="resource">
@@ -29,7 +29,7 @@
           </div>
           <div class="resource">
             <label>{{localize "arm5e.sheet.year"}}<input type="number" name="lastSeason.year"
-                value="{{lastSeason.year}}" class="resource-focus" data-dtype="Number" disabled /></label>
+                value="{{lastSeason.year}}" class="select-on-focus" data-dtype="Number" disabled /></label>
           </div>
           <div class="resource">
             <label>{{localize "arm5e.sheet.season"}}</label>
@@ -45,7 +45,7 @@
               value="{{firstSeason.date}}" data-dtype="String" /></label>
         </div>
         <div class="resource">
-          <label class="header-label">{{localize "arm5e.activity.activity"}}</label>
+          <label class="">{{localize "arm5e.activity.activity"}}</label>
           <select class="progress-activity" name="system.activity" data-type="String" style="width: 100%"
             {{@root.activityState}}>
             {{selectOptions selection.activities selected=system.activity localize=true}}
@@ -55,13 +55,13 @@
 
       <div class="flex-group-left flexrow ">
         <div class="marginsides10 resource">
-          <label>{{localize "arm5e.sheet.duration"}}</label> <input type="number" class="duration resource-focus slim"
+          <label>{{localize "arm5e.sheet.duration"}}</label> <input type="number" class="duration select-on-focus slim"
             name="system.duration" value="{{system.duration}}" data-dtype="Number" {{ui.editDuration}} />
         </div>
         {{#if (gt system.duration 1)}}
           <div class="marginsides10 resource">
             <label>{{localize "arm5e.sheet.progress"}}</label>
-            <input type="text" class="resource-focus slim" value="{{progress}}" data-dtype="Text" readonly />
+            <input type="text" class="select-on-focus slim" value="{{progress}}" data-dtype="Text" readonly />
             <!--fieldset style="text-align:center;">
               <label style=" font-size: 11pt;"> {{nbApplied}} / {{system.duration}} </label>
             </fieldset-->
@@ -142,10 +142,9 @@
           {{/if}}
         {{/if}}
         <div class="flexcol">
-          <label class="header-label"
+          <label class=""
             style="color:red; padding: 10px;">{{localize system.applyError param=system.errorParam}}</label>
-          <label class="header-label"
-            style="padding: 10px;">{{localize system.applyInfo param=system.infoParam}}</label>
+          <label class="" style="padding: 10px;">{{localize system.applyInfo param=system.infoParam}}</label>
         </div>
       </div>
     {{/if}}

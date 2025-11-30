@@ -30,7 +30,7 @@
           <div class="flexrow">
             {{#if system.verb.active}}
               <div class="resource flexcol flex-center">
-                <label for="system.verb.value" class="header-label">{{localize "arm5e.sheet.verb"}}</label>
+                <label for="system.verb.value" class="">{{localize "arm5e.sheet.verb"}}</label>
                 {{#if system.verb.valid}}
                   <div class="resource flexcol flex-center">
                     <select {{noSelect}} class="verb-change" data-dtype="String">
@@ -62,7 +62,7 @@
             {{/if}}
             {{#if system.noun.active}}
               <div class="resource flexcol flex-center">
-                <label for="system.noun.value" class="header-label">{{localize "arm5e.sheet.noun"}}</label>
+                <label for="system.noun.value" class="">{{localize "arm5e.sheet.noun"}}</label>
                 {{#if system.noun.valid}}
                   <div class="resource flexcol flex-center">
                     <select {{noSelect}} class="noun-change" data-dtype="String">
@@ -95,7 +95,7 @@
 
             {{#if system.bonusAbility.active}}
               <div class="resource flexcol flex-center">
-                <label class="header-label">{{localize "Bonus ability"}}</label>
+                <label class="">{{localize "Bonus ability"}}</label>
                 {{#if system.bonusAbility.valid}}
                   <div class="resource flexcol flex-center">
                     <input class="resource" type="text" readonly title="{{system.bonusAbility.label}}"
@@ -123,14 +123,14 @@
           <div class="flexrow">
             {{#if system.modifier.active}}
               <div class="resource flexcol flex-center">
-                <label class="header-label">{{system.modifier.label}}</label>
-                <input class="resource-focus-slim" type="number" readonly value="{{system.modifier.value}}"
+                <label class="">{{system.modifier.label}}</label>
+                <input class="select-on-focus-slim" type="number" readonly value="{{system.modifier.value}}"
                   data-dtype="Number" />
               </div>
             {{/if}}
             <div class="resource flexcol flex-center">
-              <label class="header-label">{{localize "arm5e.sheet.level"}}</label>
-              <input class="resource-focus summary" type="number" {{noEdit}} name="system.level"
+              <label class="">{{localize "arm5e.sheet.level"}}</label>
+              <input class="select-on-focus summary" type="number" {{noEdit}} name="system.level"
                 value="{{system.level}}" data-dtype="Number" style="max-width: 60px;" />
             </div>
           </div>
@@ -138,7 +138,7 @@
         </div>
         {{#unless system.valid}}
           <div class="resource flexcol flex-center">
-            <label class="header-label warning" style="padding: 10px;">Invalid: {{{system.invalidMsg}}}</label>
+            <label class=" warning" style="padding: 10px;">Invalid: {{{system.invalidMsg}}}</label>
           </div>
         {{/unless}}
       </div>

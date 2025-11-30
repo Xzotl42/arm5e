@@ -84,7 +84,7 @@
           <div class="padding2 flexrow">
             {{#if system.enchantments.visibleType }}
               <div class="flexcol flex0 flex-group-center">
-                <label class="header-label">{{localize "arm5e.sheet.type"}}</label>
+                <label class="">{{localize "arm5e.sheet.type"}}</label>
                 <select class="enchantment-state flex01" data-dtype="String" {{stateEdit}}
                   data-state="{{system.enchantments.state}}">
                   {{selectOptions selection.states selected=system.enchantments.state labelAttr="label" localize=true}}
@@ -117,10 +117,9 @@
           <div class="padding2 flexrow">
             {{#if system.enchantments.invalidItem }}
               <ul>
-                <label class="header-label"
-                  style="color: rgb(200, 0, 0);">{{localize "arm5e.enchantment.invalidItem"}}</label>
+                <label class="" style="color: rgb(200, 0, 0);">{{localize "arm5e.enchantment.invalidItem"}}</label>
                 {{#each system.enchantments.invalidMsg }}
-                  <li><label class="header-label">{{localize this}}</label></li>
+                  <li><label class="">{{localize this}}</label></li>
                 {{/each}}
               </ul>
             {{/if}}
