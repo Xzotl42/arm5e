@@ -1224,7 +1224,8 @@
           "noWeapon": "no weapon",
           "soak": "{target} soaks the damage."
         },
-        "label": "Combat"
+        "label": "Combat",
+        "preparation": "Combat preparation"
       },
       "combatInstructions1": "Equip weapons and armor to see the totals.",
       "combatInstructions2": "If your specialty is with the shield, mark it on the shield and not on the weapon. If you don't have the shield equipped, the specialty bonus doesn't apply.",
@@ -1459,6 +1460,7 @@
       "modifiersLifeMagi": "Living Conditions Mod (Magi)",
       "modifiersLifeMundane": "Living Conditions Mod (Mundanes)",
       "money": "Money",
+      "mounted": "Mounted",
       "multipleCasting": {
         "label": "Multiple Casting"
       },
@@ -1470,6 +1472,7 @@
       "narrator": "Storyguide",
       "natRes": "Natural resistance",
       "nationality": "Race/Nationality",
+      "naturalweapon": "Natural weapon",
       "naturalweapons": "Natural weapons",
       "noMagicResistance": "No magic resistance",
       "none": "None",

@@ -1,4 +1,4 @@
-## 2.4.1.5, Radislav, Cognizant Wisdom
+## 2.4.1.6, Radislav, Cognizant Wisdom
 
 ### V13 compatibility
 
@@ -15,6 +15,10 @@
 - Text in chat is selectable
 - Damage rolls with socket messages
 - New Secrets field for characters
+- Natural weapon flag for weapons
+- Combat preparation management.
+- [WIP] CSS rework.
+- Macro to roll damage for all token select (needs ars-compendia update)
 
 ### Bug fixes
 
@@ -22,6 +26,11 @@
 - Fix the casting of Hedge magic effects.
 - Chat action buttons will only appear if the player owns the actor.
 - Rollbacking aging rolls properly update the lost stats.
+- Dragging compendium items from the Codex is working again if you are owner.
+- No longer possible to drop spells and magical effects on non magus characters
+- Familiar fields are working again.
+- Casting totals are recomputed properly if you update Art scores
+- [V13] Text fields in darkmode have visible color.
 
 ## 2.4.0.31, Radislav, Enigmatic Faeries 2
 

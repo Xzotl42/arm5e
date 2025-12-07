@@ -45,6 +45,10 @@
           "confidencePrompt": false,
           "pendingDamage": false
         },
+        "combatPreps": {
+          "current": "custom",
+          "list": { "custom": { "ids": [] } }
+        },
         "biography": "Character biography, notes, &c.",
         "characteristics": {
           "int": {
@@ -899,6 +903,10 @@
         "born": {
           "value": 1200
         }
+      },
+      "combatPreps": {
+        "current": "custom",
+        "list": { "custom": { "ids": [] } }
       },
       "abilities": [],
       "weapons": [],

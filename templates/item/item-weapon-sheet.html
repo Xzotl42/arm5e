@@ -15,12 +15,21 @@
             </div>
           {{/if}}
           <div class="grid grid-2col">
+            <div class="resource flexrow">
+              <label class="">{{localize "arm5e.sheet.naturalweapon"}}</label>
+              <input type="checkbox" class="toggleNatural" name="system.naturalWeapon" {{checked
+                system.naturalWeapon}} />
+            </div>
             {{#if system.canEquip}}
-              <div class="resource flexrow">
-                <label class="">{{localize "arm5e.sheet.equipped"}}</label>
-                <input type="checkbox" name="system.equipped" class="toggle" data-item-id="{{item.id}}"
-                  data-attr="equipped" {{checked system.equipped}} />
-              </div>
+
+
+              {{#unless system.naturalWeapon}}
+                <div class="resource flexrow">
+                  <label class="">{{localize "arm5e.sheet.equipped"}}</label>
+                  <input type="checkbox" class="equipment" data-item-id="{{item.id}}" {{checked system.equipped}} />
+                </div>
+
+              {{/unless}}
               <div class="resource flexrow">
                 <label class="">{{localize "arm5e.sheet.weaponExpert"}}</label>
                 <input type="checkbox" name="system.weaponExpert" {{checked system.weaponExpert}} />
@@ -63,7 +72,9 @@
         </div>
       </div>
       <div class="flexrow">
-        {{>"systems/arm5e/templates/item/parts/cost.hbs" classes="fit"}}
+        {{#unless system.naturalWeapon}}
+          {{>"systems/arm5e/templates/item/parts/cost.hbs" classes="fit"}}
+        {{/unless}}
         <div class="flexcol">
           {{#if isGM}}
             <div class="flexrow">
@@ -80,15 +91,17 @@
             </div>
           {{/if}}
           <div class="flexrow">
-            <div class="resource flexrow">
-              <label class="">{{localize "arm5e.sheet.strengthNeeded"}}</label>
-              <input type="number" name="system.str" value="{{system.str}}" class="modifier select-on-focus"
-                data-dtype="Number" />
-            </div>
-            <div class="resource flexrow" style="min-width: 100px;">
-              <label class="checkbox-label">{{localize "arm5e.sheet.horse"}}</label>
+            <div class="resource flexrow" style="min-width: 100px; max-width: 150px;">
+              <label class="checkbox-label">{{localize "arm5e.sheet.mounted"}}</label>
               <input type="checkbox" name="system.horse" {{checked system.horse}} />
             </div>
+            {{#unless system.naturalWeapon}}
+              <div class="resource flexrow">
+                <label class="">{{localize "arm5e.sheet.strengthNeeded"}}</label>
+                <input type="number" name="system.str" value="{{system.str}}" class="modifier select-on-focus"
+                  data-dtype="Number" />
+              </div>
+            {{/unless}}
           </div>
         </div>
       </div>

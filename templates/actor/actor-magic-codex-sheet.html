@@ -20,7 +20,7 @@
           <span class="codexname flexrow" style="padding-top: 4px">
             <label for="techniqueFilter" class=""
               style="padding-right: 10px; text-align: right;">{{localize "arm5e.sheet.technique"}}</label>
-            <select name="techniqueFilter" class="technique-filter" data-type="String" data-list="filter"
+            <select name="techniqueFilter" class="technique-filter textValue" data-type="String" data-list="filter"
               data-category="hermetic" style="flex: 0 0 80px; font-size: 11pt">
               {{selectOptions config.magic.techniques selected=ui.filters.hermetic.filter.techniqueFilter labelAttr="label" blank="" }}
             </select>
@@ -28,15 +28,15 @@
           <span class="codexname flexrow" style="padding-top: 4px">
             <label for="formFilter" class=""
               style="padding-right: 10px; text-align: right;">{{localize "arm5e.sheet.form"}}</label>
-            <select name="formFilter" data-type="String" class="form-filter" data-list="filter" data-category="hermetic"
-              style="flex: 0 0 ; font-size: 11pt">
+            <select name="formFilter" data-type="String" class="form-filter textValue" data-list="filter"
+              data-category="hermetic" style="flex: 0 0 ; font-size: 11pt">
               {{selectOptions config.magic.forms selected=ui.filters.hermetic.filter.formFilter labelAttr="label" blank="" }}
             </select>
           </span>
           <span class="codexname flexrow" style="padding-top: 4px">
             <label for="levelFilter" class="" style="padding-left: 24px">{{localize "arm5e.sheet.level"}}</label>
             <select name="levelOperator" data-type="Number" data-list="filter" data-category="hermetic"
-              style="flex: 0 0; font-family: bookAntiqua" class="levelOperator-filter">
+              style="flex: 0 0; font-family: bookAntiqua" class="levelOperator-filter numValue">
               {{selectOptions config.genericOptions.filterOperator selected=ui.filters.hermetic.filter.levelOperator
                  nameAttr="key" valueAttr="key" labelAttr="label"}}
             </select>

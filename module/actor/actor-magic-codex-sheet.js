@@ -192,19 +192,6 @@ export class ArM5eMagicCodexSheet extends ArM5eActorSheet {
     if (!this.options.editable) return;
 
     // Add Inventory Item
-    // html.find('.item-create').click(this._onItemCreate.bind(this));
-
-    // // Update Inventory Item
-    // html.find('.item-edit').click(ev => {
-    //     const li = $(ev.currentTarget).parents(".item");
-    //     const itid = li.data("itemId");
-    //     const item = this.actor.items.get(itid)
-    //     item.sheet.render(true);
-    // });
-
-    // html.find('.GMonly').click(this._restrict.bind(this));
-
-    // Add Inventory Item
     html.find(".base-effect-create").click(this._onBaseEffectCreate.bind(this));
 
     // Delete Inventory Item
@@ -215,16 +202,6 @@ export class ArM5eMagicCodexSheet extends ArM5eActorSheet {
 
     // Design spell.
     html.find(".alt-design").click(this._onClickAlternateDesign.bind(this));
-
-    // Drag events for macros.
-    if (this.actor.isOwner) {
-      let handler = (ev) => this._onDragStart(ev);
-      html.find("li.item").each((i, li) => {
-        if (li.classList.contains("inventory-header")) return;
-        li.setAttribute("draggable", true);
-        li.addEventListener("dragstart", handler, false);
-      });
-    }
   }
 
   /**

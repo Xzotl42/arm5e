@@ -1,17 +1,30 @@
-<div class="backSection padding12 margintop18">
+<div class="combat-section backSection padding12 margintop18">
   <div class="grid grid-4col">
     <div class="flexrow flex-group-left" style="border: 0px">
-      <label class="smallTitle">
-        <a class="link" href="systems/arm5e/pdf/combat.pdf" target="_blank"
-          title="{{localize 'arm5e.sheet.combatInstructions1'}}"> {{localize "arm5e.sheet.combat.label"}} </a>
+      <label class="smallTitle" title="{{localize 'arm5e.sheet.combatInstructions1'}}">
+        {{localize "arm5e.sheet.combat.label"}}
       </label>
-    </div>
 
-    <div class="flexrow flex-group-center" style="border: 0px">
-      <br />
     </div>
     <div class="flexrow flex-group-center" style="border: 0px">
-      <br />
+      <label>
+        {{localize "arm5e.sheet.combat.preparation"}}
+      </label>
+      <select class="preps" name="system.combatPreps.current" data-dtype="String">
+        {{log "system.combatPreps " system.combatPreps}}
+        {{selectOptions system.combatPreps.list selected=system.combatPreps.current labelAttr="name" }}
+      </select>
+    </div>
+    <div class="preps-controls flexcol">
+      <div><br /></div>
+      <div>
+        <a class="prep-create"
+          title='{{localize "arm5e.hints.create" item=(localize "arm5e.sheet.combat.preparation")}}'>
+          <i class="fas fa-plus"></i>{{localize "arm5e.sheet.action.Create"}}</a>
+        <a class="prep-delete"
+          title='{{localize "arm5e.hints.delete" item=(localize "arm5e.sheet.combat.preparation")}}'>
+          <i class="icon-Icon_Delete_Hand_Gesture"></i></a>
+      </div>
     </div>
 
     <div class="flexrow flex-group-center" style="border: 0px">

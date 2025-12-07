@@ -683,6 +683,26 @@ export const migrateActorData = async function (actorDoc, actorItems) {
       }
     }
 
+    if (actor.system.combatPreps === undefined) {
+      const ids = [];
+      for (let weapon of actor.system.weapons ?? []) {
+        if (weapon.system.equipped == true) {
+          ids.push(weapon.id);
+        }
+      }
+
+      for (let armor of actor.system.armor ?? []) {
+        if (armor.system.equipped == true) {
+          ids.push(armor.id);
+        }
+      }
+
+      updateData["system.combatPreps"] = {
+        current: "custom",
+        list: { custom: { name: game.i18n.localize("arm5e.generic.custom"), ids: [] } }
+      };
+    }
+
     if (actor.type == "player" || actor.type == "npc") {
       let realms = {
         magic: { aligned: false },

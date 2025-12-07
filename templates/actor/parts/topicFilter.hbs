@@ -10,8 +10,7 @@
           <select
             name="topic"
             data-type="String"
-            style="flex: 0 0 100px;   max-width:120px"
-            class="topic-filter {{topic-class}}"
+            class="topic-filter {{topic-class}} textValue"
             data-list="{{list}}"
             data-category="bookTopics"
           >
@@ -28,8 +27,7 @@
           <select
             name="typeFilter"
             data-type="String"
-            style="flex: 0 0 90px"
-            class="type-filter"
+            class="type-filter textValue"
             data-list="{{list}}"
             data-category="bookTopics"
           >
@@ -45,8 +43,7 @@
           <select
             name="levelOperator"
             data-type="Number"
-            style="flex: 0 0; font-family: bookAntiqua"
-            class="levelOperator-filter"
+            class="levelOperator-filter numValue"
             data-list="{{list}}"
             data-category="bookTopics"
           >
@@ -67,7 +64,7 @@
               value="{{levelFilter}}"
               data-dtype="Number"
               style="margin-right: 12px"
-              class="level-filter"
+              class="level-filter numValue"
               data-list="{{../list}}"
               data-category="bookTopics"
             />
@@ -80,8 +77,7 @@
           <select
             name="qualityOperator"
             data-type="Number"
-            style="flex: 0 0; font-family: bookAntiqua"
-            class="qualityOperator-filter"
+            class="qualityOperator-filter numValue"
             data-list="{{list}}"
             data-category="bookTopics"
           >
@@ -102,7 +98,7 @@
               value="{{qualityFilter}}"
               data-dtype="Number"
               style="margin-right: 12px"
-              class="quality-filter"
+              class="quality-filter numValue"
               data-list="{{../list}}"
               data-category="bookTopics"
             />
