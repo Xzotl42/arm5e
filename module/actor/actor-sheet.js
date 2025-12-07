@@ -66,7 +66,7 @@ import { MedicalHistory } from "../tools/med-history.js";
 import { ArM5eActorProfiles } from "./subsheets/actor-profiles.js";
 import { ArM5eMagicSystem } from "./subsheets/magic-system.js";
 import { getRefCompendium } from "../tools/compendia.js";
-import { getConfirmation } from "../ui/dialogs.js";
+import { getConfirmation, textInput } from "../ui/dialogs.js";
 
 export class ArM5eActorSheet extends ActorSheet {
   constructor(object, options) {
@@ -86,7 +86,7 @@ export class ArM5eActorSheet extends ActorSheet {
   static get defaultOptions() {
     const res = foundry.utils.mergeObject(super.defaultOptions, {
       dragDrop: [
-        { dragSelector: ".item-list .item", dropSelector: null },
+        // { dragSelector: ".item-list .item", dropSelector: ".droppable" },
         { dragSelector: ".macro-ready" }
       ]
       /*         classes: ["arm5e", "sheet", "actor"],
@@ -1344,21 +1344,66 @@ export class ArM5eActorSheet extends ActorSheet {
       item.sheet.render(true, { focus: true });
     });
 
-    // html.find(".enchant-trigger").click(async (ev) => {
-    //   ev.preventDefault();
-    //   const li = $(ev.currentTarget).parents(".item");
-    //   let itemId = li.data("itemId");
+    html.find(".prep-create").click(async (ev) => {
+      const ids = [];
+      const prep = { ids: [] };
+      for (let weapon of this.actor.system.weapons) {
+        if (weapon.system.equipped == true) {
+          prep.name = prep.name ? prep.name : weapon.name;
+          prep.ids.push(weapon._id);
+        }
+      }
 
-    //   const item = this.actor.items.get(itemId);
-    //   // const enchantIdx = dataset.index;
-    //   if (item.isOwned) {
-    //     dataset.name = item.name;
-    //     dataset.roll = "item";
-    //     dataset.id = itemId;
-    //     dataset.physicalcondition = false;
-    //     await useMagicItem(dataset, item);
-    //   }
-    // });
+      for (let armor of this.actor.system.armor) {
+        if (armor.system.equipped == true) {
+          prep.name = prep.name ? prep.name : armor.name;
+          prep.ids.push(armor._id);
+        }
+      }
+      const name = await textInput(
+        "arm5e.sheet.combat.preparation",
+        "arm5e.sheet.name",
+        "",
+        prep.name
+      );
+      const key = slugify(name, true);
+      if (key === "custom") {
+        console.error("Invalid name:", prep.name);
+        return;
+      }
+
+      const updateData = {};
+      updateData[`system.combatPreps.list.${key}`] = prep;
+
+      updateData["system.combatPreps.current"] = key;
+
+      await this.actor.update(updateData);
+    });
+
+    html.find(".prep-delete").click(async (ev) => {
+      const current = this.actor.system.combatPreps.current;
+      if (current === "custom") {
+        return;
+      }
+      const name = this.actor.system.combatPreps.list[current].name;
+      const question = game.i18n.localize("arm5e.dialog.delete-question");
+      const confirmed = await getConfirmation(
+        name,
+        question,
+        ArM5eActorSheet.getFlavor(this.actor.type)
+      );
+
+      if (confirmed) {
+        const updateData = {};
+        updateData[`system.combatPreps.list.-=${current}`] = null;
+
+        updateData["system.combatPreps.current"] = "custom";
+
+        await this.actor.update(updateData);
+      }
+    });
+
+    html.find(".preps").change((e) => {});
 
     html.find(".item").contextmenu(async (ev) => {
       let li = ev.currentTarget;
@@ -1422,27 +1467,10 @@ export class ArM5eActorSheet extends ActorSheet {
     });
 
     // Quick edit of Item from inside Actor sheet
-    html.find(".quick-edit").change((event) => {
+    html.find(".equipment").change(async (event) => {
       const li = $(event.currentTarget).parents(".item");
-      let field = $(event.currentTarget).attr("name");
       let itemId = li.data("itemId");
-      const item = this.actor.getEmbeddedDocument("Item", itemId);
-      let value = event.target.value;
-      if ($(event.currentTarget).attr("data-dtype") === "Number") {
-        value = Number(event.target.value);
-      } else if ($(event.currentTarget).attr("data-dtype") === "Boolean") {
-        let oldValue = item.system[[field]];
-        value = !oldValue;
-      }
-
-      this.actor.updateEmbeddedDocuments("Item", [
-        {
-          _id: itemId,
-          system: {
-            [field]: value
-          }
-        }
-      ]);
+      await this.toggleEquip(itemId);
     });
 
     html.find(".item-delete").click(async (ev) => {
@@ -1534,6 +1562,25 @@ export class ArM5eActorSheet extends ActorSheet {
     html.find(".clear-confidencePrompt").click(async (event) => {
       await this.actor.clearConfidencePrompt();
     });
+  }
+
+  async toggleEquip(itemId) {
+    const updateData = {};
+    let current = this.actor.system.combatPreps.current;
+
+    if (current !== "custom") {
+      updateData["system.combatPreps.current"] = "custom";
+      current = "custom";
+    }
+    const prep = this.actor.system.combatPreps.list[current];
+    const idx = prep.ids.indexOf(itemId);
+    if (idx >= 0) {
+      prep.ids.splice(idx, 1);
+    } else {
+      prep.ids.push(itemId);
+    }
+    updateData[`system.combatPreps.list.${current}.ids`] = prep.ids;
+    await this.actor.update(updateData);
   }
 
   async _slugifyIndexKey(event) {
@@ -2057,24 +2104,38 @@ export class ArM5eActorSheet extends ActorSheet {
 
   // adding the correct topic index to the drag data for topics
   _onDragStart(event) {
-    if (!event.target.classList.contains("topic")) {
+    if (event.target.classList.contains("codex")) {
+      const li = event.currentTarget;
+      // const dataset = getDataset(event);
+      // Create drag data
+      let dragData;
+      // Owned Items
+      if (li.dataset.uuid) {
+        // const item = await fromUuid(dataset.uuid);
+        dragData = { uuid: li.dataset.uuid, type: "Item" };
+      }
+      if (!dragData) return;
+      // Set data transfer
+
+      event.dataTransfer.setData("text/plain", JSON.stringify(dragData));
+    } else if (!event.target.classList.contains("topic")) {
       super._onDragStart(event);
       return;
-    }
+    } else {
+      let dragData;
+      const li = event.currentTarget;
+      // Owned Items
+      if (li.dataset.itemId) {
+        const item = this.actor.items.get(li.dataset.itemId);
+        log(false, "Added index to topic");
+        dragData = item.toDragData();
+        dragData.topicIdx = li.dataset.index;
+      }
+      if (!dragData) return;
 
-    let dragData;
-    const li = event.currentTarget;
-    // Owned Items
-    if (li.dataset.itemId) {
-      const item = this.actor.items.get(li.dataset.itemId);
-      log(false, "Added index to topic");
-      dragData = item.toDragData();
-      dragData.topicIdx = li.dataset.index;
+      // Set data transfer
+      event.dataTransfer.setData("text/plain", JSON.stringify(dragData));
     }
-    if (!dragData) return;
-
-    // Set data transfer
-    event.dataTransfer.setData("text/plain", JSON.stringify(dragData));
   }
 
   static getFlavor(actorType) {

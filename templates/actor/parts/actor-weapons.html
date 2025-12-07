@@ -34,7 +34,7 @@
                 {{#if system.canEquip}}
                     <span class="bold flexrow">
                         <label>{{localize "arm5e.sheet.equipped"}}:</label>
-                        <input type="checkbox" class="quick-edit" name="equipped" {{checked system.equipped}}
+                        <input type="checkbox" class="equipment" {{checked system.equipped}}
                             data-dtype="Boolean" /></span>
                 {{else}}
                     <span class="flexrow bold"><label>{{localize "arm5e.sheet.quantity"}}: {{item.system.quantity}}

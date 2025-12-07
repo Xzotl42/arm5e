@@ -94,6 +94,61 @@ export async function selectItemDialog(
   });
 }
 
+export async function textInput(
+  title,
+  fieldName,
+  placeholder,
+  value,
+  classes = [],
+  validator = null
+) {
+  let dialogData = {
+    fieldName: game.i18n.localize(fieldName),
+    placeholder: placeholder,
+    value: value
+  };
+  const html = await renderTemplate("systems/arm5e/templates/generic/textInput.html", dialogData);
+  const inputText = await new Promise((resolve) => {
+    new Dialog(
+      {
+        title: game.i18n.localize(title),
+        content: html,
+        buttons: {
+          yes: {
+            icon: "<i class='fas fa-check'></i>",
+            label: `Yes`,
+            callback: async (html) => {
+              let result = html[0].querySelector(".textInput");
+
+              if (validator && validator(result.value)) {
+                resolve(result.value);
+              } else {
+                resolve(result.value);
+              }
+            }
+          },
+          no: {
+            icon: "<i class='fas fa-ban'></i>",
+            label: `Cancel`,
+            callback: () => {
+              resolve("");
+            }
+          }
+        }
+      },
+      {
+        height: "140px",
+        classes: ["arm5e-dialog", "dialog"] //.push(classes)
+      }
+    ).render(true);
+  });
+  return inputText;
+}
+
+/////////////////////////
+// Listeners
+////////////////////////
+
 export function addCommonListenersDialog(html) {
   html.find(".clickable").click((ev) => {
     $(ev.currentTarget).next().toggleClass("hide");

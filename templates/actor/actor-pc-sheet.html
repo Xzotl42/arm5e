@@ -2,7 +2,7 @@
   <div class="header-background">
     <img src="systems/arm5e/assets/PC/header150.png" />
   </div>
-  <form class="sheet-content flexcol" autocomplete="off">
+  <form class="sheet-content flexcol droppable" autocomplete="off">
     {{!-- Sheet Header --}}
     <header class="sheet-header">
       <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" height="100" width="100" />
@@ -68,10 +68,10 @@
               </div>
             </span>
           </div>
-          <span class="covenantname flex0" style="padding-top: 4px">
+          <span class="flex0" style="padding-top: 4px">
             <label for="system.charType.value" class="smallTitle"
               style="padding-left: 24px">{{localize "arm5e.sheet.charType"}}</label>
-            <select class="width2" name="system.charType.value" data-type="String">
+            <select class="charType" name="system.charType.value" data-type="String">
               {{selectOptions config.character.charTypes selected=system.charType.value labelAttr="label" localize=true}}
             </select>
           </span>

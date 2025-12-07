@@ -306,11 +306,13 @@ export class SupernaturalEffectSchema extends SpellSchema {
         this.bonusAbility.valid = false;
       }
     }
-
-    this.castingTotal = this.valid ? this.computeCastingTotal() : { value: 0, hint: "" };
   }
 
   computeCastingTotal() {
+    this.castingTotal = this.valid ? this._computeCastingTotal() : { value: 0, hint: "" };
+  }
+
+  _computeCastingTotal() {
     const owner = this.parent.actor;
     const template = owner.system.magicSystem.templates[this.template];
     const res = { value: 0, hint: "" };

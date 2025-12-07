@@ -439,6 +439,14 @@ export class ArM5eItemSheet extends ItemSheet {
       }
     });
 
+    if (this.item.system.addListeners) {
+      this.item.system.addListeners(html);
+    }
+
+    html.find(".equipement").change(async (ev) => {
+      await this.actor.sheet.toggleEquip(this.item._id);
+    });
+
     // html.find(".wound-recovery").click(async (event) => {
     //   const dataset = getDataset(event);
     //   await Sanatorium.createDialog(this.actor, this.item);
@@ -483,6 +491,23 @@ export class ArM5eItemSheet extends ItemSheet {
     });
 
     html.find(".weapon-ability").change((event) => this._changeWeaponAbility(event));
+
+    html.find(".equipment").change((event) => {
+      let current = this.actor.system.combatPreps.current;
+      const updateData = {};
+      if (current !== "custom") {
+        updateData["system.combatPreps.current"] = "custom";
+        current = "custom";
+      }
+      const idx = prep.ids.indexOf(this.item._id);
+      if (idx >= 0) {
+        prep.ids.splice(idx, 1);
+      } else {
+        prep.ids.push(this.item._id);
+      }
+      updateData[`system.combatPreps.list.${current}.ids`] = prep.ids;
+      this.actor.update(updateData);
+    });
   }
 
   async _changeWeaponAbility(event) {

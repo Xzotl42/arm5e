@@ -52,24 +52,23 @@
           </div>
         </h1>
         <div class="flexrow">
-          <span class="flex0" style="padding-top: 4px">
-            <label for="system.charType.value" class=""
-              style="padding-top: 4px">{{localize "arm5e.sheet.charType"}}</label>
-            <select name="system.charType.value" data-type="String">
+          <span class="flex0">
+            <label for="system.charType.value" class="">{{localize "arm5e.sheet.charType"}}</label>
+            <select class="charType" name="system.charType.value" data-type="String">
               {{selectOptions config.npc.types selected=system.charType.value labelAttr="label" localize=true}}
             </select>
           </span>
           {{#if (eq system.charType.value "entity")}}
-            <div class="flexrow">
-
-              <label for="system.might.value" class=" flex0 title"
-                style="font-size: 13pt;  padding-top: 15px; padding-left: 5px;padding-right: 5px;">{{localize "arm5e.sheet.might"}}</label>
-              <div style="padding-top: 15px">
-                <input type="number" name="system.might.points" value="{{system.might.points}}" data-dtype="Number"
-                  style="width: 36px; text-align: center;" class="select-on-focus" />
-                {{localize "arm5e.sheet.pointsShort"}} /
-                <input type="number" name="system.might.value" value="{{system.might.value}}" data-dtype="Number"
-                  style="width: 40px; text-align: center; " class="select-on-focus" />
+            <div class="flexrow marginsides6">
+              <div class="flexcol">
+                <label for="system.might.value" class=" flex0 title">{{localize "arm5e.sheet.might"}}</label>
+                <div>
+                  <input type="number" name="system.might.points" value="{{system.might.points}}" data-dtype="Number"
+                    style="width: 36px; text-align: center;" class="select-on-focus" />
+                  {{localize "arm5e.sheet.pointsShort"}} /
+                  <input type="number" name="system.might.value" value="{{system.might.value}}" data-dtype="Number"
+                    style="width: 40px; text-align: center; " class="select-on-focus" />
+                </div>
               </div>
               <div style="padding-top: 15px; padding-left: 5px;">
                 <select class="change-realm" name="" data-type="String" data-realm="{{system.realm}}">

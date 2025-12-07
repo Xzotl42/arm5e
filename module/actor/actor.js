@@ -63,6 +63,7 @@ export class ArM5eActor extends Actor {
       return;
     }
     const datetime = game.settings.get("arm5e", "currentDate");
+
     if (this.system.states.creationMode) {
       this.system.description.born.value =
         Number(datetime.year) - (this.system.age.value ? this.system.age.value : 0);
@@ -274,7 +275,10 @@ export class ArM5eActor extends Actor {
     system.abilities = [];
     system.diaryEntries = [];
 
-    system.familiar = { abilities: [], powers: [] };
+    if (system.familiar) {
+      system.familiar.abilities = [];
+      system.familiar.powers = [];
+    }
     system.spells = [];
     system.magicalEffects = [];
 
@@ -655,50 +659,87 @@ export class ArM5eActor extends Actor {
 
         system.totalXPArts += form.xp;
       }
+      // post preparation treatment, taking into account active effects
+      for (const spell of this.system.spells) {
+        spell.system.computeCastingTotal();
+      }
+
+      for (const effect of this.system.magicalEffects) {
+        effect.system.computeCastingTotal();
+      }
     }
 
-    ///////////////////////
-    // Combat
-    ///////////////////////
-    for (let weapon of system.weapons) {
-      if (weapon.system.equipped == true) {
-        system.combat.load += weapon.system.load;
-        system.combat.init += weapon.system.init;
-        system.combat.atk += weapon.system.atk;
-        system.combat.dfn += weapon.system.dfn;
-        system.combat.dam += weapon.system.dam;
-        system.combat.img = system.combat.img ? system.combat.img : weapon.img;
-        system.combat.name = system.combat.name ? system.combat.name : weapon.name;
-        system.combat.itemId = weapon.id;
-        system.combat.itemUuid = weapon.uuid;
-
-        const ab = this.getAbility(weapon.system.ability.key, weapon.system.ability.option);
-        system.combat.ability = 0;
-        if (ab) {
-          system.combat.ability += ab.system.finalScore;
-          if (weapon.system.weaponExpert) {
-            system.combat.ability++;
-          }
-          if (weapon.system.horse) {
-            const ride = this.getAbilityStats("ride");
-            if (ride.score > 3) {
-              ride.score = 3;
-            }
-            system.combat.ability += ride.score;
-          }
-          weapon.system.ability.id = ab._id;
+    if (system.supernaturalEffectsTemplates) {
+      for (const template of Object.values(system.supernaturalEffectsTemplates)) {
+        for (const effect of template) {
+          effect.system.computeCastingTotal();
         }
       }
     }
+    ///////////////////////
+    // Combat
+    ///////////////////////
 
-    for (let armor of system.armor) {
-      if (armor.system.equipped == true) {
-        system.combat.load += armor.system.load;
-        system.combat.prot += armor.system.prot;
+    for (let weapon of system.weapons) {
+      if (weapon.system.naturalWeapon) {
+        const key = slugify(weapon.name, true);
+        system.combatPreps.list[key] = { name: weapon.name, ids: [weapon._id] };
       }
     }
+    console.log(`Combat preps of ${this.name}`, system.combatPreps);
+    for (let [name, prep] of Object.entries(system.combatPreps.list)) {
+      prep.valid = true;
+      if (name === system.combatPreps.current) {
+        prep.load = 0;
+        prep.init = 0;
+        prep.atk = 0;
+        prep.dfn = 0;
+        prep.dam = 0;
+        prep.prot = 0;
+        prep.ability = 0;
+        let ab = null;
+        for (let id of prep.ids) {
+          const item = this.items.get(id);
+          if (!item) {
+            prep.valid = false;
+            continue;
+          }
+          if (item.type === "weapon") {
+            prep.load += item.system.load;
+            prep.init += item.system.init;
+            prep.atk += item.system.atk;
+            prep.dfn += item.system.dfn;
+            prep.dam += item.system.dam;
+            // prep.itemId = item._id;
+            prep.img = prep.img ? prep.img : item.img;
+            // prep.name = prep.img ? prep.img : item.name;
+            prep.ability = 0;
+            if (!ab) ab = this.getAbility(item.system.ability.key, item.system.ability.option);
 
-    system.combat.overload = ArM5eActor.getArtScore(system.combat.load);
+            if (ab) {
+              prep.ability += ab.system.finalScore;
+              if (item.system.weaponExpert) {
+                prep.ability++;
+              }
+              if (item.system.horse) {
+                const ride = this.getAbilityStats("ride");
+                if (ride.score > 3) {
+                  ride.score = 3;
+                }
+                prep.ability += ride.score;
+              }
+              // item.system.ability.id = ab._id;
+            }
+          } else if (item.type === "armor") {
+            prep.prot += item.system.prot;
+            prep.load += item.system.load;
+          }
+          item.system.equipped = true;
+        }
+        prep.overload = ArM5eActor.getArtScore(system.combat.load);
+        system.combat = prep;
+      }
+    }
 
     if (system.combat.prot) {
       soak += system.combat.prot;
@@ -758,6 +799,7 @@ export class ArM5eActor extends Actor {
         this.system.sanctum.linked = false;
       }
     }
+
     //log(false, "PC end of prepare actor data", system);
   }
 
@@ -1321,6 +1363,17 @@ export class ArM5eActor extends Actor {
     let toUpdate = false;
     if (CONFIG.ARM5E.ActorDataModels[data.type]?.getDefault) {
       data = CONFIG.ARM5E.ActorDataModels[data.type].getDefault(data);
+      toUpdate = true;
+    }
+
+    // Temporary until Character datamodel
+    if (["player", "npc", "beast"].includes(data.type)) {
+      data.system = {
+        combatPreps: {
+          current: "custom",
+          list: { custom: { name: game.i18n.localize("arm5e.generic.custom"), ids: [] } }
+        }
+      };
       toUpdate = true;
     }
 
