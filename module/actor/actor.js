@@ -686,7 +686,7 @@ export class ArM5eActor extends Actor {
         system.combatPreps.list[key] = { name: weapon.name, ids: [weapon._id] };
       }
     }
-    console.log(`Combat preps of ${this.name}`, system.combatPreps);
+    // console.log(`Combat preps of ${this.name}`, system.combatPreps);
     for (let [name, prep] of Object.entries(system.combatPreps.list)) {
       prep.valid = true;
       if (name === system.combatPreps.current) {

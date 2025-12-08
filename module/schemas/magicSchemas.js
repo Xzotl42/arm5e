@@ -80,11 +80,8 @@ export class MagicalEffectSchema extends AbstractMagicEntity {
   }
   computeCastingTotal() {
     this.castingTotal = this._computeCastingTotal(this.parent.actor, { char: "sta" });
-    console.log(
-      `${this.parent.actor.name} : Casting total`,
-      `${this.parent.name}: ${this.castingTotal}`
-    );
   }
+
   static migrate(itemData) {
     const updateData = migrateMagicalItem(itemData);
 

@@ -269,15 +269,15 @@ function prepareRollVariables(dataset, actor) {
  * @param dataset
  */
 function chooseTemplate(dataset) {
-  if (
-    [
-      ROLL_PROPERTIES.ATTACK.VAL,
-      ROLL_PROPERTIES.DEFENSE.VAL,
-      ROLL_PROPERTIES.INIT.VAL,
-      ROLL_PROPERTIES.OPTION.VAL
-    ].includes(dataset.roll)
-  ) {
+  if ([ROLL_PROPERTIES.OPTION.VAL].includes(dataset.roll)) {
     return "systems/arm5e/templates/roll/roll-options.html";
+  }
+  if (
+    [ROLL_PROPERTIES.ATTACK.VAL, ROLL_PROPERTIES.DEFENSE.VAL, ROLL_PROPERTIES.INIT.VAL].includes(
+      dataset.roll
+    )
+  ) {
+    return "systems/arm5e/templates/roll/roll-combat.html";
   }
   if ([ROLL_PROPERTIES.CHAR.VAL, ROLL_PROPERTIES.ABILITY.VAL].includes(dataset.roll)) {
     return "systems/arm5e/templates/roll/roll-characteristic.html";

@@ -303,7 +303,6 @@ export class BookSchema extends foundry.abstract.TypeDataModel {
       itemData.system.topic !== null &&
       itemData.system.topics.length === 0
     ) {
-      console.log(`DEBUG Migrate monotopic book 2: ${JSON.stringify(itemData)}`);
       const topic = itemData.system.topic;
       // topic.quality = itemData.system.quality;
       // topic.level = itemData.system.level;
