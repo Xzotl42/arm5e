@@ -499,6 +499,7 @@ export class ArM5eItemSheet extends ItemSheet {
         updateData["system.combatPreps.current"] = "custom";
         current = "custom";
       }
+      const prep = this.actor.system.combatPreps.list[current];
       const idx = prep.ids.indexOf(this.item._id);
       if (idx >= 0) {
         prep.ids.splice(idx, 1);
