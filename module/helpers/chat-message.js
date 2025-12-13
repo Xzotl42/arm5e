@@ -154,7 +154,7 @@ export class Arm5eChatMessage extends ChatMessage {
 
     msgTitle.html(actorFace);
 
-    if (!this.isRoll) return html;
+    // if (!this.isRoll) return html;
 
     const flavor = html.find(".flavor-text");
     flavor.append(this.addActionButtons(html, actor));

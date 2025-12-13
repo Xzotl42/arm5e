@@ -44,12 +44,21 @@ export class ArM5eItemSheet extends ItemSheet {
     }
   }
 
-  // _onDragStart(event) {
-  //   const li = event.currentTarget;
-  //   // Create drag data
-  //   let dragData;
-
-  // }
+  _getHeaderButtons() {
+    const buttons = super._getHeaderButtons();
+    if (this.item.isOwned) {
+      buttons.unshift({
+        label: game.i18n.localize("arm5e.sheet.owner"),
+        // class applied to the button for styling but also a way to retrieve it, cannot be empty
+        class: "show-owner",
+        icon: "fas fa-user",
+        onclick: () => {
+          this.actor.sheet.render(true);
+        }
+      });
+    }
+    return buttons;
+  }
 
   async _onDrop(event) {
     const dropData = TextEditor.getDragEventData(event);

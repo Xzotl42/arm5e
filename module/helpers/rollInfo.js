@@ -6,6 +6,7 @@ import { getRollTypeProperties, ROLL_MODIFIERS, ROLL_PROPERTIES } from "./rollWi
 import Aura from "./aura.js";
 import { computeLevel, spellFormLabel, spellTechniqueLabel } from "./magic.js";
 import {
+  addCombatListenersDialog,
   addCommonListenersDialog,
   addMagicListenersDialog,
   addPowersListenersDialog,
@@ -84,15 +85,26 @@ export class ArM5eRollInfo {
     this.visibility = {};
     this.addSelectObjects();
     switch (this.type) {
-      case ROLL_PROPERTIES.INIT.VAL:
-        break;
       case ROLL_PROPERTIES.ATTACK.VAL:
+        this.getTargetsInfo();
       case ROLL_PROPERTIES.DEFENSE.VAL:
         if (this.img === "") this.img = actorSystemData.combat.img;
         this.itemId = actorSystemData.combat.itemId;
         this.itemUuid = actorSystemData.combat.itemUuid;
         this.name = actorSystemData.combat.name;
+      case ROLL_PROPERTIES.INIT.VAL:
+        this.characteristic = this.getCombatRollCharacteristic();
+        this.combat.prep.list = actorSystemData.combatPreps.list;
+        this.combat.prep.current = actorSystemData.combatPreps.current;
+        this.combat.init = actorSystemData.combat.init;
+        this.combat.attack = actorSystemData.combat.atk;
+        this.combat.defense = actorSystemData.combat.dfn;
+        this.combat.ability = actorSystemData.combat.ability;
+        this.combat.overload = actorSystemData.combat.overload;
+        this.combat.prep.itemList = actorSystemData.combat.itemList;
 
+        this.part = `systems/arm5e/templates/roll/parts/combat-${this.type}.hbs`;
+        this.listeners = addCombatListenersDialog;
         break;
       case ROLL_PROPERTIES.DAMAGE.VAL:
         if (dataset.damageSource) {
@@ -524,6 +536,16 @@ export class ArM5eRollInfo {
     }
   }
 
+  getCombatRollCharacteristic() {
+    if ([ROLL_PROPERTIES.ATTACK.VAL].includes(this.type)) {
+      return "dex";
+    }
+    if ([ROLL_PROPERTIES.DEFENSE.VAL, ROLL_PROPERTIES.INIT.VAL].includes(this.type)) {
+      return "qik";
+    }
+    return "";
+  }
+
   initPenetrationVariables() {
     this.penetration = this._actor.getAbilityStats("penetration");
     this.penetration.multiplier = 1;
@@ -618,6 +640,27 @@ export class ArM5eRollInfo {
     return res;
   }
 
+  getTargetsInfo() {
+    this.combat.defenders = game.user.targets
+      .filter((e) => {
+        return e.actor.isCharacter();
+      })
+      .map((e) => {
+        return { name: e.actor.name, uuid: e.actor.uuid };
+      });
+    this.combat.targetLabel = `${game.i18n.localize("arm5e.combat.targets.none")}`;
+    this.combat.targetNames = "";
+    if (this.combat.defenders.size === 1) {
+      this.combat.targetLabel = `${game.i18n.localize("arm5e.combat.targets.single")}: `;
+      this.combat.targetNames = this.combat.defenders.first().name;
+    } else if (this.combat.defenders.size > 1) {
+      this.combat.targetLabel = `${game.i18n.localize("arm5e.combat.targets.multiple")}: `;
+      this.combat.targetNames = `${Array.from(this.combat.defenders.map((e) => e.name)).join(
+        ", "
+      )}`;
+    }
+  }
+
   setGenericField(name, value, idx, op = "+") {
     this.generic.txtOption[idx - 1] = name;
     this.generic.option[idx - 1] = value;
@@ -687,6 +730,7 @@ export class ArM5eRollInfo {
     this.mode = 0;
     this.difficulty = 0;
     this.rootMessageId = null;
+    this.part = "";
     this.magic = {
       technique: {
         active: true,
@@ -786,7 +830,14 @@ export class ArM5eRollInfo {
 
     this.ability = { id: "None", name: "", score: 0, speciality: "", specApply: false };
 
-    this.combat = { exertion: false, advantage: 0 };
+    this.combat = {
+      exertion: false,
+      advantage: 0,
+      prep: { list: {}, current: "" },
+      init: 0,
+      attack: 0,
+      defense: 0
+    };
 
     this.damage = {
       source: game.i18n.localize("arm5e.damage.sourcePlaceHolder"),

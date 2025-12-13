@@ -325,21 +325,6 @@ function chooseTemplate(dataset) {
 
 /**
  *
- * @param dataset
- * @param actor
- */
-function updateCharacteristicDependingOnRoll(dataset, actor) {
-  if (
-    [ROLL_PROPERTIES.SPONT.VAL, ROLL_PROPERTIES.MAGIC.VAL, ROLL_PROPERTIES.SPELL.VAL].includes(
-      dataset.roll
-    )
-  ) {
-    actor.rollInfo.characteristic = "sta";
-  }
-}
-
-/**
- *
  * @param actor
  * @param callback
  */
@@ -511,6 +496,7 @@ async function renderRollTemplate(dataset, template, actor) {
   actor.system.roll = actor.rollInfo;
   actor.config = CONFIG.ARM5E;
   actor.selection = actor.rollInfo.selection;
+  actor.part = actor.rollInfo.part;
   const renderedTemplate = await renderTemplate(template, actor);
   const message = await getDialog(dataset, renderedTemplate, actor);
   return message;
@@ -829,7 +815,6 @@ export function getFormData(html, actor) {
 
 export {
   chooseTemplate,
-  updateCharacteristicDependingOnRoll,
   renderRollTemplate,
   prepareRollVariables,
   ROLL_MODES,

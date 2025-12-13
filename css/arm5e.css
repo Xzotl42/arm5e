@@ -920,6 +920,10 @@ label.fit {
   max-width: fit-content;
 }
 
+label.error {
+  color: var(--arm5e-c-conflict);
+}
+
 h2.ars-chat-title {
   font-family: var(--font-header);
   font-size: 16pt;

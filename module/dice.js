@@ -1,5 +1,5 @@
 import { ROLL_MODES, ROLL_PROPERTIES, getRollTypeProperties } from "./helpers/rollWindow.js";
-import { log, putInFoldableLink, putInFoldableLinkWithAnimation, sleep } from "./tools.js";
+import { log, sleep } from "./tools.js";
 import { ARM5E } from "./config.js";
 import { ArsRoll } from "./helpers/stressdie.js";
 import { Arm5eChatMessage } from "./helpers/chat-message.js";
@@ -460,6 +460,34 @@ async function getRollFormula(actor) {
         msg += `${game.i18n.localize("arm5e.sheet.formRes")} (${rollInfo.damage.formRes})`;
         total += rollInfo.damage.formRes;
       }
+    } else if (rollInfo.type == "init") {
+      msg = newLine(msg);
+      msg += `${game.i18n.localize("arm5e.sheet.initiative")} (${rollInfo.combat.init})`;
+      total += rollInfo.combat.init;
+      msg = newLine(msg, "-");
+      msg += `${game.i18n.localize("arm5e.sheet.encumbrance")} (${rollInfo.combat.overload})`;
+      total -= rollInfo.combat.overload;
+    } else if (rollInfo.type == "attack") {
+      msg = newLine(msg);
+      if (rollInfo.combat.exertion) {
+        msg += `${game.i18n.localize("arm5e.sheet.ability")} ( 2 x ${
+          rollInfo.combat.ability
+        } ) <br/>`;
+        total += rollInfo.combat.ability * 2;
+      } else {
+        msg += `${game.i18n.localize("arm5e.sheet.ability")} (${rollInfo.combat.ability})`;
+        total += rollInfo.combat.ability;
+      }
+      msg = newLine(msg);
+      msg += `${game.i18n.localize("arm5e.sheet.attack")} (${rollInfo.combat.attack})`;
+      total += rollInfo.combat.attack;
+    } else if (rollInfo.type == "defense") {
+      msg = newLine(msg);
+      msg += `${game.i18n.localize("arm5e.sheet.ability")} (${rollInfo.combat.ability})`;
+      total += rollInfo.combat.ability;
+      msg = newLine(msg);
+      msg += `${game.i18n.localize("arm5e.sheet.defense")} (${rollInfo.combat.defense})`;
+      total += rollInfo.combat.defense;
     }
 
     if (rollInfo.ability.active) {
@@ -536,22 +564,9 @@ async function getRollFormula(actor) {
       }
     }
     if (rollInfo.hasGenericField(2)) {
-      // msg = newLine(msg);
-      // combat exertion special case
-      if (
-        [ROLL_PROPERTIES.ATTACK.VAL, ROLL_PROPERTIES.DEFENSE.VAL].includes(rollInfo.type) &&
-        rollInfo.combat.exertion
-      ) {
-        total += rollInfo.getGenericFieldValue(2) * 2;
-        msg +=
-          rollInfo.getGenericFieldLabel(2) +
-          " ( 2 x " +
-          rollInfo.getGenericFieldValue(2) +
-          ") <br/>";
-      } else {
-        total += rollInfo.getGenericFieldValue(2);
-        msg += rollInfo.getGenericFieldDetails(2);
-      }
+      msg = newLine(msg);
+      msg += rollInfo.getGenericFieldDetails(2);
+      total += rollInfo.getGenericFieldValue(2);
     }
     if (rollInfo.hasGenericField(3)) {
       total += rollInfo.getGenericFieldValue(3);
