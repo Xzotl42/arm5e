@@ -1,4 +1,3 @@
-import { updateCharacteristicDependingOnRoll } from "../helpers/rollWindow.js";
 import { getDataset } from "../tools.js";
 import { ArM5eItemMagicSheet } from "./item-magic-sheet.js";
 

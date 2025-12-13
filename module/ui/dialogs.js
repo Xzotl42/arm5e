@@ -99,13 +99,15 @@ export async function textInput(
   fieldName,
   placeholder,
   value,
+  flavor,
   classes = [],
   validator = null
 ) {
   let dialogData = {
     fieldName: game.i18n.localize(fieldName),
     placeholder: placeholder,
-    value: value
+    value: value,
+    flavor: flavor
   };
   const html = await renderTemplate("systems/arm5e/templates/generic/textInput.html", dialogData);
   const inputText = await new Promise((resolve) => {
@@ -131,7 +133,7 @@ export async function textInput(
             icon: "<i class='fas fa-ban'></i>",
             label: `Cancel`,
             callback: () => {
-              resolve("");
+              resolve(null);
             }
           }
         }
@@ -267,5 +269,56 @@ export function addSoakListenersDialog(html) {
     const actor = game.actors.get(dataset.actorid);
     actor.rollInfo.damage.ignoreArmor = val;
     html[0].querySelector(".protection").classList.toggle("hidden");
+  });
+}
+
+export function addCombatListenersDialog(html) {
+  addCommonListenersDialog(html);
+
+  html.find(".preps").change(async (event) => {
+    const dataset = getDataset(event);
+    const updateData = {};
+    updateData["system.combatPreps.current"] = event.target.value;
+    const actor = game.actors.get(dataset.actorid);
+    actor.rollInfo.setGenericField();
+    await actor.update(updateData);
+    let field = html[0].querySelector(".ability");
+    if (field) {
+      field.innerText = `${game.i18n.localize("arm5e.sheet.ability")} (${
+        actor.system.combat.ability
+      })`;
+    }
+    field = html[0].querySelector(".attack");
+    if (field) {
+      field.innerText = `${game.i18n.localize("arm5e.sheet.attack")} (${actor.system.combat.atk})`;
+    }
+    field = html[0].querySelector(".init");
+    if (field) {
+      field.innerText = `${game.i18n.localize("arm5e.sheet.init")} (${actor.system.combat.init})`;
+    }
+
+    field = html[0].querySelector(".defense");
+    if (field) {
+      field.innerText = `${game.i18n.localize("arm5e.sheet.defense")} (${actor.system.combat.dfn})`;
+    }
+
+    field = html[0].querySelector(".overload");
+    if (field) {
+      field.innerText = `${game.i18n.localize("arm5e.sheet.encumbrance")} (${
+        actor.system.combat.overload
+      })`;
+    }
+  });
+
+  html.find(".refresh-targets").click(async (event) => {
+    const dataset = getDataset(event);
+
+    const actor = game.actors.get(dataset.actorid);
+    actor.rollInfo.getTargetsInfo();
+
+    const targetLabel = html[0].querySelector(".target-label");
+    targetLabel.innerText = actor.rollInfo.combat.targetLabel;
+    const targetNames = html[0].querySelector(".target-names");
+    targetNames.innerText = actor.rollInfo.combat.targetNames;
   });
 }

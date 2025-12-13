@@ -388,6 +388,11 @@
     "combat": {
       "damage": {
         "ignored": "Ignored on roll"
+      },
+      "targets": {
+        "none": "No target selected",
+        "single": "Single target",
+        "multiple": "Multiple targets"
       }
     },
     "config": {
@@ -557,6 +562,7 @@
       "other": "Other",
       "params": "Parameters",
       "pending": "Pending",
+      "refresh": "Refresh",
       "special": "Special",
       "standard": "Standard",
       "summary": "Summary",

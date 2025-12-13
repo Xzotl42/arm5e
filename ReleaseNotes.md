@@ -1,4 +1,4 @@
-## 2.4.1.7, Radislav, Cognizant Wisdom
+## 2.4.1.8, Radislav, Cognizant Wisdom
 
 ### V13 compatibility
 
@@ -19,6 +19,7 @@
 - Combat preparation management.
 - [WIP] CSS rework.
 - Macro to roll damage for all token select (needs ars-compendia update)
+- New button in the title bar of Items' sheets to show the owner.
 
 ### Bug fixes
 

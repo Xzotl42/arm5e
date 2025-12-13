@@ -480,13 +480,7 @@ export function registerOptionRollTesting(quench) {
           try {
             let dataset = {
               roll: type,
-              name: "Initiative",
-              option1: actor.system.characteristics.qik.value,
-              txtoption1: "quick",
-              option2: actor.system.combat.init,
-              txtoption2: "init",
-              option3: actor.system.combat.overload,
-              txtoption3: "overload"
+              name: "Initiative"
             };
             await actor.rest();
             actor.rollInfo.init(dataset, actor);
@@ -545,13 +539,7 @@ export function registerOptionRollTesting(quench) {
           try {
             let dataset = {
               roll: type,
-              name: "Combat attack",
-              option1: actor.system.characteristics.dex.value,
-              txtoption1: "dex",
-              option2: actor.system.combat.ability,
-              txtoption2: "ability",
-              option3: actor.system.combat.atk,
-              txtoption3: "attack"
+              name: "Combat attack"
             };
             await actor.rest();
             actor.rollInfo.init(dataset, actor);
@@ -612,13 +600,7 @@ export function registerOptionRollTesting(quench) {
           try {
             let dataset = {
               roll: type,
-              name: "Combat defense",
-              option1: actor.system.characteristics.qik.value,
-              txtoption1: "quickness",
-              option2: actor.system.combat.ability,
-              txtoption2: "ability",
-              option3: actor.system.combat.dfn,
-              txtoption3: "defense"
+              name: "Combat defense"
             };
             await actor.rest();
             actor.rollInfo.init(dataset, actor);
@@ -679,13 +661,7 @@ export function registerOptionRollTesting(quench) {
           try {
             let dataset = {
               roll: type,
-              name: "Combat exertion",
-              option1: actor.system.characteristics.dex.value,
-              txtoption1: "dex",
-              option2: actor.system.combat.ability,
-              txtoption2: "ability",
-              option3: actor.system.combat.atk,
-              txtoption3: "attack"
+              name: "Combat exertion"
             };
             await actor.rest();
             actor.rollInfo.init(dataset, actor);
@@ -747,13 +723,7 @@ export function registerOptionRollTesting(quench) {
           try {
             let dataset = {
               roll: type,
-              name: "Combat wounded",
-              option1: actor.system.characteristics.dex.value,
-              txtoption1: "dex",
-              option2: actor.system.combat.ability,
-              txtoption2: "ability",
-              option3: actor.system.combat.atk,
-              txtoption3: "attack"
+              name: "Combat wounded"
             };
             actor.rollInfo.init(dataset, actor);
             const msg = await stressDie(actor, type, 0, actor.rollInfo.properties.CALLBACK, 10);

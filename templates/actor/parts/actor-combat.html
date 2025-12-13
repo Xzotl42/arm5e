@@ -10,8 +10,7 @@
       <label>
         {{localize "arm5e.sheet.combat.preparation"}}
       </label>
-      <select class="preps" name="system.combatPreps.current" data-dtype="String">
-        {{log "system.combatPreps " system.combatPreps}}
+      <select title="{{system.combat.itemList}}" class="preps" name="system.combatPreps.current" data-dtype="String">
         {{selectOptions system.combatPreps.list selected=system.combatPreps.current labelAttr="name" }}
       </select>
     </div>
@@ -25,6 +24,11 @@
           title='{{localize "arm5e.hints.delete" item=(localize "arm5e.sheet.combat.preparation")}}'>
           <i class="icon-Icon_Delete_Hand_Gesture"></i></a>
       </div>
+      {{#unless system.combat.valid}}
+        <label class="error">
+          {{localize "arm5e.generic.invalid"}}
+        </label>
+      {{/unless}}
     </div>
 
     <div class="flexrow flex-group-center" style="border: 0px">
@@ -37,11 +41,8 @@
     <div class="flexrow flex-group-left">
       <div class="flexrow">
 
-        <button class="arm5e rollable" data-roll="init" data-name='{{localize "arm5e.sheet.initiative"}}'
-          data-option1="{{ system.characteristics.qik.value }}" data-txtoption1='{{ localize "arm5e.sheet.quickness" }}'
-          data-option2="{{ system.combat.init }}" data-txtoption2='{{ localize "arm5e.sheet.initiative" }}'
-          data-option3="{{ system.combat.overload }}" data-txtoption3='{{ localize "arm5e.sheet.encumbrance" }}'><img
-            src="systems/arm5e/assets/dice.png" class="flex0" style="border: 0px; height: 14px">
+        <button class="arm5e rollable" data-roll="init" data-name='{{localize "arm5e.sheet.initiative"}}'>
+          <img src="systems/arm5e/assets/dice.png" class="flex0" style="border: 0px; height: 14px">
           {{localize "arm5e.sheet.initiative"}}</button>
       </div>
       <!-- quick + init - encumb + stres die -->
@@ -81,11 +82,8 @@
 
     <div class="flexrow flex-group-left">
       <div class="flexrow">
-        <button class="arm5e rollable" data-roll="attack" data-name='{{localize "arm5e.sheet.attack"}}'
-          data-option1="{{ system.characteristics.dex.value }}" data-txtoption1='{{ localize "arm5e.sheet.dexterity" }}'
-          data-option2="{{ system.combat.ability }}" data-txtoption2='{{localize "arm5e.sheet.ability"}}'
-          data-option3="{{ system.combat.atk }}" data-txtoption3='{{localize "arm5e.sheet.attack"}}'><img
-            src="systems/arm5e/assets/dice.png" class="flex0" style="border: 0px; height: 14px">
+        <button class="arm5e rollable" data-roll="attack" data-name='{{localize "arm5e.sheet.attack"}}'>
+          <img src="systems/arm5e/assets/dice.png" class="flex0" style="border: 0px; height: 14px">
           {{localize "arm5e.sheet.attack"}}</button>
       </div>
       <!-- dex + ability + weapon + stres die -->
@@ -124,11 +122,8 @@
 
     <div class="flexrow flex-group-left">
       <div class="flexrow">
-        <button class="arm5e rollable" data-roll="defense" data-name='{{localize "arm5e.sheet.defense"}}'
-          data-option1="{{ system.characteristics.qik.value }}" data-txtoption1='{{ localize "arm5e.sheet.quickness" }}'
-          data-option2="{{ system.combat.ability }}" data-txtoption2='{{localize "arm5e.sheet.ability"}}'
-          data-option3="{{ system.combat.dfn }}" data-txtoption3='{{localize "arm5e.sheet.defense"}}'> <img
-            src="systems/arm5e/assets/dice.png" style="border: 0px; height: 14px">
+        <button class="arm5e rollable" data-roll="defense" data-name='{{localize "arm5e.sheet.defense"}}'>
+          <img src="systems/arm5e/assets/dice.png" style="border: 0px; height: 14px">
           {{localize "arm5e.sheet.defense"}}</button>
       </div>
       <!-- quick + ability + weapon + stres die -->

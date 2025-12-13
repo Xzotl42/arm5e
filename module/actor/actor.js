@@ -698,18 +698,21 @@ export class ArM5eActor extends Actor {
         prep.prot = 0;
         prep.ability = 0;
         let ab = null;
+        const items = [];
         for (let id of prep.ids) {
           const item = this.items.get(id);
           if (!item) {
             prep.valid = false;
             continue;
           }
+          items.push(item.name);
           if (item.type === "weapon") {
             prep.load += item.system.load;
             prep.init += item.system.init;
             prep.atk += item.system.atk;
             prep.dfn += item.system.dfn;
             prep.dam += item.system.dam;
+
             // prep.itemId = item._id;
             prep.img = prep.img ? prep.img : item.img;
             // prep.name = prep.img ? prep.img : item.name;
@@ -736,6 +739,7 @@ export class ArM5eActor extends Actor {
           }
           item.system.equipped = true;
         }
+        prep.itemList = items.join(", ");
         prep.overload = ArM5eActor.getArtScore(system.combat.load);
         system.combat = prep;
       }

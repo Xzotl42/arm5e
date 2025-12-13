@@ -29,7 +29,6 @@ import {
 } from "../constants/userdata.js";
 import {
   prepareRollVariables,
-  updateCharacteristicDependingOnRoll,
   renderRollTemplate,
   chooseTemplate,
   ROLL_MODES,
@@ -1347,31 +1346,37 @@ export class ArM5eActorSheet extends ActorSheet {
     html.find(".prep-create").click(async (ev) => {
       const ids = [];
       const prep = { ids: [] };
+      const itemList = [];
       for (let weapon of this.actor.system.weapons) {
         if (weapon.system.equipped == true) {
           prep.name = prep.name ? prep.name : weapon.name;
+          itemList.push(weapon.name);
           prep.ids.push(weapon._id);
         }
       }
 
       for (let armor of this.actor.system.armor) {
         if (armor.system.equipped == true) {
+          itemList.push(armor.name);
           prep.name = prep.name ? prep.name : armor.name;
           prep.ids.push(armor._id);
         }
       }
+      prep.itemList = itemList.join(", ");
       const name = await textInput(
         "arm5e.sheet.combat.preparation",
         "arm5e.sheet.name",
         "",
-        prep.name
+        prep.name,
+        prep.itemList
       );
+      if (!name) return;
       const key = slugify(name, true);
       if (key === "custom") {
         console.error("Invalid name:", prep.name);
         return;
       }
-
+      prep.name = name;
       const updateData = {};
       updateData[`system.combatPreps.list.${key}`] = prep;
 
@@ -1402,8 +1407,6 @@ export class ArM5eActorSheet extends ActorSheet {
         await this.actor.update(updateData);
       }
     });
-
-    html.find(".preps").change((e) => {});
 
     html.find(".item").contextmenu(async (ev) => {
       let li = ev.currentTarget;
@@ -1567,19 +1570,25 @@ export class ArM5eActorSheet extends ActorSheet {
   async toggleEquip(itemId) {
     const updateData = {};
     let current = this.actor.system.combatPreps.current;
-
+    const prep = this.actor.system.combatPreps.list[current];
     if (current !== "custom") {
       updateData["system.combatPreps.current"] = "custom";
       current = "custom";
     }
-    const prep = this.actor.system.combatPreps.list[current];
-    const idx = prep.ids.indexOf(itemId);
+
+    const newIds = prep.ids.filter((e) => {
+      return this.actor.items.get(e);
+    });
+
+    const idx = newIds.indexOf(itemId);
     if (idx >= 0) {
-      prep.ids.splice(idx, 1);
+      newIds.splice(idx, 1);
     } else {
-      prep.ids.push(itemId);
+      newIds.push(itemId);
     }
-    updateData[`system.combatPreps.list.${current}.ids`] = prep.ids;
+    // filter
+
+    updateData[`system.combatPreps.list.${current}.ids`] = newIds;
     await this.actor.update(updateData);
   }
 
@@ -2073,7 +2082,6 @@ export class ArM5eActorSheet extends ActorSheet {
 
     prepareRollVariables(dataset, this.actor);
     this.actor.system.charmetadata = ARM5E.character.characteristics;
-    updateCharacteristicDependingOnRoll(dataset, this.actor);
     const template = chooseTemplate(dataset);
 
     const res = await renderRollTemplate(dataset, template, this.actor);
