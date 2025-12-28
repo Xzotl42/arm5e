@@ -838,6 +838,10 @@ export class ArM5eActor extends Actor {
     return super.getDefaultArtwork(actorData);
   }
 
+  get tokenName() {
+    return this.isToken ? this.token.name : this.primaryToken.name;
+  }
+
   getRollData() {
     // Let rollData = super.getRollData();
     // rollData.config = {

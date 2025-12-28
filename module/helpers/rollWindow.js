@@ -203,7 +203,7 @@ const ROLL_PROPERTIES = {
     // ACTION_LABEL: "arm5e.dialog.powerUse",
     CALLBACK: castSupernaturalEffect
   },
-  COMBAT_DAMAGE: {
+  COMBATDAMAGE: {
     VAL: "combatDamage",
     MODE: ROLL_MODES.NO_ROLL, // use dataset.mode
     MODIFIERS: 0,
@@ -211,7 +211,7 @@ const ROLL_PROPERTIES = {
     ACTION_LABEL: "arm5e.dialog.woundCalculator"
     // CALLBACK: combatDamage
   },
-  COMBAT_SOAK: {
+  COMBATSOAK: {
     VAL: "combatSoak",
     MODE: ROLL_MODES.NO_ROLL, // use dataset.mode
     MODIFIERS: 0,
@@ -314,10 +314,10 @@ function chooseTemplate(dataset) {
     return "systems/arm5e/templates/roll/roll-twilightUnderstanding.html";
   }
 
-  if (dataset.roll == ROLL_PROPERTIES.DAMAGE.VAL) {
+  if ([ROLL_PROPERTIES.COMBATDAMAGE, ROLL_PROPERTIES.DAMAGE.VAL].includes(dataset.roll)) {
     return "systems/arm5e/templates/roll/roll-damage.html";
   }
-  if (dataset.roll == ROLL_PROPERTIES.SOAK.VAL) {
+  if ([ROLL_PROPERTIES.COMBATSOAK, ROLL_PROPERTIES.SOAK.VAL].includes(dataset.roll)) {
     return "systems/arm5e/templates/roll/roll-soak.html";
   }
   return "";

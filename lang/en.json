@@ -390,9 +390,9 @@
         "ignored": "Ignored on roll"
       },
       "targets": {
+        "multiple": "Multiple targets",
         "none": "No target selected",
-        "single": "Single target",
-        "multiple": "Multiple targets"
+        "single": "Single target"
       }
     },
     "config": {
@@ -430,14 +430,15 @@
       }
     },
     "damage": {
+      "compute": "Calculate damage",
+      "damageflavor": "{amount} of damage to be soaked from {source}",
       "form": "Damage Form",
       "ignoreArmor": "Ignore armor",
       "label": "Damage",
       "roll": "Damage roll",
+      "soakFlavor": "Soak {amount} of damage from {source}",
       "source": "Source of damage",
-      "sourcePlaceHolder": "A damage source",
-      "damageflavor": "{amount} of damage to be soaked from {source}",
-      "soakFlavor": "Soak {amount} of damage from {source}"
+      "sourcePlaceHolder": "A damage source"
     },
     "dialog": {
       "botch": {
@@ -528,8 +529,8 @@
       "always": "Always",
       "base": "Base",
       "begins": "Begins",
-      "clear": "Clear",
       "cancelled": "Cancelled",
+      "clear": "Clear",
       "config": "Configuration",
       "current": "Current",
       "custom": "Custom",
@@ -805,8 +806,8 @@
       "fatigueLost": "Lost {num} fatigue level(s)",
       "noConf": "Pass confidence use",
       "noWound": "No wound inflicted",
-      "useConf": "Use confidence point",
       "soak": "Soak roll",
+      "useConf": "Use confidence point",
       "wound": {
         "dead": "deadly",
         "heavy": "heavy",
@@ -1193,7 +1194,6 @@
         "label": "Basic Lab Total"
       },
       "biography": "Biography",
-      "secrets": "Secrets",
       "birthName": "Birth Name",
       "birthplace": "Place of Origin",
       "blankBook": "Blank book",
@@ -1222,16 +1222,19 @@
       "child": "Child",
       "com": "Com",
       "combat": {
+        "defend": "Defend",
         "flavor": {
           "attack": "{attacker} attacks {target} with {weapon}.",
-          "damage": "{attacker} tries to inflict damage.",
+          "damage": "{attacker} tries to inflict {amount} damage.",
+          "damageWithTarget": "{attacker} tries to inflict {amount} damage to {target}.",
           "defense": "{defender} defends against {attacker} with {weapon}.",
           "defenseNoAttacker": "{defender} defends with {weapon}.",
           "noWeapon": "no weapon",
           "soak": "{target} soaks the damage."
         },
         "label": "Combat",
-        "preparation": "Combat preparation"
+        "preparation": "Combat preparation",
+        "wound": "Combat wound inflicted by {attacker}"
       },
       "combatInstructions1": "Equip weapons and armor to see the totals.",
       "combatInstructions2": "If your specialty is with the shield, mark it on the shield and not on the weapon. If you don't have the shield equipped, the specialty bonus doesn't apply.",
@@ -1564,6 +1567,7 @@
       "score": "Score",
       "season": "Season",
       "seasons": "seasons",
+      "secrets": "Secrets",
       "security": "Security",
       "servants": "Servants",
       "setAbilities": "Create abilities for your character that match the labels below. This ensures correct calculations. If you don't have the ability, you can still create it and set to zero and assign it.",

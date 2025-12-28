@@ -21,26 +21,19 @@ export class Arm5eChatMessage extends ChatMessage {
         }
 
         break;
-      case "useConfidence": {
-        const msg = game.messages.get(msgId);
-        if (msg) {
-          // if multiple people try to use confidence on a character they own
-          if (msg.isAuthor || game.user.isGM) {
-            if (!msg.system.impact.applied) {
-              await msg.system._applyChatMessageUpdate(payload[SMSG_FIELDS.CHAT_MSG_DB_UPDATE]);
-              game.arm5e.socketHandler.acknowledgeMessage(payload[SMSG_FIELDS.ID]);
-            }
-          }
-        }
-        break;
-      }
+      case "useConfidence":
+      case "rollDefense":
       case "rollSoak":
-        const msg = game.messages.get(msgId);
-        if (msg) {
-          if (msg.isAuthor || game.user.isGM) {
-            if (!msg.system.impact.applied) {
-              await msg.system._applyChatMessageUpdate(payload[SMSG_FIELDS.CHAT_MSG_DB_UPDATE]);
-              game.arm5e.socketHandler.acknowledgeMessage(payload[SMSG_FIELDS.ID]);
+      case "calculateDamage":
+      case "applyDamage":
+        {
+          const msg = game.messages.get(msgId);
+          if (msg) {
+            if (msg.isAuthor || game.user.isGM) {
+              if (!msg.system.impact.applied) {
+                await msg.system._applyChatMessageUpdate(payload[SMSG_FIELDS.CHAT_MSG_DB_UPDATE]);
+                game.arm5e.socketHandler.acknowledgeMessage(payload[SMSG_FIELDS.ID]);
+              }
             }
           }
         }
@@ -133,7 +126,8 @@ export class Arm5eChatMessage extends ChatMessage {
     const metadata = html.find(".message-metadata");
     metadata.css("max-width", "fit-content");
     const msgTitle = html.find(".message-sender");
-    // const msgTitle = !!html.querySelector(".message-sender");
+    // const msgTitle = html[0].querySelector(".message-sender");
+
     // is there a better way?
     let text = msgTitle.text();
     text = text.replace("GameMaster", tokenName);
@@ -160,7 +154,9 @@ export class Arm5eChatMessage extends ChatMessage {
     flavor.append(this.addActionButtons(html, actor));
 
     // format any additional rolls
-    this.system.formatTargets(html);
+    if (this.system.formatTargets) {
+      this.system.formatTargets(html);
+    }
 
     if (this.system.addListeners) {
       this.system.addListeners(html);
@@ -176,18 +172,21 @@ export class Arm5eChatMessage extends ChatMessage {
   }
 
   addActionButtons(html, actor) {
-    const btnContainer = $('<div class="btn-container"></div>');
+    const btnContainer = document.createElement("div");
+    btnContainer.classList.add("btn-container");
+    const btnArray = document.createElement("div");
+    btnArray.classList.add("flexrow");
 
     let btnCnt = 0;
-    if (actor.isOwner) {
-      if (this.system.addActionButtons) {
-        btnCnt = this.system.addActionButtons(btnContainer, actor);
-      }
-      if (btnCnt) {
-        btnContainer.prepend(
-          '<h3 class="ars-chat-title">' + game.i18n.localize("arm5e.sheet.actions") + "</h3>"
-        );
-      }
+    if (this.system.addActionButtons) {
+      btnCnt = this.system.addActionButtons(btnArray, actor);
+    }
+    if (btnCnt) {
+      const actionHeader = document.createElement("h3");
+      actionHeader.classList.add("ars-chat-title");
+      actionHeader.innerHTML = game.i18n.localize("arm5e.sheet.actions");
+      btnContainer.appendChild(actionHeader);
+      btnContainer.appendChild(btnArray);
     }
     return btnContainer;
   }
