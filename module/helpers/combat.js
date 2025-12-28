@@ -1,4 +1,4 @@
-import { calculateWound, log } from "../tools.js";
+import { calculateWound, getLastCombatMessageOfType, log } from "../tools.js";
 import { createRoll, stressDie } from "../dice.js";
 import { Arm5eChatMessage } from "./chat-message.js";
 import { _applyImpact, ROLL_PROPERTIES } from "./rollWindow.js";
@@ -90,12 +90,26 @@ export class QuickCombat extends FormApplication {
   activateListeners(html) {
     super.activateListeners(html);
     html.find(".rollable").click(async (event) => await this.object.actor.sheet.roll(event));
-    html
-      .find(".soak-damage")
-      .click(async (event) => await this.object.actor.sheet._onSoakDamage(event));
-    html
-      .find(".damage")
-      .click(async (event) => await this.object.actor.sheet._onCalculateDamage(event));
+    html.find(".soak-damage").click(async (event) => {
+      const msg = await this.object.actor.sheet._onSoakDamage(getDataset(event));
+      if (msg == null) return;
+      if (msg.system.impact.woundGravity) {
+        await this.object.actor.changeWound(
+          1,
+          CONFIG.ARM5E.recovery.rankMapping[msg.system.impact.woundGravity]
+        );
+      }
+      Arm5eChatMessage.create(msg.toObject());
+    });
+    html.find(".damage").click(async (event) => {
+      const lastAttackMessage = getLastCombatMessageOfType("attack");
+      const lastDefenseMessage = getLastCombatMessageOfType("defense");
+      const attackScore = lastAttackMessage?.rollTotal() > 0 ? lastAttackMessage.rollTotal() : 0;
+      const defenseScore = lastDefenseMessage?.rollTotal() > 0 ? lastDefenseMessage.rollTotal() : 0;
+      const advantage = attackScore - defenseScore;
+
+      const msg = await this.object.actor.sheet._onCalculateDamage({ advantage });
+    });
   }
 }
 export async function quickCombat(tokenName, actor) {
@@ -198,7 +212,11 @@ export async function quickVitals(tokenName, actor) {
 }
 
 export async function combatDamage(selector, actor) {
-  let damage = parseInt(selector.find('input[name$="modifier"]').val());
+  // TODO use javascript instead of JQuery
+  // const modifier = parseInt(selector.querySelector())
+  const modifier = parseInt(selector.find('input[name$="modifier"]').val());
+  let damage = modifier;
+  actor.rollInfo.modifier = modifier;
   const messageModifier = `${game.i18n.localize("arm5e.sheet.modifier")} (${damage})`;
   let details = "";
   const strength = parseInt(selector.find('label[name$="strength"]').attr("value") || 0);
@@ -212,9 +230,9 @@ export async function combatDamage(selector, actor) {
   damage += strength + weapon + advantage;
   details = ` ${messageStrength}<br/> ${messageWeapon}<br/> ${messageAdvantage}<br/> ${messageModifier}<br/>`;
   let title = "";
-  const messageDamage = `<h4 class="dice-total">${damage}</h4>`;
+  const messageDamage = `<h4 class="dice-roll dice-total">${damage}</h4>`;
   const messageData = {
-    type: "combat",
+    type: "combatDamage",
     content: messageDamage,
     flavor: "",
 
@@ -223,26 +241,30 @@ export async function combatDamage(selector, actor) {
     }),
     system: {
       label: game.i18n.localize("arm5e.damage.label"),
-      roll: { details: details, type: "damage" },
+      roll: { details: details, type: actor.rollInfo.type },
       confidence: {
         allowed: false
       },
-      combat: { formDamage: formDam }
+      rootMessage: actor.rollInfo.rootMessageUuid,
+      combat: { damageForm: formDam, damageTotal: damage }
     }
   };
   const message = new Arm5eChatMessage(messageData);
   message.system.enrichMessageData(actor);
 
-  Arm5eChatMessage.create(message.toObject());
+  return Arm5eChatMessage.create(message.toObject());
 }
 
-export function buildSoakDataset(selector) {
+export function buildSoakDataset(selector, actor) {
   const dataset = {};
 
   dataset.modifier = parseInt(selector.find('input[name$="modifier"]').val());
   dataset.damage = parseInt(selector.find('input[name$="damage"]').val());
-  dataset.natRes = parseInt(selector.find('select[name$="natRes"]').val() || 0);
-  dataset.formRes = parseInt(selector.find('select[name$="formRes"]').val() || 0);
+  let natRes = selector[0].querySelector('select[name$="natRes"]')?.value;
+  let formRes = selector[0].querySelector('select[name$="formRes"]')?.value;
+
+  dataset.natRes = actor.system.bonuses.resistance[natRes] || 0;
+  dataset.formRes = Math.ceil(actor.system.arts?.forms[formRes]?.finalScore / 5 || 0);
   dataset.prot = parseInt(selector.find('label[name$="prot"]').attr("value") || 0);
   dataset.bonus = parseInt(selector.find('label[name$="soak"]').attr("value") || 0);
   dataset.stamina = parseInt(selector.find('label[name$="stamina"]').attr("value") || 0);
@@ -266,7 +288,7 @@ export async function setWounds(soakData, actor) {
 
   const messageData = await roll.toMessage(
     {
-      type: "combat",
+      type: "combatSoak",
       // content: `<h4 class="dice-total">${woundInfo.messageWound}</h4>`,
       flavor: game.i18n.format("arm5e.sheet.combat.flavor.soak", {
         target: actor.name,
@@ -277,7 +299,7 @@ export async function setWounds(soakData, actor) {
       }),
       system: {
         label: game.i18n.localize("arm5e.sheet.soak"),
-        roll: { details: woundInfo.details, type: ROLL_PROPERTIES.COMBAT_SOAK.VAL },
+        roll: { details: woundInfo.details, type: ROLL_PROPERTIES.COMBATSOAK.VAL },
         confidence: {
           allowed: false
         },
@@ -287,13 +309,14 @@ export async function setWounds(soakData, actor) {
     { create: false }
   );
 
-  if (woundInfo.typeOfWound) {
-    await actor.changeWound(1, CONFIG.ARM5E.recovery.rankMapping[woundInfo.typeOfWound]);
-  }
+  // if (woundInfo.typeOfWound) {
+  //   await actor.changeWound(1, CONFIG.ARM5E.recovery.rankMapping[woundInfo.typeOfWound]);
+  // }
   const message = new Arm5eChatMessage(messageData);
   message.system.enrichMessageData(actor);
+  return message;
 
-  Arm5eChatMessage.create(message.toObject());
+  // Arm5eChatMessage.create(message.toObject());
 }
 
 function getMessageDamageDetails(soakData, actor) {
@@ -371,7 +394,6 @@ export async function damageRoll(actor, roll, message) {
 export async function soakRoll(actor, roll, message) {
   const rollInfo = actor.rollInfo;
 
-  const rootMessage = game.messages.get(rollInfo.rootMessageId);
   const damage = rollInfo.difficulty;
   const details = `${game.i18n.localize("arm5e.damage.label")} (${damage}) -<br/>(${
     message.system.roll.details

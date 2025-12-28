@@ -66,6 +66,7 @@ import { ArM5eActorProfiles } from "./subsheets/actor-profiles.js";
 import { ArM5eMagicSystem } from "./subsheets/magic-system.js";
 import { getRefCompendium } from "../tools/compendia.js";
 import { getConfirmation, textInput } from "../ui/dialogs.js";
+import { Arm5eChatMessage } from "../helpers/chat-message.js";
 
 export class ArM5eActorSheet extends ActorSheet {
   constructor(object, options) {
@@ -1518,8 +1519,35 @@ export class ArM5eActorSheet extends ActorSheet {
       } else this.roll(event);
     });
 
-    html.find(".soak-damage").click(this._onSoakDamage.bind(this));
-    html.find(".damage").click(this._onCalculateDamage.bind(this));
+    html.find(".soak-damage").click(async (event) => {
+      const msg = await this._onSoakDamage(getDataset(event));
+      if (msg == null) return;
+      if (msg.system.impact.woundGravity) {
+        await this.actor.changeWound(
+          1,
+          CONFIG.ARM5E.recovery.rankMapping[msg.system.impact.woundGravity]
+        );
+      }
+      Arm5eChatMessage.create(msg.toObject());
+    });
+    html.find(".damage").click(async (event) => {
+      const lastAttackMessage = getLastCombatMessageOfType("combatAttack");
+      const lastDefenseMessage = getLastCombatMessageOfType("combatDefense");
+      let attackScore = 0;
+      if (lastAttackMessage) {
+        attackScore = lastAttackMessage.rollTotal() > 0 ? lastAttackMessage.rollTotal() : 0;
+        attackScore += lastAttackMessage?.system.confidenceModifier;
+      }
+
+      let defenseScore = 0;
+      if (lastDefenseMessage) {
+        defenseScore = lastDefenseMessage.rollTotal() > 0 ? lastDefenseMessage.rollTotal() : 0;
+        defenseScore += lastDefenseMessage?.system.confidenceModifier;
+      }
+
+      const advantage = attackScore - defenseScore;
+      await this._onCalculateDamage({ advantage, roll: event.target.dataset.roll });
+    });
     html.find(".power-use").click(this._onUsePower.bind(this));
     html.find(".addFatigue").click(async (event) => {
       let longTerm = false;
@@ -1856,80 +1884,121 @@ export class ArM5eActorSheet extends ActorSheet {
     }
   }
 
-  async _onSoakDamage(html, actor) {
-    const lastMessageDamage = getLastCombatMessageOfType("damage");
-    const damage = parseInt($(lastMessageDamage?.content).text()) || 0;
-    var actor = this.actor;
-    const form = lastMessageDamage ? lastMessageDamage.system.combat.damageForm : "te";
-    const data = {
-      actor,
+  async _onSoakDamage(dataset) {
+    let damage = 0;
+    let form = "te";
+    if (dataset.rootMessage) {
+      const msg = fromUuidSync(dataset.rootMessage);
+      damage = msg.system.combat.damageTotal > 0 ? msg.system.combat.damageTotal : 0;
+      form = msg.system.combat.damageForm;
+    } else {
+      const lastMessageDamage = getLastCombatMessageOfType("combatDamage");
+
+      if (lastMessageDamage) {
+        damage =
+          lastMessageDamage.system.combat.damageTotal > 0
+            ? lastMessageDamage.system.combat.damageTotal
+            : 0;
+        form = lastMessageDamage.system.combat.damageForm;
+      }
+    }
+    const dialogData = {
+      actor: this.actor,
       damage,
       modifier: 0,
-      natRes: "",
-      formRes: "",
+      natRes: form,
+      formRes: form,
       selection: { natRes: {}, formRes: {} }
     };
 
-    for (let [key, resist] of Object.entries(actor.system.bonuses.resistance)) {
+    for (let [key, resist] of Object.entries(this.actor.system.bonuses.resistance)) {
       if (resist !== 0) {
-        data.hasResistance = true;
-        data.selection.natRes[key] = {
+        dialogData.hasResistance = true;
+        dialogData.selection.natRes[key] = {
           res: resist,
           label: `${CONFIG.ARM5E.magic.arts[key].label} (${resist})`
         };
       }
     }
 
-    if (actor.isMagus()) {
-      data.isMagus = true;
-      data.selection.formRes = {};
-      for (let [key, form] of Object.entries(actor.system.arts.forms)) {
-        data.selection.formRes[key] = {
+    if (this.actor.isMagus()) {
+      dialogData.isMagus = true;
+      dialogData.selection.formRes = {};
+      for (let [key, form] of Object.entries(this.actor.system.arts.forms)) {
+        dialogData.selection.formRes[key] = {
           res: Math.ceil(form.finalScore / 5),
           label: `${form.label} (${Math.ceil(form.finalScore / 5)})`
         };
       }
-      data.formRes = data.selection.formRes[form].res;
+      // dialogData.formRes = dialogData.selection.formRes[form].res;
     }
 
     let template = "systems/arm5e/templates/actor/parts/actor-soak.html";
-    const dialog = await renderTemplate(template, data);
-    new Dialog(
-      {
-        title: game.i18n.localize("arm5e.dialog.woundCalculator"),
-        content: dialog,
-        render: (html) => this.addListenersDialog(html),
-        buttons: {
-          yes: {
-            icon: "<i class='fas fa-check'></i>",
-            label: game.i18n.localize("arm5e.messages.applyDamage"),
-            callback: async (html) => {
-              const soakData = buildSoakDataset(html);
-              await setWounds(soakData, actor);
+    const html = await renderTemplate(template, dialogData);
+
+    return await new Promise((resolve) => {
+      let settled = false;
+      let pending = null;
+      const finish = (value) => {
+        if (!settled) {
+          settled = true;
+          resolve(value);
+        }
+      };
+      new Dialog(
+        {
+          title: game.i18n.localize("arm5e.dialog.woundCalculator"),
+          content: html,
+          render: (html) => this.addListenersDialog(html),
+          buttons: {
+            yes: {
+              icon: "<i class='fas fa-check'></i>",
+              label: game.i18n.localize("arm5e.messages.applyDamage"),
+              callback: async (html) => {
+                // Start the async work and capture the promise immediately so the close
+                // handler can await it if the dialog is closed while it's running.
+                pending = (async () => {
+                  const soakData = buildSoakDataset(html, this.actor);
+                  const msg = await setWounds(soakData, this.actor);
+                  return msg;
+                })();
+
+                // When it finishes, resolve (unless already resolved).
+                pending
+                  .then((msg) => finish(msg))
+                  .catch(() => {
+                    console.log("Error in dialog confirm");
+                    finish(null);
+                  });
+
+                return true;
+              }
+            },
+            no: {
+              icon: "<i class='fas fa-ban'></i>",
+              label: game.i18n.localize("arm5e.dialog.button.cancel"),
+              callback: () => finish(null)
             }
           },
-          // roll: {
-          //   label: game.i18n.localize("arm5e.dialog.button.roll"),
-          //   callback: async (html) => {
-          //     const soakData = buildSoakDataset(html);
-          //     await rolledSoak(soakData, actor);
-          //     await setWounds(soakData, actor);
-          //   }
-          // },
-          no: {
-            icon: "<i class='fas fa-ban'></i>",
-            label: game.i18n.localize("arm5e.dialog.button.cancel"),
-            callback: null
+          default: "yes",
+          close: () => {
+            // If a button triggered async work and the dialog is closed while it's running,
+            // wait for it and then resolve with its result; otherwise resolve null.
+            if (pending) {
+              pending.then((msg) => finish(msg)).catch(() => finish(null));
+            } else {
+              finish(null);
+            }
           }
+        },
+        {
+          jQuery: true,
+          height: "140px",
+          width: "400px",
+          classes: ["arm5e-dialog", "dialog"]
         }
-      },
-      {
-        jQuery: true,
-        height: "140px",
-        width: "400px",
-        classes: ["arm5e-dialog", "dialog"]
-      }
-    ).render(true);
+      ).render(true);
+    });
   }
 
   async _onUsePower(event) {
@@ -1937,50 +2006,77 @@ export class ArM5eActorSheet extends ActorSheet {
     await usePower(dataset, this.actor);
   }
 
-  async _onCalculateDamage(html, actor) {
-    const lastAttackMessage = getLastCombatMessageOfType("attack");
-    const lastDefenseMessage = getLastCombatMessageOfType("defense");
-    const attack = parseInt(lastAttackMessage?.content || "0");
-    const defense = parseInt(lastDefenseMessage?.content || "0");
-    const advantage = attack - defense;
-
-    var actor = this.actor;
+  async _onCalculateDamage(dataset) {
+    // var actor = this.actor;
 
     const data = {
-      actor,
-      advantage,
+      ...dataset,
       modifier: 0,
       formDamage: "te",
       selection: { forms: CONFIG.ARM5E.magic.forms }
     };
+    this.actor.rollInfo.init(data, this.actor);
     let template = "systems/arm5e/templates/generic/combat-damage.html";
+    data.actor = this.actor;
     const dialog = await renderTemplate(template, data);
 
-    new Dialog(
-      {
-        title: game.i18n.localize("arm5e.dialog.damageCalculator"),
-        content: dialog,
-        render: (html) => this.addListenersDialog(html),
-        buttons: {
-          apply: {
-            icon: "<i class='fas fa-check'></i>",
-            label: game.i18n.localize("arm5e.generic.yes"),
-            callback: (html) => combatDamage(html, actor)
-          },
-          no: {
-            icon: "<i class='fas fa-ban'></i>",
-            label: game.i18n.localize("arm5e.dialog.button.cancel"),
-            callback: null
-          }
+    return await new Promise((resolve) => {
+      let settled = false;
+      let pending = null;
+      const finish = (value) => {
+        if (!settled) {
+          settled = true;
+          resolve(value);
         }
-      },
-      {
-        jQuery: true,
-        height: "140px",
-        width: "400px",
-        classes: ["arm5e-dialog", "dialog"]
-      }
-    ).render(true);
+      };
+      new Dialog(
+        {
+          title: game.i18n.localize("arm5e.dialog.damageCalculator"),
+          content: dialog,
+          render: (html) => this.addListenersDialog(html),
+          buttons: {
+            apply: {
+              icon: "<i class='fas fa-check'></i>",
+              label: game.i18n.localize("arm5e.generic.yes"),
+              callback: async (html) => {
+                // Start the async work and capture the promise immediately so the close
+                // handler can await it if the dialog is closed while it's running.
+                pending = (async () => {
+                  const msg = await combatDamage(html, this.actor);
+                  return msg;
+                })();
+
+                // When it finishes, resolve (unless already resolved).
+                pending.then((msg) => finish(msg)).catch(() => finish(null));
+
+                return true;
+              }
+            },
+            no: {
+              icon: "<i class='fas fa-ban'></i>",
+              label: game.i18n.localize("arm5e.dialog.button.cancel"),
+              callback: () => finish(null)
+            }
+          },
+          default: "yes",
+          close: () => {
+            // If a button triggered async work and the dialog is closed while it's running,
+            // wait for it and then resolve with its result; otherwise resolve null.
+            if (pending) {
+              pending.then((msg) => finish(msg)).catch(() => finish(null));
+            } else {
+              finish(null);
+            }
+          }
+        },
+        {
+          jQuery: true,
+          height: "140px",
+          width: "400px",
+          classes: ["arm5e-dialog", "dialog"]
+        }
+      ).render(true);
+    });
   }
 
   async roll(event) {

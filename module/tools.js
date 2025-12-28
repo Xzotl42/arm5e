@@ -495,9 +495,9 @@ export function compareLabTexts(e1, e2) {
   }
 }
 
-export function getLastCombatMessageOfType(type) {
+export function getLastCombatMessageOfType(type, filter) {
   return game.messages.contents.findLast((msg) => {
-    return msg.type == "combat" && msg.system.roll.type == type;
+    return msg.type == type && (filter ? filter(msg) : true);
   });
 }
 /**

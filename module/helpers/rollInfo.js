@@ -62,7 +62,7 @@ export class ArM5eRollInfo {
     }
 
     if (dataset.rootMessage) {
-      this.rootMessageId = dataset.rootMessage;
+      this.rootMessageUuid = dataset.rootMessage;
     }
 
     if (dataset.mode) {
@@ -75,7 +75,7 @@ export class ArM5eRollInfo {
       this.setGenericField(
         game.i18n.localize("arm5e.sheet.encumbrance"),
         actorSystemData.combat.overload,
-        3,
+        6,
         "-"
       );
     }
@@ -107,8 +107,12 @@ export class ArM5eRollInfo {
         this.listeners = addCombatListenersDialog;
         break;
       case ROLL_PROPERTIES.DAMAGE.VAL:
+      case ROLL_PROPERTIES.COMBATDAMAGE.VAL:
         if (dataset.damageSource) {
           this.damage.source = dataset.damageSource;
+        }
+        if (dataset.advantage) {
+          this.damage.advantage = dataset.advantage;
         }
         if (dataset.damageForm) {
           this.damage.form = dataset.damageForm;
@@ -118,6 +122,7 @@ export class ArM5eRollInfo {
 
         break;
       case ROLL_PROPERTIES.SOAK.VAL:
+      case ROLL_PROPERTIES.COMBATSOAK.VAL:
         if (dataset.damageForm) {
           this.damage.form = dataset.damageForm;
         }
@@ -641,23 +646,23 @@ export class ArM5eRollInfo {
   }
 
   getTargetsInfo() {
-    this.combat.defenders = game.user.targets
-      .filter((e) => {
-        return e.actor.isCharacter();
-      })
-      .map((e) => {
-        return { name: e.actor.name, uuid: e.actor.uuid };
-      });
+    this.combat.defenders = Array.from(
+      game.user.targets
+        .filter((e) => {
+          return e.actor.isCharacter();
+        })
+        .map((e) => {
+          return { name: e.document.name, uuid: e.actor.uuid, defended: false };
+        })
+    );
     this.combat.targetLabel = `${game.i18n.localize("arm5e.combat.targets.none")}`;
     this.combat.targetNames = "";
-    if (this.combat.defenders.size === 1) {
+    if (this.combat.defenders.length === 1) {
       this.combat.targetLabel = `${game.i18n.localize("arm5e.combat.targets.single")}: `;
-      this.combat.targetNames = this.combat.defenders.first().name;
-    } else if (this.combat.defenders.size > 1) {
+      this.combat.targetNames = this.combat.defenders[0].name;
+    } else if (this.combat.defenders.length > 1) {
       this.combat.targetLabel = `${game.i18n.localize("arm5e.combat.targets.multiple")}: `;
-      this.combat.targetNames = `${Array.from(this.combat.defenders.map((e) => e.name)).join(
-        ", "
-      )}`;
+      this.combat.targetNames = `${this.combat.defenders.map((e) => e.name).join(", ")}`;
     }
   }
 
@@ -729,7 +734,7 @@ export class ArM5eRollInfo {
   reset() {
     this.mode = 0;
     this.difficulty = 0;
-    this.rootMessageId = null;
+    this.rootMessageUuid = null;
     this.part = "";
     this.magic = {
       technique: {

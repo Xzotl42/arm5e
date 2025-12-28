@@ -162,14 +162,29 @@ export class ArsRoll extends Roll {
         }
       }
     }
-    if (["magic", "spont", "spell", "supernatural", "item", "power"].includes(rollType)) {
-      return "magic";
-    } else if (["init", "attack", "defense", "combatDamage", "combatSoak"].includes(rollType)) {
-      return "combat";
-    } else if (["damage", "soak"].includes(rollType)) {
-      return "damage";
-    } else {
-      return "roll";
+    switch (rollType) {
+      case "init":
+        return "init";
+      case "attack":
+        return "combatAttack";
+      case "defense":
+        return "combatDefense";
+      case "combatDamage":
+        return "combatDamage";
+      case "combatSoak":
+        return "combatSoak";
+      case "soak":
+      case "damage":
+        return "damage";
+      case "magic":
+      case "spont":
+      case "spell":
+      case "supernatural":
+      case "item":
+      case "power":
+        return "magic";
+      default:
+        return "roll";
     }
   }
 }

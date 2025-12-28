@@ -1,4 +1,4 @@
-## 2.4.1.8, Radislav, Cognizant Wisdom
+## 2.4.1.9, Radislav, Cognizant Wisdom
 
 ### V13 compatibility
 
@@ -20,6 +20,7 @@
 - [WIP] CSS rework.
 - Macro to roll damage for all token select (needs ars-compendia update)
 - New button in the title bar of Items' sheets to show the owner.
+- New combat workflow
 
 ### Bug fixes
 
@@ -32,6 +33,8 @@
 - Familiar fields are working again.
 - Casting totals are recomputed properly if you update Art scores
 - [V13] Text fields in darkmode have visible color.
+- Spells with focus applied have the option ticked properly in the roll dialog.
+- Item Macro creation from unlinked tokens is now possible [Warning added]
 
 ## 2.4.0.31, Radislav, Enigmatic Faeries 2
 

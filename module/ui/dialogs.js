@@ -136,7 +136,9 @@ export async function textInput(
               resolve(null);
             }
           }
-        }
+        },
+        default: "yes",
+        close: () => resolve(null)
       },
       {
         height: "140px",

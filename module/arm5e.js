@@ -63,18 +63,22 @@ import { ArM5eSupernaturalEffectSheet } from "./item/item-supernaturalEffect-she
 import { SupernaturalEffectSchema } from "./schemas/supernaturalEffectSchema.js";
 import { Arm5eSocketHandler } from "./helpers/socket-messages.js";
 import { PowerSchema } from "./schemas/powerSchemas.js";
-import {
-  BasicChatSchema,
-  CombatChatSchema,
-  RollChatSchema,
-  MagicChatSchema,
-  DamageChatSchema
-} from "./schemas/chatSchema.js";
+import { BasicChatSchema } from "./schemas/basicChatSchema.js";
 import { Arm5eChatMessage } from "./helpers/chat-message.js";
 import { addActiveEffectsDefinitions } from "./constants/activeEffectsTypes.js";
 import { Astrolab } from "./tools/astrolab.js";
 import { ArsApps } from "./tools/apps.js";
 import { LabTextSchema } from "./schemas/labTextSchema.js";
+import { RollChatSchema } from "./schemas/rollChatSchema.js";
+import {
+  CombatAttackChatSchema,
+  CombatChatSchema,
+  CombatDamageChatSchema,
+  CombatDefenseChatSchema,
+  CombatSoakChatSchema
+} from "./schemas/combatChatSchema.js";
+import { MagicChatSchema } from "./schemas/magicChatSchema.js";
+import { DamageChatSchema } from "./schemas/damageChatSchema.js";
 
 Hooks.once("i18nInit", async function () {
   CONFIG.ARM5E.LOCALIZED_ABILITIES = localizeAbilities();
@@ -454,7 +458,7 @@ async function createArM5eMacro(data, slot) {
 
   if (doc.isOwned) {
     // Create the macro command
-    const command = `game.arm5e.rollItemMacro('${doc._id}', '${doc.actor._id}',event);`;
+    const command = `game.arm5e.rollItemMacro('${doc.uuid}', '${doc.actor.uuid}',event);`;
     let macro = game.macros.contents.find((m) => m.name === doc.name && m.command === command);
     if (!macro) {
       macro = await Macro.create({
@@ -522,18 +526,40 @@ async function onDropActorSheetData(actor, sheet, data) {
  * Create a Macro from an Item drop.
  * Get an existing item macro if one exists, otherwise create a new one.
  * @param {string} itemName
- * @param itemId
+ * @param itemUuid
  * @param actorId
  * @returns {Promise}
  */
-function rollItemMacro(itemId, actorId, event = undefined) {
-  const actor = game.actors.get(actorId);
+function rollItemMacro(itemUuid, actorUuid, event = undefined) {
+  let item = null;
+  let actor = null;
+
+  if (actorUuid.length == 16) {
+    actor = game.actors.get(actorUuid);
+    ui.notifications.warn(
+      `This is a legacy macro. Please recreate it as it may not work anymore in future versions.`
+    );
+  } else {
+    actor = fromUuidSync(actorUuid);
+  }
+
   if (!actor) {
     return ui.notifications.warn(`No Actor with Id ${actorId} exists in the world`);
   }
-  const item = actor.items.get(itemId);
+
+  if (itemUuid.length == 16) {
+    item = actor.items.get(itemUuid);
+    ui.notifications.warn(
+      `This is a legacy macro. Please recreate it as it may not work anymore in future versions.`
+    );
+  } else {
+    item = fromUuidSync(itemUuid);
+  }
+
   if (!item)
-    return ui.notifications.warn(`Your controlled Actor does not have an item with ID: ${itemId}`);
+    return ui.notifications.warn(
+      `Your controlled Actor does not have an item with Uuid: ${itemUuid}`
+    );
   if (event) {
     if (event.shiftKey) {
       item.sheet.render(true);
@@ -642,7 +668,12 @@ function setDatamodels() {
 
   CONFIG.ChatMessage.dataModels.standard = BasicChatSchema;
   CONFIG.ChatMessage.dataModels.roll = RollChatSchema;
-  CONFIG.ChatMessage.dataModels.combat = CombatChatSchema;
+  CONFIG.ChatMessage.dataModels.init = CombatChatSchema;
+  CONFIG.ChatMessage.dataModels.combatAttack = CombatAttackChatSchema;
+  CONFIG.ChatMessage.dataModels.combatDefense = CombatDefenseChatSchema;
+  CONFIG.ChatMessage.dataModels.combatDamage = CombatDamageChatSchema;
+  CONFIG.ChatMessage.dataModels.combatSoak = CombatSoakChatSchema;
+
   CONFIG.ChatMessage.dataModels.magic = MagicChatSchema;
   CONFIG.ChatMessage.dataModels.damage = DamageChatSchema;
   // Deprecated types

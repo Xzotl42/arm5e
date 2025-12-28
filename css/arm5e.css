@@ -269,6 +269,7 @@ img.clickable:hover {
   border-radius: 3px;
   box-shadow: inset 0 0 2px #fff;
   word-break: break-all;
+  font-size: var(--font-size-20);
 }
 h2.dice-msg,
 h3.dice-msg {

@@ -43,6 +43,7 @@ async function simpleDie(actor, type = "OPTION", callback, specialBehavior = 0) 
       allowed: confAllowed,
       score: actor.system.con.score
     },
+    rootMessage: rollInfo.rootMessageUuid,
     roll: {
       type: rollInfo.type,
       img: rollInfo.img,
@@ -204,6 +205,7 @@ async function stressDie(
       allowed: confAllowed && dieRoll.botches === 0,
       score: actor.system.con.score
     },
+    rootMessage: rollInfo.rootMessageUuid,
     roll: {
       type: rollInfo.type,
       img: rollInfo.img,
@@ -470,9 +472,7 @@ async function getRollFormula(actor) {
     } else if (rollInfo.type == "attack") {
       msg = newLine(msg);
       if (rollInfo.combat.exertion) {
-        msg += `${game.i18n.localize("arm5e.sheet.ability")} ( 2 x ${
-          rollInfo.combat.ability
-        } ) <br/>`;
+        msg += `${game.i18n.localize("arm5e.sheet.ability")} ( 2 x ${rollInfo.combat.ability} )`;
         total += rollInfo.combat.ability * 2;
       } else {
         msg += `${game.i18n.localize("arm5e.sheet.ability")} (${rollInfo.combat.ability})`;
@@ -483,8 +483,13 @@ async function getRollFormula(actor) {
       total += rollInfo.combat.attack;
     } else if (rollInfo.type == "defense") {
       msg = newLine(msg);
-      msg += `${game.i18n.localize("arm5e.sheet.ability")} (${rollInfo.combat.ability})`;
-      total += rollInfo.combat.ability;
+      if (rollInfo.combat.exertion) {
+        msg += `${game.i18n.localize("arm5e.sheet.ability")} ( 2 x ${rollInfo.combat.ability} ) `;
+        total += rollInfo.combat.ability * 2;
+      } else {
+        msg += `${game.i18n.localize("arm5e.sheet.ability")} (${rollInfo.combat.ability})`;
+        total += rollInfo.combat.ability;
+      }
       msg = newLine(msg);
       msg += `${game.i18n.localize("arm5e.sheet.defense")} (${rollInfo.combat.defense})`;
       total += rollInfo.combat.defense;
@@ -554,12 +559,13 @@ async function getRollFormula(actor) {
         rollInfo.environment.year;
     }
     if (rollInfo.hasGenericField(1)) {
+      msg = newLine(msg);
       total += rollInfo.getGenericFieldValue(1);
       msg += rollInfo.getGenericFieldDetails(1);
       if (rollInfo.type == ROLL_PROPERTIES.TWILIGHT_UNDERSTANDING.VAL) {
         if (actorSystemData.twilight.enigmaSpec) {
           total++;
-          msg += ` (+1 ${rollInfo.twilight.enigma.speciality}) <br/>`;
+          msg += ` (+1 ${rollInfo.twilight.enigma.speciality})`;
         }
       }
     }
@@ -569,37 +575,37 @@ async function getRollFormula(actor) {
       total += rollInfo.getGenericFieldValue(2);
     }
     if (rollInfo.hasGenericField(3)) {
+      msg = newLine(msg);
       total += rollInfo.getGenericFieldValue(3);
       msg += rollInfo.getGenericFieldDetails(3);
       if (rollInfo.type == ROLL_PROPERTIES.TWILIGHT_STRENGTH.VAL) {
         if (rollInfo.twilight.enigma.specApply) {
           total++;
-          msg += ` (+1 ${rollInfo.twilight.enigma.speciality}) <br/>`;
+          msg += ` (+1 ${rollInfo.twilight.enigma.speciality})`;
         }
       }
     }
     if (rollInfo.hasGenericField(4)) {
       total += rollInfo.getGenericFieldValue(4);
-      // msg = newLine(msg);
+      msg = newLine(msg);
       msg += rollInfo.getGenericFieldDetails(4);
     }
     if (rollInfo.hasGenericField(5)) {
       total += rollInfo.getGenericFieldValue(5);
-      // msg = newLine(msg);
+      msg = newLine(msg);
       msg += rollInfo.getGenericFieldDetails(5);
     }
 
     if (rollInfo.hasGenericField(6)) {
       total += rollInfo.getGenericFieldValue(6);
-      // msg = newLine(msg);
+      msg = newLine(msg);
       msg += rollInfo.getGenericFieldDetails(6);
     }
 
     if (rollInfo.bonuses) {
       total += rollInfo.bonuses;
-      // msg = newLine(msg);
-      msg +=
-        "+" + game.i18n.localize("arm5e.sheet.bonuses.label") + " (" + rollInfo.bonuses + ")<br/>";
+      msg = newLine(msg);
+      msg += game.i18n.localize("arm5e.sheet.bonuses.label") + " (" + rollInfo.bonuses + ")";
     }
     // TODO
     // if (actorData.roll.bonus > 0) {
@@ -611,13 +617,15 @@ async function getRollFormula(actor) {
     if (rollInfo.physicalCondition == true) {
       if (actorSystemData.fatigueTotal != 0) {
         total += actorSystemData.fatigueTotal;
-        msg += "+" + game.i18n.localize("arm5e.sheet.fatigue.label");
-        msg += " (" + actorSystemData.fatigueTotal + ")<br/>";
+        msg = newLine(msg);
+        msg += game.i18n.localize("arm5e.sheet.fatigue.label");
+        msg += " (" + actorSystemData.fatigueTotal + ")";
       }
       if (actorSystemData.penalties.wounds.total != 0) {
+        msg = newLine(msg);
         total += actorSystemData.penalties.wounds.total;
         msg += "+" + game.i18n.localize("arm5e.sheet.wounds");
-        msg += " (" + actorSystemData.penalties.wounds.total + ")<br/>";
+        msg += " (" + actorSystemData.penalties.wounds.total + ")";
       }
     }
 

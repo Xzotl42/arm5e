@@ -1,5 +1,6 @@
 <form class="{{cssClass}} arm5eRoll" autocomplete="off">
   {{> "systems/arm5e/templates/roll/parts/roll-header.html" header="Damage_Soak" }}
+  {{log "Roll Soak Form Data:" this}}
   <div class="roll-options">
     <div class="flexrow flex-group-center">
       <label class=" flex0">{{localize "arm5e.damage.label" }}</label>
@@ -33,7 +34,7 @@
       <div class="flexrow flex-group-center">
         <label class="">{{localize "arm5e.sheet.formRes"}}</label>
         <select name="formRes" data-type="String">
-          {{selectOptions selection.formRes selected=formRes nameAttr="res" valueAttr="res" labelAttr="label" blank="" }}
+          {{selectOptions selection.formRes selected=formRes labelAttr="label" blank="" }}
         </select>
       </div>
     {{/if}}
@@ -44,7 +45,7 @@
       <div class="flexrow flex-group-center">
         <label class="">{{localize "arm5e.sheet.natRes"}}</label>
         <select name="natRes" data-type="String">
-          {{selectOptions selection.natRes selected=natRes nameAttr="res" valueAttr="res" labelAttr="label" blank="" }}
+          {{selectOptions selection.natRes selected=natRes  labelAttr="label" blank="" }}
         </select>
       </div>
     {{/if}}
