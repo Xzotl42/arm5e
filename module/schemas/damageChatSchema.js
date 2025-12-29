@@ -137,19 +137,13 @@ export class DamageChatSchema extends RollChatSchema {
     return html;
   }
 
-  addActionButtons(btnContainer, actor) {
+  addActionButtons(btnContainer) {
     // confidence
     // confidence has been used already => no button
-    if (actor.isOwner && !this.impact.applied) {
-      // const rollSoakBtn = $(
-      //   `<button class="chat-button" data-msg-id="${this.parent._id}" data-actor-id="${actor.id}">
-      //   <i class="icon-Icon_Soak" title="${game.i18n.localize(
-      //     "arm5e.messages.soak"
-      //   )}" ></i></button>`
-      // );
+    if (this.parent.actor.isOwner && !this.impact.applied) {
       const rollSoakBtn = createChatButton(
         this,
-        actor,
+        this.parent.actor,
         "icon-Icon_Soak",
         "arm5e.messages.soak",
         "",
@@ -157,7 +151,7 @@ export class DamageChatSchema extends RollChatSchema {
           ev.stopPropagation();
           // const message = fromUuidSync(this.parent.uuid);
           // await message.system.rollSoak(actor);
-          this.rollSoak(actor);
+          this.rollSoak(this.parent.actor);
         }
       );
 
@@ -165,7 +159,7 @@ export class DamageChatSchema extends RollChatSchema {
       if (game.user.isGM) {
         const cancelBtn = createChatButton(
           this.parent,
-          actor,
+          this.parent.actor,
           "fas fa-ban",
           "arm5e.dialog.button.cancel",
           "",
@@ -173,7 +167,7 @@ export class DamageChatSchema extends RollChatSchema {
             ev.stopPropagation();
             // const message = fromUuidSync(this.parent.uuid);
             // await message.system.cancelDamageRoll(actor);
-            this.cancelDamageRoll(actor);
+            this.cancelDamageRoll(this.parent.actor);
           }
         );
 

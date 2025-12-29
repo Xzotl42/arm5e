@@ -114,30 +114,30 @@ export class Arm5eChatMessage extends ChatMessage {
       // Actor no longer exists in the world
       return html;
     }
-    let tokenName;
-    let actorImg = this.system.img;
-    if (actor.prototypeToken !== null) {
-      tokenName = actor.prototypeToken.name;
-      if (actor.prototypeToken.texture?.src) {
-        actorImg = actor.prototypeToken.texture.src;
-      }
-    }
 
     const metadata = html.find(".message-metadata");
     metadata.css("max-width", "fit-content");
-    const msgTitle = html.find(".message-sender");
-    // const msgTitle = html[0].querySelector(".message-sender");
+    const msgTitle = html[0].querySelector(".message-sender");
+    // const sender = msgTitle.textContent.replace("GameMaster", actor.tokenName);
+    const sender = actor.tokenName;
+    msgTitle.removeChild(msgTitle.firstChild);
+    msgTitle.classList.add("flexrow");
+    const imgDiv = document.createElement("div");
+    imgDiv.classList.add("moreInfo", "speaker-image", "flex01");
+    imgDiv.dataset.uuid = actor.uuid;
+    const imgEl = document.createElement("img");
+    imgEl.src = actor.tokenImage;
+    imgEl.title = actor.tokenName;
+    imgEl.width = 30;
+    imgEl.height = 30;
+    imgDiv.appendChild(imgEl);
+    msgTitle.appendChild(imgDiv);
+    const pEl = document.createElement("p");
+    pEl.classList.add("message-sender-text");
+    pEl.innerHTML = sender;
+    msgTitle.appendChild(pEl);
 
-    // is there a better way?
-    let text = msgTitle.text();
-    text = text.replace("GameMaster", tokenName);
-    msgTitle.text(text);
-    const actorFace = $(
-      `<div class="flexrow"><div class="moreInfo speaker-image flex01" data-uuid="${actor.uuid}" >
-      <img src="${actorImg}" title="${tokenName}" width="30" height="30"></div><p>${text}</p></div>`
-    );
-
-    actorFace.on("click", async (ev) => {
+    msgTitle.addEventListener("click", async (ev) => {
       const target = $(ev.currentTarget.children[0]);
       const uuid = target[0].dataset.uuid;
       const actor = await fromUuid(uuid);
@@ -146,12 +146,12 @@ export class Arm5eChatMessage extends ChatMessage {
       }
     });
 
-    msgTitle.html(actorFace);
+    // msgTitle.html(actorFace);
 
     // if (!this.isRoll) return html;
 
     const flavor = html.find(".flavor-text");
-    flavor.append(this.addActionButtons(html, actor));
+    flavor.append(this.addActionButtons(html));
 
     // format any additional rolls
     if (this.system.formatTargets) {
@@ -171,7 +171,7 @@ export class Arm5eChatMessage extends ChatMessage {
     return html;
   }
 
-  addActionButtons(html, actor) {
+  addActionButtons(html) {
     const btnContainer = document.createElement("div");
     btnContainer.classList.add("btn-container");
     const btnArray = document.createElement("div");
@@ -179,7 +179,7 @@ export class Arm5eChatMessage extends ChatMessage {
 
     let btnCnt = 0;
     if (this.system.addActionButtons) {
-      btnCnt = this.system.addActionButtons(btnArray, actor);
+      btnCnt = this.system.addActionButtons(btnArray);
     }
     if (btnCnt) {
       const actionHeader = document.createElement("h3");

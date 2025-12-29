@@ -242,30 +242,7 @@ export class CombatDefenseChatSchema extends CombatChatSchema {
     this.parent.updateSource(updateData);
   }
 
-  addActionButtons(btnContainer, actor) {
-    if (!this.combat.damageComputed) {
-      const attacker = fromUuidSync(this.combat.attacker);
-      if (attacker?.isOwner) {
-        const damageButton = createChatButton(
-          this.parent,
-          attacker,
-          "icon-Icon_Soak",
-          "arm5e.damage.compute",
-          "damageButton",
-          async (ev) => {
-            const dataset = getDataset(ev);
-            await this.calculateDamage(attacker, dataset);
-          }
-        );
-
-        btnContainer.append(damageButton);
-      }
-      super.addActionButtons(btnContainer, actor);
-    }
-    return btnContainer.children.length;
-  }
-
-  async calculateDamage(actor, dataset) {
+  getAdvantage() {
     const defenseMessage = this.parent;
     let attackMessage = fromUuidSync(this.rootMessage);
     if (attackMessage == null) {
@@ -281,56 +258,102 @@ export class CombatDefenseChatSchema extends CombatChatSchema {
         attackMessage = getLastCombatMessageOfType("combatAttack");
       }
     }
-
+    let attackScore = 0;
+    let defenseScore = 0;
     if (defenseMessage && attackMessage) {
-      let attackScore = attackMessage.rollTotal() > 0 ? attackMessage.rollTotal() : 0;
+      attackScore = attackMessage.rollTotal() > 0 ? attackMessage.rollTotal() : 0;
       attackScore += attackMessage.system.confidenceModifier;
-      let defenseScore = defenseMessage.rollTotal() > 0 ? defenseMessage.rollTotal() : 0;
+      defenseScore = defenseMessage.rollTotal() > 0 ? defenseMessage.rollTotal() : 0;
       defenseScore += this.confidenceModifier;
-      const damageTotal = attackScore - defenseScore;
-      const msg = await actor.sheet._onCalculateDamage({
-        advantage: damageTotal,
-        roll: "combatDamage",
-        rootMessage: this.parent.uuid
-      });
-
-      // update to the defense message to disable damage button and confidence use
-      const updateData = {
-        msgUpdate: {
-          system: {
-            combat: {
-              damageComputed: true
-            },
-            impact: { applied: true }
-          }
-        },
-        actorUpdate: { system: { states: { confidencePrompt: false } } }
-      };
-      const promises = [];
-      if (this.parent.isAuthor || game.user.isGM) {
-        promises.push(Promise.all(this._applyChatMessageUpdate(updateData)));
-      } else if (actor.isOwner) {
-        // Not the author, but owner of the actor rolling
-        promises.push(
-          game.arm5e.socketHandler.emitAwaited(SMSG_TYPES.CHAT, "calculateDamage", {
-            [SMSG_FIELDS.CHAT_MSG_ID]: this.parent._id,
-            [SMSG_FIELDS.SENDER]: game.user._id,
-            [SMSG_FIELDS.CHAT_MSG_DB_UPDATE]: updateData
-          })
-        );
-      } else {
-        ui.notifications.info(game.i18n.localize("arm5e.chat.notifications.notInitiator"), {
-          permanent: true
-        });
-        return;
-      }
-      const attacker = fromUuidSync(this.combat.attacker);
-      if (attacker) {
-        promises.push(attacker.update({ system: { states: { confidencePrompt: false } } }));
-        promises.push(attackMessage.update({ "system.impact.applied": true }));
-      }
-      await Promise.all(promises);
     }
+    return attackScore - defenseScore;
+  }
+
+  addActionButtons(btnContainer) {
+    if (!this.combat.damageComputed) {
+      const advantage = this.getAdvantage();
+      const attacker = fromUuidSync(this.combat.attacker);
+      if (attacker?.isOwner) {
+        let damageButton;
+        if (advantage > 0) {
+          damageButton = createChatButton(
+            this.parent,
+            attacker,
+            "icon-Icon_Soak",
+            advantage,
+            "arm5e.damage.compute",
+            "damageButton",
+            async (ev) => {
+              const dataset = getDataset(ev);
+              await this.calculateDamage(attacker, dataset);
+            }
+          );
+        } else {
+          damageButton = createChatButton(
+            this.parent,
+            attacker,
+            "",
+            game.i18n.localize("arm5e.generic.missed"),
+            "arm5e.damage.compute",
+            "damageButton",
+            async (ev) => {}
+          );
+          damageButton.disabled = true;
+        }
+        damageButton.dataset.advantage = advantage;
+        btnContainer.append(damageButton);
+      }
+      super.addActionButtons(btnContainer);
+    }
+    return btnContainer.children.length;
+  }
+
+  async calculateDamage(actor, dataset) {
+    const msg = await actor.sheet._onCalculateDamage({
+      advantage: dataset.advantage,
+      roll: "combatDamage",
+      rootMessage: this.parent.uuid
+    });
+    if (msg === null) return;
+    // update to the defense message to disable damage button and confidence use
+    const updateData = {
+      msgUpdate: {
+        system: {
+          combat: {
+            damageComputed: true
+          },
+          impact: { applied: true }
+        }
+      },
+      actorUpdate: { system: { states: { confidencePrompt: false } } }
+    };
+    const promises = [];
+    if (this.parent.isAuthor || game.user.isGM) {
+      promises.push(Promise.all(this._applyChatMessageUpdate(updateData)));
+    } else if (actor.isOwner) {
+      // Not the author, but owner of the actor rolling
+      promises.push(
+        game.arm5e.socketHandler.emitAwaited(SMSG_TYPES.CHAT, "calculateDamage", {
+          [SMSG_FIELDS.CHAT_MSG_ID]: this.parent._id,
+          [SMSG_FIELDS.SENDER]: game.user._id,
+          [SMSG_FIELDS.CHAT_MSG_DB_UPDATE]: updateData
+        })
+      );
+    } else {
+      ui.notifications.info(game.i18n.localize("arm5e.chat.notifications.notInitiator"), {
+        permanent: true
+      });
+      return;
+    }
+    const attacker = fromUuidSync(this.combat.attacker);
+    if (attacker) {
+      promises.push(attacker.update({ system: { states: { confidencePrompt: false } } }));
+    }
+    const attackMessage = fromUuidSync(this.rootMessage);
+    if (attackMessage) {
+      promises.push(attackMessage.update({ "system.impact.applied": true }));
+    }
+    await Promise.all(promises);
   }
 }
 
@@ -353,15 +376,15 @@ export class CombatDamageChatSchema extends CombatChatSchema {
     };
   }
 
-  addActionButtons(btnContainer, actor) {
+  addActionButtons(btnContainer) {
     if (!this.combat.damageApplied) {
       const defender = fromUuidSync(this.combat.defender.uuid);
-      if (defender?.isOwner && this.combat.damageTotal > 0 && this.combat.damageApplied === false) {
+      if (defender?.isOwner && this.combat.damageTotal > 0) {
         const defDiv = document.createElement("div");
         defDiv.classList.add("flexrow");
         const defImgDiv = document.createElement("div");
         defImgDiv.classList.add("moreInfo", "speaker-image", "flex02");
-        defImgDiv.dataset.uuid = `Actor.${defender.uuid}`;
+        defImgDiv.dataset.uuid = defender.uuid;
         const img = document.createElement("img");
         img.src = defender.img;
         img.title = defender.name;
@@ -370,6 +393,7 @@ export class CombatDamageChatSchema extends CombatChatSchema {
         defImgDiv.appendChild(img);
         defDiv.appendChild(defImgDiv);
         const p = document.createElement("p");
+        p.classList.add("defender-soak");
         p.innerText = defender.name;
         defDiv.appendChild(p);
         btnContainer.appendChild(defDiv);
@@ -380,6 +404,7 @@ export class CombatDamageChatSchema extends CombatChatSchema {
           this.parent,
           defender,
           "icon-Icon_Soak_red",
+          "",
           "arm5e.messages.applyDamage",
           "applyDamageButton",
           async (ev) => {
@@ -391,7 +416,7 @@ export class CombatDamageChatSchema extends CombatChatSchema {
 
         btnContainer.append(damageButton);
       }
-      super.addActionButtons(btnContainer, actor);
+      super.addActionButtons(btnContainer);
     }
     return btnContainer.children.length;
   }

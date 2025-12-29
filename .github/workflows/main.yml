@@ -26,7 +26,7 @@ jobs:
       # get part of the tag after the `v`
       - name: Extract tag version number
         id: get_version
-        uses: battila7/get-version-action@v2
+        uses: maltoze/get-version-action@v1
 
       # Substitute the Manifest and Download URLs in the system.json
       - name: Substitute Manifest and Download Links For Versioned Ones

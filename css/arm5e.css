@@ -748,6 +748,16 @@ input[type="checkbox"].tiny-checkbox:checked::before {
   margin-bottom: 12px !important;
 }
 
+h4.message-sender {
+  font-family: var(--font-header);
+  font-size: 12pt;
+}
+p.defender-soak,
+p.message-sender-text {
+  font-family: var(--font-header);
+  font-size: 12pt;
+}
+
 /* Small adjustments and legacy selector preservation */
 p,
 p.nue,
