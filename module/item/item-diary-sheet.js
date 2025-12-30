@@ -1029,7 +1029,7 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
   async _setDuration(event) {
     event.preventDefault();
     const target = event.currentTarget;
-    const newDuration = Number($(target).val());
+    let newDuration = Number($(target).val());
     if (!Number.isNumeric(newDuration) || newDuration < 1) newDuration = 1;
     let updateData = {};
     updateData["system.duration"] = newDuration;

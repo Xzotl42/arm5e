@@ -669,6 +669,7 @@ function setDatamodels() {
   CONFIG.ChatMessage.dataModels.standard = BasicChatSchema;
   CONFIG.ChatMessage.dataModels.roll = RollChatSchema;
   CONFIG.ChatMessage.dataModels.init = CombatChatSchema;
+  CONFIG.ChatMessage.dataModels.combat = CombatChatSchema; // TMP for backward compatiblity
   CONFIG.ChatMessage.dataModels.combatAttack = CombatAttackChatSchema;
   CONFIG.ChatMessage.dataModels.combatDefense = CombatDefenseChatSchema;
   CONFIG.ChatMessage.dataModels.combatDamage = CombatDamageChatSchema;

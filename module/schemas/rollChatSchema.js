@@ -261,14 +261,15 @@ export class RollChatSchema extends BasicChatSchema {
     );
   }
 
-  addActionButtons(btnContainer, actor) {
+  addActionButtons(btnContainer) {
     // confidence
     // confidence has been used already => no button
-    if (actor.isOwner && this.confPrompt && actor.canUseConfidencePoint()) {
+    if (this.parent.actor.isOwner && this.confPrompt && this.parent.actor.canUseConfidencePoint()) {
       const useConfButton = createChatButton(
         this.parent,
-        actor,
+        this.parent.actor,
         "fas fa-user-plus",
+        "",
         "arm5e.messages.useConf",
         "dice-confidence",
         async (ev) => {
@@ -284,12 +285,14 @@ export class RollChatSchema extends BasicChatSchema {
       if (
         this.impact.fatigueLevelsPending ||
         this.impact.woundGravity ||
-        ((this.confidence.used ?? 0) < this.confidence.score && actor.canUseConfidencePoint())
+        ((this.confidence.used ?? 0) < this.confidence.score &&
+          this.parent.actor.canUseConfidencePoint())
       ) {
         const noConfButton = createChatButton(
           this.parent,
-          actor,
+          this.parent.actor,
           "fa-solid fa-xmark",
+          "",
           "arm5e.messages.noConf",
           "dice-no-confidence",
           async (ev) => {
@@ -404,6 +407,11 @@ export class RollChatSchema extends BasicChatSchema {
           ui.notifications.info(game.i18n.localize("arm5e.chat.notifications.notInitiator"), {
             permanent: true
           });
+        }
+        // refresh subsequent messages
+        const index = game.messages.contents.findIndex((e) => e._id === this.parent._id);
+        for (let i = index + 1; i < game.messages.contents.length; i++) {
+          ui.chat.updateMessage(game.messages.contents[i]);
         }
       }
     } else {
@@ -558,7 +566,7 @@ export class RollChatSchema extends BasicChatSchema {
   }
 }
 
-export function createChatButton(msg, actor, icon, title, className, onClick) {
+export function createChatButton(msg, actor, icon, label, title, className, onClick) {
   const btn = document.createElement("button");
   btn.classList.add("chat-button");
   if (className) {
@@ -566,7 +574,7 @@ export function createChatButton(msg, actor, icon, title, className, onClick) {
   }
   btn.dataset.actorId = actor.id;
   btn.dataset.msgUuid = msg.uuid;
-  btn.innerHTML = `<i class="${icon}" title="${game.i18n.localize(title)}" ></i>`;
+  btn.innerHTML = `<i class="${icon}" title="${game.i18n.localize(title)}" >${label}</i>`;
   // Handle button clicks
   btn.addEventListener("click", onClick);
   return btn;

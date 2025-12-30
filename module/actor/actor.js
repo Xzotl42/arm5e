@@ -839,7 +839,11 @@ export class ArM5eActor extends Actor {
   }
 
   get tokenName() {
-    return this.isToken ? this.token.name : this.primaryToken.name;
+    return this.isToken ? this.token.name : this.prototypeToken.name;
+  }
+
+  get tokenImage() {
+    return this.isToken ? this.token.texture.src : this.prototypeToken.texture.src;
   }
 
   getRollData() {

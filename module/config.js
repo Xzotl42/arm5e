@@ -1623,42 +1623,8 @@ ARM5E.magic.durations = {
     source: "RoP:F",
     impact: 2
   },
-
-  mm: {
-    label: "arm5e.spell.durations.mm",
-    dtype: "String",
-    source: "RoP:F",
-    impact: 2
-  },
-
-  not: {
-    label: "arm5e.spell.durations.not",
-    dtype: "String",
-    source: "RoP:F",
-    impact: 2
-  },
-
   faerie: {
     label: "arm5e.spell.durations.faerie",
-    dtype: "String",
-    source: "RoP:F",
-    impact: 4
-  },
-  hidden: {
-    label: "arm5e.spell.durations.hidden",
-    dtype: "String",
-    source: "RoP:F",
-    impact: 4
-  },
-
-  aura: {
-    label: "arm5e.spell.durations.aura",
-    dtype: "String",
-    source: "RoP:F",
-    impact: 4
-  },
-  symbol: {
-    label: "arm5e.spell.durations.symbol",
     dtype: "String",
     source: "RoP:F",
     impact: 4
@@ -1880,24 +1846,11 @@ ARM5E.magic.ranges = {
     source: "RoP:F",
     impact: 2
   },
-  symbol: {
-    label: "arm5e.spell.ranges.symbol",
-    dtype: "String",
-    source: "RoP:F",
-    impact: 4
-  },
   "RoP:I": {
     label: "arm5e.sheet.source.RoP:I",
     source: "RoP:I",
     disabled: true
   },
-  cross: {
-    label: "arm5e.spell.ranges.cross",
-    dtype: "String",
-    source: "RoP:I",
-    impact: 2
-  },
-
   ww: {
     label: "arm5e.spell.ranges.ww",
     dtype: "String",
@@ -2138,18 +2091,6 @@ ARM5E.magic.targets = {
     dtype: "String",
     source: "RoP:F",
     impact: 1
-  },
-  passion: {
-    label: "arm5e.spell.targets.passion",
-    dtype: "String",
-    source: "RoP:F",
-    impact: 2
-  },
-  symbol: {
-    label: "arm5e.spell.targets.symbol",
-    dtype: "String",
-    source: "RoP:F",
-    impact: 4
   },
   "RoP:I": {
     label: "arm5e.sheet.source.RoP:I",

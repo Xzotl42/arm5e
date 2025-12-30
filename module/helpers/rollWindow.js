@@ -467,7 +467,6 @@ async function getDialog(dataset, html, actor) {
       {
         title: game.i18n.localize(title),
         content: html,
-        render: actor.rollInfo.listeners,
         buttons: {
           ...btns
           // ...getDebugButtonsIfNeeded(actor, callback)
