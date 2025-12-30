@@ -921,7 +921,7 @@ export function validTraining(context, actor, item) {
   } else if (spellsArr.length > 0) {
     const teacherScore = Number(item.system.progress.spells[0].teacherScore);
     context.system.sourceQuality = teacherScore + 3;
-    const spell = Object.values(actor.system.spells).find((e) => {
+    let spell = Object.values(actor.system.spells).find((e) => {
       return e._id === item.system.progress.spells[0].id;
     });
 

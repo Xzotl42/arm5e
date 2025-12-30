@@ -248,7 +248,7 @@ export class CombatDefenseChatSchema extends CombatChatSchema {
     if (attackMessage == null) {
       attackMessage = getLastCombatMessageOfType("combatAttack", (msg) => {
         return msg.system.combat.defenders.some(
-          (def) => def.uuid === actor.uuid && def.state === "attacked"
+          (def) => def.uuid === this.parent.actor.uuid && def.state === "attacked"
         );
       });
 
@@ -503,12 +503,11 @@ export class CombatDamageChatSchema extends CombatChatSchema {
   formatTargets(html) {
     if (this.parent.rolls.length == 0) return html;
     const contentDiv = html[0].querySelector(".message-content");
-    let diceRoll = contentDiv.querySelector(".dice-roll");
 
     const div = document.createElement("div");
     const title = document.createElement("h3");
     title.classList.add("ars-chat-title");
-    title.innerHTML = game.i18n.format("arm5e.messages.soak");
+    title.innerHTML = game.i18n.format("arm5e.sheet.soak");
     div.append(title);
     const flavorText = document.createElement("div");
     flavorText.innerHTML = this.combat.defender.flavor;
@@ -603,7 +602,7 @@ export class CombatSoakChatSchema extends CombatChatSchema {
 //       const div = document.createElement("div");
 //       const title = document.createElement("h3");
 //       title.classList.add("ars-chat-title");
-//       title.innerHTML = game.i18n.format("arm5e.messages.soak");
+//       title.innerHTML = game.i18n.format("arm5e.sheet.soak");
 //       div.append(title);
 //       this.obfuscate(diceRoll, this.parent.rolls[ii].actor, ii);
 //       diceRoll.insertAdjacentElement("beforebegin", div);

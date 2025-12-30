@@ -657,10 +657,23 @@ input[type="checkbox"].tiny-checkbox:checked::before {
   overflow: hidden;
 }
 
+.template-item-box {
+  min-width: 160px;
+  padding: 6px 8px;
+  background: rgba(188, 179, 155, 0.9);
+  font-family: var(--font-book) Bold;
+  font-size: var(--font-size-14);
+  line-height: var(--font-size-16);
+  color: rgb(0 0 0 / 90%);
+  border-width: 0px 1px 1px 0px;
+  border-radius: 3px;
+  box-shadow: 3px 3px 3px rgb(0 0 0 / 28%);
+  height: fit-content;
+}
+
 /* Tooltip / templates */
 #tooltip.covenant-tooltip,
-.locked-tooltip.covenant-tooltip,
-.template-item-box {
+.locked-tooltip.covenant-tooltip {
   position: absolute;
   width: max-content;
   max-width: 320px;
@@ -754,6 +767,7 @@ h4.message-sender {
 }
 p.defender-soak,
 p.message-sender-text {
+  padding-left: 5px;
   font-family: var(--font-header);
   font-size: 12pt;
 }
@@ -3177,20 +3191,6 @@ h3.covenant-tooltip {
   visibility: visible;
   opacity: 1;
   transition: opacity 500ms;
-}
-
-.template-item-box {
-  min-width: 160px;
-  padding: 6px 8px;
-  background: rgba(188, 179, 155, 0.9);
-  font-family: var(--font-book) Bold;
-  font-size: var(--font-size-16);
-  line-height: var(--font-size-16);
-  color: rgb(0 0 0 / 90%);
-  border-width: 0px 1px 1px 0px;
-  border-radius: 3px;
-  box-shadow: 3px 3px 3px rgb(0 0 0 / 28%);
-  height: fit-content;
 }
 
 #template-content {

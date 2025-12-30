@@ -789,7 +789,6 @@ export class ArM5eRollInfo {
       masteryScore: 0,
       ritual: false,
       focus: false,
-      masteryScore: 0,
       divide: 1,
       level: 0
     };
