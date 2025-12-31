@@ -788,13 +788,14 @@ p,
 p.nue,
 h4,
 h4.sound-name,
-/* h4.message-sender, */
 label.fit,
-.label-light,
+label.label-light,
 .label-medium,
 p.notes,
 .journal-entry-page {
   font-family: var(--font-book);
+  font-weight: 100;
+  font-size: 9pt;
 }
 
 a.header-button.configure-sheet,
@@ -959,12 +960,18 @@ label.fit {
 label.error {
   color: var(--arm5e-c-conflict);
 }
+
 h2.twilight-episode,
 h2.ars-chat-title {
   font-family: var(--font-header);
   font-size: 16pt;
   font-weight: normal;
   margin-top: 3px;
+}
+
+input[type="text"].effect-name {
+  font-weight: normal;
+  font-size: 14pt;
 }
 
 li.macro.inactive {
@@ -2066,6 +2073,7 @@ input[type="number"].design-level {
   padding: 0 3px;
   text-overflow: ellipsis;
   font-size: 9pt;
+  width: auto;
 }
 .arm5e .scriptorium select {
   font-family: "var(--font-book)";
@@ -2930,7 +2938,7 @@ img.art-icon {
 .arm5e .item-title {
   font-family: var(--font-book-bold);
   /*font-weight: bold;*/
-  /*font-size: 1.0vw;*/
+  font-size: 10pt;
   padding-left: 20px;
 }
 
