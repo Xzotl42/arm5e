@@ -262,7 +262,7 @@ img.clickable:hover {
 .chat-message .message-content .dice-total {
   font-weight: bold;
   margin: 0;
-  line-height: 20px;
+  line-height: 25px;
   text-align: center;
   background: rgba(0, 0, 0, 0.1);
   border: 1px solid var(--color-border-light-2);
@@ -417,7 +417,7 @@ input[type="time"],
   color: var(--color-text-dark-primary);
   font-family: inherit;
   font-size: inherit;
-  font-weight: bold;
+  /* font-weight: bold; */
   text-align: inherit;
   line-height: inherit;
   border-width: 0 1px 1px 0;
@@ -526,6 +526,17 @@ input[type="checkbox"]::before {
   transform: scale(0);
   background-color: rgb(112, 15, 15);
 }
+input[type="checkbox"]::after {
+  content: "";
+  width: 1rem;
+  height: 1rem;
+  padding: 1px;
+  clip-path: polygon(0 20%, 0 60%, 29% 100%, 100% 29%, 100% 1%, 35% 61%);
+  transform: scale(0);
+  background-color: rgb(112, 15, 15);
+  color: #000000;
+}
+
 input[type="checkbox"].crossed::before {
   clip-path: polygon(
     11% 6%,
@@ -948,7 +959,7 @@ label.fit {
 label.error {
   color: var(--arm5e-c-conflict);
 }
-
+h2.twilight-episode,
 h2.ars-chat-title {
   font-family: var(--font-header);
   font-size: 16pt;
@@ -1953,9 +1964,10 @@ input[type="time"] {
   background: rgba(0, 0, 0, 0.05);
   padding: 1px 3px;
   margin: 0;
-  color: #191813;
+  /* color: #191813; */
   font-family: inherit;
   font-size: inherit;
+  font-weight: 600;
   text-align: inherit;
   line-height: inherit;
   border-width: 0px 1px 1px 0px;
@@ -2303,9 +2315,10 @@ img.tinyimg {
   width: 100%;
   margin: 0;
   /* padding-top: 30px; */
-  line-height: fit-content;
   font-family: var(--font-header);
   font-size: 18pt;
+  font-weight: 400;
+  height: 30px;
   /*letter-spacing: 1px;*/
 }
 
@@ -2322,9 +2335,10 @@ fieldset .arm5e {
 .arm5e .sheet-header h2.covenantname input {
   width: 100%;
   margin: 0;
-  /*padding-top: 25px;
-  line-height: 50;*/
+  /* padding-top: 25px; */
+  line-height: 30px;
   font-family: var(--font-header);
+  font-weight: 300;
   /*letter-spacing: 1px;*/
 }
 

@@ -394,7 +394,10 @@ export async function twilightControl(actor, roll, message) {
       })
     };
     msgUpdate["flavor"] =
-      message.flavor + `<h2>${game.i18n.localize("arm5e.twilight.chat.successControl")}</h2>`;
+      message.flavor +
+      `<h2 class="twilight-episode">${game.i18n.localize(
+        "arm5e.twilight.chat.successControl"
+      )}</h2>`;
 
     promises.push(createTwilightDiaryEntry(actor, input));
 
@@ -409,7 +412,10 @@ export async function twilightControl(actor, roll, message) {
     updateData["system.twilight.pointsGained"] = actor.rollInfo.twilight.warpingPts;
     updateData["system.twilight.stage"] = TWILIGHT_STAGES.PENDING_COMPLEXITY;
     msgUpdate["flavor"] =
-      message.flavor + `<h2>${game.i18n.localize("arm5e.twilight.chat.failedControl")}</h2>`;
+      message.flavor +
+      `<h2 class="twilight-episode">${game.i18n.localize(
+        "arm5e.twilight.chat.failedControl"
+      )}</h2>`;
 
     message.updateSource(msgUpdate);
     promises.push(actor.update(updateData, {}));
@@ -460,7 +466,10 @@ export async function twilightUnderstanding(actor, roll, message) {
       })} <br/>
       ${TwilightEpisode.getTechnicalDescription(actor.system.twilight.pointsGained, dur)}`;
     msgUpdate["flavor"] =
-      message.flavor + `<h2>${game.i18n.localize("arm5e.twilight.chat.successUnderstanding")}</h2>`;
+      message.flavor +
+      `<h2 class="twilight-episode">${game.i18n.localize(
+        "arm5e.twilight.chat.successUnderstanding"
+      )}</h2>`;
   } else {
     const dur = await TwilightEpisode.getDuration(actor.system.warping.finalScore);
     diaryUpdate["system.description"] = `${diary.system.description} <br/>${controlDesc}. 
@@ -472,7 +481,10 @@ export async function twilightUnderstanding(actor, roll, message) {
       ${TwilightEpisode.getTechnicalDescription(actor.system.twilight.pointsGained, dur)}`;
 
     msgUpdate["flavor"] =
-      message.flavor + `<h2>${game.i18n.localize("arm5e.twilight.chat.failedUnderstanding")}</h2>`;
+      message.flavor +
+      `<h2 class="twilight-episode">${game.i18n.localize(
+        "arm5e.twilight.chat.failedUnderstanding"
+      )}</h2>`;
   }
   message.updateSource(msgUpdate);
   const promises = [];

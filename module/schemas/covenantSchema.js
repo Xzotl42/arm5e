@@ -714,7 +714,7 @@ export class CovenantSchema extends foundry.abstract.TypeDataModel {
     this.buildPoints.laboratoryTexts.computed += labTextPts;
     this.buildPoints.library.computed += libraryPts;
     this.buildPoints.vis.computed +=
-      Math.ceil(visStock / CONFIG.ARM5E.covenant.vis.stockCost) + visPts;
+      Math.ceil(visStock * CONFIG.ARM5E.covenant.vis.stockCost) + visPts;
     this.buildPoints.magicItems.computed += enchantmentPts;
     this.buildPoints.laboratories.computed += labPts;
     this.buildPoints.money.computed += Math.ceil(this.finances.wealth / 10);

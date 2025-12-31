@@ -75,7 +75,7 @@ export class CombatAttackChatSchema extends CombatChatSchema {
       if (defender) {
         const div = document.createElement("div");
         div.classList.add("flexrow", "padding4");
-        const title = document.createElement("h3");
+        const title = document.createElement("h2");
         title.classList.add("ars-chat-title");
         title.innerHTML = def.name;
         div.append(title);
@@ -505,7 +505,7 @@ export class CombatDamageChatSchema extends CombatChatSchema {
     const contentDiv = html[0].querySelector(".message-content");
 
     const div = document.createElement("div");
-    const title = document.createElement("h3");
+    const title = document.createElement("h2");
     title.classList.add("ars-chat-title");
     title.innerHTML = game.i18n.format("arm5e.sheet.soak");
     div.append(title);

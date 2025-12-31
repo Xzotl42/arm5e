@@ -1,4 +1,4 @@
-## 2.4.1.10, Radislav, Cognizant Wisdom
+## 2.4.1.11, Radislav, Cognizant Wisdom
 
 ### V13 compatibility
 
@@ -35,6 +35,7 @@
 - [V13] Text fields in darkmode have visible color.
 - Spells with focus applied have the option ticked properly in the roll dialog.
 - Item Macro creation from unlinked tokens is now possible [Warning added]
+- Covenant build points for vis storage are computed properly
 
 ## 2.4.0.31, Radislav, Enigmatic Faeries 2
 

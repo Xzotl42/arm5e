@@ -182,7 +182,7 @@ export class Arm5eChatMessage extends ChatMessage {
       btnCnt = this.system.addActionButtons(btnArray);
     }
     if (btnCnt) {
-      const actionHeader = document.createElement("h3");
+      const actionHeader = document.createElement("h2");
       actionHeader.classList.add("ars-chat-title");
       actionHeader.innerHTML = game.i18n.localize("arm5e.sheet.actions");
       btnContainer.appendChild(actionHeader);
