@@ -1094,7 +1094,7 @@ ARM5E.covenant.inhabitants = {
   livestock: { label: "arm5e.sheet.livestock", points: 0, advancedPts: 0 }
 };
 ARM5E.covenant.vis = {
-  stockCost: 1,
+  stockCost: 0.2,
   sourceCost: 5
 };
 
