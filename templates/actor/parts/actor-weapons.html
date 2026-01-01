@@ -23,14 +23,22 @@
             <div class="flex0">{{{magicHint}}}</div>
             <div class="flexrow flex-center">
                 <span class="flexrow item-title">{{item.name}}</span>
-                <label><span class="bold">{{localize "arm5e.sheet.initiative"}}:</span> {{item.system.init}}</label>
-                <label><span class="bold">{{localize "arm5e.sheet.attack"}}:</span> {{item.system.atk}}</label>
-                <label><span class="bold">{{localize "arm5e.sheet.defense"}}:</span> {{item.system.dfn}}</label>
-                <label><span class="bold">{{localize "arm5e.damage.label"}}:</span> {{item.system.dam}}
-                    (+{{../system.characteristics.str.value }})</label>
+                <div class="item-attribute">
+                    <label><span class="bold">{{localize "arm5e.sheet.initiative"}}:</span> {{item.system.init}}</label>
+                </div>
+                <div class="item-attribute">
+                    <label><span class="bold">{{localize "arm5e.sheet.attack"}}:</span> {{item.system.atk}}</label>
+                </div>
+                <div class="item-attribute"> <label><span class="bold">{{localize "arm5e.sheet.defense"}}:</span>
+                        {{item.system.dfn}}</label>
+                </div>
+                <div class="item-attribute"> <label><span class="bold">{{localize "arm5e.damage.label"}}:</span>
+                        {{item.system.dam}}
+                        (+{{../system.characteristics.str.value }})</label>
+                </div>
+                <div class="item-attribute flex-center">
+                    {{#if system.canEquip}}
 
-                {{#if system.canEquip}}
-                    <span class="bold flexrow">
                         {{#if system.naturalWeapon}}
                             <input type="checkbox" class="equipment" readonly {{checked system.equipped}}
                                 data-dtype="Boolean" />
@@ -38,11 +46,11 @@
                             <label>{{localize "arm5e.sheet.equipped"}}:</label>
                             <input type="checkbox" class="equipment" {{checked system.equipped}} data-dtype="Boolean" />
                         {{/if}}
-                    </span>
-                {{else}}
-                    <span class="flexrow bold"><label>{{localize "arm5e.sheet.quantity"}}: {{item.system.quantity}}
-                        </label></span>
-                {{/if}}
+                    {{else}}
+                        <span class="flexrow bold"><label>{{localize "arm5e.sheet.quantity"}}: {{item.system.quantity}}
+                            </label></span>
+                    {{/if}}
+                </div>
 
             </div>
             <div class="item-controls">

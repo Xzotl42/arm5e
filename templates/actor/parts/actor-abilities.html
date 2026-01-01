@@ -31,13 +31,16 @@
               <span class="flexrow item-title rollable width4" data-roll="ability" data-ability="{{item._id}}"
                 data-defaultcharacteristic="{{item.system.defaultChaAb}}" name="item.name">{{item.name}} (
                 {{item.system.speciality}} )</span>
-              <label class="marginRight8">{{localize "arm5e.sheet.score"}}</label><input type="text"
-                name="item.{{id}}.finalScore" value="{{item.system.finalScore}}" readonly data-dtype="Number"
-                {{{item.ui.style}}} />
+              <div class="item-attribute"><label class="marginRight8">{{localize "arm5e.sheet.score"}}</label><input
+                  type="text" name="item.{{id}}.finalScore" value="{{item.system.finalScore}}" readonly
+                  data-dtype="Number" {{{item.ui.style}}} />
+              </div>
               <span></span>
-              <label class="marginRight8">{{localize "arm5e.sheet.experience"}}</label><input type="text"
-                name="item.{{id}}.remainingXp" value="{{item.system.remainingXp}} / {{ item.system.xpNextLevel }}"
-                readonly data-dtype="Number" />
+              <div class="item-attribute">
+                <label class="marginRight8">{{localize "arm5e.sheet.experience"}}</label><input type="text"
+                  name="item.{{id}}.remainingXp" value="{{item.system.remainingXp}} / {{ item.system.xpNextLevel }}"
+                  readonly data-dtype="Number" />
+              </div>
             </div>
             <div class="item-controls">
               <a class="item-control item-edit"

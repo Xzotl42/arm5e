@@ -17,19 +17,25 @@
             <div class="flex0">{{{magicHint}}}</div>
             <div class="flexrow flex-center">
                 <span class="flexrow item-title">{{item.name}}</span>
-                <label><span class="bold">{{localize "arm5e.sheet.protection"}}:</span> {{item.system.prot}}
-                    {{#if system.canEquip}}(+{{
-                        ../system.characteristics.sta.value }}){{/if}}</label>
-                <label><span class="bold">{{localize "arm5e.sheet.load"}}:</span> {{item.system.load}}</label>
-                {{#if system.canEquip}}
-                    <span class="bold">
+                <div class="item-attribute">
+                    <label><span class="bold">{{localize "arm5e.sheet.protection"}}:</span> {{item.system.prot}}
+                        {{#if system.canEquip}}(+{{
+                            ../system.characteristics.sta.value }}){{/if}}</label>
+                </div>
+                <div class="item-attribute">
+                    <label><span class="bold">{{localize "arm5e.sheet.load"}}:</span> {{item.system.load}}</label>
+                </div>
+                <div class="item-attribute flex-center">
+
+                    {{#if system.canEquip}}
                         <label>{{localize "arm5e.sheet.equipped"}}:</label>
                         <input type="checkbox" class="equipment" name="equipped" {{checked system.equipped}}
-                            data-dtype="Boolean" /></span>
-                {{else}}
-                    <span class="flexrow bold"><label>{{localize "arm5e.sheet.quantity"}}: {{item.system.quantity}}
-                        </label></span>
-                {{/if}}
+                            data-dtype="Boolean" />
+                    {{else}}
+                        <label>{{localize "arm5e.sheet.quantity"}}: {{item.system.quantity}}
+                        </label>
+                    {{/if}}
+                </div>
             </div>
             <div class="item-controls">
                 <a class="item-control item-edit"
