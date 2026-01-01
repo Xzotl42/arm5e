@@ -195,6 +195,9 @@ button.create-compendium,
 .arm5e .sanatorium.button,
 .arm5e .astrolab.button {
   font-family: var(--font-header);
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 .arm5e .sanatorium.button,
 .arm5e .astrolab.button {
