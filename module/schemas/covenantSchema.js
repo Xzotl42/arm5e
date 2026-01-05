@@ -444,6 +444,10 @@ export class CovenantSchema extends foundry.abstract.TypeDataModel {
     this.finances.laboratoriesPoints = 0;
     this.finances.weaponsPoints = 0;
 
+    this.modifiers = {
+      aging: { magi: this.modifiersLife.magi, mundane: this.modifiersLife.mundane }
+    };
+
     this.census = {
       magi: 0,
       companions: 0,
@@ -457,7 +461,20 @@ export class CovenantSchema extends foundry.abstract.TypeDataModel {
       horses: 0,
       livestock: 0,
       servantsNeeded: 0,
-      teamstersNeeded: 0
+      teamstersNeeded: 0,
+      modifiers: {
+        magi: 0,
+        companions: 0,
+        specialists: 0,
+        craftsmen: 0,
+        turbula: 0,
+        laborers: 0,
+        teamsters: 0,
+        servants: 0,
+        dependants: 0,
+        horses: 0,
+        livestock: 0
+      }
     };
   }
 
@@ -740,8 +757,36 @@ export class CovenantSchema extends foundry.abstract.TypeDataModel {
       }).length;
 
     // INHABITANTS
-
     this.census.workers = this.census.laborers + this.census.teamsters + this.census.servants;
+    // this.census.workersEffective =
+    //   Math.max(this.census.laborers + this.census.modifiers.laborers, 0) +
+    this.census.teamstersEffective = Math.max(
+      this.census.teamsters + this.census.modifiers.teamsters,
+      0
+    );
+    this.census.servantsEffective = Math.max(
+      this.census.servants + this.census.modifiers.servants,
+      0
+    );
+
+    this.census.totalModifiers = Object.values(this.census.modifiers).reduce(
+      (accumulator, currentValue) => accumulator + currentValue,
+      0
+    );
+
+    // ajust the worker points due to active effects
+    for (const [type, points] of Object.entries(this.census.modifiers)) {
+      if (points) {
+        // worker points modifier cannot be negative for a given type.
+        workersPts += Math.max(
+          points *
+            (this.modifiersLife.mundane > 0
+              ? CONFIG.ARM5E.covenant.inhabitants[type].advancedPts
+              : CONFIG.ARM5E.covenant.inhabitants[type].points),
+          0
+        );
+      }
+    }
 
     this.census.inhabitants = this.census.workers + this.census.dependants;
 
@@ -819,9 +864,8 @@ export class CovenantSchema extends foundry.abstract.TypeDataModel {
     };
 
     this.yearlySavings.laborers.amount = Math.min(
-      this.census.laborers,
-      this.yearlyExpenses.provisions.amount *
-        CONFIG.ARM5E.covenant.yearlyExpenses.provisions.maxSaving
+      Math.max(this.census.laborers + this.census.modifiers.laborers, 0),
+      this.yearlyExpenses.provisions.amount * 0.5
     );
 
     for (let spe of this.inhabitants.specialists) {
@@ -861,7 +905,7 @@ export class CovenantSchema extends foundry.abstract.TypeDataModel {
     // get slugify version of localized "laborer"
     const laborerLocalized = slugify(game.i18n.localize("arm5e.sheet.laborers"));
     craftSavings.provisions.crafts[laborerLocalized] = {
-      val: this.census.laborers,
+      val: Math.max(this.census.laborers + this.census.modifiers.laborers, 0),
       max: this.yearlyExpenses.provisions.amount / 2
     };
 
@@ -912,7 +956,10 @@ export class CovenantSchema extends foundry.abstract.TypeDataModel {
     this.yearlySavings.specialists.amount = Math.round(this.yearlySavings.specialists.amount);
     this.yearlySavings.magicItems.amount = Math.round(this.yearlySavings.magicItems.amount);
 
-    this.yearlySavings.laborers.quantity = this.census.laborers;
+    this.yearlySavings.laborers.quantity = Math.max(
+      this.census.laborers + this.census.modifiers.laborers,
+      0
+    );
     this.yearlySavings.craftsmen.quantity = this.census.craftsmen;
     this.yearlySavings.specialists.quantity = this.census.specialists;
     // SUMMARY

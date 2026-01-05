@@ -40,6 +40,13 @@ export default class Aura {
     return this.auraValueFor(this.dominantRealm);
   }
 
+  get label() {
+    const lvl = Math.max(...Object.values(this.values));
+    const realm = Object.entries(this.values).find((e) => e[1] === lvl)[0];
+
+    return `${game.i18n.localize(ARM5E.realms[realm].label)} +${lvl}`;
+  }
+
   /**
    * Takes an alignment number of a power and computes how the current aura will modify
    * that power being used. e.g. how much a faerie power is penalized in a divine aura
@@ -134,6 +141,14 @@ export default class Aura {
     else {
       scene = canvas?.scene;
     }
+    if (scene) {
+      return new this(scene._id);
+    } else {
+      return new this(0);
+    }
+  }
+
+  static fromScene(scene) {
     if (scene) {
       return new this(scene._id);
     } else {

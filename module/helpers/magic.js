@@ -1,7 +1,7 @@
 import { SpellSchema } from "../schemas/magicSchemas.js";
 import { log } from "../tools.js";
 import { TWILIGHT_STAGES } from "./long-term-activities.js";
-import { _applyImpact, prepareRollVariables } from "./rollWindow.js";
+import { _applyImpact, prepareRollVariables, ROLL_MODES } from "./rollWindow.js";
 
 const VOICE_AND_GESTURES_ICONS = {
   voice: "icons/skills/trades/music-singing-voice-blue.webp",

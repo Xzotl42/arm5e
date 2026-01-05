@@ -7,7 +7,7 @@ const TYPE_OF_DATASET = {
   POWER: "power",
   SPONT: "spont",
   WEAPON: "weapon",
-  SUPERNATURAL: "supernatural"
+  SUPERNATURAL: "supernaturalEffect"
 };
 
 //TODO
@@ -86,7 +86,7 @@ function getDatasetForPower(item) {
 function getDatasetForSupernatural(item) {
   if (item?.type !== TYPE_OF_DATASET.SUPERNATURAL) return {};
   return {
-    roll: TYPE_OF_DATASET.SUPERNATURAL,
+    roll: "supernatural",
     id: item._id,
     name: item.name,
     img: item.img

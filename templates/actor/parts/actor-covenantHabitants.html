@@ -103,13 +103,13 @@
     <span class="flexcol">
       <label class="label-medium">{{localize "arm5e.generic.numberOf" thing=(localize "arm5e.sheet.teamsters")}} /
         {{localize "arm5e.generic.needed"}}</label>
-      <input type="text" readonly value="{{ system.census.teamsters }} / {{system.census.teamstersNeeded}}"
+      <input type="text" readonly value="{{ system.census.teamstersEffective }} / {{system.census.teamstersNeeded}}"
         data-dtype="Number" class="select-on-focus" />
     </span>
     <span class="flexcol">
       <label class="label-medium">{{localize "arm5e.generic.numberOf" thing=(localize "arm5e.sheet.servants")}} /
         {{localize "arm5e.generic.needed"}}</label>
-      <input type="text" readonly value="{{ system.census.servants }} / {{system.census.servantsNeeded}}"
+      <input type="text" readonly value="{{ system.census.servantsEffective }} / {{system.census.servantsNeeded}}"
         data-dtype="Number" class="select-on-focus" />
     </span>
     <span class="flexcol">
@@ -122,6 +122,55 @@
       <input type="number" readonly value="{{ system.census.total }}" data-dtype="Number"
         class="select-on-focus summary" />
     </span>
+  </div>
+</div>
+<div class="backSection padding12 margintop18">
+  <span class="flex01">
+    <label class="smallTitle">{{localize "arm5e.generic.misc"}}</label>
+  </span>
+  <div class="flexrow flex-group-left" style="border:0px">
+    <span class="resource flexrow">
+      <label for="system.modifiers.aging.magi" class="label-medium">{{localize "arm5e.sheet.agingMagi"}}</label>
+      <input type="number" name="system.modifiers.aging.magi" value="{{system.modifiers.aging.magi}}"
+        data-dtype="Number" readonly class="select-on-focus" />
+    </span>
+    <span class="resource flexrow">
+      <label for="system.modifiers.aging.mundane" class="label-medium">{{localize "arm5e.sheet.agingMundane"}}</label>
+      <input type="number" name="system.modifiers.aging.mundane" value="{{system.modifiers.aging.mundane}}"
+        data-dtype="Number" readonly class="select-on-focus" />
+    </span>
+    {{#unless system.census.modifier.laborers}}
+      <span class="resource flexrow">
+        <label for="system.census.modifier.laborers"
+          class="label-medium">{{localize "arm5e.covenant.inhabitantsMod.laborers"}}</label>
+        <input type="number" value="{{system.census.modifiers.laborers}}" data-dtype="Number" readonly
+          class="select-on-focus" />
+      </span>
+    {{/unless}}
+    {{#unless system.census.modifier.servants}}
+      <span class="resource flexrow">
+        <label for="system.census.modifiers.servants"
+          class="label-medium">{{localize "arm5e.covenant.inhabitantsMod.servants"}}</label>
+        <input type="number" value="{{system.census.modifiers.servants}}" data-dtype="Number" readonly
+          class="select-on-focus" />
+      </span>
+    {{/unless}}
+    {{#unless system.census.modifier.teamsters}}
+      <span class="resource flexrow">
+        <label for="system.census.modifiers.teamsters"
+          class="label-medium">{{localize "arm5e.covenant.inhabitantsMod.teamsters"}}</label>
+        <input type="number" value="{{system.census.modifiers.teamsters}}" data-dtype="Number" readonly
+          class="select-on-focus" />
+      </span>
+    {{/unless}}
+    {{#unless system.census.modifier.turbula}}
+      <span class="resource flexrow">
+        <label for="system.census.modifiers.turbula"
+          class="label-medium">{{localize "arm5e.covenant.inhabitantsMod.turbula"}}</label>
+        <input type="number" value="{{system.census.modifiers.turbula}}" data-dtype="Number" readonly
+          class="select-on-focus" />
+      </span>
+    {{/unless}}
   </div>
 </div>
 {{!-- magi --}}

@@ -1055,77 +1055,119 @@ export const migrateActiveEffectData = async function (effectData) {
     let idx = 0;
     let needUpdate = false;
     for (let ch of effectData.changes) {
-      if (ch.key === "system.bonuses.skills.civilCanonLaw.bonus") {
-        ch.key = "system.bonuses.skills.law_CivilAndCanon.bonus";
-        options[idx] = "CivilAndCanon";
-        subtypes[idx] = "law";
-        needUpdate = true;
-      } else if (ch.key === "system.bonuses.skills.commonLaw.bonus") {
-        ch.key = "system.bonuses.skills.law_Common.bonus";
-        options[idx] = "Common";
-        subtypes[idx] = "law";
-        needUpdate = true;
-      } else if (ch.key === "system.wounds.light.penalty.value") {
-        ch.key = "system.penalties.wounds.light";
-        needUpdate = true;
-      } else if (ch.key === "system.wounds.medium.penalty.value") {
-        ch.key = "system.penalties.wounds.medium";
-        needUpdate = true;
-      } else if (ch.key === "system.wounds.heavy.penalty.value") {
-        ch.key = "system.penalties.wounds.heavy";
-        needUpdate = true;
-      } else if (ch.key == "system.bonuses.activities.writing") {
-        // fix "writting" typo
-        if (types[idx] == "writting") {
-          types[idx] == "writing";
+      switch (ch.key) {
+        case "system.bonuses.skills.civilCanonLaw.bonus":
+          ch.key = "system.bonuses.skills.law_CivilAndCanon.bonus";
+          options[idx] = "CivilAndCanon";
+          subtypes[idx] = "law";
           needUpdate = true;
-        }
-      } else if (ch.key === "system.realmAlignment") {
-        switch (ch.value) {
-          case "1":
-            ch.key = "system.realms.magic.aligned";
-            ch.value = true;
-            subtypes[idx] = "magic";
+          break;
+        case "system.bonuses.skills.commonLaw.bonus":
+          ch.key = "system.bonuses.skills.law_Common.bonus";
+          options[idx] = "Common";
+          subtypes[idx] = "law";
+          needUpdate = true;
+          break;
+        case "system.wounds.light.penalty.value":
+          ch.key = "system.penalties.wounds.light";
+          needUpdate = true;
+          break;
+        case "system.wounds.medium.penalty.value":
+          ch.key = "system.penalties.wounds.medium";
+          needUpdate = true;
+          break;
+        case "system.wounds.heavy.penalty.value":
+          ch.key = "system.penalties.wounds.heavy";
+          needUpdate = true;
+          break;
+        case "system.bonuses.activities.writing":
+          // fix "writting" typo
+          if (types[idx] == "writting") {
+            types[idx] == "writing";
             needUpdate = true;
-            break;
-          case "2":
-            ch.key = "system.realms.faeric.aligned";
-            ch.value = true;
-            subtypes[idx] = "faeric";
+          }
+          break;
+        case "system.census.turbula":
+          ch.key = "system.census.modifiers.turbula";
+          needUpdate = true;
+          break;
+        case "system.census.laborers":
+          ch.key = "system.census.modifiers.laborers";
+          needUpdate = true;
+          break;
+        case "system.census.teamsters":
+          ch.key = "system.census.modifiers.teamsters";
+          needUpdate = true;
+          break;
+        case "system.census.servants":
+          ch.key = "system.census.modifiers.servants";
+          needUpdate = true;
+          break;
+        case "system.bonuses.arts.magicResistance":
+          // move magic resistance from spellcasting type
+          if (types[idx] == "spellcasting") {
+            types[idx] = "formMagicResistance";
             needUpdate = true;
-            break;
-          case "3":
-            ch.key = "system.realms.divine.aligned";
-            ch.value = true;
-            subtypes[idx] = "divine";
-            needUpdate = true;
-            break;
-          case "4":
-            ch.key = "system.realms.infernal.aligned";
-            ch.value = true;
-            subtypes[idx] = "infernal";
-            needUpdate = true;
-            break;
-          default:
-            // not possible
+          }
+          break;
+        case "system.realmAlignment":
+          switch (ch.value) {
+            case "1":
+              ch.key = "system.realms.magic.aligned";
+              ch.value = true;
+              subtypes[idx] = "magic";
+              needUpdate = true;
+              break;
+            case "2":
+              ch.key = "system.realms.faeric.aligned";
+              ch.value = true;
+              subtypes[idx] = "faeric";
+              needUpdate = true;
+              break;
+            case "3":
+              ch.key = "system.realms.divine.aligned";
+              ch.value = true;
+              subtypes[idx] = "divine";
+              needUpdate = true;
+              break;
+            case "4":
+              ch.key = "system.realms.infernal.aligned";
+              ch.value = true;
+              subtypes[idx] = "infernal";
+              needUpdate = true;
+              break;
+            default:
+              // not possible
 
-            break;
-        }
-      } else if (
-        ch.key === "system.bonuses.arts.voice" ||
-        ch.key === "system.bonuses.arts.gestures" ||
-        (ch.key === "system.bonuses.arts.spellcasting" && subtypes[idx] === "gesture") ||
-        (types[idx] == "spellcasting" && subtypes[idx] === "aura")
-      ) {
-        // delete those old effects
+              break;
+          }
+        case "system.bonuses.arts.voice":
+        case "system.bonuses.arts.gestures":
+          // delete those old effects
+          types.splice(idx, 1);
+          subtypes.splice(idx, 1);
+          options.splice(idx, 1);
+          idx++;
+          needUpdate = true;
+          continue;
+        case "system.bonuses.arts.spellcasting":
+          if (subtypes[idx] === "gesture") types.splice(idx, 1);
+          subtypes.splice(idx, 1);
+          options.splice(idx, 1);
+          idx++;
+          needUpdate = true;
+          continue;
+        default:
+          if (types[idx] == "spellcasting" && subtypes[idx] === "aura") {
+            // delete those old effects
 
-        types.splice(idx, 1);
-        subtypes.splice(idx, 1);
-        options.splice(idx, 1);
-        idx++;
-        needUpdate = true;
-        continue;
-      } else if (types[idx] == "spellcasting" && subtypes[idx] === "aura") {
+            types.splice(idx, 1);
+            subtypes.splice(idx, 1);
+            options.splice(idx, 1);
+            idx++;
+            needUpdate = true;
+            continue;
+          }
       }
       changes.push(ch);
       idx++;

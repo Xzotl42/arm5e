@@ -25,7 +25,13 @@ export function addActiveEffectsDefinitions() {
   };
 
   ACTIVE_EFFECTS_TYPES.formMagicResistance.subtypes = {
-    ...magicResistanceForms()
+    ...magicResistanceForms(),
+    magicResistance: {
+      mnemonic: "arm5e.activeEffect.subtypes.magicResistance",
+      key: "system.bonuses.arts.magicResistance",
+      mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+      default: 0
+    }
   };
 
   // Abilities related effects
@@ -759,13 +765,8 @@ export const ACTIVE_EFFECTS_TYPES = {
         key: "system.bonuses.arts.ritualFatigueCancelled",
         mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
         default: 0
-      },
-      magicResistance: {
-        mnemonic: "arm5e.activeEffect.subtypes.magicResistance",
-        key: "system.bonuses.arts.magicResistance",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-        default: 0
       }
+
       // spontDivider: {
       //   mnemonic: "arm5e.activeEffect.subtypes.spontDivider",
       //   key: "system.bonuses.arts.spontDivider",
@@ -2041,6 +2042,26 @@ export const ACTIVE_EFFECTS_TYPES = {
       }
     }
   },
+  covenantModifiers: {
+    category: "covenant",
+    type: "modifiers",
+    tags: ["covenant"],
+    mnemonic: "arm5e.activeEffect.type.covenantModifiers",
+    subtypes: {
+      magi: {
+        mnemonic: "arm5e.activeEffect.subtypes.agingMagi",
+        key: "system.modifiers.aging.magi",
+        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        default: 1
+      },
+      mundane: {
+        mnemonic: "arm5e.activeEffect.subtypes.agingMundane",
+        key: "system.modifiers.aging.mundane",
+        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        default: 2
+      }
+    }
+  },
   covenantInhabitants: {
     category: "covenant",
     type: "covenantInhabitants",
@@ -2049,25 +2070,25 @@ export const ACTIVE_EFFECTS_TYPES = {
     subtypes: {
       turbula: {
         mnemonic: "arm5e.activeEffect.subtypes.turbula",
-        key: "system.census.turbula",
+        key: "system.census.modifiers.turbula",
         mode: CONST.ACTIVE_EFFECT_MODES.ADD,
         default: 2
       },
       laborers: {
         mnemonic: "arm5e.activeEffect.subtypes.laborers",
-        key: "system.census.laborers",
+        key: "system.census.modifiers.laborers",
         mode: CONST.ACTIVE_EFFECT_MODES.ADD,
         default: 2
       },
       teamsters: {
         mnemonic: "arm5e.activeEffect.subtypes.teamsters",
-        key: "system.census.teamsters",
+        key: "system.census.modifiers.teamsters",
         mode: CONST.ACTIVE_EFFECT_MODES.ADD,
         default: 2
       },
       servants: {
         mnemonic: "arm5e.activeEffect.subtypes.servants",
-        key: "system.census.servants",
+        key: "system.census.modifiers.servants",
         mode: CONST.ACTIVE_EFFECT_MODES.ADD,
         default: 2
       }

@@ -1,4 +1,4 @@
-import { getAbilityStats, getDataset, slugify } from "../../tools.js";
+import { getAbilityStats, getDataset, log, slugify } from "../../tools.js";
 import { getConfirmation } from "../../ui/dialogs.js";
 import { ArM5eActorSheet } from "../actor-sheet.js";
 
@@ -41,6 +41,8 @@ export class ArM5eMagicSystem {
       template.nouns = [];
       template.bonusAbility = {};
       template.others = [];
+      if (!template.description) template.description = "";
+      template.namepath = `system.magicSystem.templates.${key}`;
       for (let item of template.components) {
         switch (item.type) {
           case "char":
@@ -135,7 +137,7 @@ export class ArM5eMagicSystem {
 
   async getData(context) {
     const templates = context.system.magicSystem.templates;
-
+    context.ui.sections.visibility.hedge = {};
     context.isMagus = this.actor.isMagus();
 
     for (let [name, template] of Object.entries(templates)) {
@@ -273,6 +275,39 @@ export class ArM5eMagicSystem {
     html.find(".template-option").change(this._onOptionChange.bind(this));
     html.find(".item-ability-key").change(this.onAbilityChange.bind(this));
     html.find(".supernatural-create").click(this._onItemCreate.bind(this));
+
+    html.find(".template-section-handle").click(async (ev) => {
+      const dataset = getDataset(ev);
+      ev.stopImmediatePropagation();
+      log(false, `DEBUG section: ${dataset.section}, category: ${dataset.category}`);
+      let index = dataset.index ?? "";
+      let usercache = JSON.parse(sessionStorage.getItem(`usercache-${game.user.id}`));
+      let scope = usercache[this.actor._id].sections.visibility[dataset.category];
+      let classes = document.getElementById(
+        `${dataset.category}-${dataset.section}${index}-${dataset.templateId}`
+      ).classList;
+      if (scope) {
+        if (classes.contains("hide")) {
+          if (index !== "") {
+            log(false, `DEBUG reveal ${dataset.section} at index ${index}`);
+            scope[index][dataset.section] = "";
+          } else {
+            log(false, `DEBUG reveal ${dataset.section}`);
+            scope[dataset.section] = "";
+          }
+        } else {
+          if (index !== "") {
+            log(false, `DEBUG hide ${dataset.section} at index ${index}`);
+            scope[index][dataset.section] = "hide";
+          } else {
+            log(false, `DEBUG hide ${dataset.section}`);
+            scope[dataset.section] = "hide";
+          }
+        }
+        sessionStorage.setItem(`usercache-${game.user.id}`, JSON.stringify(usercache));
+      }
+      classes.toggle("hide");
+    });
   }
 
   async _onOptionChange(event) {
@@ -427,7 +462,8 @@ export class ArM5eMagicSystem {
         const template = {
           name: "Template name",
           useFatigue: false,
-          components: [{ type: "char" }]
+          components: [{ type: "char" }],
+          description: ""
         };
         if (magicSystem.templates === undefined) {
           magicSystem.templates = {};
@@ -542,6 +578,7 @@ export class ArM5eMagicSystem {
           }
         );
         source.system.magicSystem.templates[id].name = t.name;
+        source.system.magicSystem.templates[id].description = t.description;
         source.system.magicSystem.templates[id].useFatigue = t.useFatigue;
         source.system.magicSystem.templates[id].rollType = t.rollType;
       }

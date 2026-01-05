@@ -82,16 +82,16 @@
 
         <div class="flexrow flex-between">
           <span class="covenantname flexrow" style="padding-top: 4px">
-            <label for="system.scene.id" class="" style="padding-top: 4px; padding-left: 24px">Scene</label>
-            <select name="system.scene.id" data-type="String" style="flex: 0 0 65px" {{#unless
-              (isGM)}}disabled{{/unless}}>
+            <label for="system.scene.id" class="flex0"
+              style="padding-top: 4px; padding-left: 24px">{{localize "arm5e.sheet.scene"}}</label>
+            <select name="system.scene.id" data-type="String" {{#unless (isGM)}}disabled{{/unless}}>
               {{selectOptions scenes selected=system.scene.id labelAttr="name" nameAttr="id" valueAttr="id" blank=""}}
             </select>
           </span>
           <span class="covenantname flexrow" style="padding-top: 4px">
-            <label for="system.season" class=""
+            <label for="system.season" class="flex0"
               style="padding-top: 4px; padding-left: 24px">{{localize "arm5e.sheet.season"}}</label>
-            <select name="system.season" class="select-season" data-type="String" style="flex: 0 0 65px">
+            <select name="system.season" class="select-season" data-type="String">
               {{selectOptions config.seasons selected=system.season labelAttr="label" localize=true}}
             </select>
           </span>

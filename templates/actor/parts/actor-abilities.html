@@ -35,7 +35,14 @@
                   type="text" name="item.{{id}}.finalScore" value="{{item.system.finalScore}}" readonly
                   data-dtype="Number" {{{item.ui.style}}} />
               </div>
-              <span></span>
+              <span>
+                {{#if @root.system.states.creationMode}}
+                  <div class="flex02" style="padding-top:4px; padding-left: 10px;">
+                    <a class="item-control increase-score flex0" title="Increase score"><i class="fas fa-plus"></i></a>
+                    <a class="item-control decrease-score flex0" title="Decrease score"><i class="fas fa-minus"></i></a>
+                  </div>
+                {{/if}}
+              </span>
               <div class="item-attribute">
                 <label class="marginRight8">{{localize "arm5e.sheet.experience"}}</label><input type="text"
                   name="item.{{id}}.remainingXp" value="{{item.system.remainingXp}} / {{ item.system.xpNextLevel }}"

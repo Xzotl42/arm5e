@@ -2455,6 +2455,7 @@ fieldset .arm5e {
   transition-timing-function: ease-in-out;
 }
 
+.template-section-handle,
 .section-handle {
   background: rgba(0, 0, 0, 0.15);
   padding: 1px 4px;
