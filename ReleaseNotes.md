@@ -1,3 +1,25 @@
+## 2.4.1.13, Radislav, Cognizant Wisdom BF1
+
+### V13 compatibility
+
+- Verified for version 13.351
+
+### Features & changes
+
+- Change abilities score directly from the character sheet when in creation mode
+- Active effects:
+  - New Aging roll modifier for covenant's inhabitants (Healthy Feature)
+  - Effects to add/remove inhabitants are no longer impacting loyalty or expenses
+  - Magic resistance effect has been moved from "Spellcasting" to "Forms Magic Resistance" type.
+- Various covenant sheet improvements
+- Added description field to Alternate magic templates.
+
+### Bug fixes
+
+- Supernatural effects rolls fixed
+- Supernatural effects macros will again roll by default.
+- Cost saving of laborers is up to 50% of provisions costs instead of 20%
+
 ## 2.4.1.12, Radislav, Cognizant Wisdom
 
 ### V13 compatibility

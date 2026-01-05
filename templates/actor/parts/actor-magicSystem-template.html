@@ -3,10 +3,11 @@
     <div class="flexcol resource">
       <div class="resource flexrow flex-group-left">
         <div class="resource flex01">
-          <label for="system.magicSystem.templates.{{id}}.name" class="">{{localize "Template name"}}</label>
+          <!-- {{log "Template: " this}} -->
+          <label for="{{namepath}}.name" class="">{{localize "Template name"}}</label>
 
-          <input type="text" class="template-name" name="system.magicSystem.templates.{{id}}.name" data-dtype="String"
-            value="{{name}}" style="min-width: 250px;" data-id="{{id}}">
+          <input type="text" class="template-name" name="{{namepath}}.name" data-dtype="String" value="{{name}}"
+            style="min-width: 250px;" data-id="{{id}}">
 
         </div>
         <div class="resource flex04">
@@ -100,7 +101,17 @@
           {{/each}}
         </div>
       </div>
-    </div>
+      <div class="padding4 flexrow">
+        <label class="template-section-handle  clickable" data-category="hedge" data-section="templateDesc"
+          data-template-id="{{id}}">{{localize "arm5e.sheet.description"}}</label>
+      </div>
+      <div class="foldable-section backSection  {{lookup @root.ui.sections.visibility.hedge 'templateDesc'}}"
+        id="hedge-templateDesc-{{id}}">
+        <div class="editor">
+          {{editor description target=(concat namepath ".description") button=true owner=owner
+      engine="prosemirror" editable=editable}}
+        </div>
+      </div>
 
+    </div>
   </div>
-</div>

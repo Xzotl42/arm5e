@@ -78,6 +78,8 @@
         "temporary": "Temporary effects"
       },
       "subtypes": {
+        "agingMagi": "Aging for Magi",
+        "agingMundane": "Aging for Mundane",
         "attackRoll": "Attack rolls",
         "auraLevel": "Aura's level",
         "auraRealm": "Realm of aura",
@@ -121,6 +123,7 @@
         "xpmod": "Xp bonus"
       },
       "type": {
+        "covenantModifiers": "Covenant's modifiers",
         "covenantBuildPoint": "Covenant's build points",
         "covenantInhabitants": "Covenant's inhabitants",
         "spellcasting": "Spellcasting",
@@ -427,6 +430,12 @@
         "none": "No salary",
         "normal": "Standard salary",
         "pension": "Pension"
+      },
+      "inhabitantsMod": {
+        "laborers": "Magic Laborers",
+        "turbula": "Magic Turbula",
+        "servants": "Magic Servants",
+        "teamsters": "Magic Teamsters"
       }
     },
     "damage": {
@@ -548,7 +557,9 @@
       "minutes": "minutes",
       "minutesShort": "min.",
       "modifier": "Modifier",
+      "modifiers": "Modifiers",
       "missed": "Missed",
+      "misc": "Miscellaneous",
       "multiplier": "Multiplier",
       "multipliers": "Multipliers",
       "na": "N/A",
@@ -1167,6 +1178,8 @@
       "age": "Age",
       "ageModifier": "Age modifier",
       "aging": "Aging",
+      "agingMagi": "Aging for Magi",
+      "agingMundane": "Aging for Mundane",
       "agingPts": "Aging points",
       "agingStart": "Aging start offset",
       "apparentAge": "Apparent age",
@@ -1565,6 +1578,7 @@
       "salubrity": "Salubrity",
       "sanctum": "Sanctum",
       "saving": "Savings",
+      "scene": "Scene",
       "score": "Score",
       "season": "Season",
       "seasons": "seasons",

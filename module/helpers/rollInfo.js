@@ -421,9 +421,9 @@ export class ArM5eRollInfo {
         if (actorSystemData.covenant?.linked) {
           const cov = actorSystemData.covenant.document;
           if (ArM5eActor.IsMagus(this._actor.type, actorSystemData.charType.value)) {
-            livingMod = cov.system.modifiersLife.magi ?? 0;
+            livingMod = cov.system.modifiers.aging.magi ?? 0;
           } else {
-            livingMod = cov.system.modifiersLife.mundane ?? 0;
+            livingMod = cov.system.modifiers.aging.mundane ?? 0;
           }
         }
         // Health attribute of the lab.

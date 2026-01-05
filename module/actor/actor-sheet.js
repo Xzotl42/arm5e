@@ -1481,6 +1481,20 @@ export class ArM5eActorSheet extends ActorSheet {
       this._itemDelete(ev);
     });
 
+    html.find(".increase-score").click(async (ev) => {
+      const li = $(event.currentTarget).parents(".item");
+      let itemId = li.data("itemId");
+      const item = this.actor.items.get(itemId);
+      await item.system.increaseScore();
+    });
+
+    html.find(".decrease-score").click(async (ev) => {
+      const li = $(event.currentTarget).parents(".item");
+      let itemId = li.data("itemId");
+      const item = this.actor.items.get(itemId);
+      await item.system.decreaseScore();
+    });
+
     // Delete Inventory Item and always ask for confirmation
     html.find(".item-delete-confirm").click(async (event) => {
       event.preventDefault();
