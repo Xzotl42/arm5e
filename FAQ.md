@@ -115,6 +115,12 @@ It is probable you have an active effect giving a modifier to this characteristi
 The Ability Key field is used by the system to know which ability it is. That way you can name it as you wish and in the language you prefer. The option field is read-only most of the time, but it is used for generic abilities (eg: Area Lore, Crafting , Languages,... ) to distinguish them. For example, a character may know leatherwork and forging, both crafting abilities, the option field will allow to differentiate between the two.
 This is useful when you need to tell the system which ability you are talking about. With afinities or puissant ability virtues for example.
 
+# Covenant
+
+### How do I set an Aura to my covenant?
+
+Auras are linked to Scene. You need to create a scene for the covenant (either a map or an image) and set an Aura for it in the canvas menu. Then, in the covenant sheet, select the scene above and the aura will be applied.
+
 ## Diary
 
 ### I cannot select the ability I want to progress into.

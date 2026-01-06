@@ -39,6 +39,7 @@ import {
   buildSoakDataset,
   combatDamage,
   computeCombatStats,
+  computeDamage,
   quickCombat,
   quickVitals,
   setWounds
@@ -1545,22 +1546,7 @@ export class ArM5eActorSheet extends ActorSheet {
       Arm5eChatMessage.create(msg.toObject());
     });
     html.find(".damage").click(async (event) => {
-      const lastAttackMessage = getLastCombatMessageOfType("combatAttack");
-      const lastDefenseMessage = getLastCombatMessageOfType("combatDefense");
-      let attackScore = 0;
-      if (lastAttackMessage) {
-        attackScore = lastAttackMessage.rollTotal() > 0 ? lastAttackMessage.rollTotal() : 0;
-        attackScore += lastAttackMessage?.system.confidenceModifier;
-      }
-
-      let defenseScore = 0;
-      if (lastDefenseMessage) {
-        defenseScore = lastDefenseMessage.rollTotal() > 0 ? lastDefenseMessage.rollTotal() : 0;
-        defenseScore += lastDefenseMessage?.system.confidenceModifier;
-      }
-
-      const advantage = attackScore - defenseScore;
-      await this._onCalculateDamage({ advantage, roll: event.target.dataset.roll });
+      await computeDamage(this.actor);
     });
     html.find(".power-use").click(this._onUsePower.bind(this));
     html.find(".addFatigue").click(async (event) => {

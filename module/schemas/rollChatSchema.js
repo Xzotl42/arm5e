@@ -566,7 +566,7 @@ export class RollChatSchema extends BasicChatSchema {
   }
 }
 
-export function createChatButton(msg, actor, icon, label, title, className, onClick) {
+export function createChatButton(msg, actor, icon, btnLabel, title, className, onClick) {
   const btn = document.createElement("button");
   btn.classList.add("chat-button");
   if (className) {
@@ -574,7 +574,7 @@ export function createChatButton(msg, actor, icon, label, title, className, onCl
   }
   btn.dataset.actorId = actor.id;
   btn.dataset.msgUuid = msg.uuid;
-  btn.innerHTML = `<i class="${icon}" title="${game.i18n.localize(title)}" >${label}</i>`;
+  btn.innerHTML = `<i class="${icon}" title="${game.i18n.localize(title)}" >${btnLabel}</i>`;
   // Handle button clicks
   btn.addEventListener("click", onClick);
   return btn;

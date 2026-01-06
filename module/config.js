@@ -194,44 +194,53 @@ ARM5E.character.houses = {
 };
 
 ARM5E.character.description = {
-  born: {
-    label: "arm5e.sheet.yearBorn"
-  },
   apprentice: {
-    label: "arm5e.sheet.apprenticeshipYears"
+    label: "arm5e.sheet.apprenticeshipYears",
+    number: true
   },
   birthname: {
-    label: "arm5e.sheet.birthName"
+    label: "arm5e.sheet.birthName",
+    number: false
   },
   birthplace: {
-    label: "arm5e.sheet.birthplace"
+    label: "arm5e.sheet.birthplace",
+    number: false
   },
   nationality: {
-    label: "arm5e.sheet.nationality"
+    label: "arm5e.sheet.nationality",
+    number: false
   },
   religion: {
-    label: "arm5e.sheet.religion"
+    label: "arm5e.sheet.religion",
+    number: false
   },
   height: {
-    label: "arm5e.sheet.height"
+    label: "arm5e.sheet.height",
+    number: false
   },
   weight: {
-    label: "arm5e.sheet.weight"
+    label: "arm5e.sheet.weight",
+    number: false
   },
   gender: {
-    label: "arm5e.sheet.gender"
+    label: "arm5e.sheet.gender",
+    number: false
   },
   hair: {
-    label: "arm5e.sheet.hair"
+    label: "arm5e.sheet.hair",
+    number: false
   },
   eyes: {
-    label: "arm5e.sheet.eyes"
+    label: "arm5e.sheet.eyes",
+    number: false
   },
   title: {
-    label: "arm5e.sheet.profession"
+    label: "arm5e.sheet.profession",
+    number: false
   },
   handed: {
-    label: "arm5e.sheet.handedness"
+    label: "arm5e.sheet.handedness",
+    number: false
   }
 };
 
