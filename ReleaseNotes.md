@@ -1,5 +1,7 @@
 ## 2.4.1.14, Radislav, Cognizant Wisdom BF1
 
+[IMPORTANT] Known limitation for V12, if text seems greyed out, go in the core settings and change the Preferred Color Scheme to "Light".
+
 ### V13 compatibility
 
 - Verified for version 13.351
@@ -21,7 +23,6 @@
 - Cost saving of laborers is up to 50% of provisions costs instead of 20%
 - Fixed a bug in button creation for damage roll chat messages
 - Quick combat macro dialog is working again
-- Fixed Stress die roll macro
 
 ## 2.4.1.12, Radislav, Cognizant Wisdom
 
