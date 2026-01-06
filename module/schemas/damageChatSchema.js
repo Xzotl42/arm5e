@@ -142,9 +142,10 @@ export class DamageChatSchema extends RollChatSchema {
     // confidence has been used already => no button
     if (this.parent.actor.isOwner && !this.impact.applied) {
       const rollSoakBtn = createChatButton(
-        this,
+        this.parent,
         this.parent.actor,
         "icon-Icon_Soak",
+        "",
         "arm5e.messages.soak",
         "",
         async (ev) => {
@@ -161,6 +162,7 @@ export class DamageChatSchema extends RollChatSchema {
           this.parent,
           this.parent.actor,
           "fas fa-ban",
+          "",
           "arm5e.dialog.button.cancel",
           "",
           async (ev) => {

@@ -5,10 +5,7 @@
     <div class="flexrow flex-group-left ">
       <div class="flex01">
         <button class="arm5e rollable dialog-buttons" style="min-width: 100px;" data-roll="init"
-          data-name='{{localize "arm5e.sheet.initiative"}}' data-option1="{{ system.characteristics.qik.value }}"
-          data-txtoption1='{{ localize "arm5e.sheet.quickness" }}' data-option2="{{ system.combat.init }}"
-          data-txtoption2='{{ localize "arm5e.sheet.initiative" }}' data-option3="{{ system.combat.overload }}"
-          data-txtoption3='{{ localize "arm5e.sheet.encumbrance" }}'><!--img src="systems/arm5e/assets/dice.png"
+          data-name='{{localize "arm5e.sheet.initiative"}}'><!--img src="systems/arm5e/assets/dice.png"
             class="flex0" style="border: 0px; height: 14px"-->
           {{localize "arm5e.sheet.initiative"}}</button>
       </div>
@@ -23,10 +20,7 @@
     <div class="flexrow flex-group-left">
       <div class="flex01">
         <button class="arm5e rollable dialog-buttons" style="min-width: 100px;" data-roll="attack"
-          data-name='{{localize "arm5e.sheet.attack"}}' data-option1="{{ system.characteristics.dex.value }}"
-          data-txtoption1='{{ localize "arm5e.sheet.dexterity" }}' data-option2="{{ system.combat.ability }}"
-          data-txtoption2='{{localize "arm5e.sheet.ability"}}' data-option3="{{ system.combat.atk }}"
-          data-txtoption3='{{localize "arm5e.sheet.attack"}}'><!--img src="systems/arm5e/assets/dice.png" class="flex0"
+          data-name='{{localize "arm5e.sheet.attack"}}'><!--img src="systems/arm5e/assets/dice.png" class="flex0"
             style="border: 0px; height: 14px"-->
           {{localize "arm5e.sheet.attack"}}</button>
       </div>
@@ -41,10 +35,7 @@
     <div class="flexrow flex-group-left">
       <div class="flex01">
         <button class="arm5e rollable dialog-buttons" style="min-width: 100px;" data-roll="defense"
-          data-name='{{localize "arm5e.sheet.defense"}}' data-option1="{{ system.characteristics.qik.value }}"
-          data-txtoption1='{{ localize "arm5e.sheet.quickness" }}' data-option2="{{ system.combat.ability }}"
-          data-txtoption2='{{localize "arm5e.sheet.ability"}}' data-option3="{{ system.combat.dfn }}"
-          data-txtoption3='{{localize "arm5e.sheet.defense"}}'> <!--img src="systems/arm5e/assets/dice.png"
+          data-name='{{localize "arm5e.sheet.defense"}}'> <!--img src="systems/arm5e/assets/dice.png"
             style="border: 0px; height: 14px"-->
           {{localize "arm5e.sheet.defense"}}</button>
       </div>
@@ -59,7 +50,8 @@
     <div class="flexrow flex-group-left">
       <div class="flex01">
         <!-- <img src="systems/arm5e/assets/icons/Icon_Hammer.png" class="flex0" style="border: 0px; height: 20px"> -->
-        <button class="arm5e clickable dialog-buttons damage" style="min-width: 100px; padding-left: 0px"><!--i class="icon-Icon_Soak"
+        <button class="arm5e clickable dialog-buttons damage" data-roll="combatDamage"
+          style="min-width: 100px; padding-left: 0px"><!--i class="icon-Icon_Soak"
             style="font-size: 12pt;"></i-->{{localize "arm5e.damage.label"}}</button>
       </div>
       <!-- str + weapon + attack advantage -->

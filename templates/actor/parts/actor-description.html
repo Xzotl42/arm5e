@@ -160,19 +160,24 @@
     </div>
 
     <div class="flex-group-left padding12 backSection margintop18">
+      <div class="flexrow marginbot6">
+        <label for="system.description.{{key}}.label" class="bold">{{localize "arm5e.sheet.yearBorn"}}</label>
+        <span><input type="number" name="system.description.born.value"
+            value="{{numberFormat system.description.born.value decimals=0 }}" {{ui.storyMode.edit}} data-dtype="Number"
+            class="select-on-focus wide" /></span>
+      </div>
       {{#each system.description as |description key|}}
         <div class="flexrow marginbot6">
           {{#with (lookup @root.config.character.description key)}}
             <label for="system.description.{{key}}.label" class="bold">{{localize label}}</label>
+            {{#if number}}
+              <span><input type="number" name="system.description.{{key}}.value" value="{{description.value}}"
+                  data-dtype="Number" class="select-on-focus wide" /></span>
+            {{else}}
+              <span><input type="text" name="system.description.{{key}}.value" value="{{description.value}}"
+                  data-dtype="String" /></span>
+            {{/if}}
           {{/with}}
-          {{#if (eq key "born")}}
-            <span><input type="number" name="system.description.{{key}}.value"
-                value="{{numberFormat description.value decimals=0 }}" {{ui.storyMode.edit}} data-dtype="Number"
-                class="select-on-focus wide" /></span>
-          {{else}}
-            <span><input type="text" name="system.description.{{key}}.value" value="{{description.value}}"
-                data-dtype="String" /></span>
-          {{/if}}
         </div>
       {{/each}}
     </div>

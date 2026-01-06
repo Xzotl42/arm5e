@@ -1,4 +1,4 @@
-import { calculateWound, getLastCombatMessageOfType, log } from "../tools.js";
+import { calculateWound, getDataset, getLastCombatMessageOfType, log } from "../tools.js";
 import { createRoll, stressDie } from "../dice.js";
 import { Arm5eChatMessage } from "./chat-message.js";
 import { _applyImpact, ROLL_PROPERTIES } from "./rollWindow.js";
@@ -102,16 +102,30 @@ export class QuickCombat extends FormApplication {
       Arm5eChatMessage.create(msg.toObject());
     });
     html.find(".damage").click(async (event) => {
-      const lastAttackMessage = getLastCombatMessageOfType("attack");
-      const lastDefenseMessage = getLastCombatMessageOfType("defense");
-      const attackScore = lastAttackMessage?.rollTotal() > 0 ? lastAttackMessage.rollTotal() : 0;
-      const defenseScore = lastDefenseMessage?.rollTotal() > 0 ? lastDefenseMessage.rollTotal() : 0;
-      const advantage = attackScore - defenseScore;
-
-      const msg = await this.object.actor.sheet._onCalculateDamage({ advantage });
+      await computeDamage(this.object.actor);
     });
   }
 }
+
+export async function computeDamage(actor) {
+  const lastAttackMessage = getLastCombatMessageOfType("combatAttack");
+  const lastDefenseMessage = getLastCombatMessageOfType("combatDefense");
+  let attackScore = 0;
+  if (lastAttackMessage) {
+    attackScore = lastAttackMessage.rollTotal() > 0 ? lastAttackMessage.rollTotal() : 0;
+    attackScore += lastAttackMessage?.system.confidenceModifier;
+  }
+
+  let defenseScore = 0;
+  if (lastDefenseMessage) {
+    defenseScore = lastDefenseMessage.rollTotal() > 0 ? lastDefenseMessage.rollTotal() : 0;
+    defenseScore += lastDefenseMessage?.system.confidenceModifier;
+  }
+
+  const advantage = attackScore - defenseScore;
+  await actor.sheet._onCalculateDamage({ advantage, roll: "combatDamage" });
+}
+
 export async function quickCombat(tokenName, actor) {
   if (!actor.isCharacter()) return;
 
