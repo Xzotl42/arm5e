@@ -1,3 +1,23 @@
+## 2.4.1.15, Radislav, Cognizant Wisdom BF2
+
+[IMPORTANT] Known limitation for V12, if text seems greyed out, go in the core settings and change the Preferred Color Scheme to "Light".
+
+### V13 compatibility
+
+- Verified for version 13.351
+
+### Features & changes
+
+### Bug fixes
+
+- Encumbrance was not computed properly
+- Fixed aging rollback error.
+- It is now possible to see the details of a roll even if the Actor was deleted
+- Changing combat preparation in inititive roll dialog displays proper labels
+- Encumbrance is displayed in initiative roll dialog.
+- Pending damage notification is only displayed once, the status is cleared after.
+- Fixed a bunch of formatting oddities in the details section of chat rolls.
+
 ## 2.4.1.14, Radislav, Cognizant Wisdom BF1
 
 [IMPORTANT] Known limitation for V12, if text seems greyed out, go in the core settings and change the Preferred Color Scheme to "Light".

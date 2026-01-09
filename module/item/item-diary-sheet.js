@@ -1747,41 +1747,41 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
           await Promise.all(promises);
           return;
         }
-        let actorUpdate = {
-          "system.states.pendingCrisis": false
+        let sysActorUpdate = {
+          "states.pendingCrisis": false
         };
 
         let effects = this.item.getFlag("arm5e", "effect");
         if (effects.apparent) {
-          actorUpdate["system.apparent"] = { value: actor.system.apparent.value - 1 };
+          sysActorUpdate["apparent"] = { value: actor.system.apparent.value - 1 };
         }
         if (effects.charac) {
-          actorUpdate.system.characteristics = {};
+          sysActorUpdate.characteristics = {};
         }
         for (let [char, stats] of Object.entries(effects.charac)) {
           let newAgingPts = actor.system.characteristics[char].aging - stats.aging;
           let currentCharValue = actor.system.characteristics[char].value;
           if (stats.score) {
             // characteristic was reduced
-            actorUpdate.system.characteristics[char] = {
+            sysActorUpdate.characteristics[char] = {
               value: currentCharValue + 1,
               aging: Math.max(0, Math.abs(currentCharValue + 1) - stats.aging)
             };
           } else {
-            actorUpdate.system.characteristics[char] = {
+            sysActorUpdate.characteristics[char] = {
               value: currentCharValue,
               aging: newAgingPts < 0 ? 0 : newAgingPts
             };
           }
         }
         let newDecrepitude = actor.system.decrepitude.points - effects.decrepitude;
-        actorUpdate.system.decrepitude = { points: newDecrepitude < 0 ? 0 : newDecrepitude };
+        sysActorUpdate.decrepitude = { points: newDecrepitude < 0 ? 0 : newDecrepitude };
         if (this.item.system.dates[0].season == "winter") {
           let newWarping =
             actor.system.warping.points - CONFIG.ARM5E.activities.aging.warping.impact;
-          actorUpdate.system.warping = { points: newWarping < 0 ? 0 : newWarping };
+          sysActorUpdate.warping = { points: newWarping < 0 ? 0 : newWarping };
         }
-        promises.push(this.actor.update(actorUpdate, {}));
+        promises.push(this.actor.update({ system: sysActorUpdate }, {}));
         promises.push(this.actor.deleteEmbeddedDocuments("Item", [this.item.id], {}));
         await Promise.all(promises);
         return;

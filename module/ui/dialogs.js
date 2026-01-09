@@ -296,7 +296,9 @@ export function addCombatListenersDialog(html) {
     }
     field = html[0].querySelector(".init");
     if (field) {
-      field.innerText = `${game.i18n.localize("arm5e.sheet.init")} (${actor.system.combat.init})`;
+      field.innerText = `${game.i18n.localize("arm5e.sheet.initiative")} (${
+        actor.system.combat.init
+      })`;
     }
 
     field = html[0].querySelector(".defense");

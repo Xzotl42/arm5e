@@ -466,9 +466,6 @@ async function getRollFormula(actor) {
       msg = newLine(msg);
       msg += `${game.i18n.localize("arm5e.sheet.initiative")} (${rollInfo.combat.init})`;
       total += rollInfo.combat.init;
-      msg = newLine(msg, "-");
-      msg += `${game.i18n.localize("arm5e.sheet.encumbrance")} (${rollInfo.combat.overload})`;
-      total -= rollInfo.combat.overload;
     } else if (rollInfo.type == "attack") {
       msg = newLine(msg);
       if (rollInfo.combat.exertion) {
@@ -559,7 +556,7 @@ async function getRollFormula(actor) {
         rollInfo.environment.year;
     }
     if (rollInfo.hasGenericField(1)) {
-      msg = newLine(msg);
+      // msg = newLine(msg);
       total += rollInfo.getGenericFieldValue(1);
       msg += rollInfo.getGenericFieldDetails(1);
       if (rollInfo.type == ROLL_PROPERTIES.TWILIGHT_UNDERSTANDING.VAL) {
@@ -570,13 +567,13 @@ async function getRollFormula(actor) {
       }
     }
     if (rollInfo.hasGenericField(2)) {
-      msg = newLine(msg);
-      msg += rollInfo.getGenericFieldDetails(2);
       total += rollInfo.getGenericFieldValue(2);
+      // msg = newLine(msg);
+      msg += rollInfo.getGenericFieldDetails(2);
     }
     if (rollInfo.hasGenericField(3)) {
-      msg = newLine(msg);
       total += rollInfo.getGenericFieldValue(3);
+      // msg = newLine(msg);
       msg += rollInfo.getGenericFieldDetails(3);
       if (rollInfo.type == ROLL_PROPERTIES.TWILIGHT_STRENGTH.VAL) {
         if (rollInfo.twilight.enigma.specApply) {
@@ -587,18 +584,18 @@ async function getRollFormula(actor) {
     }
     if (rollInfo.hasGenericField(4)) {
       total += rollInfo.getGenericFieldValue(4);
-      msg = newLine(msg);
+      // msg = newLine(msg);
       msg += rollInfo.getGenericFieldDetails(4);
     }
     if (rollInfo.hasGenericField(5)) {
       total += rollInfo.getGenericFieldValue(5);
-      msg = newLine(msg);
+      // msg = newLine(msg);
       msg += rollInfo.getGenericFieldDetails(5);
     }
 
     if (rollInfo.hasGenericField(6)) {
       total += rollInfo.getGenericFieldValue(6);
-      msg = newLine(msg);
+      // msg = newLine(msg);
       msg += rollInfo.getGenericFieldDetails(6);
     }
 
@@ -624,9 +621,14 @@ async function getRollFormula(actor) {
       if (actorSystemData.penalties.wounds.total != 0) {
         msg = newLine(msg);
         total += actorSystemData.penalties.wounds.total;
-        msg += "+" + game.i18n.localize("arm5e.sheet.wounds");
+        msg += game.i18n.localize("arm5e.sheet.wounds");
         msg += " (" + actorSystemData.penalties.wounds.total + ")";
       }
+    }
+    if (rollInfo.overload) {
+      msg = newLine(msg, "-");
+      msg += `${game.i18n.localize("arm5e.sheet.encumbrance")} (${rollInfo.overload})`;
+      total -= rollInfo.overload;
     }
 
     for (let optBonus of rollInfo.optionalBonuses) {

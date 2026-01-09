@@ -110,10 +110,8 @@ export class Arm5eChatMessage extends ChatMessage {
     //   return;
     // }
 
-    if (actor === null) {
-      // Actor no longer exists in the world
-      return html;
-    }
+    if (actor !== null) {
+      // Actor still exists in the world
 
     const metadata = html.find(".message-metadata");
     metadata.css("max-width", "fit-content");
@@ -145,6 +143,7 @@ export class Arm5eChatMessage extends ChatMessage {
         actor.sheet.render(true);
       }
     });
+    }
 
     // msgTitle.html(actorFace);
 
@@ -173,6 +172,7 @@ export class Arm5eChatMessage extends ChatMessage {
 
   addActionButtons(html) {
     const btnContainer = document.createElement("div");
+    if (this.actor) {
     btnContainer.classList.add("btn-container");
     const btnArray = document.createElement("div");
     btnArray.classList.add("flexrow");
@@ -187,6 +187,7 @@ export class Arm5eChatMessage extends ChatMessage {
       actionHeader.innerHTML = game.i18n.localize("arm5e.sheet.actions");
       btnContainer.appendChild(actionHeader);
       btnContainer.appendChild(btnArray);
+      }
     }
     return btnContainer;
   }

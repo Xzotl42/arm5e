@@ -72,12 +72,7 @@ export class ArM5eRollInfo {
 
     this.prepareRollFields(dataset);
     if (this.properties.MODIFIERS & ROLL_MODIFIERS.ENCUMBRANCE) {
-      this.setGenericField(
-        game.i18n.localize("arm5e.sheet.encumbrance"),
-        actorSystemData.combat.overload,
-        6,
-        "-"
-      );
+      this.overload = actorSystemData.combat.overload;
     }
 
     this.dialogListeners;
@@ -692,9 +687,13 @@ export class ArM5eRollInfo {
   }
 
   getGenericFieldDetails(idx) {
-    return `${this.generic.operatorOpt[idx - 1]} ${this.getGenericFieldLabel(idx)} (${
+    return `<br/>${this.generic.operatorOpt[idx - 1]} ${this.getGenericFieldLabel(idx)} (${
       this.generic.option[idx - 1]
-    }) <br/>`;
+    })`;
+  }
+
+  isGenericFieldBonus(idx) {
+    return this.generic.operatorOpt(idx - 1);
   }
 
   prepareRollFields(dataset) {
@@ -734,6 +733,7 @@ export class ArM5eRollInfo {
   reset() {
     this.mode = 0;
     this.difficulty = 0;
+    this.overload = 0;
     this.rootMessageUuid = null;
     this.part = "";
     this.magic = {
