@@ -740,7 +740,7 @@ export class ArM5eActor extends Actor {
           item.system.equipped = true;
         }
         prep.itemList = items.join(", ");
-        prep.overload = ArM5eActor.getArtScore(system.combat.load);
+        prep.overload = ArM5eActor.getArtScore(prep.load);
         system.combat = prep;
       }
     }

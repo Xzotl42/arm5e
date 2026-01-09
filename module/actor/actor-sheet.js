@@ -2120,6 +2120,7 @@ export class ArM5eActorSheet extends ActorSheet {
       ui.notifications.warn(game.i18n.localize("arm5e.notification.damagePending"), {
         permanent: true
       });
+      await this.actor.update({ "system.states.pendingDamage": false });
     }
 
     const rollProperties = getRollTypeProperties(dataset.roll);
