@@ -12,7 +12,7 @@ import {
 import { damageRoll, exertSelf, soakRoll } from "./combat.js";
 import { MagicalEffectSchema, SpellSchema } from "../schemas/magicSchemas.js";
 import { log } from "../tools.js";
-
+const renderTemplate = foundry.applications.handlebars.renderTemplate;
 // below is a bitmap
 const ROLL_MODES = {
   NONE: 0, // can be used with dataset to customize dynamically

@@ -48,13 +48,13 @@ export class MagicChatSchema extends RollChatSchema {
   }
 
   getImpactMessage() {
-    let impactMessage = super.getImpactMessage();
+    const res = super.getImpactMessage();
     if (this.roll.botchCheck && this.roll.botches > 0) {
-      impactMessage += `<br/>${game.i18n.format("arm5e.messages.die.warpGain", {
+      res.innerHTML += `<br/>${game.i18n.format("arm5e.messages.die.warpGain", {
         num: this.roll.botches
       })} `;
     }
-    return impactMessage;
+    return res;
   }
 
   enrichMessageData(actor) {
@@ -97,7 +97,7 @@ export class MagicChatSchema extends RollChatSchema {
 
   formatTargets(html) {
     const rollType = this.roll.type;
-    const contentDiv = html[0].getElementsByClassName("message-content")[0];
+    const contentDiv = html.getElementsByClassName("message-content")[0];
 
     for (let target of this.magic.targets) {
       let res = document.createElement("div");

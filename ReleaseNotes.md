@@ -1,3 +1,19 @@
+## 2.5.0.0 Stentorius
+
+### Compatibility
+
+- Foundry V13+
+- Removal of deprecation warnings.
+
+### Application V2 migration
+
+- Astrolabium - done
+- ChatMessage - removed jquery usage
+
+### Features & changes
+
+### Bug fixes
+
 ## 2.4.1.14, Radislav, Cognizant Wisdom BF1
 
 [IMPORTANT] Known limitation for V12, if text seems greyed out, go in the core settings and change the Preferred Color Scheme to "Light".

@@ -1,26 +1,43 @@
-<form class="{{cssClass}} astrolab astrolab-sheet" autocomplete="off">
-  <div class="astrolab header-background" style="width:600px; margin: 0px;">
+<section class="astrolab astrolab-sheet">
+  <div class="header-background" style="width:600px; margin: 0px;">
     <img src="systems/arm5e/assets/astrolab/Astrolab_Header.png" />
   </div>
   <h1 class="astrolab-title width: 100%;" text-align="center">Astrolabium</h1>
-  <label class="smallTitle flexrow flex-center"
-    style="font-size: 20pt;">{{localize (lookup (lookup seasons curSeason) "label") }}
+  <label class="smallTitle flexrow flex-center" style="font-size: 20pt;">{{localize
+      (lookup (lookup seasons curSeason) "label")
+    }}
     {{curYear}}</label>
   <div class="sheet-body backSection" style="height:228px; margin-left: 32px; margin-right: 32px;">
     <div class="flexcol" style="margin:10px">
       <div class="resource-content flexrow">
         <div class="resource-content flexrow flex-center flex-between margintop6">
-          <label for="season" class="smallTitle" style="font-size:16pt">{{localize "arm5e.sheet.season"}}</label>
-          <select name="season" {{dateChange}} data-type="String" class="change-season flex0 seasons"
-            style="font-size: 14pt;">
+          <label for="season" class="smallTitle" style="font-size:16pt">{{localize
+              "arm5e.sheet.season"
+            }}</label>
+          <select
+            name="season"
+            {{dateChange}}
+            data-type="String"
+            class="change-season flex0 seasons"
+            style="font-size: 14pt;"
+          >
             {{selectOptions seasons selected=season localize=true labelAttr="label"}}
           </select>
         </div>
         <div class="resource-content flexrow flex-center flex-between margintop6">
-          <label for="year" class="smallTitle" style="font-size:16pt">{{localize "arm5e.sheet.year"}}</label>
-          <input type="number" name="year" {{dateChange}} value="{{year}}" data-dtype="Number"
-            class="astrolab change-year select-on-focus" style="
-        font-size: 18pt;" />
+          <label for="year" class="smallTitle" style="font-size:16pt">{{localize
+              "arm5e.sheet.year"
+            }}</label>
+          <input
+            type="number"
+            name="year"
+            {{dateChange}}
+            value="{{year}}"
+            data-dtype="Number"
+            class="astrolab change-year select-on-focus"
+            style="
+        font-size: 18pt;"
+          />
 
         </div>
       </div>
@@ -31,7 +48,9 @@
       </div> -->
       <div class="flexrow">
         <div class="flex0">
-          <a class="group-schedule flex0" style="width:36px"><i class="icon-Tool_AstrolabBig"></i></a>
+          <a class="group-schedule flex0" style="width:36px"><i
+              class="icon-Tool_AstrolabBig"
+            ></i></a>
         </div>
         <div class="flexrow" style=" margin:10px">
           {{#if (eq dateChange "disabled")}}
@@ -51,11 +70,16 @@
     </div>
     <div>
       <label>{{localize "arm5e.astrolab.trackResources"}}</label>
-      <input class="trackRes" type="checkbox" name="trackRes" data-dtype="Boolean" {{checked trackRes}}>
+      <input
+        class="trackRes"
+        type="checkbox"
+        name="trackRes"
+        data-dtype="Boolean"
+        {{checked trackRes}}
+      />
     </div>
   </div>
-
   <div class="astrolab footer-background" style="width:600px; margin: 0px; height: 75px;">
     <img src="systems/arm5e/assets/astrolab/Astrolab_Footer.png" />
   </div>
-</form>
+</section>

@@ -89,8 +89,10 @@ export class QuickCombat extends FormApplication {
 
   activateListeners(html) {
     super.activateListeners(html);
-    html.find(".rollable").click(async (event) => await this.object.actor.sheet.roll(event));
-    html.find(".soak-damage").click(async (event) => {
+    html
+      .querySelector(".rollable")
+      .addEventListener("click", async (event) => await this.object.actor.sheet.roll(event));
+    html.querySelector(".soak-damage").addEventListener("click", async (event) => {
       const msg = await this.object.actor.sheet._onSoakDamage(getDataset(event));
       if (msg == null) return;
       if (msg.system.impact.woundGravity) {
@@ -101,7 +103,7 @@ export class QuickCombat extends FormApplication {
       }
       Arm5eChatMessage.create(msg.toObject());
     });
-    html.find(".damage").click(async (event) => {
+    html.querySelector(".damage").addEventListener("click", async (event) => {
       await computeDamage(this.object.actor);
     });
   }
@@ -185,25 +187,25 @@ export class QuickVitals extends FormApplication {
 
   activateListeners(html) {
     super.activateListeners(html);
-    html.find(".rest").click(async () => {
+    html.querySelector(".rest").addEventListener("click", async () => {
       await this.object.actor.rest();
       this.render();
     });
-    html.find(".addFatigue").click(async () => {
+    html.querySelector(".addFatigue").addEventListener("click", async () => {
       await this.object.actor.loseFatigueLevel(1, false);
       this.render();
     });
-    html.find(".removeFatigue").click(async () => {
+    html.querySelector(".removeFatigue").addEventListener("click", async () => {
       await this.object.actor.recoverFatigueLevel(1);
       this.render();
     });
-    html.find(".addWound").click(async (event) => {
+    html.querySelector(".addWound").addEventListener("click", async (event) => {
       event.preventDefault();
       const dataset = event.currentTarget.dataset;
       await this.object.actor.changeWound(1, dataset.type);
       this.render();
     });
-    html.find(".recovery").click(async (event) => {
+    html.querySelector(".recovery").addEventListener("click", async (event) => {
       event.preventDefault();
       const dataset = event.currentTarget.dataset;
       await this.object.actor.sheet.render(true);

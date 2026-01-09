@@ -110,7 +110,7 @@
   --z-index-tooltip: 9999;
 }
 
-.theme-dark,
+/* .theme-dark,
 .application.arm5e.themed.theme-dark {
   --arm5e-c-dark: #c9c7b8;
   --arm5e-c-faint: #191813;
@@ -122,7 +122,7 @@
   --arm5e-c-item-header-bg: #28232f;
   --arm5e-c-item-alternating-bg: rgba(255, 255, 255, 0.05);
   --color-text-dark-primary: #b5b3a4;
-}
+} */
 
 /* Base typography & grouping to avoid repeated font-family declarations */
 .arm5e,
@@ -195,7 +195,7 @@ button.create-compendium,
 .arm5e .sanatorium.button,
 .arm5e .astrolab.button {
   font-family: var(--font-header);
-  /* display: flex; */
+  display: flex;
   align-items: center;
   gap: 4px;
 }
@@ -1785,6 +1785,7 @@ p,
   text-align: center;
   font-family: var(--font-header);
   font-size: 32pt;
+  font-weight: 400;
   height: 35px;
   border: none;
   color: #2d3b51;

@@ -69,7 +69,10 @@ import { getRefCompendium } from "../tools/compendia.js";
 import { getConfirmation, textInput } from "../ui/dialogs.js";
 import { Arm5eChatMessage } from "../helpers/chat-message.js";
 
-export class ArM5eActorSheet extends ActorSheet {
+const renderTemplate = foundry.applications.handlebars.renderTemplate;
+const TextEditor = foundry.applications.ux.TextEditor;
+
+export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
   constructor(object, options) {
     super(object, options);
 
@@ -2120,6 +2123,7 @@ export class ArM5eActorSheet extends ActorSheet {
       ui.notifications.warn(game.i18n.localize("arm5e.notification.damagePending"), {
         permanent: true
       });
+      await this.actor.update({ "system.states.pendingDamage": false });
     }
 
     const rollProperties = getRollTypeProperties(dataset.roll);

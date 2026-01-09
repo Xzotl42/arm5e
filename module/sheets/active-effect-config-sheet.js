@@ -8,7 +8,7 @@ import { ACTIVE_EFFECTS_TYPES } from "../constants/activeEffectsTypes.js";
  * Extend the base ActiveEffectConfig sheet by limiting what can be edited
  * @extends {ActiveEffectConfig}
  */
-export class ArM5eActiveEffectConfigV2 extends ActiveEffectConfig {
+export class ArM5eActiveEffectConfig extends foundry.applications.sheets.ActiveEffectConfig {
   static DEFAULT_OPTIONS = {
     classes: ["arm5eV2", "active-effect-sheet"],
     // classes: ["arm5e", "arm5eActiveEffect", "active-effect-sheet"],
@@ -18,12 +18,12 @@ export class ArM5eActiveEffectConfigV2 extends ActiveEffectConfig {
     },
     position: { width: 600 },
     form: {
-      // handler: ArM5eActiveEffectConfigV2.handleSubmit,
+      // handler: ArM5eActiveEffectConfig.handleSubmit,
       submitOnChange: true,
       closeOnSubmit: false
     },
     actions: {
-      add: ArM5eActiveEffectConfigV2.addEffect
+      add: ArM5eActiveEffectConfig.addEffect
     }
   };
 

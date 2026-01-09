@@ -165,12 +165,7 @@ export class LabExperimentation extends FormApplication {
           reportBody += await this._rollForExperimentation(risk, aura, discovery);
         }
       } else {
-        let tableRef;
-        if (CONFIG.ISV13) {
-          tableRef = res.find((e) => e.type == "document");
-        } else {
-          tableRef = res.find((e) => e.type == "pack");
-        }
+        let tableRef = res.find((e) => e.type == "document");
         const subRt = docs.find((e) => tableRef.documentId === e._id);
         const subTitle = res.find((e) => e.type == "text").text;
         reportBody += this._getTableResult("extraordinaryResults", subTitle);

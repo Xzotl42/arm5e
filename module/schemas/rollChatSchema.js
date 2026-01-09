@@ -96,13 +96,14 @@ export class RollChatSchema extends BasicChatSchema {
 
   addListeners(html) {
     super.addListeners(html);
-    if (this.parent.originatorOrGM) {
-      const itemImg = html.find(".item-image");
+    if (this.parent.actor && this.parent.originatorOrGM) {
+      const itemImg = html.querySelector(".item-image");
       if (itemImg) {
-        itemImg.click(async (ev) => {
-          const img = $(ev.currentTarget.children[0]);
-          const uuid = img.data("uuid");
-          const item = await fromUuid(uuid);
+        itemImg.addEventListener("click", async (ev) => {
+          // const img = $(ev.currentTarget.children[0]);
+          // const uuid = img.data("uuid");
+
+          const item = await fromUuid(ev.currentTarget.children[0].dataset.uuid);
           if (item) {
             item.sheet.render(true);
           }
@@ -264,7 +265,11 @@ export class RollChatSchema extends BasicChatSchema {
   addActionButtons(btnContainer) {
     // confidence
     // confidence has been used already => no button
-    if (this.parent.actor.isOwner && this.confPrompt && this.parent.actor.canUseConfidencePoint()) {
+    if (
+      this.parent.actor?.isOwner &&
+      this.confPrompt &&
+      this.parent.actor.canUseConfidencePoint()
+    ) {
       const useConfButton = createChatButton(
         this.parent,
         this.parent.actor,

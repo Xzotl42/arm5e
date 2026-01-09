@@ -1,6 +1,7 @@
 import { stressDie } from "../dice.js";
 import { log, sleep } from "../tools.js";
 import { getShiftedDate, seasonsDelta } from "./time.js";
+const TextEditor = foundry.applications.ux.TextEditor;
 
 export class Sanatorium extends FormApplication {
   constructor(patient, data, options) {

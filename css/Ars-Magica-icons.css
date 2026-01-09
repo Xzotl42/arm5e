@@ -27,7 +27,6 @@
   content: "\0041";
   font-size: 19pt;
   vertical-align: middle;
-  margin-bottom: 3px;
 }
 .icon-Icon_Details:before {
   content: "\0042";
@@ -56,8 +55,6 @@
 }
 .icon-Tool_Auras:before {
   content: "\0047";
-  font-size: 19pt;
-  vertical-align: middle;
 }
 .icon-Icon_Auras2:before {
   content: "\0048";
@@ -108,20 +105,16 @@
 .icon-Tool_Scriptorium:before {
   content: "\0057";
   font-size: 19pt;
-  vertical-align: middle;
 }
 .icon-Tool_Journals:before {
   content: "\0057";
-  vertical-align: middle;
 }
 
 .icon-Tool_Journals_sidebar:before {
   content: "\0057";
-  vertical-align: middle;
 }
 .icon-Tool_Delete_Perdo2:before {
   content: "\0051";
-  font-size: 19pt;
   vertical-align: middle;
 }
 .icon-Icon_Soak:before {
@@ -143,9 +136,6 @@
 }
 .icon-Tool_Astrolab:before {
   content: "\0053";
-  font-size: 19pt;
-  vertical-align: middle;
-  margin-bottom: 3px;
 }
 .icon-Tool_AstrolabBig:before {
   content: "\0053";

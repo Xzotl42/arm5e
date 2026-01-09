@@ -4,7 +4,7 @@
  * @return {Promise}
  */
 export const ArM5ePreloadHandlebarsTemplates = async function () {
-  return loadTemplates([
+  return foundry.applications.handlebars.loadTemplates([
     // Actor Sheet Partials
     "systems/arm5e/templates/actor/parts/actor-characteristics.html",
     "systems/arm5e/templates/actor/parts/actor-fatigue.html",
@@ -165,6 +165,8 @@ export const ArM5ePreloadHandlebarsTemplates = async function () {
     "systems/arm5e/templates/generic/parts/scriptorium-reading.html",
     "systems/arm5e/templates/generic/parts/scriptorium-writing.html",
     "systems/arm5e/templates/generic/parts/scriptorium-copying.html",
-    "systems/arm5e/templates/generic/parts/list-item.hbs"
+    "systems/arm5e/templates/generic/parts/list-item.hbs",
+    // Apps partials
+    "systems/arm5e/templates/generic/astrolab.hbs"
   ]);
 };

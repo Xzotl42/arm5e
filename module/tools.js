@@ -825,9 +825,19 @@ export function putInFoldableLinkWithAnimation(
   if (startHidden) {
     hidden = "hide";
   }
-  return `<div class="arm5e ${classes} toggleCollapse"><p style="text-align:center">${game.i18n.localize(
-    content
-  )}</p></div><div class="${hidden} details">${details}</div>`;
+  const res = document.createElement("div");
+  const div = document.createElement("div");
+  div.classList.add("arm5e", "clickable", "toggleCollapse");
+  const p = document.createElement("p");
+  p.style["text-align"] = "center";
+  p.innerText = game.i18n.localize(content);
+  div.appendChild(p);
+  const div2 = document.createElement("div");
+  div2.classList.add(hidden, "details");
+  div2.innerHTML = details;
+  res.appendChild(div);
+  res.appendChild(div2);
+  return res.innerHTML;
 }
 
 /**

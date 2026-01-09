@@ -69,7 +69,7 @@ export class CombatAttackChatSchema extends CombatChatSchema {
   }
 
   formatTargets(html) {
-    const contentDiv = html[0]; //.querySelector("li.chat-message");
+    const contentDiv = html; //.querySelector("li.chat-message");
     for (let def of this.combat.defenders) {
       const defender = fromUuidSync(def.uuid);
       if (defender) {
@@ -502,7 +502,7 @@ export class CombatDamageChatSchema extends CombatChatSchema {
 
   formatTargets(html) {
     if (this.parent.rolls.length == 0) return html;
-    const contentDiv = html[0].querySelector(".message-content");
+    const contentDiv = html.querySelector(".message-content");
 
     const div = document.createElement("div");
     const title = document.createElement("h2");
@@ -557,7 +557,7 @@ export class CombatSoakChatSchema extends CombatChatSchema {
   }
 
   formatTargets(html) {
-    const diceTotal = html[0].getElementsByClassName("dice-total")[0];
+    const diceTotal = html.getElementsByClassName("dice-total")[0];
     diceTotal.innerHTML =
       this.impact.woundGravity !== 0
         ? game.i18n.format("arm5e.messages.woundResult", {
@@ -586,28 +586,3 @@ export class CombatSoakChatSchema extends CombatChatSchema {
     this.parent.updateSource(updateData);
   }
 }
-
-// formatTargets(html) {
-
-//   } else {
-//     if (this.parent.rolls.length < 2) return html;
-//     let ii = 0;
-//     const contentDiv = html[0].getElementsByClassName("message-content")[0];
-//     for (let diceRoll of contentDiv.getElementsByClassName("dice-roll")) {
-//       if (ii == 0) {
-//         // first is attack roll
-//         ii++;
-//         continue;
-//       }
-//       const div = document.createElement("div");
-//       const title = document.createElement("h3");
-//       title.classList.add("ars-chat-title");
-//       title.innerHTML = game.i18n.format("arm5e.sheet.soak");
-//       div.append(title);
-//       this.obfuscate(diceRoll, this.parent.rolls[ii].actor, ii);
-//       diceRoll.insertAdjacentElement("beforebegin", div);
-//       ii++;
-//     }
-//   }
-//   return html;
-// }

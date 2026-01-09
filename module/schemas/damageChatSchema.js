@@ -29,7 +29,6 @@ export class DamageChatSchema extends RollChatSchema {
           details: new fields.StringField({ required: false, blank: true, initial: "" }),
           natRes: basicIntegerField(0, -9999),
           formRes: basicIntegerField(0, 0)
-          // details: new fields.StringField({ required: false, blank: true, initial: "" })
         })
       })
     };
@@ -98,7 +97,7 @@ export class DamageChatSchema extends RollChatSchema {
   formatTargets(html) {
     if (this.parent.rolls.length < 2) return html;
     let ii = 0;
-    const contentDiv = html[0].querySelector(".message-content");
+    const contentDiv = html.querySelector(".message-content");
     for (let diceRoll of contentDiv.getElementsByClassName("dice-roll")) {
       if (ii == 0) {
         // first is attack roll
@@ -106,7 +105,7 @@ export class DamageChatSchema extends RollChatSchema {
         continue;
       }
       const div = document.createElement("div");
-      const title = document.createElement("h3");
+      const title = document.createElement("h2");
       title.classList.add("ars-chat-title");
       title.innerHTML = game.i18n.format("arm5e.messages.soak");
       div.append(title);

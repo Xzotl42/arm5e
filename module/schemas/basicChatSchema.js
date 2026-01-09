@@ -1,16 +1,3 @@
-import { getWoundStr } from "../config.js";
-import { createRoll } from "../dice.js";
-import { fatigueCost } from "../helpers/magic.js";
-import { ROLL_PROPERTIES } from "../helpers/rollWindow.js";
-import { SMSG_FIELDS, SMSG_TYPES } from "../helpers/socket-messages.js";
-import { ArsRoll } from "../helpers/stressdie.js";
-import {
-  getDataset,
-  getLastCombatMessageOfType,
-  log,
-  putInFoldableLinkWithAnimation
-} from "../tools.js";
-import { basicIntegerField, boolOption, hermeticForm } from "./commonSchemas.js";
 const fields = foundry.data.fields;
 export class BasicChatSchema extends foundry.abstract.TypeDataModel {
   static defineSchema() {
@@ -45,9 +32,12 @@ export class BasicChatSchema extends foundry.abstract.TypeDataModel {
   }
 
   addListeners(html) {
-    html.find(".clickable").click((ev) => {
-      $(ev.currentTarget).next().toggleClass("hide");
-    });
+    const details = html.querySelector(".clickable");
+    if (details) {
+      details.addEventListener("click", (ev) => {
+        ev.currentTarget.nextElementSibling.classList.toggle("hide");
+      });
+    }
   }
 
   getFlavor() {

@@ -8,11 +8,14 @@ import { effectToLabText } from "./item-converter.js";
 import { Sanatorium } from "../tools/sanatorium.js";
 import { getConfirmation } from "../ui/dialogs.js";
 import { FLAVORS } from "../constants/ui.js";
+
+const TextEditor = foundry.applications.ux.TextEditor;
+
 /**
  * Extend the basic ItemSheet with some very simple modifications
  * @extends {ItemSheet}
  */
-export class ArM5eItemSheet extends ItemSheet {
+export class ArM5eItemSheet extends foundry.appv1.sheets.ItemSheet {
   /** @override */
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {

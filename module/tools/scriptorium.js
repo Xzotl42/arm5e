@@ -188,7 +188,7 @@ export class Scriptorium extends FormApplication {
   }
 
   async _onDrop(event) {
-    const dropData = TextEditor.getDragEventData(event);
+    const dropData = foundry.applications.ux.TextEditor.getDragEventData(event);
     if (dropData.type == "Item") {
       // If (this.item.system.activity === "teaching" || this.item.system.activity === "training") {
 

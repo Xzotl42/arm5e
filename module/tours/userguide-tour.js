@@ -1,7 +1,7 @@
 /**
  * A Tour subclass for finding the user guide
  */
-export class UserguideTour extends Tour {
+export class UserguideTour extends foundry.nue.Tour {
   /** @override */
   async start() {
     game.togglePause(false);

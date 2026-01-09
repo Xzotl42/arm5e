@@ -15,6 +15,7 @@ import {
   VisStudy
 } from "../seasonal-activities/progressActivity.js";
 import { LabActivity } from "../seasonal-activities/labActivity.js";
+const renderTemplate = foundry.applications.handlebars.renderTemplate;
 
 export function ActivityFactory(type, owner, diaryData) {
   let ownerUuid = owner ? owner.uuid : null;

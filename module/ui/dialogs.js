@@ -1,7 +1,7 @@
 import { PickRequisites } from "../helpers/magic.js";
 import { ArM5eItem } from "../item/item.js";
 import { getDataset } from "../tools.js";
-
+const renderTemplate = foundry.applications.handlebars.renderTemplate;
 export async function getConfirmation(
   title,
   question,
@@ -296,7 +296,9 @@ export function addCombatListenersDialog(html) {
     }
     field = html[0].querySelector(".init");
     if (field) {
-      field.innerText = `${game.i18n.localize("arm5e.sheet.init")} (${actor.system.combat.init})`;
+      field.innerText = `${game.i18n.localize("arm5e.sheet.initiative")} (${
+        actor.system.combat.init
+      })`;
     }
 
     field = html[0].querySelector(".defense");

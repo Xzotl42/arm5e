@@ -16,9 +16,8 @@ import { ArM5eItemVisSheet } from "./item/item-vis-sheet.js";
 import ArM5eActiveEffect from "./helpers/active-effects.js";
 import { prepareDatasetByTypeOfItem } from "./helpers/hotbar-helpers.js";
 import { ArM5ePreloadHandlebarsTemplates } from "./templates.js";
-import { ArM5eActiveEffectConfig } from "./helpers/active-effect-config.sheet.js";
-import { ArM5eActiveEffectConfigV2 } from "./sheets/active-effect-config-sheet_V2.js";
-
+import { ArM5eActiveEffectConfig } from "./sheets/active-effect-config-sheet.js";
+import { Astrolabium } from "./apps/astrolabium.js";
 // Experiment
 import { ArsLayer, addArsButtons } from "./ui/ars-layer.js";
 import { customizePause } from "./ui/ars-pause.js";
@@ -66,7 +65,7 @@ import { PowerSchema } from "./schemas/powerSchemas.js";
 import { BasicChatSchema } from "./schemas/basicChatSchema.js";
 import { Arm5eChatMessage } from "./helpers/chat-message.js";
 import { addActiveEffectsDefinitions } from "./constants/activeEffectsTypes.js";
-import { Astrolab } from "./tools/astrolab.js";
+// import { Astrolab } from "./tools/astrolab.js";
 import { ArsApps } from "./tools/apps.js";
 import { LabTextSchema } from "./schemas/labTextSchema.js";
 import { RollChatSchema } from "./schemas/rollChatSchema.js";
@@ -100,7 +99,6 @@ Hooks.once("init", async function () {
     migrateCompendium
   };
 
-  CONFIG.ISV13 = game.release.generation == 13;
   // Add system metadata
   CONFIG.ARM5E = ARM5E;
   CONFIG.ARM5E.ItemDataModels = CONFIG.Item.dataModels;
@@ -129,17 +127,10 @@ Hooks.once("init", async function () {
   };
 
   // Adding ars layer
-  if (CONFIG.ISV13) {
-    CONFIG.Canvas.layers.arsmagica = {
-      layerClass: ArsLayer,
-      group: "interface"
-    };
-  } else {
-    CONFIG.Canvas.layers.arsmagica = {
-      layerClass: ArsLayer,
-      group: "primary"
-    };
-  }
+  CONFIG.Canvas.layers.arsmagica = {
+    layerClass: ArsLayer,
+    group: "interface"
+  };
 
   // Combatant.prototype.getInitiativeRoll = function (formula) {
 
@@ -160,9 +151,7 @@ Hooks.once("init", async function () {
   CONFIG.Item.sidebarIcon = "icon-Icon_magic-chest";
   CONFIG.JournalEntry.sidebarIcon = "icon-Tool_Journals_sidebar";
 
-  if (CONFIG.ISV13) {
-    customizePause();
-  }
+  customizePause();
   CONFIG.ARM5E_DEFAULT_ICONS = ARM5E_DEFAULT_ICONS[game.settings.get("arm5e", "defaultIconStyle")];
   CONFIG.INHABITANTS_DEFAULT_ICONS =
     INHABITANTS_DEFAULT_ICONS[game.settings.get("arm5e", "defaultIconStyle")];
@@ -267,7 +256,7 @@ Hooks.once("ready", async function () {
     seasons: CONFIG.ARM5E.seasons,
     ...game.settings.get("arm5e", "currentDate")
   };
-  ui.astrolab = new Astrolab(formData, {});
+  ui.astrolabium = new Astrolabium(formData, {});
 
   // add generated active effects based on CONFIG
 
@@ -291,12 +280,6 @@ Hooks.once("ready", async function () {
         }
       );
     }
-  }
-
-  if (game.release.generation == 13) {
-    ui.notifications.info(game.i18n.localize("arm5e.system.V13Disclaimer"), {
-      permanent: false
-    });
   }
 
   // Wait to register hotbar drop hook on ready so that modules could register earlier if they want to
@@ -478,7 +461,7 @@ async function createArM5eMacro(data, slot) {
       name: `${game.i18n.localize("Display")} ${doc.name}`,
       type: CONST.MACRO_TYPES.SCRIPT,
       img: doc.img,
-      command: `await Hotbar.toggleDocumentSheet("${doc.uuid}");`
+      command: `await foundry.applications.ui.Hotbar.toggleDocumentSheet("${doc.uuid}");`
     });
     await game.user.assignHotbarMacro(macro, slot);
     return true;
@@ -686,308 +669,156 @@ function setDatamodels() {
  */
 function registerSheets() {
   try {
-    if (CONFIG.ISV13) {
-      foundry.applications.apps.DocumentSheetConfig.unregisterSheet(
-        Actor,
-        "core",
-        foundry.appv1.sheets.ActorSheet
-      );
+    foundry.applications.apps.DocumentSheetConfig.unregisterSheet(
+      Actor,
+      "core",
+      foundry.appv1.sheets.ActorSheet
+    );
 
-      // ["player","npc","laboratoy","covenant"],
-      foundry.applications.apps.DocumentSheetConfig.registerSheet(
-        Actor,
-        "arm5ePC",
-        ArM5ePCActorSheet,
-        {
-          types: ["player"],
-          makeDefault: true,
-          label: "arm5e.sheet.player"
-        }
-      );
-      foundry.applications.apps.DocumentSheetConfig.registerSheet(
-        Actor,
-        "arm5eNPC",
-        ArM5eNPCActorSheet,
-        {
-          types: ["npc"],
-          makeDefault: true,
-          label: "arm5e.sheet.npc"
-        }
-      );
-      foundry.applications.apps.DocumentSheetConfig.registerSheet(
-        Actor,
-        "arm5eBeast",
-        ArM5eBeastActorSheet,
-        {
-          types: ["beast"],
-          makeDefault: true,
-          label: "arm5e.sheet.beast"
-        }
-      );
-
-      foundry.applications.apps.DocumentSheetConfig.registerSheet(
-        Actor,
-        "arm5eLaboratory",
-        ArM5eLaboratoryActorSheet,
-        {
-          types: ["laboratory"],
-          makeDefault: true,
-          label: "arm5e.sheet.laboratory"
-        }
-      );
-      foundry.applications.apps.DocumentSheetConfig.registerSheet(
-        Actor,
-        "arm5eCovenant",
-        ArM5eCovenantActorSheet,
-        {
-          types: ["covenant"],
-          makeDefault: true,
-          label: "arm5e.sheet.covenant"
-        }
-      );
-
-      foundry.applications.apps.DocumentSheetConfig.registerSheet(
-        Actor,
-        "arm5eMagicCodex",
-        ArM5eMagicCodexSheet,
-        {
-          types: ["magicCodex"],
-          makeDefault: true,
-          label: "arm5e.sheet.magic-codex"
-        }
-      );
-
-      // Handlebars.registerHelper("arraySize", function (data) {
-      //   return data.length;
-      // });
-
-      // let astrolabData = game.
-      foundry.applications.apps.DocumentSheetConfig.unregisterSheet(
-        Item,
-        "core",
-        foundry.appv1.sheets.ItemSheet
-      );
-
-      foundry.applications.apps.DocumentSheetConfig.registerSheet(Item, "arm5e", ArM5eSmallSheet, {
-        types: ["wound"],
-        makeDefault: true
-      });
-
-      foundry.applications.apps.DocumentSheetConfig.registerSheet(Item, "arm5e", ArM5eItemSheet, {
-        types: [
-          "art",
-          "weapon",
-          "armor",
-          "item",
-          "virtue",
-          "flaw",
-          "quality",
-          "inferiority",
-          "ability",
-          "abilityFamiliar",
-          // "might",
-          "powerFamiliar",
-          // "mightFamiliar",
-          "speciality",
-          "distinctive",
-          "sanctumRoom",
-          "reputation",
-          // "inhabitant",
-          "habitantMagi", // Deprecated
-          "habitantCompanion", // Deprecated
-          "habitantSpecialists", // Deprecated
-          "habitantHabitants", // Deprecated
-          "habitantHorses", // Deprecated
-          "habitantLivestock", // Deprecated
-          "possessionsCovenant",
-          "visSourcesCovenant",
-          "visStockCovenant",
-          "calendarCovenant",
-          "incomingSource",
-          "labCovenant",
-          "personalityTrait"
-        ],
-        makeDefault: true
-      });
-      foundry.applications.apps.DocumentSheetConfig.registerSheet(
-        Item,
-        "arm5e",
-        ArM5eItemVisSheet,
-        {
-          types: ["vis"],
-          makeDefault: true
-        }
-      );
-      foundry.applications.apps.DocumentSheetConfig.registerSheet(Item, "arm5e", ArM5eBookSheet, {
-        types: ["book"],
-        makeDefault: true
-      });
-
-      foundry.applications.apps.DocumentSheetConfig.registerSheet(
-        Item,
-        "arm5e",
-        ArM5eItemDiarySheet,
-        {
-          types: ["diaryEntry"],
-          makeDefault: true
-        }
-      );
-      foundry.applications.apps.DocumentSheetConfig.registerSheet(
-        Item,
-        "arm5e",
-        ArM5eCovenantInhabitantSheet,
-        {
-          types: ["inhabitant"],
-          makeDefault: true
-        }
-      );
-
-      foundry.applications.apps.DocumentSheetConfig.registerSheet(
-        Item,
-        "arm5e",
-        ArM5eItemMagicSheet,
-        {
-          types: [
-            "magicalEffect",
-            "enchantment",
-            "spell",
-            "baseEffect",
-            "laboratoryText",
-            "magicItem",
-            "power"
-          ],
-          makeDefault: true
-        }
-      );
-
-      foundry.applications.apps.DocumentSheetConfig.registerSheet(
-        Item,
-        "arm5e",
-        ArM5eSupernaturalEffectSheet,
-        {
-          types: ["supernaturalEffect"],
-          makeDefault: true
-        }
-      );
-
-      // Items.registerSheet("arm5e", ArM5eItemSheetNoDesc, { types: ["vis"] });
-
-      foundry.applications.apps.DocumentSheetConfig.unregisterSheet(
-        ActiveEffect,
-        "core",
-        foundry.applications.sheets.ActiveEffectConfig
-      );
-
-      foundry.applications.apps.DocumentSheetConfig.registerSheet(
-        ActiveEffect,
-        "arm5e",
-        ArM5eActiveEffectConfigV2
-      );
-    } else {
-      // V12
-      Actors.unregisterSheet("core", ActorSheet);
-
-      // ["player","npc","laboratoy","covenant"],
-      Actors.registerSheet("arm5ePC", ArM5ePCActorSheet, {
+    // ["player","npc","laboratoy","covenant"],
+    foundry.applications.apps.DocumentSheetConfig.registerSheet(
+      Actor,
+      "arm5ePC",
+      ArM5ePCActorSheet,
+      {
         types: ["player"],
         makeDefault: true,
         label: "arm5e.sheet.player"
-      });
-      Actors.registerSheet("arm5eNPC", ArM5eNPCActorSheet, {
+      }
+    );
+    foundry.applications.apps.DocumentSheetConfig.registerSheet(
+      Actor,
+      "arm5eNPC",
+      ArM5eNPCActorSheet,
+      {
         types: ["npc"],
         makeDefault: true,
         label: "arm5e.sheet.npc"
-      });
-      Actors.registerSheet("arm5eBeast", ArM5eBeastActorSheet, {
+      }
+    );
+    foundry.applications.apps.DocumentSheetConfig.registerSheet(
+      Actor,
+      "arm5eBeast",
+      ArM5eBeastActorSheet,
+      {
         types: ["beast"],
         makeDefault: true,
         label: "arm5e.sheet.beast"
-      });
+      }
+    );
 
-      Actors.registerSheet("arm5eLaboratory", ArM5eLaboratoryActorSheet, {
+    foundry.applications.apps.DocumentSheetConfig.registerSheet(
+      Actor,
+      "arm5eLaboratory",
+      ArM5eLaboratoryActorSheet,
+      {
         types: ["laboratory"],
         makeDefault: true,
         label: "arm5e.sheet.laboratory"
-      });
-      Actors.registerSheet("arm5eCovenant", ArM5eCovenantActorSheet, {
+      }
+    );
+    foundry.applications.apps.DocumentSheetConfig.registerSheet(
+      Actor,
+      "arm5eCovenant",
+      ArM5eCovenantActorSheet,
+      {
         types: ["covenant"],
         makeDefault: true,
         label: "arm5e.sheet.covenant"
-      });
+      }
+    );
 
-      Actors.registerSheet("arm5eMagicCodex", ArM5eMagicCodexSheet, {
+    foundry.applications.apps.DocumentSheetConfig.registerSheet(
+      Actor,
+      "arm5eMagicCodex",
+      ArM5eMagicCodexSheet,
+      {
         types: ["magicCodex"],
         makeDefault: true,
         label: "arm5e.sheet.magic-codex"
-      });
+      }
+    );
 
-      // Handlebars.registerHelper("arraySize", function (data) {
-      //   return data.length;
-      // });
+    foundry.applications.apps.DocumentSheetConfig.unregisterSheet(
+      Item,
+      "core",
+      foundry.appv1.sheets.ItemSheet
+    );
 
-      // let astrolabData = game.
-      DocumentSheetConfig.unregisterSheet(Item, "core", ItemSheet);
+    foundry.applications.apps.DocumentSheetConfig.registerSheet(Item, "arm5e", ArM5eSmallSheet, {
+      types: ["wound"],
+      makeDefault: true
+    });
 
-      DocumentSheetConfig.registerSheet(Item, "arm5e", ArM5eSmallSheet, {
-        types: ["wound"],
-        makeDefault: true
-      });
+    foundry.applications.apps.DocumentSheetConfig.registerSheet(Item, "arm5e", ArM5eItemSheet, {
+      types: [
+        "art",
+        "weapon",
+        "armor",
+        "item",
+        "virtue",
+        "flaw",
+        "quality",
+        "inferiority",
+        "ability",
+        "abilityFamiliar",
+        // "might",
+        "powerFamiliar",
+        // "mightFamiliar",
+        "speciality",
+        "distinctive",
+        "sanctumRoom",
+        "reputation",
+        // "inhabitant",
+        "habitantMagi", // Deprecated
+        "habitantCompanion", // Deprecated
+        "habitantSpecialists", // Deprecated
+        "habitantHabitants", // Deprecated
+        "habitantHorses", // Deprecated
+        "habitantLivestock", // Deprecated
+        "possessionsCovenant",
+        "visSourcesCovenant",
+        "visStockCovenant",
+        "calendarCovenant",
+        "incomingSource",
+        "labCovenant",
+        "personalityTrait"
+      ],
+      makeDefault: true
+    });
+    foundry.applications.apps.DocumentSheetConfig.registerSheet(Item, "arm5e", ArM5eItemVisSheet, {
+      types: ["vis"],
+      makeDefault: true
+    });
+    foundry.applications.apps.DocumentSheetConfig.registerSheet(Item, "arm5e", ArM5eBookSheet, {
+      types: ["book"],
+      makeDefault: true
+    });
 
-      DocumentSheetConfig.registerSheet(Item, "arm5e", ArM5eItemSheet, {
-        types: [
-          "art",
-          "weapon",
-          "armor",
-          "item",
-          "virtue",
-          "flaw",
-          "quality",
-          "inferiority",
-          "ability",
-          "abilityFamiliar",
-          // "might",
-          "powerFamiliar",
-          // "mightFamiliar",
-          "speciality",
-          "distinctive",
-          "sanctumRoom",
-          "reputation",
-          // "inhabitant",
-          "habitantMagi", // Deprecated
-          "habitantCompanion", // Deprecated
-          "habitantSpecialists", // Deprecated
-          "habitantHabitants", // Deprecated
-          "habitantHorses", // Deprecated
-          "habitantLivestock", // Deprecated
-          "possessionsCovenant",
-          "visSourcesCovenant",
-          "visStockCovenant",
-          "calendarCovenant",
-          "incomingSource",
-          "labCovenant",
-          "personalityTrait"
-        ],
-        makeDefault: true
-      });
-      DocumentSheetConfig.registerSheet(Item, "arm5e", ArM5eItemVisSheet, {
-        types: ["vis"],
-        makeDefault: true
-      });
-      DocumentSheetConfig.registerSheet(Item, "arm5e", ArM5eBookSheet, {
-        types: ["book"],
-        makeDefault: true
-      });
-
-      DocumentSheetConfig.registerSheet(Item, "arm5e", ArM5eItemDiarySheet, {
+    foundry.applications.apps.DocumentSheetConfig.registerSheet(
+      Item,
+      "arm5e",
+      ArM5eItemDiarySheet,
+      {
         types: ["diaryEntry"],
         makeDefault: true
-      });
-      DocumentSheetConfig.registerSheet(Item, "arm5e", ArM5eCovenantInhabitantSheet, {
+      }
+    );
+    foundry.applications.apps.DocumentSheetConfig.registerSheet(
+      Item,
+      "arm5e",
+      ArM5eCovenantInhabitantSheet,
+      {
         types: ["inhabitant"],
         makeDefault: true
-      });
+      }
+    );
 
-      DocumentSheetConfig.registerSheet(Item, "arm5e", ArM5eItemMagicSheet, {
+    foundry.applications.apps.DocumentSheetConfig.registerSheet(
+      Item,
+      "arm5e",
+      ArM5eItemMagicSheet,
+      {
         types: [
           "magicalEffect",
           "enchantment",
@@ -998,19 +829,32 @@ function registerSheets() {
           "power"
         ],
         makeDefault: true
-      });
+      }
+    );
 
-      DocumentSheetConfig.registerSheet(Item, "arm5e", ArM5eSupernaturalEffectSheet, {
+    foundry.applications.apps.DocumentSheetConfig.registerSheet(
+      Item,
+      "arm5e",
+      ArM5eSupernaturalEffectSheet,
+      {
         types: ["supernaturalEffect"],
         makeDefault: true
-      });
+      }
+    );
 
-      // Items.registerSheet("arm5e", ArM5eItemSheetNoDesc, { types: ["vis"] });
+    // Items.registerSheet("arm5e", ArM5eItemSheetNoDesc, { types: ["vis"] });
 
-      // [DEV] comment line bellow to get access to the original sheet
-      DocumentSheetConfig.unregisterSheet(ActiveEffect, "core", ActiveEffectConfig);
-      DocumentSheetConfig.registerSheet(ActiveEffect, "arm5e", ArM5eActiveEffectConfig);
-    }
+    foundry.applications.apps.DocumentSheetConfig.unregisterSheet(
+      ActiveEffect,
+      "core",
+      foundry.applications.sheets.ActiveEffectConfig
+    );
+
+    foundry.applications.apps.DocumentSheetConfig.registerSheet(
+      ActiveEffect,
+      "arm5e",
+      ArM5eActiveEffectConfig
+    );
   } catch (err) {
     err.message = `Failed registration of a sheet: ${err.message}`;
     console.error(err);

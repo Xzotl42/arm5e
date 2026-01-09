@@ -28,7 +28,7 @@ export class ArM5eBookSheet extends ArM5eItemSheet {
   }
 
   async _onDrop(event) {
-    const dropData = TextEditor.getDragEventData(event);
+    const dropData = foundry.applications.ux.getDragEventData(event);
 
     let index = Number(getDataset(event).index);
     if (dropData.type == "Item")

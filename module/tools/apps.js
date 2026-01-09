@@ -7,14 +7,10 @@ import { Scriptorium, ScriptoriumObject } from "./scriptorium.js";
 
 export class ArsApps {
   static async openAstrolab() {
-    // const html = await renderTemplate("systems/arm5e/templates/generic/astrolab.html", dialogData);
-
-    // const astrolab = new Astrolab(formData, {}); // data, options
-    const res = await ui.astrolab.render(true);
+    const res = await ui.astrolabium.render(true);
   }
   static async openScriptorium() {
     let formData = new ScriptoriumObject();
-    // // const html = await renderTemplate("systems/arm5e/templates/generic/astrolab.html", dialogData);
     const scriptorium = new Scriptorium(formData, {}); // data, options
     const res = await scriptorium.render(true);
   }

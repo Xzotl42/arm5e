@@ -2,7 +2,7 @@ import { SpellSchema } from "../schemas/magicSchemas.js";
 import { log } from "../tools.js";
 import { TWILIGHT_STAGES } from "./long-term-activities.js";
 import { _applyImpact, prepareRollVariables, ROLL_MODES } from "./rollWindow.js";
-
+const renderTemplate = foundry.applications.handlebars.renderTemplate;
 const VOICE_AND_GESTURES_ICONS = {
   voice: "icons/skills/trades/music-singing-voice-blue.webp",
   gestures: "icons/skills/social/wave-halt-stop.webp"
@@ -795,7 +795,7 @@ async function handleTargetsOfMagic(actorCaster, form, message) {
  */
 function magicalAttributesHelper(attributes, options) {
   // For (const range of Object.entries(ranges))
-  return HandlebarsHelpers.selectOptions(attributes, options);
+  return foundry.applications.handlebars.selectOptions(attributes, options);
 }
 
 /**
