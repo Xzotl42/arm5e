@@ -148,62 +148,65 @@
     </header>
     {{!-- Sheet Tab Navigation --}}
     <nav class="arm5eTabs arm5eTabsNPC sheet-tabs tabs" data-group="primary">
-      <a class="item posRelative" data-tab="description">
+      <a class="item posRelative flexrow" data-tab="description">
         <div class="navItem-left-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
-        <div class="navItem-right-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
         {{localize "arm5e.sheet.description"}}
-      </a>
-      <a class="item posRelative" data-tab="abilities">
-        <div class="navItem-left-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
         <div class="navItem-right-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
+      </a>
+      <a class="item posRelative flexrow" data-tab="abilities">
+        <div class="navItem-left-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
         {{localize "arm5e.sheet.abilities"}}
+        <div class="navItem-right-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
+
       </a>
       {{#if system.features.powers }}
-        <a class="item posRelative" data-tab="powers">
+        <a class="item posRelative flexrow" data-tab="powers">
           <div class="navItem-left-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
-          <div class="navItem-right-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
           {{localize "arm5e.sheet.powers"}}
+          <div class="navItem-right-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
         </a>
       {{/if}}
       {{#if (eq system.charType.value "magusNPC")}}
-        <a class="item posRelative" data-tab="arts">
+        <a class="item posRelative flexrow" data-tab="arts">
           <div class="navItem-left-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
-          <div class="navItem-right-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
           {{localize "arm5e.sheet.arts"}}
-        </a>
-        <a class="item posRelative" data-tab="laboratory">
-          <div class="navItem-left-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
           <div class="navItem-right-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
+        </a>
+        <a class="item posRelative flexrow" data-tab="laboratory">
+          <div class="navItem-left-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
           {{localize "arm5e.sheet.laboratory"}}
+          <div class="navItem-right-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
         </a>
       {{/if}}
       {{#if system.features.magicSystem}}
-        <a class="item posRelative" data-tab="tradition">
+        <a class="item posRelative flexrow" data-tab="tradition">
           <div class="navItem-left-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
-          <div class="navItem-right-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
           {{system.magicSystem.name}}
+          <div class="navItem-right-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
         </a>
       {{/if}}
-      <a class="item posRelative" data-tab="inventory">
+      <a class="item posRelative flexrow" data-tab="inventory">
         <div class="navItem-left-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
-        <div class="navItem-right-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
         {{localize "arm5e.sheet.inventory"}}
-      </a>
-      <a class="item posRelative" data-tab="diary">
-        <div class="navItem-left-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
         <div class="navItem-right-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
+      </a>
+      <a class="item posRelative flexrow" data-tab="diary">
+        <div class="navItem-left-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
         {{localize "arm5e.sheet.diary"}}
-      </a>
-      <a class="item posRelative" data-tab="effects">
-        <div class="navItem-left-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
         <div class="navItem-right-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
+
+      </a>
+      <a class="item posRelative flexrow" data-tab="effects">
+        <div class="navItem-left-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
         {{localize "arm5e.sheet.effects"}}
+        <div class="navItem-right-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
+
       </a>
       {{#if isGM}}
-        <a class="item posRelative" data-tab="config">
+        <a class="item posRelative flexrow" data-tab="config">
           <div class="navItem-left-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
-          <div class="navItem-right-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
           <i class="fas fa-cog"></i>
+          <div class="navItem-right-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
         </a>
       {{/if}}
     </nav>
@@ -213,15 +216,15 @@
       {{!-- Description Tab --}}
       <div class="tab description" data-group="primary" data-tab="description">
         <nav class="arm5eSubTabs desc-tabs tabs" data-group="desc-secondary">
-          <a class="item posRelative" data-tab="desc" data-group="desc-secondary">
+          <a class="item posRelative flexrow" data-tab="desc" data-group="desc-secondary">
             <div class="navItem-left-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
-            <div class="navItem-right-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
             {{localize "arm5e.sheet.description"}}
-          </a>
-          <a class="item posRelative" data-tab="wounds" data-group="desc-secondary">
-            <div class="navItem-left-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
             <div class="navItem-right-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
+          </a>
+          <a class="item posRelative flexrow" data-tab="wounds" data-group="desc-secondary">
+            <div class="navItem-left-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
             {{localize "arm5e.sheet.vitals"}} & {{localize "arm5e.sheet.combat.label"}}
+            <div class="navItem-right-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
           </a>
         </nav>
         <section class="desc-body">
@@ -240,15 +243,15 @@
       <div class="tab abilities" data-group="primary" data-tab="abilities">
         {{!-- Sheet Tab Navigation --}}
         <nav class="arm5eSubTabs abilities-tabs tabs" data-group="abilities-secondary">
-          <a class="item posRelative" data-tab="abilities" data-group="secondary">
+          <a class="item posRelative flexrow" data-tab="abilities" data-group="secondary">
             <div class="navItem-left-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
-            <div class="navItem-right-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
             {{localize "arm5e.sheet.abilities"}}
-          </a>
-          <a class="item posRelative" data-tab="vandf" data-group="abilities-secondary">
-            <div class="navItem-left-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
             <div class="navItem-right-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
+          </a>
+          <a class="item posRelative flexrow" data-tab="vandf" data-group="abilities-secondary">
+            <div class="navItem-left-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
             {{localize "arm5e.sheet.virtues"}} & {{localize "arm5e.sheet.flaws"}}
+            <div class="navItem-right-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
           </a>
         </nav>
         <section class="abilities-body">
@@ -273,15 +276,15 @@
         <div class="tab arts" data-group="primary" data-tab="arts">
           {{!-- Sheet Tab Navigation --}}
           <nav class="arm5eSubTabs arts-tabs tabs" data-group="arts-secondary">
-            <a class="item posRelative" data-tab="arts-subtab" data-group="arts-secondary">
+            <a class="item posRelative flexrow" data-tab="arts-subtab" data-group="arts-secondary">
               <div class="navItem-left-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
-              <div class="navItem-right-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
               {{localize "arm5e.sheet.arts"}}
-            </a>
-            <a class="item posRelative" data-tab="casting-total" data-group="arts-secondary">
-              <div class="navItem-left-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
               <div class="navItem-right-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
+            </a>
+            <a class="item posRelative flexrow" data-tab="casting-total" data-group="arts-secondary">
+              <div class="navItem-left-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
               {{localize "arm5e.sheet.castingTotals"}}
+              <div class="navItem-right-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
             </a>
           </nav>
           {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
@@ -297,15 +300,15 @@
         {{!-- Laboratory Tab --}}
         <div class="tab laboratory" data-group="primary" data-tab="laboratory">
           <nav class="arm5eSubTabs lab-tabs tabs" data-group="lab-secondary">
-            <a class="item posRelative" data-tab="lab" data-group="secondary">
+            <a class="item posRelative flexrow" data-tab="lab" data-group="secondary">
               <div class="navItem-left-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
-              <div class="navItem-right-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
               {{localize "arm5e.sheet.laboratory"}}
-            </a>
-            <a class="item posRelative" data-tab="lab-total" data-group="lab-secondary">
-              <div class="navItem-left-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
               <div class="navItem-right-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
+            </a>
+            <a class="item posRelative flexrow" data-tab="lab-total" data-group="lab-secondary">
+              <div class="navItem-left-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
               {{localize "arm5e.sheet.labTotal"}}
+              <div class="navItem-right-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
             </a>
           </nav>
           <section class="lab-body">
@@ -323,15 +326,15 @@
       <div class="tab tradition" data-group="primary" data-tab="tradition">
         {{!-- Sheet Tab Navigation --}}
         <nav class="arm5eSubTabs tradition-tabs tabs" data-group="tradition-secondary">
-          <a class="item posRelative" data-tab="tradition-subtab" data-group="tradition-secondary">
+          <a class="item posRelative flexrow" data-tab="tradition-subtab" data-group="tradition-secondary">
             <div class="navItem-left-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
-            <div class="navItem-right-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
             {{system.magicSystem.effects}}
-          </a>
-          <a class="item posRelative" data-tab="tradition-config" data-group="tradition-secondary">
-            <div class="navItem-left-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
             <div class="navItem-right-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
+          </a>
+          <a class="item posRelative flexrow" data-tab="tradition-config" data-group="tradition-secondary">
+            <div class="navItem-left-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
             {{localize "arm5e.generic.config"}}
+            <div class="navItem-right-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
           </a>
         </nav>
         {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
@@ -349,15 +352,15 @@
       {{!-- Inventory Tab --}}
       <div class="tab inventory" data-group="primary" data-tab="inventory">
         <nav class="arm5eSubTabs inventory-tabs tabs" data-group="inventory-secondary">
-          <a class="item posRelative" data-tab="inventory" data-group="inventory-secondary">
+          <a class="item posRelative flexrow" data-tab="inventory" data-group="inventory-secondary">
             <div class="navItem-left-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
-            <div class="navItem-right-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
             {{localize "arm5e.sheet.inventory"}}
-          </a>
-          <a class="item posRelative" data-tab="library" data-group="inventory-secondary">
-            <div class="navItem-left-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
             <div class="navItem-right-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
+          </a>
+          <a class="item posRelative flexrow" data-tab="library" data-group="inventory-secondary">
+            <div class="navItem-left-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
             {{localize "arm5e.sheet.library"}}
+            <div class="navItem-right-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
           </a>
         </nav>
         <section class="inventory-body">

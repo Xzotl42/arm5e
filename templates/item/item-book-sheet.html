@@ -81,28 +81,28 @@
   </header>
   {{!-- Sheet Tab Navigation --}}
   <nav class="arm5eTabs sheet-tabs tabs tab-header" data-group="primary">
-    <a class="item posRelative" data-tab="description">
+    <a class="item posRelative flexrow" data-tab="description">
       <div class="navItem-left-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
-      <div class="navItem-right-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
       {{localize "arm5e.sheet.description"}}
+      <div class="navItem-right-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
     </a>
     {{#if (ne system.state "inert")}}
-      <a class="item posRelative" data-tab="enchantments">
+      <a class="item posRelative flexrow" data-tab="enchantments">
         <div class="navItem-left-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
-        <div class="navItem-right-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
         {{localize "arm5e.sheet.enchantments"}}
-      </a>
-      <a class="item posRelative" data-tab="effects">
-        <div class="navItem-left-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
         <div class="navItem-right-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
+      </a>
+      <a class="item posRelative flexrow" data-tab="effects">
+        <div class="navItem-left-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
         {{localize "arm5e.sheet.effects"}}
+        <div class="navItem-right-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
       </a>
     {{/if}}
 
-    <!-- <a class="item posRelative" data-tab="authorship">
+    <!-- <a class="item posRelative flexrow" data-tab="authorship">
       <div class="navItem-left-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
-      <div class="navItem-right-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
       {{localize "arm5e.sheet.authorship.label"}}
+      <div class="navItem-right-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
     </a> -->
   </nav>
   {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
