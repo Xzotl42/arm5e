@@ -1,5 +1,5 @@
 import { ARM5E } from "../config.js";
-import { log } from "../tools.js";
+import { log } from "./tools.js";
 
 // get the corresponding collection from the reference module, based on configuration.
 export async function getRefCompendium(collectionName) {

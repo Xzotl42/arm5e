@@ -2,7 +2,7 @@ import { ArM5eActor } from "../actor/actor.js";
 import { ACTIVE_EFFECTS_TYPES } from "../constants/activeEffectsTypes.js";
 import { ArM5eItem } from "../item/item.js";
 // import { ArM5eItem } from "../item/item.js";
-import { log } from "../tools.js";
+import { log } from "../tools/tools.js";
 /**
  * Extend the base ActiveEffect class to implement system-specific logic.
  * @extends {ActiveEffect}

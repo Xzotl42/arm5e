@@ -9,7 +9,7 @@ import {
   spellData1
 } from "./testData.js";
 import { ARM5E } from "../config.js";
-import { log, sleep } from "../tools.js";
+import { log, sleep } from "../tools/tools.js";
 import { nextDate } from "../tools/time.js";
 import { DiaryEntrySchema } from "../schemas/diarySchema.js";
 const results = {

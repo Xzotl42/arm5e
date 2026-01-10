@@ -775,8 +775,12 @@ input[type="checkbox"].tiny-checkbox:checked::before {
 .arm5eTabs,
 .arm5eSubTabs {
   border: 0 !important;
-  min-height: 36px;
-  margin-bottom: 12px !important;
+  /* min-height: 36px; */
+  /* margin-bottom: 12px !important; */
+}
+
+.arm5e nav.tabs {
+  align-items: center;
 }
 
 h4.message-sender {
@@ -2693,29 +2697,14 @@ label.uppercase {
   background-position-y: bottom;
 }
 
-.arm5e .tabs {
-  height: 32px;
-  border-top: 1px solid #aaa;
-  border-bottom: 1px solid #aaa;
-}
-
-.arm5e .tabs .item {
-  /*line-height: 60px;*/
-  font-family: var(--font-header);
-  font-size: 14pt;
-}
-
 .arm5e .tabs .item.active {
   /*text-decoration: underline;*/
   text-shadow: none;
-}
-
-.posRelative {
-  position: relative;
+  align-items: center;
 }
 
 .navItem-right-ball {
-  position: absolute;
+  /* position: absolute; */
   border: 0px;
   top: 0px;
   left: -15px;
@@ -2741,7 +2730,7 @@ img.art-icon {
 }
 
 .navItem-left-ball {
-  position: absolute;
+  /* position: absolute; */
   border: 0px;
   top: 0px;
   right: -15px;

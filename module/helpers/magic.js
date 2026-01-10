@@ -1,6 +1,6 @@
 import { SpellSchema } from "../schemas/magicSchemas.js";
-import { log } from "../tools.js";
-import { TWILIGHT_STAGES } from "./long-term-activities.js";
+import { log } from "../tools/tools.js";
+import { TWILIGHT_STAGES } from "../seasonal-activities/long-term-activities.js";
 import { _applyImpact, prepareRollVariables, ROLL_MODES } from "./rollWindow.js";
 const renderTemplate = foundry.applications.handlebars.renderTemplate;
 const VOICE_AND_GESTURES_ICONS = {

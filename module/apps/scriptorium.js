@@ -8,7 +8,7 @@ import { ArM5eItem } from "../item/item.js";
 import { BookSchema } from "../schemas/bookSchema.js";
 import { boolOption } from "../schemas/commonSchemas.js";
 import { DiaryEntrySchema } from "../schemas/diarySchema.js";
-import { compareTopics, debug, getDataset, log } from "../tools.js";
+import { compareTopics, debug, getDataset, log } from "../tools/tools.js";
 import { selectItemDialog } from "../ui/dialogs.js";
 
 export class ScriptoriumObject {

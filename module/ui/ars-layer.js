@@ -1,8 +1,8 @@
-import { log } from "../tools.js";
+import { log } from "../tools/tools.js";
 
-import { Scriptorium, ScriptoriumObject } from "../tools/scriptorium.js";
-import { AuraConfig } from "./aura-config.js";
-import { ArsApps } from "../tools/apps.js";
+import { Scriptorium, ScriptoriumObject } from "../apps/scriptorium.js";
+import { AuraConfig } from "../apps/aura-config.js";
+import { ArsApps } from "./apps.js";
 
 export class ArsLayer extends foundry.canvas.layers.InteractionLayer {
   async draw() {

@@ -1,9 +1,9 @@
 import { Arm5eChatMessage } from "../helpers/chat-message.js";
 import { ROLL_MODES, ROLL_PROPERTIES } from "../helpers/rollWindow.js";
-import { AuraConfig } from "../ui/aura-config.js";
-import { getConfirmation } from "../ui/dialogs.js";
-import { LabExperimentation } from "./labExperimentation.js";
-import { Scriptorium, ScriptoriumObject } from "./scriptorium.js";
+import { AuraConfig } from "../apps/aura-config.js";
+import { getConfirmation } from "./dialogs.js";
+import { LabExperimentation } from "../apps/labExperimentation.js";
+import { Scriptorium, ScriptoriumObject } from "../apps/scriptorium.js";
 
 export class ArsApps {
   static async openAstrolab() {

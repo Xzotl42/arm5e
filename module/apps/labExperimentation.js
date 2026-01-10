@@ -1,5 +1,5 @@
-import { ArsRoll } from "../helpers/stressdie.js";
-import { log } from "../tools.js";
+import { ArsRoll } from "../helpers/roll.js";
+import { log } from "../tools/tools.js";
 import { privateMessage } from "../helpers/chat-message.js";
 
 export class LabExperimentation extends FormApplication {

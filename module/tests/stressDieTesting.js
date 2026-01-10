@@ -1,6 +1,6 @@
-import { stressDie } from "../dice.js";
-import { StressDieInternal } from "../helpers/stressdie.js";
-import { log } from "../tools.js";
+import { stressDie } from "../helpers/dice.js";
+import { StressDieInternal } from "../helpers/roll.js";
+import { log } from "../tools/tools.js";
 import { companionData } from "./testData.js";
 
 export function registerStressDieTesting(quench) {

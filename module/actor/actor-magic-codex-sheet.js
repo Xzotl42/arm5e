@@ -1,6 +1,6 @@
 import { ArM5eActorSheet } from "./actor-sheet.js";
 
-import { compareBaseEffects, compareSpells, hermeticFilter, log } from "../tools.js";
+import { compareBaseEffects, compareSpells, hermeticFilter, log } from "../tools/tools.js";
 
 import { labTextToEffect } from "../item/item-converter.js";
 import { ArM5eItem } from "../item/item.js";

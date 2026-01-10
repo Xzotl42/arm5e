@@ -1,6 +1,6 @@
 import { ARM5E } from "../config.js";
 
-import { log, error, slugify } from "../tools.js";
+import { log, error, slugify } from "../tools/tools.js";
 
 import { ACTIVE_EFFECTS_TYPES } from "../constants/activeEffectsTypes.js";
 

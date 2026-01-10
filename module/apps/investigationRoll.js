@@ -1,7 +1,7 @@
-import { stressDie } from "../dice.js";
+import { stressDie } from "../helpers/dice.js";
 import { GetEffectAttributesLabel, computeLevel } from "../helpers/magic.js";
 import { ROLL_MODES } from "../helpers/rollWindow.js";
-import { log } from "../tools.js";
+import { log } from "../tools/tools.js";
 
 export class InvestigationRoll extends FormApplication {
   constructor(diary, data, options) {

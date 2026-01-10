@@ -1,5 +1,5 @@
 import { fatigueCost } from "../helpers/magic.js";
-import { log, putInFoldableLinkWithAnimation } from "../tools.js";
+import { log, putInFoldableLinkWithAnimation } from "../tools/tools.js";
 import { boolOption } from "./commonSchemas.js";
 import { RollChatSchema } from "./rollChatSchema.js";
 const fields = foundry.data.fields;

@@ -1,8 +1,8 @@
-import { log } from "../tools.js";
+import { log } from "../tools/tools.js";
 import { getCompanion, getLab, getMagus } from "./testData.js";
 import { ArsLayer } from "../ui/ars-layer.js";
 import { ARM5E } from "../config.js";
-import { simpleDie, stressDie } from "../dice.js";
+import { simpleDie, stressDie } from "../helpers/dice.js";
 
 export function registerLabActivityTesting(quench) {
   quench.registerBatch(

@@ -1,5 +1,5 @@
 import { ARM5E } from "../config.js";
-import { simpleDie, stressDie, noRoll } from "../dice.js";
+import { simpleDie, stressDie, noRoll } from "./dice.js";
 import { castSpell, castSupernaturalEffect, noFatigue } from "./magic.js";
 import {
   setAgingEffects,
@@ -8,10 +8,10 @@ import {
   applyTwilightStrength,
   applyTwilightComplexity,
   twilightUnderstanding
-} from "./long-term-activities.js";
+} from "../seasonal-activities/long-term-activities.js";
 import { damageRoll, exertSelf, soakRoll } from "./combat.js";
 import { MagicalEffectSchema, SpellSchema } from "../schemas/magicSchemas.js";
-import { log } from "../tools.js";
+import { log } from "../tools/tools.js";
 const renderTemplate = foundry.applications.handlebars.renderTemplate;
 // below is a bitmap
 const ROLL_MODES = {

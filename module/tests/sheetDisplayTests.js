@@ -1,5 +1,5 @@
 import { ArM5eItem } from "../item/item.js";
-import { sleep } from "../tools.js";
+import { sleep } from "../tools/tools.js";
 const DEPRECATED = [
   "personality",
   "mundaneBook",

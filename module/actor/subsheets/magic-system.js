@@ -1,4 +1,4 @@
-import { getAbilityStats, getDataset, log, slugify } from "../../tools.js";
+import { getAbilityStats, getDataset, log, slugify } from "../../tools/tools.js";
 import { getConfirmation } from "../../ui/dialogs.js";
 import { ArM5eActorSheet } from "../actor-sheet.js";
 

@@ -9,7 +9,7 @@ import {
   compareTopics,
   integerToRomanNumeral,
   slugify
-} from "../tools.js";
+} from "../tools/tools.js";
 
 import { ACTIVE_EFFECTS_TYPES } from "../constants/activeEffectsTypes.js";
 

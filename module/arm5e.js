@@ -15,19 +15,18 @@ import { ArM5eItemDiarySheet } from "./item/item-diary-sheet.js";
 import { ArM5eItemVisSheet } from "./item/item-vis-sheet.js";
 import ArM5eActiveEffect from "./helpers/active-effects.js";
 import { prepareDatasetByTypeOfItem } from "./helpers/hotbar-helpers.js";
-import { ArM5ePreloadHandlebarsTemplates } from "./templates.js";
+import { ArM5ePreloadHandlebarsTemplates } from "./ui/templates.js";
 import { ArM5eActiveEffectConfig } from "./sheets/active-effect-config-sheet.js";
 import { Astrolabium } from "./apps/astrolabium.js";
 // Experiment
 import { ArsLayer, addArsButtons } from "./ui/ars-layer.js";
 import { customizePause } from "./ui/ars-pause.js";
 import { migrateCompendium, migration } from "./migration.js";
-import { log } from "./tools.js";
+import { log } from "./tools/tools.js";
 
 import { migrateSettings, registerSettings } from "./settings.js";
 import { registerTestSuites } from "./tests/tests.js";
-import { AlternateStressDie, ArsRoll, StressDie, StressDieInternal } from "./helpers/stressdie.js";
-import { UserguideTour } from "./tours/userguide-tour.js";
+import { AlternateStressDie, ArsRoll, StressDie, StressDieInternal } from "./helpers/roll.js";
 import { BaseEffectSchema, MagicalEffectSchema, SpellSchema } from "./schemas/magicSchemas.js";
 import { AbilitySchema } from "./schemas/abilitySchema.js";
 import { BookSchema } from "./schemas/bookSchema.js";
@@ -60,13 +59,13 @@ import { CovenantSchema } from "./schemas/covenantSchema.js";
 import { ArM5eCovenantInhabitantSheet } from "./item/item-inhabitantCovenant.js";
 import { ArM5eSupernaturalEffectSheet } from "./item/item-supernaturalEffect-sheet.js";
 import { SupernaturalEffectSchema } from "./schemas/supernaturalEffectSchema.js";
-import { Arm5eSocketHandler } from "./helpers/socket-messages.js";
+import { Arm5eSocketHandler } from "./tools/socket-messages.js";
 import { PowerSchema } from "./schemas/powerSchemas.js";
 import { BasicChatSchema } from "./schemas/basicChatSchema.js";
 import { Arm5eChatMessage } from "./helpers/chat-message.js";
 import { addActiveEffectsDefinitions } from "./constants/activeEffectsTypes.js";
 // import { Astrolab } from "./tools/astrolab.js";
-import { ArsApps } from "./tools/apps.js";
+import { ArsApps } from "./ui/apps.js";
 import { LabTextSchema } from "./schemas/labTextSchema.js";
 import { RollChatSchema } from "./schemas/rollChatSchema.js";
 import {
@@ -110,12 +109,6 @@ Hooks.once("init", async function () {
 
   // UI elements
   // CONFIG.ui.actors = ArsActorDirectory;
-
-  // Game.tours.register(
-  //   ARM5E.SYSTEM_ID,
-  //   "userguide",
-  //   await UserguideTour.fromJSON("systems/arm5e/tours/userguide.json")
-  // );
 
   /**
    * Set an initiative formula for the system

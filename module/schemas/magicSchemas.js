@@ -2,7 +2,7 @@
 import { ArM5eActor } from "../actor/actor.js";
 import { ARM5E } from "../config.js";
 import { computeLevel, getRequisitesLabel, IsMagicalEffect } from "../helpers/magic.js";
-import { convertToNumber, log } from "../tools.js";
+import { convertToNumber, log } from "../tools/tools.js";
 import {
   baseDescription,
   boolOption,

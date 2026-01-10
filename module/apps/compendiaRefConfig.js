@@ -1,4 +1,4 @@
-import { log } from "../tools.js";
+import { log } from "../tools/tools.js";
 
 export class CompendiaRefConfig extends FormApplication {
   static get defaultOptions() {

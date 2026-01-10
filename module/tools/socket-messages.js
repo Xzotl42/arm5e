@@ -1,6 +1,6 @@
-import { log, sleep } from "../tools.js";
+import { log, sleep } from "../tools/tools.js";
 import { Mutex } from "../tools/concurency.js";
-import { Arm5eChatMessage } from "./chat-message.js";
+import { Arm5eChatMessage } from "../helpers/chat-message.js";
 
 export const SMSG_TYPES = {
   ACK: "ACK",

@@ -1,5 +1,5 @@
-import { calculateWound, getDataset, getLastCombatMessageOfType, log } from "../tools.js";
-import { createRoll, stressDie } from "../dice.js";
+import { calculateWound, getDataset, getLastCombatMessageOfType, log } from "../tools/tools.js";
+import { createRoll, stressDie } from "./dice.js";
 import { Arm5eChatMessage } from "./chat-message.js";
 import { _applyImpact, ROLL_PROPERTIES } from "./rollWindow.js";
 import { getWoundStr } from "../config.js";

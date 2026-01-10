@@ -1,8 +1,8 @@
-import { log, sleep } from "../tools.js";
+import { log, sleep } from "../tools/tools.js";
 import { getCompanion, getLab, getMagus } from "./testData.js";
 import { ArsLayer } from "../ui/ars-layer.js";
 import { ARM5E } from "../config.js";
-import { simpleDie, stressDie } from "../dice.js";
+import { simpleDie, stressDie } from "../helpers/dice.js";
 import Aura from "../helpers/aura.js";
 import { ROLL_PROPERTIES } from "../helpers/rollWindow.js";
 

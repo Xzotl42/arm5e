@@ -1,11 +1,11 @@
-import { getDataset, log, slugify } from "../tools.js";
+import { getDataset, log, slugify } from "../tools/tools.js";
 import ArM5eActiveEffect from "../helpers/active-effects.js";
 import { ArM5eActorSheet } from "../actor/actor-sheet.js";
 import { EnchantmentExtension } from "../schemas/enchantmentSchema.js";
 import { ArM5eItemEnchantmentSheet } from "./subsheet/enchant-extension-sheet.js";
 import { ARM5E } from "../config.js";
 import { effectToLabText } from "./item-converter.js";
-import { Sanatorium } from "../tools/sanatorium.js";
+import { Sanatorium } from "../apps/sanatorium.js";
 import { getConfirmation } from "../ui/dialogs.js";
 import { FLAVORS } from "../constants/ui.js";
 

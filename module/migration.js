@@ -1,8 +1,8 @@
 import { ArM5eActor } from "./actor/actor.js";
 import { ARM5E } from "./config.js";
-import { TWILIGHT_STAGES } from "./helpers/long-term-activities.js";
+import { TWILIGHT_STAGES } from "./seasonal-activities/long-term-activities.js";
 import { computeLevel } from "./helpers/magic.js";
-import { convertToNumber, error, log } from "./tools.js";
+import { convertToNumber, error, log } from "./tools/tools.js";
 
 const DEPRECATED_ITEMS = ["speciality", "distinctive", "sanctumRoom", "personality"];
 const DEPRECATED_ACTORS = ["scriptorium"];

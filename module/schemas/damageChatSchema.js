@@ -1,9 +1,6 @@
-import { getWoundStr } from "../config.js";
-import { fatigueCost } from "../helpers/magic.js";
-import { ROLL_PROPERTIES } from "../helpers/rollWindow.js";
-import { SMSG_FIELDS, SMSG_TYPES } from "../helpers/socket-messages.js";
-import { ArsRoll } from "../helpers/stressdie.js";
-import { log, putInFoldableLinkWithAnimation } from "../tools.js";
+import { SMSG_FIELDS, SMSG_TYPES } from "../tools/socket-messages.js";
+import { ArsRoll } from "../helpers/roll.js";
+import { log, putInFoldableLinkWithAnimation } from "../tools/tools.js";
 import { basicIntegerField, boolOption } from "./commonSchemas.js";
 import { createChatButton, RollChatSchema } from "./rollChatSchema.js";
 const fields = foundry.data.fields;

@@ -1,9 +1,9 @@
-import { ROLL_MODES, ROLL_PROPERTIES, getRollTypeProperties } from "./helpers/rollWindow.js";
-import { log, sleep } from "./tools.js";
-import { ARM5E } from "./config.js";
-import { ArsRoll } from "./helpers/stressdie.js";
-import { Arm5eChatMessage } from "./helpers/chat-message.js";
-import { handleTargetsOfMagic } from "./helpers/magic.js";
+import { ROLL_MODES, ROLL_PROPERTIES, getRollTypeProperties } from "./rollWindow.js";
+import { log, sleep } from "../tools/tools.js";
+import { ARM5E } from "../config.js";
+import { ArsRoll } from "./roll.js";
+import { Arm5eChatMessage } from "./chat-message.js";
+import { handleTargetsOfMagic } from "./magic.js";
 const renderTemplate = foundry.applications.handlebars.renderTemplate;
 
 let iterations = 1;

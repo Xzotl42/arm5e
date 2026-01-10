@@ -1,7 +1,7 @@
 import { getWoundStr } from "../config.js";
 import { ROLL_PROPERTIES } from "../helpers/rollWindow.js";
-import { SMSG_FIELDS, SMSG_TYPES } from "../helpers/socket-messages.js";
-import { log, putInFoldableLinkWithAnimation } from "../tools.js";
+import { SMSG_FIELDS, SMSG_TYPES } from "../tools/socket-messages.js";
+import { log, putInFoldableLinkWithAnimation } from "../tools/tools.js";
 import { BasicChatSchema } from "./basicChatSchema.js";
 import { basicIntegerField, boolOption } from "./commonSchemas.js";
 const fields = foundry.data.fields;
@@ -426,6 +426,7 @@ export class RollChatSchema extends BasicChatSchema {
 
   _applyChatMessageUpdate(data) {
     log(false, "applying chat message update", data);
+    // const woundDescription =
     const promises = [];
     promises.push(this.parent.actor.update(data.actorUpdate ?? {}));
     promises.push(this.parent.update(data.msgUpdate ?? {}));

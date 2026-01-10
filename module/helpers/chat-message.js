@@ -1,6 +1,6 @@
-import { log, putInFoldableLink, putInFoldableLinkWithAnimation } from "../tools.js";
-import { SMSG_FIELDS } from "./socket-messages.js";
-import { ArsRoll } from "./stressdie.js";
+import { log, putInFoldableLink, putInFoldableLinkWithAnimation } from "../tools/tools.js";
+import { SMSG_FIELDS } from "../tools/socket-messages.js";
+import { ArsRoll } from "./roll.js";
 
 export class Arm5eChatMessage extends ChatMessage {
   static async handleSocketMessages(action, payload) {

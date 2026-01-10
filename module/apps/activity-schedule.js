@@ -1,8 +1,8 @@
 import { ARM5E } from "../config.js";
 import { UI } from "../constants/ui.js";
 import { DiaryEntrySchema } from "../schemas/diarySchema.js";
-import { debug, getDataset, log } from "../tools.js";
-import { compareDates } from "./time.js";
+import { debug, getDataset, log } from "../tools/tools.js";
+import { compareDates } from "../tools/time.js";
 
 export class ActivitySchedule extends FormApplication {
   constructor(data, options) {

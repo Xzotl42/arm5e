@@ -15,7 +15,7 @@ import {
 import { ArM5eItemDiarySheet } from "../item/item-diary-sheet.js";
 import { ArM5eItem } from "../item/item.js";
 import { EnchantmentExtension } from "../schemas/enchantmentSchema.js";
-import { log } from "../tools.js";
+import { log } from "../tools/tools.js";
 import { Activity } from "./activity.js";
 
 ///////////////////////

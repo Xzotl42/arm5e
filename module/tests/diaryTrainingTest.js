@@ -1,4 +1,4 @@
-import { log, sleep } from "../tools.js";
+import { log, sleep } from "../tools/tools.js";
 import { getCompanion, getMagus, getTeacher } from "./testData.js";
 import { ArsLayer } from "../ui/ars-layer.js";
 import { ARM5E } from "../config.js";

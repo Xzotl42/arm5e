@@ -1,8 +1,8 @@
-import { getDataset, log } from "../tools.js";
+import { getDataset, log } from "../tools/tools.js";
 import { ArM5eActor } from "../actor/actor.js";
-import { InvestigationRoll } from "../tools/investigationRoll.js";
+import { InvestigationRoll } from "../apps/investigationRoll.js";
 import { getAbilityFromCompendium } from "../tools/compendia.js";
-import { ArsRoll } from "./stressdie.js";
+import { ArsRoll } from "../helpers/roll.js";
 import { DiaryEntrySchema } from "../schemas/diarySchema.js";
 import {
   AgingActivity,
@@ -13,8 +13,8 @@ import {
   ResourceActivity,
   TwilightActivity,
   VisStudy
-} from "../seasonal-activities/progressActivity.js";
-import { LabActivity } from "../seasonal-activities/labActivity.js";
+} from "./progressActivity.js";
+import { LabActivity } from "./labActivity.js";
 const renderTemplate = foundry.applications.handlebars.renderTemplate;
 
 export function ActivityFactory(type, owner, diaryData) {

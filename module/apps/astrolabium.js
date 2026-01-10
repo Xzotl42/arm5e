@@ -1,5 +1,5 @@
-import { convertToNumber, debug, log } from "../tools.js";
-import { GroupSchedule } from "../tools/group-schedule.js";
+import { convertToNumber, debug, log } from "../tools/tools.js";
+import { GroupSchedule } from "./group-schedule.js";
 
 // Similar syntax to importing, but note that
 // this is object destructuring rather than an actual import

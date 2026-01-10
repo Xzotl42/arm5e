@@ -1,12 +1,12 @@
-import { debug, getDataset, log } from "../tools.js";
+import { debug, getDataset, log } from "../tools/tools.js";
 import { ArM5eItemSheet } from "./item-sheet.js";
 import {
   agingRoll,
   genericValidationOfActivity,
   getNewTitleForActivity
-} from "../helpers/long-term-activities.js";
+} from "../seasonal-activities/long-term-activities.js";
 import { ArM5eItem } from "./item.js";
-import { ActivitySchedule } from "../tools/activity-schedule.js";
+import { ActivitySchedule } from "../apps/activity-schedule.js";
 import { DiaryEntrySchema } from "../schemas/diarySchema.js";
 import { ArM5eActorSheet } from "../actor/actor-sheet.js";
 import { getAbilityFromCompendium } from "../tools/compendia.js";

@@ -1,10 +1,10 @@
-import { SMSG_FIELDS, SMSG_TYPES } from "../helpers/socket-messages.js";
+import { SMSG_FIELDS, SMSG_TYPES } from "../tools/socket-messages.js";
 import {
   getDataset,
   getLastCombatMessageOfType,
   log,
   putInFoldableLinkWithAnimation
-} from "../tools.js";
+} from "../tools/tools.js";
 import { basicIntegerField, boolOption, hermeticForm } from "./commonSchemas.js";
 import { createChatButton, RollChatSchema } from "./rollChatSchema.js";
 const fields = foundry.data.fields;

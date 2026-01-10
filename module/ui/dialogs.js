@@ -1,6 +1,6 @@
 import { PickRequisites } from "../helpers/magic.js";
 import { ArM5eItem } from "../item/item.js";
-import { getDataset } from "../tools.js";
+import { getDataset } from "../tools/tools.js";
 const renderTemplate = foundry.applications.handlebars.renderTemplate;
 export async function getConfirmation(
   title,

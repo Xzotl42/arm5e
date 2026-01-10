@@ -1,5 +1,5 @@
 import { ARM5E } from "../config.js";
-import { convertToNumber } from "../tools.js";
+import { convertToNumber } from "../tools/tools.js";
 
 const fields = foundry.data.fields;
 

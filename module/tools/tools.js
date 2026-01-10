@@ -1,4 +1,4 @@
-import { ARM5E } from "./config.js";
+import { ARM5E } from "../config.js";
 
 /**
  *

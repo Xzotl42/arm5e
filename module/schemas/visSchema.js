@@ -1,8 +1,8 @@
 import { ARM5E } from "../config.js";
-import { stressDie } from "../dice.js";
+import { stressDie } from "../helpers/dice.js";
 import Aura from "../helpers/aura.js";
-import { setVisStudyResults } from "../helpers/long-term-activities.js";
-import { convertToNumber, log } from "../tools.js";
+import { setVisStudyResults } from "../seasonal-activities/long-term-activities.js";
+import { convertToNumber, log } from "../tools/tools.js";
 import {
   boolOption,
   convertToInteger,

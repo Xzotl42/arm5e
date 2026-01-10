@@ -1,6 +1,6 @@
 import { ArM5eActorSheet } from "../actor/actor-sheet.js";
 import { getConfirmation } from "../ui/dialogs.js";
-import { compareDates, nextDate } from "./time.js";
+import { compareDates, nextDate } from "../tools/time.js";
 
 export class MedicalHistory extends FormApplication {
   constructor(data, options) {

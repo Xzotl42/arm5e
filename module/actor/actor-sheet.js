@@ -18,7 +18,7 @@ import {
   getLastCombatMessageOfType,
   slugify,
   getWoundRanges
-} from "../tools.js";
+} from "../tools/tools.js";
 import ArM5eActiveEffect from "../helpers/active-effects.js";
 import {
   HERMETIC_FILTER,
@@ -52,7 +52,7 @@ import {
   usePower
 } from "../helpers/magic.js";
 import { UI } from "../constants/ui.js";
-import { Schedule } from "../tools/schedule.js";
+import { Schedule } from "../apps/schedule.js";
 import {
   createAgingDiaryEntry,
   createTwilightDiaryEntry,
@@ -60,9 +60,9 @@ import {
   TWILIGHT_STAGES,
   TwilightEpisode,
   twilightRoll
-} from "../helpers/long-term-activities.js";
-import { Sanatorium } from "../tools/sanatorium.js";
-import { MedicalHistory } from "../tools/med-history.js";
+} from "../seasonal-activities/long-term-activities.js";
+import { Sanatorium } from "../apps/sanatorium.js";
+import { MedicalHistory } from "../apps/med-history.js";
 import { ArM5eActorProfiles } from "./subsheets/actor-profiles.js";
 import { ArM5eMagicSystem } from "./subsheets/magic-system.js";
 import { getRefCompendium } from "../tools/compendia.js";

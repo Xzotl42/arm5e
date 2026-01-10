@@ -1,6 +1,6 @@
-import { stressDie } from "../dice.js";
-import { log, sleep } from "../tools.js";
-import { getShiftedDate, seasonsDelta } from "./time.js";
+import { stressDie } from "../helpers/dice.js";
+import { log, sleep } from "../tools/tools.js";
+import { getShiftedDate, seasonsDelta } from "../tools/time.js";
 const TextEditor = foundry.applications.ux.TextEditor;
 
 export class Sanatorium extends FormApplication {

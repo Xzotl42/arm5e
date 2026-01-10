@@ -1,4 +1,4 @@
-import { sleep } from "../tools.js";
+import { sleep } from "../tools/tools.js";
 
 export function registerItemCreationTests(quench) {
   quench.registerBatch(

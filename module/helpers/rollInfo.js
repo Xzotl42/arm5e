@@ -1,7 +1,7 @@
 import { ARM5E } from "../config.js";
 import ArM5eActiveEffect from "./active-effects.js";
 import { ArM5eActor } from "../actor/actor.js";
-import { log } from "../tools.js";
+import { log } from "../tools/tools.js";
 import { getRollTypeProperties, ROLL_MODIFIERS, ROLL_PROPERTIES } from "./rollWindow.js";
 import Aura from "./aura.js";
 import { computeLevel, spellFormLabel, spellTechniqueLabel } from "./magic.js";
