@@ -1,5 +1,5 @@
 <form class="{{cssClass}} arm5eActiveEffect" autocomplete="off">
-  {{> "systems/arm5e/templates/generic/largeDialog-header.html" header="Inputs" }}
+  {{> "systems/arm5e/templates/generic/largeDialog-header.hbs" header="Inputs" }}
   <!-- Effect Header -->
   <header class="sheet-header effect-options">
     <img class="item-small-img" src="{{ data.ui.img }}" />
@@ -124,6 +124,6 @@
     </section>
   </section>
 
-  {{> "systems/arm5e/templates/generic/largeDialog-footer.html" footer="Inputs"}}
+  {{> "systems/arm5e/templates/generic/largeDialog-footer.hbs" footer="Inputs"}}
   <!-- <button type="submit"><i class="fas fa-save"></i> {{localize submitText}}</button> -->
 </form>

@@ -7,10 +7,10 @@
     <header class="sheet-header sheet-header-lab">
       <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" height="100" width="100" />
       <div class="header-fields">
-        <h1 class="charname"><input name="name" type="text" value="{{actor.name}}" placeholder="Name" /></h1>
+        <h1 class="bigname"><input name="name" type="text" value="{{actor.name}}" placeholder="Name" /></h1>
 
         <div class="flexrow flex-between" style="margin-top: 8px">
-          <span class="covenantname flexrow">
+          <span class="flexrow">
             <label for="system.owner.value" class="bold"
               style="padding-top: 4px; padding-left: 24px; flex: 0.4">{{localize "arm5e.sheet.owner"}}</label>
             <div>
@@ -23,7 +23,7 @@
               {{/if}}
             </div>
           </span>
-          <span class="covenantname flexrow">
+          <span class="flexrow">
             <label for=" system.covenant.value" class="bold"
               style="padding-top: 4px; padding-left: 24px; flex: 0.4">{{localize "arm5e.sheet.covenant"}}</label>
             <div>
@@ -38,12 +38,12 @@
           </span>
         </div>
         <div class="flexrow flex-between" style="margin-top: 8px">
-          <span class="covenantname flexrow width4">
+          <span class="flexrow width4">
             <label for="system.location" class="bold"
               style="padding-top: 4px; padding-left: 24px; flex: 0.2">{{localize "arm5e.sheet.location"}}</label>
             <input name="system.location" type="text" value="{{system.location}}" data-dtype="String" />
           </span>
-          <span class="covenantname flexrow" style="padding-top: 4px">
+          <span class="flexrow" style="padding-top: 4px">
             <label for="system.points" class="bold"
               style="padding-top: 4px; padding-left: 24px; flex: 0.6">{{localize "arm5e.sheet.points"}}</label>
             <input name="system.points" type="text" value="{{system.points}}" data-dtype="Number" style="flex: 0.3" />

@@ -1,6 +1,7 @@
 <section class="tab scrollable{{#if tab.active}} active{{/if}}" data-group="{{tab.group}}" data-tab="{{tab.id}}">
-    {{!-- {{formGroup fields.tint value=source.tint rootId=rootId placeholder="#ffffff"}} --}}
+    {{formGroup fields.tint value=source.tint rootId=rootId placeholder="#ffffff"}}
     {{formGroup fields.disabled value=source.disabled rootId=rootId}}
+    {{!-- {{formGroup fields.name value=source.name rootId=rootId}} --}}
 
     {{#if isActorEffect}}
     {{formGroup fields.origin value=origin rootId=rootId disabled=true}}
@@ -8,10 +9,11 @@
     {{#if isItemEffect}}
     {{formGroup fields.transfer value=source.transfer rootId=rootId label=legacyTransfer.label hint=legacyTransfer.hint}}
     {{/if}}
+    {{formGroup fields.statuses value=source.statuses options=statuses rootId=rootId classes="statuses"}}
     {{#if isGM}}
     <div class="form-group">
       <label>{{ localize "arm5e.generic.hidden" }}</label>
-      <input type="checkbox" name="flags.arm5e.hidden" {{ checked data.flags.arm5e.hidden }} />
+      <input type="checkbox" name="flags.arm5e.hidden" {{ checked source.flags.arm5e.hidden }} />
     </div>
     {{/if}}
 </section>

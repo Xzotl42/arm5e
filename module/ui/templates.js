@@ -151,8 +151,6 @@ export const ArM5ePreloadHandlebarsTemplates = async function () {
     "systems/arm5e/templates/generic/numberInput.html",
     "systems/arm5e/templates/generic/auraInput.html",
     "systems/arm5e/templates/generic/agingPointsEdit.html",
-    "systems/arm5e/templates/generic/largeDialog-footer.html",
-    "systems/arm5e/templates/generic/largeDialog-header.html",
     "systems/arm5e/templates/generic/source.html",
     "systems/arm5e/templates/generic/aging-dialog.html",
     "systems/arm5e/templates/generic/metalic-bar.html",
@@ -166,6 +164,8 @@ export const ArM5ePreloadHandlebarsTemplates = async function () {
     "systems/arm5e/templates/generic/parts/scriptorium-writing.html",
     "systems/arm5e/templates/generic/parts/scriptorium-copying.html",
     "systems/arm5e/templates/generic/parts/list-item.hbs",
+    "systems/arm5e/templates/generic/largeDialog-header.hbs",
+    "systems/arm5e/templates/generic/largeDialog-footer.hbs",
     // Apps partials
     "systems/arm5e/templates/generic/astrolab.hbs"
   ]);

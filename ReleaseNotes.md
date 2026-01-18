@@ -4,13 +4,17 @@
 
 - Foundry V13+
 - Removal of deprecation warnings.
+- CSS rework [WIP]
 
 ### Application V2 migration
 
 - Astrolabium - done
 - ChatMessage - removed jquery usage
+- Active effects config - Ars theme
 
 ### Features & changes
+
+- Added tint and condition statuses to Active Effect.
 
 ### Bug fixes
 

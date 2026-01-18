@@ -10,13 +10,13 @@ import { ACTIVE_EFFECTS_TYPES } from "../constants/activeEffectsTypes.js";
  */
 export class ArM5eActiveEffectConfig extends foundry.applications.sheets.ActiveEffectConfig {
   static DEFAULT_OPTIONS = {
-    classes: ["arm5eV2", "active-effect-sheet"],
+    classes: ["arm5e", "arm5eLargeDialog"],
     // classes: ["arm5e", "arm5eActiveEffect", "active-effect-sheet"],
     window: {
       contentClasses: ["standard-form"],
       icon: "fa-solid fa-person-rays"
     },
-    position: { width: 600 },
+    position: { width: 600, height: 650 },
     form: {
       // handler: ArM5eActiveEffectConfig.handleSubmit,
       submitOnChange: true,
@@ -41,8 +41,11 @@ export class ArM5eActiveEffectConfig extends foundry.applications.sheets.ActiveE
 
   /** @override */
   static PARTS = {
-    header: { template: "templates/sheets/active-effect/header.hbs" },
-    // header: { template: "systems/arm5e/templates/sheets/active-effect/header.hbs" },
+    headerFalvor: { template: "systems/arm5e/templates/generic/largeDialog-header.hbs" },
+    header: {
+      template: "systems/arm5e/templates/sheets/active-effect/header.hbs",
+      classes: ["marginsides32"]
+    },
     tabs: {
       // Foundry-provided generic template
       template: "templates/generic/tab-navigation.hbs"
@@ -54,16 +57,19 @@ export class ArM5eActiveEffectConfig extends foundry.applications.sheets.ActiveE
     // duration: { template: "systems/arm5e/templates/sheets/active-effect/duration.hbs" },
     changes: {
       template: "systems/arm5e/templates/sheets/active-effect/changes.hbs",
-      scrollable: ["ol[changes-list]"]
-    }
+      scrollable: ["ol[changes-list]"],
+      classes: ["marginsides32"]
+    },
     // footer: { template: "templates/generic/form-footer.hbs" }
-    // footer: { template: "systems/arm5e/templates/generic/largeDialog-footer.hbs" }
+    footer: { template: "systems/arm5e/templates/generic/largeDialog-footer.hbs" }
   };
 
-  // static async handleSubmit(event, form, formData, options) {
-  //   console.log(formData);
-  //   _prepareSubmitData
-  //   await this._processSubmitData(event, form, formData.object);
+  // /** @inheritDoc */
+  // _onChangeForm(formConfig, event) {
+  //   super._onChangeForm(formConfig, event);
+  //   if (event.target.tagName === "COLOR-PICKER" && event.target.name.endsWith("tint")) {
+  //     this.submit({ updateData: { tint: event.target.value } });
+  //   }
   // }
 
   setFilter(filter, mod) {
@@ -84,15 +90,15 @@ export class ArM5eActiveEffectConfig extends foundry.applications.sheets.ActiveE
       context.types = ACTIVE_EFFECTS_TYPES;
     }
 
-    context.data.ui = {
-      nameAttr: "name",
-      name: context.data.name,
-      img: context.data.img,
-      imgAttr: "img"
-    };
+    // context.data.ui = {
+    //   nameAttr: "name",
+    //   name: context.data.name,
+    //   img: context.data.img,
+    //   imgAttr: "img"
+    // };
 
+    context.flavor = "Inputs";
     context.origin = context.document.sourceName;
-
     // first effect created, add null effect type and subtype (still needed?)
     context.selectedTypes = this.document.getFlag("arm5e", "type");
     if (context.document.changes.length > 0 && context.selectedTypes == null) {

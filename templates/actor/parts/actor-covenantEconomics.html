@@ -1,51 +1,51 @@
 {{!-- "wealth" --}}
 <div class="backSection padding12">
-  <div class="grid grid-2col" style="border: 0px">
-    <span style="border: 0px">
+  <div class="grid grid-2col border-0">
+    <span class="border-0">
       <label for="system.governForm" class="smallTitle">{{localize "arm5e.sheet.wealth"}}</label>
     </span>
   </div>
   {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
-  <div class="grid grid-2col" style="border: 0px">
-    <span class="flex-group-right" style="border: 0px">
+  <div class="grid grid-2col border-0">
+    <span class="flex-group-right border-0">
       <label for="system.finances.inhabitantsPoints"
         class="label-medium">{{localize "arm5e.sheet.inhabitantsPoints"}}</label>
       <input type="number" name="system.finances.inhabitantsPoints" value="{{system.finances.inhabitantsPoints}}"
         data-dtype="Number" class="select-on-focus" />
     </span>
-    <span class="flex-group-right" style="border: 0px">
+    <span class="flex-group-right border-0">
       <label for="system.finances.totalIncome" class="label-medium">{{localize "arm5e.sheet.totalIncome"}}</label>
       <input type="number" name="system.finances.totalIncome" value="{{system.finances.totalIncome}}"
         data-dtype="Number" class="select-on-focus" readonly />
     </span>
-    <span class="flex-group-right" style="border: 0px">
+    <span class="flex-group-right border-0">
       <label for="system.finances.laboratoriesPoints"
         class="label-medium">{{localize "arm5e.sheet.laboratoriesPoints"}}</label>
       <input type="number" name="system.finances.laboratoriesPoints" value="{{system.finances.laboratoriesPoints}}"
         data-dtype="Number" class="select-on-focus" readonly />
     </span>
-    <span class="flex-group-right" style="border: 0px">
+    <span class="flex-group-right border-0">
       <label for="system.finances.baseExpenditure"
         class="label-medium">{{localize "arm5e.sheet.baseExpenditure"}}</label>
       <input type="number" name="system.finances.baseExpenditure" value="{{system.finances.baseExpenditure}}"
         data-dtype="Number" class="select-on-focus" readonly />
     </span>
-    <span class="flex-group-right" style="border: 0px">
+    <span class="flex-group-right border-0">
       <label for="system.finances.weaponsPoints" class="label-medium">{{localize "arm5e.sheet.weaponsPoints"}}</label>
       <input type="number" name="system.finances.weaponsPoints" value="{{system.finances.weaponsPoints}}"
         data-dtype="Number" class="select-on-focus" readonly />
     </span>
-    <span class="flex-group-right" style="border: 0px">
+    <span class="flex-group-right border-0">
       <label for="system.finances.costSavings" class="label-medium">{{localize "arm5e.sheet.costSavings"}}</label>
       <input type="number" name="system.finances.costSavings" value="{{system.finances.costSavings}}"
         data-dtype="Number" class="select-on-focus" readonly />
     </span>
-    <span class="flex-group-right" style="border: 0px">
+    <span class="flex-group-right border-0">
       <label for="system.finances.wealth" class="label-medium">{{localize "arm5e.sheet.wealth"}}</label>
       <input type="number" name="system.finances.wealth" value="{{ system.finances.wealth }}" data-dtype="Number"
         class="select-on-focus editable" />
     </span>
-    <span class="flex-group-right" style="border: 0px">
+    <span class="flex-group-right border-0">
       <label for="system.finances.totalExpenditure" class="bold">{{localize "arm5e.sheet.totalExpenditure"}}</label>
       <input type="number" name="system.finances.totalExpenditure" value="{{system.finances.totalExpenditure}}"
         data-dtype="Number" class="select-on-focus summary" readonly />
@@ -84,9 +84,9 @@
 
 {{!-- "yearlyExpenses" --}}
 <div class="backSection margintop18">
-  <div class="flexrow flex-group-center" style="border: 0px">
-    <ol style="width: 100%">
-      <li class="flexrow flex-group-left" style="border: 0px" data-attribute="{{key}}">
+  <div class="flexrow flex-group-center border-0">
+    <ol class="w-full">
+      <li class="flexrow flex-group-left border-0" data-attribute="{{key}}">
         <label class="smallTitle width2">{{localize "arm5e.sheet.yearExpenditure" }}</label>
         <span class="flex05"></span>
         <label class="bold flex05">{{localize "arm5e.sheet.cost"}}</label>
@@ -96,7 +96,7 @@
 
 
       {{#each system.yearlyExpenses as |exp key|}}
-        <li class="flexrow flex-group-left" style="border: 0px" data-attribute="{{key}}" data-tooltip-direction="RIGHT">
+        <li class="flexrow flex-group-left border-0" data-attribute="{{key}}" data-tooltip-direction="RIGHT">
           <span class="width2">
             <label class="bold">{{localize exp.label}}</label>
             <div class="label-light">{{localize exp.sumary}}</div>
@@ -129,16 +129,16 @@
 
 {{!-- "yearlySavings" --}}
 <div class="backSection padding12 margintop18">
-  <div class="flexrow flex-group-center" style="border: 0px">
-    <ol style="width: 100%">
-      <li class="flexrow flex-group-left" style="border: 0px" data-attribute="{{key}}">
+  <div class="flexrow flex-group-center border-0">
+    <ol class="w-full">
+      <li class="flexrow flex-group-left border-0" data-attribute="{{key}}">
         <label class="smallTitle flex07">{{localize "arm5e.sheet.costsSavings" }}</label>
         <label class="bold flex05">{{localize "arm5e.sheet.quantity"}}</label>
         <label class="bold flex05">{{localize "arm5e.sheet.saving"}}</label>
         <label class="bold">{{localize "arm5e.sheet.notes"}}</label>
       </li>
       {{#each system.yearlySavings as |saving key|}}
-        <li class="flexrow flex-group-left" style="border: 0px" data-attribute="{{key}}">
+        <li class="flexrow flex-group-left border-0" data-attribute="{{key}}">
           <span class="flexcol flex07">
             <label class="bold">{{localize saving.label}}</label>
             <div class="label-light">({{localize saving.sumary}})</div>

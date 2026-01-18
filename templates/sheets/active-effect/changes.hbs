@@ -1,35 +1,33 @@
-<section class='tab changes {{tab.cssClass}}'
-  data-group='primary'
-  data-tab='changes'>
-
+<section class="tab changes{{#if tab.active}} active{{/if}}" data-group="{{tab.group}}" data-tab="{{tab.id}}"
+style="min-height: 250px">
       <header class="effect-change effects-header flexrow">
-        <div class="type">{{ localize "arm5e.sheet.type" }}</div>
-        <div class="key">{{ localize "arm5e.sheet.attributes" }}</div>
-        <div class="mode">{{ localize "arm5e.activeEffect.changeMode" }}</div>
-        <div class="value">{{ localize "arm5e.activeEffect.changeValue" }}</div>
-        <div class="effect-controls">
+        <div class="type flex04">{{ localize "arm5e.sheet.type" }}</div>
+        <div class="key flex04">{{ localize "arm5e.sheet.attributes" }}</div>
+        <div class="mode flex01">{{ localize "arm5e.activeEffect.changeMode" }}</div>
+        <div class="value flex01">{{ localize "arm5e.activeEffect.changeValue" }}</div>
+        <div class="effect-controls flex0">
           <a class="addChange" data-action="add"><i class="fas fa-plus"></i></a>
         </div>
       </header>
-      <ol class="changes-list" style="min-height: 48px; ">
+      <ol class="changes-list flexcol" >
         {{#each data.changes as |change i|}}
           <li class="effect-change">
             <div class="flexrow">
-              <div class="type">
-                <select data-type="String" class="effect-type" data-index="{{i}}">
-                  {{selectOptions @root.types selected=(lookup ../selectedTypes i) labelAttr="mnemonic" localize=true}}
-                </select>
-              </div>
-              <div class="subtype">
-                <select class="effect-subtype" data-index="{{i}}">
-                  {{selectOptions (lookup @root.subtypes i) selected=(lookup ../selectedSubtypes i) labelAttr="mnemonic" localize=true
-                    nameAttr="name" valueAttr="name"}}
-                </select>
-                <div style="font-size: 8pt; overflow-wrap: break-word">{{#if ../devMode}}{{change.key}}{{/if}}</div>
-              </div>
-              <div class="mode">{{localize (lookup (lookup ../currentProperties i) "modeStr")}}</div>
+            <div class="type flex04">
+              <select data-type="String" class="effect-type" data-index="{{i}}">
+                {{selectOptions @root.types selected=(lookup ../selectedTypes i) labelAttr="mnemonic" localize=true}}
+              </select>
+            </div>
+            <div class="key flex04">
+              <select class="effect-subtype" data-index="{{i}}">
+                {{selectOptions (lookup @root.subtypes i) selected=(lookup ../selectedSubtypes i) labelAttr="mnemonic" localize=true
+                  nameAttr="name" valueAttr="name"}}
+              </select>
+              <div style="font-size: 8pt; overflow-wrap: break-word">{{#if ../devMode}}{{change.key}}{{/if}}</div>
+            </div>
+            <div class="mode flex01 marginsides3">{{localize (lookup (lookup ../currentProperties i) "modeStr")}}</div>
 
-              <div class="value">
+            <div class="value flex01">
                 {{#if (lookup (lookup ../currentProperties i) "withChoice")}}
                   <select name="changes.{{i}}.value" data-index="{{i}}" class="effect-value">
                     {{#select (lookup change "value") }} {{#each (lookup (lookup (lookup ../subtypes i) (lookup
@@ -49,15 +47,14 @@
                 {{/if }}
               </div>
 
-              <div class="effect-controls">
+              <div class="effect-controls flex0">
                 {{#if (lookup (lookup ../currentProperties i) "option")}}
                   <a class="effect-option" data-index="{{i}}" data-action="option"><i class="fas fa-cogs"></i></a>
                 {{/if}}
-                <a class="effect-delete" data-index="{{i}}" data-action="deleteChange"><i
+                <a class="effect-delete flex0" data-index="{{i}}" data-action="deleteChange"><i
                     class="icon-Icon_Delete_Hand_Gesture"></i></a>
               </div>
-            </div>
-            <div style="position: absolute; right: -2300px">
+            <div style="position: absolute; top: -2300px">
               <input type="hidden" name="changes.{{i}}.mode" value="{{change.mode}}" data-dtype="Number" />
               <input type="hidden" name="changes.{{i}}.key" value="{{change.key}}" data-dtype="String" />
 
