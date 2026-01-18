@@ -20,8 +20,8 @@
           <li class="item effect flexrow" data-effect-id="{{effect.UUID}}" data-filter="{{../../filter}}"
             data-mode="{{../../mode}}">
             <div class="item-name effect-name flexrow">
-              <img class="item-image effect-control" data-action="edit" style="max-width: 100px" src="{{effect.img}}"
-                title="{{{effect.descr}}}" width="36" height="36" />
+              <img class="item-image effect-control" data-action="edit" src="{{effect.img}}" title="{{{effect.descr}}}"
+                width="36" height="36" />
               <div class="item-title">{{effect.displayName}}</div>
             </div>
             <div class="effect-source">{{effect.sourceName}}</div>
@@ -38,7 +38,7 @@
               {{/unless}}
               {{#unless (and effect.noDelete (eq ../../mode "actor"))}}
                 <a class="effect-control" data-action="delete" title="{{localize 'arm5e.sheet.action.Delete'}}">
-                  <i class="icon-Icon_Delete_Hand_Gesture"></i>
+                  <i class="icon-SmallIcon_Delete_Hand_Gesture"></i>
                 </a>
               {{/unless}}
             </div>

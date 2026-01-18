@@ -107,6 +107,8 @@
   --border-dark: #444;
   --color-text-dark-primary: #191813;
 
+  --arm5e-c-hover-shadow: rgb(135 38 22);
+
   --arm5e-c-conflict: rgb(135 38 22);
   --arm5e-c-free: rgb(51 120 34);
   --arm5e-c-busy: rgb(20 55 175);
@@ -424,10 +426,9 @@ h3.dice-msg {
 /* Inputs / selects grouped */
 .arm5e input[type="text"],
 .arm5e input[type="number"],
-.arm5einput[type="password"],
+.arm5e input[type="password"],
 .arm5e input[type="date"],
 .arm5e input[type="time"],
-.arm5e input,
 .arm5e select,
 .arm5eRoll select {
   width: calc(100% - 2px);
@@ -450,6 +451,20 @@ h3.dice-msg {
   -moz-user-select: text;
   -ms-user-select: text;
   user-select: text;
+}
+
+.arm5e .lean,
+.arm5e input[type="text"].lean-input,
+.arm5e input[type="number"].lean-input,
+.arm5e select.lean-select {
+  font-weight: normal;
+  font-size: 9pt;
+}
+
+.arm5e select.lean-select {
+  min-width: 0px;
+  width: 100%;
+  flex-shrink: 0;
 }
 
 input:disabled:hover {
@@ -588,6 +603,7 @@ input[type="checkbox"].crossed::before {
   transform: scale(0);
   flex-shrink: 0;
 }
+
 input[type="checkbox"]:checked::before {
   transform: scale(1.2);
 }
@@ -596,7 +612,7 @@ input[type="checkbox"]:checked::before {
   flex: 0 0 10px;
   width: 10px;
   height: 10px;
-  margin-top: 3px;
+  margin-top: 0px;
   border: 1px solid black;
 }
 .arm5e input[type="checkbox"].tiny-checkbox::before {
@@ -604,9 +620,11 @@ input[type="checkbox"]:checked::before {
   height: 1rem;
   transform: scale(0);
   background-color: rgb(112, 15, 15);
+  position: absolute;
+  top: -5px;
 }
 input[type="checkbox"].tiny-checkbox:checked::before {
-  transform: scale(1.2);
+  transform: scale(0.8);
 }
 
 /* Lists, items & images */
@@ -908,6 +926,15 @@ body .locked-tooltip.active {
 
 .arm5e nav.tabs {
   align-items: center;
+}
+
+.arm5e nav.tabs [data-tab] {
+  color: var(--arm5e-c-black);
+}
+
+nav.tabs [data-tab].active,
+nav.tabs [data-tab]:hover {
+  text-shadow: 0 0 10px var(--arm5e-c-hover-shadow);
 }
 
 .arm5eLargeDialog nav.sheet-tabs {
@@ -2122,8 +2149,18 @@ input[type="number"].design-level {
 }
 
 li.effect-change {
-  margin-right: 1px;
+  display: flex;
+  flex-shrink: 0;
+  width: 100%; /* force li to take full width of ol container */
 }
+
+.effect-change .type,
+.effect-change .key,
+.effect-change .mode,
+.effect-change .value {
+  min-width: 0; /* allows flex children to shrink properly */
+}
+
 /* .arm5e .mainItem .sheet-header {
   margin-top: 100px;
 } */

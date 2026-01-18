@@ -1,59 +1,58 @@
 <section class="tab changes{{#if tab.active}} active{{/if}}" data-group="{{tab.group}}" data-tab="{{tab.id}}"
 style="min-height: 250px">
       <header class="effect-change effects-header flexrow">
-        <div class="type flex04">{{ localize "arm5e.sheet.type" }}</div>
-        <div class="key flex04">{{ localize "arm5e.sheet.attributes" }}</div>
-        <div class="mode flex01">{{ localize "arm5e.activeEffect.changeMode" }}</div>
-        <div class="value flex01">{{ localize "arm5e.activeEffect.changeValue" }}</div>
-        <div class="effect-controls flex0">
+        <div class="type flex04 lean">{{ localize "arm5e.sheet.type" }}</div>
+        <div class="key flex04 lean">{{ localize "arm5e.sheet.attributes" }}</div>
+        <div class="mode flex01 lean">{{ localize "arm5e.activeEffect.changeMode" }}</div>
+        <div class="value flex01 lean">{{ localize "arm5e.activeEffect.changeValue" }}</div>
+        <div class="effect-controls flex0 lean">
           <a class="addChange" data-action="add"><i class="fas fa-plus"></i></a>
         </div>
       </header>
       <ol class="changes-list flexcol" >
         {{#each data.changes as |change i|}}
-          <li class="effect-change">
-            <div class="flexrow">
+          <li class="effect-change flexrow">
             <div class="type flex04">
-              <select data-type="String" class="effect-type" data-index="{{i}}">
+              <select data-type="String" class="effect-type lean-select" data-index="{{i}}">
                 {{selectOptions @root.types selected=(lookup ../selectedTypes i) labelAttr="mnemonic" localize=true}}
               </select>
             </div>
             <div class="key flex04">
-              <select class="effect-subtype" data-index="{{i}}">
+              <select class="effect-subtype lean-select" data-index="{{i}}">
                 {{selectOptions (lookup @root.subtypes i) selected=(lookup ../selectedSubtypes i) labelAttr="mnemonic" localize=true
                   nameAttr="name" valueAttr="name"}}
               </select>
               <div style="font-size: 8pt; overflow-wrap: break-word">{{#if ../devMode}}{{change.key}}{{/if}}</div>
             </div>
-            <div class="mode flex01 marginsides3">{{localize (lookup (lookup ../currentProperties i) "modeStr")}}</div>
+            <div class="mode flex01 marginsides3 lean">{{localize (lookup (lookup ../currentProperties i) "modeStr")}}</div>
 
             <div class="value flex01">
                 {{#if (lookup (lookup ../currentProperties i) "withChoice")}}
-                  <select name="changes.{{i}}.value" data-index="{{i}}" class="effect-value">
+                  <select name="changes.{{i}}.value" data-index="{{i}}" class="effect-value lean-select">
                     {{#select (lookup change "value") }} {{#each (lookup (lookup (lookup ../subtypes i) (lookup
                 ../selectedSubtypes i)) "choice") as | value key|}}
                         <option value="{{key}}">{{localize value}}</option>
                       {{/each}} {{/select}}
                   </select>
                 {{else if (lookup (lookup ../currentProperties i) 'isBool')}}
-                    <input class="effect-value" type="checkbox" name="changes.{{i}}.value" {{checked change.value}} data-dtype="Boolean" data-index="{{i}}" readonly/>
+                    <input class="effect-value tiny-checkbox" readonly type="checkbox" name="changes.{{i}}.value" {{checked change.value}} data-dtype="Boolean" data-index="{{i}}" />
                 {{else if (lookup (lookup ../currentProperties i) "isString")}}
-                  <input class="effect-value" type="text" name="changes.{{i}}.value" value="{{change.value}}"
+                  <input class="effect-value lean-input" type="text" name="changes.{{i}}.value" value="{{change.value}}"
                     data-dtype="String" data-index="{{i}}" />
 
                 {{else}}
-                  <input class="effect-value select-on-focus" type="number" name="changes.{{i}}.value"
+                  <input class="effect-value lean-input" type="number" name="changes.{{i}}.value"
                     value="{{change.value}}" data-dtype="Number" data-index="{{i}}" />
                 {{/if }}
-              </div>
+            </div>
 
-              <div class="effect-controls flex0">
-                {{#if (lookup (lookup ../currentProperties i) "option")}}
-                  <a class="effect-option" data-index="{{i}}" data-action="option"><i class="fas fa-cogs"></i></a>
-                {{/if}}
-                <a class="effect-delete flex0" data-index="{{i}}" data-action="deleteChange"><i
-                    class="icon-Icon_Delete_Hand_Gesture"></i></a>
-              </div>
+            <div class="effect-controls flex0">
+              {{#if (lookup (lookup ../currentProperties i) "option")}}
+                <a class="effect-option" data-index="{{i}}" data-action="option"><i class="fas fa-cogs"></i></a>
+              {{/if}}
+              <a class="effect-delete flex0" data-index="{{i}}" data-action="deleteChange"><i
+                  class="icon-SmallIcon_Delete_Hand_Gesture"></i></a>
+            </div>
             <div style="position: absolute; top: -2300px">
               <input type="hidden" name="changes.{{i}}.mode" value="{{change.mode}}" data-dtype="Number" />
               <input type="hidden" name="changes.{{i}}.key" value="{{change.key}}" data-dtype="String" />
