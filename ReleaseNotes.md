@@ -18,6 +18,7 @@
 - Pending damage notification is only displayed once, the status is cleared after.
 - Fixed a bunch of formatting oddities in the details section of chat rolls.
 - Fixed a bug during an aging crisis where the number of aging points of the characteristic impacted was wrongly computed.
+- Even if a notification was raised, rolls were still possible for dead/unconscious characters
 
 ## 2.4.1.14, Radislav, Cognizant Wisdom BF1
 
