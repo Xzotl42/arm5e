@@ -1482,7 +1482,7 @@ export class ArM5eActor extends Actor {
           this.system.decrepitude.points + this.system.decrepitude.experienceNextLevel;
 
         if (
-          this.system.decrepitude.experienceNextLevel >
+          this.system.characteristics[char1].aging + this.system.decrepitude.experienceNextLevel >
           Math.abs(this.system.characteristics[char1].value)
         ) {
           updateData[`system.characteristics.${char1}.value`] =
