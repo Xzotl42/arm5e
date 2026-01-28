@@ -2081,7 +2081,7 @@ export class ArM5eActorSheet extends ActorSheet {
 
   async roll(event) {
     const dataset = getDataset(event);
-    if (this.isRollPossible(dataset)) {
+    if (await this.isRollPossible(dataset)) {
       return await this._roll(dataset);
     }
   }

@@ -1,7 +1,8 @@
+import { changeMightCallback, noRoll, useItemCharge } from "../dice.js";
 import { SpellSchema } from "../schemas/magicSchemas.js";
 import { log } from "../tools.js";
 import { TWILIGHT_STAGES } from "./long-term-activities.js";
-import { _applyImpact, prepareRollVariables, ROLL_MODES } from "./rollWindow.js";
+import { _applyImpact, getFormData, prepareRollVariables, ROLL_MODES } from "./rollWindow.js";
 
 const VOICE_AND_GESTURES_ICONS = {
   voice: "icons/skills/trades/music-singing-voice-blue.webp",
@@ -819,7 +820,7 @@ async function useMagicItem(dataset, item) {
     {
       title: game.i18n.localize("arm5e.dialog.magicItemUse"),
       content: renderedTemplate,
-      render: actor.rollInfo.listeners,
+      render: item.actor.rollInfo.listeners,
       buttons: {
         yes: {
           icon: "<i class='fas fa-check'></i>",
@@ -876,9 +877,9 @@ async function usePower(dataset, actor) {
           callback: async (html) => {
             getFormData(html, actor);
             if (actor.system.features.hasMight) {
-              await noRoll(actor, 1, changeMight);
+              await noRoll(actor, 1, changeMightCallback);
             } else {
-              await noRoll(actor, 1, actor.loseFatigueLevel);
+              await noRoll(actor, 1, loseFatigueLevelCallback);
             }
           }
         },

@@ -1004,10 +1004,14 @@ async function noRoll(actor, specialBehavior, callback) {
   // actor.rollInfo.reset();
 }
 
-async function changeMight(actor, roll, message) {
+async function changeMightCallback(actor, roll, message) {
   // const form = CONFIG.ARM5E.magic.arts[actor.rollInfo.power.form]?.label ?? "NONE";
   await handleTargetsOfMagic(actor, actor.rollInfo.power.form, message);
   await actor.changeMight(-actor.rollInfo.power.cost);
+}
+
+async function loseFatigueLevelCallback(actor, roll, message) {
+  await actor.loseFatigueLevel(actor.rollInfo.power.cost);
 }
 
 async function useItemCharge(actor, roll, message) {
@@ -1016,4 +1020,11 @@ async function useItemCharge(actor, roll, message) {
   await handleTargetsOfMagic(actor, actor.rollInfo.item.form, message);
   await item.useItemCharge();
 }
-export { simpleDie, stressDie, noRoll, changeMight, useItemCharge };
+export {
+  simpleDie,
+  stressDie,
+  noRoll,
+  changeMightCallback,
+  loseFatigueLevelCallback,
+  useItemCharge
+};
