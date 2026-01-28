@@ -1,13 +1,14 @@
 <div class="characteristics grid grid-2col backSection margintop18">
   <div class="flexrow flex-group-left">
     <label class="item-title stance">{{localize "arm5e.sheet.magic.voice"}}</label>
-    <select name="system.stances.voiceStance" class="voice-and-gestures stance" effect="voice" data-actorId="{{_id}}">
+    <select name="system.stances.voiceStance" class="voice-and-gestures stance lean-select" effect="voice"
+      data-actorId="{{_id}}">
       {{selectOptions selection.voiceStances selected=system.stances.voiceStance  }}
     </select>
   </div>
   <div class="flexrow flex-group-left">
     <label class="item-title stance">{{localize "arm5e.sheet.magic.gestures"}}</label>
-    <select name="system.stances.gesturesStance" class="voice-and-gestures stance" effect="gestures"
+    <select name="system.stances.gesturesStance" class="voice-and-gestures stance lean-select" effect="gestures"
       data-actorId="{{_id}}">
       {{selectOptions selection.gesturesStances selected=system.stances.gesturesStance  }}
     </select>

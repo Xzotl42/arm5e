@@ -11,12 +11,19 @@
 - Astrolabium - done
 - ChatMessage - removed jquery usage
 - Active effects config - Ars theme
+- All dialogs are now DialogV2
 
 ### Features & changes
 
 - Added tint and condition statuses to Active Effect.
+- [technical] Converted most of the largest assets from png to webp format
 
 ### Bug fixes
+
+- Fixed a bug during an aging crisis where the number of aging points of the characteristic impacted was wrongly computed.
+- Even if a notification was raised, rolls were still possible for dead/unconscious characters
+- Private results of an aging crisis were generating a corrupted message
+- Using magic items is working again.
 
 ## 2.4.1.14, Radislav, Cognizant Wisdom BF1
 

@@ -93,6 +93,9 @@ export class Arm5eChatMessage extends ChatMessage {
       }
     }
     const html = await super.renderHTML(options);
+
+    if (this.type === "base") return html;
+
     let actor = this.actor;
 
     if (this.isRoll) {

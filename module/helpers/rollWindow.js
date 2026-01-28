@@ -12,6 +12,7 @@ import {
 import { damageRoll, exertSelf, soakRoll } from "./combat.js";
 import { MagicalEffectSchema, SpellSchema } from "../schemas/magicSchemas.js";
 import { log } from "../tools/tools.js";
+const DialogV2 = foundry.applications.api.DialogV2;
 const renderTemplate = foundry.applications.handlebars.renderTemplate;
 // below is a bitmap
 const ROLL_MODES = {
@@ -334,14 +335,14 @@ function getDebugButtonsIfNeeded(actor, callback) {
     explode: {
       label: "DEV Roll 1",
       callback: async (html) => {
-        actor = getFormData(html, actor);
+        actor = getFormData(html[0], actor);
         await stressDie(actor, actor.rollInfo.type, 1, callback, actor.rollInfo.botchNumber);
       }
     },
     zero: {
       label: "DEV Roll 0",
       callback: async (html) => {
-        actor = getFormData(html, actor);
+        actor = getFormData(html[0], actor);
         await stressDie(actor, actor.rollInfo.type, 2, callback, actor.rollInfo.botchNumber);
       }
     }
@@ -370,7 +371,7 @@ async function getDialog(dataset, html, actor) {
         icon: "<i class='fas fa-check'></i>",
         label: game.i18n.localize(btnLabel),
         callback: async (html) => {
-          getFormData(html, actor);
+          getFormData(html[0], actor);
           if (rollAlteration) {
             rollAlteration(actor);
           }
@@ -389,7 +390,7 @@ async function getDialog(dataset, html, actor) {
             : "arm5e.dialog.button.stressdie"
         ),
         callback: async (html) => {
-          getFormData(html, actor);
+          getFormData(html[0], actor);
           resolve(
             await stressDie(actor, rollProperties.type, mode, callback, rollInfo.botchNumber)
           );
@@ -430,7 +431,7 @@ async function getDialog(dataset, html, actor) {
             : "arm5e.dialog.button.simpledie"
         ),
         callback: async (html) => {
-          getFormData(html, actor);
+          getFormData(html[0], actor);
           resolve(await simpleDie(actor, rollProperties.type, callback));
         }
       };
@@ -452,7 +453,7 @@ async function getDialog(dataset, html, actor) {
           rollProperties.ACTION_LABEL ? rollProperties.ACTION_LABEL : "arm5e.dialog.powerUse"
         ),
         callback: async (html) => {
-          getFormData(html, actor);
+          getFormData(html[0], actor);
           resolve(await noRoll(actor, 1, null));
         }
       };
@@ -468,8 +469,8 @@ async function getDialog(dataset, html, actor) {
         title: game.i18n.localize(title),
         content: html,
         buttons: {
-          ...btns
-          // ...getDebugButtonsIfNeeded(actor, callback)
+          ...btns,
+          ...getDebugButtonsIfNeeded(actor, callback)
         },
         render: actor.rollInfo.listeners
       },
@@ -616,13 +617,13 @@ async function applyImpact(actor, roll, message) {
  * @param actor
  */
 export function getFormData(html, actor) {
-  let find = html.find(".SelectedCharacteristic");
-  if (find.length > 0) {
-    actor.rollInfo.characteristic = find[0].value;
+  let find = html.querySelector(".SelectedCharacteristic");
+  if (find) {
+    actor.rollInfo.characteristic = find.value;
   }
-  find = html.find(".SelectedAbility");
-  if (find.length > 0) {
-    if (find[0].value == "None") {
+  find = html.querySelector(".SelectedAbility");
+  if (find) {
+    if (find.value == "None") {
       const dataset = {
         name: actor.rollInfo.name,
         roll: "char",
@@ -637,7 +638,7 @@ export function getFormData(html, actor) {
       const dataset = {
         name: actor.rollInfo.name,
         roll: "ability",
-        ability: find[0].value,
+        ability: find.value,
         defaultcharacteristic: actor.rollInfo.characteristic,
         modifier: actor.rollInfo.modifier
       };
@@ -650,85 +651,85 @@ export function getFormData(html, actor) {
     }
   }
 
-  find = html.find(".abilitySpeciality");
-  if (find.length > 0) {
-    actor.rollInfo.ability.specApply = find[0].checked;
+  find = html.querySelector(".abilitySpeciality");
+  if (find) {
+    actor.rollInfo.ability.specApply = find.checked;
   }
 
-  find = html.find(".enigmaSpeciality");
-  if (find.length > 0) {
-    actor.rollInfo.twilight.enigma.specApply = find[0].checked;
+  find = html.querySelector(".enigmaSpeciality");
+  if (find) {
+    actor.rollInfo.twilight.enigma.specApply = find.checked;
   }
 
-  find = html.find(".SelectedTechnique");
-  if (find.length > 0) {
-    actor.rollInfo.magic.technique.value = find[0].value;
-    actor.rollInfo.magic.technique.label = ARM5E.magic.techniques[find[0].value].label;
+  find = html.querySelector(".SelectedTechnique");
+  if (find) {
+    actor.rollInfo.magic.technique.value = find.value;
+    actor.rollInfo.magic.technique.label = ARM5E.magic.techniques[find.value].label;
     actor.rollInfo.magic.technique.score = parseInt(
-      actor.system.arts.techniques[find[0].value].finalScore
+      actor.system.arts.techniques[find.value].finalScore
     );
 
-    if (actor.system.arts.techniques[find[0].value].deficient) {
+    if (actor.system.arts.techniques[find.value].deficient) {
       actor.rollInfo.magic.technique.deficiency = true;
     } else {
       actor.rollInfo.magic.technique.deficiency = false;
     }
   }
 
-  find = html.find(".SelectedForm");
-  if (find.length > 0) {
-    actor.rollInfo.magic.form.value = find[0].value;
-    actor.rollInfo.magic.form.label = ARM5E.magic.forms[find[0].value].label;
-    actor.rollInfo.magic.form.score = parseInt(actor.system.arts.forms[find[0].value].finalScore);
-    if (actor.system.arts.forms[find[0].value].deficient) {
+  find = html.querySelector(".SelectedForm");
+  if (find) {
+    actor.rollInfo.magic.form.value = find.value;
+    actor.rollInfo.magic.form.label = ARM5E.magic.forms[find.value].label;
+    actor.rollInfo.magic.form.score = parseInt(actor.system.arts.forms[find.value].finalScore);
+    if (actor.system.arts.forms[find.value].deficient) {
       actor.rollInfo.magic.form.deficiency = true;
     } else {
       actor.rollInfo.magic.form.deficiency = false;
     }
   }
 
-  find = html.find(".SelectedAura");
-  if (find.length > 0) {
-    actor.rollInfo.environment.aura.modifier = Number(find[0].value) ?? 0;
+  find = html.querySelector(".SelectedAura");
+  if (find) {
+    actor.rollInfo.environment.aura.modifier = Number(find.value) ?? 0;
   }
 
-  find = html.find(".SelectedLevel");
-  if (find.length > 0) {
-    actor.rollInfo.magic.level = Number(find[0].value) ?? 0;
+  find = html.querySelector(".SelectedLevel");
+  if (find) {
+    actor.rollInfo.magic.level = Number(find.value) ?? 0;
   }
 
-  find = html.find(".SelectedModifier");
-  if (find.length > 0) {
-    actor.rollInfo.modifier = Number(find[0].value) ?? 0;
+  find = html.querySelector(".SelectedModifier");
+  if (find) {
+    actor.rollInfo.modifier = Number(find.value) ?? 0;
     // Negative modifier
     if ([ROLL_PROPERTIES.CRISIS.VAL].includes(actor.rollInfo.type)) {
       actor.rollInfo.modifier = -actor.rollInfo.modifier;
     }
   }
 
-  find = html.find(".SelectedAdvantage");
-  if (find.length > 0) {
-    actor.rollInfo.combat.advantage = Number(find[0].value) ?? 0;
+  find = html.querySelector(".SelectedAdvantage");
+  if (find) {
+    actor.rollInfo.combat.advantage = Number(find.value) ?? 0;
   }
 
-  find = html.find(".SelectedWarpingPoints");
-  if (find.length > 0) {
-    actor.rollInfo.twilight.warpingPts = Number(find[0].value) ?? 2;
+  find = html.querySelector(".SelectedWarpingPoints");
+  if (find) {
+    actor.rollInfo.twilight.warpingPts = Number(find.value) ?? 2;
   }
 
-  find = html.find(".SelectedFocus");
-  if (find.length > 0) {
-    actor.rollInfo.magic.focus = find[0].checked;
+  find = html.querySelector(".SelectedFocus");
+  if (find) {
+    actor.rollInfo.magic.focus = find.checked;
   }
 
-  find = html.find(".SelectedYear");
-  if (find.length > 0) {
-    actor.rollInfo.environment.year = Number(find[0].value) ?? 1220;
+  find = html.querySelector(".SelectedYear");
+  if (find) {
+    actor.rollInfo.environment.year = Number(find.value) ?? 1220;
   }
 
-  find = html.find(".SelectedDifficulty");
-  if (find.length > 0) {
-    actor.rollInfo.difficulty = parseInt(find[0].value ?? 0);
+  find = html.querySelector(".SelectedDifficulty");
+  if (find) {
+    actor.rollInfo.difficulty = parseInt(find.value ?? 0);
   }
 
   if (
@@ -737,74 +738,74 @@ export function getFormData(html, actor) {
     ) ||
     actor.rollInfo.type == "power"
   ) {
-    find = html.find(".penSpeciality");
-    if (find.length > 0) {
-      actor.rollInfo.penetration.specApply = find[0].checked;
+    find = html.querySelector(".penSpeciality");
+    if (find) {
+      actor.rollInfo.penetration.specApply = find.checked;
     }
-    find = html.find(".spellMastery");
-    if (find.length > 0) {
-      actor.rollInfo.penetration.penetrationMastery = find[0].checked;
+    find = html.querySelector(".spellMastery");
+    if (find) {
+      actor.rollInfo.penetration.penetrationMastery = find.checked;
     }
-    find = html.find(".multiplierBonusArcanic");
-    if (find.length > 0) {
-      actor.rollInfo.penetration.multiplierBonusArcanic = Number(find[0].value) ?? 0;
-    }
-
-    find = html.find(".multiplierBonusSympathic");
-    if (find.length > 0) {
-      actor.rollInfo.penetration.multiplierBonusSympathic = Number(find[0].value) ?? 0;
+    find = html.querySelector(".multiplierBonusArcanic");
+    if (find) {
+      actor.rollInfo.penetration.multiplierBonusArcanic = Number(find.value) ?? 0;
     }
 
-    find = html.find(".power-cost");
-    if (find.length > 0) {
-      actor.rollInfo.power.cost = Number(find[0].value) ?? 0;
+    find = html.querySelector(".multiplierBonusSympathic");
+    if (find) {
+      actor.rollInfo.penetration.multiplierBonusSympathic = Number(find.value) ?? 0;
+    }
+
+    find = html.querySelector(".power-cost");
+    if (find) {
+      actor.rollInfo.power.cost = Number(find.value) ?? 0;
       actor.rollInfo.power.penetrationPenalty = actor.rollInfo.power.cost * 5;
     }
 
-    find = html.find(".power-label");
-    if (find.length > 0) {
-      actor.rollInfo.label = find[0].value ?? actor.rollInfo.label;
+    find = html.querySelector(".power-label");
+    if (find) {
+      actor.rollInfo.label = find.value ?? actor.rollInfo.label;
     }
 
-    find = html.find(".power-form");
-    if (find.length > 0) {
-      actor.rollInfo.power.form = find[0].value ?? actor.rollInfo.power.form;
+    find = html.querySelector(".power-form");
+    if (find) {
+      actor.rollInfo.power.form = find.value ?? actor.rollInfo.power.form;
     }
   } else if ([ROLL_PROPERTIES.DAMAGE.VAL, ROLL_PROPERTIES.SOAK.VAL].includes(actor.rollInfo.type)) {
-    find = html.find(".SelectedDamage");
-    if (find.length > 0) {
-      actor.rollInfo.difficulty = parseInt(find[0].value);
+    find = html.querySelector(".SelectedDamage");
+    if (find) {
+      actor.rollInfo.difficulty = parseInt(find.value);
     }
 
-    find = html.find(".SelectedSource");
-    if (find.length > 0) {
-      actor.rollInfo.damage.source = find[0].value;
+    find = html.querySelector(".SelectedSource");
+    if (find) {
+      actor.rollInfo.damage.source = find.value;
     }
-    find = html.find(".SelectedFormDamage");
-    if (find.length > 0) {
-      actor.rollInfo.damage.form = find[0].value;
-    }
-
-    find = html.find(".ignoreArmor");
-    if (find.length > 0) {
-      actor.rollInfo.damage.ignoreArmor = find[0].checked;
+    find = html.querySelector(".SelectedFormDamage");
+    if (find) {
+      actor.rollInfo.damage.form = find.value;
     }
 
-    find = html.find(".formRes");
-    if (find.length > 0) {
-      actor.rollInfo.damage.formRes = parseInt(find[0].value);
+    find = html.querySelector(".ignoreArmor");
+    if (find) {
+      actor.rollInfo.damage.ignoreArmor = find.checked;
     }
 
-    find = html.find(".natRes");
-    if (find.length > 0) {
-      actor.rollInfo.damage.natRes = parseInt(find[0].value);
+    find = html.querySelector(".formRes");
+    if (find) {
+      actor.rollInfo.damage.formRes = parseInt(find.value);
+    }
+
+    find = html.querySelector(".natRes");
+    if (find) {
+      actor.rollInfo.damage.natRes = parseInt(find.value);
     }
   }
   let idx = 0;
   for (let optEffect of actor.rollInfo.optionalBonuses) {
-    find = html.find(`.SelectedOptional${idx}`);
-    if (find.length > 0) {
-      actor.rollInfo.optionalBonuses[idx].active = find[0].checked;
+    find = html.querySelector(`.SelectedOptional${idx}`);
+    if (find) {
+      actor.rollInfo.optionalBonuses[idx].active = find.checked;
     }
     idx++;
   }

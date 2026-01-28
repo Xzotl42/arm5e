@@ -1,7 +1,9 @@
 import { SpellSchema } from "../schemas/magicSchemas.js";
 import { log } from "../tools/tools.js";
 import { TWILIGHT_STAGES } from "../seasonal-activities/long-term-activities.js";
-import { _applyImpact, prepareRollVariables, ROLL_MODES } from "./rollWindow.js";
+import { _applyImpact, getFormData, prepareRollVariables, ROLL_MODES } from "./rollWindow.js";
+import { customDialogAsync } from "../ui/dialogs.js";
+import { changeMightCallback, noRoll, useItemCharge } from "./dice.js";
 const renderTemplate = foundry.applications.handlebars.renderTemplate;
 const VOICE_AND_GESTURES_ICONS = {
   voice: "icons/skills/trades/music-singing-voice-blue.webp",
@@ -148,32 +150,29 @@ export async function PickRequisites(spelldata, flavor, editable, updatePath = "
   let template = "systems/arm5e/templates/item/parts/requisites.html";
   let html = await renderTemplate(template, spelldata);
 
-  let itemUpdate = await new Promise((resolve) => {
-    new Dialog(
+  return await customDialogAsync({
+    window: {
+      title: game.i18n.localize("arm5e.sheet.Requisites")
+    },
+    classes: ["arm5eRequisite"],
+    content: html,
+    buttons: [
       {
-        title: game.i18n.localize("arm5e.sheet.Requisites"),
-        content: html,
-        buttons: {
-          yes: {
-            icon: "<i class='fas fa-check'></i>",
-            label: game.i18n.localize("arm5e.dialog.button.save"),
-            callback: async (html) => {
-              resolve(_setRequisites(html, updatePath));
-            }
-          },
-          no: {
-            icon: "<i class='fas fa-ban'></i>",
-            label: game.i18n.localize("arm5e.dialog.button.cancel"),
-            callback: null
-          }
+        action: "confirm",
+        icon: "<i class='fas fa-check'></i>",
+        label: game.i18n.localize("arm5e.generic.confirm"),
+        callback: async (event, button, dialog) => {
+          return _setRequisites(dialog.element, updatePath);
         }
       },
       {
-        classes: ["arm5e-dialog", "dialog"]
+        action: "cancel",
+        icon: "<i class='fas fa-ban'></i>",
+        label: game.i18n.localize("arm5e.dialog.button.cancel"),
+        callback: null
       }
-    ).render(true);
+    ]
   });
-  return itemUpdate;
 }
 
 /**
@@ -184,25 +183,21 @@ function _setRequisites(selector, updatePath) {
   let itemUpdate = {};
 
   for (const tech of Object.entries(CONFIG.ARM5E.magic.techniques)) {
-    let found = selector.find(`.Selected${tech[1].label}`);
-    if (found.length > 0) {
-      if (found[0].checked === true) {
-        itemUpdate[`${updatePath}.technique-req.${tech[0]}`] = true;
-      } else {
-        itemUpdate[`${updatePath}.technique-req.${tech[0]}`] = false;
-      }
+    let found = selector.querySelector(`.Selected${tech[1].label}`);
+    if (found.checked === true) {
+      itemUpdate[`${updatePath}.technique-req.${tech[0]}`] = true;
+    } else {
+      itemUpdate[`${updatePath}.technique-req.${tech[0]}`] = false;
     }
   }
 
   // Forms
   for (const form of Object.entries(CONFIG.ARM5E.magic.forms)) {
-    let found = selector.find(`.Selected${form[1].label}`);
-    if (found.length > 0) {
-      if (found[0].checked === true) {
-        itemUpdate[`${updatePath}.form-req.${form[0]}`] = true;
-      } else {
-        itemUpdate[`${updatePath}.form-req.${form[0]}`] = false;
-      }
+    let found = selector.querySelector(`.Selected${form[1].label}`);
+    if (found.checked === true) {
+      itemUpdate[`${updatePath}.form-req.${form[0]}`] = true;
+    } else {
+      itemUpdate[`${updatePath}.form-req.${form[0]}`] = false;
     }
   }
 
@@ -815,35 +810,29 @@ async function useMagicItem(dataset, item) {
   item.actor.config = CONFIG.ARM5E;
   const renderedTemplate = await renderTemplate(template, item.actor);
 
-  const dialog = new Dialog(
-    {
-      title: game.i18n.localize("arm5e.dialog.magicItemUse"),
-      content: renderedTemplate,
-      render: actor.rollInfo.listeners,
-      buttons: {
-        yes: {
-          icon: "<i class='fas fa-check'></i>",
-          label: game.i18n.localize(),
-          callback: async (html) => {
-            getFormData(html, item.actor);
-            await noRoll(item.actor, 1, useItemCharge);
-          }
-        },
-        no: {
-          icon: "<i class='fas fa-ban'></i>",
-          label: game.i18n.localize("arm5e.dialog.button.cancel"),
-          callback: null
-        }
-      }
+  await customDialogAsync({
+    window: {
+      title: game.i18n.localize("arm5e.dialog.magicItemUse")
     },
-    {
-      jQuery: true,
-      height: "600px",
-      width: "400px",
-      classes: ["roll-dialog", "arm5e-dialog", "dialog"]
-    }
-  );
-  dialog.render(true);
+    classes: ["roll-dialog"],
+    content: renderedTemplate,
+    buttons: [
+      {
+        action: "confirm",
+        icon: "<i class='fas fa-check'></i>",
+        label: game.i18n.localize("arm5e.generic.confirm"),
+        callback: async (event, button, dialog) => {
+          getFormData(dialog.element, item.actor);
+          await noRoll(item.actor, 1, useItemCharge);
+        }
+      },
+      {
+        action: "cancel",
+        icon: "<i class='fas fa-ban'></i>",
+        label: game.i18n.localize("arm5e.dialog.button.cancel")
+      }
+    ]
+  });
 }
 
 /**
@@ -863,40 +852,33 @@ async function usePower(dataset, actor) {
   actor.system.roll = actor.rollInfo;
   actor.config = { magic: CONFIG.ARM5E.magic };
   const renderedTemplate = await renderTemplate(template, actor);
-
-  const dialog = new Dialog(
-    {
-      title: dataset.name,
-      content: renderedTemplate,
-      render: actor.rollInfo.listeners,
-      buttons: {
-        yes: {
-          icon: "<i class='fas fa-check'></i>",
-          label: game.i18n.localize(rollProperties.ACTION_LABEL),
-          callback: async (html) => {
-            getFormData(html, actor);
-            if (actor.system.features.hasMight) {
-              await noRoll(actor, 1, changeMight);
-            } else {
-              await noRoll(actor, 1, actor.loseFatigueLevel);
-            }
-          }
-        },
-        no: {
-          icon: "<i class='fas fa-ban'></i>",
-          label: game.i18n.localize("arm5e.dialog.button.cancel"),
-          callback: null
-        }
-      }
+  await customDialogAsync({
+    window: {
+      title: dataset.name
     },
-    {
-      jQuery: true,
-      height: "600px",
-      width: "400px",
-      classes: ["roll-dialog", "arm5e-dialog", "dialog"]
-    }
-  );
-  dialog.render(true);
+    classes: ["roll-dialog"],
+    content: renderedTemplate,
+    buttons: [
+      {
+        action: "confirm",
+        icon: "<i class='fas fa-check'></i>",
+        label: game.i18n.localize(rollProperties.ACTION_LABEL),
+        callback: async (event, button, dialog) => {
+          getFormData(dialog.element, actor);
+          if (actor.system.features.hasMight) {
+            await noRoll(actor, 1, changeMightCallback);
+          } else {
+            await noRoll(actor, 1, loseFatigueLevelCallback);
+          }
+        }
+      },
+      {
+        action: "cancel",
+        icon: "<i class='fas fa-ban'></i>",
+        label: game.i18n.localize("arm5e.dialog.button.cancel")
+      }
+    ]
+  });
 }
 
 export {

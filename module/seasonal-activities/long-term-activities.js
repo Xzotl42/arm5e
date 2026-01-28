@@ -15,6 +15,8 @@ import {
   VisStudy
 } from "./progressActivity.js";
 import { LabActivity } from "./labActivity.js";
+import { customDialog, customDialogAsync } from "../ui/dialogs.js";
+import { Arm5eChatMessage } from "../helpers/chat-message.js";
 const renderTemplate = foundry.applications.handlebars.renderTemplate;
 
 export function ActivityFactory(type, owner, diaryData) {
@@ -70,7 +72,7 @@ export async function setAgingEffects(actor, roll, message) {
   let rtCompendium = game.packs.get("arm5e.rolltables");
   let docs = await rtCompendium.getDocuments();
   const agingTable = docs.filter((rt) => rt.name === "Aging table")[0];
-  let res = agingTable.getResultsForRoll(roll.total)[0].text;
+  let res = agingTable.getResultsForRoll(roll.total)[0].description;
   let dialogData = CONFIG.ARM5E.activities.aging[res];
 
   dialogData.year = actor.rollInfo.environment.year;
@@ -87,45 +89,38 @@ export async function setAgingEffects(actor, roll, message) {
     "systems/arm5e/templates/generic/aging-dialog.html",
     dialogData
   );
-  let resultAging = {};
-  await new Promise((resolve) => {
-    new Dialog(
+
+  const result = await customDialog({
+    window: { title: game.i18n.localize("arm5e.aging.summary") },
+    content: renderedTemplate,
+    classes: ["arm5e-prompt"],
+    buttons: [
       {
-        title: game.i18n.localize("arm5e.aging.summary"),
-        content: renderedTemplate,
-        buttons: {
-          yes: {
-            icon: "<i class='fas fa-check'></i>",
-            label: game.i18n.localize("arm5e.sheet.action.apply"),
-            callback: async (html) => {
-              let find = html.find(".SelectedCharacteristic");
-              if (find.length > 0) {
-                dialogData.char = find[0].value;
-              }
-              resultAging = await actor.getAgingEffects(dialogData);
-              resolve();
-            }
-          },
-          no: {
-            icon: "<i class='fas fa-bomb'></i>",
-            label: game.i18n.localize("arm5e.dialog.button.cancel"),
-            callback: (html) => {
-              resolve();
-            }
+        action: "yes",
+        class: ["dialog-button"],
+        icon: "<i class='fas fa-check'></i>",
+        label: game.i18n.localize("arm5e.sheet.action.apply"),
+        callback: (event, button, dialog) => {
+          let find = dialog.element.querySelector(".SelectedCharacteristic");
+          if (find) {
+            return find.value;
           }
+          return null;
         }
-      },
-      {
-        classes: ["arm5e-dialog", "dialog"],
-        height: "600px",
-        width: "400px"
       }
-    ).render(true);
+    ]
   });
+
+  if (!result) return;
+  dialogData.char = result;
+  let resultAging = await actor.getAgingEffects(dialogData);
+
   resultAging.roll = { formula: roll._formula, result: roll.result };
   resultAging.year = actor.rollInfo.environment.year;
 
   await updateAgingDiaryEntry(actor, resultAging);
+
+  return;
 }
 
 export async function agingRoll(item) {
@@ -143,12 +138,12 @@ export async function agingCrisis(actor, roll, message) {
   let docs = await rtCompendium.getDocuments();
 
   const crisisTable = docs.filter((rt) => rt.name === "Aging crisis table")[0];
-  let res = crisisTable.getResultsForRoll(roll.total)[0].text;
+  let res = crisisTable.getResultsForRoll(roll.total)[0].description;
 
   // log(false, `Crisis result expanded: ${msg}`);
-  ChatMessage.create({
-    content: "<h3>" + game.i18n.localize(`arm5e.aging.crisis.${res}`) + "</h3><br/>",
-    speaker: ChatMessage.getSpeaker({
+  Arm5eChatMessage.create({
+    flavor: game.i18n.localize(`arm5e.aging.crisis.${res}`),
+    speaker: Arm5eChatMessage.getSpeaker({
       actor: actor
     }),
     whisper: ChatMessage.getWhisperRecipients("gm"),

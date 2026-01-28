@@ -4,6 +4,7 @@ import { ARM5E } from "../config.js";
 import { ArsRoll } from "./roll.js";
 import { Arm5eChatMessage } from "./chat-message.js";
 import { handleTargetsOfMagic } from "./magic.js";
+import { customDialogAsync } from "../ui/dialogs.js";
 const renderTemplate = foundry.applications.handlebars.renderTemplate;
 
 let iterations = 1;
@@ -798,27 +799,20 @@ async function explodingRoll(actorData, rollOptions = {}, botchNum = -1) {
         "systems/arm5e/templates/generic/explodingRoll.html",
         dialogData
       );
-      await new Promise((resolve) => {
-        new Dialog(
+
+      dieRoll = await customDialogAsync({
+        window: { title: game.i18n.localize("arm5e.dialog.roll.explodingroll") },
+        content: html,
+        buttons: [
           {
-            title: game.i18n.localize("arm5e.dialog.roll.explodingroll"),
-            content: html,
-            buttons: {
-              yes: {
-                icon: "<i class='fas fa-check'></i>",
-                label: game.i18n.localize("arm5e.dialog.button.roll"),
-                callback: async (html) => {
-                  dieRoll = await explodingRoll(actorData, rollOptions);
-                  resolve();
-                }
-              }
+            action: "yes",
+            label: game.i18n.localize("arm5e.dialog.button.roll"),
+            callback: async (event, button, dialog) => {
+              return await explodingRoll(actorData, rollOptions);
             }
-          },
-          {
-            classes: ["arm5e-dialog", "dialog"],
-            height: "400px"
           }
-        ).render(true);
+        ],
+        modal: true
       });
     } else {
       if (game.modules.get("dice-so-nice")?.active) {
@@ -843,43 +837,21 @@ async function explodingRoll(actorData, rollOptions = {}, botchNum = -1) {
       let botchRoll;
       if (botchNum === -1 && rollOptions.prompt) {
         // interactive mode show dialog
-        await new Promise((resolve) => {
-          new Dialog(
+        botchRoll = await customDialogAsync({
+          window: { title: game.i18n.localize("arm5e.dialog.botch.title") },
+          content: html,
+          buttons: [
             {
-              title: game.i18n.localize("arm5e.dialog.botch.title"),
-              content: html,
-              buttons: {
-                yes: {
-                  icon: "<i class='fas fa-check'></i>",
-                  label: game.i18n.localize("arm5e.dialog.button.rollbotch"),
-                  callback: async (html) => {
-                    botchNum = html.find("#botchDice").val();
-                    botchRoll = await CheckBotch(botchNum, dieRoll);
-                    resolve();
-                  }
-                },
-                no: {
-                  icon: "<i class='fas fa-times'></i>",
-                  label: `Cancel`,
-                  callback: (html) => {
-                    ChatMessage.create({
-                      content: game.i18n.localize("arm5e.dialog.button.rollnobotch"),
-                      speaker: ChatMessage.getSpeaker({
-                        actor: actorData
-                      })
-                    });
-                    botchRoll = 0;
-                    resolve();
-                  }
-                }
-              },
-              default: "yes"
-            },
-            {
-              classes: ["arm5e-dialog", "dialog"],
-              height: "400px"
+              action: "yes",
+              label: game.i18n.localize("arm5e.dialog.button.rollbotch"),
+              callback: async (event, button, dialog) => {
+                let botchNum = parseInt(dialog.element.querySelector("#botchDice").value);
+                if (isNaN(botchNum) || botchNum < 0) botchNum = 0;
+                return await CheckBotch(botchNum, dieRoll);
+              }
             }
-          ).render(true);
+          ],
+          modal: true
         });
       } else {
         botchRoll = await CheckBotch(botchNum, dieRoll);
@@ -1006,10 +978,14 @@ async function noRoll(actor, specialBehavior, callback) {
   // actor.rollInfo.reset();
 }
 
-async function changeMight(actor, roll, message) {
+async function changeMightCallback(actor, roll, message) {
   // const form = CONFIG.ARM5E.magic.arts[actor.rollInfo.power.form]?.label ?? "NONE";
   await handleTargetsOfMagic(actor, actor.rollInfo.power.form, message);
   await actor.changeMight(-actor.rollInfo.power.cost);
+}
+
+async function loseFatigueLevelCallback(actor, roll, message) {
+  await actor.loseFatigueLevel(actor.rollInfo.power.cost);
 }
 
 async function useItemCharge(actor, roll, message) {
@@ -1018,4 +994,11 @@ async function useItemCharge(actor, roll, message) {
   await handleTargetsOfMagic(actor, actor.rollInfo.item.form, message);
   await item.useItemCharge();
 }
-export { simpleDie, stressDie, noRoll, changeMight, useItemCharge };
+export {
+  simpleDie,
+  stressDie,
+  noRoll,
+  changeMightCallback,
+  loseFatigueLevelCallback,
+  useItemCharge
+};

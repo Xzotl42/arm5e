@@ -1,6 +1,6 @@
 <form class="{{cssClass}} arm5eRoll" autocomplete="off">
   {{> "systems/arm5e/templates/roll/parts/roll-header.html" header="Confirmation" }}
-  <div class="roll-options">
+  <div class="roll-options marginsides32">
     <input class="power-label" type="text" hidden name="system.roll.label" value="{{system.roll.label}}">
     <div class="flexrow flex-group-center">
       <label class="">{{localize "arm5e.sheet.form" }}</label>
@@ -10,7 +10,7 @@
       <label class="">{{localize "arm5e.sheet.cost" }}</label>
       <input type="number" class="power-cost select-on-focus" value="{{system.roll.power.cost}}" data-id="{{_id}}">
     </div>
-    <div class="flexrow flex-group-center">
+    <div class="flexcol flex-group-center">
       <label class=""><img src="systems/arm5e/assets/ballSilver.png" width="20" height="20"
           style="border :0px" /></label>
     </div>
@@ -42,7 +42,7 @@
       <label class="">+</label>
     </div>
     <div class="flexrow flex-group-center">
-      <label class="">{{localize "arm5e.sheet.modifier" }}</label>
+      <label class="flex01">{{localize "arm5e.sheet.modifier" }}</label>
       <input type="number" name="modifier" value="{{modifier}}" data-dtype="Number"
         class="SelectedModifier select-on-focus" />
     </div>
@@ -81,7 +81,7 @@
       </div>
     {{/unless}}
 
-    <div class="flexrow flex-group-center">
+    <div class="flexcol flex-group-center">
       <label class=""><img src="systems/arm5e/assets/icons/Icon_Details_option1.png" title="Penetration" width="24"
           height="24" style="border :0px" /></label>
     </div>

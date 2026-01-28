@@ -1,7 +1,9 @@
 <form class="{{cssClass}} arm5eInfo" autocomplete="off">
   {{> "systems/arm5e/templates/roll/parts/roll-header.html" header="Exploding_rolls"}}
   <div class="flexrow backSection" style="padding: 20px; font-size: 20pt">
-    <p class="info-msg">{{msg}}</p>
+    <div class="flexcol flex-center">
+      <label style="margin: 10px; font-size: 14pt;">{{msg}}</label>
+    </div>
   </div>
   {{> "systems/arm5e/templates/roll/parts/roll-footer.html" footer="Exploding_rolls" }}
 </form>

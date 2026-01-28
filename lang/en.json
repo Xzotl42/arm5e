@@ -541,6 +541,7 @@
       "cancelled": "Cancelled",
       "clear": "Clear",
       "config": "Configuration",
+      "confirm": "Confirm",
       "current": "Current",
       "custom": "Custom",
       "default": "Default",
@@ -870,7 +871,9 @@
       "setDate": "The current date has been set to {season} {year}",
       "situationHasChanged": "The situation has changed, applying is no longer possible.",
       "synchActors": "All actors have been synchronized to {season} {year}",
-      "unconscious": "This character is unconscious, no action possible..."
+      "unconscious": "This character is unconscious, no action possible...",
+      "valueMax": "The value cannot be more than {max}. Setting to maximum.",
+      "valueMin": "The value cannot be less than {min}. Setting to minimum."
     },
     "packs": {
       "abilities": {

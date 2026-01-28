@@ -66,7 +66,13 @@ import { MedicalHistory } from "../apps/med-history.js";
 import { ArM5eActorProfiles } from "./subsheets/actor-profiles.js";
 import { ArM5eMagicSystem } from "./subsheets/magic-system.js";
 import { getRefCompendium } from "../tools/compendia.js";
-import { getConfirmation, textInput } from "../ui/dialogs.js";
+import {
+  customDialog,
+  customDialogAsync,
+  getConfirmation,
+  numberInput,
+  textInput
+} from "../ui/dialogs.js";
 import { Arm5eChatMessage } from "../helpers/chat-message.js";
 
 const renderTemplate = foundry.applications.handlebars.renderTemplate;
@@ -1671,76 +1677,38 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
     log(false, "Edit aging");
     const dataset = getDataset(event);
     const score = this.actor.system.characteristics[dataset.characteristic].value;
-    let dialogData = {
-      label: game.i18n.localize(
-        CONFIG.ARM5E.character.characteristics[dataset.characteristic].label
-      ),
-      value: score,
-      aging: this.actor.system.characteristics[dataset.characteristic].aging,
-      fieldName: "arm5e.sheet.agingPts"
-    };
 
-    const html = await renderTemplate(
-      "systems/arm5e/templates/generic/agingPointsEdit.html",
-      dialogData
+    // TODO numberInput with validation
+    const prompt = `${game.i18n.localize(
+      CONFIG.ARM5E.character.characteristics[dataset.characteristic].label
+    )} (${score})`;
+    let newValue = await numberInput(
+      game.i18n.format("arm5e.hints.edit", {
+        item: game.i18n.localize("arm5e.sheet.agingPts")
+      }),
+      prompt,
+      0,
+      this.actor.system.characteristics[dataset.characteristic].aging,
+      ""
     );
 
-    new Dialog(
-      {
-        title: game.i18n.format("arm5e.hints.edit", {
-          item: game.i18n.localize("arm5e.sheet.agingPts")
+    const updateData = {};
+    if (newValue > Math.abs(score)) {
+      newValue = 0;
+      updateData[`system.characteristics.${dataset.characteristic}.value`] =
+        this.actor.system.characteristics[dataset.characteristic].value - 1;
+      ui.notifications.info(
+        game.i18n.format("arm5e.aging.manualEdit", {
+          name: this.actor.name,
+          char: prompt
         }),
-        content: html,
-        render: this.addListenersDialog,
-        buttons: {
-          yes: {
-            icon: "<i class='fas fa-check'></i>",
-            label: game.i18n.localize("arm5e.sheet.action.apply")
-          }
-        },
-        default: "yes",
-        close: async (html) => {
-          let input = html.find('input[name="inputField"]');
-          let newVal = 0;
-          if (Number.isNumeric(input.val())) {
-            newVal = Number(input.val());
-          }
-          const updateData = {};
-          if (newVal > Math.abs(score)) {
-            newVal = 0;
-            updateData[`system.characteristics.${dataset.characteristic}.value`] =
-              this.actor.system.characteristics[dataset.characteristic].value - 1;
-            ui.notifications.info(
-              game.i18n.format("arm5e.aging.manualEdit", {
-                name: this.actor.name,
-                char: dialogData.label
-              }),
-              {
-                permanent: false
-              }
-            );
-          }
-          updateData[`system.characteristics.${dataset.characteristic}.aging`] = newVal;
-          await this.actor.update(updateData, {});
+        {
+          permanent: false
         }
-      },
-      {
-        jQuery: true,
-        height: "110px",
-        classes: ["arm5e-dialog", "dialog", "aging-points"]
-      }
-    ).render(true);
-  }
-  addListenersDialog(html) {
-    html.find(".select-on-focus").focus((ev) => {
-      ev.preventDefault();
-      ev.currentTarget.select();
-    });
-
-    html.find(".combatDamage").change((ev) => {
-      ev.preventDefault();
-      this.render(true);
-    });
+      );
+    }
+    updateData[`system.characteristics.${dataset.characteristic}.aging`] = newValue;
+    await this.actor.update(updateData, {});
   }
 
   async _increaseArt(type, art) {
@@ -1939,68 +1907,27 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
     let template = "systems/arm5e/templates/actor/parts/actor-soak.html";
     const html = await renderTemplate(template, dialogData);
 
-    return await new Promise((resolve) => {
-      let settled = false;
-      let pending = null;
-      const finish = (value) => {
-        if (!settled) {
-          settled = true;
-          resolve(value);
-        }
-      };
-      new Dialog(
+    return await customDialogAsync({
+      window: { title: game.i18n.localize("arm5e.dialog.woundCalculator") },
+      content: html,
+      buttons: [
         {
-          title: game.i18n.localize("arm5e.dialog.woundCalculator"),
-          content: html,
-          render: (html) => this.addListenersDialog(html),
-          buttons: {
-            yes: {
-              icon: "<i class='fas fa-check'></i>",
-              label: game.i18n.localize("arm5e.messages.applyDamage"),
-              callback: async (html) => {
-                // Start the async work and capture the promise immediately so the close
-                // handler can await it if the dialog is closed while it's running.
-                pending = (async () => {
-                  const soakData = buildSoakDataset(html, this.actor);
-                  const msg = await setWounds(soakData, this.actor);
-                  return msg;
-                })();
-
-                // When it finishes, resolve (unless already resolved).
-                pending
-                  .then((msg) => finish(msg))
-                  .catch(() => {
-                    console.log("Error in dialog confirm");
-                    finish(null);
-                  });
-
-                return true;
-              }
-            },
-            no: {
-              icon: "<i class='fas fa-ban'></i>",
-              label: game.i18n.localize("arm5e.dialog.button.cancel"),
-              callback: () => finish(null)
-            }
-          },
-          default: "yes",
-          close: () => {
-            // If a button triggered async work and the dialog is closed while it's running,
-            // wait for it and then resolve with its result; otherwise resolve null.
-            if (pending) {
-              pending.then((msg) => finish(msg)).catch(() => finish(null));
-            } else {
-              finish(null);
-            }
+          action: "yes",
+          label: game.i18n.localize("arm5e.messages.applyDamage"),
+          icon: "<i class='fas fa-check'></i>",
+          callback: async (event, button, dialog) => {
+            const soakData = buildSoakDataset(dialog.element, this.actor);
+            const msg = await setWounds(soakData, this.actor);
+            return msg;
           }
         },
         {
-          jQuery: true,
-          height: "140px",
-          width: "400px",
-          classes: ["arm5e-dialog", "dialog"]
+          action: "no",
+          label: game.i18n.localize("arm5e.dialog.button.cancel"),
+          icon: "<i class='fas fa-ban'></i>",
+          callback: () => null
         }
-      ).render(true);
+      ]
     });
   }
 
@@ -2023,68 +1950,31 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
     data.actor = this.actor;
     const dialog = await renderTemplate(template, data);
 
-    return await new Promise((resolve) => {
-      let settled = false;
-      let pending = null;
-      const finish = (value) => {
-        if (!settled) {
-          settled = true;
-          resolve(value);
-        }
-      };
-      new Dialog(
+    return await customDialogAsync({
+      window: { title: game.i18n.localize("arm5e.dialog.damageCalculator") },
+      content: dialog,
+      buttons: [
         {
-          title: game.i18n.localize("arm5e.dialog.damageCalculator"),
-          content: dialog,
-          render: (html) => this.addListenersDialog(html),
-          buttons: {
-            apply: {
-              icon: "<i class='fas fa-check'></i>",
-              label: game.i18n.localize("arm5e.generic.yes"),
-              callback: async (html) => {
-                // Start the async work and capture the promise immediately so the close
-                // handler can await it if the dialog is closed while it's running.
-                pending = (async () => {
-                  const msg = await combatDamage(html, this.actor);
-                  return msg;
-                })();
-
-                // When it finishes, resolve (unless already resolved).
-                pending.then((msg) => finish(msg)).catch(() => finish(null));
-
-                return true;
-              }
-            },
-            no: {
-              icon: "<i class='fas fa-ban'></i>",
-              label: game.i18n.localize("arm5e.dialog.button.cancel"),
-              callback: () => finish(null)
-            }
-          },
-          default: "yes",
-          close: () => {
-            // If a button triggered async work and the dialog is closed while it's running,
-            // wait for it and then resolve with its result; otherwise resolve null.
-            if (pending) {
-              pending.then((msg) => finish(msg)).catch(() => finish(null));
-            } else {
-              finish(null);
-            }
+          action: "apply",
+          label: game.i18n.localize("arm5e.generic.yes"),
+          icon: "<i class='fas fa-check'></i>",
+          callback: async (event, button, dialog) => {
+            return await combatDamage(dialog.element, this.actor);
           }
         },
         {
-          jQuery: true,
-          height: "140px",
-          width: "400px",
-          classes: ["arm5e-dialog", "dialog"]
+          action: "no",
+          label: game.i18n.localize("arm5e.dialog.button.cancel"),
+          icon: "<i class='fas fa-ban'></i>",
+          callback: () => null
         }
-      ).render(true);
+      ]
     });
   }
 
   async roll(event) {
     const dataset = getDataset(event);
-    if (this.isRollPossible(dataset)) {
+    if (await this.isRollPossible(dataset)) {
       return await this._roll(dataset);
     }
   }
@@ -2285,57 +2175,20 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
         game.i18n.localize("arm5e.dialog.confirmTransfer-info")
       );
     } else {
-      let dialogData = {
-        fieldname: item.name,
-        prompt: game.i18n.format("arm5e.dialog.confirmTransfer-amount", {
+      confirmed = await numberInput(
+        item.name,
+        game.i18n.format("arm5e.dialog.confirmTransfer-amount", {
           max: quantity
         }),
-        help: game.i18n.localize("arm5e.dialog.confirmTransfer-info"),
-        value: 1,
-        min: 1,
-        max: quantity,
-        cssClass: "pickAmount"
-      };
-      const template = await renderTemplate(
-        "systems/arm5e/templates/generic/numberInput.html",
-        dialogData
+        "",
+        1,
+        game.i18n.localize("arm5e.dialog.confirmTransfer-info"),
+        [],
+        null,
+        { min: 1, max: quantity }
       );
-      confirmed = await new Promise((resolve) => {
-        new Dialog(
-          {
-            title: item.name,
-            content: template,
-            render: this.addListenersDialog,
-            buttons: {
-              yes: {
-                icon: "<i class='fas fa-check'></i>",
-                label: `Yes`,
-                callback: async (html) => {
-                  let result = html.find('input[name="inputField"]');
-                  if (result.val() !== "") {
-                    chosenAmount = Number(result.val());
-                  }
-                  resolve(true);
-                }
-              },
-              no: {
-                icon: "<i class='fas fa-ban'></i>",
-                label: `Cancel`,
-                callback: () => {
-                  resolve(false);
-                }
-              }
-            },
-            close: () => resolve(false)
-          },
-          {
-            jQuery: true,
-            height: "140px",
-            classes: ["arm5e-dialog", "dialog"]
-          }
-        ).render(true);
-      });
     }
+
     if (confirmed) {
       const originActor = game.actors.get(item.actor._id);
       if (!originActor) return false;

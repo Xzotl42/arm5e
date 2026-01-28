@@ -228,17 +228,15 @@ export async function quickVitals(tokenName, actor) {
 }
 
 export async function combatDamage(selector, actor) {
-  // TODO use javascript instead of JQuery
-  // const modifier = parseInt(selector.querySelector())
-  const modifier = parseInt(selector.find('input[name$="modifier"]').val());
+  const modifier = parseInt(selector.querySelector('input[name="modifier"]').value);
   let damage = modifier;
   actor.rollInfo.modifier = modifier;
   const messageModifier = `${game.i18n.localize("arm5e.sheet.modifier")} (${damage})`;
   let details = "";
-  const strength = parseInt(selector.find('label[name$="strength"]').attr("value") || 0);
-  const weapon = parseInt(selector.find('label[name$="weapon"]').attr("value") || 0);
-  const advantage = parseInt(selector.find('input[name$="advantage"]').val());
-  const formDam = selector.find('select[name$="formDamage"]').val() || "";
+  const strength = actor.system.characteristics.str.value;
+  const weapon = actor.system.combat.dam;
+  const advantage = parseInt(selector.querySelector('input[name="advantage"]').value);
+  const formDam = selector.querySelector('select[name="formDamage"]').value || "";
 
   const messageStrength = `${game.i18n.localize("arm5e.sheet.strength")} (${strength})`;
   const messageWeapon = `${game.i18n.localize("arm5e.damage.label")} (${weapon})`;
@@ -274,16 +272,16 @@ export async function combatDamage(selector, actor) {
 export function buildSoakDataset(selector, actor) {
   const dataset = {};
 
-  dataset.modifier = parseInt(selector.find('input[name$="modifier"]').val());
-  dataset.damage = parseInt(selector.find('input[name$="damage"]').val());
-  let natRes = selector[0].querySelector('select[name$="natRes"]')?.value;
-  let formRes = selector[0].querySelector('select[name$="formRes"]')?.value;
+  dataset.modifier = parseInt(selector.querySelector('input[name="modifier"]').value);
+  dataset.damage = parseInt(selector.querySelector('input[name="damage"]').value);
+  let natRes = selector.querySelector('select[name="natRes"]')?.value;
+  let formRes = selector.querySelector('select[name="formRes"]')?.value;
 
   dataset.natRes = actor.system.bonuses.resistance[natRes] || 0;
   dataset.formRes = Math.ceil(actor.system.arts?.forms[formRes]?.finalScore / 5 || 0);
-  dataset.prot = parseInt(selector.find('label[name$="prot"]').attr("value") || 0);
-  dataset.bonus = parseInt(selector.find('label[name$="soak"]').attr("value") || 0);
-  dataset.stamina = parseInt(selector.find('label[name$="stamina"]').attr("value") || 0);
+  dataset.prot = actor.system.combat.prot;
+  dataset.bonus = actor.system.bonuses.traits.soak;
+  dataset.stamina = actor.system.characteristics.sta.value;
   dataset.damageToApply =
     dataset.damage -
     dataset.modifier -

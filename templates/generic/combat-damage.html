@@ -2,8 +2,7 @@
   {{> "systems/arm5e/templates/roll/parts/roll-header.html" header="Damage_Soak" }}
   <div class="roll-options">
     <div class="flexrow flex-group-center">
-      <label class="" name="strength"
-        value="{{actor.system.characteristics.str.value}}">{{localize "arm5e.sheet.strength" }} ({{ numberFormat
+      <label class="">{{localize "arm5e.sheet.strength" }} ({{ numberFormat
         actor.system.characteristics.str.value decimals=0
         sign=true }})</label>
     </div>
@@ -12,8 +11,7 @@
       <label class="">+</label>
     </div>
     <div class="flexrow flex-group-center">
-      <label class="" name="weapon" value="{{actor.system.combat.dam}}">{{localize "arm5e.damage.label" }}
-        ({{ numberFormat
+      <label class="">{{localize "arm5e.damage.label" }} ({{ numberFormat
         actor.system.combat.dam decimals=0 sign=true }})</label>
     </div>
 
@@ -34,7 +32,7 @@
       <input type="number" name="modifier" value="{{modifier}}" data-dtype="Number"
         class="SelectedModifier select-on-focus modifier" />
     </div>
-    <div class="flexrow flex-group-center">
+    <div class="flex-group-center flexcol">
       <label class=""><img src="systems/arm5e/assets/ballSilver.png" width="20" height="20"
           style="border :0px" /></label>
     </div>

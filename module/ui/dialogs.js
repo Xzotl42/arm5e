@@ -21,33 +21,30 @@ export async function getConfirmation(
     "systems/arm5e/templates/generic/confirmation.html",
     dialogData
   );
-  return await new Promise((resolve) => {
-    new Dialog(
-      {
-        title: title,
-        content: html,
-        buttons: {
-          yes: {
-            icon: "<i class='fas fa-check'></i>",
-            label: game.i18n.localize(yesLabel),
-            callback: () => resolve(true)
-          },
-          no: {
-            icon: "<i class='fas fa-times'></i>",
-            label: game.i18n.localize(noLabel),
-            callback: () => resolve(false)
-          }
-        },
-        default: "yes",
-        close: () => resolve(false)
-      },
-      {
-        jQuery: true,
-        height: "150px",
-        classes: ["arm5e-dialog", "dialog"]
+  const proceed = await foundry.applications.api.DialogV2.confirm({
+    window: { title: title },
+    content: html,
+    classes: ["arm5e-confirm"],
+    rejectClose: false,
+    modal: true,
+    yes: {
+      icon: "<i class='fas fa-check'></i>",
+      label: game.i18n.localize(yesLabel),
+      class: ["dialog-button"],
+      callback: (event) => {
+        return true;
       }
-    ).render(true);
+    },
+    no: {
+      icon: "<i class='fas fa-times'></i>",
+      label: game.i18n.localize(noLabel),
+      class: ["dialog-button"],
+      callback: (event) => {
+        return false;
+      }
+    }
   });
+  return proceed;
 }
 
 export async function selectItemDialog(
@@ -96,57 +93,227 @@ export async function selectItemDialog(
 
 export async function textInput(
   title,
-  fieldName,
+  prompt,
   placeholder,
   value,
-  flavor,
+  help = "",
   classes = [],
-  validator = null
+  validator = null,
+  listeners = null
 ) {
   let dialogData = {
-    fieldName: game.i18n.localize(fieldName),
+    prompt: game.i18n.localize(prompt),
     placeholder: placeholder,
     value: value,
-    flavor: flavor
+    help: help
   };
   const html = await renderTemplate("systems/arm5e/templates/generic/textInput.html", dialogData);
-  const inputText = await new Promise((resolve) => {
-    new Dialog(
-      {
-        title: game.i18n.localize(title),
-        content: html,
-        buttons: {
-          yes: {
-            icon: "<i class='fas fa-check'></i>",
-            label: `Yes`,
-            callback: async (html) => {
-              let result = html[0].querySelector(".textInput");
 
-              if (validator && validator(result.value)) {
-                resolve(result.value);
-              } else {
-                resolve(result.value);
-              }
-            }
-          },
-          no: {
-            icon: "<i class='fas fa-ban'></i>",
-            label: `Cancel`,
-            callback: () => {
-              resolve(null);
-            }
-          }
+  return await foundry.applications.api.DialogV2.prompt({
+    window: { title: title },
+    content: html,
+    classes: ["arm5e-prompt", ...classes],
+    render: listeners
+      ? listeners(event, dialog)
+      : (event, dialog) => {
+          dialog.element.querySelector(".textInput").addEventListener("focus", (ev) => {
+            ev.preventDefault();
+            ev.currentTarget.select();
+          });
         },
-        default: "yes",
-        close: () => resolve(null)
-      },
-      {
-        height: "140px",
-        classes: ["arm5e-dialog", "dialog"] //.push(classes)
+    ok: {
+      icon: "<i class='fas fa-check'></i>",
+      label: game.i18n.localize("arm5e.generic.confirm"),
+      class: ["dialog-button"],
+      callback: async (event) => {
+        let result = event.currentTarget.closest(".arm5e-prompt").querySelector(".textInput");
+
+        if (validator) {
+          if (validator(result.value)) {
+            return result.value;
+          } else {
+            return "";
+          }
+        } else {
+          return result.value;
+        }
       }
-    ).render(true);
+    }
   });
-  return inputText;
+}
+
+export async function numberInput(
+  title,
+  prompt,
+  placeholder,
+  value,
+  help = "",
+  classes = [],
+  validator = null,
+  constraints = { min: null, max: null, step: 1 },
+  listeners = null
+) {
+  let dialogData = {
+    prompt: game.i18n.localize(prompt),
+    placeholder: placeholder,
+    value: value,
+    help: help,
+    constraints: constraints
+  };
+  const html = await renderTemplate("systems/arm5e/templates/generic/numberInput.html", dialogData);
+
+  return await foundry.applications.api.DialogV2.prompt({
+    window: { title: title },
+    content: html,
+    classes: ["arm5e-prompt", ...classes],
+    render: listeners
+      ? listeners(event, dialog)
+      : (event, dialog) => {
+          dialog.element.querySelector(".numberInput").addEventListener("focus", (ev) => {
+            ev.preventDefault();
+            ev.currentTarget.select();
+          });
+        },
+    ok: {
+      icon: "<i class='fas fa-check'></i>",
+      label: game.i18n.localize("arm5e.generic.confirm"),
+      class: ["dialog-button"],
+      callback: async (event) => {
+        let result = event.currentTarget.closest(".arm5e-prompt").querySelector(".numberInput");
+        let val = parseInt(result.value);
+        if (isNaN(val)) val = 0;
+        if (constraints.min !== null && val < constraints.min) {
+          val = constraints.min;
+          ui.notifications.warn(
+            game.i18n.format("arm5e.notifications.valueMin", { min: constraints.min })
+          );
+        }
+        if (constraints.max !== null && val > constraints.max) {
+          val = constraints.max;
+          ui.notifications.warn(
+            game.i18n.format("arm5e.notifications.valueMax", { max: constraints.max })
+          );
+        }
+        if (validator) {
+          if (validator(val)) {
+            return val;
+          } else {
+            return 0;
+          }
+        } else {
+          return val;
+        }
+      }
+    }
+  });
+}
+
+export async function customDialog(payload) {
+  return await new Promise((resolve) => {
+    if (!payload.close) {
+      payload.close = () => {
+        resolve(null);
+      };
+    }
+    for (let i = 0; i < payload.buttons.length; i++) {
+      payload.buttons[i].class = payload.buttons[i].class || ["dialog-button"];
+    }
+    if (!payload.render) {
+      payload.render = (event, dialog) => {
+        const elements = dialog.element.querySelectorAll(".select-on-focus");
+        for (let el of elements) {
+          el.addEventListener("focus", (ev) => {
+            ev.preventDefault();
+            ev.currentTarget.select();
+          });
+        }
+      };
+    }
+    payload.submit = (result, dialog) => {
+      resolve(result);
+    };
+
+    const dialog = new foundry.applications.api.DialogV2(payload);
+
+    // Attach render event listener if render callback is provided
+    if (payload.render instanceof Function) {
+      dialog.addEventListener("render", (event) => payload.render(event, dialog));
+    }
+
+    dialog.render({ force: true });
+  });
+}
+
+// A generic dialog that supports async button callbacks and prevent multiple clicks
+
+export async function customDialogAsync(payload) {
+  return await new Promise((resolve) => {
+    let settled = false;
+    let pending = null;
+    const finish = (value) => {
+      if (!settled) {
+        settled = true;
+        resolve(value);
+      }
+    };
+    payload.classes = payload.classes || [];
+    if (!payload.classes.includes("arm5e-dialog")) {
+      payload.classes.push("arm5e-dialog");
+    }
+
+    if (!payload.render) {
+      payload.render = (event, dialog) => {
+        const elements = dialog.element.querySelectorAll(".select-on-focus");
+        for (let el of elements) {
+          el.addEventListener("focus", (ev) => {
+            ev.preventDefault();
+            ev.currentTarget.select();
+          });
+        }
+      };
+    }
+
+    // Patch the button callbacks to put a guard around resolution
+    for (let i = 0; i < payload.buttons.length; i++) {
+      payload.buttons[i].class = payload.buttons[i].class || ["dialog-button"];
+      const originalCallback = payload.buttons[i].callback;
+      payload.buttons[i].callback = (event, button, dialog) => {
+        // Start the async work and capture the promise immediately so the close
+        // handler can await it if the dialog is closed while it's running.
+        pending = (async () => {
+          return await originalCallback(event, button, dialog);
+        })();
+
+        // When it finishes, resolve (unless already resolved).
+        pending
+          .then((msg) => finish(msg))
+          .catch(() => {
+            console.error("Error in dialog", payload.title);
+            finish(null);
+          });
+        return true;
+      };
+    }
+
+    payload.close = () => {
+      // If a button triggered async work and the dialog is closed while it's running,
+      // wait for it and then resolve with its result; otherwise resolve null.
+      if (pending) {
+        pending.then((msg) => finish(msg)).catch(() => finish(null));
+      } else {
+        finish(null);
+      }
+    };
+
+    const dialog = new foundry.applications.api.DialogV2(payload);
+
+    // Attach render event listener if render callback is provided
+    if (payload.render instanceof Function) {
+      dialog.addEventListener("render", (event) => payload.render(event, dialog));
+    }
+
+    dialog.render({ force: true });
+  });
 }
 
 /////////////////////////

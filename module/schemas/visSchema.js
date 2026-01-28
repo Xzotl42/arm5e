@@ -11,6 +11,7 @@ import {
   SeasonField,
   XpField
 } from "./commonSchemas.js";
+import { customDialogAsync } from "../ui/dialogs.js";
 const fields = foundry.data.fields;
 
 export class VisSchema extends foundry.abstract.TypeDataModel {
@@ -118,30 +119,48 @@ export class VisSchema extends foundry.abstract.TypeDataModel {
     };
     actor.rollInfo.init(dataset, actor);
     const html = await renderTemplate("systems/arm5e/templates/generic/vis-study.html", dialogData);
-    new Dialog(
-      {
-        title: game.i18n.localize("arm5e.activity.visStudy"),
-        content: html,
-        buttons: {
-          yes: {
-            icon: "<i class='fas fa-check'></i>",
-            label: game.i18n.localize("arm5e.dialog.button.roll"),
-            callback: async (html) => {
-              let val = html.find('input[name="aura"]');
-              actor.rollInfo.setGenericField(auraLabel, Number(val.val()), 1, "+");
-              await stressDie(actor, dataset.roll, 0, setVisStudyResults);
-            }
+
+    await customDialogAsync({
+      window: { title: game.i18n.localize("arm5e.activity.visStudy") },
+      content: html,
+      buttons: [
+        {
+          action: "confirm",
+          label: game.i18n.localize("arm5e.dialog.button.roll"),
+          icon: "<i class='fas fa-check'></i>",
+          callback: async (event, button, dialog) => {
+            let aura = dialog.element.querySelector('input[name="aura"]');
+            actor.rollInfo.setGenericField(auraLabel, Number(aura.value), 1, "+");
+            await stressDie(actor, dataset.roll, 0, setVisStudyResults);
           }
-        },
-        default: "yes",
-        close: null
-      },
-      {
-        jQuery: true,
-        height: "140px",
-        classes: ["arm5e-dialog", "dialog"]
-      }
-    ).render(true);
+        }
+      ]
+    });
+
+    // new Dialog(
+    //   {
+    //     title: game.i18n.localize("arm5e.activity.visStudy"),
+    //     content: html,
+    //     buttons: {
+    //       yes: {
+    //         icon: "<i class='fas fa-check'></i>",
+    //         label: game.i18n.localize("arm5e.dialog.button.roll"),
+    //         callback: async (html) => {
+    //           let val = html.find('input[name="aura"]');
+    //           actor.rollInfo.setGenericField(auraLabel, Number(val.val()), 1, "+");
+    //           await stressDie(actor, dataset.roll, 0, setVisStudyResults);
+    //         }
+    //       }
+    //     },
+    //     default: "yes",
+    //     close: null
+    //   },
+    //   {
+    //     jQuery: true,
+    //     height: "140px",
+    //     classes: ["arm5e-dialog", "dialog"]
+    //   }
+    // ).render(true);
   }
 
   async createDiaryEntryToStudyVis(actor) {

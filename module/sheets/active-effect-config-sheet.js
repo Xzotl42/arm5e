@@ -3,6 +3,7 @@ import { ARM5E } from "../config.js";
 import { log, error, slugify } from "../tools/tools.js";
 
 import { ACTIVE_EFFECTS_TYPES } from "../constants/activeEffectsTypes.js";
+import { textInput } from "../ui/dialogs.js";
 
 /**
  * Extend the base ActiveEffectConfig sheet by limiting what can be edited
@@ -371,43 +372,23 @@ export class ArM5eActiveEffectConfig extends foundry.applications.sheets.ActiveE
       placeholder: "arm5e.dialog.hint.abilityOption",
       value: chosenOption
     };
-    const html = await renderTemplate("systems/arm5e/templates/generic/textInput.html", dialogData);
-    await new Promise((resolve) => {
-      new Dialog(
-        {
-          title: game.i18n.localize("arm5e.sheet.skill.abilityOption"),
-          content: html,
-          buttons: {
-            yes: {
-              icon: "<i class='fas fa-check'></i>",
-              label: `Yes`,
-              callback: async (html) => {
-                let result = html.find('input[name="inputField"]');
-                if (result[0].value !== "") {
-                  chosenOption = result[0].value;
-                }
-                resolve();
-              }
-            },
-            no: {
-              icon: "<i class='fas fa-ban'></i>",
-              label: `Cancel`,
-              callback: () => {
-                resolve();
-              }
-            }
-          }
-        },
-        {
-          jQuery: true,
-          height: "140px",
-          classes: ["arm5e-dialog", "dialog", "set-option"]
-        }
-      ).render(true);
-    });
+    chosenOption = await textInput(
+      game.i18n.localize("arm5e.sheet.skill.abilityOption"),
+      "arm5e.sheet.skill.abilityOption",
+      "arm5e.dialog.hint.abilityOption",
+      chosenOption,
+      "",
+      [],
+      (value) => {
+        return value.length > 0;
+      }
+    );
+    if (!chosenOption) {
+      return;
+    }
     // remove any non alphanumeric character
-    chosenOption = slugify(chosenOption); //.replace(/[^a-zA-Z0-9]/gi, "");
-    if (chosenOption == "") {
+    chosenOption = slugify(chosenOption, false);
+    if (!chosenOption) {
       chosenOption = ACTIVE_EFFECTS_TYPES[type].subtypes[subtype].default;
     }
     let computedKey = ACTIVE_EFFECTS_TYPES[type].subtypes[subtype].key;

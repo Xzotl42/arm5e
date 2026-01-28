@@ -3,6 +3,7 @@ import { log } from "../tools/tools.js";
 import { Scriptorium, ScriptoriumObject } from "../apps/scriptorium.js";
 import { AuraConfig } from "../apps/aura-config.js";
 import { ArsApps } from "./apps.js";
+import { getConfirmation } from "./dialogs.js";
 
 export class ArsLayer extends foundry.canvas.layers.InteractionLayer {
   async draw() {
@@ -30,14 +31,13 @@ export class ArsLayer extends foundry.canvas.layers.InteractionLayer {
     if (bypassDialog) {
       canvas.scene.setFlag("arm5e", "aura", null);
     } else {
-      Dialog.confirm({
-        title: game.i18n.localize("arm5e.canvas.buttons.clearAura"),
-        content: game.i18n.localize("arm5e.dialog.confirmClearAura"),
-        yes: () => {
-          canvas.scene.setFlag("arm5e", "aura", null);
-        },
-        no: () => {}
-      });
+      const confirmed = await getConfirmation(
+        game.i18n.localize("arm5e.canvas.buttons.clearAura"),
+        game.i18n.localize("arm5e.dialog.confirmClearAura")
+      );
+      if (confirmed) {
+        canvas.scene.setFlag("arm5e", "aura", null);
+      }
     }
   }
   static async openAstrolab() {

@@ -88,10 +88,9 @@
   --font-book-bold: "bookAntiquaBold", serif;
   --font-header: "blackmoor", serif;
 
-  --parchment: url("../assets/compendium/parchment.png") repeat;
-  --dialog-bg: url("../assets/dialog/Dialog_Background.png") repeat-y;
-  --dialog-bg-large: url("../assets/dialog/LargeDialog_Background.png") repeat-y;
-  --bg-main: url("../assets/background.webp") repeat-y;
+  --parchment: url("../assets/compendium/parchment.webp");
+  --dialog-bg: url("../assets/dialog/Dialog_Background.webp");
+  --dialog-bg-large: url("../assets/dialog/LargeDialog_Background.webp");
 
   --arm5e-c-dark: #191813;
   --arm5e-c-faint: #c9c7b8;
@@ -171,13 +170,17 @@ label,
   background-size: auto;
 }
 
-/* Window / dialog baseline (consolidated) */
+/* ============================================
+   WINDOW & DIALOG CONTENT BASELINE
+   ============================================ */
+
+/* Base window-content for all applications */
 .window-app .window-content,
-.arm5e .window-content,
-.arm5e-dialog .window-content {
+.arm5e .window-content {
   padding: 0;
   border: 2px solid var(--border-main);
-  background: var(--parchment);
+  /* background: var(--parchment); */
+  background-image: var(--parchment);
   color: var(--color-text-dark-primary);
   overflow-y: auto;
   overflow-x: hidden;
@@ -185,10 +188,58 @@ label,
   flex-direction: column;
 }
 
+/* Dialog-specific window-content with background images */
+.arm5e-prompt .window-content,
+.arm5e-dialog .window-content {
+  padding: 0;
+  color: var(--color-text-dark-primary);
+  background: var(--dialog-bg);
+  background-image: var(--dialog-bg);
+  background-size: cover;
+  overflow: hidden;
+  color: var(--color-text-dark-primary);
+}
+
+.roll-dialog .window-content {
+  padding: 0;
+  background-size: auto;
+}
+
+.arm5e-confirm .window-content {
+  padding: 0;
+  color: var(--color-text-dark-primary);
+  background-image: var(--parchment);
+  background-size: contain;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.arm5eLargeDialog .window-content {
+  padding: 0;
+  background-image: var(--dialog-bg-large);
+  background-size: contain;
+  overflow: hidden;
+}
+
+.arm5e-prompt.aura-config {
+  background-size: contain;
+}
+
+.journal-sheet .window-content {
+  padding: 0;
+  overflow-x: hidden;
+  background: var(--parchment);
+  color: var(--arm5e-c-black);
+}
+
 /* Dialog footer/buttons bg */
 .arm5e-dialog .dialog-buttons,
 .arm5e .dialog-buttons {
   background-color: var(--arm5e-c-muted);
+}
+
+.arm5e-dialog .window-header {
+  background: rgba(0, 0, 0, 0.85);
 }
 
 /* Button font grouping */
@@ -375,15 +426,16 @@ h3.dice-msg {
 }
 
 /* Main & dialog backgrounds */
+.arm5e-prompt,
+.arm5e-dialog,
 .arm5eMain {
-  background-image: var(--bg-main);
-  background-size: 100%;
-  padding: 32px;
+  /* background-image: var(--bg-main); */
+  /* background-size: 100%; */
+  /* padding: 32px; */
   font-family: var(--font-book-bold);
 }
 .arm5eInfo,
 .arm5eEffect,
-.arm5eChooser,
 .arm5eRoll,
 .arm5InvestigateRoll,
 .arm5eActiveEffect {
@@ -411,6 +463,7 @@ h3.dice-msg {
   border-radius: var(--radius-small);
   overflow: hidden;
 }
+
 .arm5e .sanatorium .progressbar-inner {
   height: 100%;
   background-color: var(--accent-conflict);
@@ -424,12 +477,17 @@ h3.dice-msg {
 }
 
 /* Inputs / selects grouped */
+.arm5e-prompt input[type="text"],
+.arm5e-prompt input[type="number"],
+.arm5e-dialog input[type="number"],
 .arm5e input[type="text"],
 .arm5e input[type="number"],
 .arm5e input[type="password"],
 .arm5e input[type="date"],
 .arm5e input[type="time"],
 .arm5e select,
+.arm5e-prompt select,
+.arm5e-dialog select,
 .arm5eRoll select {
   width: calc(100% - 2px);
   min-width: 20px;
@@ -451,6 +509,12 @@ h3.dice-msg {
   -moz-user-select: text;
   -ms-user-select: text;
   user-select: text;
+}
+.arm5e input[type="number"],
+.arm5e-dialog input[type="number"],
+.arm5e-prompt input[type="number"] {
+  text-align: center;
+  max-width: 70px;
 }
 
 .arm5e .lean,
@@ -968,6 +1032,10 @@ p.notes {
   font-size: 9pt;
 }
 
+.notification p {
+  font-size: 11pt;
+}
+
 .journal-entry-page {
   font-family: var(--font-book);
   font-weight: 100;
@@ -1024,7 +1092,7 @@ a.header-button.close {
 }
 
 .arm5e .sanatorium.sanatorium-sheet {
-  background-image: url("../assets/sanatorium/Background_Sanatorium.png");
+  background-image: url("../assets/sanatorium/Background_Sanatorium.webp");
   background-repeat: repeat-y;
 }
 .arm5e .sanatorium-title,
@@ -1171,15 +1239,17 @@ span.player-name {
   font-family: var(--font-book), sans-serif;
 }
 
-/* Removed duplicate window-content overrides; consolidated baseline above applies */
-
 .dialog-content {
   height: auto;
+  gap: 0; /* remove flex/grid gap */
+  margin-bottom: 0; /* remove gap above footer */
 }
 
-.arm5e-dialog .dialog-buttons,
-.arm5e .dialog-buttons {
-  background-color: rgb(169 159 134 / 50%);
+.dialog-form {
+  height: auto;
+  margin: 0; /* remove form default margins */
+  gap: 0; /* remove flex/grid gap */
+  display: block; /* prevent flex container gap */
 }
 
 .arm5e .art-score input[type="number"] {
@@ -1211,10 +1281,8 @@ span.player-name {
   border-radius: var(--radius-sm);
   opacity: 0.5;
 }
-.journal-sheet .window-content {
-  background: var(--parchment);
-  color: var(--arm5e-c-black);
-}
+
+/* Removed: .journal-sheet .window-content consolidated at top of file */
 
 .theme-dark .journal-sheet h4.window-title {
   color: var(--color-light-2);
@@ -1320,6 +1388,53 @@ a.content-link i.fa-book-open {
   border-color: rgb(161, 154, 154);
 }
 
+.arm5e-prompt .dialog-buttons,
+.arm5e-dialog .dialog-buttons,
+.arm5e-confirm .dialog-buttons,
+.arm5e .dialog-buttons {
+  /* background-color: rgb(169 159 134 / 50%); */
+  background-color: var(--arm5e-c-tan);
+}
+
+/* .arm5e button {
+  font-family: var(--font-header);
+  font-size: 13pt;
+  background-image: url("../assets/buttons/wood2.webp");
+  border-width: 1px;
+  border-style: groove;
+  border-color: rgb(69, 50, 2);
+  border-radius: var(--radius-md);
+  box-shadow: 0 0 5px var(--arm5e-c-beige);
+
+  color: var(--arm5e-c-black);
+  padding: 10px;
+ }  */
+
+.arm5e-prompt button.dialog-button,
+.arm5e-dialog button.dialog-button,
+.arm5e-confirm button.dialog-button,
+.arm5e .astrolab.button {
+  font-family: var(--font-header);
+  font-size: 13pt;
+  background-image: url("../assets/buttons/forged_metal.webp");
+  border-width: 2px;
+  border-style: outset;
+  border-color: #000000;
+  border-radius: var(--radius-md);
+  box-shadow: 0 0 5px var(--arm5e-c-beige);
+
+  color: var(--arm5e-c-beige);
+  /* padding: 10px; */
+}
+
+.arm5e button:hover,
+.arm5e .astrolab.button:hover,
+.arm5e-confirm button.dialog-button:hover,
+.arm5e-dialog button.dialog-button:hover,
+.arm5e-prompt button.dialog-button:hover {
+  box-shadow: 0 0 10px var(--arm5e-c-beige);
+}
+
 /* Removed redundant .arm5e .window-app .window-content override; baseline already sets display:flex */
 
 .arm5e {
@@ -1330,10 +1445,17 @@ a.content-link i.fa-book-open {
   color: rgb(200, 0, 0);
 }
 
+h1.window-title,
 h4.window-title {
   font-family: var(--font-header);
-  font-size: 20px;
+  font-size: 16pt;
 }
+
+.roll-dialog footer.form-footer,
+.arm5e-confirm footer.form-footer {
+  background-color: var(--arm5e-c-tan);
+}
+
 /* Removed duplicate sanatorium/astrolab button styling; consolidated definition above applies */
 
 /* .arm5e-dialog.aura-config form > div {
@@ -1499,7 +1621,7 @@ p,
 }
 
 .arm5eInfo {
-  background-image: url("../assets/dialog/Dialog_Background.png");
+  background-image: var(--dialog-bg);
   background-repeat: repeat-y;
   background-size: cover;
   font-family: "var(--font-book-bold)";
@@ -1604,7 +1726,7 @@ p,
 
 .arm5eEffect .sheet-body {
   height: auto;
-  background-image: url("../assets/dialog/Dialog_Background.png");
+  background-image: var(--dialog-bg);
   background-repeat: repeat-y;
   background-size: cover;
   font-family: "var(--font-book-bold)";
@@ -1615,52 +1737,32 @@ p,
 
 /* .arm5eInfo .footer-background,
 .arm5eEffect .footer-background,
-.arm5eChooser .footer-background {
+.arm5e-prompt .footer-background {
   height: 50px;
 } */
 
-.arm5eChooser .header-background img,
-.arm5eChooser .footer-background img,
+/* ============================================
+   DIALOG & WINDOW STYLES
+   ============================================ */
+
+/* Window-content rules consolidated at top of file */
+
+/* Dialog header backgrounds */
 .arm5eEffect .header-background img {
-  width: 100%;
-  border: 0px;
-  padding-left: 0px;
-  padding-right: 0px;
+  height: 30px;
   background-size: cover;
 }
 
-.arm5eChooser {
-  /* font-size: 10pt; */
-  background-image: url("../assets/dialog/Dialog_Background.png");
-  /* background-repeat: repeat-y; */
-  /* background-size: contain; */
-  /* font-family: "var(--font-book-bold)"; */
-  overflow: hidden;
-}
-
-.arm5eLargeDialog .window-content {
-  /* font-size: 10pt; */
-  background-image: url("../assets/dialog/LargeDialog_Background.png");
-  /* background-repeat: repeat-y; */
-  background-size: contain;
-  /* font-family: "var(--font-book-bold)"; */
-  overflow: hidden;
-}
-
-.arm5eChooser.aura-config {
-  background-size: contain;
-}
-
-/* .pickAmount.arm5eChooser,
-.arm5eChooser.aging,
-.arm5eChooser.vis-study,
-.set-option .arm5eChooser,
-.aging-points .arm5eChooser {
+/* .pickAmount.arm5e-prompt,
+.arm5e-prompt.aging,
+.arm5e-prompt.vis-study,
+.set-option .arm5e-prompt,
+.aging-points .arm5e-prompt {
   background-size: cover;
 } */
 
 .scriptorium.scriptorium-sheet {
-  background-image: url("../assets/scriptorium/Scriptorium_background.png");
+  background-image: url("../assets/scriptorium/Scriptorium_background.webp");
   background-repeat: repeat-y;
   background-size: contain;
 }
@@ -1676,7 +1778,7 @@ p,
 }
 
 .arm5e .sanatorium.sanatorium-sheet {
-  background-image: url("../assets/sanatorium/Background_Sanatorium.png");
+  background-image: url("../assets/sanatorium/Background_Sanatorium.webp");
   background-repeat: repeat-y;
 }
 
@@ -1738,39 +1840,33 @@ p,
   color: rgb(135 38 22 / 100%);
 }
 
+/* ============================================
+   SCRIPTORIUM, ASTROLAB & CALENDAR STYLES
+   ============================================ */
+
+/* Shared astrolab/calendar background */
 .arm5e .calendar.calendar-sheet,
 .arm5e .astrolab.astrolab-sheet {
-  background-image: url("../assets/astrolab/Astrolab_Background.png");
+  background-image: url("../assets/astrolab/Astrolab_Background.webp");
   background-repeat: repeat-y;
 }
 
-.arm5e .astrolab.header-background img {
-  border: 0px;
-}
-
+/* Astrolab-specific */
 .arm5e .astrolab .header-background {
   height: 120px;
   width: 600px;
-  margin: 0px;
-}
-
-.arm5e .astrolab .footer-background img {
-  border: 0px;
+  margin: 0;
 }
 
 .arm5e .astrolab .footer-background {
   height: 75px;
   width: 600px;
-  margin: 0px;
+  margin: 0;
   background-image: none;
 }
-.arm5e .scriptorium-title {
-  text-align: center;
-  font-family: var(--font-header);
-  font-size: 32pt;
-  height: 45px;
-  border: none;
-  color: #30512d;
+
+.arm5e .astrolab .footer-background img {
+  border: 0;
 }
 
 .arm5e .astrolab-title {
@@ -1783,26 +1879,40 @@ p,
   color: #2d3b51;
 }
 
+/* Scriptorium-specific */
+.arm5e .scriptorium-title {
+  text-align: center;
+  font-family: var(--font-header);
+  font-size: 32pt;
+  height: 45px;
+  border: none;
+  color: #30512d;
+}
+
+/* ============================================
+   REQUISITE, ROLL & ACTIVE EFFECT DIALOGS
+   ============================================ */
+
 .arm5eRequisite {
   font-size: 10pt;
-  background-image: url("../assets/item/background.webp");
   background-repeat: repeat-y;
   background-size: cover;
+  background-color: var(--arm5e-c-tan);
   font-family: "var(--font-book-bold)";
   width: 397px;
-  height: 285px;
+  height: auto;
 }
 
-.arm5eRequisite .header-background img {
-  border: 0px;
-}
-
-.arm5eRequisite .footer-background img {
-  border: 0px;
+.arm5eRequisite .form-footer {
+  background-color: var(--arm5e-c-tan);
 }
 
 .arm5eRequisite .footer-background {
   height: 45px;
+}
+
+.arm5eRequisite .footer-background img {
+  border: 0;
 }
 
 .effect-list {
@@ -1821,19 +1931,20 @@ p,
   max-width: 100px;
 } */
 
+/* Roll dialogs */
 .arm5InvestigateRoll {
-  background-image: url("../assets/dialog/LargeDialog_Background.png");
+  background-image: var(--dialog-bg-large);
   background-repeat: repeat-y;
   background-size: contain;
   font-family: "var(--font-book-bold)";
-  /* font-size: 12pt; */
 }
+
+/* Active Effect dialog */
 .arm5eActiveEffect {
-  background-image: url("../assets/dialog/LargeDialog_Background.png");
+  background-image: var(--dialog-bg-large);
   background-repeat: repeat-y;
   background-size: cover;
   font-family: "var(--font-book-bold)";
-  /* font-size: 12pt; */
 }
 
 .arm5eActiveEffect .effect-options {
@@ -1844,26 +1955,20 @@ p,
 }
 
 .arm5e .arm5eActiveEffect .header-background {
-  border: 0px;
-  padding-left: 0px;
-  padding-right: 0px;
-  margin-left: 0px;
+  border: 0;
+  padding-left: 0;
+  padding-right: 0;
+  margin-left: 0;
   width: 100%;
 }
+
 .arm5e .arm5eActiveEffect .footer-background {
-  border: 0px;
-  padding-left: 0px;
-  padding-right: 0px;
-  margin-left: 0px;
   height: 87px;
   width: 100%;
 }
-.arm5e .arm5eActiveEffect .header-background img {
-  border: 0px;
-}
 
 .arm5eRoll {
-  background-image: url("../assets/dialog/Dialog_Background.png");
+  background-image: url("../assets/dialog/Dialog_Background.webp");
   background-repeat: repeat-y;
   background-size: 100%;
   font-family: "var(--font-book-bold)";
@@ -1882,26 +1987,7 @@ p,
   font-size: 14px;
 }
 
-.arm5eRoll .header-background img {
-  width: 100%;
-  border: 0px;
-  padding-left: 0px;
-  padding-right: 0px;
-}
-.arm5e-dialog .footer-background {
-  /* margin-top: -27px; */
-  width: 100%;
-  height: auto;
-  border: 0px;
-  padding-left: 0px;
-  padding-right: 0px;
-}
-.arm5e-dialog .footer-background img {
-  width: 100%;
-  border: 0px;
-  padding-left: 0px;
-  padding-right: 0px;
-}
+/* arm5eRoll header-background img styles consolidated above */
 
 /* Styles limited to arm5e sheets */
 
@@ -1991,38 +2077,36 @@ p,
   max-width: 190px;
 }
 
-input[type="number"].select-on-focus {
+/* input[type="number"].select-on-focus {
   max-width: 70px;
   text-align: center;
-}
+} */
 
-input[type="text"].select-on-focus.slim,
-input[type="number"].select-on-focus.slim {
+input[type="text"].slim,
+input[type="number"].slim {
   max-width: 50px;
   text-align: center;
 }
 
-input[type="text"].select-on-focus {
+/* input[type="text"].select-on-focus {
   max-width: 70px;
   text-align: center;
-}
+} */
 
-input[type="text"].select-on-focus.wide {
+input[type="text"].wide {
   max-width: none;
   width: calc(100% - 2px);
   text-align: center;
   font-size: 9pt;
 }
 
-input[type="number"].select-on-focus.summary {
+input[type="number"].summary {
   background: var(--arm5e-c-shadow);
   box-shadow: var(--shadow-card);
 }
 
-input[type="text"].select-on-focus-slim.editable,
-input[type="text"].select-on-focus.editable,
-input[type="number"].select-on-focus-slim.editable,
-input[type="number"].select-on-focus.editable {
+input[type="text"].editable,
+input[type="number"].editable {
   background-color: rgb(208 182 130 / 50%);
 }
 
@@ -2072,41 +2156,53 @@ input[type="number"].design-level {
   background-size: contain;
   font-family: "var(--font-book-bold)";
 }
-/* 
-.arm5e .mainItem .sheet-body {
-  height: auto;
-} */
 
 .arm5e .mainItem .header-background {
   /* margin-left: -34px; */
   text-align: center;
   margin-top: 0px;
 }
-/* .arm5e .header-background {
-  margin-left: -32px;
-  width: calc(100% + 64px);
-} */
 .arm5e .mainItem .footer-background {
   text-align: center;
-  /* margin-left: -34px; */
-  margin-top: 0px;
+  margin: 0;
 }
-/* .arm5e .footer-background {
-  margin-left: -32px;
-  margin-top: auto;
-  width: calc(100% + 64px);
-} */
 
-.arm5e .header-background img {
+/* ============================================
+   HEADER & FOOTER BACKGROUNDS
+   ============================================ */
+
+/* Base header background image styles */
+.arm5e .header-background img,
+.arm5e-prompt .header-background img,
+.arm5eEffect .header-background img,
+.arm5eRequisite .header-background img,
+.arm5e .arm5eActiveEffect .header-background img,
+.arm5eRoll .header-background img,
+.arm5e .astrolab.header-background img {
   width: 100%;
-  border: 0px;
+  border: 0;
 }
 
+/* Base footer background styles */
+.arm5e-prompt .footer-background {
+  height: 55px;
+}
+
+.arm5e-prompt .footer-background img,
+.arm5e-dialog .footer-background img,
+.arm5e-confirm .footer-background img,
 .arm5e .footer-background img {
   width: 100%;
-  border: 0px;
+  border: 0;
   height: inherit;
+  display: block;
+  margin-bottom: 0;
 }
+
+/* ============================================
+   COMPONENT-SPECIFIC DIALOGS
+   ============================================ */
+
 .arm5e .header.scriptorium-header {
   flex: 0 0 120px;
   /*overflow: hidden;*/

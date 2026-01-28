@@ -107,13 +107,13 @@
             {{/if}}
           </span>
           <span class="flex05">
-            <input type="text" name="system.yearlyExpenses.{{key}}.amount" class="select-on-focus-slim {{exp.classes}}"
+            <input type="text" name="system.yearlyExpenses.{{key}}.amount" class="select-on-focus slim {{exp.classes}}"
               value="{{numberFormat exp.amount decimals=0 sign=true}}" {{exp.canEdit}} data-dtype="Number" />
           </span>
           {{#unless (eq exp.classes "editable")}}
             <span class="flex05">
               <input type="text" name="system.yearlyExpenses.{{key}}.craftSavings"
-                class="select-on-focus-slim {{exp.classes}}"
+                class="select-on-focus slim {{exp.classes}}"
                 value="{{numberFormat exp.craftSavings decimals=0 sign=true}}" {{exp.canEdit}}
                 data-tooltip="{{exp.savingsDetails}}" data-tooltip-class="covenant-tooltip" data-dtype="Number" />
             </span>
@@ -144,11 +144,11 @@
             <div class="label-light">({{localize saving.sumary}})</div>
           </span>
           <span class="flex05">
-            <input type="text" name="system.yearlySavings.{{key}}.quantity" class="select-on-focus-slim"
+            <input type="text" name="system.yearlySavings.{{key}}.quantity" class="select-on-focus slim"
               value="{{numberFormat saving.quantity decimals=0 sign=true}}" data-dtype="Number" readonly />
           </span>
           <span class="flex05">
-            <input type="text" name="system.yearlySavings.{{key}}.amount" class="select-on-focus-slim"
+            <input type="text" name="system.yearlySavings.{{key}}.amount" class="select-on-focus slim"
               value="{{numberFormat saving.amount decimals=0 sign=true}}" data-dtype="Number" readonly />
           </span>
           <span class="">
