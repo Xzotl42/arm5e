@@ -20,6 +20,7 @@
 - Fixed a bug during an aging crisis where the number of aging points of the characteristic impacted was wrongly computed.
 - Even if a notification was raised, rolls were still possible for dead/unconscious characters
 - Using magic items is working again
+- Using powers reduce the might points properly
 
 ## 2.4.1.14, Radislav, Cognizant Wisdom BF1
 

@@ -1,4 +1,4 @@
-import { noRoll, useItemCharge } from "../dice.js";
+import { changeMightCallback, noRoll, useItemCharge } from "../dice.js";
 import { SpellSchema } from "../schemas/magicSchemas.js";
 import { log } from "../tools.js";
 import { TWILIGHT_STAGES } from "./long-term-activities.js";
@@ -877,9 +877,9 @@ async function usePower(dataset, actor) {
           callback: async (html) => {
             getFormData(html, actor);
             if (actor.system.features.hasMight) {
-              await noRoll(actor, 1, changeMight);
+              await noRoll(actor, 1, changeMightCallback);
             } else {
-              await noRoll(actor, 1, actor.loseFatigueLevel);
+              await noRoll(actor, 1, loseFatigueLevelCallback);
             }
           }
         },
