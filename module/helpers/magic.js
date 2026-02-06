@@ -777,7 +777,7 @@ async function handleTargetsOfMagic(actorCaster, form, message) {
     const target = {
       uuid: tokenTarget.actor.uuid,
       name: tokenTarget.name, // use the token name instead of the actor's if possible
-      magicResistance: tokenTarget.actor.magicResistance(form, message.system.magic.realm),
+      magicResistance: tokenTarget.actor.magicResistanceDetails(form, message.system.magic.realm),
       hasPlayerOwner: tokenTarget.actor.hasPlayerOwner
     };
     targets.push(target);

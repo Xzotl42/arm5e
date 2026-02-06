@@ -1,4 +1,4 @@
-## 2.4.1.16, Radislav, Cognizant Wisdom BF2
+## 2.4.1.17, Radislav, Cognizant Wisdom BF3
 
 [IMPORTANT] Known limitation for V12, if text seems greyed out, go in the core settings and change the Preferred Color Scheme to "Light".
 
@@ -13,6 +13,9 @@
 - Damage application from the chat messages stops inflicting a wound to all protagonists.
 - Fixed combat wound description.
 - The dialog title for using a magic item effect will be the name of the effect instead of the name of the item.
+- Magic resistance description in chat message was incorrect, not accounting confidence spent for the total penetration
+- Parma magica is only counted once in the magic resistance
+- Roll mode is now taken into account for the new chat messages.
 
 ## 2.4.1.15, Radislav, Cognizant Wisdom BF2
 
