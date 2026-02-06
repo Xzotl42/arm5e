@@ -113,36 +113,36 @@ export class Arm5eChatMessage extends ChatMessage {
     if (actor !== null) {
       // Actor still exists in the world
 
-    const metadata = html.find(".message-metadata");
-    metadata.css("max-width", "fit-content");
-    const msgTitle = html[0].querySelector(".message-sender");
-    // const sender = msgTitle.textContent.replace("GameMaster", actor.tokenName);
-    const sender = actor.tokenName;
-    msgTitle.removeChild(msgTitle.firstChild);
-    msgTitle.classList.add("flexrow");
-    const imgDiv = document.createElement("div");
-    imgDiv.classList.add("moreInfo", "speaker-image", "flex01");
-    imgDiv.dataset.uuid = actor.uuid;
-    const imgEl = document.createElement("img");
-    imgEl.src = actor.tokenImage;
-    imgEl.title = actor.tokenName;
-    imgEl.width = 30;
-    imgEl.height = 30;
-    imgDiv.appendChild(imgEl);
-    msgTitle.appendChild(imgDiv);
-    const pEl = document.createElement("p");
-    pEl.classList.add("message-sender-text");
-    pEl.innerHTML = sender;
-    msgTitle.appendChild(pEl);
+      const metadata = html.find(".message-metadata");
+      metadata.css("max-width", "fit-content");
+      const msgTitle = html[0].querySelector(".message-sender");
+      // const sender = msgTitle.textContent.replace("GameMaster", actor.tokenName);
+      const sender = actor.tokenName;
+      msgTitle.removeChild(msgTitle.firstChild);
+      msgTitle.classList.add("flexrow");
+      const imgDiv = document.createElement("div");
+      imgDiv.classList.add("moreInfo", "speaker-image", "flex01");
+      imgDiv.dataset.uuid = actor.uuid;
+      const imgEl = document.createElement("img");
+      imgEl.src = actor.tokenImage;
+      imgEl.title = actor.tokenName;
+      imgEl.width = 30;
+      imgEl.height = 30;
+      imgDiv.appendChild(imgEl);
+      msgTitle.appendChild(imgDiv);
+      const pEl = document.createElement("p");
+      pEl.classList.add("message-sender-text");
+      pEl.innerHTML = sender;
+      msgTitle.appendChild(pEl);
 
-    msgTitle.addEventListener("click", async (ev) => {
-      const target = $(ev.currentTarget.children[0]);
-      const uuid = target[0].dataset.uuid;
-      const actor = await fromUuid(uuid);
-      if (actor) {
-        actor.sheet.render(true);
-      }
-    });
+      msgTitle.addEventListener("click", async (ev) => {
+        const target = $(ev.currentTarget.children[0]);
+        const uuid = target[0].dataset.uuid;
+        const actor = await fromUuid(uuid);
+        if (actor) {
+          actor.sheet.render(true);
+        }
+      });
     }
 
     // msgTitle.html(actorFace);
@@ -173,20 +173,20 @@ export class Arm5eChatMessage extends ChatMessage {
   addActionButtons(html) {
     const btnContainer = document.createElement("div");
     if (this.actor) {
-    btnContainer.classList.add("btn-container");
-    const btnArray = document.createElement("div");
-    btnArray.classList.add("flexrow");
+      btnContainer.classList.add("btn-container");
+      const btnArray = document.createElement("div");
+      btnArray.classList.add("flexrow");
 
-    let btnCnt = 0;
-    if (this.system.addActionButtons) {
-      btnCnt = this.system.addActionButtons(btnArray);
-    }
-    if (btnCnt) {
-      const actionHeader = document.createElement("h2");
-      actionHeader.classList.add("ars-chat-title");
-      actionHeader.innerHTML = game.i18n.localize("arm5e.sheet.actions");
-      btnContainer.appendChild(actionHeader);
-      btnContainer.appendChild(btnArray);
+      let btnCnt = 0;
+      if (this.system.addActionButtons) {
+        btnCnt = this.system.addActionButtons(btnArray);
+      }
+      if (btnCnt) {
+        const actionHeader = document.createElement("h2");
+        actionHeader.classList.add("ars-chat-title");
+        actionHeader.innerHTML = game.i18n.localize("arm5e.sheet.actions");
+        btnContainer.appendChild(actionHeader);
+        btnContainer.appendChild(btnArray);
       }
     }
     return btnContainer;
