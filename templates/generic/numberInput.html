@@ -1,5 +1,5 @@
 <form class="{{cssClass}} arm5e-prompt" autocomplete="off">
-  {{> "systems/arm5e/templates/roll/parts/roll-header.html" header="Inputs" }}
+  {{> "systems/arm5e/templates/roll/parts/roll-header.hbs" header="Inputs" }}
   <div class="flexrow3 backSection marginsides32">
     <div class="flex-center flexcol">
       <label style="font-size: 16pt;">{{prompt}}</label>
@@ -13,5 +13,5 @@
         min="{{constraints.min}}" max="{{constraints.max}}" step="{{constraints.step}}" />
     </div>
   </div>
-  {{> "systems/arm5e/templates/roll/parts/roll-footer.html" footer="Inputs"}}
+  {{> "systems/arm5e/templates/roll/parts/roll-footer.hbs" footer="Inputs"}}
 </form>

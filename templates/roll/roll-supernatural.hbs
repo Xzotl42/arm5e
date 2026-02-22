@@ -1,12 +1,12 @@
-<form class="{{cssClass}} arm5eRoll" autocomplete="off">
-  {{> "systems/arm5e/templates/roll/parts/roll-header.html" header="Rolls"}}
+<form class="{{cssClass}} arm5e-roll" autocomplete="off">
+  {{> "systems/arm5e/templates/roll/parts/roll-header.hbs" header="Rolls"}}
   <div class="roll-options">
     <div class="flexrow flex-group-center" style="word-break: break-all;">
       <label class="" style="font-size: 13pt; position: relative;
       top: -15px;">{{ system.roll.label}}</label>
     </div>
     {{#if false}}
-      {{> "systems/arm5e/templates/actor/parts/actor-voice-and-gestures.html" }}
+      {{> "systems/arm5e/templates/actor/parts/actor-voice-and-gestures.hbs" selection=rollInfo.selection id=_id}}
     {{/if}}
     <div class="flexrow flex-group-center">
       {{#if system.roll.magic.technique.active}}
@@ -178,9 +178,9 @@
         height="24" style="border :0px" /></label>
   </div>
   {{#if false}}
-    {{> "systems/arm5e/templates/roll/parts/penetration-options.html" }}
+    {{> "systems/arm5e/templates/roll/parts/penetration-options.hbs" }}
   {{/if}}
   </div>
 
-  {{> "systems/arm5e/templates/roll/parts/roll-footer.html" footer="Rolls" }}
+  {{> "systems/arm5e/templates/roll/parts/roll-footer.hbs" footer="Rolls" }}
 </form>

@@ -1,4 +1,4 @@
-import { ROLL_MODES, ROLL_PROPERTIES, getRollTypeProperties } from "./rollWindow.js";
+import { ROLL_MODES, ROLL_PROPERTIES, getRollTypeProperties } from "../ui/roll-window.js";
 import { log, sleep } from "../tools/tools.js";
 import { ARM5E } from "../config.js";
 import { ArsRoll } from "./roll.js";
@@ -833,7 +833,7 @@ async function explodingRoll(actorData, rollOptions = {}, botchNum = -1) {
         return await output_roll.evaluate(rollOptions);
       }
 
-      const html = await renderTemplate("systems/arm5e/templates/roll/roll-botch.html");
+      const html = await renderTemplate("systems/arm5e/templates/roll/roll-botch.hbs");
       let botchRoll;
       if (botchNum === -1 && rollOptions.prompt) {
         // interactive mode show dialog

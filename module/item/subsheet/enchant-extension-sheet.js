@@ -656,7 +656,7 @@ export class ArM5eItemEnchantmentSheet {
       const item = this.item;
       const enchantIdx = dataset.index;
       if (item.isOwned) {
-        dataset.name = item.name;
+        // dataset.name = item.name;
         dataset.roll = "item";
         dataset.id = item._id;
         dataset.physicalcondition = false;

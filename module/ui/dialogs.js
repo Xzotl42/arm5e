@@ -233,6 +233,12 @@ export async function customDialog(payload) {
       resolve(result);
     };
 
+    if (!payload.classes) {
+      payload.classes = ["arm5e-dialog"];
+    } else if (!payload.classes.includes("arm5e-dialog")) {
+      payload.classes.push("arm5e-dialog");
+    }
+
     const dialog = new foundry.applications.api.DialogV2(payload);
 
     // Attach render event listener if render callback is provided
@@ -256,8 +262,9 @@ export async function customDialogAsync(payload) {
         resolve(value);
       }
     };
-    payload.classes = payload.classes || [];
-    if (!payload.classes.includes("arm5e-dialog")) {
+    if (!payload.classes) {
+      payload.classes = ["arm5e-dialog"];
+    } else if (!payload.classes.includes("arm5e-dialog")) {
       payload.classes.push("arm5e-dialog");
     }
 
@@ -320,41 +327,45 @@ export async function customDialogAsync(payload) {
 // Listeners
 ////////////////////////
 
-export function addCommonListenersDialog(html) {
-  html.find(".clickable").click((ev) => {
-    $(ev.currentTarget).next().toggleClass("hide");
-  });
-
-  html.find(".select-on-focus").focus((ev) => {
+export function addAbilityListenersDialog(context, html) {
+  html.querySelector(".SelectedAbility")?.addEventListener("change", (ev) => {
     ev.preventDefault();
-    ev.currentTarget.select();
+    const dataset = getDataset(ev);
+    const val = ev.currentTarget.value;
+    const specialty = html.querySelector(".SpecialtyLabel");
+    context.rollInfo.ability.id = val;
+    const actor = game.actors.get(dataset.actorid);
+    if (val === "None") {
+      context.rollInfo.ability.speciality = "";
+    } else {
+      const ability = actor.items.get(val);
+      context.rollInfo.ability.speciality = ability.system.speciality;
+    }
+    specialty.innerHTML =
+      game.i18n.localize("arm5e.sheet.speciality") + ` (${context.rollInfo.ability.speciality})`;
   });
 }
 
-export function addPowersListenersDialog(html) {
-  addCommonListenersDialog(html);
-
+export function addPowersListenersDialog(context, html) {
   // Power specific
-  html.find(".power-cost").change(async (event) => {
+  html.querySelector(".power-cost")?.addEventListener("change", async (event) => {
     const dataset = getDataset(event);
     const val = Number(event.target.value);
-    const e = html[0].getElementsByClassName("power-level")[0];
+    const e = html.querySelector(".power-level");
     e.innerHTML = game.i18n.format("arm5e.sheet.powerLevel", { res: 5 * val });
   });
 
-  html.find(".power-form").change(async (event) => {
+  html.querySelector(".power-form")?.addEventListener("change", async (event) => {
     const dataset = getDataset(event);
     const val = event.target.value;
-    const e = html[0].getElementsByClassName("power-label")[0];
+    const e = html.querySelector(".power-label");
     e.value = e.value.replace(/\((.+)\)/i, `(${CONFIG.ARM5E.magic.arts[val].short})`);
   });
 }
 
-export function addMagicListenersDialog(html) {
-  addCommonListenersDialog(html);
-
+export function addMagicListenersDialog(context, html) {
   // Magic specific
-  html.find(".advanced-req-roll").click(async (e) => {
+  html.querySelector(".advanced-req-roll")?.addEventListener("click", async (e) => {
     const dataset = getDataset(e);
     const actor = game.actors.get(dataset.actorid);
     let newSpell;
@@ -391,13 +402,13 @@ export function addMagicListenersDialog(html) {
     actor.rollInfo.magic.form.deficiency = formData[2];
     actor.rollInfo.magic["technique-req"] = newSpell.system["technique-req"];
     actor.rollInfo.magic["form-req"] = newSpell.system["form-req"];
-    const e1 = html[0].getElementsByClassName("technique-label")[0];
+    const e1 = html.querySelector(".technique-label");
     e1.innerHTML = `${actor.rollInfo.magic.technique.label} (${actor.rollInfo.magic.technique.score})`;
-    const e2 = html[0].getElementsByClassName("form-label")[0];
+    const e2 = html.querySelector(".form-label");
     e2.innerHTML = `${actor.rollInfo.magic.form.label} (${actor.rollInfo.magic.form.score})`;
   });
 
-  html.find(".voice-and-gestures").change(async (event) => {
+  html.querySelector(".voice-and-gestures")?.addEventListener("change", async (event) => {
     const dataset = getDataset(event);
     const actor = game.actors.get(dataset.actorid);
     const name = $(event.target).attr("effect");
@@ -405,17 +416,14 @@ export function addMagicListenersDialog(html) {
   });
 }
 
-export function addSoakListenersDialog(html) {
-  addCommonListenersDialog(html);
-
-  //html.querySelector(".SelectedFormDamage");
-  html.find(".SelectedFormDamage").change(async (event) => {
+export function addSoakListenersDialog(context, html) {
+  html.querySelector(".SelectedFormDamage")?.addEventListener("change", async (event) => {
     const dataset = getDataset(event);
     const val = event.target.value;
     const actor = game.actors.get(dataset.actorid);
-    const classes = html[0].querySelector(".natural-resistance").classList;
+    const classes = html.querySelector(".natural-resistance").classList;
     if (actor.system.bonuses.resistance[val]) {
-      html[0].querySelector(".natRes").value = actor.system.bonuses.resistance[val];
+      html.querySelector(".natRes").value = actor.system.bonuses.resistance[val];
       classes.remove("hidden");
     } else {
       classes.add("hidden");
@@ -423,73 +431,69 @@ export function addSoakListenersDialog(html) {
 
     if (actor.isMagus()) {
       if (val === "") {
-        html[0].querySelector(".formRes").value = 0;
+        html.querySelector(".formRes").value = 0;
       } else {
         const resist = Math.ceil(actor.system.arts.forms[val].finalScore / 5);
-        html[0].querySelector(".formRes").value = resist;
+        html.querySelector(".formRes").value = resist;
       }
     }
     actor.rollInfo.damage.form = val;
   });
 
-  html.find(".ignoreArmor").change(async (event) => {
+  html.querySelector(".ignoreArmor")?.addEventListener("change", async (event) => {
     const dataset = getDataset(event);
     const val = event.target.checked;
     const actor = game.actors.get(dataset.actorid);
     actor.rollInfo.damage.ignoreArmor = val;
-    html[0].querySelector(".protection").classList.toggle("hidden");
+    html.querySelector(".protection").classList.toggle("hidden");
   });
 }
 
-export function addCombatListenersDialog(html) {
-  addCommonListenersDialog(html);
+export function addCombatListenersDialog(context, html) {
+  html.querySelector(".refresh-targets")?.addEventListener("click", (event) => {
+    const dataset = getDataset(event);
+    const actor = game.actors.get(dataset.actorid);
+    actor.rollInfo.getTargetsInfo();
+    const targetLabel = html.querySelector(".target-label");
+    targetLabel.innerText = actor.rollInfo.combat.targetLabel;
+    const targetNames = html.querySelector(".target-names");
+    targetNames.innerText = actor.rollInfo.combat.targetNames;
+  });
 
-  html.find(".preps").change(async (event) => {
+  html.querySelector(".preps")?.addEventListener("change", async (event) => {
     const dataset = getDataset(event);
     const updateData = {};
     updateData["system.combatPreps.current"] = event.target.value;
     const actor = game.actors.get(dataset.actorid);
     actor.rollInfo.setGenericField();
     await actor.update(updateData);
-    let field = html[0].querySelector(".ability");
+    let field = html.querySelector(".ability");
     if (field) {
       field.innerText = `${game.i18n.localize("arm5e.sheet.ability")} (${
         actor.system.combat.ability
       })`;
     }
-    field = html[0].querySelector(".attack");
+    field = html.querySelector(".attack");
     if (field) {
       field.innerText = `${game.i18n.localize("arm5e.sheet.attack")} (${actor.system.combat.atk})`;
     }
-    field = html[0].querySelector(".init");
+    field = html.querySelector(".init");
     if (field) {
       field.innerText = `${game.i18n.localize("arm5e.sheet.initiative")} (${
         actor.system.combat.init
       })`;
     }
 
-    field = html[0].querySelector(".defense");
+    field = html.querySelector(".defense");
     if (field) {
       field.innerText = `${game.i18n.localize("arm5e.sheet.defense")} (${actor.system.combat.dfn})`;
     }
 
-    field = html[0].querySelector(".overload");
+    field = html.querySelector(".overload");
     if (field) {
       field.innerText = `${game.i18n.localize("arm5e.sheet.encumbrance")} (${
         actor.system.combat.overload
       })`;
     }
-  });
-
-  html.find(".refresh-targets").click(async (event) => {
-    const dataset = getDataset(event);
-
-    const actor = game.actors.get(dataset.actorid);
-    actor.rollInfo.getTargetsInfo();
-
-    const targetLabel = html[0].querySelector(".target-label");
-    targetLabel.innerText = actor.rollInfo.combat.targetLabel;
-    const targetNames = html[0].querySelector(".target-names");
-    targetNames.innerText = actor.rollInfo.combat.targetNames;
   });
 }

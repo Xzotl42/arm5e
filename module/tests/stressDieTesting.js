@@ -14,6 +14,8 @@ export function registerStressDieTesting(quench) {
       }
       const { describe, it, assert, after, before } = context;
       describe(`Exploding die`, function () {
+        this.timeout(300000); // 300 seconds for easier debugging
+
         before(async function () {
           actor = await Actor.create({
             name: `BobTheCompanion`,

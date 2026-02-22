@@ -1,0 +1,75 @@
+<div class="{{cssClass}} arm5e-roll" autocomplete="off">
+  <div class="roll-options marginsides32">
+    <div class="flexrow flex-group-center">
+      <label class="">{{localize "arm5e.sheet.characteristic"}}</label>
+      <select name="rollInfo.characteristic" data-type="String" class="SelectedCharacteristic">
+        {{selectOptions rollInfo.selection.characteristics selected=rollInfo.characteristic}}
+      </select>
+    </div>
+    <div class="flexrow flex-group-center">
+      <label class="">+</label>
+    </div>
+    <div class="flexrow flex-group-center">
+      <label class="">{{localize "arm5e.sheet.abilities"}}</label>
+      <select
+        name="rollInfo.ability.id"
+        data-type="String"
+        class="ability-key SelectedAbility"
+        data-actorId="{{_id}}"
+      >
+        {{selectOptions rollInfo.selection.abilities selected=rollInfo.ability.id}}
+      </select>
+    </div>
+    <div class="flexrow flex-group-center">
+      <label class="SpecialtyLabel">{{localize "arm5e.sheet.speciality"}}
+        ({{rollInfo.ability.speciality}})</label>
+      <input
+        type="checkbox"
+        class="abilitySpeciality"
+        name="rollInfo.ability.specApply"
+        {{checked rollInfo.ability.specApply}}
+      />
+    </div>
+    <div class="flexrow flex-group-center">
+      <label class="">+</label>
+    </div>
+    <div class="flexrow flex-group-center">
+      <label class="flex01">{{localize "arm5e.sheet.modifier"}}</label>
+      <input
+        type="number"
+        name="rollInfo.modifier"
+        value="{{rollInfo.modifier}}"
+        data-dtype="Number"
+        class="SelectedModifier select-on-focus"
+      />
+    </div>
+    <div class="flexrow flex-group-center">
+      <label class="">+</label>
+    </div>
+    <div class="flexrow flex-group-center">
+      <label class="">{{localize "arm5e.sheet.fatigue.label"}} ({{system.fatigueTotal}})</label>
+    </div>
+    <div class="flexrow flex-group-center">
+      <label class="">+</label>
+    </div>
+    <div class="flexrow flex-group-center">
+      <label class="">{{localize "arm5e.sheet.wounds"}} ({{system.penalties.wounds.total}})</label>
+    </div>
+    <div class="flex-group-center flexcol">
+      <img src="systems/arm5e/assets/ballSilver.png" width="20" height="20" style="border :0px" />
+    </div>
+    <div class="flex-group-center">
+      <div class="flex-group-center flexrow" style="margin-top: 10px;">
+        <label class="flex03">{{localize "arm5e.generic.difficulty"}}</label>
+        <input
+          type="number"
+          name="rollInfo.difficulty"
+          value="{{rollInfo.difficulty}}"
+          data-dtype="Number"
+          data-actorId="{{_id}}"
+          class="SelectedDifficulty select-on-focus"
+        />
+      </div>
+    </div>
+  </div>
+</div>

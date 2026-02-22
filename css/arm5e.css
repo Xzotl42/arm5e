@@ -91,6 +91,7 @@
   --parchment: url("../assets/compendium/parchment.webp");
   --dialog-bg: url("../assets/dialog/Dialog_Background.webp");
   --dialog-bg-large: url("../assets/dialog/LargeDialog_Background.webp");
+  --chat-bg: url("../assets/chat/background.webp");
 
   --arm5e-c-dark: #191813;
   --arm5e-c-faint: #c9c7b8;
@@ -189,30 +190,37 @@ label,
 }
 
 /* Dialog-specific window-content with background images */
+.arm5e-confirm .window-content,
 .arm5e-prompt .window-content,
+.arm5e-roll .window-content, /* for dialog */
+.window-content .arm5e-roll, /* for app roll */
 .arm5e-dialog .window-content {
   padding: 0;
   color: var(--color-text-dark-primary);
   background: var(--dialog-bg);
   background-image: var(--dialog-bg);
-  background-size: cover;
+  background-size: 100% auto; /* Scale width to 100%, height auto-adjusts */
+  background-repeat: repeat-y;
+  background-color: var(--color-text-dark-primary);
   overflow: hidden;
-  color: var(--color-text-dark-primary);
+  gap: 0;
 }
 
 .roll-dialog .window-content {
+  gap: 0;
   padding: 0;
-  background-size: auto;
 }
 
-.arm5e-confirm .window-content {
+/* .arm5e-confirm .window-content {
   padding: 0;
   color: var(--color-text-dark-primary);
-  background-image: var(--parchment);
+  background-image: var(--dialog-bg);
   background-size: contain;
+  background-size: 100% auto;
+  background-repeat: repeat-y;
   overflow-y: auto;
   overflow-x: hidden;
-}
+} */
 
 .arm5eLargeDialog .window-content {
   padding: 0;
@@ -237,7 +245,7 @@ label,
 .arm5e .dialog-buttons {
   background-color: var(--arm5e-c-muted);
 }
-
+.arm5e-roll .window-header,
 .arm5e-dialog .window-header {
   background: rgba(0, 0, 0, 0.85);
 }
@@ -296,7 +304,7 @@ img.clickable:hover {
   padding: 5px 10px;
   font-size: 14px;
   color: var(--color-text-dark-primary);
-  background-image: url("../assets/chat/background.webp");
+  background-image: var(--chat-bg);
   background-repeat: repeat;
   background-size: 100%;
   border: 2px solid var(--border-main);
@@ -315,9 +323,15 @@ img.clickable:hover {
   font-size: var(--font-size-12);
 }
 .chat-message .message-content {
+  word-break: normal;
   overflow-wrap: break-word;
+  hyphens: none;
   line-height: 20px;
 }
+
+/* header.ars-chat-header {
+  background-image: url("../assets/chat/header.webp");
+} */
 .chat-message .message-content .dice-total {
   font-weight: bold;
   margin: 0;
@@ -327,13 +341,19 @@ img.clickable:hover {
   border: 1px solid var(--color-border-light-2);
   border-radius: var(--radius-sm);
   box-shadow: inset 0 0 2px #fff;
-  word-break: break-all;
+  word-break: normal;
   font-size: var(--font-size-20);
 }
 h2.dice-msg,
 h3.dice-msg {
   font-size: 12pt;
   font-weight: bold;
+}
+
+.system-arm5e .chat-input {
+  background-image: var(--chat-bg);
+  background-size: 100%;
+  color: var(--color-text-dark-primary);
 }
 
 /* Grid utilities (fixed grid-6col) */
@@ -436,15 +456,18 @@ h3.dice-msg {
 }
 .arm5eInfo,
 .arm5eEffect,
-.arm5eRoll,
+.arm5e-roll,
 .arm5InvestigateRoll,
 .arm5eActiveEffect {
   background-image: var(--dialog-bg);
   background-repeat: repeat-y;
+  background-size: 100%;
   font-family: var(--font-book-bold);
   font-size: var(--font-size-12);
+  padding: 0px;
+  gap: 0px;
 }
-.arm5eRoll {
+.arm5e-roll {
   width: 420px;
 }
 
@@ -480,6 +503,8 @@ h3.dice-msg {
 .arm5e-prompt input[type="text"],
 .arm5e-prompt input[type="number"],
 .arm5e-dialog input[type="number"],
+.arm5e-roll input[type="number"],
+.arm5e-roll input[type="text"],
 .arm5e input[type="text"],
 .arm5e input[type="number"],
 .arm5e input[type="password"],
@@ -488,7 +513,7 @@ h3.dice-msg {
 .arm5e select,
 .arm5e-prompt select,
 .arm5e-dialog select,
-.arm5eRoll select {
+.arm5e-roll select {
   width: calc(100% - 2px);
   min-width: 20px;
   height: 20px;
@@ -510,9 +535,20 @@ h3.dice-msg {
   -ms-user-select: text;
   user-select: text;
 }
+
+.arm5e select,
+.arm5e-prompt select,
+.arm5e-dialog select,
+.arm5e-roll select {
+  font-weight: 500;
+  width: auto;
+  min-width: fit-content;
+}
+
 .arm5e input[type="number"],
 .arm5e-dialog input[type="number"],
-.arm5e-prompt input[type="number"] {
+.arm5e-prompt input[type="number"],
+.arm5e-roll input[type="number"] {
   text-align: center;
   max-width: 70px;
 }
@@ -1271,6 +1307,41 @@ span.player-name {
 
 /*journal stuff */
 
+.system-arm5e .journal-entry-page h1 {
+  font-family: var(--font-header);
+  font-size: 24pt;
+  color: var(--arm5e-c-black);
+}
+
+.system-arm5e .journal-entry-page h2 {
+  font-family: var(--font-header);
+  font-size: 16pt;
+  color: var(--arm5e-c-black);
+}
+
+.system-arm5e .journal-entry-page h3 {
+  font-family: var(--font-header);
+  font-size: 14pt;
+  color: var(--arm5e-c-black);
+  border-bottom: 1px solid var(--color-warm-3);
+}
+
+.system-arm5e .journal-entry-page h4 {
+  font-family: var(--font-header);
+  font-size: 14pt;
+  color: var(--arm5e-c-black);
+  border-bottom: 1px solid var(--color-warm-3);
+}
+
+.system-arm5e .journal-entry-page code,
+.system-arm5e .journal-entry-page code.block {
+  display: block;
+  padding: 0.5rem;
+  margin: initial;
+  color: black;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
 .journal-sheet .journal-sidebar {
   background: var(--parchment);
   color: var(--arm5e-c-black);
@@ -1280,12 +1351,6 @@ span.player-name {
   background: black;
   border-radius: var(--radius-sm);
   opacity: 0.5;
-}
-
-/* Removed: .journal-sheet .window-content consolidated at top of file */
-
-.theme-dark .journal-sheet h4.window-title {
-  color: var(--color-light-2);
 }
 
 .sheet.journal-entry .journal-entry-content {
@@ -1317,14 +1382,9 @@ span.player-name {
 /* Removed duplicate .journal-entry-page definition - consolidated above at line ~788 */
 /* Child selectors inherit font-family from parent */
 
-.journal-entry-page h3 {
+/* .journal-entry-page h4 {
   font-size: 16pt;
-  border-bottom: 1px solid var(--color-warm-3);
-}
-
-.journal-entry-page h4 {
-  font-size: 16pt;
-}
+} */
 
 .theme-dark .journal-entry-page .editor.prosemirror {
   /* font-size: 16px; */
@@ -1374,6 +1434,12 @@ a.content-link i.fa-book-open {
   display: none;
 }
 
+/* .compendium-directory h1 {
+  font-family: var(--font-header);
+  font-size: 18pt;
+  color: var(--arm5e-c-beige);
+} */
+
 .scriptorium.resource {
   padding-top: 5px;
 }
@@ -1396,20 +1462,26 @@ a.content-link i.fa-book-open {
   background-color: var(--arm5e-c-tan);
 }
 
-/* .arm5e button {
+.arm5e .window-content button {
   font-family: var(--font-header);
   font-size: 13pt;
-  background-image: url("../assets/buttons/wood2.webp");
-  border-width: 1px;
+  background-image: radial-gradient(ellipse, rgba(255, 255, 255, 0.7), rgba(181, 179, 164, 0.2)),
+    url("../assets/buttons/light-brown-leather.webp");
+  /* background-size: 100% 100%, 200% 200%;
+  background-position: 0 0, var(--bg-pos-x, 0%) var(--bg-pos-y, 0%);
+  background-attachment: local; */
+
+  border-width: 0px;
   border-style: groove;
   border-color: rgb(69, 50, 2);
   border-radius: var(--radius-md);
-  box-shadow: 0 0 5px var(--arm5e-c-beige);
+  box-shadow: 0 0 5px var(--arm5e-c-beige), 2px 2px 4px rgba(0, 0, 0, 0.4);
 
   color: var(--arm5e-c-black);
-  padding: 10px;
- }  */
+  padding: 5px;
+}
 
+.arm5e-roll button.dialog-button,
 .arm5e-prompt button.dialog-button,
 .arm5e-dialog button.dialog-button,
 .arm5e-confirm button.dialog-button,
@@ -1422,12 +1494,30 @@ a.content-link i.fa-book-open {
   border-color: #000000;
   border-radius: var(--radius-md);
   box-shadow: 0 0 5px var(--arm5e-c-beige);
-
   color: var(--arm5e-c-beige);
-  /* padding: 10px; */
+  padding: 12px;
+  white-space: normal;
+  line-height: 1.4;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  flex: 1 1 auto;
+  gap: 6px;
+  min-height: 36px;
 }
 
-.arm5e button:hover,
+.arm5e-roll button.dialog-button span,
+.arm5e-prompt button.dialog-button span,
+.arm5e-dialog button.dialog-button span,
+.arm5e-confirm button.dialog-button span {
+  text-align: center;
+}
+
+.arm5e button:hover {
+  box-shadow: 0 0 10px black, 2px 2px 6px rgba(0, 0, 0, 0.6);
+}
 .arm5e .astrolab.button:hover,
 .arm5e-confirm button.dialog-button:hover,
 .arm5e-dialog button.dialog-button:hover,
@@ -1450,10 +1540,13 @@ h4.window-title {
   font-family: var(--font-header);
   font-size: 16pt;
 }
-
-.roll-dialog footer.form-footer,
+.arm5e-roll footer.form-footer,
+.arm5e-dialog footer.form-footer,
 .arm5e-confirm footer.form-footer {
   background-color: var(--arm5e-c-tan);
+  gap: 1px;
+  display: flex;
+  align-items: flex-start;
 }
 
 /* Removed duplicate sanatorium/astrolab button styling; consolidated definition above applies */
@@ -1967,27 +2060,25 @@ p,
   width: 100%;
 }
 
-.arm5eRoll {
-  background-image: url("../assets/dialog/Dialog_Background.webp");
+/* .arm5e-roll {
   background-repeat: repeat-y;
   background-size: 100%;
   font-family: "var(--font-book-bold)";
-  font-size: 12pt;
-  width: 420px;
-}
+  font-size: 11pt;
+}*/
 
-.arm5eRoll .roll-options {
+.arm5e-roll .roll-options {
   font-family: "var(--font-book-bold)";
   padding-left: 32px;
   padding-right: 32px;
   background-size: cover;
 }
 
-.arm5eRoll .roll-options .sub {
+.arm5e-roll .roll-options .sub {
   font-size: 14px;
 }
 
-/* arm5eRoll header-background img styles consolidated above */
+/* arm5e-roll header-background img styles consolidated above */
 
 /* Styles limited to arm5e sheets */
 
@@ -2174,10 +2265,11 @@ input[type="number"].design-level {
 /* Base header background image styles */
 .arm5e .header-background img,
 .arm5e-prompt .header-background img,
+.arm5e-confirm .header-background img,
 .arm5eEffect .header-background img,
 .arm5eRequisite .header-background img,
 .arm5e .arm5eActiveEffect .header-background img,
-.arm5eRoll .header-background img,
+.arm5e-roll .header-background img,
 .arm5e .astrolab.header-background img {
   width: 100%;
   border: 0;
@@ -2191,6 +2283,7 @@ input[type="number"].design-level {
 .arm5e-prompt .footer-background img,
 .arm5e-dialog .footer-background img,
 .arm5e-confirm .footer-background img,
+.arm5e-roll .footer-background img,
 .arm5e .footer-background img {
   width: 100%;
   border: 0;
@@ -2416,7 +2509,7 @@ fieldset .arm5e {
 .arm5e .spell-attribute {
   max-width: 160px;
 }
-.arm5eRoll .ability-key,
+.arm5e-roll .ability-key,
 .arm5e .ability-key {
   max-width: 250px;
 }
@@ -2455,6 +2548,14 @@ fieldset .arm5e {
   height: 20px;
   width: 30px;
   border: 0px;
+}
+
+.section-title {
+  font-family: var(--font-header);
+  font-size: 14pt;
+  font-weight: normal;
+  align-items: center;
+  /* padding-top: 5px; */
 }
 
 /* Removed duplicate toggle/collapse animation blocks; consolidated canonical definitions above apply */
@@ -3020,7 +3121,7 @@ img.art-icon {
   padding-left: 5px;
 }
 
-.arm5eRoll .modifier,
+.arm5e-roll .modifier,
 .arm5e .modifier {
   width: 35px;
   max-width: 35px;

@@ -16,6 +16,8 @@ export function registerActorLinkTesting(quench) {
       before(async function () {});
 
       describe("ActorLink nominal", function () {
+        this.timeout(300000); // 300 seconds for easier debugging
+
         let src;
         let target;
         for (let srcType of actorTypes) {

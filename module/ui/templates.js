@@ -18,7 +18,7 @@ export const ArM5ePreloadHandlebarsTemplates = async function () {
     "systems/arm5e/templates/actor/parts/actor-laboratory.html",
     "systems/arm5e/templates/actor/parts/actor-laboratoryTotals.html",
     "systems/arm5e/templates/actor/parts/actor-castingTotals.html",
-    "systems/arm5e/templates/actor/parts/actor-voice-and-gestures.html",
+    "systems/arm5e/templates/actor/parts/actor-voice-and-gestures.hbs",
     "systems/arm5e/templates/actor/parts/actor-diary.html",
     "systems/arm5e/templates/actor/parts/actor-powers.html",
 
@@ -134,12 +134,12 @@ export const ArM5ePreloadHandlebarsTemplates = async function () {
     "systems/arm5e/templates/lab-activities/investigation.html",
     "systems/arm5e/templates/lab-activities/longevity-ritual.html",
     // Rolls partials
-    "systems/arm5e/templates/roll/parts/roll-header.html",
-    "systems/arm5e/templates/roll/parts/roll-footer.html",
-    "systems/arm5e/templates/roll/parts/penetration-options.html",
-    "systems/arm5e/templates/roll/parts/combat-init.hbs",
-    "systems/arm5e/templates/roll/parts/combat-attack.hbs",
-    "systems/arm5e/templates/roll/parts/combat-defense.hbs",
+    "systems/arm5e/templates/roll/parts/roll-header.hbs",
+    "systems/arm5e/templates/roll/parts/roll-footer.hbs",
+    // "systems/arm5e/templates/roll/parts/penetration-options.hbs",
+    // "systems/arm5e/templates/roll/parts/combat-init.hbs",
+    // "systems/arm5e/templates/roll/parts/combat-attack.hbs",
+    // "systems/arm5e/templates/roll/parts/combat-defense.hbs",
     // generic partials
     "systems/arm5e/templates/generic/active-effects-tab.hbs",
     "systems/arm5e/templates/generic/calendar-grid.html",
@@ -165,8 +165,8 @@ export const ArM5ePreloadHandlebarsTemplates = async function () {
     "systems/arm5e/templates/generic/parts/scriptorium-copying.html",
     "systems/arm5e/templates/generic/parts/list-item.hbs",
     "systems/arm5e/templates/generic/largeDialog-header.hbs",
-    "systems/arm5e/templates/generic/largeDialog-footer.hbs",
+    "systems/arm5e/templates/generic/largeDialog-footer.hbs"
     // Apps partials
-    "systems/arm5e/templates/generic/astrolab.hbs"
+    // "systems/arm5e/templates/generic/astrolab.hbs"
   ]);
 };

@@ -107,9 +107,6 @@ export class ArM5eActor extends Actor {
     this.system.bonuses = {};
 
     if (this.isMagus()) {
-      // Hack, if the active effect for magus is not setup
-      this.system.realms.magic.aligned = true;
-
       for (let key of Object.keys(this.system.arts.techniques)) {
         this.system.arts.techniques[key].bonus = 0;
         this.system.arts.techniques[key].xpCoeff = 1.0;
@@ -655,6 +652,9 @@ export class ArM5eActor extends Actor {
         form.magicResistance = parmaStats.score * 5 + form.finalScore;
         if (parmaStats.speciality.toUpperCase() === form.label.toUpperCase()) {
           form.magicResistance += 5;
+          form.speciality = true;
+        } else {
+          form.speciality = false;
         }
 
         system.totalXPArts += form.xp;
@@ -1118,7 +1118,7 @@ export class ArM5eActor extends Actor {
     await this.update(updateData);
   }
 
-  async addActiveEffect(name, type, subtype, value, option = null, icon) {
+  async addActiveEffect(name, type, subtype, value, option = null, disabled = false, icon = null) {
     if (Object.keys(ACTIVE_EFFECTS_TYPES).includes(type)) {
       if (Object.keys(ACTIVE_EFFECTS_TYPES[type].subtypes).includes(subtype)) {
         const activeEffectData = {
@@ -1146,6 +1146,7 @@ export class ArM5eActor extends Actor {
         };
         activeEffectData.name = name;
         activeEffectData.img = icon ?? "icons/svg/aura.svg";
+        activeEffectData.disabled = disabled;
 
         return await this.createEmbeddedDocuments("ActiveEffect", [activeEffectData]);
       } else {
@@ -1156,19 +1157,41 @@ export class ArM5eActor extends Actor {
     }
   }
 
-  // Async removeActiveEffect(type, subtype) {
-  //   if (Object.keys(ACTIVE_EFFECTS_TYPES).includes(type)) {
-  //     if (Object.keys(ACTIVE_EFFECTS_TYPES[type].subtypes).includes(subtype)) {
-  //       const toDelete = Object.values(this.effects).filter(e => )
-  //       return await this.deleteEmbeddedDocuments("ActiveEffect", toDelete);
-  //     } else {
-  //       log(false, "Unknown subtype");
-  //     }
-  //   } else {
-  //     log(false, "Unknown type");
-  //   }
-  //   return;
-  // }
+  // warning: this will remove all active effects of the given type and subtype, even those not created by arm5e system
+  async removeActiveEffect(type, subtype) {
+    if (Object.keys(ACTIVE_EFFECTS_TYPES).includes(type)) {
+      if (Object.keys(ACTIVE_EFFECTS_TYPES[type].subtypes).includes(subtype)) {
+        const toDelete = Object.values(this.effects)
+          .filter(
+            (e) => e.flags.arm5e?.type?.includes(type) && e.flags.arm5e?.subtype?.includes(subtype)
+          )
+          .map((e) => e.id);
+        return await this.deleteEmbeddedDocuments("ActiveEffect", toDelete);
+      } else {
+        log(false, "Unknown subtype");
+      }
+    } else {
+      log(false, "Unknown type");
+    }
+    return;
+  }
+
+  async disableActiveEffect(type, subtype) {
+    if (Object.keys(ACTIVE_EFFECTS_TYPES).includes(type)) {
+      if (Object.keys(ACTIVE_EFFECTS_TYPES[type].subtypes).includes(subtype)) {
+        const toDisable = Object.values(this.effects).filter(
+          (e) => e.flags.arm5e?.type?.includes(type) && e.flags.arm5e?.subtype?.includes(subtype)
+        );
+        const updateData = toDisable.map((e) => ({ _id: e.id, disabled: true }));
+        return await this.updateEmbeddedDocuments("ActiveEffect", updateData);
+      } else {
+        log(false, "Unknown subtype");
+      }
+    } else {
+      log(false, "Unknown type");
+    }
+    return;
+  }
 
   async changeWound(amount, wtype, description = "") {
     if (
@@ -1301,42 +1324,34 @@ export class ArM5eActor extends Actor {
     return true;
   }
 
-  magicResistance(form, realm) {
+  magicResistanceDetails(form, realm) {
     if (!this.isCharacter()) return null;
-
-    let magicResistance =
-      Number(this.system.laboratory?.magicResistance?.value) ||
-      Number(this.system?.might?.value) ||
-      0; //  No magicResistance != magicResistance of 0
-
-    // TODO support magic resistance for hedge magic forms
-
+    //  No magicResistance != magicResistance of 0
+    let magicResistance = 0;
+    let hermeticMagicResistance = 0;
     const formLabel = CONFIG.ARM5E.magic.arts[form]?.label || "NONE";
-
     let specialityIncluded = "";
-    let parma = null;
-    if (this.hasSkill("parma")) {
-      parma = this.getAbilityStats("parma");
-      magicResistance += parma.score * 5;
-      if (parma.speciality && parma.speciality.toUpperCase() === formLabel.toUpperCase()) {
+    let formScore = 0;
+    if (this.system?.arts) {
+      hermeticMagicResistance = this.system.arts.forms[form]?.magicResistance || 0;
+      if (this.system.arts.forms[form]?.speciality || false) {
         specialityIncluded = formLabel;
-        magicResistance += 5;
       }
+      formScore = this.system.arts.forms[form]?.finalScore || 0;
     }
-
-    const arts = this.system?.arts;
     let auraMod = 0;
-    // TODO, do a better job for player aligned to a realm
     if (this.hasMight()) {
       let aura = Aura.fromActor(this);
       auraMod = aura.computeMaxAuraModifier(this.system.realms);
       magicResistance += parseInt(auraMod);
     }
 
-    let formScore = 0;
-    if (arts) {
-      formScore = arts.forms[form]?.finalScore || 0;
-      magicResistance += formScore;
+    // only the highest between hermetic magic resistance and other sources
+    magicResistance = Math.max(hermeticMagicResistance, magicResistance);
+
+    let parma = null;
+    if (this.hasSkill("parma")) {
+      parma = this.getAbilityStats("parma");
     }
 
     let otherResistance = Math.max(
@@ -1346,7 +1361,6 @@ export class ArM5eActor extends Actor {
     // not cumulative with Parma
     if (otherResistance > 0 && otherResistance > magicResistance) {
       magicResistance = otherResistance;
-      specialityIncluded = false;
       parma = null;
     }
 

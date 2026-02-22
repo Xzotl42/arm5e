@@ -679,16 +679,17 @@ export function validAdventuring(context, actor, item) {
 export function validChildhood(context, actor, item) {
   context.system.totalXp = { abilities: 0, arts: 0, masteries: 0 };
 
-  let abilitiesArr = Object.values(item.system.progress.abilities);
-  checkForDuplicates("abilities", context, abilitiesArr);
-  context.system.totalXp.abilities = checkMaxXpPerItem(context, abilitiesArr, 1000);
-  const filteredArray = actor.system.abilities.filter((e) => {
-    return abilitiesArr.some((filter) => {
-      return filter.id === e._id && e.system.key == "livingLanguage" && filter.xp >= 50;
-    });
+  checkForDuplicates("abilities", context, item.system.progress.abilities);
+  context.system.totalXp.abilities = checkMaxXpPerItem(
+    context,
+    item.system.progress.abilities,
+    1000
+  );
+  const language = item.system.progress.abilities.filter((e) => {
+    return e.key == "livingLanguage" && e.xp >= 30;
   });
 
-  if (filteredArray.length != 1) {
+  if (language.length != 1) {
     context.system.applyPossible = true;
     if (context.system.applyError === "")
       context.system.applyError = "arm5e.activity.msg.missingMotherTongue";

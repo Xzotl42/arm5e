@@ -92,7 +92,8 @@ export class Arm5eChatMessage extends ChatMessage {
         }
       }
     }
-    const html = await super.renderHTML(options);
+    let html = await super.renderHTML(options);
+    // html = `<header class="ars-chat-header"></header><div>${html.outerHTML}</div>`;
 
     if (this.type === "base") return html;
 

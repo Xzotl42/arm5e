@@ -1,6 +1,6 @@
 import { stressDie } from "../helpers/dice.js";
 import { GetEffectAttributesLabel, computeLevel } from "../helpers/magic.js";
-import { ROLL_MODES } from "../helpers/rollWindow.js";
+import { ROLL_MODES } from "../ui/roll-window.js";
 import { log } from "../tools/tools.js";
 
 export class InvestigationRoll extends FormApplication {

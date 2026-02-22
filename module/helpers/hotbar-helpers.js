@@ -1,4 +1,4 @@
-import { ROLL_PROPERTIES } from "./rollWindow.js";
+import { ROLL_PROPERTIES } from "../ui/roll-window.js";
 
 const TYPE_OF_DATASET = {
   ABILITY: "ability",

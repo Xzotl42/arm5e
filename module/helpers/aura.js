@@ -57,7 +57,9 @@ export default class Aura {
   computeAuraModifierFor(alignment) {
     let dominantRealm = this.dominantRealm || "mundane";
     const multiplier = ARM5E.realmsExt[dominantRealm].influence[alignment];
-    this.modifier = this.auraValueFor(dominantRealm) * multiplier;
+    const rawModifier = this.auraValueFor(dominantRealm) * multiplier;
+    // Bonuses are rounded up, penalties are not rounded
+    this.modifier = rawModifier > 0 ? Math.ceil(rawModifier) : Math.floor(rawModifier);
     return this.modifier;
   }
 
@@ -170,6 +172,14 @@ export default class Aura {
     currentAura.values[realm] = value;
     currentAura.nightModifier[realm] = nightMod;
     await this.scene.setFlag("arm5e", "aura", currentAura);
+  }
+
+  // Reset all aura values to 0 (utility function for tests)
+  async reset() {
+    if (!this.scene) {
+      this.scene = game.scenes.get(this.sceneId);
+    }
+    await this.scene.setFlag("arm5e", "aura", foundry.utils.deepClone(Aura.defaultAura));
   }
 
   // Mundane is added here to easily compute cases with no aura

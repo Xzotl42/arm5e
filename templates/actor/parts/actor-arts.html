@@ -96,7 +96,7 @@
   </div>
 </div>
 
-{{> "systems/arm5e/templates/actor/parts/actor-voice-and-gestures.html" target="system.stances" data=system.stances }}
+{{> "systems/arm5e/templates/actor/parts/actor-voice-and-gestures.hbs" id=_id }}
 {{>
 "systems/arm5e/templates/actor/parts/actor-magic-attributes.html" show="arts" }}
 
@@ -105,7 +105,8 @@
     <li class="item flexrow item-header">
       <div class="item-image"></div>
       <div>
-        <span class="item-name spell-list">{{localize "arm5e.sheet.spells"}}</span><span> ({{ system.totalXPSpells }}
+        <span class="section-title spell-list">{{localize "arm5e.sheet.spells"}}</span><span> ({{ system.totalXPSpells
+          }}
           lvl) -- </span><span class="item-name spell-list">{{localize "arm5e.sheet.mastery"}}</span><span> ({{
           system.totalXPMasteries }}
           xp)</span>
@@ -161,7 +162,7 @@
     <li class="item flexrow item-header">
 
       <div class="item-image"></div>
-      <div><span class="item-name">{{localize "arm5e.sheet.magicalEffects"}}</span></div>
+      <div><span class="section-title">{{localize "arm5e.sheet.magicalEffects"}}</span></div>
       <div class="item-controls header">
         <a class="item-control toggleHidden" title="Filter" data-category="hermetic" data-hidden="magicalEffects"
           data-list="magicalEffects" {{{ui.magicEffectFilter}}}><i class="fas fa-sort"> </i>

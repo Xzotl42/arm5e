@@ -30,6 +30,8 @@ export function registerLabActivityTesting(quench) {
       });
 
       describe("LabActivity activity change", function () {
+        this.timeout(300000); // 300 seconds for easier debugging
+
         for (let act of Object.keys(ACTIVITIES)) {
           it(`Switch to ${act}`, async function () {
             try {
@@ -44,6 +46,8 @@ export function registerLabActivityTesting(quench) {
       });
 
       describe("Lab totals Spells", function () {
+        this.timeout(300000); // 300 seconds for easier debugging
+
         for (let tech of Object.keys(ARM5E.magic.techniques)) {
           for (let form of Object.keys(ARM5E.magic.forms)) {
             it(`Lab total ${tech} ${form}`, async function () {

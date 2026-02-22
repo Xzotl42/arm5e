@@ -29,11 +29,10 @@ import {
 } from "../constants/userdata.js";
 import {
   prepareRollVariables,
-  renderRollTemplate,
-  chooseTemplate,
   ROLL_MODES,
-  getRollTypeProperties
-} from "../helpers/rollWindow.js";
+  getRollTypeProperties,
+  getRollDialog
+} from "../ui/roll-window.js";
 
 import {
   buildSoakDataset,
@@ -2072,10 +2071,14 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
 
     prepareRollVariables(dataset, this.actor);
     this.actor.system.charmetadata = ARM5E.character.characteristics;
-    const template = chooseTemplate(dataset);
 
-    const res = await renderRollTemplate(dataset, template, this.actor);
-    return res;
+    // this.actor.system.roll = actor.rollInfo;
+    this.actor.config = CONFIG.ARM5E;
+    // this.actor.selection = actor.rollInfo.selection;
+    // this.actor.part = actor.rollInfo.part;
+
+    const message = await getRollDialog(this.actor);
+    return message;
   }
 
   async quickCombat(name) {
@@ -2147,6 +2150,8 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
         return "covenant";
       case "laboratory":
         return "Lab";
+      case "magicCodex":
+        return "codex";
       default:
         return "Neutral";
     }

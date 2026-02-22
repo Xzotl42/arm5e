@@ -72,11 +72,15 @@ export function registerTrainingTesting(quench) {
         entry = entry[0];
       });
       describe("DEBUG", function () {
+        this.timeout(300000); // 300 seconds for easier debugging
+
         it("Dummy", async function () {
           assert.ok(true);
         });
       });
       describe("Training nominal", function () {
+        this.timeout(300000); // 300 seconds for easier debugging
+
         it("Single Ability", async function () {
           let sheet = entry.sheet;
           const sheetData = await entry.sheet.getData();

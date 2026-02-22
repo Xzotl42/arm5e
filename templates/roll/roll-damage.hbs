@@ -1,0 +1,60 @@
+<div class="{{cssClass}} arm5e-roll" autocomplete="off">
+  <div class="roll-options">
+    <div class="flexcol flex-group-center">
+      <label class="flex0">{{localize "arm5e.damage.source"}}</label>
+      <input
+        type="text"
+        name="rollInfo.damage.source"
+        value="{{rollInfo.damage.source}}"
+        data-dtype="String"
+        class="SelectedSource select-on-focus wide"
+      />
+    </div>
+    <div class="flexrow flex-group-center">
+      <label class="flex0">{{localize "arm5e.damage.label"}} </label>
+      <input
+        type="number"
+        name="rollInfo.modifier"
+        value="{{rollInfo.modifier}}"
+        data-dtype="Number"
+        class="SelectedModifier select-on-focus modifier"
+      />
+    </div>
+    <div class="flexcol flex-group-center">
+      <label class=""><img
+          src="systems/arm5e/assets/ballSilver.png"
+          width="20"
+          height="20"
+          style="border :0px"
+        /></label>
+    </div>
+    <div class="flexrow flex-group-center">
+      <label class="fit">{{localize "arm5e.damage.form"}} </label>
+      <div style="max-width: fit-content;">
+        <select
+          name="rollInfo.damage.form"
+          class="SelectedFormDamage"
+          data-type="String"
+          style="max-width: fit-content;"
+        >
+          {{selectOptions
+            rollInfo.selection.forms
+            selected=rollInfo.damage.form
+            labelAttr="label"
+            blank=""
+          }}
+        </select>
+      </div>
+    </div>
+    <div class="flexrow flex-group-center">
+      <label class="flex0">{{localize "arm5e.damage.ignoreArmor"}} </label>
+      <input
+        type="checkbox"
+        name="rollInfo.damage.ignoreArmor"
+        {{checked rollInfo.damage.ignoreArmor}}
+        data-dtype="Boolean"
+        class="ignoreArmor"
+      />
+    </div>
+  </div>
+</div>

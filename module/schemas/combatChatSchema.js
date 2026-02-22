@@ -368,7 +368,16 @@ export class CombatDamageChatSchema extends CombatChatSchema {
           uuid: new fields.DocumentUUIDField(),
           name: new fields.StringField({ required: false, blank: true, initial: "" }),
           flavor: new fields.StringField({ required: false, blank: true, initial: "" }),
-          details: new fields.StringField({ required: false, blank: true, initial: "" })
+          details: new fields.StringField({ required: false, blank: true, initial: "" }),
+          woundGravity: new fields.NumberField({
+            required: false,
+            nullable: false,
+            integer: true,
+            initial: 0,
+            step: 1,
+            min: 0,
+            max: 5
+          })
         }),
         damageTotal: basicIntegerField(0, 0),
         damageApplied: boolOption(false)
@@ -439,10 +448,11 @@ export class CombatDamageChatSchema extends CombatChatSchema {
             damageApplied: true,
             defender: {
               flavor: msg.flavor,
-              details: msg.system.roll.details
+              details: msg.system.roll.details,
+              woundGravity: msg.system.impact.woundGravity
             }
           },
-          impact: { applied: true, woundGravity: msg.system.impact.woundGravity }
+          impact: { applied: true }
         }
       },
       actorUpdate: {}
@@ -466,7 +476,7 @@ export class CombatDamageChatSchema extends CombatChatSchema {
       await defender.changeWound(
         1,
         CONFIG.ARM5E.recovery.rankMapping[gravity],
-        game.i18n.format("arm5e.sheet.combat.wound", { attacker: this.parent.actor })
+        game.i18n.format("arm5e.sheet.combat.wound", { attacker: this.parent.actor.name })
       );
     }
   }
@@ -524,10 +534,11 @@ export class CombatDamageChatSchema extends CombatChatSchema {
     const soakRes = document.createElement("h4");
     soakRes.classList.add("dice-roll", "dice-total");
     soakRes.innerHTML =
-      this.impact.woundGravity !== 0
+      this.combat.defender.woundGravity !== 0
         ? game.i18n.format("arm5e.messages.woundResult", {
             typeWound: game.i18n.localize(
-              "arm5e.messages.wound." + CONFIG.ARM5E.recovery.rankMapping[this.impact.woundGravity]
+              "arm5e.messages.wound." +
+                CONFIG.ARM5E.recovery.rankMapping[this.combat.defender.woundGravity]
             )
           })
         : game.i18n.localize("arm5e.messages.noWound");

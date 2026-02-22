@@ -1,5 +1,5 @@
-<form class="{{cssClass}} arm5eRoll" autocomplete="off">
-  {{> "systems/arm5e/templates/roll/parts/roll-header.html" header="Damage_Soak" }}
+<form class="{{cssClass}} arm5e-roll" autocomplete="off">
+  {{> "systems/arm5e/templates/roll/parts/roll-header.hbs" header="Damage_Soak" }}
   {{log "Roll Soak Form Data:" this}}
   <div class="roll-options">
     <div class="flexrow flex-group-center">
@@ -71,5 +71,5 @@
         class="SelectedModifier select-on-focus modifier" />
     </div>
   </div>
-  {{> "systems/arm5e/templates/roll/parts/roll-footer.html" footer="Damage_Soak"}}
+  {{> "systems/arm5e/templates/roll/parts/roll-footer.hbs" footer="Damage_Soak"}}
 </form>

@@ -750,6 +750,8 @@ export function registerDiaryTesting(quench) {
       let Sp1;
       const { describe, it, assert, after, before } = context;
       describe(`Diary entries tests`, function () {
+        this.timeout(300000); // 300 seconds for easier debugging
+
         before(async function () {
           magus = await Actor.create({
             name: `JasquierTheChronicler`,

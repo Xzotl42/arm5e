@@ -1,5 +1,5 @@
 import { Arm5eChatMessage } from "../helpers/chat-message.js";
-import { ROLL_MODES, ROLL_PROPERTIES } from "../helpers/rollWindow.js";
+import { ROLL_MODES, ROLL_PROPERTIES } from "./roll-window.js";
 import { AuraConfig } from "../apps/aura-config.js";
 import { getConfirmation } from "./dialogs.js";
 import { LabExperimentation } from "../apps/labExperimentation.js";

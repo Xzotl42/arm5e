@@ -1,5 +1,5 @@
 import { getWoundStr } from "../config.js";
-import { ROLL_PROPERTIES } from "../helpers/rollWindow.js";
+import { ROLL_PROPERTIES } from "../ui/roll-window.js";
 import { SMSG_FIELDS, SMSG_TYPES } from "../tools/socket-messages.js";
 import { log, putInFoldableLinkWithAnimation } from "../tools/tools.js";
 import { BasicChatSchema } from "./basicChatSchema.js";
@@ -15,6 +15,12 @@ export class RollChatSchema extends BasicChatSchema {
         allowed: boolOption(true),
         score: basicIntegerField(0, 0),
         used: basicIntegerField(0, 0)
+      }),
+      rollMode: new fields.StringField({
+        required: false,
+        blank: false,
+        choices: Object.values(CONST.DICE_ROLL_MODES).map((e) => e),
+        initial: CONST.DICE_ROLL_MODES.PUBLIC
       }),
 
       roll: new fields.SchemaField({
@@ -182,7 +188,9 @@ export class RollChatSchema extends BasicChatSchema {
     return (
       game.users.get(game.userId).isGM ||
       actor?.isOwner ||
-      (type === "player" && ["ALL", "PLAYERS"].includes(showRolls)) ||
+      (this.rollMode === CONST.DICE_ROLL_MODES.PUBLIC &&
+        type === "player" &&
+        ["ALL", "PLAYERS"].includes(showRolls)) ||
       "ALL" == showRolls
     );
   }
@@ -192,8 +200,8 @@ export class RollChatSchema extends BasicChatSchema {
     return (
       game.users.get(game.userId).isGM ||
       actor?.isOwner ||
-      (type === "player" && ["ALL", "PLAYERS"].includes(showFormulas)) ||
-      "ALL" == showFormulas
+      (this.rollMode === CONST.DICE_ROLL_MODES.PUBLIC &&
+        ((type === "player" && ["ALL", "PLAYERS"].includes(showFormulas)) || "ALL" == showFormulas))
     );
   }
 

@@ -216,7 +216,7 @@
         "agingInWinter": "Aging happens usually in winter unless it is an external effect.",
         "duplicates": "There are duplicate {param}",
         "gainCapped": "The experience gain has been capped to {param}, the student will equal the master.",
-        "missingMotherTongue": "Childhood must include a living language at level 5 (75 xps).",
+        "missingMotherTongue": "Childhood must include a living language at level 5 (75 xps). (With exceptions)",
         "noAbility": "No ability left",
         "noArt": "No Art left",
         "noEnoughVis": "Not enough vis available in stock.",
@@ -584,6 +584,8 @@
       "templates": "Templates",
       "total": "Total",
       "unknown": "Unknown",
+      "update": "Update",
+      "value": "Value",
       "versus": "Versus",
       "yes": "Yes"
     },

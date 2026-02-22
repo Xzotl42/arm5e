@@ -1,39 +1,38 @@
-<form class="{{cssClass}} arm5eRoll" autocomplete="off">
-  {{> "systems/arm5e/templates/roll/parts/roll-header.html" header="Rolls"}}
+<div class="{{cssClass}} arm5e-roll" autocomplete="off">
   <div class="roll-options">
     <div class="flexrow flex-group-center">
       <label>
         {{localize "arm5e.sheet.combat.preparation"}}
       </label>
-      <select title="{{system.roll.combat.prep.itemList}}" class="preps" name="system.combatPreps.current"
-        data-dtype="String" data-actorId="{{system.roll._actor._id}}">
-        {{selectOptions system.roll.combat.prep.list selected=system.roll.combat.prep.current labelAttr="name" }}
+      <select title="{{rollInfo.combat.prep.itemList}}" class="preps" name="system.combatPreps.current"
+        data-dtype="String" data-actorId="{{rollInfo._actor._id}}">
+        {{selectOptions rollInfo.combat.prep.list selected=rollInfo.combat.prep.current labelAttr="name" }}
       </select>
     </div>
     <div class="flexrow flex-group-center">
       <label class="">{{localize "arm5e.sheet.modifier" }}</label>
-      <input type="number" name="system.roll.modifier" value="{{system.roll.modifier}}" data-dtype="Number"
+      <input type="number" name="rollInfo.modifier" value="{{rollInfo.modifier}}" data-dtype="Number"
         class="SelectedModifier select-on-focus" />
     </div>
-    {{> (lookup . "part") }}
-    {{#each system.roll.generic.txtOption as | txt idx| }}
+    {{> (lookup rollInfo "part") }}
+    {{#each rollInfo.generic.txtOption as | txt idx| }}
       {{#unless (eq txt "")}}
         <div class="flexrow flex-group-center">
-          <label class="">{{lookup ../system.roll.generic.operatorOpt idx }}</label>
+          <label class="">{{lookup ../rollInfo.generic.operatorOpt idx }}</label>
         </div>
         <div class="flexrow flex-group-center">
-          <label class="">{{txt}} ({{lookup ../system.roll.generic.option idx }})</label>
+          <label class="">{{txt}} ({{lookup ../rollInfo.generic.option idx }})</label>
         </div>
       {{/unless}}
     {{/each}}
-    {{#each system.roll.optionalBonuses as |optional|}}
+    {{#each rollInfo.optionalBonuses as |optional|}}
       <div class="flexrow flex-group-center sub">
         <div class="modifier">+ </div>
         <label class="">{{optional.name }} ({{ optional.bonus }})</label><input type="checkbox" name="{{optional.name}}"
           {{checked optional.active}} class="SelectedOptional{{@index}} flex01" />
       </div>
     {{/each}}
-    {{#if system.roll.physicalCondition }}
+    {{#if rollInfo.physicalCondition }}
       <div class="flexrow flex-group-center">
         <label class="">+</label>
       </div>
@@ -47,17 +46,16 @@
         <label class="">{{localize "arm5e.sheet.wounds"}} ({{ system.penalties.wounds.total }})</label>
       </div>
     {{/if}}
-    {{#if (eq system.roll.type "attack") }}
+    {{#if (eq rollInfo.type "attack") }}
       <div class="flexcol targets flex-group-center">
         <img src="systems/arm5e/assets/ballSilver.png" width="20" height="20" style="border :0px" />
         <div class="flex-group-center flexcol" style="margin-top: 10px;">
-          <label class="target-label"><b>{{localize system.roll.combat.targetLabel }}</b></label>
-          <label class="target-names">{{localize system.roll.combat.targetNames }}</label>
+          <label class="target-label"><b>{{localize rollInfo.combat.targetLabel }}</b></label>
+          <label class="target-names">{{localize rollInfo.combat.targetNames }}</label>
         </div>
-        <a class="refresh-targets clickable" style="font-size: 9pt;" data-actorId="{{system.roll._actor._id}}">
+        <a class="refresh-targets clickable" style="font-size: 9pt;" data-actorId="{{rollInfo._actor._id}}">
           <i class="fas fa-arrows-rotate"></i>{{localize "arm5e.generic.refresh"}}</a>
       </div>
     {{/if}}
   </div>
-  {{> "systems/arm5e/templates/roll/parts/roll-footer.html" footer="Rolls" }}
-</form>
+</div>

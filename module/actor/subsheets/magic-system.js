@@ -143,7 +143,7 @@ export class ArM5eMagicSystem {
     for (let [name, template] of Object.entries(templates)) {
       template.selection = {};
       template.selection.targetType = { simple: "Simple", complex: "Complex" };
-      // see rollWindow.js for value significance
+      // see roll-window.js for value significance
       template.selection.rollType = [
         { value: 1, label: game.i18n.localize("arm5e.dialog.button.stressdie") },
         { value: 2, label: game.i18n.localize("arm5e.dialog.button.simpledie") },

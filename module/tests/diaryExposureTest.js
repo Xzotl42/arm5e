@@ -72,6 +72,8 @@ export function registerExposureTesting(quench) {
       });
 
       describe("Exposure nominal", function () {
+        this.timeout(300000); // 300 seconds for easier debugging
+
         it("Single Ability", async function () {
           let sheet = entry.sheet;
 

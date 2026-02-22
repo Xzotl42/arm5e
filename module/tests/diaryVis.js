@@ -75,6 +75,8 @@ export function registerVisTesting(quench) {
       });
 
       describe("Vis extraction nominal", function () {
+        this.timeout(300000); // 300 seconds for easier debugging
+
         it("Extraction Nominal", async function () {
           await lab.sheet._resetPlanning("visExtraction");
           await lab.sheet.getData();

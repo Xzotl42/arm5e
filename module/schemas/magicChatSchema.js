@@ -48,9 +48,9 @@ export class MagicChatSchema extends RollChatSchema {
   }
 
   getImpactMessage() {
-    const res = super.getImpactMessage();
+    let res = super.getImpactMessage();
     if (this.roll.botchCheck && this.roll.botches > 0) {
-      res.innerHTML += `<br/>${game.i18n.format("arm5e.messages.die.warpGain", {
+      res += `<br/>${game.i18n.format("arm5e.messages.die.warpGain", {
         num: this.roll.botches
       })} `;
     }
@@ -127,7 +127,10 @@ export class MagicChatSchema extends RollChatSchema {
       let penetrationSpec = "";
       if (showDetails || this.magic.caster.hasPlayerOwner) {
         const totalPenetration = `+ ${game.i18n.localize("arm5e.sheet.totalPenetration")} (${
-          this.roll.secondaryScore + this.parent.rollTotal(0) - this.roll.difficulty
+          this.roll.secondaryScore +
+          this.parent.rollTotal(0) -
+          this.roll.difficulty +
+          this.confidenceModifier
         })`;
         if (["item", "power"].includes(rollType)) {
           flavorTotalPenetration = `<b>${totalPenetration}</b><br/>`;

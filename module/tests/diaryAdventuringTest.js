@@ -76,6 +76,8 @@ export function registerAdventuringTesting(quench) {
       });
 
       describe("Adventuring nominal", function () {
+        this.timeout(300000); // 300 seconds for easier debugging
+
         it("Single Ability", async function () {
           let sheet = entry.sheet;
 
@@ -337,6 +339,8 @@ export function registerAdventuringTesting(quench) {
       });
 
       describe("Adventuring with AE bonus", function () {
+        this.timeout(300000); // 300 seconds for easier debugging
+
         it("Single Ability", async function () {
           let sheet = entry.sheet;
           await entry.update({ "system.sourceQuality": 2 });
@@ -567,6 +571,8 @@ export function registerAdventuringTesting(quench) {
         });
       });
       describe("Adventuring with affinity", function () {
+        this.timeout(300000); // 300 seconds for easier debugging
+
         it("Single Ability", async function () {
           // try {
           let sheet = entry.sheet;

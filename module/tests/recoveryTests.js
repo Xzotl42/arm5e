@@ -54,6 +54,8 @@ export function registerRecoveryTesting(quench) {
       });
 
       describe("Recovery nominal", async function () {
+        this.timeout(300000); // 300 seconds for easier debugging
+
         CONFIG.ARM5E.recovery.wounds;
 
         for (const [woundName, woundCfg] of Object.entries(CONFIG.ARM5E.recovery.wounds)) {

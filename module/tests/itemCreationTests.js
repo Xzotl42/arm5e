@@ -8,6 +8,8 @@ export function registerItemCreationTests(quench) {
       for (let a of CONFIG.Actor.documentClass.TYPES) {
         if (["base"].includes(a)) continue;
         describe(`${a} Sheet`, function () {
+          this.timeout(300000); // 300 seconds for easier debugging
+
           let actor;
           before(async function () {
             actor = await Actor.create({ name: `Bob`, type: a });
