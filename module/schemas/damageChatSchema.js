@@ -140,7 +140,7 @@ export class DamageChatSchema extends RollChatSchema {
       const rollSoakBtn = createChatButton(
         this.parent,
         this.parent.actor,
-        "icon-Icon_Soak",
+        "ars-Icon_Soak",
         "",
         "arm5e.messages.soak",
         "",

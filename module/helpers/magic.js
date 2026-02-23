@@ -1,17 +1,12 @@
-import { SpellSchema } from "../schemas/magicSchemas.js";
 import { log } from "../tools/tools.js";
 import { TWILIGHT_STAGES } from "../seasonal-activities/long-term-activities.js";
 import {
   _applyImpact,
-  getFormData,
-  prepareRollVariables,
   ROLL_MODES,
-  RollWindow,
   UseMagicItemWindow,
   UsePowerRollWindow
 } from "../ui/roll-window.js";
 import { customDialogAsync } from "../ui/dialogs.js";
-import { changeMightCallback, noRoll, useItemCharge } from "./dice.js";
 const renderTemplate = foundry.applications.handlebars.renderTemplate;
 const VOICE_AND_GESTURES_ICONS = {
   voice: "icons/skills/trades/music-singing-voice-blue.webp",
@@ -836,39 +831,9 @@ async function useMagicItem(dataset, item) {
     ui.notifications.warn(game.i18n.localize("arm5e.notification.noChargesLeft"));
     return;
   }
-  prepareRollVariables(dataset, item.actor);
+  item.actor.rollInfo.init(dataset, item.actor);
   new UseMagicItemWindow(item.actor, { window: { title: dataset.name } }).render(true);
   return;
-
-  // // log(false, `Roll variables: ${JSON.stringify(item.actor.system.roll)}`);
-  // let template = "systems/arm5e/templates/actor/parts/itemUse.html";
-  // item.actor.system.roll = item.actor.rollInfo;
-  // item.actor.config = CONFIG.ARM5E;
-  // const renderedTemplate = await renderTemplate(template, item.actor);
-
-  // await customDialogAsync({
-  //   window: {
-  //     title: game.i18n.localize("arm5e.dialog.magicItemUse")
-  //   },
-  //   classes: ["roll-dialog"],
-  //   content: renderedTemplate,
-  //   buttons: [
-  //     {
-  //       action: "confirm",
-  //       icon: "<i class='fas fa-check'></i>",
-  //       label: game.i18n.localize("arm5e.generic.confirm"),
-  //       callback: async (event, button, dialog) => {
-  //         getFormData(dialog.element, item.actor);
-  //         await noRoll(item.actor, 1, useItemCharge);
-  //       }
-  //     },
-  //     {
-  //       action: "cancel",
-  //       icon: "<i class='fas fa-ban'></i>",
-  //       label: game.i18n.localize("arm5e.dialog.button.cancel")
-  //     }
-  //   ]
-  // });
 }
 
 /**
@@ -881,7 +846,7 @@ async function usePower(dataset, actor) {
     ui.notifications.warn(game.i18n.localize("arm5e.notification.noMightPoints"));
     return;
   }
-  prepareRollVariables(dataset, actor);
+  actor.rollInfo.init(dataset, actor);
   const rollProperties = actor.rollInfo.properties;
   // log(false, `Roll variables: ${JSON.stringify(actor.system.roll)}`);
   // let template = "systems/arm5e/templates/roll/powerUse.html";
@@ -890,34 +855,6 @@ async function usePower(dataset, actor) {
   const options = { window: { title: dataset.name } };
   new UsePowerRollWindow(actor, options).render(true);
   return;
-  const renderedTemplate = await renderTemplate(template, actor);
-  await customDialogAsync({
-    window: {
-      title: dataset.name
-    },
-    classes: ["roll-dialog"],
-    content: renderedTemplate,
-    buttons: [
-      {
-        action: "confirm",
-        icon: "<i class='fas fa-check'></i>",
-        label: game.i18n.localize(rollProperties.ACTION_LABEL),
-        callback: async (event, button, dialog) => {
-          getFormData(dialog.element, actor);
-          if (actor.system.features.hasMight) {
-            await noRoll(actor, 1, changeMightCallback);
-          } else {
-            await noRoll(actor, 1, loseFatigueLevelCallback);
-          }
-        }
-      },
-      {
-        action: "cancel",
-        icon: "<i class='fas fa-ban'></i>",
-        label: game.i18n.localize("arm5e.dialog.button.cancel")
-      }
-    ]
-  });
 }
 
 export {

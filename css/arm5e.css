@@ -252,9 +252,9 @@ label,
 
 /* Button font grouping */
 button.arm5e,
-button.create-folder,
+/* button.create-folder,
 button.create-document,
-button.create-compendium,
+button.create-compendium, */
 .arm5e.button,
 .arm5e.button.ui,
 .arm5e .sanatorium.button,
@@ -264,6 +264,13 @@ button.create-compendium,
   align-items: center;
   gap: 4px;
 }
+
+button.plain.icon.ars-Icon_magic-chest,
+button.create-button.create-entry.icon.ars-Icon_magic-chest {
+  font-family: "Ars Magica icons";
+  font-size: 16pt;
+}
+
 .arm5e .sanatorium.button,
 .arm5e .astrolab.button {
   font-size: 13pt;

@@ -15,7 +15,7 @@
         {{>"systems/arm5e/templates/item/parts/cost.hbs" classes="fit"}}
       </div>
       {{#if locked}}
-        <i class="icon-Icon_Locked"></i>
+        <i class="ars-Icon_Locked"></i>
       {{/if}}
       <h1 class="bigname"><input name="name" {{noEdit}} type="text" value="{{item.name}}" placeholder="Name" /></h1>
       <div class="padding4 flexrow">
@@ -28,7 +28,7 @@
         {{#if canBeRead}}
           <div class="modifier" style="margin-top: 10px;">
             <a class=" study-labtext" title='{{localize "arm5e.hints.read" item=(localize "arm5e.sheet.book")}}'
-              style="padding-left: 5px; padding-top: 5px;"><i class="icon-Icon_Readspell"></i></a>
+              style="padding-left: 5px; padding-top: 5px;"><i class="ars-Icon_Readspell"></i></a>
           </div>
         {{/if}}
       </div>

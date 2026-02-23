@@ -6,22 +6,33 @@
 </li>
 {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
 {{#each system.filteredEnchantments as |enchantment id|}}
-  <li class="item spell-value flexrow flex-center codex" data-name="{{enchantment.name}}" data-item-id="{{enchantment.id}}"
-    data-item-type="{{enchantment.type}}" data-uuid="{{enchantment.uuid}}">
-    <div class="item-image item-control item-edit"><img src="{{enchantment.img}}" title="{{enchantment.name}}" style="max-height:50px"/></div>
-    <div class="flexrow flex-center">
-      <span class="flexrow spell-title design" data-name="{{enchantment.name}}">
-        <!-- data-level="{{enchantment.system.baseLevel}}" data-technique="{{enchantment.system.technique.value}}" data-form="{{enchantment.system.form.value}}"-->
-        {{enchantment.name}} : {{enchantment.system.localizedDesc}}
-      </span>
-    </div>
-    <div class="item-controls">
-      <a class="item-control item-edit"
-        title='{{localize "arm5e.hints.edit" item=(localize "ITEM.TypeEnchantment")}}'><i
-          class="icon-Icon_Edit"></i></a>
-      <a class="item-control effect-delete"
-        title='{{localize "arm5e.hints.delete" item=(localize "ITEM.TypeEnchantment")}}'><i
-          class="icon-Icon_Delete_Hand_Gesture"></i></a>
-    </div>
-  </li>
+<li
+  class="item spell-value flexrow flex-center codex"
+  data-name="{{ enchantment.name }}"
+  data-item-id="{{ enchantment.id }}"
+  data-item-type="{{ enchantment.type }}"
+  data-uuid="{{ enchantment.uuid }}"
+>
+  <div class="item-image item-control item-edit">
+    <img src="{{ enchantment.img }}" title="{{ enchantment.name }}" style="max-height: 50px" />
+  </div>
+  <div class="flexrow flex-center">
+    <span class="flexrow spell-title design" data-name="{{ enchantment.name }}">
+      <!-- data-level="{{enchantment.system.baseLevel}}" data-technique="{{enchantment.system.technique.value}}" data-form="{{enchantment.system.form.value}}"-->
+      {{ enchantment.name }} : {{ enchantment.system.localizedDesc }}
+    </span>
+  </div>
+  <div class="item-controls">
+    <a
+      class="item-control item-edit"
+      title="{{localize &quot;arm5e.hints.edit&quot; item=(localize &quot;ITEM.TypeEnchantment&quot;)}}"
+      ><i class="ars-Icon_Edit"></i
+    ></a>
+    <a
+      class="item-control effect-delete"
+      title="{{localize &quot;arm5e.hints.delete&quot; item=(localize &quot;ITEM.TypeEnchantment&quot;)}}"
+      ><i class="ars-Icon_Delete_Hand_Gesture"></i
+    ></a>
+  </div>
+</li>
 {{/each}}

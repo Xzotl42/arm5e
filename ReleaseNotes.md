@@ -27,6 +27,8 @@
 - Using magic items is working again.
 - Ability specialty will update agin on change in the roll dialog.
 - Magus characters missing the virtue will receive "The Gift" making them aligned with magic realm (instead of a previous hack where all magi were magic aligned. As long as you have the virtue (ie: one with an index-key = "the-gift"), it won't be added again, so you can change the effects as you desire)
+- Buttons to create items and folders are now properly displayed
+- [technical] ars magica icons names in css are now prefixed with "ars-" to avoid conflicts with core Foundry
 
 ## 2.4.1.14, Radislav, Cognizant Wisdom BF1
 

@@ -279,7 +279,7 @@ export class CombatDefenseChatSchema extends CombatChatSchema {
           damageButton = createChatButton(
             this.parent,
             attacker,
-            "icon-Icon_Soak",
+            "ars-Icon_Soak",
             advantage,
             "arm5e.damage.compute",
             "damageButton",
@@ -412,7 +412,7 @@ export class CombatDamageChatSchema extends CombatChatSchema {
         const damageButton = createChatButton(
           this.parent,
           defender,
-          "icon-Icon_Soak_red",
+          "ars-Icon_Soak_red",
           "",
           "arm5e.messages.applyDamage",
           "applyDamageButton",

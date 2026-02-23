@@ -27,12 +27,7 @@ import {
   TOPIC_FILTER,
   updateUserCache
 } from "../constants/userdata.js";
-import {
-  prepareRollVariables,
-  ROLL_MODES,
-  getRollTypeProperties,
-  getRollDialog
-} from "../ui/roll-window.js";
+import { ROLL_MODES, getRollTypeProperties, getRollDialog } from "../ui/roll-window.js";
 
 import {
   buildSoakDataset,
@@ -925,7 +920,7 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
           spell.system.finalScore > 0
             ? `<i title="${game.i18n.localize("arm5e.spell.masteryHint")}  ${
                 spell.system.finalScore
-              } - ${spell.system.masteryAbilities}" class="icon-Icon_Effects-small"></i>`
+              } - ${spell.system.masteryAbilities}" class="ars-Icon_Effects-small"></i>`
             : "";
       }
 
@@ -941,7 +936,7 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
             ? ""
             : `<i title="${game.i18n.localize(
                 ARM5E.lab.enchantment.receptacle.state[item.system.state]
-              )}" class="icon-Icon_Effects-small"></i>`;
+              )}" class="ars-Icon_Effects-small"></i>`;
       }
     }
     if (actorData.system.weapons) {
@@ -951,7 +946,7 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
             ? ""
             : `<i title="${game.i18n.localize(
                 ARM5E.lab.enchantment.receptacle.state[item.system.state]
-              )}" class="icon-Icon_Effects-small"></i>`;
+              )}" class="ars-Icon_Effects-small"></i>`;
       }
     }
     if (actorData.system.armor) {
@@ -961,7 +956,7 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
             ? ""
             : `<i title="${game.i18n.localize(
                 ARM5E.lab.enchantment.receptacle.state[item.system.state]
-              )}" class="icon-Icon_Effects-small"></i>`;
+              )}" class="ars-Icon_Effects-small"></i>`;
       }
     }
   }
@@ -2069,15 +2064,10 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
   async _roll(event) {
     const dataset = getDataset(event);
 
-    prepareRollVariables(dataset, this.actor);
     this.actor.system.charmetadata = ARM5E.character.characteristics;
-
-    // this.actor.system.roll = actor.rollInfo;
     this.actor.config = CONFIG.ARM5E;
-    // this.actor.selection = actor.rollInfo.selection;
-    // this.actor.part = actor.rollInfo.part;
 
-    const message = await getRollDialog(this.actor);
+    const message = await getRollDialog(this.actor, dataset);
     return message;
   }
 

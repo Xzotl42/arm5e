@@ -273,15 +273,85 @@ function prepareRollVariables(dataset, actor) {
 }
 
 export class RollWindow extends HandlebarsApplicationMixin(ApplicationV2) {
-  constructor(data, buttons, options) {
+  constructor(data, options) {
     options.window = super(options);
     this.data = data;
-    this.buttons = buttons;
+    this.buttons = this._generateDialogButtons(data);
     this.resolver = null;
   }
 
   data = {};
   buttons = {};
+
+  /**
+   * Generate dialog buttons based on rollInfo properties
+   * @private
+   * @param {Object} actor - The actor with rollInfo data
+   * @returns {Array} Array of button objects
+   */
+  _generateDialogButtons(actor) {
+    const rollInfo = actor.rollInfo;
+    const rollProperties = rollInfo.properties;
+    let btns = [];
+    const rollMode = rollProperties.MODE;
+
+    if (rollMode & ROLL_MODES.STRESS) {
+      btns.push({
+        label: game.i18n.localize(
+          rollProperties.ACTION_LABEL
+            ? rollProperties.ACTION_LABEL
+            : "arm5e.dialog.button.stressdie"
+        ),
+        action: "stressRoll",
+        icon: "fas fa-check",
+        cssClass: "dialog-button"
+      });
+    }
+    if (rollMode & ROLL_MODES.SIMPLE) {
+      btns.push({
+        label: game.i18n.localize(
+          rollProperties.ACTION_LABEL
+            ? rollProperties.ACTION_LABEL
+            : "arm5e.dialog.button.simpledie"
+        ),
+        icon: "fas fa-check",
+        action: "simpleRoll",
+        cssClass: "dialog-button"
+      });
+    }
+
+    if (rollProperties.ALT_ACTION) {
+      btns.push({
+        label: game.i18n.localize(rollProperties.ALT_ACTION_LABEL),
+        action: "altAction",
+        icon: "fas fa-check",
+        cssClass: "dialog-button"
+      });
+    }
+
+    if (true) {
+      // if (game.modules.get("_dev-mode")?.api?.getPackageDebugValue(ARM5E.SYSTEM_ID)) {
+      btns.push({
+        label: "DEV Explode",
+        action: "explodingRoll",
+        cssClass: "dialog-button"
+      });
+      btns.push({
+        label: "DEV Botch",
+        action: "botchingRoll",
+        cssClass: "dialog-button"
+      });
+    }
+
+    btns.push({
+      label: game.i18n.localize("arm5e.dialog.button.cancel"),
+      icon: "fas fa-ban",
+      action: "cancel",
+      cssClass: "dialog-button"
+    });
+
+    return btns;
+  }
 
   static DEFAULT_OPTIONS = {
     id: "arm5e-roll",
@@ -498,7 +568,7 @@ export class RollWindow extends HandlebarsApplicationMixin(ApplicationV2) {
 
   static async stressRoll(event, target) {
     event.preventDefault();
-    getFormData(this.element, this.data);
+    RollWindow.getFormData(this.element, this.data);
     const res = await stressDie(
       this.data,
       this.data.rollInfo.type,
@@ -511,7 +581,7 @@ export class RollWindow extends HandlebarsApplicationMixin(ApplicationV2) {
   }
   static async simpleRoll(event, target) {
     event.preventDefault();
-    getFormData(this.element, this.data);
+    RollWindow.getFormData(this.element, this.data);
     const res = await simpleDie(
       this.data,
       this.data.rollInfo.type,
@@ -523,7 +593,7 @@ export class RollWindow extends HandlebarsApplicationMixin(ApplicationV2) {
 
   static async onAltAction(event, target) {
     event.preventDefault();
-    getFormData(this.element, this.data);
+    RollWindow.getFormData(this.element, this.data);
     if (this.data.rollInfo.properties.ALT_ACTION) {
       const res = await this.data.rollInfo.properties.ALT_ACTION(
         this.data,
@@ -537,7 +607,7 @@ export class RollWindow extends HandlebarsApplicationMixin(ApplicationV2) {
 
   static async explodingRoll(event, target) {
     event.preventDefault();
-    getFormData(this.element, this.data);
+    RollWindow.getFormData(this.element, this.data);
     const res = await stressDie(
       this.data,
       this.data.rollInfo.type,
@@ -551,7 +621,7 @@ export class RollWindow extends HandlebarsApplicationMixin(ApplicationV2) {
 
   static async botchingRoll(event, target) {
     event.preventDefault();
-    getFormData(this.element, this.data);
+    RollWindow.getFormData(this.element, this.data);
     const res = await stressDie(
       this.data,
       this.data.rollInfo.type,
@@ -568,13 +638,205 @@ export class RollWindow extends HandlebarsApplicationMixin(ApplicationV2) {
     if (this.resolver) this.resolver(null);
     this.close();
   }
-}
 
-export class SpellRollWindow extends RollWindow {
-  constructor(data, options) {
-    const buttons = [];
+  /**
+   * Extract form data from dialog elements and update actor.rollInfo
+   * @static
+   * @param {HTMLElement} html - The form element
+   * @param {Object} actor - The actor to update
+   * @returns {Object} The updated actor
+   */
+  static getFormData(html, actor) {
+    let find = html.querySelector(".SelectedCharacteristic");
+    if (find) {
+      actor.rollInfo.characteristic = find.value;
+    }
+    find = html.querySelector(".SelectedAbility");
+    if (find) {
+      if (find.value == "None") {
+        const dataset = {
+          name: actor.rollInfo.name,
+          roll: "char",
+          characteristic: actor.rollInfo.characteristic,
+          modifier: actor.rollInfo.modifier
+        };
+        actor.rollInfo.init(dataset, actor);
+      } else {
+        const dataset = {
+          name: actor.rollInfo.name,
+          roll: "ability",
+          ability: find.value,
+          defaultcharacteristic: actor.rollInfo.characteristic,
+          modifier: actor.rollInfo.modifier
+        };
+        actor.rollInfo.init(dataset, actor);
+      }
+    }
+
+    find = html.querySelector(".abilitySpeciality");
+    if (find) {
+      actor.rollInfo.ability.specApply = find.checked;
+    }
+
+    find = html.querySelector(".enigmaSpeciality");
+    if (find) {
+      actor.rollInfo.twilight.enigma.specApply = find.checked;
+    }
+
+    find = html.querySelector(".SelectedTechnique");
+    if (find) {
+      actor.rollInfo.magic.technique.value = find.value;
+      actor.rollInfo.magic.technique.label = ARM5E.magic.techniques[find.value].label;
+      actor.rollInfo.magic.technique.score = parseInt(
+        actor.system.arts.techniques[find.value].finalScore
+      );
+
+      if (actor.system.arts.techniques[find.value].deficient) {
+        actor.rollInfo.magic.technique.deficiency = true;
+      } else {
+        actor.rollInfo.magic.technique.deficiency = false;
+      }
+    }
+
+    find = html.querySelector(".SelectedForm");
+    if (find) {
+      actor.rollInfo.magic.form.value = find.value;
+      actor.rollInfo.magic.form.label = ARM5E.magic.forms[find.value].label;
+      actor.rollInfo.magic.form.score = parseInt(actor.system.arts.forms[find.value].finalScore);
+      if (actor.system.arts.forms[find.value].deficient) {
+        actor.rollInfo.magic.form.deficiency = true;
+      } else {
+        actor.rollInfo.magic.form.deficiency = false;
+      }
+    }
+
+    find = html.querySelector(".SelectedAura");
+    if (find) {
+      actor.rollInfo.environment.aura.modifier = Number(find.value) ?? 0;
+    }
+
+    find = html.querySelector(".SelectedLevel");
+    if (find) {
+      actor.rollInfo.magic.level = Number(find.value) ?? 0;
+    }
+
+    find = html.querySelector(".SelectedModifier");
+    if (find) {
+      actor.rollInfo.modifier = Number(find.value) ?? 0;
+      if ([ROLL_PROPERTIES.CRISIS.VAL].includes(actor.rollInfo.type)) {
+        actor.rollInfo.modifier = -actor.rollInfo.modifier;
+      }
+    }
+
+    find = html.querySelector(".SelectedAdvantage");
+    if (find) {
+      actor.rollInfo.combat.advantage = Number(find.value) ?? 0;
+    }
+
+    find = html.querySelector(".SelectedWarpingPoints");
+    if (find) {
+      actor.rollInfo.twilight.warpingPts = Number(find.value) ?? 2;
+    }
+
+    find = html.querySelector(".SelectedFocus");
+    if (find) {
+      actor.rollInfo.magic.focus = find.checked;
+    }
+
+    find = html.querySelector(".SelectedYear");
+    if (find) {
+      actor.rollInfo.environment.year = Number(find.value) ?? 1220;
+    }
+
+    find = html.querySelector(".SelectedDifficulty");
+    if (find) {
+      actor.rollInfo.difficulty = parseInt(find.value ?? 0);
+    }
+
+    if (
+      [ROLL_PROPERTIES.SPONT.VAL, ROLL_PROPERTIES.MAGIC.VAL, ROLL_PROPERTIES.SPELL.VAL].includes(
+        actor.rollInfo.type
+      ) ||
+      actor.rollInfo.type == "power"
+    ) {
+      find = html.querySelector(".penSpeciality");
+      if (find) {
+        actor.rollInfo.penetration.specApply = find.checked;
+      }
+      find = html.querySelector(".spellMastery");
+      if (find) {
+        actor.rollInfo.penetration.penetrationMastery = find.checked;
+      }
+      find = html.querySelector(".multiplierBonusArcanic");
+      if (find) {
+        actor.rollInfo.penetration.multiplierBonusArcanic = Number(find.value) ?? 0;
+      }
+
+      find = html.querySelector(".multiplierBonusSympathic");
+      if (find) {
+        actor.rollInfo.penetration.multiplierBonusSympathic = Number(find.value) ?? 0;
+      }
+
+      find = html.querySelector(".power-cost");
+      if (find) {
+        actor.rollInfo.power.cost = Number(find.value) ?? 0;
+        actor.rollInfo.power.penetrationPenalty = actor.rollInfo.power.cost * 5;
+      }
+
+      find = html.querySelector(".power-label");
+      if (find) {
+        actor.rollInfo.label = find.value ?? actor.rollInfo.label;
+      }
+
+      find = html.querySelector(".power-form");
+      if (find) {
+        actor.rollInfo.power.form = find.value ?? actor.rollInfo.power.form;
+      }
+    } else if (
+      [ROLL_PROPERTIES.DAMAGE.VAL, ROLL_PROPERTIES.SOAK.VAL].includes(actor.rollInfo.type)
+    ) {
+      find = html.querySelector(".SelectedDamage");
+      if (find) {
+        actor.rollInfo.difficulty = parseInt(find.value);
+      }
+
+      find = html.querySelector(".SelectedSource");
+      if (find) {
+        actor.rollInfo.damage.source = find.value;
+      }
+      find = html.querySelector(".SelectedFormDamage");
+      if (find) {
+        actor.rollInfo.damage.form = find.value;
+      }
+
+      find = html.querySelector(".ignoreArmor");
+      if (find) {
+        actor.rollInfo.damage.ignoreArmor = find.checked;
+      }
+
+      find = html.querySelector(".formRes");
+      if (find) {
+        actor.rollInfo.damage.formRes = parseInt(find.value);
+      }
+
+      find = html.querySelector(".natRes");
+      if (find) {
+        actor.rollInfo.damage.natRes = parseInt(find.value);
+      }
+    }
+    let idx = 0;
+    for (let optEffect of actor.rollInfo.optionalBonuses) {
+      find = html.querySelector(`.SelectedOptional${idx}`);
+      if (find) {
+        actor.rollInfo.optionalBonuses[idx].active = find.checked;
+      }
+      idx++;
+    }
+
+    return actor;
   }
 }
+
 //////////////////////
 // NO ROLL WINDOW CLASS
 //////////////////////
@@ -724,7 +986,7 @@ export class UsePowerRollWindow extends NoRollWindow {
 
   static async onUse(event, target) {
     event.preventDefault();
-    getFormData(this.element, this.data);
+    RollWindow.getFormData(this.element, this.data);
     if (this.data.system.features.hasMight) {
       await noRoll(this.data, 1, changeMightCallback);
     } else {
@@ -780,225 +1042,34 @@ export class UseMagicItemWindow extends NoRollWindow {
 
   static async onUse(event, target) {
     event.preventDefault();
-    getFormData(this.element, this.data);
+    RollWindow.getFormData(this.element, this.data);
     await noRoll(this.data, 1, useItemCharge);
   }
 }
 
 /**
- *
- * @param actor
+ * Create and display a roll dialog
+ * @param {Actor} actor - The actor performing the roll
+ * @param {Object} [dataset] - Optional dataset to initialize rollInfo with
+ * @returns {Promise} Promise that resolves when the dialog is closed
  */
-export async function getRollDialog(actor) {
-  const buttons = getDialogButtons(actor);
+export async function getRollDialog(actor, dataset = null) {
+  // Initialize rollInfo if dataset is provided
+  if (dataset) {
+    actor.rollInfo.init(dataset, actor);
+  }
+
   let options = {
     window: { title: actor.rollInfo.title ? actor.rollInfo.title : actor.rollInfo.properties.TITLE }
   };
   return await new Promise((resolve) => {
-    const dialog = new RollWindow(actor, buttons, options);
-    dialog.resolver = resolve; // Store resolver
+    // RollWindow generates buttons automatically from actor.rollInfo
+    const dialog = new RollWindow(actor, options);
+    dialog.resolver = resolve;
     dialog.render(true);
   });
 }
 
-//////////////////////////////
-// DIALOG BUTTONS
-//////////////////////////////
-
-function getDialogButtons(actor) {
-  const rollInfo = actor.rollInfo;
-  const rollProperties = rollInfo.properties;
-  const callback = rollProperties.CALLBACK;
-  let btns = [];
-  let mode = 0;
-
-  const rollMode = rollProperties.MODE;
-
-  if (rollMode & ROLL_MODES.STRESS) {
-    btns.push({
-      label: game.i18n.localize(
-        rollProperties.ACTION_LABEL ? rollProperties.ACTION_LABEL : "arm5e.dialog.button.stressdie"
-      ),
-      action: "stressRoll",
-      icon: "fas fa-check",
-      cssClass: "dialog-button"
-    });
-  }
-  if (rollMode & ROLL_MODES.SIMPLE) {
-    btns.push({
-      label: game.i18n.localize(
-        rollProperties.ACTION_LABEL ? rollProperties.ACTION_LABEL : "arm5e.dialog.button.simpledie"
-      ),
-      icon: "fas fa-check",
-      action: "simpleRoll",
-      cssClass: "dialog-button"
-    });
-  }
-
-  if (rollProperties.ALT_ACTION) {
-    btns.push({
-      label: game.i18n.localize(rollProperties.ALT_ACTION_LABEL),
-      action: "altAction",
-      icon: "fas fa-check",
-      cssClass: "dialog-button"
-    });
-    // const btnLabel = rollProperties.ALT_ACTION_LABEL;
-    // const rollAlteration = rollProperties.ALTER_ROLL;
-    // altBtn = {
-    //   icon: "fas fa-check",
-    //   label: game.i18n.localize(btnLabel),
-    //   callback: async (html) => {
-    //     getFormData(html[0], actor);
-    //     if (rollAlteration) {
-    //       rollAlteration(actor);
-    //     }
-    //     resolve(await altAction(actor, mode, callback));
-    //   }
-    // };
-  }
-
-  if (true) {
-    // if (game.modules.get("_dev-mode")?.api?.getPackageDebugValue(ARM5E.SYSTEM_ID)) {
-    btns.push({
-      label: "DEV Explode",
-      action: "explodingRoll",
-      cssClass: "dialog-button"
-    });
-    btns.push({
-      label: "DEV Botch",
-      action: "botchingRoll",
-      cssClass: "dialog-button"
-    });
-  }
-
-  btns.push({
-    label: game.i18n.localize("arm5e.dialog.button.cancel"),
-    icon: "fas fa-ban",
-    action: "cancel",
-    cssClass: "dialog-button"
-  });
-
-  return btns;
-}
-
-// btns.yes = {
-//   icon: "<i class='fas fa-check'></i>",
-//   label: game.i18n.localize(
-//     rollProperties.ACTION_LABEL ? rollProperties.ACTION_LABEL : "arm5e.dialog.button.stressdie"
-//   ),
-//   callback: async (html) => {
-//     getFormData(html[0], actor);
-//     resolve(await stressDie(actor, rollProperties.type, mode, callback, rollInfo.botchNumber));
-//   }
-// };
-//   if (altAction) {
-//     btns.alt = altBtn;
-//   }
-//   if (rollMode & ROLL_MODES.SIMPLE) {
-//     btns.no = {
-//       icon: "<i class='fas fa-check'></i>",
-//       label: game.i18n.localize(
-//         rollProperties.ACTION_LABEL
-//           ? rollProperties.ACTION_LABEL
-//           : "arm5e.dialog.button.simpledie"
-//       ),
-//       callback: async (html) => {
-//         getFormData(html, actor);
-//         resolve(await simpleDie(actor, rollProperties.type, callback));
-//       }
-//     };
-//   } else {
-//     btns.no = {
-//       icon: "<i class='fas fa-ban'></i>",
-//       label: game.i18n.localize("arm5e.dialog.button.cancel"),
-//       callback: async (html) => {
-//         await rollInfo.reset();
-//       }
-//     };
-//   }
-// } else if (rollMode & ROLL_MODES.SIMPLE) {
-//   // Simple die only
-//   btns.yes = {
-//     icon: "<i class='fas fa-check'></i>",
-//     label: game.i18n.localize(
-//       rollProperties.ACTION_LABEL ? rollProperties.ACTION_LABEL : "arm5e.dialog.button.simpledie"
-//     ),
-//     callback: async (html) => {
-//       getFormData(html[0], actor);
-//       resolve(await simpleDie(actor, rollProperties.type, callback));
-//     }
-//   };
-//   if (altAction) {
-//     btns.alt = altBtn;
-//   }
-// btns.no = {
-//   icon: "<i class='fas fa-ban'></i>",
-//   label: game.i18n.localize("arm5e.dialog.button.cancel"),
-//   callback: async (html) => {
-//     rollInfo.reset();
-//   }
-// };
-// } else {
-//   //no roll
-//   btns.yes = {
-//     icon: "<i class='fas fa-check'></i>",
-//     label: game.i18n.localize(
-//       rollProperties.ACTION_LABEL ? rollProperties.ACTION_LABEL : "arm5e.dialog.powerUse"
-//     ),
-//     callback: async (html) => {
-//       getFormData(html[0], actor);
-//       resolve(await noRoll(actor, 1, null));
-//     }
-//   };
-//   btns.no = {
-//     icon: "<i class='fas fa-ban'></i>",
-//     label: game.i18n.localize("arm5e.dialog.button.cancel"),
-//     callback: null
-//   };
-// }
-
-// new Dialog(
-//   {
-//     title: game.i18n.localize(title),
-//     content: html,
-//     buttons: {
-//       ...btns,
-//       ...getDebugButtonsIfNeeded(actor, callback)
-//     },
-//     render: actor.rollInfo.listeners
-//   },
-//   {
-//     classes: ["arm5e-dialog", "dialog"],
-//     height: "780px",
-//     width: "400px"
-//   }
-// ).render(true);
-// }
-
-// /**
-//  *
-//  * @param dataset
-//  * @param template
-//  * @param actor
-//  */
-// async function renderRollTemplate(dataset, actor) {
-//   if (!template) {
-//     return false;
-//   }
-//   actor.system.roll = actor.rollInfo;
-//   actor.config = CONFIG.ARM5E;
-//   actor.selection = actor.rollInfo.selection;
-//   actor.part = actor.rollInfo.part;
-//   // const renderedTemplate = await renderTemplate(template, actor);
-//   return message;
-// }
-
-/**
- *
- * @param attacker
- * @param roll
- * @param message
- */
 async function combatAttack(attacker, roll, message) {
   await applyImpact(attacker, roll, message);
 }
@@ -1107,201 +1178,4 @@ async function applyImpact(actor, roll, message) {
  * @param html
  * @param actor
  */
-export function getFormData(html, actor) {
-  let find = html.querySelector(".SelectedCharacteristic");
-  if (find) {
-    actor.rollInfo.characteristic = find.value;
-  }
-  find = html.querySelector(".SelectedAbility");
-  if (find) {
-    if (find.value == "None") {
-      const dataset = {
-        name: actor.rollInfo.name,
-        roll: "char",
-        characteristic: actor.rollInfo.characteristic,
-        modifier: actor.rollInfo.modifier
-      };
-      actor.rollInfo.init(dataset, actor);
-      // Actor.rollInfo.ability.score = 0;
-      // actor.rollInfo.ability.name = "";
-      // actor.rollInfo.type = "char";
-    } else {
-      const dataset = {
-        name: actor.rollInfo.name,
-        roll: "ability",
-        ability: find.value,
-        defaultcharacteristic: actor.rollInfo.characteristic,
-        modifier: actor.rollInfo.modifier
-      };
-      actor.rollInfo.init(dataset, actor);
-
-      // Const ability = actor.items.get(find[0].value);
-      // actor.rollInfo.ability.score = ability.system.finalScore;
-      // actor.rollInfo.ability.name = ability.name;
-      // actor.rollInfo.type = "ability";
-    }
-  }
-
-  find = html.querySelector(".abilitySpeciality");
-  if (find) {
-    actor.rollInfo.ability.specApply = find.checked;
-  }
-
-  find = html.querySelector(".enigmaSpeciality");
-  if (find) {
-    actor.rollInfo.twilight.enigma.specApply = find.checked;
-  }
-
-  find = html.querySelector(".SelectedTechnique");
-  if (find) {
-    actor.rollInfo.magic.technique.value = find.value;
-    actor.rollInfo.magic.technique.label = ARM5E.magic.techniques[find.value].label;
-    actor.rollInfo.magic.technique.score = parseInt(
-      actor.system.arts.techniques[find.value].finalScore
-    );
-
-    if (actor.system.arts.techniques[find.value].deficient) {
-      actor.rollInfo.magic.technique.deficiency = true;
-    } else {
-      actor.rollInfo.magic.technique.deficiency = false;
-    }
-  }
-
-  find = html.querySelector(".SelectedForm");
-  if (find) {
-    actor.rollInfo.magic.form.value = find.value;
-    actor.rollInfo.magic.form.label = ARM5E.magic.forms[find.value].label;
-    actor.rollInfo.magic.form.score = parseInt(actor.system.arts.forms[find.value].finalScore);
-    if (actor.system.arts.forms[find.value].deficient) {
-      actor.rollInfo.magic.form.deficiency = true;
-    } else {
-      actor.rollInfo.magic.form.deficiency = false;
-    }
-  }
-
-  find = html.querySelector(".SelectedAura");
-  if (find) {
-    actor.rollInfo.environment.aura.modifier = Number(find.value) ?? 0;
-  }
-
-  find = html.querySelector(".SelectedLevel");
-  if (find) {
-    actor.rollInfo.magic.level = Number(find.value) ?? 0;
-  }
-
-  find = html.querySelector(".SelectedModifier");
-  if (find) {
-    actor.rollInfo.modifier = Number(find.value) ?? 0;
-    // Negative modifier
-    if ([ROLL_PROPERTIES.CRISIS.VAL].includes(actor.rollInfo.type)) {
-      actor.rollInfo.modifier = -actor.rollInfo.modifier;
-    }
-  }
-
-  find = html.querySelector(".SelectedAdvantage");
-  if (find) {
-    actor.rollInfo.combat.advantage = Number(find.value) ?? 0;
-  }
-
-  find = html.querySelector(".SelectedWarpingPoints");
-  if (find) {
-    actor.rollInfo.twilight.warpingPts = Number(find.value) ?? 2;
-  }
-
-  find = html.querySelector(".SelectedFocus");
-  if (find) {
-    actor.rollInfo.magic.focus = find.checked;
-  }
-
-  find = html.querySelector(".SelectedYear");
-  if (find) {
-    actor.rollInfo.environment.year = Number(find.value) ?? 1220;
-  }
-
-  find = html.querySelector(".SelectedDifficulty");
-  if (find) {
-    actor.rollInfo.difficulty = parseInt(find.value ?? 0);
-  }
-
-  if (
-    [ROLL_PROPERTIES.SPONT.VAL, ROLL_PROPERTIES.MAGIC.VAL, ROLL_PROPERTIES.SPELL.VAL].includes(
-      actor.rollInfo.type
-    ) ||
-    actor.rollInfo.type == "power"
-  ) {
-    find = html.querySelector(".penSpeciality");
-    if (find) {
-      actor.rollInfo.penetration.specApply = find.checked;
-    }
-    find = html.querySelector(".spellMastery");
-    if (find) {
-      actor.rollInfo.penetration.penetrationMastery = find.checked;
-    }
-    find = html.querySelector(".multiplierBonusArcanic");
-    if (find) {
-      actor.rollInfo.penetration.multiplierBonusArcanic = Number(find.value) ?? 0;
-    }
-
-    find = html.querySelector(".multiplierBonusSympathic");
-    if (find) {
-      actor.rollInfo.penetration.multiplierBonusSympathic = Number(find.value) ?? 0;
-    }
-
-    find = html.querySelector(".power-cost");
-    if (find) {
-      actor.rollInfo.power.cost = Number(find.value) ?? 0;
-      actor.rollInfo.power.penetrationPenalty = actor.rollInfo.power.cost * 5;
-    }
-
-    find = html.querySelector(".power-label");
-    if (find) {
-      actor.rollInfo.label = find.value ?? actor.rollInfo.label;
-    }
-
-    find = html.querySelector(".power-form");
-    if (find) {
-      actor.rollInfo.power.form = find.value ?? actor.rollInfo.power.form;
-    }
-  } else if ([ROLL_PROPERTIES.DAMAGE.VAL, ROLL_PROPERTIES.SOAK.VAL].includes(actor.rollInfo.type)) {
-    find = html.querySelector(".SelectedDamage");
-    if (find) {
-      actor.rollInfo.difficulty = parseInt(find.value);
-    }
-
-    find = html.querySelector(".SelectedSource");
-    if (find) {
-      actor.rollInfo.damage.source = find.value;
-    }
-    find = html.querySelector(".SelectedFormDamage");
-    if (find) {
-      actor.rollInfo.damage.form = find.value;
-    }
-
-    find = html.querySelector(".ignoreArmor");
-    if (find) {
-      actor.rollInfo.damage.ignoreArmor = find.checked;
-    }
-
-    find = html.querySelector(".formRes");
-    if (find) {
-      actor.rollInfo.damage.formRes = parseInt(find.value);
-    }
-
-    find = html.querySelector(".natRes");
-    if (find) {
-      actor.rollInfo.damage.natRes = parseInt(find.value);
-    }
-  }
-  let idx = 0;
-  for (let optEffect of actor.rollInfo.optionalBonuses) {
-    find = html.querySelector(`.SelectedOptional${idx}`);
-    if (find) {
-      actor.rollInfo.optionalBonuses[idx].active = find.checked;
-    }
-    idx++;
-  }
-
-  return actor;
-}
-
 export { prepareRollVariables, ROLL_MODES, ROLL_MODIFIERS, ROLL_PROPERTIES, getRollTypeProperties };

@@ -62,14 +62,14 @@ export function addArsButtons(buttons) {
     name: "ArsMagica",
     title: "ArsMagica",
     layer: "arsmagica",
-    icon: "icon-Tool_Ars",
+    icon: "ars-icon-Tool_Ars",
     visible: true,
     tools: {
       aura: {
         name: "aura",
         order: 1,
         title: game.i18n.localize("arm5e.canvas.buttons.setAura"),
-        icon: "icon-Tool_Auras",
+        icon: "ars-icon-Tool_Auras",
         visible: game.user.isGM,
         button: true,
         onChange: (event, active) => {
@@ -80,7 +80,7 @@ export function addArsButtons(buttons) {
         name: "clearAura",
         order: 2,
         title: game.i18n.localize("arm5e.canvas.buttons.clearAura"),
-        icon: "icon-Tool_Delete_Perdo2",
+        icon: "ars-icon-Tool_Delete_Perdo2",
         visible: game.user.isGM,
         button: true,
         onChange: (event, active) => {
@@ -91,7 +91,7 @@ export function addArsButtons(buttons) {
         name: "astrolab",
         order: 3,
         title: "Astrolabium",
-        icon: "icon-Tool_Astrolab",
+        icon: "ars-icon-Tool_Astrolab",
         visible: game.user.isGM,
         button: true,
         onChange: (event, active) => {
@@ -102,7 +102,7 @@ export function addArsButtons(buttons) {
         name: "scriptorium",
         order: 4,
         title: "Scriptorium",
-        icon: "icon-Tool_Scriptorium",
+        icon: "ars-icon-Tool_Scriptorium",
         visible: true,
         button: true,
         onChange: (event, active) => {
@@ -113,7 +113,7 @@ export function addArsButtons(buttons) {
         name: "arcaneExperimentation",
         order: 5,
         title: "arm5e.rolltables.experimentation.title",
-        icon: "icon-Tool_Ars",
+        icon: "ars-icon-Tool_Ars",
         visible: true,
         button: true,
         onChange: (event, active) => {

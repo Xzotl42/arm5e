@@ -6,25 +6,38 @@
 </li>
 {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
 {{#each system.filteredMagicEffects as |effect id|}}
-  <li class="item spell-value flexrow flex-center codex" data-name="{{effect.name}}" data-item-id="{{effect.id}}"
-    data-item-type="{{effect.type}}" data-uuid="{{effect.uuid}}">
-    <div class="item-image item-control item-edit" ><img src="{{effect.img}}" title="{{effect.name}}" style="max-height:50px"/></div>
-    <div class="flexrow flex-center">
-      <span class="flexrow spell-title design" data-name="{{effect.name}}">
-        <!-- data-level="{{effect.system.baseLevel}}" data-technique="{{effect.system.technique.value}}" data-form="{{effect.system.form.value}}"-->
-        {{effect.name}} {{effect.system.localizedDesc}}
-      </span>
-    </div>
-    <div class="item-controls">
-      <a class="item-control alt-design"
-        title='{{localize "arm5e.hints.design" item=(localize "TYPES.Item.enchantment")}}'><i
-          class="fa-xl fas fa-gavel"></i></a>
-      <a class="item-control item-edit"
-        title='{{localize "arm5e.hints.edit" item=(localize "TYPES.Item.magicalEffect")}}'><i
-          class="icon-Icon_Edit"></i></a>
-      <a class="item-control effect-delete"
-        title='{{localize "arm5e.hints.delete" item=(localize "TYPES.Item.magicalEffect")}}'><i
-          class="icon-Icon_Delete_Hand_Gesture"></i></a>
-    </div>
-  </li>
+<li
+  class="item spell-value flexrow flex-center codex"
+  data-name="{{ effect.name }}"
+  data-item-id="{{ effect.id }}"
+  data-item-type="{{ effect.type }}"
+  data-uuid="{{ effect.uuid }}"
+>
+  <div class="item-image item-control item-edit">
+    <img src="{{ effect.img }}" title="{{ effect.name }}" style="max-height: 50px" />
+  </div>
+  <div class="flexrow flex-center">
+    <span class="flexrow spell-title design" data-name="{{ effect.name }}">
+      <!-- data-level="{{effect.system.baseLevel}}" data-technique="{{effect.system.technique.value}}" data-form="{{effect.system.form.value}}"-->
+      {{ effect.name }} {{ effect.system.localizedDesc }}
+    </span>
+  </div>
+  <div class="item-controls">
+    <a
+      class="item-control alt-design"
+      title="{{localize &quot;arm5e.hints.design&quot; item=(localize &quot;TYPES.Item.enchantment&quot;)}}"
+      ><i class="fa-xl fas fa-gavel"></i
+    ></a>
+    <a
+      class="item-control item-edit"
+      title="{{localize &quot;arm5e.hints.edit&quot; item=(localize &quot;TYPES.Item.magicalEffect&quot;)}}"
+      ><i class="ars-Icon_Edit"></i
+    ></a>
+    <a
+      class="item-control effect-delete"
+      title="{{localize &quot;arm5e.hints.delete&quot; item=(localize &quot;TYPES.Item.magicalEffect&quot;)}}"
+      ><i class="ars-Icon_Delete_Hand_Gesture"></i
+    ></a>
+  </div>
+</li>
 {{/each}}

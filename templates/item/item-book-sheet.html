@@ -39,7 +39,7 @@
           <div class="flexrow padding10 max-w-44">
             <a class="item-control table-contents"
               title='{{localize "arm5e.hints.create"  item=(localize "arm5e.book.tableContents")}}'><i
-                class="icon-Icon_Edit"></i></a>
+                class="ars-Icon_Edit"></i></a>
           </div>
         </div>
       </div>
@@ -57,22 +57,22 @@
           {{#if topicNum }}
             <a class="item-control delete-topic book-control-spacing-alt" title="Delete topic"
               data-index="{{topicIdx}}"><i class="
-          icon-Icon_Delete_Hand_Gesture"></i></a>
+          ars-Icon_Delete_Hand_Gesture"></i></a>
 
             {{#unless (eq currentTopic.category "labText")}}
               <a class="plan-reading book-control-spacing"
                 title='{{localize "arm5e.hints.read" item=(localize "arm5e.sheet.book")}}' data-index="{{topicIdx}}"><i
-                  class="icon-Icon_Readspell"></i></a>
+                  class="ars-Icon_Readspell"></i></a>
             {{else}}
               {{#if isOwned}}
                 <a class="study-labtext book-control-spacing"
                   title='{{localize "arm5e.hints.read" item=(localize "arm5e.sheet.book")}}'
-                  data-index="{{topicIdx}}"><i class="icon-Icon_Readspell"></i></a>
+                  data-index="{{topicIdx}}"><i class="ars-Icon_Readspell"></i></a>
               {{/if}}
             {{/unless}}
             <a class="plan-copy book-control-spacing"
               title='{{localize "arm5e.hints.copy" item=(localize "arm5e.sheet.book")}}' data-index="{{topicIdx}}"><i
-                class="icon-Icon_Copy"></i></a>
+                class="ars-Icon_Copy"></i></a>
 
           {{/if}}
         </div>
@@ -275,7 +275,7 @@
                       class="">{{currentTopic.labtext.summary}}</label>
                     <a class="item-control show-details flex0 book-control-spacing-alt"
                       title='{{localize "arm5e.generic.details"}}' data-index="{{topicIdx}}"><i
-                        class="icon-Icon_Read"></i></a>
+                        class="ars-Icon_Read"></i></a>
 
                   </div>
                   {{editor currentTopic.labtext.description target="currentTopic.labtext.description" button=false owner=owner editable=false

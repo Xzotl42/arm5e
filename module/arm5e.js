@@ -141,8 +141,8 @@ Hooks.once("init", async function () {
   //CONFIG.Dice.rolls.push(ArsRoll);
 
   // UI customization
-  CONFIG.Item.sidebarIcon = "icon-Icon_magic-chest";
-  CONFIG.JournalEntry.sidebarIcon = "icon-Tool_Journals_sidebar";
+  CONFIG.Item.sidebarIcon = "ars-Icon_magic-chest";
+  CONFIG.JournalEntry.sidebarIcon = "ars-icon-Tool_Journals_sidebar";
 
   customizePause();
   CONFIG.ARM5E_DEFAULT_ICONS = ARM5E_DEFAULT_ICONS[game.settings.get("arm5e", "defaultIconStyle")];
