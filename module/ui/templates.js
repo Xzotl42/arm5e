@@ -142,7 +142,7 @@ export const ArM5ePreloadHandlebarsTemplates = async function () {
     // "systems/arm5e/templates/roll/parts/combat-defense.hbs",
     // generic partials
     "systems/arm5e/templates/generic/active-effects-tab.hbs",
-    "systems/arm5e/templates/generic/calendar-grid.html",
+    // "systems/arm5e/templates/generic/calendar-grid.html",s
     "systems/arm5e/templates/generic/group-schedule-grid.html",
     "systems/arm5e/templates/generic/schedule-grid.html",
     "systems/arm5e/templates/generic/itemPickerDialog.html",

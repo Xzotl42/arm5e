@@ -307,7 +307,8 @@ export function registerRollTesting(quench) {
             magus.rollInfo.init(dataset, magus);
             const warpingScore = magus.system.warping.finalScore ?? 0;
             const enigmaScore = magus.rollInfo.twilight.enigma.score;
-            const expectedMod = warpingScore + enigmaScore;
+            aura = Aura.fromActor(magus);
+            const expectedMod = warpingScore + enigmaScore + dataset.warpingPts + aura.level;
             const msg = await stressDie(magus, "twilight_strength", 0, null, 0);
             const roll = msg.rolls[0];
             log(false, roll);

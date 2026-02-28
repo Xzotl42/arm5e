@@ -2168,12 +2168,14 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
   async displayCalendar() {
     if (this.item.isOwned) {
       const calendar = new ActivitySchedule({
-        actor: this.item.actor,
-        activity: {
-          id: this.item.id,
-          name: this.item.name,
-          img: this.item.img,
-          system: foundry.utils.deepClone(this.item.system)
+        document: {
+          actor: this.item.actor,
+          activity: {
+            id: this.item.id,
+            name: this.item.name,
+            img: this.item.img,
+            system: foundry.utils.deepClone(this.item.system)
+          }
         }
       });
       const res = await calendar.render(true);

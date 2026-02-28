@@ -1945,10 +1945,11 @@ p,
    ============================================ */
 
 /* Shared astrolab/calendar background */
-.arm5e .calendar.calendar-sheet,
-.arm5e .astrolab.astrolab-sheet {
+.calendar-sheet .window-content,
+.astrolab-sheet .window-content {
   background-image: url("../assets/astrolab/Astrolab_Background.webp");
   background-repeat: repeat-y;
+  gap: 0px;
 }
 
 /* Astrolab-specific */

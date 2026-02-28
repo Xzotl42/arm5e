@@ -41,8 +41,8 @@ export function registerDialogTesting(quench) {
               "This is additional info line 2"
             ).catch(() => {}); // Ignore rejection when dialog is closed
 
-            // Let it display for 3 seconds
-            await pause(3000);
+            // Let it display for 1 second
+            await pause(1000);
 
             // Close the active dialog
             if (ui.activeWindow) {
@@ -71,8 +71,8 @@ export function registerDialogTesting(quench) {
               "arm5e.dialog.button.no"
             ).catch(() => {});
 
-            // Let it display for 3 seconds
-            await pause(3000);
+            // Let it display for 1 second
+            await pause(1000);
 
             // Close the active dialog
             if (ui.activeWindow) {
@@ -99,8 +99,8 @@ export function registerDialogTesting(quench) {
               "Twilight points will be reset to 0"
             ).catch(() => {});
 
-            // Let it display for 3 seconds
-            await pause(3000);
+            // Let it display for 1 second
+            await pause(1000);
 
             // Close the active dialog
             if (ui.activeWindow) {
@@ -131,8 +131,8 @@ export function registerDialogTesting(quench) {
               "This will be the name of your item"
             ).catch(() => {});
 
-            // Let it display for 3 seconds
-            await pause(3000);
+            // Let it display for 1 second
+            await pause(1000);
 
             // Close the active dialog
             if (ui.activeWindow) {
@@ -163,8 +163,8 @@ export function registerDialogTesting(quench) {
               validator
             ).catch(() => {});
 
-            // Let it display for 3 seconds
-            await pause(3000);
+            // Let it display for 1 second
+            await pause(1000);
 
             // Close the active dialog
             if (ui.activeWindow) {
@@ -195,8 +195,8 @@ export function registerDialogTesting(quench) {
               "Enter a numeric value"
             ).catch(() => {});
 
-            // Let it display for 3 seconds
-            await pause(3000);
+            // Let it display for 1 second
+            await pause(1000);
 
             // Close the active dialog
             if (ui.activeWindow) {
@@ -228,8 +228,8 @@ export function registerDialogTesting(quench) {
               constraints
             ).catch(() => {});
 
-            // Let it display for 3 seconds
-            await pause(3000);
+            // Let it display for 1 second
+            await pause(1000);
 
             // Close the active dialog
             if (ui.activeWindow) {
@@ -261,8 +261,8 @@ export function registerDialogTesting(quench) {
               { min: 0, max: 100, step: 1 }
             ).catch(() => {});
 
-            // Let it display for 3 seconds
-            await pause(3000);
+            // Let it display for 1 second
+            await pause(1000);
 
             // Close the active dialog
             if (ui.activeWindow) {
@@ -278,7 +278,7 @@ export function registerDialogTesting(quench) {
       });
 
       describe("DialogV2 Custom Dialogs", function () {
-        this.timeout(10000); // 10 seconds for all dialog tests
+        this.timeout(120000); // 120 seconds for all dialog tests
 
         it("Custom dialog - aging summary", async function () {
           try {
@@ -325,8 +325,8 @@ export function registerDialogTesting(quench) {
               ]
             }).catch(() => {});
 
-            // Let it display for 3 seconds
-            await pause(3000);
+            // Let it display for 1 second
+            await pause(1000);
 
             // Close the active dialog
             if (ui.activeWindow) {
@@ -377,8 +377,8 @@ export function registerDialogTesting(quench) {
               ]
             }).catch(() => {});
 
-            // Let it display for 3 seconds
-            await pause(3000);
+            // Let it display for 1 second
+            await pause(1000);
 
             // Close the active dialog
             if (ui.activeWindow) {

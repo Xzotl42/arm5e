@@ -6,9 +6,9 @@ import { GroupSchedule } from "./group-schedule.js";
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 export class Astrolabium extends HandlebarsApplicationMixin(ApplicationV2) {
-  constructor(data, options) {
+  constructor(options) {
     super(options);
-    this.appData = data;
+    this.appData = options.document;
     this.appData.trackRes = game.settings.get("arm5e", "trackResources");
 
     Hooks.on("arm5e-date-change", (date) => {
@@ -39,8 +39,15 @@ export class Astrolabium extends HandlebarsApplicationMixin(ApplicationV2) {
   }
 
   static PARTS = {
+    header: {
+      template: "systems/arm5e/templates/generic/parts/astrolab-header.hbs"
+    },
+
     astrolabium: {
       template: "systems/arm5e/templates/generic/astrolab.hbs"
+    },
+    footer: {
+      template: "systems/arm5e/templates/generic/parts/astrolab-footer.hbs"
     }
   };
 

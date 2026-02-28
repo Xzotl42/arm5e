@@ -1167,7 +1167,6 @@ export async function _applyImpact(actor, roll, message) {
   return updateData;
 }
 
-// TODO
 async function applyImpact(actor, roll, message) {
   const updateData = await _applyImpact(actor, roll, message);
   await actor.update(updateData);

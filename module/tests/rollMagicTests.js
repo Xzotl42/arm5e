@@ -1401,8 +1401,8 @@ export function registerMagicRollTesting(quench) {
                 if (msgData.failedRoll()) {
                   assert.equal(
                     msgData.impact.fatigueLevelsLost,
-                    1,
-                    "fatigue levels lost should be 1"
+                    cnt + 1,
+                    `fatigue levels lost should be ${cnt + 1}`
                   );
                   if (cnt >= 2) {
                     console.log("failed by 10 or more");

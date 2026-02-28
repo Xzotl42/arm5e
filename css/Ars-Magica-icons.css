@@ -9,7 +9,8 @@
   font-weight: normal;
   font-style: normal;
 }
-[class*="ars-icon-Tool"]:before {
+[class*="ars-icon-Tool"]:before,
+[class*="ars-Icon_"]:before {
   display: inline-block;
   font-family: "Ars Magica icons";
   font-style: normal;

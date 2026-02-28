@@ -249,7 +249,7 @@ Hooks.once("ready", async function () {
     seasons: CONFIG.ARM5E.seasons,
     ...game.settings.get("arm5e", "currentDate")
   };
-  ui.astrolabium = new Astrolabium(formData, {});
+  ui.astrolabium = new Astrolabium({ document: formData });
 
   // add generated active effects based on CONFIG
 
