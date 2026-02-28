@@ -44,7 +44,7 @@ export class ActivitySchedule extends HandlebarsApplicationMixin(ApplicationV2) 
   };
 
   get title() {
-    return "Activity schedule";
+    return game.i18n.localize("arm5e.activity.schedule.label");
   }
 
   static PARTS = {

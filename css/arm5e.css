@@ -616,6 +616,11 @@ input:disabled:hover {
   font-family: var(--font-book);
 }
 
+.arm5e select option {
+  background-image: var(--parchment);
+  background-color: rgb(218, 216, 204);
+}
+
 /* Range styling grouped */
 .arm5e input[type="range"] {
   -webkit-appearance: none;
