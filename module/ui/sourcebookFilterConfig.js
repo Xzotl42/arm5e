@@ -3,13 +3,11 @@ import { log } from "../tools.js";
 export class SourcebookFilterConfig extends FormApplication {
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
-      title: game.i18n.localize("PERMISSION.Title"),
       id: "sourcebooks-filters-config",
       template: "systems/arm5e/templates/generic/sourcebook-filter-config.html",
       height: "auto",
       classes: ["arm5e-config"],
       closeOnSubmit: false,
-      height: "auto",
       submitOnChange: false,
       submitOnClose: false,
       title: game.i18n.localize(`Sourcebooks filter`),

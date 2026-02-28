@@ -3,7 +3,7 @@
   <div class="flexrow flex-group-center">{{name}}</div>
   <div class="flex-group-left ">
     <div class="flexrow">
-      <label class="smallTitle" style="min-width: 100px;">{{localize "arm5e.sheet.fatigue"}} {{#if conscious}} ({{
+      <label class="smallTitle" style="min-width: 100px;">{{localize "arm5e.sheet.fatigue.label"}} {{#if conscious}} ({{
           actor.system.fatigueTotal
           }}) {{actor.system.fatigueCurrent}} / {{actor.system.fatigueMaxLevel}}
         {{else}} - {{localize "arm5e.sheet.unconscious" }} {{/if}}</label>
@@ -13,10 +13,9 @@
       </div>
     </div>
     <div class="flexrow">
-      <button class="arm5e clickable dialog-buttons rest paddingSide18"
-        style="font-family: blackmoor">{{localize "arm5e.sheet.action.rest"}}</button>
-      <button class="arm5e clickable dialog-buttons recovery paddingSide18"
-        style="font-family: blackmoor">{{localize "arm5e.activity.recovery"}}</button>
+      <button class="arm5e clickable dialog-buttons rest paddingSide18">{{localize "arm5e.sheet.action.rest"}}</button>
+      <button
+        class="arm5e clickable dialog-buttons recovery paddingSide18">{{localize "arm5e.activity.recovery"}}</button>
     </div>
   </div>
 

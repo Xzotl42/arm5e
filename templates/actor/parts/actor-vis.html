@@ -13,10 +13,11 @@
             <div class="item-image item-control item-edit"><img src="{{item.img}}" title="{{item.name}}" /></div>
             <div class="flexrow flex-center">
                 <span class="flexrow item-title">{{item.name}}</span>
-                <label><span class="bold">{{localize "arm5e.sheet.art"}}:</span>
+                <label class="label-light"><span class="bold">{{localize "arm5e.sheet.art"}}:</span>
                     {{#with (lookup @root.config.magic.arts
           item.system.art)~}}{{label~}} {{/with}}</label>
-                <label><span class="bold">{{localize "arm5e.sheet.pawns"}}:</span> {{item.system.quantity}}</label>
+                <label class="label-light"><span class="bold">{{localize "arm5e.sheet.pawns"}}:</span>
+                    {{item.system.quantity}}</label>
             </div>
             <div class="item-controls">
                 {{#if ../system.isMagus}}

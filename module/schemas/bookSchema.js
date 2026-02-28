@@ -9,7 +9,7 @@ import {
   authorship
 } from "./commonSchemas.js";
 import { EnchantmentExtension, ItemState } from "./enchantmentSchema.js";
-import { LabTextTopicSchema } from "./magicSchemas.js";
+import { LabTextTopicSchema } from "./labTextSchema.js";
 const fields = foundry.data.fields;
 export class BookSchema extends foundry.abstract.TypeDataModel {
   static defineSchema() {
@@ -303,7 +303,6 @@ export class BookSchema extends foundry.abstract.TypeDataModel {
       itemData.system.topic !== null &&
       itemData.system.topics.length === 0
     ) {
-      console.log(`DEBUG Migrate monotopic book 2: ${JSON.stringify(itemData)}`);
       const topic = itemData.system.topic;
       // topic.quality = itemData.system.quality;
       // topic.level = itemData.system.level;

@@ -87,20 +87,24 @@ export class ArM5eBeastActorSheet extends ArM5eActorSheet {
           default:
             return true;
         }
+      case "spell":
+      case "magicalEffect":
+      case "abilityFamiliar":
+      case "powerFamiliar":
+        return this.actor.isMagus();
+      case "supernaturalEffect":
+        return this.actor.system.features.magicSystem;
       case "quality":
       case "inferiority":
       case "weapon":
       case "armor":
-      case "spell":
       case "vis":
       case "item":
       case "book":
       case "ability":
       case "diaryEntry":
-      case "powerFamiliar":
       case "personalityTrait":
       case "reputation":
-      case "magicalEffect":
         return true;
       default:
         return false;

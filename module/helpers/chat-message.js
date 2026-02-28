@@ -21,19 +21,23 @@ export class Arm5eChatMessage extends ChatMessage {
         }
 
         break;
-      case "useConfidence": {
-        const msg = game.messages.get(msgId);
-        if (msg) {
-          // if multiple people try to use confidence on a character they own
-          if (msg.isAuthor || game.user.isGM) {
-            if (!msg.system.impact.applied) {
-              await msg.system._applyChatMessageUpdate(payload[SMSG_FIELDS.CHAT_MSG_DB_UPDATE]);
-              game.arm5e.socketHandler.acknowledgeMessage(payload[SMSG_FIELDS.ID]);
+      case "useConfidence":
+      case "rollDefense":
+      case "rollSoak":
+      case "calculateDamage":
+      case "applyDamage":
+        {
+          const msg = game.messages.get(msgId);
+          if (msg) {
+            if (msg.isAuthor || game.user.isGM) {
+              if (!msg.system.impact.applied) {
+                await msg.system._applyChatMessageUpdate(payload[SMSG_FIELDS.CHAT_MSG_DB_UPDATE]);
+                game.arm5e.socketHandler.acknowledgeMessage(payload[SMSG_FIELDS.ID]);
+              }
             }
           }
         }
         break;
-      }
       default:
         console.error(`Unknown chat socket message: ${action}`);
     }
@@ -95,8 +99,62 @@ export class Arm5eChatMessage extends ChatMessage {
 
     if (this.isRoll) {
       if (this.system.obfuscate) {
-        this.system.obfuscate(html, actor);
+        // obfuscate the first roll
+        const roll = html[0].getElementsByClassName("dice-roll")[0];
+        this.system.obfuscate(roll, actor);
       }
+    }
+
+    // legacy chat messages, ignore them
+    // if (data.message.flags.arm5e) {
+    //   return;
+    // }
+
+    if (actor !== null) {
+      // Actor still exists in the world
+
+      const metadata = html.find(".message-metadata");
+      metadata.css("max-width", "fit-content");
+      const msgTitle = html[0].querySelector(".message-sender");
+      // const sender = msgTitle.textContent.replace("GameMaster", actor.tokenName);
+      const sender = actor.tokenName;
+      msgTitle.removeChild(msgTitle.firstChild);
+      msgTitle.classList.add("flexrow");
+      const imgDiv = document.createElement("div");
+      imgDiv.classList.add("moreInfo", "speaker-image", "flex01");
+      imgDiv.dataset.uuid = actor.uuid;
+      const imgEl = document.createElement("img");
+      imgEl.src = actor.tokenImage;
+      imgEl.title = actor.tokenName;
+      imgEl.width = 30;
+      imgEl.height = 30;
+      imgDiv.appendChild(imgEl);
+      msgTitle.appendChild(imgDiv);
+      const pEl = document.createElement("p");
+      pEl.classList.add("message-sender-text");
+      pEl.innerHTML = sender;
+      msgTitle.appendChild(pEl);
+
+      msgTitle.addEventListener("click", async (ev) => {
+        const target = $(ev.currentTarget.children[0]);
+        const uuid = target[0].dataset.uuid;
+        const actor = await fromUuid(uuid);
+        if (actor) {
+          actor.sheet.render(true);
+        }
+      });
+    }
+
+    // msgTitle.html(actorFace);
+
+    // if (!this.isRoll) return html;
+
+    const flavor = html.find(".flavor-text");
+    flavor.append(this.addActionButtons(html));
+
+    // format any additional rolls
+    if (this.system.formatTargets) {
+      this.system.formatTargets(html);
     }
 
     if (this.system.addListeners) {
@@ -105,79 +163,37 @@ export class Arm5eChatMessage extends ChatMessage {
 
     const originatorOrGM = this.originatorOrGM;
 
-    // let msg = html.find(".chat-message");
-    // var details = html[0].getElementsByClassName("clickable");
     if (!originatorOrGM) {
       html.find(".clickable").remove();
-      html.find(".clickable2").remove();
     }
-    // legacy chat messages, ignore them
-    // if (data.message.flags.arm5e) {
-    //   return;
-    // }
-
-    if (actor === null) {
-      // Actor no longer exists in the world
-      return html;
-    }
-    let tokenName;
-    let actorImg = this.system.img;
-    if (actor.prototypeToken !== null) {
-      tokenName = actor.prototypeToken.name;
-      if (actor.prototypeToken.texture?.src) {
-        actorImg = actor.prototypeToken.texture.src;
-      }
-    }
-
-    const metadata = html.find(".message-metadata");
-    metadata.css("max-width", "fit-content");
-    const msgTitle = html.find(".message-sender");
-    // const msgTitle = !!html.querySelector(".message-sender");
-    // is there a better way?
-    let text = msgTitle.text();
-    text = text.replace("GameMaster", tokenName);
-    msgTitle.text(text);
-    const actorFace = $(
-      `<div class="flexrow"><div class="moreInfo speaker-image flex01" data-uuid="${actor.uuid}" >
-      <img src="${actorImg}" title="${tokenName}" width="30" height="30"></div><p>${text}</p></div>`
-    );
-
-    actorFace.on("click", async (ev) => {
-      const target = $(ev.currentTarget.children[0]);
-      const uuid = target[0].dataset.uuid;
-      const actor = await fromUuid(uuid);
-      if (actor) {
-        actor.sheet.render(true);
-      }
-    });
-
-    msgTitle.html(actorFace);
-
-    if (!this.isRoll) return html;
-
-    const flavor = html.find(".flavor-text");
-    flavor.append(this.addActionButtons(html, actor));
 
     return html;
   }
 
-  addActionButtons(html, actor) {
-    const btnContainer = $('<div class="btn-container"></div>');
+  addActionButtons(html) {
+    const btnContainer = document.createElement("div");
+    if (this.actor) {
+      btnContainer.classList.add("btn-container");
+      const btnArray = document.createElement("div");
+      btnArray.classList.add("flexrow");
 
-    let btnCnt = 0;
-    if (this.system.addActionButtons) {
-      btnCnt = this.system.addActionButtons(btnContainer, actor);
-    }
-    if (btnCnt) {
-      btnContainer.prepend(
-        '<h3 class="ars-chat-title">' + game.i18n.localize("arm5e.sheet.actions") + "</h3>"
-      );
+      let btnCnt = 0;
+      if (this.system.addActionButtons) {
+        btnCnt = this.system.addActionButtons(btnArray);
+      }
+      if (btnCnt) {
+        const actionHeader = document.createElement("h2");
+        actionHeader.classList.add("ars-chat-title");
+        actionHeader.innerHTML = game.i18n.localize("arm5e.sheet.actions");
+        btnContainer.appendChild(actionHeader);
+        btnContainer.appendChild(btnArray);
+      }
     }
     return btnContainer;
   }
 
-  get rollTotal() {
-    return this.rolls[0].total;
+  rollTotal(index = 0) {
+    return this.rolls[index].total;
   }
 }
 

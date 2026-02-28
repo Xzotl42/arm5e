@@ -17,10 +17,10 @@
             {{selectOptions inhabitantCategory selected=system.category labelAttr="label" localize=true}}
           </select>
         </div>
-        <div class="resource-focus flexcol flex0">
+        <div class="select-on-focus flexcol flex0">
           <label for="system.points" class="bold">{{localize "arm5e.sheet.points"}}</label>
-          <input class="resource-focus" type="number" name="system.number" value="{{system.points}}" data-dtype="Number"
-            readonly />
+          <input class="select-on-focus" type="number" name="system.number" value="{{system.points}}"
+            data-dtype="Number" readonly />
         </div>
       </div>
       <div class="flexrow" style="margin: 8px">
@@ -31,7 +31,7 @@
         {{#unless details}}
           <div class="resource flexcol flex0">
             <label for="system.score" class="bold">{{localize "arm5e.sheet.score"}}</label>
-            <input class="resource-focus" type="number" name="system.score" value="{{system.score}}"
+            <input class="select-on-focus" type="number" name="system.score" value="{{system.score}}"
               data-dtype="Number" />
           </div>
         {{/unless}}
@@ -40,14 +40,14 @@
         <div class="flexrow" style="margin: 8px">
           <div class="resource">
             <label class="bold">{{localize specialistChar}} </label>
-            <input class="resource-focus" type="number" name="system.specialistChar" value="{{system.specialistChar}}"
+            <input class="select-on-focus" type="number" name="system.specialistChar" value="{{system.specialistChar}}"
               data-dtype="Number" />
             <label class="bold">{{localize specialistAbility}}</label>
             {{#if teacherDetails}}
-              <input class="resource-focus" type="number" name="system.teacherScore" value="{{system.teacherScore}}"
+              <input class="select-on-focus" type="number" name="system.teacherScore" value="{{system.teacherScore}}"
                 data-dtype="Number" />
             {{else}}
-              <input class="resource-focus" type="number" name="system.score" value="{{system.score}}"
+              <input class="select-on-focus" type="number" name="system.score" value="{{system.score}}"
                 data-dtype="Number" />
             {{/if}}
           </div>
@@ -70,7 +70,7 @@
         {{/if}}
         <div class="resource flexcol flex0">
           <label for="system.loyalty" class="bold">{{localize "arm5e.sheet.loyalty"}}</label>
-          <input class="resource-focus" type="number" name="system.loyalty" value="{{system.loyalty}}"
+          <input class="select-on-focus" type="number" name="system.loyalty" value="{{system.loyalty}}"
             data-dtype="Number" />
         </div>
       </div>

@@ -6,7 +6,7 @@
 </li>
 {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
 {{#each system.filteredEnchantments as |enchantment id|}}
-  <li class="item spell-value flexrow flex-center" data-name="{{enchantment.name}}" data-item-id="{{enchantment.id}}"
+  <li class="item spell-value flexrow flex-center codex" data-name="{{enchantment.name}}" data-item-id="{{enchantment.id}}"
     data-item-type="{{enchantment.type}}" data-uuid="{{enchantment.uuid}}">
     <div class="item-image item-control item-edit"><img src="{{enchantment.img}}" title="{{enchantment.name}}" style="max-height:50px"/></div>
     <div class="flexrow flex-center">

@@ -2,7 +2,7 @@
   <div style="min-height: 418px;">
     <div class="flexcol marginsides32">
       <div class="padding4 flexrow flex-group-left">
-        <label class="section-handle header-label clickable" data-section="scribe"
+        <label class="section-handle  clickable" data-section="scribe"
           data-category="scriptorium">{{localize "arm5e.scriptorium.scribe.title"}}</label>
       </div>
       <!-- COPYING - SCRIBE -->
@@ -24,13 +24,12 @@
 
           {{#unless (eq copying.scribe.id null)}}
             <div class="scriptorium resource">
-              <label class="header-label">{{localize "arm5e.scriptorium.scribe.name"}}</label>
+              <label class="">{{localize "arm5e.scriptorium.scribe.name"}}</label>
               <input type="text" name="copying.scribe.name" value="{{copying.scribe.name}}" data-dtype="String"
                 style="max-width: 220px;" copyonly>
             </div>
             <div class="scriptorium resource">
-              <label for="copying.scribe.language"
-                class="header-label">{{localize "arm5e.scriptorium.languages"}}</label>
+              <label for="copying.scribe.language" class="">{{localize "arm5e.scriptorium.languages"}}</label>
               <select name="copying.scribe.language" data-dtype="String" class="ability-key">
                 {{selectOptions copying.scribe.languages selected=copying.scribe.language labelAttr="name" 
                 nameAttr="id" valueAttr="id" }}
@@ -41,20 +40,20 @@
           {{/unless}}
           <fieldset>
             <div class="scriptorium item-header resource">
-              <label class="header-label checkbox-label">{{localize "arm5e.scriptorium.quickCopy"}}</label>
+              <label class=" checkbox-label">{{localize "arm5e.scriptorium.quickCopy"}}</label>
               <input type="checkbox" name="copying.quickCopy" {{checked copying.quickCopy }} />
-              <label class="header-label checkbox-label">{{localize "arm5e.scriptorium.individualCopies"}}</label>
+              <label class=" checkbox-label">{{localize "arm5e.scriptorium.individualCopies"}}</label>
               <input type="checkbox" name="copying.individualCopies" {{checked copying.individualCopies }} />
             </div>
             <div class="scriptorium item-header resource">
-              <label for="copying.scribe.copyingScore" class="header-label">{{copying.scribe.writingScoreLabel}} :
+              <label for="copying.scribe.copyingScore" class="">{{copying.scribe.writingScoreLabel}} :
                 {{copying.scribe.writingScore}}</label>
               <input class="flex01" title="{{copying.scribe.speciality}}" type="text"
                 value="{{copying.scribe.speciality}}" readonly style="max-width: 150px" />
               <input type="checkbox" name="copying.scribe.specApply" {{checked copying.scribe.specApply }} />
             </div>
             <div class="scriptorium item-header resource">
-              <label for="copying.scribe.copyingScore" class="header-label">{{localize "arm5e.sheet.duration"}} :
+              <label for="copying.scribe.copyingScore" class="">{{localize "arm5e.sheet.duration"}} :
                 {{localize "arm5e.scriptorium.duration" num=copying.duration pts=copying.total}}</label>
             </div>
 
@@ -62,7 +61,7 @@
         {{/if}}
       </div>
       <div class="padding4 flexrow flex-group-left">
-        <label class="section-handle header-label clickable" data-section="book-copy"
+        <label class="section-handle  clickable" data-section="book-copy"
           data-category="scriptorium">{{localize "arm5e.sheet.books"}} : {{copying.topicType}}</label>
       </div>
       <!-- COPYING - BOOK -->
@@ -86,11 +85,11 @@
               <div class="backSection resource">
                 <div class="scriptorium item-header resource flexrow">
                   <div class="scriptorium item-header resource">
-                    <label class="header-label">{{localize "arm5e.activity.book.title"}}</label>
+                    <label class="">{{localize "arm5e.activity.book.title"}}</label>
                     <input type="text" name="copying.books.{{@index}}.name" value="{{this.name}}" data-dtype="String">
                   </div>
                   <div class="scriptorium item-header resource">
-                    <label class="header-label">{{localize "arm5e.sheet.authorship.language"}}</label>
+                    <label class="">{{localize "arm5e.sheet.authorship.language"}}</label>
                     <input type="text" name="copying.books.{{@index}}.system.topics.{{this.system.topicIndex}}.language"
                       value="{{this.currentTopic.language}}" data-dtype="String" readonly style="max-width: 150px;">
                   </div>
@@ -103,7 +102,7 @@
                 <div class="flexrow">
                   <div class="flexcol">
                     <div class="scriptorium item-header resource">
-                      <label class="header-label">{{localize "arm5e.sheet.bookTopic"}}</label>
+                      <label class="">{{localize "arm5e.sheet.bookTopic"}}</label>
                       <input type="text" value="{{localize (lookup @root.bookTopics  this.currentTopic.category) }}"
                         data-dtype="String" readonly>
                     </div>
@@ -133,7 +132,7 @@
                         <div class="scriptorium item-header resource flexrow">
                           <div>
                             <label for="copying.books.{{@index}}.system.topics.{{this.system.topicIndex}}.key"
-                              class="header-label">{{localize "arm5e.sheet.skill.abilityKey"}}</label>
+                              class="">{{localize "arm5e.sheet.skill.abilityKey"}}</label>
                             <input type="text" class="ability-key"
                               value="{{localize (lookup (lookup @root.abilityKeysList this.currentTopic.key) 'label')}}"
                               readonly style="max-width: 180px;" />
@@ -142,7 +141,7 @@
                           <div>
                             {{#if (lookup (lookup @root.abilityKeysList this.currentTopic.key) "option")}}
                               <label for="copying.books.{{@index}}.system.topics.{{this.system.topicIndex}}.option"
-                                class="header-label">{{localize "arm5e.sheet.skill.abilityOption"}}</label>
+                                class="">{{localize "arm5e.sheet.skill.abilityOption"}}</label>
                               <input type="text" class="ability-option" value='{{this.currentTopic.option}}' readonly
                                 style="max-width: 180px;" />
 
@@ -153,7 +152,7 @@
                       {{#if (eq this.currentTopic.category "art")}}
                         <div class="resource" style="width: 220px; padding-top: 5px;">
                           <label for="copying.books.{{@index}}.system.topics.{{this.system.topicIndex}}.art"
-                            class="header-label">{{localize "arm5e.sheet.art"}}</label>
+                            class="">{{localize "arm5e.sheet.art"}}</label>
                           <input type="text"
                             value="{{localize (lookup (lookup @root.arts this.currentTopic.art) 'label')}}" readonly
                             style="max-width: 180px;" />
@@ -162,7 +161,7 @@
                       {{#if (eq this.currentTopic.category "mastery")}}
                         <div class="scriptorium resource">
                           <label for="copying.books.{{@index}}.system.topics.{{this.system.topicIndex}}.spellName"
-                            class="header-label">{{localize "arm5e.sheet.spell"}}</label>
+                            class="">{{localize "arm5e.sheet.spell"}}</label>
                           <input type="text"
                             name="copying.books.{{@index}}.system.topics.{{this.system.topicIndex}}.spellName"
                             value='{{this.currentTopic.spellName}}' readonly />
@@ -178,15 +177,15 @@
                       {{/if}}
                       <div class="scriptorium item-header resource">
                         {{#if (eq this.currentTopic.type "Summa")}}
-                          <label class="header-label">{{localize "arm5e.sheet.level"}}</label>
+                          <label class="">{{localize "arm5e.sheet.level"}}</label>
                           <input type="number" value='{{this.currentTopic.level}}' data-dtype="Number"
                             style="max-width: 50px;" readonly>
                         {{/if}}
-                        <label class="header-label">{{localize "arm5e.sheet.quality"}}</label>
+                        <label class="">{{localize "arm5e.sheet.quality"}}</label>
                         <input type="number" value='{{this.currentTopic.quality}}' data-dtype="Number"
                           style="max-width: 50px;" readonly>
                         {{#unless (and (ne @root.copying.scribe.id null)  (eq this.currentTopic.finalQuality this.currentTopic.quality ))}}
-                          <label class="header-label">{{localize "arm5e.scriptorium.copying.finalQuality"}}</label>
+                          <label class="">{{localize "arm5e.scriptorium.copying.finalQuality"}}</label>
                           <input type="number" value='{{this.currentTopic.finalQuality}}' data-dtype="Number"
                             style="max-width: 50px;" readonly>
                         {{/unless}}
@@ -231,7 +230,7 @@
         <ul>
           {{#each @root.ui.copying.warning }}
             <li>
-              <div class="scriptorium resource"><label class="header-label"
+              <div class="scriptorium resource"><label class=""
                   style="color:red; padding: 10px; text-align: center;">{{this}}</label>
               </div>
             </li>

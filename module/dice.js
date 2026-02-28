@@ -1,5 +1,5 @@
 import { ROLL_MODES, ROLL_PROPERTIES, getRollTypeProperties } from "./helpers/rollWindow.js";
-import { log, putInFoldableLink, putInFoldableLinkWithAnimation, sleep } from "./tools.js";
+import { log, sleep } from "./tools.js";
 import { ARM5E } from "./config.js";
 import { ArsRoll } from "./helpers/stressdie.js";
 import { Arm5eChatMessage } from "./helpers/chat-message.js";
@@ -13,7 +13,7 @@ let iterations = 1;
  * @param {any} callBack
  * @returns {any}
  */
-async function simpleDie(actor, type = "OPTION", callback, modes = 0) {
+async function simpleDie(actor, type = "OPTION", callback, specialBehavior = 0) {
   iterations = 1;
   // actor = getFormData(html, actor);
   actor = await getRollFormula(actor);
@@ -25,7 +25,7 @@ async function simpleDie(actor, type = "OPTION", callback, modes = 0) {
   if (rollInfo.magic.divide > 1) {
     formula = "(1D10+" + rollInfo.formula + ")/" + rollInfo.magic.divide;
   }
-  const roll = new ArsRoll(formula, actor.system);
+  const roll = new ArsRoll(formula, actor.system, { actor: actor.uuid });
   let dieRoll = await roll.roll();
 
   let rollMode = game.settings.get("core", "rollMode");
@@ -35,9 +35,6 @@ async function simpleDie(actor, type = "OPTION", callback, modes = 0) {
   }
 
   let confAllowed = actor.system.con.score > 0 && (rollProperties.MODE & ROLL_MODES.NO_CONF) == 0;
-  if (modes & 16) {
-    confAllowed = false;
-  }
 
   const system = {
     img: actor.img,
@@ -46,6 +43,7 @@ async function simpleDie(actor, type = "OPTION", callback, modes = 0) {
       allowed: confAllowed,
       score: actor.system.con.score
     },
+    rootMessage: rollInfo.rootMessageUuid,
     roll: {
       type: rollInfo.type,
       img: rollInfo.img,
@@ -64,7 +62,8 @@ async function simpleDie(actor, type = "OPTION", callback, modes = 0) {
       fatigueLevelsFail: 0,
       woundGravity: 0,
       applied: false
-    }
+    },
+    rollMode: rollMode
   };
 
   const messageData = await dieRoll.toMessage(
@@ -83,7 +82,7 @@ async function simpleDie(actor, type = "OPTION", callback, modes = 0) {
   const message = new Arm5eChatMessage(messageData);
 
   message.system.enrichMessageData(actor);
-  if (modes & 32) {
+  if (rollProperties.MODE & ROLL_MODES.NO_CHAT) {
     if (game.modules.get("dice-so-nice")?.active) {
       await game.dice3d.showForRoll(dieRoll); //, user, synchronize, whisper, blind, chatMessageID, speaker)
     }
@@ -92,47 +91,52 @@ async function simpleDie(actor, type = "OPTION", callback, modes = 0) {
   if (callback) {
     await callback(actor, dieRoll, message, rollInfo);
   }
-  if (!(modes & 32)) return await Arm5eChatMessage.create(message.toObject());
+  if (!(rollProperties.MODE & ROLL_MODES.NO_CHAT))
+    return await Arm5eChatMessage.create(message.toObject());
   // actor.rollInfo.reset();
   return message;
 }
 
-// modes bitmask:
+// specialBehavior bitmask:
 // 0 => standard
 // 1 => force a one/explosion
 // 2 => force a zero/botch check
-// 4 => Aging roll
-// 8 => non-interactive
-// 16 => no confidence
-// 32 => no chat message
+// 4 => non-interactive
 /**
  * Description
  * @param {any} actor
  * @param {any} type="OPTION"
- * @param {any} modes=0
+ * @param {any} specialBehavior=0
  * @param {any} callBack=undefined
  * @param {any} botchNum=-1
  * @returns {any}
  */
-async function stressDie(actor, type = "OPTION", modes = 0, callback = undefined, botchNum = -1) {
+async function stressDie(
+  actor,
+  type = "OPTION",
+  specialBehavior = 0,
+  callback = undefined,
+  botchNum = -1
+) {
   iterations = 1;
   actor = await getRollFormula(actor);
   const rollInfo = actor.rollInfo;
   const rollProperties = rollInfo.properties;
   let rollOptions = {
+    actor: actor.uuid,
     minimize: false,
     maximize: false,
     prompt: true,
     alternateStressDie: game.settings.get(CONFIG.ARM5E.SYSTEM_ID, "alternateStressDie")
   };
-  if (modes & 1) {
+  if (specialBehavior & 1) {
     if (rollOptions.alternateStressDie) {
       rollOptions.maximize = true;
     } else {
       rollOptions.minimize = true;
     }
     ui.notifications.info(`${actor.name} used DEV mode to explode the roll`);
-  } else if (modes & 2) {
+  } else if (specialBehavior & 2) {
     if (rollOptions.alternateStressDie) {
       rollOptions.minimize = true;
     } else {
@@ -140,17 +144,14 @@ async function stressDie(actor, type = "OPTION", modes = 0, callback = undefined
     }
     ui.notifications.info(`${actor.name} used DEV mode to check for botch`);
   }
-  if (modes & 4) {
+  if (rollProperties.MODE & ROLL_MODES.NO_BOTCH) {
     botchNum = 0;
   }
-  if (modes & 8) {
+  if (specialBehavior & 4) {
     rollOptions.prompt = false;
   }
 
   let confAllowed = actor.system.con.score > 0 && (rollProperties.MODE & ROLL_MODES.NO_CONF) == 0;
-  if (modes & 16) {
-    confAllowed = false;
-  }
 
   let flavorTxt = rollInfo.flavor.length ? `<p>${rollInfo.flavor}</p>` : "";
   flavorTxt += `<p>${game.i18n.localize("arm5e.dialog.button.stressdie")}:</p>`;
@@ -158,36 +159,34 @@ async function stressDie(actor, type = "OPTION", modes = 0, callback = undefined
 
   let botchCheck = false;
   if (iterations > 1) {
-    flavorTxt = `<h2 class="dice-msg">${game.i18n.localize(
-      "arm5e.messages.die.exploding"
-    )}</h3><br/>`;
+    flavorTxt = `<h3 class="dice-msg">${game.i18n.localize("arm5e.messages.die.exploding")}</h3>`;
   } else if (iterations === 0) {
     if (dieRoll.botches === 0) {
-      if (modes && 4) {
+      if (rollProperties.MODE & ROLL_MODES.NO_BOTCH) {
         flavorTxt = `<p>${game.i18n.localize("arm5e.dialog.button.stressdieNoBotch")}:</p>`;
       } else {
-        flavorTxt = `<h2 class="dice-msg">${game.i18n.format("arm5e.messages.die.noBotch", {
+        flavorTxt = `<h3 class="dice-msg">${game.i18n.format("arm5e.messages.die.noBotch", {
           dicenum: dieRoll.botchDice
-        })}</h2><br/>`;
+        })}</h3>`;
       }
     } else if (dieRoll._total == 1) {
       confAllowed = false;
-      flavorTxt = `<h2 class="dice-msg">${game.i18n.localize("arm5e.messages.die.botch")}</h2>`;
+      flavorTxt = `<h3 class="dice-msg">${game.i18n.localize("arm5e.messages.die.botch")}</h3>`;
       if (rollInfo.isMagic) {
-        flavorTxt += `<br/>${game.i18n.format("arm5e.messages.die.warpGain", {
+        flavorTxt += `<p>${game.i18n.format("arm5e.messages.die.warpGain", {
           num: dieRoll.botches
-        })} `;
+        })}</p>`;
       }
       dieRoll._total = 0;
     } else if (dieRoll._total > 1) {
       confAllowed = false;
-      flavorTxt = `<h2 class="dice-msg">${game.i18n.format("arm5e.messages.die.botches", {
+      flavorTxt = `<h3 class="dice-msg">${game.i18n.format("arm5e.messages.die.botches", {
         num: dieRoll._total
-      })}</h2>`;
+      })}</h3>`;
       if (rollInfo.isMagic) {
-        flavorTxt += `<br/>${game.i18n.format("arm5e.messages.die.warpGain", {
+        flavorTxt += `<p>${game.i18n.format("arm5e.messages.die.warpGain", {
           num: dieRoll.botches
-        })} `;
+        })}</p>`;
       }
       dieRoll._total = 0;
     }
@@ -207,6 +206,7 @@ async function stressDie(actor, type = "OPTION", modes = 0, callback = undefined
       allowed: confAllowed && dieRoll.botches === 0,
       score: actor.system.con.score
     },
+    rootMessage: rollInfo.rootMessageUuid,
     roll: {
       type: rollInfo.type,
       img: rollInfo.img,
@@ -226,7 +226,8 @@ async function stressDie(actor, type = "OPTION", modes = 0, callback = undefined
       fatigueLevelsFail: 0,
       woundGravity: 0,
       applied: false
-    }
+    },
+    rollMode: rollMode
   };
 
   //   system.combat = { attacker: actor.uuid, defenders: [] };
@@ -252,7 +253,7 @@ async function stressDie(actor, type = "OPTION", modes = 0, callback = undefined
     `DBG: Stress die Roll total ${testRoll.total} * ${testRoll.divider} (divider) - (${testRoll.dice[0].total} (diceTotal) * ${testRoll.multiplier} (multiplier)) `
   );
   message.system.enrichMessageData(actor);
-  if (modes & 32) {
+  if (rollProperties.MODE & ROLL_MODES.NO_CHAT) {
     if (game.modules.get("dice-so-nice")?.active) {
       await game.dice3d.showForRoll(dieRoll); //, user, synchronize, whisper, blind, chatMessageID, speaker)
     }
@@ -261,7 +262,8 @@ async function stressDie(actor, type = "OPTION", modes = 0, callback = undefined
   if (callback) {
     await callback(actor, dieRoll, message, rollInfo);
   }
-  if (!(modes & 32)) return await Arm5eChatMessage.create(message.toObject());
+  if (!(rollProperties.MODE & ROLL_MODES.NO_CHAT))
+    return await Arm5eChatMessage.create(message.toObject());
   // actor.rollInfo.reset();
   return message;
 }
@@ -273,7 +275,20 @@ async function getRollFormula(actor) {
     let msg = "";
     const rollInfo = actor.rollInfo;
     let actorSystemData = actor.system;
+
+    if (rollInfo.characteristic != "") {
+      value = actorSystemData.characteristics[rollInfo.characteristic].value;
+      total += parseInt(value);
+
+      let name = game.i18n.localize(ARM5E.character.characteristics[rollInfo.characteristic].label);
+      if (rollInfo.type == "char") {
+        rollInfo.label = name;
+      }
+      msg += name;
+      msg += " (" + value + ")";
+    }
     if (rollInfo.type == "spell" || rollInfo.type == "magic" || rollInfo.type == "spont") {
+      msg = newLine(msg);
       let valueTech = 0;
       let valueForm = 0;
       valueTech = parseInt(rollInfo.magic.technique.score);
@@ -415,30 +430,6 @@ async function getRollFormula(actor) {
       if (rollInfo.magic.form.deficiency) {
         rollInfo.magic.divide *= 2;
       }
-
-      // const voiceMod = actorSystemData.stances.voice[actorSystemData.stances.voiceStance];
-      // if (voiceMod) {
-      //   total += voiceMod;
-      //   msg = newLine(msg);
-      //   msg +=
-      //     game.i18n.localize(ARM5E.magic.mod.voice[actorSystemData.stances.voiceStance].mnemonic) +
-      //     ` (${voiceMod})`;
-      // }
-      // const gestureMod = actorSystemData.stances.gestures[actorSystemData.stances.gesturesStance];
-      // if (gestureMod) {
-      //   total += gestureMod;
-      //   msg = newLine(msg);
-      //   msg +=
-      //     game.i18n.localize(
-      //       ARM5E.magic.mod.gestures[actorSystemData.stances.gesturesStance].mnemonic
-      //     ) + ` (${gestureMod})`;
-      // }
-
-      // if (rollInfo.magic.masteryScore > 0) {
-      //   total += rollInfo.magic.masteryScore;
-      //   msg = newLine(msg);
-      //   msg += game.i18n.localize("arm5e.sheet.mastery") + ` (${rollInfo.magic.masteryScore})`;
-      // }
     } else if (rollInfo.type == "power") {
       msg += game.i18n.format("arm5e.sheet.powerCost", {
         might: actorSystemData.might.value,
@@ -450,19 +441,57 @@ async function getRollFormula(actor) {
         rollInfo.twilight.warpingPts
       })`;
       total += rollInfo.twilight.warpingPts;
-    }
-
-    if (rollInfo.characteristic != "") {
-      value = actorSystemData.characteristics[rollInfo.characteristic].value;
-      total += parseInt(value);
+    } else if (["damage", "combatDamage"].includes(rollInfo.type)) {
+    } else if (["soak", "soakDamage"].includes(rollInfo.type)) {
       msg = newLine(msg);
-      let name = game.i18n.localize(ARM5E.character.characteristics[rollInfo.characteristic].label);
-      if (rollInfo.type == "char") {
-        rollInfo.label = name;
+      msg += `${game.i18n.localize("arm5e.sheet.soakBonus")} (${
+        actorSystemData.bonuses.traits.soak
+      })`;
+      total += actorSystemData.bonuses.traits.soak;
+      if (!rollInfo.damage.ignoreArmor) {
+        msg = newLine(msg);
+        msg += `${game.i18n.localize("arm5e.sheet.protection")} (${actorSystemData.combat.prot})`;
+        total += actorSystemData.combat.prot;
+      }
+      if (rollInfo.damage.natRes != 0) {
+        msg = newLine(msg);
+        msg += `${game.i18n.localize("arm5e.sheet.natRes")} (${rollInfo.damage.natRes})`;
+        total += rollInfo.damage.natRes;
       }
 
-      msg += name;
-      msg += " (" + value + ")";
+      if (rollInfo.damage.formRes != 0) {
+        msg = newLine(msg);
+        msg += `${game.i18n.localize("arm5e.sheet.formRes")} (${rollInfo.damage.formRes})`;
+        total += rollInfo.damage.formRes;
+      }
+    } else if (rollInfo.type == "init") {
+      msg = newLine(msg);
+      msg += `${game.i18n.localize("arm5e.sheet.initiative")} (${rollInfo.combat.init})`;
+      total += rollInfo.combat.init;
+    } else if (rollInfo.type == "attack") {
+      msg = newLine(msg);
+      if (rollInfo.combat.exertion) {
+        msg += `${game.i18n.localize("arm5e.sheet.ability")} ( 2 x ${rollInfo.combat.ability} )`;
+        total += rollInfo.combat.ability * 2;
+      } else {
+        msg += `${game.i18n.localize("arm5e.sheet.ability")} (${rollInfo.combat.ability})`;
+        total += rollInfo.combat.ability;
+      }
+      msg = newLine(msg);
+      msg += `${game.i18n.localize("arm5e.sheet.attack")} (${rollInfo.combat.attack})`;
+      total += rollInfo.combat.attack;
+    } else if (rollInfo.type == "defense") {
+      msg = newLine(msg);
+      if (rollInfo.combat.exertion) {
+        msg += `${game.i18n.localize("arm5e.sheet.ability")} ( 2 x ${rollInfo.combat.ability} ) `;
+        total += rollInfo.combat.ability * 2;
+      } else {
+        msg += `${game.i18n.localize("arm5e.sheet.ability")} (${rollInfo.combat.ability})`;
+        total += rollInfo.combat.ability;
+      }
+      msg = newLine(msg);
+      msg += `${game.i18n.localize("arm5e.sheet.defense")} (${rollInfo.combat.defense})`;
+      total += rollInfo.combat.defense;
     }
 
     if (rollInfo.ability.active) {
@@ -529,40 +558,29 @@ async function getRollFormula(actor) {
         rollInfo.environment.year;
     }
     if (rollInfo.hasGenericField(1)) {
+      // msg = newLine(msg);
       total += rollInfo.getGenericFieldValue(1);
       msg += rollInfo.getGenericFieldDetails(1);
       if (rollInfo.type == ROLL_PROPERTIES.TWILIGHT_UNDERSTANDING.VAL) {
         if (actorSystemData.twilight.enigmaSpec) {
           total++;
-          msg += ` (+1 ${rollInfo.twilight.enigma.speciality}) <br/>`;
+          msg += ` (+1 ${rollInfo.twilight.enigma.speciality})`;
         }
       }
     }
     if (rollInfo.hasGenericField(2)) {
+      total += rollInfo.getGenericFieldValue(2);
       // msg = newLine(msg);
-      // combat exertion special case
-      if (
-        [ROLL_PROPERTIES.ATTACK.VAL, ROLL_PROPERTIES.DEFENSE.VAL].includes(rollInfo.type) &&
-        rollInfo.combat.exertion
-      ) {
-        total += rollInfo.getGenericFieldValue(2) * 2;
-        msg +=
-          rollInfo.getGenericFieldLabel(2) +
-          " ( 2 x " +
-          rollInfo.getGenericFieldValue(2) +
-          ") <br/>";
-      } else {
-        total += rollInfo.getGenericFieldValue(2);
-        msg += rollInfo.getGenericFieldDetails(2);
-      }
+      msg += rollInfo.getGenericFieldDetails(2);
     }
     if (rollInfo.hasGenericField(3)) {
       total += rollInfo.getGenericFieldValue(3);
+      // msg = newLine(msg);
       msg += rollInfo.getGenericFieldDetails(3);
       if (rollInfo.type == ROLL_PROPERTIES.TWILIGHT_STRENGTH.VAL) {
         if (rollInfo.twilight.enigma.specApply) {
           total++;
-          msg += ` (+1 ${rollInfo.twilight.enigma.speciality}) <br/>`;
+          msg += ` (+1 ${rollInfo.twilight.enigma.speciality})`;
         }
       }
     }
@@ -585,9 +603,8 @@ async function getRollFormula(actor) {
 
     if (rollInfo.bonuses) {
       total += rollInfo.bonuses;
-      // msg = newLine(msg);
-      msg +=
-        "+" + game.i18n.localize("arm5e.sheet.bonuses.label") + " (" + rollInfo.bonuses + ")<br/>";
+      msg = newLine(msg);
+      msg += game.i18n.localize("arm5e.sheet.bonuses.label") + " (" + rollInfo.bonuses + ")";
     }
     // TODO
     // if (actorData.roll.bonus > 0) {
@@ -599,14 +616,21 @@ async function getRollFormula(actor) {
     if (rollInfo.physicalCondition == true) {
       if (actorSystemData.fatigueTotal != 0) {
         total += actorSystemData.fatigueTotal;
-        msg += "+" + game.i18n.localize("arm5e.sheet.fatigue");
-        msg += " (" + actorSystemData.fatigueTotal + ")<br/>";
+        msg = newLine(msg);
+        msg += game.i18n.localize("arm5e.sheet.fatigue.label");
+        msg += " (" + actorSystemData.fatigueTotal + ")";
       }
       if (actorSystemData.penalties.wounds.total != 0) {
+        msg = newLine(msg);
         total += actorSystemData.penalties.wounds.total;
-        msg += "+" + game.i18n.localize("arm5e.sheet.wounds");
-        msg += " (" + actorSystemData.penalties.wounds.total + ")<br/>";
+        msg += game.i18n.localize("arm5e.sheet.wounds");
+        msg += " (" + actorSystemData.penalties.wounds.total + ")";
       }
+    }
+    if (rollInfo.overload) {
+      msg = newLine(msg, "-");
+      msg += `${game.i18n.localize("arm5e.sheet.encumbrance")} (${rollInfo.overload})`;
+      total -= rollInfo.overload;
     }
 
     for (let optBonus of rollInfo.optionalBonuses) {
@@ -714,7 +738,7 @@ async function CheckBotch(botchDice, roll) {
   } else {
     rollCommand += "d10cf=10";
   }
-  const botchRoll = new ArsRoll(rollCommand);
+  const botchRoll = new ArsRoll(rollCommand, {}, { actor: roll.options.actor });
   await botchRoll.roll();
   botchRoll.options.offset = roll.offset;
   botchRoll.options.botches = botchRoll.total;
@@ -810,9 +834,9 @@ async function explodingRoll(actorData, rollOptions = {}, botchNum = -1) {
         await game.dice3d.showForRoll(dieRoll); //, user, synchronize, whisper, blind, chatMessageID, speaker)
       }
       if (rollOptions.noBotch) {
-        let output_roll = new ArsRoll(actorData.rollInfo.formula.toString(), {}, options);
+        let output_roll = new ArsRoll(actorData.rollInfo.formula.toString(), {}, rollOptions);
         output_roll.data = {};
-        return await output_roll.evaluate(options);
+        return await output_roll.evaluate(rollOptions);
       }
 
       const html = await renderTemplate("systems/arm5e/templates/roll/roll-botch.html");
@@ -877,10 +901,14 @@ async function explodingRoll(actorData, rollOptions = {}, botchNum = -1) {
 
 export async function createRoll(rollFormula, multiplier, divide, options = {}) {
   let rollInit;
-  if (options.noBotch || options.alternateStressDie) {
-    rollInit = `1d10 + ${rollFormula}`;
+  if (options.deterministic) {
+    rollInit = `${rollFormula}`;
   } else {
-    rollInit = `1di10 + ${rollFormula}`;
+    if (options.noBotch || options.alternateStressDie) {
+      rollInit = `1d10 + ${rollFormula}`;
+    } else {
+      rollInit = `1di10 + ${rollFormula}`;
+    }
   }
   if (Number.parseInt(multiplier) > 1) {
     if (options.alternateStressDie) {
@@ -907,7 +935,7 @@ export async function createRoll(rollFormula, multiplier, divide, options = {}) 
   return output_roll;
 }
 
-async function noRoll(actor, modes, callback) {
+async function noRoll(actor, specialBehavior, callback) {
   actor = await getRollFormula(actor);
   const rollInfo = actor.rollInfo;
   const rollProperties = rollInfo.properties;
@@ -921,7 +949,10 @@ async function noRoll(actor, modes, callback) {
   if (rollInfo.magic.divide > 1) {
     formula += ` / ${rollInfo.magic.divide}`;
   }
-  const dieRoll = new ArsRoll(formula, actor.system, { divider: rollInfo.magic.divide });
+  const dieRoll = new ArsRoll(formula, actor.system, {
+    divider: rollInfo.magic.divide,
+    actor: actor.uuid
+  });
   let tmp = await dieRoll.roll();
   const system = {
     img: actor.img,
@@ -975,10 +1006,14 @@ async function noRoll(actor, modes, callback) {
   // actor.rollInfo.reset();
 }
 
-async function changeMight(actor, roll, message) {
+async function changeMightCallback(actor, roll, message) {
   // const form = CONFIG.ARM5E.magic.arts[actor.rollInfo.power.form]?.label ?? "NONE";
   await handleTargetsOfMagic(actor, actor.rollInfo.power.form, message);
   await actor.changeMight(-actor.rollInfo.power.cost);
+}
+
+async function loseFatigueLevelCallback(actor, roll, message) {
+  await actor.loseFatigueLevel(actor.rollInfo.power.cost);
 }
 
 async function useItemCharge(actor, roll, message) {
@@ -987,4 +1022,11 @@ async function useItemCharge(actor, roll, message) {
   await handleTargetsOfMagic(actor, actor.rollInfo.item.form, message);
   await item.useItemCharge();
 }
-export { simpleDie, stressDie, noRoll, changeMight, useItemCharge };
+export {
+  simpleDie,
+  stressDie,
+  noRoll,
+  changeMightCallback,
+  loseFatigueLevelCallback,
+  useItemCharge
+};

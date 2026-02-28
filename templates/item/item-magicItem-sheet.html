@@ -5,26 +5,26 @@
       <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name" /></h1>
       <div class="grid grid-col">
         <div class="resource flexcol flexrow">
-          <label for="system.technique.value" class="header-label">{{localize "arm5e.sheet.technique"}}</label>
+          <label for="system.technique.value" class="">{{localize "arm5e.sheet.technique"}}</label>
           <select name="system.technique.value" data-type="String">
             {{selectOptions config.magic.techniques selected=system.technique.value labelAttr="label"}}
           </select>
         </div>
 
         <div class="resource flexcol flexrow">
-          <label for="system.form.value" class="header-label">{{localize "arm5e.sheet.form"}}</label>
+          <label for="system.form.value" class="">{{localize "arm5e.sheet.form"}}</label>
           <select name="system.form.value" data-type="String">
             {{selectOptions config.magic.forms selected=system.form.value labelAttr="label"}}
           </select>
         </div>
 
         <div class="resource">
-          <label class="header-label">{{localize "arm5e.sheet.level"}}</label>
+          <label class="">{{localize "arm5e.sheet.level"}}</label>
           <input type="text" name="system.level" value="{{system.level}}" data-dtype="Number" />
         </div>
 
         <div class="resource">
-          <label class="header-label">{{localize "arm5e.sheet.uses"}}</label>
+          <label class="">{{localize "arm5e.sheet.uses"}}</label>
           <input type="text" name="system.uses" value="{{system.uses}}" data-dtype="Number" />
         </div>
       </div>
@@ -51,34 +51,34 @@
     <div class="tab attributes" data-group="primary" data-tab="attributes">
       <div class="flexrow">
         <div class="resource">
-          <label class="header-label">{{localize "arm5e.sheet.range"}}</label>
+          <label class="">{{localize "arm5e.sheet.range"}}</label>
           <select name="system.range.value" data-type="String" class="spell-attribute">
             {{magicalAttributesHelper selection.ranges selected=system.range.value}}
           </select>
         </div>
         <div class="resource">
-          <label class="header-label">{{localize "arm5e.sheet.duration"}}</label>
+          <label class="">{{localize "arm5e.sheet.duration"}}</label>
           <select name="system.duration.value" data-type="String" class="spell-attribute">
             {{magicalAttributesHelper selection.durations selected=system.duration.value}}
           </select>
         </div>
         <div class="resource">
-          <label class="header-label">{{localize "arm5e.sheet.target"}}</label>
+          <label class="">{{localize "arm5e.sheet.target"}}</label>
           <select name="system.target.value" data-type="String" class="spell-attribute">
             {{magicalAttributesHelper selection.targets selected=system.target.value}}
           </select>
         </div>
         <div class="resource">
-          <label class="header-label">{{localize "arm5e.sheet.effects"}}</label>
+          <label class="">{{localize "arm5e.sheet.effects"}}</label>
           <input type="text" name="system.effects" value="{{system.effects}}" data-dtype="String"
             style="min-width:170px" />
         </div>
         <div class="resource">
-          <label class="header-label">{{localize "arm5e.sheet.creator"}}</label>
+          <label class="">{{localize "arm5e.sheet.creator"}}</label>
           <input type="text" name="system.creator" value="{{system.creator}}" data-dtype="String" />
         </div>
         <div class="resource">
-          <label class="header-label">{{localize "arm5e.sheet.year"}}</label>
+          <label class="">{{localize "arm5e.sheet.year"}}</label>
           <input type="text" name="system.year" value="{{system.year}}" data-dtype="String" />
         </div>
       </div>

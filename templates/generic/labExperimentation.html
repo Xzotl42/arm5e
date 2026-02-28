@@ -6,20 +6,20 @@
   </h1>
   <header class="flexcol marginsides32">
     <div class="resource flexrow flex-group-center">
-      <label class="resource header-label flex0">{{localize "arm5e.sheet.name"}}</label>
-      <input type="text" class="resource flex03 resource-focus" name="subject" value="{{subject}}"
+      <label class="resource  flex0">{{localize "arm5e.sheet.name"}}</label>
+      <input type="text" class="resource flex03 select-on-focus" name="subject" value="{{subject}}"
         style="max-width:300px;width:300px;">
     </div>
     <div class="resource flexrow flex-group-center">
       <div class="resource-content flexrow flex-center">
-        <label for="season" class="header-label">{{localize "arm5e.sheet.season"}}</label>
-        <select name="season" data-type="String" class="flex0">
+        <label for="season" class="">{{localize "arm5e.sheet.season"}}</label>
+        <select name="season" data-type="String" class="seasons">
           {{selectOptions seasons selected=season localize=true labelAttr="label"}}
         </select>
       </div>
       <div class="resource-content flexrow flex-center">
-        <label for="year" class="header-label">{{localize "arm5e.sheet.year"}}</label>
-        <input type="number" name="year" value="{{year}}" data-dtype="Number" class="resource-focus slim" />
+        <label for="year" class="">{{localize "arm5e.sheet.year"}}</label>
+        <input type="number" name="year" value="{{year}}" data-dtype="Number" class="select-on-focus slim" />
 
       </div>
       <div class="resource-content flexrow flex-center" style="padding:10px">
@@ -28,18 +28,17 @@
     </div>
     <div class="flexrow">
       <div class="resource flexcol flex-center">
-        <label class="header-label">{{localize "arm5e.rolltables.experimentation.riskModifier" }}</label>
-        <input type="number" class="resource-focus slim" name="riskModifier" value="{{riskModifier}}" />
+        <label class="">{{localize "arm5e.rolltables.experimentation.riskModifier" }}</label>
+        <input type="number" class="select-on-focus slim" name="riskModifier" value="{{riskModifier}}" />
       </div>
 
       <div class="resource flexcol flex-center">
-        <label class="header-label">{{localize "arm5e.sheet.aura" }}</label>
-        <input type="number" class="resource-focus slim" name="aura" value="{{aura}}" />
+        <label class="">{{localize "arm5e.sheet.aura" }}</label>
+        <input type="number" class="select-on-focus slim" name="aura" value="{{aura}}" />
       </div>
       <div class="resource flexcol flex-center">
-        <label
-          class="header-label">{{localize "arm5e.rolltables.experimentation.extraordinaryResults.discovery.short" }}</label>
-        <input type="checkbox" class="resource-focus slim" name="discovery" {{checked discovery}} />
+        <label class="">{{localize "arm5e.rolltables.experimentation.extraordinaryResults.discovery.short" }}</label>
+        <input type="checkbox" class="select-on-focus slim" name="discovery" {{checked discovery}} />
       </div>
     </div>
     <div class="flexrow">

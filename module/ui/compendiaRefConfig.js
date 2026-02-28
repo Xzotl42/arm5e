@@ -5,7 +5,6 @@ export class CompendiaRefConfig extends FormApplication {
     return foundry.utils.mergeObject(super.defaultOptions, {
       id: "sourcebooks-filters-config",
       template: "systems/arm5e/templates/generic/compendia-ref-config.html",
-      height: "auto",
       classes: ["arm5e-config"],
       closeOnSubmit: true,
       height: "auto",

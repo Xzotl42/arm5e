@@ -11,7 +11,7 @@
       <div class="resource-content flexrow">
         <div class="resource-content flexrow flex-center flex-between margintop6">
           <label for="season" class="smallTitle" style="font-size:16pt">{{localize "arm5e.sheet.season"}}</label>
-          <select name="season" {{dateChange}} data-type="String" class="change-season flex0 astrolab"
+          <select name="season" {{dateChange}} data-type="String" class="change-season flex0 seasons"
             style="font-size: 14pt;">
             {{selectOptions seasons selected=season localize=true labelAttr="label"}}
           </select>
@@ -19,14 +19,14 @@
         <div class="resource-content flexrow flex-center flex-between margintop6">
           <label for="year" class="smallTitle" style="font-size:16pt">{{localize "arm5e.sheet.year"}}</label>
           <input type="number" name="year" {{dateChange}} value="{{year}}" data-dtype="Number"
-            class="astrolab change-year resource-focus" style="
+            class="astrolab change-year select-on-focus" style="
         font-size: 18pt;" />
 
         </div>
       </div>
       <!-- <div style="margin:10px">
         <label for="date" class="smallTitle" style="font-size:16pt">{{!--localize "arm5e.sheet.date"--}}</label>
-        <input type="date" name="date" value="{{date}}" data-dtype="Number" class="astrolab  resource-focus" style="
+        <input type="date" name="date" value="{{date}}" data-dtype="Number" class="astrolab  select-on-focus" style="
         font-size: 18pt;" />
       </div> -->
       <div class="flexrow">

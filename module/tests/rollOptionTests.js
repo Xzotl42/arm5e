@@ -1,10 +1,10 @@
-import { log, sleep } from "../tools.js";
 import { getCompanion, getMagus } from "./testData.js";
 import { ArsLayer } from "../ui/ars-layer.js";
 import { ARM5E } from "../config.js";
 import { simpleDie, stressDie } from "../dice.js";
 import Aura from "../helpers/aura.js";
 import { ROLL_PROPERTIES } from "../helpers/rollWindow.js";
+import { log } from "../tools.js";
 
 export function registerOptionRollTesting(quench) {
   quench.registerBatch(
@@ -90,7 +90,7 @@ export function registerOptionRollTesting(quench) {
             assert.equal(msgData.impact.woundGravity, 0, "wound gravity should be 0");
 
             assert.equal(
-              msgData.roll.difficulty > msg.rollTotal,
+              msgData.roll.difficulty > msg.rollTotal(),
               msgData.failedRoll(),
               "failed roll incorrect"
             );
@@ -152,7 +152,7 @@ export function registerOptionRollTesting(quench) {
             );
             assert.equal(msgData.impact.woundGravity, 0, "wound gravity should be 0");
             assert.equal(
-              msgData.roll.difficulty > msg.rollTotal,
+              msgData.roll.difficulty > msg.rollTotal(0),
               msgData.failedRoll(),
               "failed roll incorrect"
             );
@@ -234,7 +234,7 @@ export function registerOptionRollTesting(quench) {
               );
             } else {
               assert.equal(
-                msgData.roll.difficulty > msg.rollTotal,
+                msgData.roll.difficulty > msg.rollTotal(0),
                 msgData.failedRoll(),
                 "failed roll incorrect"
               );
@@ -320,7 +320,7 @@ export function registerOptionRollTesting(quench) {
               assert.equal(msgData.impact.woundGravity, 0, "wound gravity should be 0");
               assert.equal(msgData.impact.applied, true, "shoud be applied");
               assert.equal(
-                msgData.roll.difficulty > msg.rollTotal,
+                msgData.roll.difficulty > msg.rollTotal(0),
                 msgData.failedRoll(),
                 "failed roll incorrect"
               );
@@ -334,7 +334,7 @@ export function registerOptionRollTesting(quench) {
               assert.equal(msgData.impact.woundGravity, 0, "wound gravity should be 0");
               assert.equal(msgData.impact.applied, false, "shoud not be applied");
               assert.equal(
-                msgData.roll.difficulty > msg.rollTotal,
+                msgData.roll.difficulty > msg.rollTotal(0),
                 msgData.failedRoll(),
                 "failed roll incorrect"
               );
@@ -400,7 +400,7 @@ export function registerOptionRollTesting(quench) {
               assert.equal(msgData.failedRoll(), true, "failed roll should be true");
             } else {
               assert.equal(
-                msgData.roll.difficulty > msg.rollTotal,
+                msgData.roll.difficulty > msg.rollTotal(0),
                 msgData.failedRoll(),
                 "failed roll incorrect"
               );
@@ -461,7 +461,7 @@ export function registerOptionRollTesting(quench) {
             assert.equal(msgData.impact.woundGravity, 0, "wound gravity should be 0");
             assert.equal(msgData.impact.applied, false, "shoud not be applied");
             assert.equal(
-              msgData.roll.difficulty > msg.rollTotal,
+              msgData.roll.difficulty > msg.rollTotal(0),
               msgData.failedRoll(),
               "failed roll incorrect"
             );
@@ -480,13 +480,7 @@ export function registerOptionRollTesting(quench) {
           try {
             let dataset = {
               roll: type,
-              name: "Initiative",
-              option1: actor.system.characteristics.qik.value,
-              txtoption1: "quick",
-              option2: actor.system.combat.init,
-              txtoption2: "init",
-              option3: actor.system.combat.overload,
-              txtoption3: "overload"
+              name: "Initiative"
             };
             await actor.rest();
             actor.rollInfo.init(dataset, actor);
@@ -519,7 +513,7 @@ export function registerOptionRollTesting(quench) {
               assert.equal(msg.system.confidence.allowed, false, "confidence is not allowed");
             } else {
               assert.equal(
-                msgData.roll.difficulty > msg.rollTotal,
+                msgData.roll.difficulty > msg.rollTotal(0),
                 msgData.failedRoll(),
                 "failed roll incorrect"
               );
@@ -545,13 +539,7 @@ export function registerOptionRollTesting(quench) {
           try {
             let dataset = {
               roll: type,
-              name: "Combat attack",
-              option1: actor.system.characteristics.dex.value,
-              txtoption1: "dex",
-              option2: actor.system.combat.ability,
-              txtoption2: "ability",
-              option3: actor.system.combat.atk,
-              txtoption3: "attack"
+              name: "Combat attack"
             };
             await actor.rest();
             actor.rollInfo.init(dataset, actor);
@@ -586,7 +574,7 @@ export function registerOptionRollTesting(quench) {
               assert.equal(msg.system.confidence.allowed, false, "confidence is not allowed");
             } else {
               assert.equal(
-                msgData.roll.difficulty > msg.rollTotal,
+                msgData.roll.difficulty > msg.rollTotal(0),
                 msgData.failedRoll(),
                 "failed roll incorrect"
               );
@@ -612,13 +600,7 @@ export function registerOptionRollTesting(quench) {
           try {
             let dataset = {
               roll: type,
-              name: "Combat defense",
-              option1: actor.system.characteristics.qik.value,
-              txtoption1: "quickness",
-              option2: actor.system.combat.ability,
-              txtoption2: "ability",
-              option3: actor.system.combat.dfn,
-              txtoption3: "defense"
+              name: "Combat defense"
             };
             await actor.rest();
             actor.rollInfo.init(dataset, actor);
@@ -654,7 +636,7 @@ export function registerOptionRollTesting(quench) {
               assert.equal(msg.system.confidence.allowed, false, "confidence is not allowed");
             } else {
               assert.equal(
-                msgData.roll.difficulty > msg.rollTotal,
+                msgData.roll.difficulty > msg.rollTotal(0),
                 msgData.failedRoll(),
                 "failed roll incorrect"
               );
@@ -679,13 +661,7 @@ export function registerOptionRollTesting(quench) {
           try {
             let dataset = {
               roll: type,
-              name: "Combat exertion",
-              option1: actor.system.characteristics.dex.value,
-              txtoption1: "dex",
-              option2: actor.system.combat.ability,
-              txtoption2: "ability",
-              option3: actor.system.combat.atk,
-              txtoption3: "attack"
+              name: "Combat exertion"
             };
             await actor.rest();
             actor.rollInfo.init(dataset, actor);
@@ -721,7 +697,7 @@ export function registerOptionRollTesting(quench) {
               assert.equal(msg.system.confidence.allowed, false, "confidence is not allowed");
             } else {
               assert.equal(
-                msgData.roll.difficulty > msg.rollTotal,
+                msgData.roll.difficulty > msg.rollTotal(0),
                 msgData.failedRoll(),
                 "failed roll incorrect"
               );
@@ -747,13 +723,7 @@ export function registerOptionRollTesting(quench) {
           try {
             let dataset = {
               roll: type,
-              name: "Combat wounded",
-              option1: actor.system.characteristics.dex.value,
-              txtoption1: "dex",
-              option2: actor.system.combat.ability,
-              txtoption2: "ability",
-              option3: actor.system.combat.atk,
-              txtoption3: "attack"
+              name: "Combat wounded"
             };
             actor.rollInfo.init(dataset, actor);
             const msg = await stressDie(actor, type, 0, actor.rollInfo.properties.CALLBACK, 10);
@@ -787,7 +757,7 @@ export function registerOptionRollTesting(quench) {
               assert.equal(msg.system.confidence.allowed, false, "confidence is not allowed");
             } else {
               assert.equal(
-                msgData.roll.difficulty > msg.rollTotal,
+                msgData.roll.difficulty > msg.rollTotal(0),
                 msgData.failedRoll(),
                 "failed roll incorrect"
               );
@@ -863,7 +833,7 @@ export function registerOptionRollTesting(quench) {
               );
             } else {
               assert.equal(
-                msgData.roll.difficulty > msg.rollTotal,
+                msgData.roll.difficulty > msg.rollTotal(0),
                 msgData.failedRoll(),
                 "failed roll incorrect"
               );

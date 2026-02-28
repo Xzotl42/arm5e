@@ -3,52 +3,52 @@
 
   <div class="roll-options">
     <div class="flexrow flex-group-center">
-      <label class="resource-label">{{localize "arm5e.twilight.strength" }}</label>
+      <label class="">{{localize "arm5e.twilight.strength" }}</label>
     </div>
     <div class="flexrow flex-group-center">
-      <label class="resource-label">{{ lookup system.roll.generic.txtOption 0 }} ({{lookup system.roll.generic.option 0
+      <label class="">{{ lookup system.roll.generic.txtOption 0 }} ({{lookup system.roll.generic.option 0
         }})</label>
     </div>
     <div class="flexrow flex-group-center">
-      <label class="resource-label">+</label>
+      <label class="">+</label>
     </div>
     <div class="flexrow flex-group-center">
-      <label class="resource-label flex03">{{localize "arm5e.sheet.modifier"}}</label>
+      <label class=" flex03">{{localize "arm5e.sheet.modifier"}}</label>
       <input type="number" name="system.roll.modifier" value="{{system.roll.modifier}}" data-dtype="Number"
-        class="SelectedModifier resource-focus" />
+        class="SelectedModifier select-on-focus" />
     </div>
     <div class="flexrow flex-group-center">
-      <label class="resource-label">+</label>
+      <label class="">+</label>
     </div>
     <div class="flexrow flex-group-center">
-      <label class="resource-label flex03">{{localize "arm5e.twilight.warpingPoints"}}</label>
+      <label class=" flex03">{{localize "arm5e.twilight.warpingPoints"}}</label>
       <input type="number" name="system.roll.twilight.warpingPts" value="{{system.roll.twilight.warpingPts}}"
-        data-dtype="Number" class="SelectedWarpingPoints resource-focus" />
+        data-dtype="Number" class="SelectedWarpingPoints select-on-focus" />
     </div>
     {{#if system.roll.twilight.enigma.score}}
       <div class="flexrow flex-group-center">
-        <label class="resource-label">+</label>
+        <label class="">+</label>
       </div>
       <div class="flexrow flex-group-center">
-        <label class="resource-label">{{ lookup system.roll.generic.txtOption 2 }} ({{lookup system.roll.generic.option
+        <label class="">{{ lookup system.roll.generic.txtOption 2 }} ({{lookup system.roll.generic.option
           2
           }})</label>
       </div>
       <div class="flexrow flex-group-center">
-        <label class="resource-label">{{localize "arm5e.sheet.speciality"}} ({{
+        <label class="">{{localize "arm5e.sheet.speciality"}} ({{
           system.roll.twilight.enigma.speciality}})</label>
         <input type="checkbox" class="enigmaSpeciality" name="system.roll.twilight.enigma.specApply" {{checked
           system.roll.twilight.enigma.specApply}} />
       </div>
     {{/if}}
     <div class="flexrow flex-group-center">
-      <label class="resource-label">+</label>
+      <label class="">+</label>
     </div>
     <div class=" flexrow flex-group-center">
-      <label class="resource-label flex03 " style="padding-right: 10px;">{{localize "arm5e.sheet.levelAura"}} </label>
+      <label class=" flex03 " style="padding-right: 10px;">{{localize "arm5e.sheet.levelAura"}} </label>
       <input type="number" name="system.roll.environment.aura.modifier"
         value="{{system.roll.environment.aura.modifier}}" data-dtype="Number"
-        class="SelectedAura flex02 resource-focus" />
+        class="SelectedAura flex02 select-on-focus" />
     </div>
   </div>
   {{> "systems/arm5e/templates/roll/parts/roll-footer.html" footer="Twilight_rolls" }}

@@ -78,6 +78,8 @@
         "temporary": "Temporary effects"
       },
       "subtypes": {
+        "agingMagi": "Aging for Magi",
+        "agingMundane": "Aging for Mundane",
         "attackRoll": "Attack rolls",
         "auraLevel": "Aura's level",
         "auraRealm": "Realm of aura",
@@ -85,6 +87,7 @@
         "combatRoll": "Combat rolls",
         "consumables": "Consumables",
         "defRoll": "Defence rolls",
+        "fatigueRolls": "Fatigue rolls modifier",
         "fatigueTotal": "Fatigue total",
         "formMagicRoll": "Formulaic magic rolls",
         "inhabitantPoints": "Inhabitant points",
@@ -120,6 +123,7 @@
         "xpmod": "Xp bonus"
       },
       "type": {
+        "covenantModifiers": "Covenant's modifiers",
         "covenantBuildPoint": "Covenant's build points",
         "covenantInhabitants": "Covenant's inhabitants",
         "spellcasting": "Spellcasting",
@@ -378,15 +382,20 @@
     "chat": {
       "contestOfMagic": "Contest of magic",
       "contestOfMagicWith": "Contest of magic with {name}",
-      "otherMagicResistance": "Other Magic resistance",
-      "totalMagicResistance": "Magic resistance total",
       "notifications": {
         "notInitiator": "Not authorized as you are not the initiator of the roll. Ask him/her or a GM"
-      }
+      },
+      "otherMagicResistance": "Other Magic resistance",
+      "totalMagicResistance": "Magic resistance total"
     },
     "combat": {
       "damage": {
         "ignored": "Ignored on roll"
+      },
+      "targets": {
+        "multiple": "Multiple targets",
+        "none": "No target selected",
+        "single": "Single target"
       }
     },
     "config": {
@@ -421,7 +430,24 @@
         "none": "No salary",
         "normal": "Standard salary",
         "pension": "Pension"
+      },
+      "inhabitantsMod": {
+        "laborers": "Magic Laborers",
+        "turbula": "Magic Turbula",
+        "servants": "Magic Servants",
+        "teamsters": "Magic Teamsters"
       }
+    },
+    "damage": {
+      "compute": "Calculate damage",
+      "damageflavor": "{amount} of damage to be soaked from {source}",
+      "form": "Damage Form",
+      "ignoreArmor": "Ignore armor",
+      "label": "Damage",
+      "roll": "Damage roll",
+      "soakFlavor": "Soak {amount} of damage from {source}",
+      "source": "Source of damage",
+      "sourcePlaceHolder": "A damage source"
     },
     "dialog": {
       "botch": {
@@ -512,6 +538,7 @@
       "always": "Always",
       "base": "Base",
       "begins": "Begins",
+      "cancelled": "Cancelled",
       "clear": "Clear",
       "config": "Configuration",
       "current": "Current",
@@ -530,6 +557,9 @@
       "minutes": "minutes",
       "minutesShort": "min.",
       "modifier": "Modifier",
+      "modifiers": "Modifiers",
+      "missed": "Missed",
+      "misc": "Miscellaneous",
       "multiplier": "Multiplier",
       "multipliers": "Multipliers",
       "na": "N/A",
@@ -545,6 +575,7 @@
       "other": "Other",
       "params": "Parameters",
       "pending": "Pending",
+      "refresh": "Refresh",
       "special": "Special",
       "standard": "Standard",
       "summary": "Summary",
@@ -787,6 +818,7 @@
       "fatigueLost": "Lost {num} fatigue level(s)",
       "noConf": "Pass confidence use",
       "noWound": "No wound inflicted",
+      "soak": "Soak roll",
       "useConf": "Use confidence point",
       "wound": {
         "dead": "deadly",
@@ -814,6 +846,7 @@
           }
         }
       },
+      "damagePending": "There is a damage roll pending for this character. You may want to soak it before rolling something else.",
       "dead": "This character is dead...",
       "doubleAbility": "That character already have the ability",
       "effectLinked": "Deletion impossible. An effect is linked to that capacity.",
@@ -1145,6 +1178,8 @@
       "age": "Age",
       "ageModifier": "Age modifier",
       "aging": "Aging",
+      "agingMagi": "Aging for Magi",
+      "agingMundane": "Aging for Mundane",
       "agingPts": "Aging points",
       "agingStart": "Aging start offset",
       "apparentAge": "Apparent age",
@@ -1201,16 +1236,19 @@
       "child": "Child",
       "com": "Com",
       "combat": {
+        "defend": "Defend",
         "flavor": {
           "attack": "{attacker} attacks {target} with {weapon}.",
-          "damage": "{attacker} tries to inflict damage.",
-          "damageSource": "Source of damage",
+          "damage": "{attacker} tries to inflict {amount} damage.",
+          "damageWithTarget": "{attacker} tries to inflict {amount} damage to {target}.",
           "defense": "{defender} defends against {attacker} with {weapon}.",
           "defenseNoAttacker": "{defender} defends with {weapon}.",
           "noWeapon": "no weapon",
           "soak": "{target} soaks the damage."
         },
-        "label": "Combat"
+        "label": "Combat",
+        "preparation": "Combat preparation",
+        "wound": "Combat wound inflicted by {attacker}"
       },
       "combatInstructions1": "Equip weapons and armor to see the totals.",
       "combatInstructions2": "If your specialty is with the shield, mark it on the shield and not on the weapon. If you don't have the shield equipped, the specialty bonus doesn't apply.",
@@ -1239,8 +1277,6 @@
       "cun": "Cun",
       "cunning": "Cunning",
       "currentYear": "Current Year",
-      "damage": "Damage",
-      "damageRoll": "Damage roll",
       "date": "Date",
       "dazed": "Dazed",
       "dazedLvl": "Dazed level",
@@ -1284,9 +1320,13 @@
       "fastCastingSpeed": {
         "label": "Fast Casting Speed"
       },
-      "fatigue": "Fatigue",
-      "fatigueOverflow": "Fatigue overflow",
-      "fatigueRoll": "Fatigue roll",
+      "fatigue": {
+        "add": "Add a fatigue level + SHIFT for long term.",
+        "label": "Fatigue",
+        "overflow": "Fatigue overflow",
+        "recover": "Recover a fatigue level + SHIFT for long term.",
+        "roll": "Fatigue roll"
+      },
       "features": "Features",
       "fieldOfWork": "Field of work",
       "filters": "Filters",
@@ -1294,7 +1334,6 @@
       "fo": "Fo",
       "focus": "Focus",
       "form": "Form",
-      "formDamage": "Form damage",
       "formRequisite": "Form Requisite",
       "formRes": "Form resistance",
       "formScore": "Form score ({form})",
@@ -1444,6 +1483,7 @@
       "modifiersLifeMagi": "Living Conditions Mod (Magi)",
       "modifiersLifeMundane": "Living Conditions Mod (Mundanes)",
       "money": "Money",
+      "mounted": "Mounted",
       "multipleCasting": {
         "label": "Multiple Casting"
       },
@@ -1455,6 +1495,7 @@
       "narrator": "Storyguide",
       "natRes": "Natural resistance",
       "nationality": "Race/Nationality",
+      "naturalweapon": "Natural weapon",
       "naturalweapons": "Natural weapons",
       "noMagicResistance": "No magic resistance",
       "none": "None",
@@ -1537,9 +1578,11 @@
       "salubrity": "Salubrity",
       "sanctum": "Sanctum",
       "saving": "Savings",
+      "scene": "Scene",
       "score": "Score",
       "season": "Season",
       "seasons": "seasons",
+      "secrets": "Secrets",
       "security": "Security",
       "servants": "Servants",
       "setAbilities": "Create abilities for your character that match the labels below. This ensures correct calculations. If you don't have the ability, you can still create it and set to zero and assign it.",

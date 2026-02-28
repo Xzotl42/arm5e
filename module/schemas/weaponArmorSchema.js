@@ -1,6 +1,12 @@
 import { ARM5E } from "../config.js";
-import { convertToNumber, log } from "../tools.js";
-import { boolOption, CostField, itemBase, NullableDocumentIdField } from "./commonSchemas.js";
+import { convertToNumber, getDataset, log } from "../tools.js";
+import {
+  boolOption,
+  CostField,
+  hermeticForm,
+  itemBase,
+  NullableDocumentIdField
+} from "./commonSchemas.js";
 import { EnchantmentExtension, ItemState } from "./enchantmentSchema.js";
 const fields = foundry.data.fields;
 export class ArmorSchema extends foundry.abstract.TypeDataModel {
@@ -31,7 +37,7 @@ export class ArmorSchema extends foundry.abstract.TypeDataModel {
         step: 1
       }),
       full: boolOption(false, true),
-      equipped: boolOption(false, true),
+      // equipped: boolOption(false, true),
       state: ItemState(),
       enchantments: new fields.EmbeddedDataField(EnchantmentExtension, {
         nullable: true,
@@ -164,8 +170,10 @@ export class WeaponSchema extends foundry.abstract.TypeDataModel {
         step: 1
       }),
       weaponExpert: boolOption(false, true),
-      equipped: boolOption(false, true),
+      // equipped: boolOption(false, true),
       horse: boolOption(false, true),
+      formDamage: hermeticForm("te"),
+      naturalWeapon: boolOption(false, true),
       ability: new fields.SchemaField(
         {
           key: new fields.StringField({ required: false, blank: true, initial: "brawl" }),
@@ -247,6 +255,15 @@ export class WeaponSchema extends foundry.abstract.TypeDataModel {
     }
 
     return update;
+  }
+
+  addListeners(html) {
+    // html.find(".toggleNatural").change(async (event) => {
+    //   const dataset = getDataset(event);
+    //   // const item = this.parent;
+    //   // await item.update({});
+    //   this.parent.sheet.render(true);
+    // });
   }
 
   sanitize() {

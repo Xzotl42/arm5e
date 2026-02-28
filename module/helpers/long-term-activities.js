@@ -134,7 +134,7 @@ export async function agingRoll(item) {
     season: item.system.dates[0].season,
     moredata: { diaryId: item._id }
   };
-  await item.actor.sheet._onRoll(input);
+  await item.actor.sheet.roll(input);
 }
 
 export async function agingCrisis(actor, roll, message) {
@@ -274,7 +274,7 @@ export class TwilightEpisode {
       return game.i18n.localize(durations[0]);
     }
     if (score === 9) {
-      let roll = new ArsRoll("0di", {}, {});
+      let roll = new ArsRoll("0di", {}, { actor: this.actor.uuid });
       await roll.evaluate();
       return game.i18n.format("arm5e.twilight.durations.decades", { num: 7 + roll.total });
     }
@@ -325,11 +325,11 @@ export async function twilightUnderstandingRoll(item) {
     moredata: { diaryId: item._id },
     botchNumber: item.actor.system.twilight.pointsGained + 1
   };
-  await item.actor.sheet._onRoll(input);
+  await item.actor.sheet.roll(input);
 }
 
 export async function twilightRoll(actor, data) {
-  await actor.sheet._onRoll(data);
+  await actor.sheet.roll(data);
 }
 
 export async function applyTwilightStrength(actor, roll, message) {
@@ -394,7 +394,10 @@ export async function twilightControl(actor, roll, message) {
       })
     };
     msgUpdate["flavor"] =
-      message.flavor + `<h2>${game.i18n.localize("arm5e.twilight.chat.successControl")}</h2>`;
+      message.flavor +
+      `<h2 class="twilight-episode">${game.i18n.localize(
+        "arm5e.twilight.chat.successControl"
+      )}</h2>`;
 
     promises.push(createTwilightDiaryEntry(actor, input));
 
@@ -409,7 +412,10 @@ export async function twilightControl(actor, roll, message) {
     updateData["system.twilight.pointsGained"] = actor.rollInfo.twilight.warpingPts;
     updateData["system.twilight.stage"] = TWILIGHT_STAGES.PENDING_COMPLEXITY;
     msgUpdate["flavor"] =
-      message.flavor + `<h2>${game.i18n.localize("arm5e.twilight.chat.failedControl")}</h2>`;
+      message.flavor +
+      `<h2 class="twilight-episode">${game.i18n.localize(
+        "arm5e.twilight.chat.failedControl"
+      )}</h2>`;
 
     message.updateSource(msgUpdate);
     promises.push(actor.update(updateData, {}));
@@ -460,7 +466,10 @@ export async function twilightUnderstanding(actor, roll, message) {
       })} <br/>
       ${TwilightEpisode.getTechnicalDescription(actor.system.twilight.pointsGained, dur)}`;
     msgUpdate["flavor"] =
-      message.flavor + `<h2>${game.i18n.localize("arm5e.twilight.chat.successUnderstanding")}</h2>`;
+      message.flavor +
+      `<h2 class="twilight-episode">${game.i18n.localize(
+        "arm5e.twilight.chat.successUnderstanding"
+      )}</h2>`;
   } else {
     const dur = await TwilightEpisode.getDuration(actor.system.warping.finalScore);
     diaryUpdate["system.description"] = `${diary.system.description} <br/>${controlDesc}. 
@@ -472,7 +481,10 @@ export async function twilightUnderstanding(actor, roll, message) {
       ${TwilightEpisode.getTechnicalDescription(actor.system.twilight.pointsGained, dur)}`;
 
     msgUpdate["flavor"] =
-      message.flavor + `<h2>${game.i18n.localize("arm5e.twilight.chat.failedUnderstanding")}</h2>`;
+      message.flavor +
+      `<h2 class="twilight-episode">${game.i18n.localize(
+        "arm5e.twilight.chat.failedUnderstanding"
+      )}</h2>`;
   }
   message.updateSource(msgUpdate);
   const promises = [];
@@ -921,7 +933,7 @@ export function validTraining(context, actor, item) {
   } else if (spellsArr.length > 0) {
     const teacherScore = Number(item.system.progress.spells[0].teacherScore);
     context.system.sourceQuality = teacherScore + 3;
-    const spell = Object.values(actor.system.spells).find((e) => {
+    let spell = Object.values(actor.system.spells).find((e) => {
       return e._id === item.system.progress.spells[0].id;
     });
 

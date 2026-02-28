@@ -1,3 +1,111 @@
+## 2.4.1.17, Radislav, Cognizant Wisdom BF3
+
+[IMPORTANT] Known limitation for V12, if text seems greyed out, go in the core settings and change the Preferred Color Scheme to "Light".
+
+### V13 compatibility
+
+- Verified for version 13.351
+
+### Features & changes
+
+### Bug fixes
+
+- Damage application from the chat messages stops inflicting a wound to all protagonists.
+- Fixed combat wound description.
+- The dialog title for using a magic item effect will be the name of the effect instead of the name of the item.
+- Magic resistance description in chat message was incorrect, not accounting confidence spent for the total penetration
+- Parma magica is only counted once in the magic resistance
+- Roll mode is now taken into account for the new chat messages.
+
+## 2.4.1.15, Radislav, Cognizant Wisdom BF2
+
+[IMPORTANT] Known limitation for V12, if text seems greyed out, go in the core settings and change the Preferred Color Scheme to "Light".
+
+### V13 compatibility
+
+- Verified for version 13.351
+
+### Features & changes
+
+### Bug fixes
+
+- Encumbrance was not computed properly
+- Fixed aging rollback error.
+- It is now possible to see the details of a roll even if the Actor was deleted
+- Changing combat preparation in inititive roll dialog displays proper labels
+- Encumbrance is displayed in initiative roll dialog.
+- Pending damage notification is only displayed once, the status is cleared after.
+- Fixed a bunch of formatting oddities in the details section of chat rolls.
+- Fixed a bug during an aging crisis where the number of aging points of the characteristic impacted was wrongly computed.
+- Even if a notification was raised, rolls were still possible for dead/unconscious characters
+- Using magic items is working again
+- Using powers reduce the might points properly
+
+## 2.4.1.14, Radislav, Cognizant Wisdom BF1
+
+[IMPORTANT] Known limitation for V12, if text seems greyed out, go in the core settings and change the Preferred Color Scheme to "Light".
+
+### V13 compatibility
+
+- Verified for version 13.351
+
+### Features & changes
+
+- Change abilities score directly from the character sheet when in creation mode
+- Active effects:
+  - New Aging roll modifier for covenant's inhabitants (Healthy Feature)
+  - Effects to add/remove inhabitants are no longer impacting loyalty or expenses
+  - Magic resistance effect has been moved from "Spellcasting" to "Forms Magic Resistance" type.
+- Various covenant sheet improvements
+- Added description field to Alternate magic templates.
+
+### Bug fixes
+
+- Supernatural effects rolls fixed
+- Supernatural effects macros will again roll by default.
+- Cost saving of laborers is up to 50% of provisions costs instead of 20%
+- Fixed a bug in button creation for damage roll chat messages
+- Quick combat macro dialog is working again
+
+## 2.4.1.12, Radislav, Cognizant Wisdom
+
+### V13 compatibility
+
+- Verified for version 13.351
+
+### Features & changes
+
+- New active effects:
+  - Fatigue roll modifier
+- New formated "Number" field that accept empty value
+- Long term fatigue management.
+- Confidence can now be used on rolled supernatural effect (Hedge magic)
+- New parameter to set the font used for headers
+- Text in chat is selectable
+- Damage rolls with socket messages
+- New Secrets field for characters
+- Natural weapon flag for weapons
+- Combat preparation management.
+- [WIP] CSS rework.
+- Macro to roll damage for all token select (needs ars-compendia update)
+- New button in the title bar of Items' sheets to show the owner.
+- New combat workflow
+
+### Bug fixes
+
+- [Simple Calendar] Fixed a bug where changing the date wasn't working anymore.
+- Fix the casting of Hedge magic effects.
+- Chat action buttons will only appear if the player owns the actor.
+- Rollbacking aging rolls properly update the lost stats.
+- Dragging compendium items from the Codex is working again if you are owner.
+- No longer possible to drop spells and magical effects on non magus characters
+- Familiar fields are working again.
+- Casting totals are recomputed properly if you update Art scores
+- [V13] Text fields in darkmode have visible color.
+- Spells with focus applied have the option ticked properly in the roll dialog.
+- Item Macro creation from unlinked tokens is now possible [Warning added]
+- Covenant build points for vis storage are computed properly
+
 ## 2.4.0.31, Radislav, Enigmatic Faeries 2
 
 ### V13 compatibility

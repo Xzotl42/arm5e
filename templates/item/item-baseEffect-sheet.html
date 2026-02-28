@@ -5,27 +5,27 @@
       <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name" /></h1>
       <div class="grid grid-2col">
         <div class="resource flexcol flexrow">
-          <label for="system.technique.value" class="header-label">{{localize "arm5e.sheet.technique"}}</label>
+          <label for="system.technique.value" class="">{{localize "arm5e.sheet.technique"}}</label>
           <select name="system.technique.value" data-type="String">
             {{selectOptions config.magic.techniques selected=system.technique.value labelAttr="label"  }}
           </select>
         </div>
         <div class="resource flexcol flexrow">
-          <label for="system.form.value" class="header-label">{{localize "arm5e.sheet.form"}}</label>
+          <label for="system.form.value" class="">{{localize "arm5e.sheet.form"}}</label>
           <select name="system.form.value" data-type="String">
             {{selectOptions config.magic.forms selected=system.form.value labelAttr="label" }}
           </select>
         </div>
         <div class="grid grid-2col">
           <div class="resource flexcol flex-center">
-            <label class="header-label">{{localize "arm5e.sheet.Requisites"}}</label>
+            <label class="">{{localize "arm5e.sheet.Requisites"}}</label>
             <a class="item-control advanced-req" title="Advanced Requistes" data-flavor="{{ui.flavor}}"><i
                 class="fas fa-gavel fa-lg"></i></a>
-            <label class="header-label">{{ui.requisites}}</label>
+            <label class="">{{ui.requisites}}</label>
           </div>
           <div class="resource">
-            <label class="header-label">{{localize "arm5e.spell.effect.baseLevel"}}</label>
-            <input type="text" name="system.baseLevel" value="{{system.baseLevel}}" class="resource-focus"
+            <label class="">{{localize "arm5e.spell.effect.baseLevel"}}</label>
+            <input type="text" name="system.baseLevel" value="{{system.baseLevel}}" class="select-on-focus"
               data-dtype="Number" />
           </div>
         </div>

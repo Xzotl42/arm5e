@@ -1,7 +1,5 @@
 import { ARM5E } from "../config.js";
-import { UI } from "../constants/ui.js";
 import { computeLevel } from "../helpers/magic.js";
-import { ArM5eItem } from "../item/item.js";
 import { log } from "../tools.js";
 import {
   baseDescription,
@@ -9,11 +7,9 @@ import {
   DateField,
   itemBase,
   ModifierField,
-  NullableSchemaField,
   SeasonField,
   SpellAttributes,
-  TechniquesForms,
-  XpField
+  TechniquesForms
 } from "./commonSchemas.js";
 import { baseLevel, MagicalEffectSchema } from "./magicSchemas.js";
 const fields = foundry.data.fields;

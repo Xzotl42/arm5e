@@ -4,6 +4,7 @@ import { HERMETIC_FILTER, TIME_FILTER, TOPIC_FILTER } from "../constants/userdat
 import { effectToLabText, resetOwnerFields } from "../item/item-converter.js";
 import { ArM5eActor } from "./actor.js";
 import { getConfirmation } from "../ui/dialogs.js";
+import Aura from "../helpers/aura.js";
 
 /**
  * Extend the basic ArM5eActorSheet
@@ -155,7 +156,12 @@ export class ArM5eCovenantActorSheet extends ArM5eActorSheet {
     }
 
     context.scenes = game.scenes.contents.map((e) => {
-      return { name: e.name, id: e._id };
+      const aura = Aura.fromScene(e);
+      let label = e.name;
+      if (aura.visible) {
+        label += ` (${aura.label})`;
+      }
+      return { name: label, id: e._id };
     });
 
     for (const exp of Object.keys(context.system.yearlyExpenses)) {

@@ -4,18 +4,13 @@ import { GroupSchedule } from "./group-schedule.js";
 export class Astrolab extends FormApplication {
   constructor(data, options) {
     super(data, options);
-    this.timeHook = Hooks.on("arm5e-date-change", (date) => {
+    this.object.trackRes = game.settings.get("arm5e", "trackResources");
+
+    Hooks.on("arm5e-date-change", (date) => {
       this.object.year = date.year;
       this.object.season = date.season;
       this.render(true);
     });
-    this.object.trackRes = game.settings.get("arm5e", "trackResources");
-
-    Hooks.on("closeApplication", (app, html) => this.onClose(app));
-  }
-
-  onClose(app) {
-    Hooks.off("arm5e-date-change", this.timeHook);
   }
 
   /** @override */
@@ -90,17 +85,12 @@ export class Astrolab extends FormApplication {
     event.preventDefault();
     const dataset = event.currentTarget.dataset;
     const updateData = {
-      "system.fatigueCurrent": 0
+      "system.fatigueCurrent": 0,
+      "system.fatigueLongTerm": 0
     };
     await game.actors.updateAll(updateData, (e) => {
       return e.type === "player" || e.type === "npc" || e.type === "beast";
     });
-    // ui.notifications.info(
-    //   game.i18n.format("arm5e.notification.synchActors", {
-    //     year: dataset.year,
-    //     season: game.i18n.localize(CONFIG.ARM5E.seasons[dataset.season].label)
-    //   })
-    // );
   }
 
   async _updateObject(event, formData) {

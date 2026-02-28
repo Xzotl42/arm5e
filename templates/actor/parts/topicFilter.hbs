@@ -2,16 +2,15 @@
   <li class="filter-item toggle-display flexrow" draggable="false" style="padding-bottom: 8px;">
     <!--style=" {{lookup display list}}"-->
     <div class="header-fields">
-      <div class="resources flexrow flex-between padding12x5">
+      <div class="flexrow flex-between padding12x5">
         <span class="flexrow">
-          <label for="topic" class="header-label" style="padding-left: 10px">{{localize
+          <label for="topic" class="" style="padding-left: 10px">{{localize
               "arm5e.sheet.bookTopic"
             }}</label>
           <select
             name="topic"
             data-type="String"
-            style="flex: 0 0 100px;   max-width:120px"
-            class="topic-filter {{topic-class}}"
+            class="topic-filter {{topic-class}} textValue"
             data-list="{{list}}"
             data-category="bookTopics"
           >
@@ -21,15 +20,14 @@
           </select>
         </span>
         <span class="flexrow">
-          <label for="typeFilter" class="header-label flex0" style="padding-left: 10px">{{localize
+          <label for="typeFilter" class=" flex0" style="padding-left: 10px">{{localize
               "arm5e.sheet.type"
             }}</label>
 
           <select
             name="typeFilter"
             data-type="String"
-            style="flex: 0 0 90px"
-            class="type-filter"
+            class="type-filter textValue"
             data-list="{{list}}"
             data-category="bookTopics"
           >
@@ -39,14 +37,13 @@
           </select>
         </span>
         <span class="flexrow">
-          <label for="system.levelFilter" class="header-label" style="padding-left: 12px">{{localize
+          <label for="system.levelFilter" class="" style="padding-left: 12px">{{localize
               "arm5e.sheet.level"
             }}</label>
           <select
             name="levelOperator"
             data-type="Number"
-            style="flex: 0 0; font-family: bookAntiqua"
-            class="levelOperator-filter"
+            class="levelOperator-filter numValue"
             data-list="{{list}}"
             data-category="bookTopics"
           >
@@ -67,21 +64,20 @@
               value="{{levelFilter}}"
               data-dtype="Number"
               style="margin-right: 12px"
-              class="level-filter"
+              class="level-filter numValue"
               data-list="{{../list}}"
               data-category="bookTopics"
             />
           {{/with}}
         </span>
         <span class="flexrow">
-          <label for="system.levelFilter" class="header-label" style="padding-left: 12px">{{localize
+          <label for="system.levelFilter" class="" style="padding-left: 12px">{{localize
               "arm5e.sheet.quality"
             }}</label>
           <select
             name="qualityOperator"
             data-type="Number"
-            style="flex: 0 0; font-family: bookAntiqua"
-            class="qualityOperator-filter"
+            class="qualityOperator-filter numValue"
             data-list="{{list}}"
             data-category="bookTopics"
           >
@@ -102,7 +98,7 @@
               value="{{qualityFilter}}"
               data-dtype="Number"
               style="margin-right: 12px"
-              class="quality-filter"
+              class="quality-filter numValue"
               data-list="{{../list}}"
               data-category="bookTopics"
             />

@@ -18,7 +18,7 @@ export class ArsLayer extends InteractionLayer {
       if (v > 20) ev.currentTarget.value = 20;
     });
 
-    html.find(".resource-focus").focus((ev) => {
+    html.find(".select-on-focus").focus((ev) => {
       ev.preventDefault();
       ev.currentTarget.select();
     });

@@ -27,6 +27,7 @@
   content: "\0041";
   font-size: 19pt;
   vertical-align: middle;
+  margin-bottom: 3px;
 }
 .icon-Icon_Details:before {
   content: "\0042";
@@ -126,6 +127,16 @@
 .icon-Icon_Soak:before {
   content: "\0052";
 }
+
+.icon-Icon_Soak_red:before {
+  content: "\0052";
+  color: rgb(135 38 22);
+}
+
+.icon-Icon_Soak_Big:before {
+  font-size: 30pt;
+  content: "\0052";
+}
 .icon-Icon_Astrolab:before {
   content: "\0053";
   vertical-align: middle;
@@ -134,6 +145,7 @@
   content: "\0053";
   font-size: 19pt;
   vertical-align: middle;
+  margin-bottom: 3px;
 }
 .icon-Tool_AstrolabBig:before {
   content: "\0053";

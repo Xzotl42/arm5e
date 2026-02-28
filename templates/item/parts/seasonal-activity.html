@@ -4,36 +4,36 @@
       <input type="hidden" name="system.sourceModifier" value="{{system.sourceModifier}}" data-dtype="Number" />
     </div>
     <div class="resource">
-      <label class="header-label">{{localize "arm5e.sheet.sourceQuality"}} : </label>
+      <label class="">{{localize "arm5e.sheet.sourceQuality"}} : </label>
       {{#if ui.editSource}}
         <input type="text" name="system.sourceQuality" value="{{system.sourceQuality}}" data-dtype="Number"
           {{system.canEdit}} style="max-width: 50px;" />
       {{else}}
         {{#if system.done}}
-          <label class="header-label"><b>{{system.sourceQuality}}</b></label>
+          <label class=""><b>{{system.sourceQuality}}</b></label>
         {{else}}
           {{#if ui.showBaseQuality}}
-            <label class="header-label"> {{localize "arm5e.generic.base"}} ({{system.sourceQuality}})</label>
+            <label class=""> {{localize "arm5e.generic.base"}} ({{system.sourceQuality}})</label>
           {{else}}
-            <label class="header-label"> : {{localize "arm5e.generic.default"}} ({{system.sourceDefault}}) </label>
+            <label class=""> : {{localize "arm5e.generic.default"}} ({{system.sourceDefault}}) </label>
           {{/if}}
         {{/if}}
       {{/if}}
       {{#if ui.bonusOptions}}
-        <label class="header-label"> + </label>
+        <label class=""> + </label>
         <select class="progress-bonus" name="system.optionKey" data-dtype="String" {{@root.system.disabled}}>
           {{selectOptions bonusOptions selected=system.optionKey labelAttr="selectLabel"}}
         </select>
       {{/if}}
       {{#unless (or (eq system.sourceModifier 0) system.cappedGain)}}
-        <label class="header-label"> + </label>
-        <label class="header-label"> {{localize "arm5e.sheet.bonus.activeEffects"}}
+        <label class=""> + </label>
+        <label class=""> {{localize "arm5e.sheet.bonus.activeEffects"}}
           ({{system.sourceModifier}})</label>
       {{/unless}}
       {{#unless system.cappedGain}}
-        <label class="header-label"> = <b>{{totalQuality }}</b></label>
+        <label class=""> = <b>{{totalQuality }}</b></label>
       {{else}}
-        <label class="header-label"> => <b>{{system.sourceQuality}} *</b></label>
+        <label class=""> => <b>{{system.sourceQuality}} *</b></label>
       {{/unless}}
     </div>
   </div>

@@ -1,7 +1,7 @@
 <div class="resource flex-group-center flex01 smallBackSection {{classes}}" title="{{cost.hint}}">
   {{#if (ne cost.detail "NONE")}}
     {{#if (eq cost.detail "QUALIFIER")}}
-      <label for="system.cost.value" class="header-label">{{localize "arm5e.sheet.cost"}}</label>
+      <label for="system.cost.value" class="">{{localize "arm5e.sheet.cost"}}</label>
       <select name="system.cost.value" data-type="String">
         {{selectOptions
           config.item.costs
@@ -11,7 +11,7 @@
         }}
       </select>
     {{else}}
-      <label for="system.cost.amount" class="header-label">{{localize "arm5e.sheet.cost"}}</label>
+      <label for="system.cost.amount" class="">{{localize "arm5e.sheet.cost"}}</label>
       <div class="resource-content flexrow flex-center flex-between margintop6">
         <input
           type="number"
@@ -28,12 +28,12 @@
 
   {{/if}}
   <div class="resource">
-    <label class="header-label">{{localize "arm5e.sheet.quantity"}}</label>
+    <label class="">{{localize "arm5e.sheet.quantity"}}</label>
     <input
       type="number"
       name="system.quantity"
       value="{{system.quantity}}"
-      class="modifier resource-focus"
+      class="modifier select-on-focus"
       data-dtype="Number"
     />
   </div>

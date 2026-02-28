@@ -39,6 +39,17 @@ ARM5E.genericOptions = {
   ]
 };
 
+ARM5E.fontfaces = {
+  almendra: "Almendra",
+  blackmoor: "Blackmoor (original)",
+  bokor: "Bokor",
+  eagleLake: "Eagle Lake",
+  germaniaOne: "Germania One",
+  grenzeGotisch: "Grenze Gotisch",
+  medievalSharp: "Medieval Sharp",
+  metamorphous: "Metamorphous"
+};
+
 ARM5E.character.charTypes = {
   magus: {
     label: "arm5e.sheet.magus",
@@ -183,44 +194,53 @@ ARM5E.character.houses = {
 };
 
 ARM5E.character.description = {
-  born: {
-    label: "arm5e.sheet.yearBorn"
-  },
   apprentice: {
-    label: "arm5e.sheet.apprenticeshipYears"
+    label: "arm5e.sheet.apprenticeshipYears",
+    number: true
   },
   birthname: {
-    label: "arm5e.sheet.birthName"
+    label: "arm5e.sheet.birthName",
+    number: false
   },
   birthplace: {
-    label: "arm5e.sheet.birthplace"
+    label: "arm5e.sheet.birthplace",
+    number: false
   },
   nationality: {
-    label: "arm5e.sheet.nationality"
+    label: "arm5e.sheet.nationality",
+    number: false
   },
   religion: {
-    label: "arm5e.sheet.religion"
+    label: "arm5e.sheet.religion",
+    number: false
   },
   height: {
-    label: "arm5e.sheet.height"
+    label: "arm5e.sheet.height",
+    number: false
   },
   weight: {
-    label: "arm5e.sheet.weight"
+    label: "arm5e.sheet.weight",
+    number: false
   },
   gender: {
-    label: "arm5e.sheet.gender"
+    label: "arm5e.sheet.gender",
+    number: false
   },
   hair: {
-    label: "arm5e.sheet.hair"
+    label: "arm5e.sheet.hair",
+    number: false
   },
   eyes: {
-    label: "arm5e.sheet.eyes"
+    label: "arm5e.sheet.eyes",
+    number: false
   },
   title: {
-    label: "arm5e.sheet.profession"
+    label: "arm5e.sheet.profession",
+    number: false
   },
   handed: {
-    label: "arm5e.sheet.handedness"
+    label: "arm5e.sheet.handedness",
+    number: false
   }
 };
 
@@ -1025,7 +1045,7 @@ ARM5E.familiar.labels = {
     label: "arm5e.sheet.soak"
   },
   fatigue: {
-    label: "arm5e.sheet.fatigue"
+    label: "arm5e.sheet.fatigue.label"
   },
   initiative: {
     label: "arm5e.sheet.initiative"
@@ -1037,7 +1057,7 @@ ARM5E.familiar.labels = {
     label: "arm5e.sheet.defense"
   },
   damage: {
-    label: "arm5e.sheet.damage"
+    label: "arm5e.damage.label"
   }
 };
 
@@ -1083,7 +1103,7 @@ ARM5E.covenant.inhabitants = {
   livestock: { label: "arm5e.sheet.livestock", points: 0, advancedPts: 0 }
 };
 ARM5E.covenant.vis = {
-  stockCost: 1,
+  stockCost: 0.2,
   sourceCost: 5
 };
 
@@ -1612,42 +1632,8 @@ ARM5E.magic.durations = {
     source: "RoP:F",
     impact: 2
   },
-
-  mm: {
-    label: "arm5e.spell.durations.mm",
-    dtype: "String",
-    source: "RoP:F",
-    impact: 2
-  },
-
-  not: {
-    label: "arm5e.spell.durations.not",
-    dtype: "String",
-    source: "RoP:F",
-    impact: 2
-  },
-
   faerie: {
     label: "arm5e.spell.durations.faerie",
-    dtype: "String",
-    source: "RoP:F",
-    impact: 4
-  },
-  hidden: {
-    label: "arm5e.spell.durations.hidden",
-    dtype: "String",
-    source: "RoP:F",
-    impact: 4
-  },
-
-  aura: {
-    label: "arm5e.spell.durations.aura",
-    dtype: "String",
-    source: "RoP:F",
-    impact: 4
-  },
-  symbol: {
-    label: "arm5e.spell.durations.symbol",
     dtype: "String",
     source: "RoP:F",
     impact: 4
@@ -1869,24 +1855,11 @@ ARM5E.magic.ranges = {
     source: "RoP:F",
     impact: 2
   },
-  symbol: {
-    label: "arm5e.spell.ranges.symbol",
-    dtype: "String",
-    source: "RoP:F",
-    impact: 4
-  },
   "RoP:I": {
     label: "arm5e.sheet.source.RoP:I",
     source: "RoP:I",
     disabled: true
   },
-  cross: {
-    label: "arm5e.spell.ranges.cross",
-    dtype: "String",
-    source: "RoP:I",
-    impact: 2
-  },
-
   ww: {
     label: "arm5e.spell.ranges.ww",
     dtype: "String",
@@ -2127,18 +2100,6 @@ ARM5E.magic.targets = {
     dtype: "String",
     source: "RoP:F",
     impact: 1
-  },
-  passion: {
-    label: "arm5e.spell.targets.passion",
-    dtype: "String",
-    source: "RoP:F",
-    impact: 2
-  },
-  symbol: {
-    label: "arm5e.spell.targets.symbol",
-    dtype: "String",
-    source: "RoP:F",
-    impact: 4
   },
   "RoP:I": {
     label: "arm5e.sheet.source.RoP:I",
@@ -3372,7 +3333,7 @@ ARM5E.recovery = {
     }
   },
   daysInSeason: 92,
-  rollMode: 56 // no chat message, no confidence, non-interactive
+  rollMode: 40 // no chat message, no confidence
 };
 
 export function getWoundStr(gravity = 0) {

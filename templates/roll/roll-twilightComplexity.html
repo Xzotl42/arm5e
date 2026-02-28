@@ -3,20 +3,20 @@
 
   <div class="roll-options">
     <div class="flexrow flex-group-center">
-      <label class="resource-label">{{localize "arm5e.twilight.complexity" }}</label>
+      <label class="">{{localize "arm5e.twilight.complexity" }}</label>
     </div>
     <div class="flexrow flex-group-center">
-      <label class="resource-label">{{ lookup system.roll.generic.txtOption 0 }} ({{lookup system.roll.generic.option
+      <label class="">{{ lookup system.roll.generic.txtOption 0 }} ({{lookup system.roll.generic.option
         0
         }})</label>
     </div>
     <div class="flexrow flex-group-center">
-      <label class="resource-label">+</label>
+      <label class="">+</label>
     </div>
     <div class="flexrow flex-group-center">
-      <label class="resource-label flex03">{{localize "arm5e.sheet.modifier"}}</label>
+      <label class=" flex03">{{localize "arm5e.sheet.modifier"}}</label>
       <input type="Number" name="system.roll.modifier" value="{{system.roll.modifier}}" data-dtype="Number"
-        class="SelectedModifier resource-focus" />
+        class="SelectedModifier select-on-focus" />
     </div>
   </div>
   {{> "systems/arm5e/templates/roll/parts/roll-footer.html" footer="Twilight_rolls" }}

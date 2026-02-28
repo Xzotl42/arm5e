@@ -1,12 +1,12 @@
 <div class="resource">
   <div class="padding4">
     <div class="padding4 flexrow flex-group-left">
-      <label class="section-handle header-label">{{localize "arm5e.lab.ritualSubject"}}</label>
+      <label class="section-handle ">{{localize "arm5e.lab.ritualSubject"}}</label>
     </div>
     <div class="backSection padding4 ">
       <div class="padding4 flexrow flex-group-left">
         <div class="flexcol flex0">
-          <label class="header-label ">{{localize "arm5e.lab.self"}}</label>
+          <label class=" ">{{localize "arm5e.lab.self"}}</label>
           <input type="checkbox" name="{{planning.namePrefix}}subject.self" {{checked planning.data.subject.self}}
             data-dtype="Boolean" />
         </div>
@@ -14,18 +14,18 @@
         <fieldset class="flexrow">
           <legend>{{localize "arm5e.lab.otherSubject"}}</legend>
           <div class="flexcol">
-            <label class="header-label ">{{localize "arm5e.sheet.name"}}</label>
+            <label class=" ">{{localize "arm5e.sheet.name"}}</label>
             <input type="text" {{ui.subjectName}} name="{{planning.namePrefix}}subject.name"
               value="{{planning.data.subject.name}}" data-dtype="String" />
           </div>
           <div class="flexcol">
-            <label class="header-label ">{{localize "arm5e.realm.magic"}}</label>
+            <label class=" ">{{localize "arm5e.realm.magic"}}</label>
             <input type="checkbox" {{ui.subjectMagical}} name="{{planning.namePrefix}}subject.magical" {{checked
               planning.data.subject.magical}} data-dtype="Boolean" />
           </div>
           <div class="flexcol">
-            <label class="header-label ">{{localize "arm5e.sheet.age"}}</label>
-            <input class="resource-focus" type="number" {{ui.subjectName}} name="{{planning.namePrefix}}subject.age"
+            <label class=" ">{{localize "arm5e.sheet.age"}}</label>
+            <input class="select-on-focus" type="number" {{ui.subjectName}} name="{{planning.namePrefix}}subject.age"
               value="{{planning.data.subject.age}}" data-dtype="Number" />
           </div>
         </fieldset>

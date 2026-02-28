@@ -44,12 +44,21 @@ export class ArM5eItemSheet extends ItemSheet {
     }
   }
 
-  // _onDragStart(event) {
-  //   const li = event.currentTarget;
-  //   // Create drag data
-  //   let dragData;
-
-  // }
+  _getHeaderButtons() {
+    const buttons = super._getHeaderButtons();
+    if (this.item.isOwned) {
+      buttons.unshift({
+        label: game.i18n.localize("arm5e.sheet.owner"),
+        // class applied to the button for styling but also a way to retrieve it, cannot be empty
+        class: "show-owner",
+        icon: "fas fa-user",
+        onclick: () => {
+          this.actor.sheet.render(true);
+        }
+      });
+    }
+    return buttons;
+  }
 
   async _onDrop(event) {
     const dropData = TextEditor.getDragEventData(event);
@@ -439,12 +448,20 @@ export class ArM5eItemSheet extends ItemSheet {
       }
     });
 
+    if (this.item.system.addListeners) {
+      this.item.system.addListeners(html);
+    }
+
+    html.find(".equipement").change(async (ev) => {
+      await this.actor.sheet.toggleEquip(this.item._id);
+    });
+
     // html.find(".wound-recovery").click(async (event) => {
     //   const dataset = getDataset(event);
     //   await Sanatorium.createDialog(this.actor, this.item);
     // });
 
-    html.find(".resource-focus").focus((ev) => {
+    html.find(".select-on-focus").focus((ev) => {
       ev.preventDefault();
       ev.currentTarget.select();
     });
@@ -452,7 +469,7 @@ export class ArM5eItemSheet extends ItemSheet {
     html.find(".rollable").click(async (event) => {
       const dataset = getDataset(event);
 
-      await this.object.actor.sheet._onRoll(dataset);
+      await this.object.actor.sheet.roll(dataset);
     });
 
     html.find(".create-labtext").click(async (event) => {
@@ -483,6 +500,24 @@ export class ArM5eItemSheet extends ItemSheet {
     });
 
     html.find(".weapon-ability").change((event) => this._changeWeaponAbility(event));
+
+    html.find(".equipment").change((event) => {
+      let current = this.actor.system.combatPreps.current;
+      const updateData = {};
+      if (current !== "custom") {
+        updateData["system.combatPreps.current"] = "custom";
+        current = "custom";
+      }
+      const prep = this.actor.system.combatPreps.list[current];
+      const idx = prep.ids.indexOf(this.item._id);
+      if (idx >= 0) {
+        prep.ids.splice(idx, 1);
+      } else {
+        prep.ids.push(this.item._id);
+      }
+      updateData[`system.combatPreps.list.${current}.ids`] = prep.ids;
+      this.actor.update(updateData);
+    });
   }
 
   async _changeWeaponAbility(event) {

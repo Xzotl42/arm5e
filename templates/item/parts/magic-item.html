@@ -1,36 +1,36 @@
 <div class="grid grid-2col">
   <div class="resource">
-    <label class="header-label">{{localize "arm5e.lab.enchantment.item.material.base" }}</label>
+    <label class="">{{localize "arm5e.lab.enchantment.item.material.base" }}</label>
     <select name="system.materialBase" data-dtype="Number">
       {{selectOptions config.lab.enchantment.materialBase selected=system.materialBase localize=true
         nameAttr="base" valueAttr="base" labelAttr="eg"}}
     </select>
   </div>
   <div class="resource">
-    <label class="header-label">{{localize "arm5e.lab.enchantment.item.size.label" }}</label>
+    <label class="">{{localize "arm5e.lab.enchantment.item.size.label" }}</label>
     <select name="system.sizeMultiplier" data-dtype="Number">
       {{selectOptions config.lab.enchantment.sizeMultiplier selected=system.sizeMultiplier localize=true
       nameAttr="value" valueAttr="value" labelAttr="eg"}}
     </select>
   </div>
   <div class="resource">
-    <label class="header-label">{{localize "arm5e.lab.enchantment.item.material.label" }}</label>
+    <label class="">{{localize "arm5e.lab.enchantment.item.material.label" }}</label>
     <input type="text" name="system.material" value="{{system.material}}" data-dtype="String" />
   </div>
   <div class="resource">
-    <label class="header-label">{{localize "arm5e.lab.enchantment.item.material.bonus"}}</label>
+    <label class="">{{localize "arm5e.lab.enchantment.item.material.bonus"}}</label>
     <input type="text" name="system.materialBonus" value="{{system.materialBonus}}" data-dtype="Number" />
   </div>
   <div class="resource">
-    <label class="header-label">{{localize "arm5e.lab.enchantment.item.shape.label"}}</label>
+    <label class="">{{localize "arm5e.lab.enchantment.item.shape.label"}}</label>
     <input type="text" name="system.shape" value="{{system.shape}}" data-dtype="String" />
   </div>
   <div class="resource">
-    <label class="header-label">{{localize "arm5e.lab.enchantment.item.shape.bonus"}}</label>
+    <label class="">{{localize "arm5e.lab.enchantment.item.shape.bonus"}}</label>
     <input type="text" name="system.shapeBonus" value="{{system.shapeBonus}}" data-dtype="Number" />
   </div>
   <div class="resource">
-    <label class="header-label">{{localize "arm5e.lab.enchantment.item.expiry.label"}}</label>
+    <label class="">{{localize "arm5e.lab.enchantment.item.expiry.label"}}</label>
     <select name="system.expiry" data-dtype="Number">
       {{selectOptions @root.config.lab.enchantment.expiry selected=system.expiry localize=true}}
     </select>

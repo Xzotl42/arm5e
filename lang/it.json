@@ -281,6 +281,9 @@
     "config": {
       "sourcebookFilter": "Filtro libro fonte"
     },
+    "damage": {
+      "label": "Danno"
+    },
     "dialog": {
       "botch": {
         "num": "Numero di dadi pasticcio:",
@@ -706,7 +709,6 @@
       "cun": "Ast",
       "cunning": "Astuzia",
       "currentYear": "Anno Corrente",
-      "damage": "Danno",
       "date": "Data",
       "dazed": "Stordito",
       "dazedLvl": "Livello stordito",
@@ -745,7 +747,9 @@
       "fastCastingSpeed": {
         "label": "Velocità di Lancio Rapido"
       },
-      "fatigue": "Fatica",
+      "fatigue": {
+        "label": "Fatica"
+      },
       "features": "Caratteristiche",
       "filters": "Filtri",
       "flaws": "Difetti",

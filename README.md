@@ -50,9 +50,9 @@ Thanks to various contributors at https://game-icons.net for some default icons
 
 ![Latest Release Download Count](https://img.shields.io/github/downloads/Xzotl42/arm5e/latest/arm5e.zip)
 
-![Release 2.3.2.29 Download Count (V10)](https://img.shields.io/github/downloads/Xzotl42/arm5e/v2.3.2.29/arm5e.zip)
+![Release 2.4.0.31 Download Count](https://img.shields.io/github/downloads/Xzotl42/arm5e/v2.4.0.31/arm5e.zip)
 
-![Release 2.2.4.24 Download Count](https://img.shields.io/github/downloads/Xzotl42/arm5e/v2.2.4.24/arm5e.zip)
+![Release 2.3.2.29 Download Count (V10)](https://img.shields.io/github/downloads/Xzotl42/arm5e/v2.3.2.29/arm5e.zip)
 
 ![Supported Foundry Versions](https://img.shields.io/endpoint?url=https://foundryshields.com/version?url=https://github.com/Xzotl42/arm5e/releases/latest/download/system.json)
 

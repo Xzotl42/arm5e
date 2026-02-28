@@ -6,13 +6,13 @@
       <div class="grid grid-2col">
         <div class="resource">
           <div class="resource">
-            <label for="system.type" class="header-label">{{localize "arm5e.sheet.type"}}</label>
+            <label for="system.type" class="">{{localize "arm5e.sheet.type"}}</label>
             <select name="system.type" data-type="String" class="change-VFType">
               {{selectOptions config.qualityTypes selected=system.type labelAttr="label" localize=true }}
             </select>
           </div>
           <div class="resource">
-            <label for="system.impact.value" class="header-label">{{localize system.impact.label}}</label>
+            <label for="system.impact.value" class="">{{localize system.impact.label}}</label>
             <select name="system.impact.value" data-type="String">
               {{selectOptions config.impacts selected=system.impact.value labelAttr="label" localize=true }}
             </select>

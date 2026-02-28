@@ -151,7 +151,6 @@ export const ACTIVITIES_DEFAULT_ICONS = {
     recovery: "icons/magic/life/cross-explosion-burst-green.webp",
     longevityRitual: "icons/consumables/potions/bottle-pear-corked-pink.webp",
     minorEnchant: "icons/skills/trades/smithing-anvil-silver-red.webp",
-    minorEnchant: "icons/skills/trades/smithing-anvil-silver-red.webp",
     investigateItem: "icons/tools/scribal/magnifying-glass.webp",
     resourceOutput: "systems/arm5e/assets/icons/activities/expense.svg",
     resourceInput: "systems/arm5e/assets/icons/activities/profit.svg"

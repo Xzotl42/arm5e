@@ -63,8 +63,10 @@ export class ArM5eActor extends Actor {
       return;
     }
     const datetime = game.settings.get("arm5e", "currentDate");
+
     if (this.system.states.creationMode) {
-      this.system.description.born.value = Number(datetime.year) - this.system.age.value;
+      this.system.description.born.value =
+        Number(datetime.year) - (this.system.age.value ? this.system.age.value : 0);
     } else {
       this.system.age.value = this.system.description?.born?.value
         ? Number(datetime.year) - this.system.description.born.value
@@ -181,6 +183,10 @@ export class ArM5eActor extends Actor {
       }
     };
 
+    this.system.bonuses.rolls = {
+      fatigue: 0
+    };
+
     this.system.bonuses.traits = {
       soak: 0,
       aging: 0,
@@ -269,7 +275,10 @@ export class ArM5eActor extends Actor {
     system.abilities = [];
     system.diaryEntries = [];
 
-    system.familiar = { abilities: [], powers: [] };
+    if (system.familiar) {
+      system.familiar.abilities = [];
+      system.familiar.powers = [];
+    }
     system.spells = [];
     system.magicalEffects = [];
 
@@ -340,21 +349,34 @@ export class ArM5eActor extends Actor {
     if (system.fatigue) {
       system.fatigueTotal = 0;
       system.fatigueTime = 0;
+      system.fatigueLongTerm = system.fatigueLongTerm ?? 0;
+
       let lvl = 0;
+      let longTerm = "crossed";
       for (let [key, item] of Object.entries(system.fatigue)) {
         let fatigueArray = [];
 
         for (let ii = 0; ii < item.amount; ii++) {
           if (lvl < system.fatigueCurrent) {
-            fatigueArray.push(true);
-            system.fatigueTime += CONFIG.ARM5E.character.fatigueLevels[key].time;
+            if (lvl >= system.fatigueLongTerm) {
+              longTerm = "";
+              system.fatigueTime += CONFIG.ARM5E.character.fatigueLevels[key].time;
+            }
+            fatigueArray.push({ state: true, lt: longTerm });
+
             system.fatigueTotal = item.number > 0 ? 0 : item.number;
           } else {
-            fatigueArray.push(false);
+            fatigueArray.push({ state: false, lt: "" });
           }
           lvl++;
         }
         item.levels = fatigueArray;
+      }
+      if (system.fatigueCurrent > 0 && system.fatigueCurrent == system.fatigueLongTerm) {
+        system.fatigueTime = 8;
+        system.fatigueRestUnit = game.i18n.localize("arm5e.generic.hoursShort");
+      } else {
+        system.fatigueRestUnit = game.i18n.localize("arm5e.generic.minutesShort");
       }
       system.fatigueTotal =
         system.fatigueTotal + system.bonuses.traits.fatigue > 0
@@ -633,54 +655,98 @@ export class ArM5eActor extends Actor {
         form.magicResistance = parmaStats.score * 5 + form.finalScore;
         if (parmaStats.speciality.toUpperCase() === form.label.toUpperCase()) {
           form.magicResistance += 5;
+          form.speciality = true;
+        } else {
+          form.speciality = false;
         }
 
         system.totalXPArts += form.xp;
       }
+      // post preparation treatment, taking into account active effects
+      for (const spell of this.system.spells) {
+        spell.system.computeCastingTotal();
+      }
+
+      for (const effect of this.system.magicalEffects) {
+        effect.system.computeCastingTotal();
+      }
     }
 
-    ///////////////////////
-    // Combat
-    ///////////////////////
-    for (let weapon of system.weapons) {
-      if (weapon.system.equipped == true) {
-        system.combat.load += weapon.system.load;
-        system.combat.init += weapon.system.init;
-        system.combat.atk += weapon.system.atk;
-        system.combat.dfn += weapon.system.dfn;
-        system.combat.dam += weapon.system.dam;
-        system.combat.img = system.combat.img ? system.combat.img : weapon.img;
-        system.combat.name = system.combat.name ? system.combat.name : weapon.name;
-        system.combat.itemId = weapon.id;
-        system.combat.itemUuid = weapon.uuid;
-
-        const ab = this.getAbility(weapon.system.ability.key, weapon.system.ability.option);
-        system.combat.ability = 0;
-        if (ab) {
-          system.combat.ability += ab.system.finalScore;
-          if (weapon.system.weaponExpert) {
-            system.combat.ability++;
-          }
-          if (weapon.system.horse) {
-            const ride = this.getAbilityStats("ride");
-            if (ride.score > 3) {
-              ride.score = 3;
-            }
-            system.combat.ability += ride.score;
-          }
-          weapon.system.ability.id = ab._id;
+    if (system.supernaturalEffectsTemplates) {
+      for (const template of Object.values(system.supernaturalEffectsTemplates)) {
+        for (const effect of template) {
+          effect.system.computeCastingTotal();
         }
       }
     }
+    ///////////////////////
+    // Combat
+    ///////////////////////
 
-    for (let armor of system.armor) {
-      if (armor.system.equipped == true) {
-        system.combat.load += armor.system.load;
-        system.combat.prot += armor.system.prot;
+    for (let weapon of system.weapons) {
+      if (weapon.system.naturalWeapon) {
+        const key = slugify(weapon.name, true);
+        system.combatPreps.list[key] = { name: weapon.name, ids: [weapon._id] };
       }
     }
+    // console.log(`Combat preps of ${this.name}`, system.combatPreps);
+    for (let [name, prep] of Object.entries(system.combatPreps.list)) {
+      prep.valid = true;
+      if (name === system.combatPreps.current) {
+        prep.load = 0;
+        prep.init = 0;
+        prep.atk = 0;
+        prep.dfn = 0;
+        prep.dam = 0;
+        prep.prot = 0;
+        prep.ability = 0;
+        let ab = null;
+        const items = [];
+        for (let id of prep.ids) {
+          const item = this.items.get(id);
+          if (!item) {
+            prep.valid = false;
+            continue;
+          }
+          items.push(item.name);
+          if (item.type === "weapon") {
+            prep.load += item.system.load;
+            prep.init += item.system.init;
+            prep.atk += item.system.atk;
+            prep.dfn += item.system.dfn;
+            prep.dam += item.system.dam;
 
-    system.combat.overload = ArM5eActor.getArtScore(system.combat.load);
+            // prep.itemId = item._id;
+            prep.img = prep.img ? prep.img : item.img;
+            // prep.name = prep.img ? prep.img : item.name;
+            prep.ability = 0;
+            if (!ab) ab = this.getAbility(item.system.ability.key, item.system.ability.option);
+
+            if (ab) {
+              prep.ability += ab.system.finalScore;
+              if (item.system.weaponExpert) {
+                prep.ability++;
+              }
+              if (item.system.horse) {
+                const ride = this.getAbilityStats("ride");
+                if (ride.score > 3) {
+                  ride.score = 3;
+                }
+                prep.ability += ride.score;
+              }
+              // item.system.ability.id = ab._id;
+            }
+          } else if (item.type === "armor") {
+            prep.prot += item.system.prot;
+            prep.load += item.system.load;
+          }
+          item.system.equipped = true;
+        }
+        prep.itemList = items.join(", ");
+        prep.overload = ArM5eActor.getArtScore(prep.load);
+        system.combat = prep;
+      }
+    }
 
     if (system.combat.prot) {
       soak += system.combat.prot;
@@ -740,6 +806,7 @@ export class ArM5eActor extends Actor {
         this.system.sanctum.linked = false;
       }
     }
+
     //log(false, "PC end of prepare actor data", system);
   }
 
@@ -772,6 +839,14 @@ export class ArM5eActor extends Actor {
       }
     }
     return super.getDefaultArtwork(actorData);
+  }
+
+  get tokenName() {
+    return this.isToken ? this.token.name : this.prototypeToken.name;
+  }
+
+  get tokenImage() {
+    return this.isToken ? this.token.texture.src : this.prototypeToken.texture.src;
   }
 
   getRollData() {
@@ -960,28 +1035,28 @@ export class ArM5eActor extends Actor {
 
   // Vitals management
 
-  async recoverFatigueLevel(num) {
+  async recoverFatigueLevel(num, longTerm = false) {
     const updateData = {};
-    const res = this._changeFatigueLevel(updateData, -num, false);
+    const res = this._changeFatigueLevel(updateData, -num, false, longTerm);
     if (res.fatigueLevels) await this.update(updateData, {});
     return res;
   }
 
-  async loseFatigueLevel(num, wound = true) {
+  async loseFatigueLevel(num, wound = true, longTerm = false) {
     const updateData = {};
-    const res = this._changeFatigueLevel(updateData, num, wound);
+    const res = this._changeFatigueLevel(updateData, num, wound, longTerm);
     if (res.fatigueLevels) await this.update(updateData, {});
     if (res.woundGravity) {
       await this.changeWound(
         1,
-        ARM5E.recovery.rankMapping[res.woundGravity],
-        game.i18n.localize("arm5e.sheet.fatigueOverflow")
+        CONFIG.ARM5E.recovery.rankMapping[res.woundGravity],
+        game.i18n.localize("arm5e.sheet.fatigue.overflow")
       );
     }
     return res;
   }
 
-  _changeFatigueLevel(updateData, num, wound = true) {
+  _changeFatigueLevel(updateData, num, wound = true, longTerm = false) {
     const res = {
       fatigueLevels: 0,
       woundGravity: 0
@@ -989,20 +1064,45 @@ export class ArM5eActor extends Actor {
     if (!this.isCharacter() || (num <= 0 && this.system.fatigueCurrent == 0)) {
       return res;
     }
-    let tmp = this.system.fatigueCurrent + num;
+    let futureLvl = this.system.fatigueCurrent + num;
     let overflow = 0;
-    if (tmp < 0) {
+    if (futureLvl < 0) {
       // character cannot restore more fatigue levels than he/she has
-      res.fatigueLevels = tmp;
-      updateData["system.fatigueCurrent"] = 0;
-    } else if (tmp > this.system.fatigueMaxLevel) {
+      if (longTerm) {
+        res.fatigueLevels = -this.system.fatigueCurrent;
+        updateData["system.fatigueLongTerm"] = 0;
+        updateData["system.fatigueCurrent"] = 0;
+      } else {
+        res.fatigueLevels = futureLvl + this.system.fatigueLongTerm;
+        updateData["system.fatigueCurrent"] = this.system.fatigueLongTerm;
+      }
+    } else if (futureLvl > this.system.fatigueMaxLevel) {
       // overflow to a wound
-      res.fatigueLevels = this.system.fatigueMaxLevel - this.system.fatigueCurrent;
-      updateData["system.fatigueCurrent"] = this.system.fatigueMaxLevel;
-      overflow = tmp - this.system.fatigueMaxLevel;
+      if (longTerm) {
+        res.fatigueLevels = this.system.fatigueMaxLevel - this.system.fatigueCurrent;
+        updateData["system.fatigueCurrent"] = this.system.fatigueMaxLevel;
+        updateData["system.fatigueLongTerm"] = this.system.fatigueLongTerm + res.fatigueLevels;
+      } else {
+        res.fatigueLevels = this.system.fatigueMaxLevel - this.system.fatigueCurrent;
+        updateData["system.fatigueCurrent"] = this.system.fatigueMaxLevel;
+      }
+      overflow = futureLvl - this.system.fatigueMaxLevel;
     } else {
       res.fatigueLevels = num;
-      updateData["system.fatigueCurrent"] = tmp;
+
+      if (longTerm) {
+        const newLongTerm = this.system.fatigueLongTerm + num;
+        if (newLongTerm > 0) {
+          updateData["system.fatigueLongTerm"] = newLongTerm;
+          updateData["system.fatigueCurrent"] = futureLvl;
+        } else {
+          updateData["system.fatigueLongTerm"] = 0;
+          updateData["system.fatigueCurrent"] =
+            this.system.fatigueCurrent - this.system.fatigueLongTerm;
+        }
+      } else {
+        updateData["system.fatigueCurrent"] = Math.max(futureLvl, this.system.fatigueLongTerm);
+      }
     }
 
     if (wound && overflow > 0) {
@@ -1158,16 +1258,31 @@ export class ArM5eActor extends Actor {
     return ["player", "beast", "covenant", "npc"].includes(this.type);
   }
 
-  async rest() {
+  async rest(longTerm = false) {
     const updateData = {};
-    if (this._rest(updateData)) await this.update(updateData, {});
+    if (this._rest(updateData, longTerm)) await this.update(updateData, {});
   }
 
-  _rest(updateData) {
+  _rest(updateData, longTerm = false) {
     if (!this.isCharacter()) {
       return false;
     }
-    updateData["system.fatigueCurrent"] = 0;
+    if (longTerm) {
+      updateData["system.fatigueLongTerm"] = 0;
+      updateData["system.fatigueCurrent"] = 0;
+    } else {
+      // first reduce short-term fatigue
+      if (this.system.fatigueCurrent > this.system.fatigueLongTerm) {
+        updateData["system.fatigueCurrent"] = this.system.fatigueLongTerm;
+      } else {
+        // then reduce long-term fatigue by 1
+        let fatigueLongTerm =
+          this.system.fatigueLongTerm - 1 >= 0 ? this.system.fatigueLongTerm - 1 : 0;
+        updateData["system.fatigueCurrent"] = fatigueLongTerm;
+        updateData["system.fatigueLongTerm"] = fatigueLongTerm;
+      }
+    }
+
     return true;
   }
 
@@ -1189,42 +1304,35 @@ export class ArM5eActor extends Actor {
     return true;
   }
 
-  magicResistance(form, realm) {
+  magicResistanceDetails(form, realm) {
     if (!this.isCharacter()) return null;
-
-    let magicResistance =
-      Number(this.system.laboratory?.magicResistance?.value) ||
-      Number(this.system?.might?.value) ||
-      0; //  No magicResistance != magicResistance of 0
-
-    // TODO support magic resistance for hedge magic forms
-
+    //  No magicResistance != magicResistance of 0
+    let magicResistance = 0;
+    let hermeticMagicResistance = 0;
     const formLabel = CONFIG.ARM5E.magic.arts[form]?.label || "NONE";
-
     let specialityIncluded = "";
-    let parma = null;
-    if (this.hasSkill("parma")) {
-      parma = this.getAbilityStats("parma");
-      magicResistance += parma.score * 5;
-      if (parma.speciality && parma.speciality.toUpperCase() === formLabel.toUpperCase()) {
+    let formScore = 0;
+    if (this.system?.arts) {
+      hermeticMagicResistance = this.system.arts.forms[form]?.magicResistance || 0;
+      if (this.system.arts.forms[form]?.speciality || false) {
         specialityIncluded = formLabel;
-        magicResistance += 5;
       }
+      formScore = this.system.arts.forms[form]?.finalScore || 0;
     }
-
-    const arts = this.system?.arts;
     let auraMod = 0;
-    // TODO, do a better job for player aligned to a realm
     if (this.hasMight()) {
       let aura = Aura.fromActor(this);
+      magicResistance += this.system?.might?.value || 0;
       auraMod = aura.computeMaxAuraModifier(this.system.realms);
       magicResistance += parseInt(auraMod);
     }
 
-    let formScore = 0;
-    if (arts) {
-      formScore = arts.forms[form]?.finalScore || 0;
-      magicResistance += formScore;
+    // only the highest between hermetic magic resistance and other sources
+    magicResistance = Math.max(hermeticMagicResistance, magicResistance);
+
+    let parma = null;
+    if (this.hasSkill("parma")) {
+      parma = this.getAbilityStats("parma");
     }
 
     let otherResistance = Math.max(
@@ -1234,7 +1342,6 @@ export class ArM5eActor extends Actor {
     // not cumulative with Parma
     if (otherResistance > 0 && otherResistance > magicResistance) {
       magicResistance = otherResistance;
-      specialityIncluded = false;
       parma = null;
     }
 
@@ -1263,6 +1370,17 @@ export class ArM5eActor extends Actor {
     let toUpdate = false;
     if (CONFIG.ARM5E.ActorDataModels[data.type]?.getDefault) {
       data = CONFIG.ARM5E.ActorDataModels[data.type].getDefault(data);
+      toUpdate = true;
+    }
+
+    // Temporary until Character datamodel
+    if (["player", "npc", "beast"].includes(data.type)) {
+      data.system = {
+        combatPreps: {
+          current: "custom",
+          list: { custom: { name: game.i18n.localize("arm5e.generic.custom"), ids: [] } }
+        }
+      };
       toUpdate = true;
     }
 
@@ -1359,7 +1477,7 @@ export class ArM5eActor extends Actor {
           this.system.decrepitude.points + this.system.decrepitude.experienceNextLevel;
 
         if (
-          this.system.decrepitude.experienceNextLevel >
+          this.system.characteristics[char1].aging + this.system.decrepitude.experienceNextLevel >
           Math.abs(this.system.characteristics[char1].value)
         ) {
           updateData[`system.characteristics.${char1}.value`] =

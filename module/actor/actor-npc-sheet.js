@@ -127,18 +127,23 @@ export class ArM5eNPCActorSheet extends ArM5eActorSheet {
       case "power":
         if (this.actor.system.charType.value === "entity") return true;
         else return false;
+      case "spell":
+      case "magicalEffect":
+      case "abilityFamiliar":
+      case "powerFamiliar":
+        return this.actor.isMagus();
+      case "supernaturalEffect":
+        return this.actor.system.features.magicSystem;
+
       case "weapon":
       case "armor":
-      case "spell":
       case "vis":
       case "item":
       case "book":
       case "ability":
       case "diaryEntry":
-      case "powerFamiliar":
       case "personalityTrait":
       case "reputation":
-      case "magicalEffect":
       case "quality":
       case "inferiority":
         return true;

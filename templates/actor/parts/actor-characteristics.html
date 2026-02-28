@@ -7,11 +7,11 @@
     {{#each charac as | key|}}
       <div class="characteristic flexrow flex-group-center">
         {{#with (lookup ../config.character.characteristics key)}}
-          <label for="system.characteristics.{{key}}.value" class="resource-label rollable-aging" data-roll="char"
+          <label for="system.characteristics.{{key}}.value" class="uppercase rollable-aging" data-roll="char"
             data-characteristic="{{key}}">{{localize short}}</label>
         {{/with}}
         {{#with (lookup ../system.characteristics key)}}
-          <input type="text" name="system.characteristics.{{key}}.value" class="resource-focus agingPoints"
+          <input type="text" name="system.characteristics.{{key}}.value" class="select-on-focus agingPoints"
             value="{{numberFormat value decimals=0 sign=true}}" data-dtype="Number" {{{characteristic.ui.style}}}
             title="{{ui.title}}" />
         {{/with}}

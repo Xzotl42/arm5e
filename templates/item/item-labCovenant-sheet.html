@@ -20,17 +20,17 @@
         <div class="resource flexcol flexrow">
           <label for="system.quality" class="bold">{{localize "arm5e.sheet.quality"}}</label>
           <input type="number" name="system.quality" value="{{system.quality}}" data-dtype="Number"
-            class="resource-focus" {{canEdit}} />
+            class="select-on-focus" {{canEdit}} />
         </div>
         <div class="resource flexcol flexrow">
           <label for="system.score" class="bold">{{localize "arm5e.lab.upkeep"}}</label>
-          <input type="number" name="system.upkeep" value="{{system.upkeep}}" data-dtype="Number" class="resource-focus"
-            {{canEdit}} />
+          <input type="number" name="system.upkeep" value="{{system.upkeep}}" data-dtype="Number"
+            class="select-on-focus" {{canEdit}} />
         </div>
         <div class="resource" style="margin-top: 8px">
           <label class="bold">{{localize "arm5e.sheet.constructionPoints"}}</label>
           <input type="number" {{canEdit}} name="system.buildPoints" value="{{system.buildPoints}}" data-dtype="Number"
-            class="resource-focus" />
+            class="select-on-focus" />
         </div>
       </div>
 

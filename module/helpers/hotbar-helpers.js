@@ -7,7 +7,7 @@ const TYPE_OF_DATASET = {
   POWER: "power",
   SPONT: "spont",
   WEAPON: "weapon",
-  SUPERNATURAL: "supernatural"
+  SUPERNATURAL: "supernaturalEffect"
 };
 
 //TODO
@@ -31,13 +31,13 @@ function getDatasetForWeapon(item) {
   }
   return {
     roll: ROLL_PROPERTIES.ATTACK.VAL,
-    name: game.i18n.localize("arm5e.sheet.attack"),
-    option1: item.actor.system.characteristics.dex.value,
-    txtoption1: game.i18n.localize("arm5e.sheet.dexterity"),
-    option2: item.actor.system.combat.ability,
-    txtoption2: game.i18n.localize("arm5e.sheet.ability"),
-    option3: item.actor.system.combat.atk,
-    txtoption3: game.i18n.localize("arm5e.sheet.attack")
+    name: game.i18n.localize("arm5e.sheet.attack")
+    // option1: item.actor.system.characteristics.dex.value,
+    // txtoption1: game.i18n.localize("arm5e.sheet.dexterity"),
+    // option2: item.actor.system.combat.ability,
+    // txtoption2: game.i18n.localize("arm5e.sheet.ability"),
+    // option3: item.actor.system.combat.atk,
+    // txtoption3: game.i18n.localize("arm5e.sheet.attack")
   };
 }
 
@@ -86,7 +86,7 @@ function getDatasetForPower(item) {
 function getDatasetForSupernatural(item) {
   if (item?.type !== TYPE_OF_DATASET.SUPERNATURAL) return {};
   return {
-    roll: TYPE_OF_DATASET.SUPERNATURAL,
+    roll: "supernatural",
     id: item._id,
     name: item.name,
     img: item.img

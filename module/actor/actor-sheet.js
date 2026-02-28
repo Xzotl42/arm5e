@@ -7,7 +7,6 @@ import { resetOwnerFields } from "../item/item-converter.js";
 import { ARM5E } from "../config.js";
 import {
   log,
-  calculateWound,
   getDataset,
   hermeticFilter,
   putInFoldableLinkWithAnimation,
@@ -30,26 +29,28 @@ import {
 } from "../constants/userdata.js";
 import {
   prepareRollVariables,
-  updateCharacteristicDependingOnRoll,
   renderRollTemplate,
   chooseTemplate,
   ROLL_MODES,
-  getRollTypeProperties,
-  usePower,
-  useMagicItem
+  getRollTypeProperties
 } from "../helpers/rollWindow.js";
 
 import {
-  buildDamageDataset,
   buildSoakDataset,
   combatDamage,
   computeCombatStats,
+  computeDamage,
   quickCombat,
   quickVitals,
-  rolledDamage,
   setWounds
 } from "../helpers/combat.js";
-import { quickMagic, spellFormLabel, spellTechniqueLabel } from "../helpers/magic.js";
+import {
+  quickMagic,
+  spellFormLabel,
+  spellTechniqueLabel,
+  useMagicItem,
+  usePower
+} from "../helpers/magic.js";
 import { UI } from "../constants/ui.js";
 import { Schedule } from "../tools/schedule.js";
 import {
@@ -65,7 +66,8 @@ import { MedicalHistory } from "../tools/med-history.js";
 import { ArM5eActorProfiles } from "./subsheets/actor-profiles.js";
 import { ArM5eMagicSystem } from "./subsheets/magic-system.js";
 import { getRefCompendium } from "../tools/compendia.js";
-import { getConfirmation } from "../ui/dialogs.js";
+import { getConfirmation, textInput } from "../ui/dialogs.js";
+import { Arm5eChatMessage } from "../helpers/chat-message.js";
 
 export class ArM5eActorSheet extends ActorSheet {
   constructor(object, options) {
@@ -85,7 +87,7 @@ export class ArM5eActorSheet extends ActorSheet {
   static get defaultOptions() {
     const res = foundry.utils.mergeObject(super.defaultOptions, {
       dragDrop: [
-        { dragSelector: ".item-list .item", dropSelector: null },
+        // { dragSelector: ".item-list .item", dropSelector: ".droppable" },
         { dragSelector: ".macro-ready" }
       ]
       /*         classes: ["arm5e", "sheet", "actor"],
@@ -259,6 +261,7 @@ export class ArM5eActorSheet extends ActorSheet {
       selection: "disabled"
     };
     context.isGM = game.user.isGM;
+    context.isOwner = this.document.isOwner;
     context.metagame = {
       view: game.settings.get("arm5e", "metagame"),
       edit: context.isGM ? "" : "readonly"
@@ -1342,21 +1345,70 @@ export class ArM5eActorSheet extends ActorSheet {
       item.sheet.render(true, { focus: true });
     });
 
-    // html.find(".enchant-trigger").click(async (ev) => {
-    //   ev.preventDefault();
-    //   const li = $(ev.currentTarget).parents(".item");
-    //   let itemId = li.data("itemId");
+    html.find(".prep-create").click(async (ev) => {
+      const ids = [];
+      const prep = { ids: [] };
+      const itemList = [];
+      for (let weapon of this.actor.system.weapons) {
+        if (weapon.system.equipped == true) {
+          prep.name = prep.name ? prep.name : weapon.name;
+          itemList.push(weapon.name);
+          prep.ids.push(weapon._id);
+        }
+      }
 
-    //   const item = this.actor.items.get(itemId);
-    //   // const enchantIdx = dataset.index;
-    //   if (item.isOwned) {
-    //     dataset.name = item.name;
-    //     dataset.roll = "item";
-    //     dataset.id = itemId;
-    //     dataset.physicalcondition = false;
-    //     await useMagicItem(dataset, item);
-    //   }
-    // });
+      for (let armor of this.actor.system.armor) {
+        if (armor.system.equipped == true) {
+          itemList.push(armor.name);
+          prep.name = prep.name ? prep.name : armor.name;
+          prep.ids.push(armor._id);
+        }
+      }
+      prep.itemList = itemList.join(", ");
+      const name = await textInput(
+        "arm5e.sheet.combat.preparation",
+        "arm5e.sheet.name",
+        "",
+        prep.name,
+        prep.itemList
+      );
+      if (!name) return;
+      const key = slugify(name, true);
+      if (key === "custom") {
+        console.error("Invalid name:", prep.name);
+        return;
+      }
+      prep.name = name;
+      const updateData = {};
+      updateData[`system.combatPreps.list.${key}`] = prep;
+
+      updateData["system.combatPreps.current"] = key;
+
+      await this.actor.update(updateData);
+    });
+
+    html.find(".prep-delete").click(async (ev) => {
+      const current = this.actor.system.combatPreps.current;
+      if (current === "custom") {
+        return;
+      }
+      const name = this.actor.system.combatPreps.list[current].name;
+      const question = game.i18n.localize("arm5e.dialog.delete-question");
+      const confirmed = await getConfirmation(
+        name,
+        question,
+        ArM5eActorSheet.getFlavor(this.actor.type)
+      );
+
+      if (confirmed) {
+        const updateData = {};
+        updateData[`system.combatPreps.list.-=${current}`] = null;
+
+        updateData["system.combatPreps.current"] = "custom";
+
+        await this.actor.update(updateData);
+      }
+    });
 
     html.find(".item").contextmenu(async (ev) => {
       let li = ev.currentTarget;
@@ -1398,7 +1450,7 @@ export class ArM5eActorSheet extends ActorSheet {
       this._deccreaseArt("forms", element[0].dataset.attribute);
     });
 
-    html.find(".resource-focus").focus((ev) => {
+    html.find(".select-on-focus").focus((ev) => {
       ev.preventDefault();
       ev.currentTarget.select();
     });
@@ -1420,31 +1472,28 @@ export class ArM5eActorSheet extends ActorSheet {
     });
 
     // Quick edit of Item from inside Actor sheet
-    html.find(".quick-edit").change((event) => {
+    html.find(".equipment").change(async (event) => {
       const li = $(event.currentTarget).parents(".item");
-      let field = $(event.currentTarget).attr("name");
       let itemId = li.data("itemId");
-      const item = this.actor.getEmbeddedDocument("Item", itemId);
-      let value = event.target.value;
-      if ($(event.currentTarget).attr("data-dtype") === "Number") {
-        value = Number(event.target.value);
-      } else if ($(event.currentTarget).attr("data-dtype") === "Boolean") {
-        let oldValue = item.system[[field]];
-        value = !oldValue;
-      }
-
-      this.actor.updateEmbeddedDocuments("Item", [
-        {
-          _id: itemId,
-          system: {
-            [field]: value
-          }
-        }
-      ]);
+      await this.toggleEquip(itemId);
     });
 
     html.find(".item-delete").click(async (ev) => {
       this._itemDelete(ev);
+    });
+
+    html.find(".increase-score").click(async (ev) => {
+      const li = $(event.currentTarget).parents(".item");
+      let itemId = li.data("itemId");
+      const item = this.actor.items.get(itemId);
+      await item.system.increaseScore();
+    });
+
+    html.find(".decrease-score").click(async (ev) => {
+      const li = $(event.currentTarget).parents(".item");
+      let itemId = li.data("itemId");
+      const item = this.actor.items.get(itemId);
+      await item.system.decreaseScore();
     });
 
     // Delete Inventory Item and always ask for confirmation
@@ -1468,24 +1517,53 @@ export class ArM5eActorSheet extends ActorSheet {
 
     html.find(".rest").click((ev) => {
       if (this.actor.type === "player" || this.actor.type === "npc" || this.actor.type == "beast") {
-        this.actor.rest();
+        let longTerm = false;
+        if (ev.shiftKey) {
+          longTerm = true;
+        }
+        this.actor.rest(longTerm);
       }
     });
 
     // Rollable abilities.
-    html.find(".rollable").click(this._onRoll.bind(this));
+    html.find(".rollable").click(this.roll.bind(this));
 
     html.find(".rollable-aging").click(async (event) => {
       if (event.shiftKey) {
         this._editAging(event);
-      } else this._onRoll(event);
+      } else this.roll(event);
     });
 
-    html.find(".soak-damage").click(this._onSoakDamage.bind(this));
-    html.find(".damage").click(this._onCalculateDamage.bind(this));
+    html.find(".soak-damage").click(async (event) => {
+      const msg = await this._onSoakDamage(getDataset(event));
+      if (msg == null) return;
+      if (msg.system.impact.woundGravity) {
+        await this.actor.changeWound(
+          1,
+          CONFIG.ARM5E.recovery.rankMapping[msg.system.impact.woundGravity]
+        );
+      }
+      Arm5eChatMessage.create(msg.toObject());
+    });
+    html.find(".damage").click(async (event) => {
+      await computeDamage(this.actor);
+    });
     html.find(".power-use").click(this._onUsePower.bind(this));
-    html.find(".addFatigue").click(async (event) => this.actor.loseFatigueLevel(1));
-    html.find(".removeFatigue").click(async (event) => this.actor.recoverFatigueLevel(1));
+    html.find(".addFatigue").click(async (event) => {
+      let longTerm = false;
+      if (event.shiftKey) {
+        longTerm = true;
+      }
+      this.actor.loseFatigueLevel(1, false, longTerm);
+    });
+
+    html.find(".removeFatigue").click(async (event) => {
+      let longTerm = false;
+      if (event.shiftKey) {
+        longTerm = true;
+      }
+      this.actor.recoverFatigueLevel(1, longTerm);
+    });
     html.find(".add-wound").click(async (event) => {
       const dataset = getDataset(event);
       await this.actor.changeWound(1, dataset.type);
@@ -1515,6 +1593,31 @@ export class ArM5eActorSheet extends ActorSheet {
     html.find(".clear-confidencePrompt").click(async (event) => {
       await this.actor.clearConfidencePrompt();
     });
+  }
+
+  async toggleEquip(itemId) {
+    const updateData = {};
+    let current = this.actor.system.combatPreps.current;
+    const prep = this.actor.system.combatPreps.list[current];
+    if (current !== "custom") {
+      updateData["system.combatPreps.current"] = "custom";
+      current = "custom";
+    }
+
+    const newIds = prep.ids.filter((e) => {
+      return this.actor.items.get(e);
+    });
+
+    const idx = newIds.indexOf(itemId);
+    if (idx >= 0) {
+      newIds.splice(idx, 1);
+    } else {
+      newIds.push(itemId);
+    }
+    // filter
+
+    updateData[`system.combatPreps.list.${current}.ids`] = newIds;
+    await this.actor.update(updateData);
   }
 
   async _slugifyIndexKey(event) {
@@ -1626,7 +1729,7 @@ export class ArM5eActorSheet extends ActorSheet {
     ).render(true);
   }
   addListenersDialog(html) {
-    html.find(".resource-focus").focus((ev) => {
+    html.find(".select-on-focus").focus((ev) => {
       ev.preventDefault();
       ev.currentTarget.select();
     });
@@ -1781,80 +1884,121 @@ export class ArM5eActorSheet extends ActorSheet {
     }
   }
 
-  async _onSoakDamage(html, actor) {
-    const lastMessageDamage = getLastCombatMessageOfType("damage");
-    const damage = parseInt($(lastMessageDamage?.content).text()) || 0;
-    var actor = this.actor;
-    const form = lastMessageDamage ? lastMessageDamage.system.combat.damageForm : "te";
-    const data = {
-      actor,
+  async _onSoakDamage(dataset) {
+    let damage = 0;
+    let form = "te";
+    if (dataset.rootMessage) {
+      const msg = fromUuidSync(dataset.rootMessage);
+      damage = msg.system.combat.damageTotal > 0 ? msg.system.combat.damageTotal : 0;
+      form = msg.system.combat.damageForm;
+    } else {
+      const lastMessageDamage = getLastCombatMessageOfType("combatDamage");
+
+      if (lastMessageDamage) {
+        damage =
+          lastMessageDamage.system.combat.damageTotal > 0
+            ? lastMessageDamage.system.combat.damageTotal
+            : 0;
+        form = lastMessageDamage.system.combat.damageForm;
+      }
+    }
+    const dialogData = {
+      actor: this.actor,
       damage,
       modifier: 0,
-      natRes: "",
-      formRes: "",
+      natRes: form,
+      formRes: form,
       selection: { natRes: {}, formRes: {} }
     };
 
-    for (let [key, resist] of Object.entries(actor.system.bonuses.resistance)) {
+    for (let [key, resist] of Object.entries(this.actor.system.bonuses.resistance)) {
       if (resist !== 0) {
-        data.hasResistance = true;
-        data.selection.natRes[key] = {
+        dialogData.hasResistance = true;
+        dialogData.selection.natRes[key] = {
           res: resist,
           label: `${CONFIG.ARM5E.magic.arts[key].label} (${resist})`
         };
       }
     }
 
-    if (actor.isMagus()) {
-      data.isMagus = true;
-      data.selection.formRes = {};
-      for (let [key, form] of Object.entries(actor.system.arts.forms)) {
-        data.selection.formRes[key] = {
+    if (this.actor.isMagus()) {
+      dialogData.isMagus = true;
+      dialogData.selection.formRes = {};
+      for (let [key, form] of Object.entries(this.actor.system.arts.forms)) {
+        dialogData.selection.formRes[key] = {
           res: Math.ceil(form.finalScore / 5),
           label: `${form.label} (${Math.ceil(form.finalScore / 5)})`
         };
       }
-      data.formRes = data.selection.formRes[form].res;
+      // dialogData.formRes = dialogData.selection.formRes[form].res;
     }
 
     let template = "systems/arm5e/templates/actor/parts/actor-soak.html";
-    const dialog = await renderTemplate(template, data);
-    new Dialog(
-      {
-        title: game.i18n.localize("arm5e.dialog.woundCalculator"),
-        content: dialog,
-        render: (html) => this.addListenersDialog(html),
-        buttons: {
-          yes: {
-            icon: "<i class='fas fa-check'></i>",
-            label: game.i18n.localize("arm5e.messages.applyDamage"),
-            callback: async (html) => {
-              const soakData = buildSoakDataset(html);
-              await setWounds(soakData, actor);
+    const html = await renderTemplate(template, dialogData);
+
+    return await new Promise((resolve) => {
+      let settled = false;
+      let pending = null;
+      const finish = (value) => {
+        if (!settled) {
+          settled = true;
+          resolve(value);
+        }
+      };
+      new Dialog(
+        {
+          title: game.i18n.localize("arm5e.dialog.woundCalculator"),
+          content: html,
+          render: (html) => this.addListenersDialog(html),
+          buttons: {
+            yes: {
+              icon: "<i class='fas fa-check'></i>",
+              label: game.i18n.localize("arm5e.messages.applyDamage"),
+              callback: async (html) => {
+                // Start the async work and capture the promise immediately so the close
+                // handler can await it if the dialog is closed while it's running.
+                pending = (async () => {
+                  const soakData = buildSoakDataset(html, this.actor);
+                  const msg = await setWounds(soakData, this.actor);
+                  return msg;
+                })();
+
+                // When it finishes, resolve (unless already resolved).
+                pending
+                  .then((msg) => finish(msg))
+                  .catch(() => {
+                    console.log("Error in dialog confirm");
+                    finish(null);
+                  });
+
+                return true;
+              }
+            },
+            no: {
+              icon: "<i class='fas fa-ban'></i>",
+              label: game.i18n.localize("arm5e.dialog.button.cancel"),
+              callback: () => finish(null)
             }
           },
-          // roll: {
-          //   label: game.i18n.localize("arm5e.dialog.button.roll"),
-          //   callback: async (html) => {
-          //     const soakData = buildSoakDataset(html);
-          //     await rolledSoak(soakData, actor);
-          //     await setWounds(soakData, actor);
-          //   }
-          // },
-          no: {
-            icon: "<i class='fas fa-ban'></i>",
-            label: game.i18n.localize("arm5e.dialog.button.cancel"),
-            callback: null
+          default: "yes",
+          close: () => {
+            // If a button triggered async work and the dialog is closed while it's running,
+            // wait for it and then resolve with its result; otherwise resolve null.
+            if (pending) {
+              pending.then((msg) => finish(msg)).catch(() => finish(null));
+            } else {
+              finish(null);
+            }
           }
+        },
+        {
+          jQuery: true,
+          height: "140px",
+          width: "400px",
+          classes: ["arm5e-dialog", "dialog"]
         }
-      },
-      {
-        jQuery: true,
-        height: "140px",
-        width: "400px",
-        classes: ["arm5e-dialog", "dialog"]
-      }
-    ).render(true);
+      ).render(true);
+    });
   }
 
   async _onUsePower(event) {
@@ -1862,70 +2006,87 @@ export class ArM5eActorSheet extends ActorSheet {
     await usePower(dataset, this.actor);
   }
 
-  async _onCalculateDamage(html, actor) {
-    const lastAttackMessage = getLastCombatMessageOfType("attack");
-    const lastDefenseMessage = getLastCombatMessageOfType("defense");
-    const attack = parseInt(lastAttackMessage?.content || "0");
-    const defense = parseInt(lastDefenseMessage?.content || "0");
-    const advantage = attack - defense;
-
-    var actor = this.actor;
+  async _onCalculateDamage(dataset) {
+    // var actor = this.actor;
 
     const data = {
-      actor,
-      advantage,
+      ...dataset,
       modifier: 0,
       formDamage: "te",
       selection: { forms: CONFIG.ARM5E.magic.forms }
     };
+    this.actor.rollInfo.init(data, this.actor);
     let template = "systems/arm5e/templates/generic/combat-damage.html";
+    data.actor = this.actor;
     const dialog = await renderTemplate(template, data);
 
-    new Dialog(
-      {
-        title: game.i18n.localize("arm5e.dialog.damageCalculator"),
-        content: dialog,
-        render: (html) => this.addListenersDialog(html),
-        buttons: {
-          apply: {
-            icon: "<i class='fas fa-check'></i>",
-            label: game.i18n.localize("arm5e.generic.yes"),
-            callback: (html) => combatDamage(html, actor)
-          },
-          // roll: {
-          //   label: game.i18n.localize("arm5e.dialog.button.roll"),
-          //   callback: async (html) => {
-          //     const damageData = buildDamageDataset(html);
-          //     await rolledDamage(damageData, actor);
-          //   }
-          // },
-          no: {
-            icon: "<i class='fas fa-ban'></i>",
-            label: game.i18n.localize("arm5e.dialog.button.cancel"),
-            callback: null
-          }
+    return await new Promise((resolve) => {
+      let settled = false;
+      let pending = null;
+      const finish = (value) => {
+        if (!settled) {
+          settled = true;
+          resolve(value);
         }
-      },
-      {
-        jQuery: true,
-        height: "140px",
-        width: "400px",
-        classes: ["arm5e-dialog", "dialog"]
-      }
-    ).render(true);
+      };
+      new Dialog(
+        {
+          title: game.i18n.localize("arm5e.dialog.damageCalculator"),
+          content: dialog,
+          render: (html) => this.addListenersDialog(html),
+          buttons: {
+            apply: {
+              icon: "<i class='fas fa-check'></i>",
+              label: game.i18n.localize("arm5e.generic.yes"),
+              callback: async (html) => {
+                // Start the async work and capture the promise immediately so the close
+                // handler can await it if the dialog is closed while it's running.
+                pending = (async () => {
+                  const msg = await combatDamage(html, this.actor);
+                  return msg;
+                })();
+
+                // When it finishes, resolve (unless already resolved).
+                pending.then((msg) => finish(msg)).catch(() => finish(null));
+
+                return true;
+              }
+            },
+            no: {
+              icon: "<i class='fas fa-ban'></i>",
+              label: game.i18n.localize("arm5e.dialog.button.cancel"),
+              callback: () => finish(null)
+            }
+          },
+          default: "yes",
+          close: () => {
+            // If a button triggered async work and the dialog is closed while it's running,
+            // wait for it and then resolve with its result; otherwise resolve null.
+            if (pending) {
+              pending.then((msg) => finish(msg)).catch(() => finish(null));
+            } else {
+              finish(null);
+            }
+          }
+        },
+        {
+          jQuery: true,
+          height: "140px",
+          width: "400px",
+          classes: ["arm5e-dialog", "dialog"]
+        }
+      ).render(true);
+    });
   }
 
-  async roll(parameters) {
-    await this._onRoll(parameters);
-  }
-  /**
-   * Handle clickable rolls.
-   * @param {Event} event   The originating click event
-   * @private
-   */
-  async _onRoll(event) {
+  async roll(event) {
     const dataset = getDataset(event);
+    if (await this.isRollPossible(dataset)) {
+      return await this._roll(dataset);
+    }
+  }
 
+  async isRollPossible(dataset) {
     if (game.settings.get("arm5e", "passConfidencePromptOnRoll")) {
       // find if there is indeed a message with a prompt with this actor.
       let pendingConfMsg = game.messages.contents.filter((m) => {
@@ -1955,9 +2116,16 @@ export class ArM5eActorSheet extends ActorSheet {
       return false;
     }
 
+    if (this.actor.system.states.pendingDamage && dataset.roll != "soak") {
+      ui.notifications.warn(game.i18n.localize("arm5e.notification.damagePending"), {
+        permanent: true
+      });
+      await this.actor.update({ "system.states.pendingDamage": false });
+    }
+
     const rollProperties = getRollTypeProperties(dataset.roll);
     if (dataset.mode) {
-      rollProperties.MODE = dataset.mode;
+      rollProperties.MODE = parseInt(dataset.mode);
     }
 
     if ((rollProperties.MODE & ROLL_MODES.UNCONSCIOUS) == 0) {
@@ -1999,16 +2167,22 @@ export class ArM5eActorSheet extends ActorSheet {
       }
     }
 
-    prepareRollVariables(dataset, this.actor);
-
-    // var actor = this.actor;
-    this.actor.system.charmetadata = ARM5E.character.characteristics;
-    updateCharacteristicDependingOnRoll(dataset, this.actor);
-
-    const template = chooseTemplate(dataset);
-    await renderRollTemplate(dataset, template, this.actor);
-    // log(false, `spell info: ${JSON.stringify(this.actor.rollInfo.magic)}`);
     return true;
+  }
+  /**
+   * Handle clickable rolls.
+   * @param {Event} event   The originating click event
+   * @private
+   */
+  async _roll(event) {
+    const dataset = getDataset(event);
+
+    prepareRollVariables(dataset, this.actor);
+    this.actor.system.charmetadata = ARM5E.character.characteristics;
+    const template = chooseTemplate(dataset);
+
+    const res = await renderRollTemplate(dataset, template, this.actor);
+    return res;
   }
 
   async quickCombat(name) {
@@ -2035,24 +2209,38 @@ export class ArM5eActorSheet extends ActorSheet {
 
   // adding the correct topic index to the drag data for topics
   _onDragStart(event) {
-    if (!event.target.classList.contains("topic")) {
+    if (event.target.classList.contains("codex")) {
+      const li = event.currentTarget;
+      // const dataset = getDataset(event);
+      // Create drag data
+      let dragData;
+      // Owned Items
+      if (li.dataset.uuid) {
+        // const item = await fromUuid(dataset.uuid);
+        dragData = { uuid: li.dataset.uuid, type: "Item" };
+      }
+      if (!dragData) return;
+      // Set data transfer
+
+      event.dataTransfer.setData("text/plain", JSON.stringify(dragData));
+    } else if (!event.target.classList.contains("topic")) {
       super._onDragStart(event);
       return;
-    }
+    } else {
+      let dragData;
+      const li = event.currentTarget;
+      // Owned Items
+      if (li.dataset.itemId) {
+        const item = this.actor.items.get(li.dataset.itemId);
+        log(false, "Added index to topic");
+        dragData = item.toDragData();
+        dragData.topicIdx = li.dataset.index;
+      }
+      if (!dragData) return;
 
-    let dragData;
-    const li = event.currentTarget;
-    // Owned Items
-    if (li.dataset.itemId) {
-      const item = this.actor.items.get(li.dataset.itemId);
-      log(false, "Added index to topic");
-      dragData = item.toDragData();
-      dragData.topicIdx = li.dataset.index;
+      // Set data transfer
+      event.dataTransfer.setData("text/plain", JSON.stringify(dragData));
     }
-    if (!dragData) return;
-
-    // Set data transfer
-    event.dataTransfer.setData("text/plain", JSON.stringify(dragData));
   }
 
   static getFlavor(actorType) {
@@ -2303,6 +2491,17 @@ export class ArM5eActorSheet extends ActorSheet {
         relativeTo: this.actor
       });
     }
+    if (this.actor.system.secrets) {
+      context.enrichedSecrets = await TextEditor.enrichHTML(this.actor.system.secrets, {
+        // Whether to show secret blocks in the finished html
+        secrets: this.document.isOwner,
+        // Data to fill in for inline rolls
+        rollData: context.rollData,
+        // Relative UUID resolution
+        relativeTo: this.actor
+      });
+    }
+
     if (this.actor.system.sigil?.value) {
       context.enrichedSigil = await TextEditor.enrichHTML(this.actor.system.sigil.value, {
         // Whether to show secret blocks in the finished html

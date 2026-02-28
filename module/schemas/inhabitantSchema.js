@@ -2,7 +2,7 @@ import { ARM5E } from "../config.js";
 import { ARM5E_DEFAULT_ICONS } from "../constants/ui.js";
 import { convertToNumber, log } from "../tools.js";
 import { Scriptorium } from "../tools/scriptorium.js";
-import { itemBase } from "./commonSchemas.js";
+import { boolOption, itemBase } from "./commonSchemas.js";
 const fields = foundry.data.fields;
 export class InhabitantSchema extends foundry.abstract.TypeDataModel {
   //   "habitantMagi",
@@ -34,6 +34,7 @@ export class InhabitantSchema extends foundry.abstract.TypeDataModel {
         initial: 0,
         step: 1
       }),
+
       job: new fields.StringField({ required: false, blank: true, initial: "" }),
       score: new fields.NumberField({
         required: false,
