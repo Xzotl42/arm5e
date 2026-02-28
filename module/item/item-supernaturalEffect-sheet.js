@@ -1,4 +1,4 @@
-import { getDataset } from "../tools.js";
+import { getDataset } from "../tools/tools.js";
 import { ArM5eItemMagicSheet } from "./item-magic-sheet.js";
 
 /**

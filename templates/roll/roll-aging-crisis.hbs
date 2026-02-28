@@ -1,0 +1,61 @@
+<div class="{{cssClass}} arm5e-roll" autocomplete="off">
+  <div class="roll-options">
+    <div class="flexrow flex-group-center" style="font-size: large">
+      <label class="">{{localize rollInfo.environment.seasonLabel}}
+        {{rollInfo.environment.year}}</label>
+    </div>
+    <div class="flexrow flex-group-center">
+      <label class="">{{lookup rollInfo.generic.txtOption 0}}
+        ({{lookup rollInfo.generic.option 0}})</label>
+    </div>
+    {{#unless (eq (lookup rollInfo.generic.txtOption 1) "")}}
+      <div class="flexrow flex-group-center">
+        <label class="">+</label>
+      </div>
+      <div class="flexrow flex-group-center">
+        <label class="">{{lookup rollInfo.generic.txtOption 1}}
+          ({{lookup rollInfo.generic.option 1}})</label>
+      </div>
+    {{/unless}}
+    {{#unless (eq (lookup rollInfo.generic.txtOption 2) "")}}
+      <div class="flexrow flex-group-center">
+        <label class="">-</label>
+      </div>
+      <div class="flexrow flex-group-center">
+        <label class="">{{lookup rollInfo.generic.txtOption 2}}
+          ({{lookup rollInfo.generic.option 2}})</label>
+      </div>
+    {{/unless}}
+    {{#unless (eq (lookup rollInfo.generic.txtOption 3) "")}}
+      <div class="flexrow flex-group-center">
+        <label class="">+</label>
+      </div>
+      <div class="flexrow flex-group-center">
+        <label class="">{{lookup rollInfo.generic.txtOption 3}}
+          ({{lookup rollInfo.generic.option 3}})</label>
+      </div>
+    {{/unless}}
+    {{#unless (eq (lookup rollInfo.generic.txtOption 4) "")}}
+      <div class="flexrow flex-group-center">
+        <label class="">+</label>
+      </div>
+      <div class="flexrow flex-group-center">
+        <label class="">{{lookup rollInfo.generic.txtOption 4}}
+          ({{lookup rollInfo.generic.option 4}})</label>
+      </div>
+    {{/unless}}
+    <div class="flexrow flex-group-center">
+      <label class="">-</label>
+    </div>
+    <div class="flexrow flex-group-center">
+      <label class="">{{localize "arm5e.aging.crisis.medicalAssistance"}}</label>
+      <input
+        type="number"
+        name="rollInfo.modifier"
+        value="{{rollInfo.modifier}}"
+        data-dtype="Number"
+        class="SelectedModifier"
+      />
+    </div>
+  </div>
+</div>

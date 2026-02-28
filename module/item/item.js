@@ -1,4 +1,4 @@
-import { getDataset, log } from "../tools.js";
+import { getDataset, log } from "../tools/tools.js";
 import { ArM5eActor } from "../actor/actor.js";
 import { migrateItemData } from "../migration.js";
 import { GetEffectAttributesLabel, IsMagicalEffect, computeLevel } from "../helpers/magic.js";

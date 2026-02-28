@@ -1,3 +1,36 @@
+## 2.5.0.0 Stentorius
+
+### Compatibility
+
+- Foundry V13+
+- Removal of deprecation warnings.
+- CSS rework [WIP]
+
+### Application V2 migration
+
+- Astrolabium - done
+- Activity Schedule - done
+- ChatMessage - removed jquery usage
+- Active effects config - Ars theme
+- All dialogs are now DialogV2
+- All roll dialogs are now ApplicationV2
+
+### Features & changes
+
+- Added tint and condition statuses to Active Effect.
+- [technical] Converted most of the largest assets from png to webp format
+
+### Bug fixes
+
+- Fixed a bug during an aging crisis where the number of aging points of the characteristic impacted was wrongly computed.
+- Even if a notification was raised, rolls were still possible for dead/unconscious characters
+- Private results of an aging crisis were generating a corrupted message
+- Using magic items is working again.
+- Ability specialty will update agin on change in the roll dialog.
+- Magus characters missing the virtue will receive "The Gift" making them aligned with magic realm (instead of a previous hack where all magi were magic aligned. As long as you have the virtue (ie: one with an index-key = "the-gift"), it won't be added again, so you can change the effects as you desire)
+- Buttons to create items and folders are now properly displayed
+- [technical] ars magica icons names in css are now prefixed with "ars-" to avoid conflicts with core Foundry
+
 ## 2.4.1.17, Radislav, Cognizant Wisdom BF3
 
 [IMPORTANT] Known limitation for V12, if text seems greyed out, go in the core settings and change the Preferred Color Scheme to "Light".

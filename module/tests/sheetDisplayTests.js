@@ -1,5 +1,5 @@
 import { ArM5eItem } from "../item/item.js";
-import { sleep } from "../tools.js";
+import { sleep } from "../tools/tools.js";
 const DEPRECATED = [
   "personality",
   "mundaneBook",
@@ -18,6 +18,8 @@ export function registerSheetDisplayTests(quench) {
       const { describe, it, assert, afterEach } = context;
 
       describe("Actor create and display sheet Suite", function () {
+        this.timeout(300000); // 300 seconds for easier debugging
+
         let actor;
         for (let t of CONFIG.Actor.documentClass.TYPES) {
           it(`Test ${t}'s constructor`, async function () {

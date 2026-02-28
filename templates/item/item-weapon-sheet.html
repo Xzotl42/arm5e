@@ -4,7 +4,7 @@
       <div class="flexrow">
         <img class="item-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" />
         <div class="flexcol header-fields">
-          <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name" /></h1>
+          <h1 class="bigname"><input name="name" type="text" value="{{item.name}}" placeholder="Name" /></h1>
           {{#if system.canEquip}}
             <div class="resource flexcol flexrow">
               <label for="system.ability" class="">{{localize "arm5e.sheet.ability"}} </label>
@@ -109,21 +109,21 @@
   </header>
   {{!-- Sheet Tab Navigation --}}
   <nav class="arm5eTabs sheet-tabs tabs" data-group="primary">
-    <a class="item posRelative" data-tab="description">
-      <div class="navItem-right-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
-      <div class="navItem-left-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
+    <a class="item posRelative flexrow" data-tab="description">
+      <div class="navItem-left-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
       {{localize "arm5e.sheet.description"}}
+      <div class="navItem-right-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
     </a>
     {{#if (ne system.state "inert")}}
-      <a class="item posRelative" data-tab="enchantments">
-        <div class="navItem-right-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
-        <div class="navItem-left-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
+      <a class="item posRelative flexrow" data-tab="enchantments">
+        <div class="navItem-left-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
         {{localize "arm5e.sheet.item.enchantments"}}
+        <div class="navItem-right-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
       </a>
-      <a class="item posRelative" data-tab="effects">
-        <div class="navItem-right-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
-        <div class="navItem-left-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
+      <a class="item posRelative flexrow" data-tab="effects">
+        <div class="navItem-left-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
         {{localize "arm5e.sheet.effects"}}
+        <div class="navItem-right-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
       </a>
     {{/if}}
   </nav>
@@ -142,7 +142,7 @@
       </div> <!-- Description Tab END -->
       {{> "systems/arm5e/templates/item/parts/enchant-extension.html" }}
       <div class="tab effects" data-group="primary" data-tab="effects" style="overflow-y: scroll">
-        {{> "systems/arm5e/templates/generic/active-effects.html" }}
+        {{> "systems/arm5e/templates/generic/active-effects-tab.hbs" }}
       </div>
     {{/if}}
     {{#if metagame.view }}

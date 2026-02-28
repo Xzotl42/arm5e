@@ -1,0 +1,52 @@
+<div class="{{cssClass}} arm5e-roll" autocomplete="off">
+  <div class="roll-options">
+    <div class="flexrow flex-group-center">
+      <div>
+        <label class="">{{localize "arm5e.sheet.modifier" }}</label>
+        <input type="number" name="rollInfo.modifier" value="{{rollInfo.modifier}}" data-dtype="Number"
+          class="SelectedModifier select-on-focus" />
+      </div>
+    </div>
+    {{#each rollInfo.generic.txtOption as | txt idx| }}
+      {{#unless (eq txt "")}}
+        <div class="flexrow flex-group-center">
+          <label class="">{{lookup ../rollInfo.generic.operatorOpt idx }}</label>
+        </div>
+        <div class="flexrow flex-group-center">
+          <label class="">{{txt}} ({{lookup ../rollInfo.generic.option idx }})</label>
+        </div>
+      {{/unless}}
+    {{/each}}
+    {{#each rollInfo.optionalBonuses as |optional|}}
+      <div class="flexrow flex-group-center sub">
+        <div class="modifier">+ </div>
+        <label class="">{{optional.name }} ({{ optional.bonus }})</label><input type="checkbox" name="{{optional.name}}"
+          {{checked optional.active}} class="SelectedOptional{{@index}} flex01" />
+      </div>
+    {{/each}}
+    {{#if rollInfo.physicalCondition }}
+      <div class="flexrow flex-group-center">
+        <label class="">+</label>
+      </div>
+      <div class="flexrow flex-group-center">
+        <label class="">{{localize "arm5e.sheet.fatigue.label"}} ({{ system.fatigueTotal }})</label>
+      </div>
+      <div class="flexrow flex-group-center">
+        <label class="">+</label>
+      </div>
+      <div class="flexrow flex-group-center">
+        <label class="">{{localize "arm5e.sheet.wounds"}} ({{ system.penalties.wounds.total }})</label>
+      </div>
+    {{/if}}
+    <div class="flex-group-center flexcol">
+      <img src="systems/arm5e/assets/ballSilver.png" width="20" height="20" style="border :0px" />
+      </div>
+     <div class="flex-group-center">
+      <div class="flex-group-center flexrow" style="margin-top: 10px;">
+        <label class=" flex03">{{localize "arm5e.generic.difficulty" }}</label>
+        <input type="number" name="rollInfo.difficulty" value="{{rollInfo.difficulty}}" data-dtype="Number"
+          data-actorId="{{_id}}" class="SelectedDifficulty select-on-focus" />
+      </div>
+    </div>
+  </div>
+</div>

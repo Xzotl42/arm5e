@@ -1,5 +1,5 @@
-<form class="{{cssClass}} arm5eChooser" autocomplete="off">
-  {{> "systems/arm5e/templates/roll/parts/roll-header.html" header="Inputs" }}
+<form class="{{cssClass}} arm5e-prompt" autocomplete="off">
+  {{> "systems/arm5e/templates/roll/parts/roll-header.hbs" header="Inputs" }}
   <div style="text-align: center;">
     <label class="smallTitle" style="font-size: 16pt; ">{{label}} ( {{numberFormat value sign=true}} )</label>
   </div>
@@ -13,5 +13,5 @@
   <div style="text-align: center;">
     <label></label>
   </div>
-  {{> "systems/arm5e/templates/roll/parts/roll-footer.html" footer="Inputs"}}
+  {{> "systems/arm5e/templates/roll/parts/roll-footer.hbs" footer="Inputs"}}
 </form>

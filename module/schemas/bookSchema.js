@@ -1,6 +1,6 @@
 import { ARM5E } from "../config.js";
-import { log } from "../tools.js";
-import { Scriptorium, ScriptoriumObject } from "../tools/scriptorium.js";
+import { log } from "../tools/tools.js";
+import { Scriptorium, ScriptoriumObject } from "../apps/scriptorium.js";
 import {
   CostField,
   hermeticForm,

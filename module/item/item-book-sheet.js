@@ -1,4 +1,4 @@
-import { getDataset, log } from "../tools.js";
+import { getDataset, log } from "../tools/tools.js";
 import { ArM5eItemSheet } from "./item-sheet.js";
 import { ArM5eActorSheet } from "../actor/actor-sheet.js";
 import { spellFormLabel, spellTechniqueLabel } from "../helpers/magic.js";
@@ -28,7 +28,7 @@ export class ArM5eBookSheet extends ArM5eItemSheet {
   }
 
   async _onDrop(event) {
-    const dropData = TextEditor.getDragEventData(event);
+    const dropData = foundry.applications.ux.getDragEventData(event);
 
     let index = Number(getDataset(event).index);
     if (dropData.type == "Item")

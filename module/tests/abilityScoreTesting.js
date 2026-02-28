@@ -6,6 +6,8 @@ export function registerAbilityScoresTesting(quench) {
       const { describe, it, assert, after, before } = context;
 
       describe(`Normal ability`, function () {
+        this.timeout(300000); // 300 seconds for easier debugging
+
         let actor;
         let item;
         before(async function () {

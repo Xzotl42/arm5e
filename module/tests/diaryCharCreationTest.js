@@ -1,4 +1,4 @@
-import { log, sleep } from "../tools.js";
+import { log, sleep } from "../tools/tools.js";
 import { getCompanion, getMagus, newSpell1 } from "./testData.js";
 import { ArsLayer } from "../ui/ars-layer.js";
 import { ARM5E } from "../config.js";
@@ -72,6 +72,8 @@ export function registerApprenticeshipTesting(quench) {
       });
 
       describe("Apprenticeship nominal", function () {
+        this.timeout(300000); // 300 seconds for easier debugging
+
         it("Single Ability", async function () {
           let sheet = entry.sheet;
 

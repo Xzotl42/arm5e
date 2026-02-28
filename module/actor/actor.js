@@ -9,7 +9,7 @@ import {
   compareTopics,
   integerToRomanNumeral,
   slugify
-} from "../tools.js";
+} from "../tools/tools.js";
 
 import { ACTIVE_EFFECTS_TYPES } from "../constants/activeEffectsTypes.js";
 
@@ -107,9 +107,6 @@ export class ArM5eActor extends Actor {
     this.system.bonuses = {};
 
     if (this.isMagus()) {
-      // Hack, if the active effect for magus is not setup
-      this.system.realms.magic.aligned = true;
-
       for (let key of Object.keys(this.system.arts.techniques)) {
         this.system.arts.techniques[key].bonus = 0;
         this.system.arts.techniques[key].xpCoeff = 1.0;
@@ -1121,7 +1118,7 @@ export class ArM5eActor extends Actor {
     await this.update(updateData);
   }
 
-  async addActiveEffect(name, type, subtype, value, option = null, icon) {
+  async addActiveEffect(name, type, subtype, value, option = null, disabled = false, icon = null) {
     if (Object.keys(ACTIVE_EFFECTS_TYPES).includes(type)) {
       if (Object.keys(ACTIVE_EFFECTS_TYPES[type].subtypes).includes(subtype)) {
         const activeEffectData = {
@@ -1149,6 +1146,7 @@ export class ArM5eActor extends Actor {
         };
         activeEffectData.name = name;
         activeEffectData.img = icon ?? "icons/svg/aura.svg";
+        activeEffectData.disabled = disabled;
 
         return await this.createEmbeddedDocuments("ActiveEffect", [activeEffectData]);
       } else {
@@ -1159,19 +1157,41 @@ export class ArM5eActor extends Actor {
     }
   }
 
-  // Async removeActiveEffect(type, subtype) {
-  //   if (Object.keys(ACTIVE_EFFECTS_TYPES).includes(type)) {
-  //     if (Object.keys(ACTIVE_EFFECTS_TYPES[type].subtypes).includes(subtype)) {
-  //       const toDelete = Object.values(this.effects).filter(e => )
-  //       return await this.deleteEmbeddedDocuments("ActiveEffect", toDelete);
-  //     } else {
-  //       log(false, "Unknown subtype");
-  //     }
-  //   } else {
-  //     log(false, "Unknown type");
-  //   }
-  //   return;
-  // }
+  // warning: this will remove all active effects of the given type and subtype, even those not created by arm5e system
+  async removeActiveEffect(type, subtype) {
+    if (Object.keys(ACTIVE_EFFECTS_TYPES).includes(type)) {
+      if (Object.keys(ACTIVE_EFFECTS_TYPES[type].subtypes).includes(subtype)) {
+        const toDelete = Object.values(this.effects)
+          .filter(
+            (e) => e.flags.arm5e?.type?.includes(type) && e.flags.arm5e?.subtype?.includes(subtype)
+          )
+          .map((e) => e.id);
+        return await this.deleteEmbeddedDocuments("ActiveEffect", toDelete);
+      } else {
+        log(false, "Unknown subtype");
+      }
+    } else {
+      log(false, "Unknown type");
+    }
+    return;
+  }
+
+  async disableActiveEffect(type, subtype) {
+    if (Object.keys(ACTIVE_EFFECTS_TYPES).includes(type)) {
+      if (Object.keys(ACTIVE_EFFECTS_TYPES[type].subtypes).includes(subtype)) {
+        const toDisable = Object.values(this.effects).filter(
+          (e) => e.flags.arm5e?.type?.includes(type) && e.flags.arm5e?.subtype?.includes(subtype)
+        );
+        const updateData = toDisable.map((e) => ({ _id: e.id, disabled: true }));
+        return await this.updateEmbeddedDocuments("ActiveEffect", updateData);
+      } else {
+        log(false, "Unknown subtype");
+      }
+    } else {
+      log(false, "Unknown type");
+    }
+    return;
+  }
 
   async changeWound(amount, wtype, description = "") {
     if (

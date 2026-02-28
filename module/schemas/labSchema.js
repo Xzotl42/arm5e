@@ -1,5 +1,5 @@
 import Aura from "../helpers/aura.js";
-import { compareTopics, log } from "../tools.js";
+import { compareTopics, log } from "../tools/tools.js";
 import { actorBase } from "./actorCommonSchema.js";
 import { actorLink, basicTextField } from "./commonSchemas.js";
 const fields = foundry.data.fields;

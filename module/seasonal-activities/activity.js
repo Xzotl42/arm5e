@@ -3,7 +3,7 @@
 import { ARM5E } from "../config.js";
 import { DiaryEntrySchema } from "../schemas/diarySchema.js";
 
-import { error, getDataset, log } from "../tools.js";
+import { error, getDataset, log } from "../tools/tools.js";
 
 export class Activity {
   constructor(actorUuid, type) {

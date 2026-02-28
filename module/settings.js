@@ -1,6 +1,6 @@
-import { log } from "./tools.js";
-import { CompendiaRefConfig } from "./ui/compendiaRefConfig.js";
-import { SourcebookFilterConfig } from "./ui/sourcebookFilterConfig.js";
+import { log } from "./tools/tools.js";
+import { CompendiaRefConfig } from "./apps/compendiaRefConfig.js";
+import { SourcebookFilterConfig } from "./apps/sourcebookFilterConfig.js";
 
 export function registerSettings() {
   const ARM5E = CONFIG.ARM5E;

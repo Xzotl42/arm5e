@@ -1,7 +1,7 @@
 import { ArM5eActor } from "../actor/actor.js";
 import { ARM5E } from "../config.js";
 import { ABILITIES_DEFAULT_ICONS } from "../constants/ui.js";
-import { log } from "../tools.js";
+import { log } from "../tools/tools.js";
 import { boolOption, itemBase, RealmField, XpField } from "./commonSchemas.js";
 const fields = foundry.data.fields;
 export class AbilitySchema extends foundry.abstract.TypeDataModel {

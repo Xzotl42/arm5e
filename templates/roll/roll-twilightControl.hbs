@@ -1,0 +1,65 @@
+<div class="{{ cssClass }} arm5e-roll" autocomplete="off">
+  <div class="roll-options">
+    <div class="flexrow flex-group-center">
+      <label class="">{{localize "arm5e.twilight.control.question"}}</label>
+    </div>
+    <div class="flexrow flex-group-center">
+      <label class=""
+        >{{localize "arm5e.sheet.stamina"}} ({{ system.characteristics.sta.value }})</label
+      >
+    </div>
+    <div class="flexrow flex-group-center">
+      <label class="">+</label>
+    </div>
+    <div class="flexrow flex-group-center">
+      <label class="flex03">{{localize "arm5e.sheet.modifier"}}</label>
+      <input
+        type="Number"
+        name="rollInfo.modifier"
+        value="{{ rollInfo.modifier }}"
+        data-dtype="Number"
+        class="SelectedModifier select-on-focus"
+      />
+    </div>
+    <div class="flexrow flex-group-center">
+      <label class="">+</label>
+    </div>
+    <div class="flexrow flex-group-center">
+      <label class=""
+        >{{lookup rollInfo.generic.txtOption 0}} ({{lookup rollInfo.generic.option 0}})</label
+      >
+    </div>
+    {{#unless (eq (lookup rollInfo.generic.txtOption 1) "")}}
+    <div class="flexrow flex-group-center">
+      <label class="">+</label>
+    </div>
+    <div class="flexrow flex-group-center">
+      <label class=""
+        >{{lookup rollInfo.generic.txtOption 1}} ({{lookup rollInfo.generic.option 1}})</label
+      >
+    </div>
+    {{/unless}}
+    {{#unless (eq (lookup rollInfo.generic.txtOption 2) "")}}
+    <div class="flexrow flex-group-center">
+      <label class="">+</label>
+    </div>
+    <div class="flexrow flex-group-center">
+      <label class=""
+        >{{lookup rollInfo.generic.txtOption 2}} ({{lookup rollInfo.generic.option 2}})</label
+      >
+    </div>
+    {{/unless}}
+    <div class="flexcol flex-group-center">
+      <label class=""
+        ><img src="systems/arm5e/assets/ballSilver.png" width="24" height="24" style="border: 0px"
+      /></label>
+    </div>
+    <div class="flexrow flex-group-center">
+      <label class="">{{localize "arm5e.generic.versus"}}</label>
+    </div>
+
+    <div class="flexrow flex-group-center">
+      <label class="" style="font-size: 16pt">{{ system.twilight.strength }}</label>
+    </div>
+  </div>
+</div>

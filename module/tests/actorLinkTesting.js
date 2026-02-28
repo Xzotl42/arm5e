@@ -1,8 +1,8 @@
-import { log, sleep } from "../tools.js";
+import { log, sleep } from "../tools/tools.js";
 import { getCompanion, getMagus } from "./testData.js";
 import { ArsLayer } from "../ui/ars-layer.js";
 import { ARM5E } from "../config.js";
-import { simpleDie, stressDie } from "../dice.js";
+import { simpleDie, stressDie } from "../helpers/dice.js";
 import Aura from "../helpers/aura.js";
 
 export function registerActorLinkTesting(quench) {
@@ -16,6 +16,8 @@ export function registerActorLinkTesting(quench) {
       before(async function () {});
 
       describe("ActorLink nominal", function () {
+        this.timeout(300000); // 300 seconds for easier debugging
+
         let src;
         let target;
         for (let srcType of actorTypes) {

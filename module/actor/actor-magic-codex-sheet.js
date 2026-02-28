@@ -1,6 +1,6 @@
 import { ArM5eActorSheet } from "./actor-sheet.js";
 
-import { compareBaseEffects, compareSpells, hermeticFilter, log } from "../tools.js";
+import { compareBaseEffects, compareSpells, hermeticFilter, log } from "../tools/tools.js";
 
 import { labTextToEffect } from "../item/item-converter.js";
 import { ArM5eItem } from "../item/item.js";
@@ -214,7 +214,7 @@ export class ArM5eMagicCodexSheet extends ArM5eActorSheet {
     const question = game.i18n.localize("arm5e.dialog.delete-question");
     const li = $(event.currentTarget).parents(".item");
     let itemId = li.data("itemId");
-    const confirm = await getConfirmation(li[0].dataset.name, question, "Codex");
+    const confirm = await getConfirmation(li[0].dataset.name, question, "codex");
     if (confirm) {
       this._deleteEffect(itemId, li);
     }
@@ -303,7 +303,7 @@ export class ArM5eMagicCodexSheet extends ArM5eActorSheet {
     const element = event.currentTarget;
     const dataset = element.dataset;
     const question = game.i18n.localize(mnemo);
-    const confirm = await getConfirmation(dataset.name, question, "Codex");
+    const confirm = await getConfirmation(dataset.name, question, "codex");
     if (confirm) {
       this._onDesignEffect(uuid, false);
     }

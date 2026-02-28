@@ -3,7 +3,7 @@
     <img class="item-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"
       style="height: 165px; flex-basis: 165px;" />
     <div class="header-fields">
-      <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="name" /></h1>
+      <h1 class="bigname"><input name="name" type="text" value="{{item.name}}" placeholder="name" /></h1>
       <div class="flexrow">
         <div class="resource flex0">
           <label>{{localize "arm5e.generic.begins"}}: </label>
@@ -69,14 +69,14 @@
         {{/if}}
         {{#if ui.schedule}}
           <div class="marginsides10 resource">
-            <a class="select-dates slim"><i {{{astrolabIconStyle}}} class=" icon-Tool_Astrolab"></i></a>
+            <a class="select-dates slim"><i {{{astrolabIconStyle}}} class=" ars-icon-Tool_AstrolabBig"></i></a>
           </div>
         {{/if}}
         {{#if isOwned}}
           <div class="flexrow ">
             <a class="item-control item-delete-confirm"
               title='{{localize "arm5e.hints.delete" item=(localize "arm5e.sheet.diary")}}'><i
-                class="icon-Icon_Delete_Hand_Gesture"></i></a>
+                class="ars-Icon_Delete_Hand_Gesture"></i></a>
           </div>
         {{/if}}
       </div>
@@ -84,16 +84,16 @@
   </header>
   {{!-- Sheet Tab Navigation --}}
   <nav class="arm5eTabs sheet-tabs tabs" data-group="primary">
-    <a class="item posRelative" data-tab="description" data-group="primary">
-      <div class="navItem-right-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
-      <div class="navItem-left-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
+    <a class="item posRelative flexrow" data-tab="description" data-group="primary">
+      <div class="navItem-left-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
       {{localize "arm5e.sheet.description"}}
+      <div class="navItem-right-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
     </a>
     {{#if ui.showTab}}
-      <a class="item posRelative" data-tab="advanced" data-group="primary">
-        <div class="navItem-right-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
-        <div class="navItem-left-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
+      <a class="item posRelative flexrow" data-tab="advanced" data-group="primary">
+        <div class="navItem-left-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
         {{localize "arm5e.sheet.advanced"}}
+        <div class="navItem-right-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
       </a>
     {{/if}}
   </nav>

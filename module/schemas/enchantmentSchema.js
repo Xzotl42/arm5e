@@ -1,6 +1,6 @@
 import { ARM5E } from "../config.js";
 import { computeLevel } from "../helpers/magic.js";
-import { log } from "../tools.js";
+import { log } from "../tools/tools.js";
 import {
   baseDescription,
   boolOption,

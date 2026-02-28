@@ -1,8 +1,10 @@
 import { ArM5eActor } from "./actor/actor.js";
 import { ARM5E } from "./config.js";
-import { TWILIGHT_STAGES } from "./helpers/long-term-activities.js";
+import { TWILIGHT_STAGES } from "./seasonal-activities/long-term-activities.js";
 import { computeLevel } from "./helpers/magic.js";
-import { convertToNumber, error, log } from "./tools.js";
+import { convertToNumber, error, log } from "./tools/tools.js";
+import ArM5eActiveEffect from "./helpers/active-effects.js";
+import { getItemFromCompendium } from "./tools/compendia.js";
 
 const DEPRECATED_ITEMS = ["speciality", "distinctive", "sanctumRoom", "personality"];
 const DEPRECATED_ACTORS = ["scriptorium"];
@@ -773,9 +775,17 @@ export const migrateActorData = async function (actorDoc, actorItems) {
 
       if (["magus", "magusNPC"].includes(actor.system.charType.value)) {
         if (actor.system.realms === undefined) {
-          realms["magic"].aligned = true;
+          // realms["magic"].aligned = true;
           realmsUpdate = true;
           updateData["system.-=realmAlignment"] = null;
+        }
+        if (actorDoc instanceof ArM5eActor) {
+          if (!actorDoc.hasVirtue("the-gift")) {
+            const theGiftVirtue = await getItemFromCompendium("virtues", "the-gift");
+            if (actorDoc instanceof ArM5eActor) {
+              await actorDoc.createEmbeddedDocuments("Item", [theGiftVirtue.toObject()]);
+            }
+          }
         }
         if (actor.system?.sanctum?.value === undefined) {
           let sanctum = {

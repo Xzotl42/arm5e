@@ -1,0 +1,71 @@
+<div class="{{cssClass}} arm5e-roll" autocomplete="off">
+
+  <div class="roll-options">
+    <div class="flexrow flex-group-center">
+      <label class="">{{localize "arm5e.twilight.strength"}}</label>
+    </div>
+    <div class="flexrow flex-group-center">
+      <label class="">{{lookup rollInfo.generic.txtOption 0}}
+        ({{lookup rollInfo.generic.option 0}})</label>
+    </div>
+    <div class="flexrow flex-group-center">
+      <label class="">+</label>
+    </div>
+    <div class="flexrow flex-group-center">
+      <label class="flex03">{{localize "arm5e.sheet.modifier"}}</label>
+      <input
+        type="number"
+        name="rollInfo.modifier"
+        value="{{rollInfo.modifier}}"
+        data-dtype="Number"
+        class="SelectedModifier select-on-focus"
+      />
+    </div>
+    <div class="flexrow flex-group-center">
+      <label class="">+</label>
+    </div>
+    <div class="flexrow flex-group-center">
+      <label class="flex03">{{localize "arm5e.twilight.warpingPoints"}}</label>
+      <input
+        type="number"
+        name="rollInfo.twilight.warpingPts"
+        value="{{rollInfo.twilight.warpingPts}}"
+        data-dtype="Number"
+        class="SelectedWarpingPoints select-on-focus"
+      />
+    </div>
+    {{#if rollInfo.twilight.enigma.score}}
+      <div class="flexrow flex-group-center">
+        <label class="">+</label>
+      </div>
+      <div class="flexrow flex-group-center">
+        <label class="">{{lookup rollInfo.generic.txtOption 2}}
+          ({{lookup rollInfo.generic.option 2}})</label>
+      </div>
+      <div class="flexrow flex-group-center">
+        <label class="">{{localize "arm5e.sheet.speciality"}}
+          ({{rollInfo.twilight.enigma.speciality}})</label>
+        <input
+          type="checkbox"
+          class="enigmaSpeciality"
+          name="rollInfo.twilight.enigma.specApply"
+          {{checked rollInfo.twilight.enigma.specApply}}
+        />
+      </div>
+    {{/if}}
+    <div class="flexrow flex-group-center">
+      <label class="">+</label>
+    </div>
+    <div class="flexrow flex-group-center">
+      <label class="flex03" style="padding-right: 10px;">{{localize "arm5e.sheet.levelAura"}}
+      </label>
+      <input
+        type="number"
+        name="rollInfo.environment.aura.modifier"
+        value="{{rollInfo.environment.aura.modifier}}"
+        data-dtype="Number"
+        class="SelectedAura flex02 select-on-focus"
+      />
+    </div>
+  </div>
+</div>

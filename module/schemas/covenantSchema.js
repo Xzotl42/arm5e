@@ -1,6 +1,6 @@
 import ArM5eActiveEffect from "../helpers/active-effects.js";
 import { canBeEnchanted } from "../helpers/magic.js";
-import { compareLabTexts, compareTopics, convertToNumber, slugify } from "../tools.js";
+import { compareLabTexts, compareTopics, convertToNumber, slugify } from "../tools/tools.js";
 import { actorBase } from "./actorCommonSchema.js";
 import {
   actorLink,

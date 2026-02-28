@@ -9,7 +9,7 @@ import {
   spellData1
 } from "./testData.js";
 import { ARM5E } from "../config.js";
-import { log, sleep } from "../tools.js";
+import { log, sleep } from "../tools/tools.js";
 import { nextDate } from "../tools/time.js";
 import { DiaryEntrySchema } from "../schemas/diarySchema.js";
 const results = {
@@ -750,6 +750,8 @@ export function registerDiaryTesting(quench) {
       let Sp1;
       const { describe, it, assert, after, before } = context;
       describe(`Diary entries tests`, function () {
+        this.timeout(300000); // 300 seconds for easier debugging
+
         before(async function () {
           magus = await Actor.create({
             name: `JasquierTheChronicler`,

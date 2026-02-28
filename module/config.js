@@ -14,7 +14,7 @@ import {
   investigate,
   validWriting,
   twilightUnderstandingRoll
-} from "./helpers/long-term-activities.js";
+} from "./seasonal-activities/long-term-activities.js";
 
 export const ARM5E = {};
 

@@ -1,0 +1,74 @@
+<div class="flexrow flex-group-center clickable expend">
+  <label class="" data-hidden="penetration">{{localize "arm5e.sheet.penetrationOptions"}}</label>
+</div>
+<div id="penetration" class="penetration hide">
+  <div class="flexrow flex-group-center">
+    <label class="">***</label>
+  </div>
+  {{#unless (eq rollInfo.penetration.score 0)}}
+    <div class="flexrow flex-group-center sub">
+      <label class="">{{localize "arm5e.sheet.penetration"}}
+        ({{numberFormat rollInfo.penetration.score decimals=0 sign=true}})
+      </label>
+    </div>
+    <div class="flexrow flex-group-center sub">
+      <label class="flex02">{{localize "arm5e.sheet.speciality"}}
+        ({{rollInfo.penetration.speciality}})</label>
+      <input
+        type="checkbox"
+        class="penSpeciality"
+        name="penetration.specApply"
+        {{checked rollInfo.specApply}}
+      />
+    </div>
+  {{/unless}}
+  {{#if (eq rollInfo.type "spell")}}
+    <div class="flexrow flex-group-center sub">
+      <label class="">+</label>
+    </div>
+    <div class="flexrow flex-group-center sub">
+      <label class="flex02">{{localize "arm5e.spell.masteries.penetration"}}</label>
+      <input
+        type="checkbox"
+        class="spellMastery"
+        name="penetration.spellMastery"
+        {{checked rollInfo.spellMastery}}
+      />
+    </div>
+  {{/if}}
+  <div class="flexrow flex-group-center sub">
+    <label class="">*</label>
+  </div>
+  <div class="flexrow flex-group-center sub">
+    <label class="">{{localize "arm5e.generic.multipliers"}}</label>
+  </div>
+  <div class="flexrow flex-group-center sub">
+    <label class="flex02">{{localize "arm5e.sheet.penetrationBonusArcanic"}}</label>
+    <select
+      name="rollInfo.penetration.multiplierBonusArcanic"
+      data-type="number"
+      class="multiplierBonusArcanic flex01"
+    >
+      {{selectOptions
+        rollInfo.penetration.selection.arcanic
+        selected=rollInfo.penetration.multiplierBonusArcanic
+      }}
+    </select>
+  </div>
+  <div class="flexrow flex-group-center sub">
+    <label class="">+</label>
+  </div>
+  <div class="flexrow flex-group-center sub">
+    <label class="flex02">{{localize "arm5e.sheet.penetrationBonusSympathic"}}</label>
+    <select
+      name="rollInfo.penetration.multiplierBonusSympathic"
+      data-type="number"
+      class="multiplierBonusSympathic flex01"
+    >
+      {{selectOptions
+        rollInfo.penetration.selection.sympathic
+        selected=rollInfo.penetration.multiplierBonusSympathic
+      }}
+    </select>
+  </div>
+</div>

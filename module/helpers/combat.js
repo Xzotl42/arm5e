@@ -1,7 +1,7 @@
-import { calculateWound, getDataset, getLastCombatMessageOfType, log } from "../tools.js";
-import { createRoll, stressDie } from "../dice.js";
+import { calculateWound, getDataset, getLastCombatMessageOfType, log } from "../tools/tools.js";
+import { createRoll, stressDie } from "./dice.js";
 import { Arm5eChatMessage } from "./chat-message.js";
-import { _applyImpact, ROLL_PROPERTIES } from "./rollWindow.js";
+import { _applyImpact, ROLL_PROPERTIES } from "../ui/roll-window.js";
 import { getWoundStr } from "../config.js";
 
 // export function doubleAbility(actor) {
@@ -89,8 +89,10 @@ export class QuickCombat extends FormApplication {
 
   activateListeners(html) {
     super.activateListeners(html);
-    html.find(".rollable").click(async (event) => await this.object.actor.sheet.roll(event));
-    html.find(".soak-damage").click(async (event) => {
+    html
+      .querySelector(".rollable")
+      .addEventListener("click", async (event) => await this.object.actor.sheet.roll(event));
+    html.querySelector(".soak-damage").addEventListener("click", async (event) => {
       const msg = await this.object.actor.sheet._onSoakDamage(getDataset(event));
       if (msg == null) return;
       if (msg.system.impact.woundGravity) {
@@ -101,7 +103,7 @@ export class QuickCombat extends FormApplication {
       }
       Arm5eChatMessage.create(msg.toObject());
     });
-    html.find(".damage").click(async (event) => {
+    html.querySelector(".damage").addEventListener("click", async (event) => {
       await computeDamage(this.object.actor);
     });
   }
@@ -185,25 +187,25 @@ export class QuickVitals extends FormApplication {
 
   activateListeners(html) {
     super.activateListeners(html);
-    html.find(".rest").click(async () => {
+    html.querySelector(".rest").addEventListener("click", async () => {
       await this.object.actor.rest();
       this.render();
     });
-    html.find(".addFatigue").click(async () => {
+    html.querySelector(".addFatigue").addEventListener("click", async () => {
       await this.object.actor.loseFatigueLevel(1, false);
       this.render();
     });
-    html.find(".removeFatigue").click(async () => {
+    html.querySelector(".removeFatigue").addEventListener("click", async () => {
       await this.object.actor.recoverFatigueLevel(1);
       this.render();
     });
-    html.find(".addWound").click(async (event) => {
+    html.querySelector(".addWound").addEventListener("click", async (event) => {
       event.preventDefault();
       const dataset = event.currentTarget.dataset;
       await this.object.actor.changeWound(1, dataset.type);
       this.render();
     });
-    html.find(".recovery").click(async (event) => {
+    html.querySelector(".recovery").addEventListener("click", async (event) => {
       event.preventDefault();
       const dataset = event.currentTarget.dataset;
       await this.object.actor.sheet.render(true);
@@ -226,17 +228,15 @@ export async function quickVitals(tokenName, actor) {
 }
 
 export async function combatDamage(selector, actor) {
-  // TODO use javascript instead of JQuery
-  // const modifier = parseInt(selector.querySelector())
-  const modifier = parseInt(selector.find('input[name$="modifier"]').val());
+  const modifier = parseInt(selector.querySelector('input[name="modifier"]').value);
   let damage = modifier;
   actor.rollInfo.modifier = modifier;
   const messageModifier = `${game.i18n.localize("arm5e.sheet.modifier")} (${damage})`;
   let details = "";
-  const strength = parseInt(selector.find('label[name$="strength"]').attr("value") || 0);
-  const weapon = parseInt(selector.find('label[name$="weapon"]').attr("value") || 0);
-  const advantage = parseInt(selector.find('input[name$="advantage"]').val());
-  const formDam = selector.find('select[name$="formDamage"]').val() || "";
+  const strength = actor.system.characteristics.str.value;
+  const weapon = actor.system.combat.dam;
+  const advantage = parseInt(selector.querySelector('input[name="advantage"]').value);
+  const formDam = selector.querySelector('select[name="formDamage"]').value || "";
 
   const messageStrength = `${game.i18n.localize("arm5e.sheet.strength")} (${strength})`;
   const messageWeapon = `${game.i18n.localize("arm5e.damage.label")} (${weapon})`;
@@ -272,16 +272,16 @@ export async function combatDamage(selector, actor) {
 export function buildSoakDataset(selector, actor) {
   const dataset = {};
 
-  dataset.modifier = parseInt(selector.find('input[name$="modifier"]').val());
-  dataset.damage = parseInt(selector.find('input[name$="damage"]').val());
-  let natRes = selector[0].querySelector('select[name$="natRes"]')?.value;
-  let formRes = selector[0].querySelector('select[name$="formRes"]')?.value;
+  dataset.modifier = parseInt(selector.querySelector('input[name="modifier"]').value);
+  dataset.damage = parseInt(selector.querySelector('input[name="damage"]').value);
+  let natRes = selector.querySelector('select[name="natRes"]')?.value;
+  let formRes = selector.querySelector('select[name="formRes"]')?.value;
 
   dataset.natRes = actor.system.bonuses.resistance[natRes] || 0;
   dataset.formRes = Math.ceil(actor.system.arts?.forms[formRes]?.finalScore / 5 || 0);
-  dataset.prot = parseInt(selector.find('label[name$="prot"]').attr("value") || 0);
-  dataset.bonus = parseInt(selector.find('label[name$="soak"]').attr("value") || 0);
-  dataset.stamina = parseInt(selector.find('label[name$="stamina"]').attr("value") || 0);
+  dataset.prot = actor.system.combat.prot;
+  dataset.bonus = actor.system.bonuses.traits.soak;
+  dataset.stamina = actor.system.characteristics.sta.value;
   dataset.damageToApply =
     dataset.damage -
     dataset.modifier -

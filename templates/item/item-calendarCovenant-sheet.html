@@ -2,7 +2,7 @@
   <header class="sheet-header">
     <img class="item-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" />
     <div class="header-fields">
-      <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name" /></h1>
+      <h1 class="bigname"><input name="name" type="text" value="{{item.name}}" placeholder="Name" /></h1>
       <div class="grid grid-col">
         <div class="resource">
           <label class="">{{localize "arm5e.sheet.season"}}</label>
@@ -16,15 +16,15 @@
 
   {{!-- Sheet Tab Navigation --}}
   <nav class="arm5eTabs sheet-tabs tabs" data-group="primary">
-    <a class="item posRelative" data-tab="description">
-      <div class="navItem-right-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
-      <div class="navItem-left-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
+    <a class="item posRelative flexrow" data-tab="description">
+      <div class="navItem-left-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
       {{localize "arm5e.sheet.description"}}
+      <div class="navItem-right-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
     </a>
-    <a class="item posRelative" data-tab="attributes">
-      <div class="navItem-right-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
-      <div class="navItem-left-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
+    <a class="item posRelative flexrow" data-tab="attributes">
+      <div class="navItem-left-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
       {{localize "arm5e.sheet.attributes"}}
+      <div class="navItem-right-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
     </a>
   </nav>
   {{> "systems/arm5e/templates/generic/metalic-bar.html" }}

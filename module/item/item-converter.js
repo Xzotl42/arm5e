@@ -1,4 +1,4 @@
-import { log } from "../tools.js";
+import { log } from "../tools/tools.js";
 
 /*
  *   functions to convert a type to another

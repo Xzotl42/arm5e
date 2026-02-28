@@ -929,47 +929,86 @@ export async function getMagus(magusName = "MerlinTheMagus", items = [], overrid
   items.push({ name: "Gaelic", type: "ability", system: languageSkill });
 
   items.push({
-    name: "Standard effect",
+    name: "ME: Cr Ig Formulaic",
     type: "magicalEffect",
     system: magicalEffect1
   });
   items.push({
-    name: "All req effect",
+    name: "ME: All Requisites",
     type: "magicalEffect",
     system: magicalEffect2
   });
   items.push({
-    name: "Effect with focus",
+    name: "ME: Mu An with Focus",
     type: "magicalEffect",
     system: magicalEffect3
   });
   items.push({
-    name: "Standard spell",
+    name: "Spell: Cr Ig Standard",
     type: "spell",
     system: spellData1
   });
   items.push({
-    name: "Spell with focus",
+    name: "Spell: Mu Co with Focus",
     type: "spell",
     system: spellData2
   });
   items.push({
-    name: "Ritual spell",
+    name: "Spell: Re Vi Ritual",
     type: "spell",
     system: spellData3
   });
   items.push({
-    name: "Spell with deficiency",
+    name: "Spell: Pe Vi with Deficiency",
     type: "spell",
     system: spellData4
   });
   items.push({
-    name: "Spell partial failing",
+    name: "Spell: Re Au Partial Fail",
     type: "spell",
     system: spellData5
   });
 
   await character.createEmbeddedDocuments("Item", items, {});
+
+  // Add disabled active effects for realm alignment and susceptibility
+  await character.addActiveEffect("Faeric Alignment", "realm", "magic", true, null, false);
+  await character.addActiveEffect("Faeric Alignment", "realm", "faeric", true, null, true);
+  await character.addActiveEffect("Divine Alignment", "realm", "divine", true, null, true);
+  await character.addActiveEffect("Infernal Alignment", "realm", "infernal", true, null, true);
+
+  await character.addActiveEffect(
+    "Magic Susceptibility",
+    "realmSusceptibility",
+    "magic",
+    true,
+    null,
+    true
+  );
+  await character.addActiveEffect(
+    "Faeric Susceptibility",
+    "realmSusceptibility",
+    "faeric",
+    true,
+    null,
+    true
+  );
+  await character.addActiveEffect(
+    "Divine Susceptibility",
+    "realmSusceptibility",
+    "divine",
+    true,
+    null,
+    true
+  );
+  await character.addActiveEffect(
+    "Infernal Susceptibility",
+    "realmSusceptibility",
+    "infernal",
+    true,
+    null,
+    true
+  );
 
   return character;
 }
@@ -998,34 +1037,34 @@ export async function getTeacher(magusName = "Master", items = [], override = {}
   items.push({ name: "Magic theory", type: "ability", system: magicTheorySkill });
 
   items.push({
-    name: "Standard effect",
+    name: "ME: Cr Ig Formulaic",
     type: "magicalEffect",
     system: magicalEffect1
   });
   items.push({
-    name: "All req effect",
+    name: "ME: All Requisites",
     type: "magicalEffect",
     system: magicalEffect2
   });
   items.push({
-    name: "Effect with focus",
+    name: "ME: Mu An with Focus",
     type: "magicalEffect",
     system: magicalEffect3
   });
   let spellData = foundry.utils.duplicate(spellData1);
   spellData.xp = 75;
   items.push({
-    name: "Standard spell",
+    name: "Spell: Cr Ig Standard",
     type: "spell",
     system: spellData
   });
   items.push({
-    name: "Spell with focus",
+    name: "Spell: Mu Co with Focus",
     type: "spell",
     system: spellData2
   });
   items.push({
-    name: "Ritual spell",
+    name: "Spell: Re Vi Ritual",
     type: "spell",
     system: spellData3
   });
@@ -1035,7 +1074,7 @@ export async function getTeacher(magusName = "Master", items = [], override = {}
     system: newSpell1
   });
   items.push({
-    name: "Spell partial failing",
+    name: "Spell: Re Au Partial Fail",
     type: "spell",
     system: spellData5
   });

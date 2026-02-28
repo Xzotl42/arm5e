@@ -1,5 +1,5 @@
 import { ARM5E } from "../../config.js";
-import { getDataset, log } from "../../tools.js";
+import { getDataset, log } from "../../tools/tools.js";
 import { getAbilityFromCompendium, getItemFromCompendium } from "../../tools/compendia.js";
 
 export class ArM5eActorProfiles {

@@ -2,17 +2,17 @@
   <header class="sheet-header">
     <img class="item-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" />
     <div class="header-fields">
-      <h1 class="charname" style="font-size: 24pt">
+      <h1 class="bigname" style="font-size: 24pt">
         <div class="flexrow">{{localize "arm5e.sheet.spell"}}
           {{#if noRoll}}
             <a class="create-labtext" data-flavor="{{ui.flavor}}" title="Create draft lab text"><i
-                class="icon-Icon_Details2"></i></a>
+                class="ars-Icon_Details2"></i></a>
           {{/if}}
         </div>
       </h1>
 
 
-      <h1 class="charname">
+      <h1 class="bigname">
         <div class="flexrow"><input name="name" type="text" title="{{item.name}}" value="{{item.name}}"
             placeholder="Name" />
           {{#if noRoll}}
@@ -25,7 +25,7 @@
         </div>
       </h1>
       {{#if locked}}
-        <i class="icon-Icon_Locked"></i>
+        <i class="ars-Icon_Locked"></i>
       {{/if}}
       <div class="grid grid-2col">
         <div class="resource flexcol flexrow">
@@ -62,15 +62,15 @@
   </header>
   {{!-- Sheet Tab Navigation --}}
   <nav class="arm5eTabs sheet-tabs tabs" data-group="primary">
-    <a class="item posRelative" data-tab="description">
-      <div class="navItem-right-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
-      <div class="navItem-left-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
+    <a class="item posRelative flexrow" data-tab="description">
+      <div class="navItem-left-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
       {{localize "arm5e.sheet.description"}}
+      <div class="navItem-right-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
     </a>
-    <a class="item posRelative" data-tab="attributes">
-      <div class="navItem-right-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
-      <div class="navItem-left-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
+    <a class="item posRelative flexrow" data-tab="attributes">
+      <div class="navItem-left-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
       {{localize "arm5e.sheet.attributes"}}
+      <div class="navItem-right-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
     </a>
   </nav>
   {{> "systems/arm5e/templates/generic/metalic-bar.html" }}

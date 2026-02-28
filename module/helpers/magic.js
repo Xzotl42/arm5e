@@ -1,9 +1,13 @@
-import { changeMightCallback, noRoll, useItemCharge } from "../dice.js";
-import { SpellSchema } from "../schemas/magicSchemas.js";
-import { log } from "../tools.js";
-import { TWILIGHT_STAGES } from "./long-term-activities.js";
-import { _applyImpact, getFormData, prepareRollVariables, ROLL_MODES } from "./rollWindow.js";
-
+import { log } from "../tools/tools.js";
+import { TWILIGHT_STAGES } from "../seasonal-activities/long-term-activities.js";
+import {
+  _applyImpact,
+  ROLL_MODES,
+  UseMagicItemWindow,
+  UsePowerRollWindow
+} from "../ui/roll-window.js";
+import { customDialogAsync } from "../ui/dialogs.js";
+const renderTemplate = foundry.applications.handlebars.renderTemplate;
 const VOICE_AND_GESTURES_ICONS = {
   voice: "icons/skills/trades/music-singing-voice-blue.webp",
   gestures: "icons/skills/social/wave-halt-stop.webp"
@@ -149,32 +153,29 @@ export async function PickRequisites(spelldata, flavor, editable, updatePath = "
   let template = "systems/arm5e/templates/item/parts/requisites.html";
   let html = await renderTemplate(template, spelldata);
 
-  let itemUpdate = await new Promise((resolve) => {
-    new Dialog(
+  return await customDialogAsync({
+    window: {
+      title: game.i18n.localize("arm5e.sheet.Requisites")
+    },
+    classes: ["arm5eRequisite"],
+    content: html,
+    buttons: [
       {
-        title: game.i18n.localize("arm5e.sheet.Requisites"),
-        content: html,
-        buttons: {
-          yes: {
-            icon: "<i class='fas fa-check'></i>",
-            label: game.i18n.localize("arm5e.dialog.button.save"),
-            callback: async (html) => {
-              resolve(_setRequisites(html, updatePath));
-            }
-          },
-          no: {
-            icon: "<i class='fas fa-ban'></i>",
-            label: game.i18n.localize("arm5e.dialog.button.cancel"),
-            callback: null
-          }
+        action: "confirm",
+        icon: "<i class='fas fa-check'></i>",
+        label: game.i18n.localize("arm5e.generic.confirm"),
+        callback: async (event, button, dialog) => {
+          return _setRequisites(dialog.element, updatePath);
         }
       },
       {
-        classes: ["arm5e-dialog", "dialog"]
+        action: "cancel",
+        icon: "<i class='fas fa-ban'></i>",
+        label: game.i18n.localize("arm5e.dialog.button.cancel"),
+        callback: null
       }
-    ).render(true);
+    ]
   });
-  return itemUpdate;
 }
 
 /**
@@ -185,25 +186,21 @@ function _setRequisites(selector, updatePath) {
   let itemUpdate = {};
 
   for (const tech of Object.entries(CONFIG.ARM5E.magic.techniques)) {
-    let found = selector.find(`.Selected${tech[1].label}`);
-    if (found.length > 0) {
-      if (found[0].checked === true) {
-        itemUpdate[`${updatePath}.technique-req.${tech[0]}`] = true;
-      } else {
-        itemUpdate[`${updatePath}.technique-req.${tech[0]}`] = false;
-      }
+    let found = selector.querySelector(`.Selected${tech[1].label}`);
+    if (found.checked === true) {
+      itemUpdate[`${updatePath}.technique-req.${tech[0]}`] = true;
+    } else {
+      itemUpdate[`${updatePath}.technique-req.${tech[0]}`] = false;
     }
   }
 
   // Forms
   for (const form of Object.entries(CONFIG.ARM5E.magic.forms)) {
-    let found = selector.find(`.Selected${form[1].label}`);
-    if (found.length > 0) {
-      if (found[0].checked === true) {
-        itemUpdate[`${updatePath}.form-req.${form[0]}`] = true;
-      } else {
-        itemUpdate[`${updatePath}.form-req.${form[0]}`] = false;
-      }
+    let found = selector.querySelector(`.Selected${form[1].label}`);
+    if (found.checked === true) {
+      itemUpdate[`${updatePath}.form-req.${form[0]}`] = true;
+    } else {
+      itemUpdate[`${updatePath}.form-req.${form[0]}`] = false;
     }
   }
 
@@ -647,32 +644,57 @@ function noFatigue(actor) {
 function fatigueCost(actor, castingTotal, difficulty, ritual = false) {
   const res = { use: 0, partial: 0, fail: 0 };
   const delta = castingTotal - difficulty;
+
   if (ritual) {
-    // Mythic blood
-    res.use = Math.max(1 - actor.system.bonuses.arts.ritualFatigueCancelled, 0);
-    if (delta < 0) {
-      let cnt = Math.ceil((difficulty - castingTotal) / 5);
-      const numberOfFatigueCancelled = Math.min(
-        Math.max(actor.system.bonuses.arts.ritualFatigueCancelled - 1, 0),
-        2
-      );
-      if (cnt > 2) {
-        res.fail = cnt - 2;
-        res.partial = 2 - numberOfFatigueCancelled;
-      } else {
-        // remove partial fatigue levels with mythic blood
-        res.partial = Math.max(cnt - numberOfFatigueCancelled, 0);
-      }
-    }
+    calculateRitualFatigueCost(res, delta, difficulty, castingTotal, actor);
   } else {
-    if (-delta > 10) {
-      res.fail = 1;
-    } else if (delta + actor.system.bonuses.arts.spellFatigueThreshold < 0) {
-      res.partial = 1;
-    }
+    calculateSpellFatigueCost(res, delta, actor);
   }
+
   log(false, "Spell fatigue cost", res);
   return res;
+}
+
+function calculateRitualFatigueCost(res, delta, difficulty, castingTotal, actor) {
+  const ritualFatigueCancelled = actor.system.bonuses.arts.ritualFatigueCancelled;
+
+  // Base cost for casting ritual (reduced by mythic blood virtue)
+  res.use = Math.max(1 - ritualFatigueCancelled, 0);
+
+  // Additional fatigue if ritual fails
+  if (delta < 0) {
+    const failureMargin = difficulty - castingTotal;
+    const totalFatigueLevels = Math.ceil(failureMargin / 5);
+
+    // Mythic blood can cancel up to 2 partial fatigue levels beyond the initial use cost
+    const partialFatigueCancellation = Math.min(Math.max(ritualFatigueCancelled - 1, 0), 2);
+
+    const MAX_PARTIAL_LEVELS = 2;
+
+    if (totalFatigueLevels > MAX_PARTIAL_LEVELS) {
+      // Split between partial (first 2) and full fatigue (rest)
+      res.fail = totalFatigueLevels - MAX_PARTIAL_LEVELS;
+      res.partial = Math.max(MAX_PARTIAL_LEVELS - partialFatigueCancellation, 0);
+      log(false, `Ritual fatigue (high): totalLevels=${totalFatigueLevels}, res=`, res);
+    } else {
+      // All fatigue is partial, apply cancellation
+      res.partial = Math.max(totalFatigueLevels - partialFatigueCancellation, 0);
+      log(false, `Ritual fatigue (low): totalLevels=${totalFatigueLevels}, res=`, res);
+    }
+  }
+}
+
+function calculateSpellFatigueCost(res, delta, actor) {
+  const fatigueThreshold = actor.system.bonuses.arts.spellFatigueThreshold;
+
+  // Spell fails by more than 10: full fatigue level
+  if (delta < -10) {
+    res.fail = 1;
+  }
+  // Spell fails (considering fatigue threshold bonus): partial fatigue
+  else if (delta + fatigueThreshold < 0) {
+    res.partial = 1;
+  }
 }
 
 /**
@@ -796,7 +818,7 @@ async function handleTargetsOfMagic(actorCaster, form, message) {
  */
 function magicalAttributesHelper(attributes, options) {
   // For (const range of Object.entries(ranges))
-  return HandlebarsHelpers.selectOptions(attributes, options);
+  return foundry.applications.handlebars.selectOptions(attributes, options);
 }
 
 /**
@@ -809,42 +831,9 @@ async function useMagicItem(dataset, item) {
     ui.notifications.warn(game.i18n.localize("arm5e.notification.noChargesLeft"));
     return;
   }
-  prepareRollVariables(dataset, item.actor);
-  // log(false, `Roll variables: ${JSON.stringify(item.actor.system.roll)}`);
-  let template = "systems/arm5e/templates/actor/parts/actor-itemUse.html";
-  item.actor.system.roll = item.actor.rollInfo;
-  item.actor.config = CONFIG.ARM5E;
-  const renderedTemplate = await renderTemplate(template, item.actor);
-
-  const dialog = new Dialog(
-    {
-      title: game.i18n.localize("arm5e.dialog.magicItemUse"),
-      content: renderedTemplate,
-      render: item.actor.rollInfo.listeners,
-      buttons: {
-        yes: {
-          icon: "<i class='fas fa-check'></i>",
-          label: game.i18n.localize(),
-          callback: async (html) => {
-            getFormData(html, item.actor);
-            await noRoll(item.actor, 1, useItemCharge);
-          }
-        },
-        no: {
-          icon: "<i class='fas fa-ban'></i>",
-          label: game.i18n.localize("arm5e.dialog.button.cancel"),
-          callback: null
-        }
-      }
-    },
-    {
-      jQuery: true,
-      height: "600px",
-      width: "400px",
-      classes: ["roll-dialog", "arm5e-dialog", "dialog"]
-    }
-  );
-  dialog.render(true);
+  item.actor.rollInfo.init(dataset, item.actor);
+  new UseMagicItemWindow(item.actor, { window: { title: dataset.name } }).render(true);
+  return;
 }
 
 /**
@@ -857,47 +846,15 @@ async function usePower(dataset, actor) {
     ui.notifications.warn(game.i18n.localize("arm5e.notification.noMightPoints"));
     return;
   }
-  prepareRollVariables(dataset, actor);
+  actor.rollInfo.init(dataset, actor);
   const rollProperties = actor.rollInfo.properties;
   // log(false, `Roll variables: ${JSON.stringify(actor.system.roll)}`);
-  let template = "systems/arm5e/templates/actor/parts/actor-powerUse.html";
+  // let template = "systems/arm5e/templates/roll/powerUse.html";
   actor.system.roll = actor.rollInfo;
   actor.config = { magic: CONFIG.ARM5E.magic };
-  const renderedTemplate = await renderTemplate(template, actor);
-
-  const dialog = new Dialog(
-    {
-      title: dataset.name,
-      content: renderedTemplate,
-      render: actor.rollInfo.listeners,
-      buttons: {
-        yes: {
-          icon: "<i class='fas fa-check'></i>",
-          label: game.i18n.localize(rollProperties.ACTION_LABEL),
-          callback: async (html) => {
-            getFormData(html, actor);
-            if (actor.system.features.hasMight) {
-              await noRoll(actor, 1, changeMightCallback);
-            } else {
-              await noRoll(actor, 1, loseFatigueLevelCallback);
-            }
-          }
-        },
-        no: {
-          icon: "<i class='fas fa-ban'></i>",
-          label: game.i18n.localize("arm5e.dialog.button.cancel"),
-          callback: null
-        }
-      }
-    },
-    {
-      jQuery: true,
-      height: "600px",
-      width: "400px",
-      classes: ["roll-dialog", "arm5e-dialog", "dialog"]
-    }
-  );
-  dialog.render(true);
+  const options = { window: { title: dataset.name } };
+  new UsePowerRollWindow(actor, options).render(true);
+  return;
 }
 
 export {

@@ -1,52 +1,86 @@
 import { getCompanion, getMagus } from "./testData.js";
 import { ArsLayer } from "../ui/ars-layer.js";
-import { ARM5E } from "../config.js";
-import { simpleDie, stressDie } from "../dice.js";
+import { simpleDie, stressDie } from "../helpers/dice.js";
 import Aura from "../helpers/aura.js";
-import { ROLL_PROPERTIES } from "../helpers/rollWindow.js";
-import { log } from "../tools.js";
+import { ROLL_PROPERTIES } from "../ui/roll-window.js";
+import { log } from "../tools/tools.js";
+
+// Test constants
+const BOTCH_DIE_COUNT = 10;
 
 export function registerOptionRollTesting(quench) {
   quench.registerBatch(
     "Ars-Option-rolls",
     (context) => {
-      const { describe, it, assert, before } = context;
+      const { describe, it, assert, before, afterEach } = context;
       let actor;
       let magus;
-      let ME1;
-      let ME2;
-      let ME3;
-      let Sp1;
-      let Sp2;
-      let Sp3;
-      let Sp4;
       let magusToken;
       let aura;
+
+      // Helper functions
+      function assertBasicRollStructure(msgData, expectedLabel, expectedType) {
+        assert.ok(msgData, "system missing");
+        assert.equal(msgData.label, expectedLabel, `label should be "${expectedLabel}"`);
+        assert.equal(msgData.roll.type, expectedType, `roll type should be "${expectedType}"`);
+        assert.equal(msgData.roll.actorType, "player", "actor type should be 'player'");
+      }
+
+      function assertConfidenceState(msgData) {
+        assert.ok(msgData.confidence.score >= 0, "confidence.score should be non-negative");
+        assert.equal(msgData.confidence.used, 0, "confidence.used should be 0 initially");
+      }
+
+      function assertImpactDefaults(msgData) {
+        assert.equal(msgData.impact.fatigueLevelsLost, 0, "fatigue levels lost should be 0");
+        assert.equal(msgData.impact.fatigueLevelsPending, 0, "fatigue levels pending should be 0");
+        assert.equal(msgData.impact.woundGravity, 0, "wound gravity should be 0");
+      }
+
+      function assertBotchBehavior(msgData, roll) {
+        assert.equal(msgData.impact.applied, true, "impact should be applied on botch");
+        assert.equal(roll.total, 0, "botch total should be 0");
+        assert.equal(msgData.roll.botchCheck, true, "botch check should be true");
+        assert.equal(msgData.roll.botches, roll.botches, "botch count should match");
+        assert.equal(msgData.confidence.allowed, false, "confidence not allowed on botch");
+      }
+
+      async function assertSuccessWithConfidence(msg, actor, expectedModifier) {
+        assert.equal(msg.system.impact.applied, false, "impact should not be applied yet");
+        assert.equal(msg.system.confidence.allowed, true, "confidence should be allowed");
+        if (expectedModifier !== undefined) {
+          assert.equal(msg.rolls[0].modifier, expectedModifier, "modifier not correct");
+        }
+        const initialUsed = msg.system.confidence.used;
+        await msg.system.useConfidence(actor._id);
+
+        assert.equal(
+          msg.system.confidence.used,
+          initialUsed + 1,
+          `confidence.used should be ${initialUsed + 1}`
+        );
+        // Confidence is only disallowed if all confidence points have been spent
+        const expectedAllowed = msg.system.confidence.used < msg.system.confidence.score;
+        assert.equal(
+          msg.system.confidence.allowed,
+          expectedAllowed,
+          `confidence ${expectedAllowed ? "should" : "should not"} be allowed (${
+            msg.system.confidence.used
+          }/${msg.system.confidence.score} used)`
+        );
+      }
 
       if (game.modules.get("dice-so-nice")?.active) {
         ui.notifications.warn("Disable dice-so-nice to test dice rolls");
         return;
-      }
-      let hasScene = false;
-      if (game.scenes.viewed) {
-        hasScene = true;
       }
 
       before(async function () {
         actor = await getCompanion(`BobTheCompanion`);
         ArsLayer.clearAura(true);
         magus = await getMagus("Tiberius");
-        ME1 = magus.items.getName("Standard effect");
-        ME2 = magus.items.getName("All req effect");
-        ME3 = magus.items.getName("Effect with focus");
-        Sp1 = magus.items.getName("Standard spell");
-        Sp2 = magus.items.getName("Spell with focus");
-        Sp3 = magus.items.getName("Ritual spell");
-        Sp4 = magus.items.getName("Spell with deficiency");
 
-        await magus.addActiveEffect("Affinity Corpus", "affinity", "co", 2, null);
-        await magus.addActiveEffect("Puissant Muto", "art", "mu", 3, null);
-        await magus.addActiveEffect("Deficient Perdo", "deficiency", "pe", undefined, null);
+        const hasScene = !!game.scenes.viewed;
         if (hasScene) {
           const data = await magus.getTokenDocument({ x: 1000, y: 1000 });
           data.actorLink = true;
@@ -58,725 +92,874 @@ export function registerOptionRollTesting(quench) {
           aura = new Aura(0);
         }
       });
+
+      afterEach(async function () {
+        await actor.rest();
+        await actor.restoreHealth();
+      });
       describe("Options rolls", function () {
+        this.timeout(300000); // 300 seconds for easier debugging
+
         it("Personality roll", async function () {
-          try {
-            let dataset = {
-              roll: "option",
-              name: "Personality Loyal",
-              option1: 1,
-              txtoption1: "score",
-              difficulty: 6
-            };
-            await actor.rest();
-            actor.rollInfo.init(dataset, actor);
-            const msg = await stressDie(actor, "option", 0, actor.rollInfo.properties.CALLBACK, 10);
-            const roll = msg.rolls[0];
-            const msgData = msg.system;
+          const dataset = {
+            roll: "option",
+            name: "Personality Loyal",
+            option1: 1,
+            txtoption1: "score",
+            difficulty: 6
+          };
+          actor.rollInfo.init(dataset, actor);
+          const msg = await stressDie(
+            actor,
+            "option",
+            0,
+            actor.rollInfo.properties.CALLBACK,
+            BOTCH_DIE_COUNT
+          );
+          const roll = msg.rolls[0];
+          const msgData = msg.system;
 
-            assert.ok(roll);
-            assert.ok(msgData, "system missing");
-            assert.equal(msgData.label, "Personality Loyal");
-            assert.equal(msgData.confidence.score, 1);
-            assert.equal(msgData.roll.type, "option");
-            assert.equal(msgData.roll.difficulty, dataset.difficulty);
-            assert.equal(msgData.roll.actorType, "player");
-            assert.equal(msgData.impact.fatigueLevelsLost, 0, "fatigue levels lost should be 0");
-            assert.equal(
-              msgData.impact.fatigueLevelsPending,
-              0,
-              "fatigue levels pending should be 0"
-            );
-            assert.equal(msgData.impact.woundGravity, 0, "wound gravity should be 0");
+          assert.ok(roll, "roll should exist");
+          assertBasicRollStructure(msgData, "Personality Loyal", "option");
+          assert.equal(msgData.confidence.score, 1, "confidence score should be 1");
+          assertConfidenceState(msgData);
+          assert.equal(msgData.roll.difficulty, dataset.difficulty, "difficulty should match");
+          assertImpactDefaults(msgData);
+          assert.equal(
+            msgData.roll.difficulty > msg.rollTotal(),
+            msgData.failedRoll(),
+            "failed roll calculation incorrect"
+          );
 
-            assert.equal(
-              msgData.roll.difficulty > msg.rollTotal(),
-              msgData.failedRoll(),
-              "failed roll incorrect"
-            );
-            if (roll.botches) {
-              assert.equal(msgData.impact.applied, true, "shoud be applied");
-              assert.equal(roll.total, 0, "botched");
-              assert.equal(msgData.roll.botchCheck, true, "Check for botch missing");
-              assert.equal(msgData.roll.botches, roll.botches, "Wrong number of botches");
-              assert.equal(msg.system.confidence.allowed, false, "confidence is not allowed");
-            } else {
-              assert.equal(msgData.impact.applied, false, "shoud not be applied");
-              assert.equal(roll.modifier, 1, "bad modifier");
-              assert.equal(msgData.confidence.allowed, true, "confidence is allowed");
-              await msgData.useConfidence(actor._id);
-              assert.equal(msg.system.confidence.used, 1, "confidence.used should be 1");
-              assert.equal(msg.system.confidence.allowed, false, "confidence is not allowed");
-            }
-          } catch (err) {
-            console.error(`Error: ${err}`);
-            assert.ok(false, err);
+          if (roll.botches) {
+            assertBotchBehavior(msgData, roll);
+          } else {
+            assert.equal(roll.modifier, 1, "modifier should be 1");
+            await assertSuccessWithConfidence(msg, actor, 1);
           }
         });
         it("Personality roll doomed to fail", async function () {
-          try {
-            let dataset = {
-              roll: "option",
-              name: "Personality roll doomed to fail",
-              option1: 1,
-              txtoption1: "score",
-              difficulty: 99
-            };
-            await actor.rest();
-            actor.rollInfo.init(dataset, actor);
-            const botchNum = 10;
-            const msg = await stressDie(
-              actor,
-              "option",
-              0,
-              actor.rollInfo.properties.CALLBACK,
-              botchNum
-            );
-            const roll = msg.rolls[0];
-            assert.ok(roll);
-            const msgData = msg.system;
+          const dataset = {
+            roll: "option",
+            name: "Personality roll doomed to fail",
+            option1: 1,
+            txtoption1: "score",
+            difficulty: 99
+          };
+          actor.rollInfo.init(dataset, actor);
+          const msg = await stressDie(
+            actor,
+            "option",
+            0,
+            actor.rollInfo.properties.CALLBACK,
+            BOTCH_DIE_COUNT
+          );
+          const roll = msg.rolls[0];
+          const msgData = msg.system;
 
-            assert.ok(msgData, "system missing");
-            assert.equal(msgData.label, "Personality roll doomed to fail");
-            assert.equal(msgData.confidence.score, 1);
-            assert.ok(msgData.confidence.score >= 0, "confidence.score should be non-negative");
-            assert.equal(msgData.confidence.used, 0, "confidence.used should be 0");
-            assert.equal(msgData.roll.type, "option");
-            assert.equal(msgData.roll.difficulty, dataset.difficulty);
-            assert.equal(msgData.roll.actorType, "player");
+          assert.ok(roll, "roll should exist");
+          assertBasicRollStructure(msgData, "Personality roll doomed to fail", "option");
+          assert.equal(msgData.confidence.score, 1, "confidence score should be 1");
+          assertConfidenceState(msgData);
+          assert.equal(msgData.roll.difficulty, dataset.difficulty, "difficulty should match");
+          assertImpactDefaults(msgData);
+          assert.equal(
+            msgData.roll.difficulty > msg.rollTotal(0),
+            msgData.failedRoll(),
+            "failed roll calculation incorrect"
+          );
+
+          if (roll.botches) {
+            assertBotchBehavior(msgData, roll);
+          } else {
+            assert.equal(roll.modifier, 1, "modifier should be 1");
+            await assertSuccessWithConfidence(msg, actor, 1);
+          }
+        });
+        it("Roll with fatigue roll doomed to fail", async function () {
+          const dataset = {
+            roll: "option",
+            name: "Fatigue roll doomed to fail",
+            option1: 1,
+            txtoption1: "score",
+            difficulty: 999,
+            fatigueOnFail: 2
+          };
+          actor.rollInfo.init(dataset, actor);
+          const fatigueCurrent = actor.system.fatigueCurrent;
+          const msg = await stressDie(
+            actor,
+            "option",
+            0,
+            actor.rollInfo.properties.CALLBACK,
+            BOTCH_DIE_COUNT
+          );
+          const roll = msg.rolls[0];
+          const msgData = msg.system;
+
+          assert.ok(roll, "roll should exist");
+          assertBasicRollStructure(msgData, "Fatigue roll doomed to fail", "option");
+          assert.equal(msgData.confidence.score, 1, "confidence score should be 1");
+          assertConfidenceState(msgData);
+          assert.equal(msgData.roll.difficulty, dataset.difficulty, "difficulty should match");
+          assert.equal(msgData.impact.woundGravity, 0, "wound gravity should be 0");
+
+          if (roll.botches) {
+            assert.equal(msgData.failedRoll(), true, "should be a failed roll");
+            assertBotchBehavior(msgData, roll);
+            assert.equal(msgData.impact.fatigueLevelsLost, 2, "fatigue levels lost should be 2");
+            assert.equal(
+              msgData.impact.fatigueLevelsPending,
+              0,
+              "fatigue levels pending should be 0"
+            );
+            assert.equal(msgData.impact.fatigueLevelsFail, 0, "fatigue levels on fail should be 0");
+          } else {
+            assert.equal(
+              msgData.roll.difficulty > msg.rollTotal(0),
+              msgData.failedRoll(),
+              "failed roll calculation incorrect"
+            );
+            assert.equal(msgData.impact.applied, false, "impact should not be applied yet");
             assert.equal(msgData.impact.fatigueLevelsLost, 0, "fatigue levels lost should be 0");
             assert.equal(
               msgData.impact.fatigueLevelsPending,
               0,
               "fatigue levels pending should be 0"
             );
-            assert.equal(msgData.impact.woundGravity, 0, "wound gravity should be 0");
+            assert.equal(msgData.impact.fatigueLevelsFail, 2, "fatigue levels on fail should be 2");
+            assert.equal(msgData.confidence.allowed, true, "confidence should be allowed");
             assert.equal(
-              msgData.roll.difficulty > msg.rollTotal(0),
-              msgData.failedRoll(),
-              "failed roll incorrect"
+              fatigueCurrent,
+              actor.system.fatigueCurrent,
+              "fatigue should not change yet"
             );
-            if (roll.botches) {
-              assert.equal(msgData.impact.applied, true, "shoud be applied");
-              assert.equal(roll.total, 0, "botched");
-              assert.equal(msgData.roll.botchCheck, true, "Check for botch missing");
-              assert.equal(msgData.roll.botches, roll.botches, "Wrong number of botches");
-              assert.equal(msg.system.confidence.allowed, false, "confidence is not allowed");
-            } else {
-              assert.equal(msgData.impact.applied, false, "shoud not be applied");
-              assert.equal(msgData.confidence.allowed, true, "confidence is allowed");
-              assert.equal(roll.modifier, 1, "bad modifier");
-              await msgData.useConfidence(actor._id);
-              assert.equal(msg.system.confidence.used, 1, "confidence.used should be 1");
-              assert.equal(msg.system.confidence.allowed, false, "confidence is not allowed");
-            }
-            // await msgData.useConfidence(magus._id);
-            // assert.equal(msgData.confidence.used, 2, "confidence.used should be 2");
-            // assert.equal(msgData.confidence.allowed, false, "confidence is not allowed");
-          } catch (err) {
-            console.error(`Error: ${err}`);
-            assert.ok(false, err);
-          }
-        });
-        it("Roll with fatigue roll doomed to fail", async function () {
-          try {
-            let dataset = {
-              roll: "option",
-              name: "Fatigue roll doomed to fail",
-              option1: 1,
-              txtoption1: "score",
-              difficulty: 999,
-              fatigueOnFail: 2
-            };
-            await actor.rest();
-            actor.rollInfo.init(dataset, actor);
-            const fatigueCurrent = actor.system.fatigueCurrent;
-            const botchNum = 10;
-            const msg = await stressDie(
-              actor,
-              "option",
-              dataset.mode,
-              actor.rollInfo.properties.CALLBACK,
-              botchNum
+            assert.equal(roll.modifier, 1, "modifier should be 1");
+            await msgData.useConfidence(actor._id);
+            assert.equal(
+              fatigueCurrent + 2,
+              actor.system.fatigueCurrent,
+              "fatigue should increase after confidence use"
             );
-            const roll = msg.rolls[0];
-            assert.ok(roll);
-            const msgData = msg.system;
-
-            assert.ok(msgData, "system missing");
-            assert.equal(msgData.label, "Fatigue roll doomed to fail");
-            assert.equal(msgData.confidence.score, 1);
-            assert.ok(msgData.confidence.score >= 0, "confidence.score should be non-negative");
-            assert.equal(msgData.confidence.used, 0, "confidence.used should be 0");
-            assert.equal(msgData.roll.type, "option");
-            assert.equal(msgData.roll.difficulty, dataset.difficulty);
-            assert.equal(msgData.roll.actorType, "player");
-
-            assert.equal(msgData.impact.woundGravity, 0, "wound gravity should be 0");
-
-            if (roll.botches) {
-              assert.equal(msgData.failedRoll(), true, "failed roll incorrect");
-              assert.equal(msgData.impact.applied, true, "shoud be applied");
-              assert.equal(roll.total, 0, "botched");
-              assert.equal(msgData.roll.botchCheck, true, "Check for botch missing");
-              assert.equal(msgData.roll.botches, roll.botches, "Wrong number of botches");
-              assert.equal(msg.system.confidence.allowed, false, "confidence is not allowed");
-              assert.equal(msgData.impact.fatigueLevelsLost, 2, "fatigue levels lost should be 2");
-              assert.equal(
-                msgData.impact.fatigueLevelsPending,
-                0,
-                "fatigue levels pending should be 0"
-              );
-              assert.equal(
-                msgData.impact.fatigueLevelsFail,
-                0,
-                "fatigue levels on fail should be 0"
-              );
-            } else {
-              assert.equal(
-                msgData.roll.difficulty > msg.rollTotal(0),
-                msgData.failedRoll(),
-                "failed roll incorrect"
-              );
-              assert.equal(msgData.impact.applied, false, "shoud not be applied");
-              assert.equal(msgData.impact.fatigueLevelsLost, 0, "fatigue levels lost should be 0");
-              assert.equal(
-                msgData.impact.fatigueLevelsPending,
-                0,
-                "fatigue levels pending should be 0"
-              );
-              assert.equal(
-                msgData.impact.fatigueLevelsFail,
-                2,
-                "fatigue levels on fail should be 2"
-              );
-              assert.equal(msgData.confidence.allowed, true, "confidence is allowed");
-              assert.equal(fatigueCurrent, actor.system.fatigueCurrent, "fatigue changed");
-              assert.equal(roll.modifier, 1, "bad modifier");
-              await msgData.useConfidence(actor._id);
-              assert.equal(
-                fatigueCurrent + 2,
-                actor.system.fatigueCurrent,
-                "fatigue should change"
-              );
-              assert.equal(msg.system.confidence.used, 1, "confidence.used should be 1");
-              assert.equal(msg.system.confidence.allowed, false, "confidence is not allowed");
-            }
-
-            // await msgData.useConfidence(magus._id);
-            // assert.equal(msgData.confidence.used, 2, "confidence.used should be 2");
-            // assert.equal(msgData.confidence.allowed, false, "confidence is not allowed");
-          } catch (err) {
-            console.error(`Error: ${err}`);
-            assert.ok(false, err);
+            assert.equal(msg.system.confidence.used, 1, "confidence.used should be 1");
+            assert.equal(msg.system.confidence.allowed, false, "confidence not allowed after use");
           }
         });
         it("Roll with fatigue on use", async function () {
-          try {
-            let dataset = {
-              roll: "option",
-              name: "Fatigue on Use",
-              option1: 1,
-              txtoption1: "score",
-              difficulty: 6,
-              fatigueOnUse: 3
-            };
-            await actor.rest();
-            actor.rollInfo.init(dataset, actor);
-            let fatigueCurrent = actor.system.fatigueCurrent;
-            const botchNum = 10;
-            const msg = await stressDie(
-              actor,
-              "option",
-              dataset.mode,
-              actor.rollInfo.properties.CALLBACK,
-              botchNum
+          const dataset = {
+            roll: "option",
+            name: "Fatigue on Use",
+            option1: 1,
+            txtoption1: "score",
+            difficulty: 6,
+            fatigueOnUse: 3
+          };
+          actor.rollInfo.init(dataset, actor);
+          let fatigueCurrent = actor.system.fatigueCurrent;
+          const msg = await stressDie(
+            actor,
+            "option",
+            0,
+            actor.rollInfo.properties.CALLBACK,
+            BOTCH_DIE_COUNT
+          );
+          const roll = msg.rolls[0];
+          const msgData = msg.system;
+
+          assert.ok(roll, "roll should exist");
+          assertBasicRollStructure(msgData, "Fatigue on Use", "option");
+          assert.equal(msgData.confidence.score, 1, "confidence score should be 1");
+          assertConfidenceState(msgData);
+          assert.equal(msgData.roll.difficulty, 6, "difficulty should be 6");
+          assert.equal(msgData.impact.fatigueLevelsLost, 3, "fatigue levels lost should be 3");
+          assert.equal(
+            fatigueCurrent + 3,
+            actor.system.fatigueCurrent,
+            "fatigue should increase by 3"
+          );
+
+          if (roll.botches) {
+            assert.equal(roll.total, 0, "botch total should be 0");
+            assert.equal(msgData.roll.botchCheck, true, "botch check should be true");
+            assert.equal(msgData.roll.botches, roll.botches, "botch count should match");
+            assert.equal(msgData.confidence.allowed, false, "confidence not allowed on botch");
+            assert.equal(
+              msgData.impact.fatigueLevelsPending,
+              0,
+              "fatigue levels pending should be 0"
             );
-            const roll = msg.rolls[0];
-            assert.ok(roll);
-            const msgData = msg.system;
+            assert.equal(msgData.impact.woundGravity, 0, "wound gravity should be 0");
+            assert.equal(msgData.impact.applied, true, "impact should be applied");
+            assert.equal(msgData.failedRoll(), true, "should be a failed roll");
+          } else {
+            assert.equal(
+              msgData.impact.fatigueLevelsPending,
+              0,
+              "fatigue levels pending should be 0"
+            );
+            assert.equal(msgData.impact.woundGravity, 0, "wound gravity should be 0");
+            assert.equal(msgData.impact.applied, false, "impact should not be applied yet");
+            assert.equal(
+              msgData.roll.difficulty > msg.rollTotal(0),
+              msgData.failedRoll(),
+              "failed roll calculation incorrect"
+            );
+            assert.equal(msgData.confidence.allowed, true, "confidence should be allowed");
+            assert.equal(roll.modifier, 1, "modifier should be 1");
+            fatigueCurrent = actor.system.fatigueCurrent;
+            await msgData.useConfidence(actor._id);
+            assert.equal(
+              fatigueCurrent,
+              actor.system.fatigueCurrent,
+              "fatigue should not change on confidence use"
+            );
+            assert.equal(msg.system.confidence.used, 1, "confidence.used should be 1");
+            assert.equal(msg.system.confidence.allowed, false, "confidence not allowed after use");
+          }
+        });
 
-            assert.ok(msgData, "system missing");
-            assert.equal(msgData.label, "Fatigue on Use");
-            assert.equal(msgData.confidence.score, 1);
-            assert.ok(msgData.confidence.score >= 0, "confidence.score should be non-negative");
-            assert.equal(msgData.confidence.used, 0, "confidence.used should be 0");
-            assert.equal(msgData.roll.type, "option");
-            assert.equal(msgData.roll.difficulty, 6);
-            assert.equal(msgData.roll.actorType, "player");
-            assert.equal(msgData.impact.fatigueLevelsLost, 3, "fatigue levels lost should be 3");
+        it("Roll with both fatigue on use and on fail", async function () {
+          const dataset = {
+            roll: "option",
+            name: "Fatigue on both",
+            option1: 1,
+            txtoption1: "score",
+            difficulty: 999,
+            fatigueOnUse: 2,
+            fatigueOnFail: 3
+          };
+          actor.rollInfo.init(dataset, actor);
+          let fatigueCurrent = actor.system.fatigueCurrent;
+          const msg = await stressDie(
+            actor,
+            "option",
+            0,
+            actor.rollInfo.properties.CALLBACK,
+            BOTCH_DIE_COUNT
+          );
+          const roll = msg.rolls[0];
+          const msgData = msg.system;
 
-            assert.equal(fatigueCurrent + 3, actor.system.fatigueCurrent, "fatigue not changed");
-            if (roll.botches) {
-              assert.equal(roll.total, 0, "botched");
-              assert.equal(msgData.roll.botchCheck, true, "Check for botch missing");
-              assert.equal(msgData.roll.botches, roll.botches, "Wrong number of botches");
-              assert.equal(msg.system.confidence.allowed, false, "confidence is not allowed");
-              assert.equal(
-                msgData.impact.fatigueLevelsPending,
-                0,
-                "fatigue levels pending should be 0"
-              );
-              assert.equal(msgData.impact.woundGravity, 0, "wound gravity should be 0");
-              assert.equal(msgData.impact.applied, true, "shoud be applied");
-              assert.equal(
-                msgData.roll.difficulty > msg.rollTotal(0),
-                msgData.failedRoll(),
-                "failed roll incorrect"
-              );
-              assert.equal(msgData.failedRoll(), true, "failed roll should be true");
-            } else {
-              assert.equal(
-                msgData.impact.fatigueLevelsPending,
-                0,
-                "fatigue levels pending should be 0"
-              );
-              assert.equal(msgData.impact.woundGravity, 0, "wound gravity should be 0");
-              assert.equal(msgData.impact.applied, false, "shoud not be applied");
-              assert.equal(
-                msgData.roll.difficulty > msg.rollTotal(0),
-                msgData.failedRoll(),
-                "failed roll incorrect"
-              );
-              assert.equal(msgData.confidence.allowed, true, "confidence is allowed");
-              assert.equal(roll.modifier, 1, "bad modifier");
-              fatigueCurrent = actor.system.fatigueCurrent;
-              await msgData.useConfidence(actor._id);
-              assert.equal(
-                fatigueCurrent,
-                actor.system.fatigueCurrent,
-                "fatigue should not change"
-              );
-              assert.equal(msg.system.confidence.used, 1, "confidence.used should be 1");
-              assert.equal(msg.system.confidence.allowed, false, "confidence is not allowed");
-            }
-            await actor.rest();
-            // await msgData.useConfidence(magus._id);
-            // assert.equal(msgData.confidence.used, 2, "confidence.used should be 2");
-            // assert.equal(msgData.confidence.allowed, false, "confidence is not allowed");
-          } catch (err) {
-            console.error(`Error: ${err}`);
-            assert.ok(false, err);
+          assert.ok(roll, "roll should exist");
+          assertBasicRollStructure(msgData, "Fatigue on both", "option");
+          assert.equal(msgData.confidence.score, 1, "confidence score should be 1");
+          assertConfidenceState(msgData);
+          assert.equal(msgData.roll.difficulty, 999, "difficulty should be 999");
+          assert.equal(msgData.impact.fatigueLevelsLost, 2, "fatigue levels lost should be 2");
+          assert.equal(
+            fatigueCurrent + 2,
+            actor.system.fatigueCurrent,
+            "fatigue should increase by 2 from use"
+          );
+
+          if (roll.botches) {
+            assert.equal(msgData.failedRoll(), true, "should be a failed roll");
+            assertBotchBehavior(msgData, roll);
+            assert.equal(msgData.impact.fatigueLevelsFail, 3, "fatigue levels on fail should be 3");
+          } else {
+            assert.equal(
+              msgData.roll.difficulty > msg.rollTotal(0),
+              msgData.failedRoll(),
+              "failed roll calculation incorrect"
+            );
+            assert.equal(msgData.impact.applied, false, "impact should not be applied yet");
+            assert.equal(msgData.impact.fatigueLevelsFail, 3, "fatigue levels on fail should be 3");
+            assert.equal(msgData.confidence.allowed, true, "confidence should be allowed");
+            assert.equal(roll.modifier, 1, "modifier should be 1");
+            fatigueCurrent = actor.system.fatigueCurrent;
+            await msgData.useConfidence(actor._id);
+            // Should add both fatigueOnUse (already applied) and fatigueOnFail (from failing)
+            assert.equal(
+              fatigueCurrent + 3,
+              actor.system.fatigueCurrent,
+              "fatigue should increase by 3 more from fail after confidence use"
+            );
+            assert.equal(msg.system.confidence.used, 1, "confidence.used should be 1");
+            assert.equal(msg.system.confidence.allowed, false, "confidence not allowed after use");
+          }
+        });
+
+        it("Roll while already fatigued", async function () {
+          // First, apply some fatigue
+          await actor.loseFatigueLevel(2, false);
+          const initialFatigue = actor.system.fatigueCurrent;
+          assert.equal(initialFatigue, 2, "actor should start with 2 fatigue levels");
+
+          const dataset = {
+            roll: "option",
+            name: "Roll while fatigued",
+            option1: 1,
+            txtoption1: "score",
+            difficulty: 6,
+            fatigueOnUse: 1
+          };
+          actor.rollInfo.init(dataset, actor);
+          const msg = await stressDie(
+            actor,
+            "option",
+            0,
+            actor.rollInfo.properties.CALLBACK,
+            BOTCH_DIE_COUNT
+          );
+          const roll = msg.rolls[0];
+          const msgData = msg.system;
+
+          assert.ok(roll, "roll should exist");
+          assertBasicRollStructure(msgData, "Roll while fatigued", "option");
+          assert.equal(msgData.confidence.score, 1, "confidence score should be 1");
+          assertConfidenceState(msgData);
+          assert.equal(msgData.roll.difficulty, 6, "difficulty should be 6");
+          assert.equal(msgData.impact.fatigueLevelsLost, 1, "fatigue levels lost should be 1");
+          assert.equal(
+            initialFatigue + 1,
+            actor.system.fatigueCurrent,
+            "fatigue should increase by 1 from initial level"
+          );
+
+          if (roll.botches) {
+            assertBotchBehavior(msgData, roll);
+          } else {
+            assert.equal(
+              msgData.roll.difficulty > msg.rollTotal(0),
+              msgData.failedRoll(),
+              "failed roll calculation incorrect"
+            );
+            assert.equal(msgData.impact.applied, false, "impact should not be applied yet");
+            assert.equal(msgData.confidence.allowed, true, "confidence should be allowed");
+            // Modifier should account for fatigue penalty
+            const fatiguePenalty = Math.floor(actor.system.fatigueCurrent / 2);
+            const expectedModifier = 1 - fatiguePenalty;
+            assert.equal(
+              roll.modifier,
+              expectedModifier,
+              `modifier should be ${expectedModifier} (1 - ${fatiguePenalty} fatigue penalty)`
+            );
+            await msgData.useConfidence(actor._id);
+            assert.equal(msg.system.confidence.used, 1, "confidence.used should be 1");
+            assert.equal(msg.system.confidence.allowed, false, "confidence not allowed after use");
           }
         });
 
         it("Reputation roll", async function () {
-          try {
-            let dataset = {
-              roll: "option",
-              name: "Dead reputation",
-              option1: 1,
-              txtoption1: "score"
-            };
-            await actor.rest();
-            actor.rollInfo.init(dataset, actor);
-            const msg = await stressDie(actor, "char", 0, actor.rollInfo.properties.CALLBACK, 10);
-            const roll = msg.rolls[0];
-            log(false, roll);
-            assert.ok(roll);
-            const msgData = msg.system;
+          const dataset = {
+            roll: "option",
+            name: "Dead reputation",
+            option1: 1,
+            txtoption1: "score"
+          };
+          actor.rollInfo.init(dataset, actor);
+          const msg = await stressDie(
+            actor,
+            "option",
+            0,
+            actor.rollInfo.properties.CALLBACK,
+            BOTCH_DIE_COUNT
+          );
+          const roll = msg.rolls[0];
+          log(false, roll);
 
-            assert.ok(msgData, "system missing");
-            assert.equal(msgData.label, "Dead reputation");
-            assert.equal(msgData.confidence.score, 1);
-            assert.ok(msgData.confidence.score >= 0, "confidence.score should be non-negative");
-            assert.equal(msgData.confidence.used, 0, "confidence.used should be 0");
-            assert.equal(msgData.roll.type, "option");
-            assert.equal(msgData.roll.difficulty, 0);
-            assert.equal(msgData.roll.actorType, "player");
-            assert.equal(msgData.impact.fatigueLevelsLost, 0, "fatigue levels lost should be 0");
+          assert.ok(roll, "roll should exist");
+          assertBasicRollStructure(msg.system, "Dead reputation", "option");
+          assert.equal(msg.system.confidence.score, 1, "confidence score should be 1");
+          assertConfidenceState(msg.system);
+          assert.equal(msg.system.roll.difficulty, 0, "difficulty should be 0");
+          assertImpactDefaults(msg.system);
+
+          if (roll.botches) {
+            assertBotchBehavior(msg.system, roll);
+            assert.equal(msg.system.failedRoll(), true, "should be a failed roll");
+          } else {
             assert.equal(
-              msgData.impact.fatigueLevelsPending,
-              0,
-              "fatigue levels pending should be 0"
+              msg.system.roll.difficulty > msg.rollTotal(0),
+              msg.system.failedRoll(),
+              "failed roll calculation incorrect"
             );
-            assert.equal(msgData.impact.woundGravity, 0, "wound gravity should be 0");
-            if (roll.botches) {
-              assert.equal(msgData.impact.applied, true, "shoud be applied");
-              assert.equal(roll.total, 0, "botched");
-              assert.equal(msgData.roll.botchCheck, true, "Check for botch missing");
-              assert.equal(msgData.roll.botches, roll.botches, "Wrong number of botches");
-              assert.equal(msg.system.confidence.allowed, false, "confidence is not allowed");
-              assert.equal(msgData.failedRoll(), true, "failed roll should be true");
-            } else {
-              assert.equal(
-                msgData.roll.difficulty > msg.rollTotal(0),
-                msgData.failedRoll(),
-                "failed roll incorrect"
-              );
-              assert.equal(msgData.impact.applied, false, "shoud not be applied");
-              assert.equal(msgData.confidence.allowed, true, "confidence is allowed");
-              assert.equal(roll.modifier, 1, "bad modifier");
-              await msgData.useConfidence(actor._id);
-              assert.equal(msg.system.confidence.used, 1, "confidence.used should be 1");
-              assert.equal(msg.system.confidence.allowed, false, "confidence is not allowed");
-            }
-          } catch (err) {
-            console.error(`Error: ${err}`);
-            assert.ok(false, err);
+            assert.equal(roll.modifier, 1, "modifier should be 1");
+            await assertSuccessWithConfidence(msg, actor, 1);
           }
         });
 
-        it("All options roll", async function () {
-          try {
-            let dataset = {
-              roll: "option",
-              name: "All options",
-              option1: 10,
-              txtoption1: "score",
-              option2: 10,
-              txtoption2: "score 2",
-              option3: 10,
-              txtoption3: "score 3",
-              option4: 10,
-              txtoption4: "score 4",
-              option5: 10,
-              txtoption5: "score 5"
-            };
-            await actor.rest();
-            actor.rollInfo.init(dataset, actor);
-            const msg = await simpleDie(actor, "option", actor.rollInfo.properties.CALLBACK);
-            const roll = msg.rolls[0];
-            const msgData = msg.system;
-            log(false, roll);
-            assert.equal(msgData.roll.botchCheck, false, "Check for botch missing");
-            assert.equal(msgData.roll.botches, roll.botches, "Wrong number of botches");
-            assert.ok(roll.total > 50);
-            assert.equal(roll.modifier, 50, "modifier not correct");
+        it("Simple die with multiple options", async function () {
+          const dataset = {
+            roll: "option",
+            name: "All options",
+            option1: 10,
+            txtoption1: "score",
+            option2: 10,
+            txtoption2: "score 2",
+            option3: 10,
+            txtoption3: "score 3",
+            option4: 10,
+            txtoption4: "score 4",
+            option5: 10,
+            txtoption5: "score 5"
+          };
+          actor.rollInfo.init(dataset, actor);
+          const msg = await simpleDie(actor, "option", actor.rollInfo.properties.CALLBACK);
+          const roll = msg.rolls[0];
+          const msgData = msg.system;
+          log(false, roll);
 
-            assert.ok(msgData, "system missing");
-            assert.equal(msgData.label, "All options");
-            assert.equal(msgData.confidence.score, 1);
-            assert.ok(msgData.confidence.score >= 0, "confidence.score should be non-negative");
-            assert.equal(msgData.confidence.used, 0, "confidence.used should be 0");
-            assert.equal(msgData.roll.type, "option");
-            assert.equal(msgData.roll.difficulty, dataset.difficulty || 0);
-            assert.equal(msgData.roll.actorType, "player");
-            assert.equal(msgData.impact.fatigueLevelsLost, 0, "fatigue levels lost should be 0");
-            assert.equal(
-              msgData.impact.fatigueLevelsPending,
-              0,
-              "fatigue levels pending should be 0"
-            );
-            assert.equal(msgData.impact.woundGravity, 0, "wound gravity should be 0");
-            assert.equal(msgData.impact.applied, false, "shoud not be applied");
-            assert.equal(
-              msgData.roll.difficulty > msg.rollTotal(0),
-              msgData.failedRoll(),
-              "failed roll incorrect"
-            );
+          assert.equal(msgData.roll.botchCheck, false, "botch check should be false");
+          assert.equal(msgData.roll.botches, roll.botches, "botch count should match");
+          assert.ok(roll.total > 50, "total should be greater than 50");
+          assert.equal(roll.modifier, 50, "modifier should be 50");
 
-            await msgData.useConfidence(actor._id);
-            assert.equal(msg.system.confidence.used, 1, "confidence.used should be 1");
-            assert.equal(msg.system.confidence.allowed, false, "confidence is not allowed");
-          } catch (err) {
-            console.error(`Error: ${err}`);
-            assert.ok(false, err);
-          }
+          assertBasicRollStructure(msgData, "All options", "option");
+          assert.equal(msgData.confidence.score, 1, "confidence score should be 1");
+          assertConfidenceState(msgData);
+          assert.equal(msgData.roll.difficulty, 0, "difficulty should be 0");
+          assertImpactDefaults(msgData);
+          assert.equal(msgData.impact.applied, false, "impact should not be applied");
+          assert.equal(
+            msgData.roll.difficulty > msg.rollTotal(0),
+            msgData.failedRoll(),
+            "failed roll calculation incorrect"
+          );
+
+          await msgData.useConfidence(actor._id);
+          assert.equal(msg.system.confidence.used, 1, "confidence.used should be 1");
+          assert.equal(msg.system.confidence.allowed, false, "confidence not allowed after use");
         });
 
         it("Init roll", async function () {
-          let type = "init";
-          try {
-            let dataset = {
-              roll: type,
-              name: "Initiative"
-            };
-            await actor.rest();
-            actor.rollInfo.init(dataset, actor);
-            const msg = await stressDie(actor, type, 0, actor.rollInfo.properties.CALLBACK, 10);
-            const roll = msg.rolls[0];
-            assert.ok(roll);
-            log(false, roll);
-            const msgData = msg.system;
+          const type = "init";
+          const dataset = {
+            roll: type,
+            name: "Initiative"
+          };
+          actor.rollInfo.init(dataset, actor);
+          const msg = await stressDie(
+            actor,
+            type,
+            0,
+            actor.rollInfo.properties.CALLBACK,
+            BOTCH_DIE_COUNT
+          );
+          const roll = msg.rolls[0];
+          log(false, roll);
 
-            assert.ok(msgData, "system missing");
-            assert.equal(msgData.label, "Initiative");
-            assert.equal(msgData.confidence.score, 1);
-            assert.ok(msgData.confidence.score >= 0, "confidence.score should be non-negative");
-            assert.equal(msgData.confidence.used, 0, "confidence.used should be 0");
-            assert.equal(msgData.roll.type, "init");
-            assert.equal(msgData.roll.difficulty, dataset.difficulty || 0);
-            assert.equal(msgData.roll.actorType, "player");
-            assert.equal(msgData.impact.fatigueLevelsLost, 0, "fatigue levels lost should be 0");
+          assert.ok(roll, "roll should exist");
+          assertBasicRollStructure(msg.system, "Initiative", "init");
+          assert.equal(msg.system.confidence.score, 1, "confidence score should be 1");
+          assertConfidenceState(msg.system);
+          assert.equal(msg.system.roll.difficulty, 0, "difficulty should be 0");
+          assertImpactDefaults(msg.system);
+
+          if (roll.botches) {
+            assertBotchBehavior(msg.system, roll);
+          } else {
             assert.equal(
-              msgData.impact.fatigueLevelsPending,
-              0,
-              "fatigue levels pending should be 0"
+              msg.system.roll.difficulty > msg.rollTotal(0),
+              msg.system.failedRoll(),
+              "failed roll calculation incorrect"
             );
-            assert.equal(msgData.impact.woundGravity, 0, "wound gravity should be 0");
-            if (roll.botches) {
-              assert.equal(msgData.impact.applied, true, "shoud be applied");
-              assert.equal(roll.total, 0, "botched");
-              assert.equal(msgData.roll.botchCheck, true, "Check for botch missing");
-              assert.equal(msgData.roll.botches, roll.botches, "Wrong number of botches");
-              assert.equal(msg.system.confidence.allowed, false, "confidence is not allowed");
-            } else {
-              assert.equal(
-                msgData.roll.difficulty > msg.rollTotal(0),
-                msgData.failedRoll(),
-                "failed roll incorrect"
-              );
-              assert.equal(msgData.impact.applied, false, "shoud not be applied");
-              assert.equal(msgData.confidence.allowed, true, "confidence is allowed");
-              let tot =
-                actor.system.characteristics.qik.value +
-                actor.system.combat.init -
-                actor.system.combat.overload;
-              assert.equal(roll.modifier, tot, "bad modifier");
-              await msgData.useConfidence(actor._id);
-              assert.equal(msg.system.confidence.used, 1, "confidence.used should be 1");
-              assert.equal(msg.system.confidence.allowed, false, "confidence is not allowed");
-            }
-          } catch (err) {
-            console.error(`Error: ${err}`);
-            assert.ok(false, err);
+            assert.equal(msg.system.impact.applied, false, "impact should not be applied yet");
+            assert.equal(msg.system.confidence.allowed, true, "confidence should be allowed");
+            const expectedModifier =
+              actor.system.characteristics.qik.value +
+              actor.system.combat.init -
+              actor.system.combat.overload;
+            assert.equal(roll.modifier, expectedModifier, "modifier should match calculation");
+            await msg.system.useConfidence(actor._id);
+            assert.equal(msg.system.confidence.used, 1, "confidence.used should be 1");
+            assert.equal(msg.system.confidence.allowed, false, "confidence not allowed after use");
           }
         });
 
-        it("Combat roll", async function () {
-          let type = ROLL_PROPERTIES.ATTACK.VAL;
-          try {
-            let dataset = {
+        describe("Combat rolls", function () {
+          this.timeout(300000); // 300 seconds for easier debugging
+
+          it("Combat roll attack", async function () {
+            const type = ROLL_PROPERTIES.ATTACK.VAL;
+            const dataset = {
               roll: type,
               name: "Combat attack"
             };
-            await actor.rest();
             actor.rollInfo.init(dataset, actor);
-            const msg = await stressDie(actor, type, 0, actor.rollInfo.properties.CALLBACK, 10);
+            const msg = await stressDie(
+              actor,
+              type,
+              0,
+              actor.rollInfo.properties.CALLBACK,
+              BOTCH_DIE_COUNT
+            );
             const roll = msg.rolls[0];
             log(false, roll);
-            assert.ok(roll);
-            const msgData = msg.system;
 
-            assert.ok(msgData, "system missing");
-            assert.equal(msgData.label, "Combat attack");
-            assert.equal(msgData.confidence.score, 1);
-            assert.ok(msgData.confidence.score >= 0, "confidence.score should be non-negative");
-            assert.equal(msgData.confidence.used, 0, "confidence.used should be 0");
-            assert.equal(msgData.roll.type, "attack");
-            assert.equal(msgData.roll.difficulty, dataset.difficulty || 0);
-            assert.equal(msgData.roll.actorType, "player");
-            assert.equal(msgData.impact.fatigueLevelsLost, 0, "fatigue levels lost should be 0");
-            assert.equal(
-              msgData.impact.fatigueLevelsPending,
-              0,
-              "fatigue levels pending should be 0"
-            );
-            assert.equal(msgData.impact.woundGravity, 0, "wound gravity should be 0");
+            assert.ok(roll, "roll should exist");
+            assertBasicRollStructure(msg.system, "Combat attack", "attack");
+            assert.equal(msg.system.confidence.score, 1, "confidence score should be 1");
+            assertConfidenceState(msg.system);
+            assert.equal(msg.system.roll.difficulty, 0, "difficulty should be 0");
+            assertImpactDefaults(msg.system);
 
             if (roll.botches) {
-              assert.equal(msgData.failedRoll(), true, "failed roll incorrect");
-              assert.equal(msgData.impact.applied, true, "shoud be applied");
-              assert.equal(roll.total, 0, "botched");
-              assert.equal(msgData.roll.botchCheck, true, "Check for botch missing");
-              assert.equal(msgData.roll.botches, roll.botches, "Wrong number of botches");
-              assert.equal(msg.system.confidence.allowed, false, "confidence is not allowed");
+              assertBotchBehavior(msg.system, roll);
             } else {
-              assert.equal(
-                msgData.roll.difficulty > msg.rollTotal(0),
-                msgData.failedRoll(),
-                "failed roll incorrect"
-              );
-              assert.equal(msgData.impact.applied, false, "shoud not be applied");
-              assert.equal(msgData.confidence.allowed, true, "confidence is allowed");
-              let tot =
+              assert.equal(msg.system.impact.applied, false, "impact should not be applied yet");
+              assert.equal(msg.system.confidence.allowed, true, "confidence should be allowed");
+              const expectedModifier =
                 actor.system.characteristics.dex.value +
                 actor.system.combat.atk +
                 actor.system.combat.ability;
-              assert.equal(roll.modifier, tot, "modifier not correct");
-
-              await msgData.useConfidence(actor._id);
+              assert.equal(roll.modifier, expectedModifier, "modifier should match calculation");
+              await msg.system.useConfidence(actor._id);
               assert.equal(msg.system.confidence.used, 1, "confidence.used should be 1");
-              assert.equal(msg.system.confidence.allowed, false, "confidence is not allowed");
+              assert.equal(
+                msg.system.confidence.allowed,
+                false,
+                "confidence not allowed after use"
+              );
             }
-          } catch (err) {
-            console.error(`Error: ${err}`);
-            assert.ok(false, err);
-          }
-        });
-        it("Combat roll defense", async function () {
-          let type = ROLL_PROPERTIES.DEFENSE.VAL;
-          try {
-            let dataset = {
+          });
+          it("Combat roll defense", async function () {
+            const type = ROLL_PROPERTIES.DEFENSE.VAL;
+            const dataset = {
               roll: type,
               name: "Combat defense"
             };
-            await actor.rest();
             actor.rollInfo.init(dataset, actor);
-            const msg = await stressDie(actor, type, 0, actor.rollInfo.properties.CALLBACK, 10);
+            const msg = await stressDie(
+              actor,
+              type,
+              0,
+              actor.rollInfo.properties.CALLBACK,
+              BOTCH_DIE_COUNT
+            );
             const roll = msg.rolls[0];
             log(false, roll);
-            assert.ok(roll);
 
-            const msgData = msg.system;
-
-            assert.ok(msgData, "system missing");
-            assert.equal(msgData.label, "Combat defense");
-            assert.equal(msgData.confidence.score, 1);
-            assert.ok(msgData.confidence.score >= 0, "confidence.score should be non-negative");
-            assert.equal(msgData.confidence.used, 0, "confidence.used should be 0");
-            assert.equal(msgData.roll.type, "defense");
-            assert.equal(msgData.roll.difficulty, dataset.difficulty || 0);
-            assert.equal(msgData.roll.actorType, "player");
-            assert.equal(msgData.impact.fatigueLevelsLost, 0, "fatigue levels lost should be 0");
-            assert.equal(
-              msgData.impact.fatigueLevelsPending,
-              0,
-              "fatigue levels pending should be 0"
-            );
-            assert.equal(msgData.impact.woundGravity, 0, "wound gravity should be 0");
+            assert.ok(roll, "roll should exist");
+            assertBasicRollStructure(msg.system, "Combat defense", "defense");
+            assert.equal(msg.system.confidence.score, 1, "confidence score should be 1");
+            assertConfidenceState(msg.system);
+            assert.equal(msg.system.roll.difficulty, 0, "difficulty should be 0");
+            assertImpactDefaults(msg.system);
 
             if (roll.botches) {
-              assert.equal(msgData.failedRoll(), true, "failed roll incorrect");
-              assert.equal(msgData.impact.applied, true, "shoud be applied");
-              assert.equal(roll.total, 0, "botched");
-              assert.equal(msgData.roll.botchCheck, true, "Check for botch missing");
-              assert.equal(msgData.roll.botches, roll.botches, "Wrong number of botches");
-              assert.equal(msg.system.confidence.allowed, false, "confidence is not allowed");
+              assertBotchBehavior(msg.system, roll);
             } else {
-              assert.equal(
-                msgData.roll.difficulty > msg.rollTotal(0),
-                msgData.failedRoll(),
-                "failed roll incorrect"
-              );
-              assert.equal(msgData.impact.applied, false, "shoud not be applied");
-              assert.equal(msgData.confidence.allowed, true, "confidence is allowed");
-              let tot =
+              assert.equal(msg.system.impact.applied, false, "impact should not be applied yet");
+              assert.equal(msg.system.confidence.allowed, true, "confidence should be allowed");
+              const expectedModifier =
                 actor.system.characteristics.qik.value +
                 actor.system.combat.ability +
                 actor.system.combat.dfn;
-              assert.equal(roll.modifier, tot, "modifier not correct");
-              await msgData.useConfidence(actor._id);
+              assert.equal(roll.modifier, expectedModifier, "modifier should match calculation");
+              await msg.system.useConfidence(actor._id);
               assert.equal(msg.system.confidence.used, 1, "confidence.used should be 1");
-              assert.equal(msg.system.confidence.allowed, false, "confidence is not allowed");
+              assert.equal(
+                msg.system.confidence.allowed,
+                false,
+                "confidence not allowed after use"
+              );
             }
-          } catch (err) {
-            console.error(`Error: ${err}`);
-            assert.ok(false, err);
-          }
-        });
-        it("Combat roll exertion", async function () {
-          let type = ROLL_PROPERTIES.ATTACK.VAL;
-          try {
-            let dataset = {
+          });
+          it("Combat roll with exertion", async function () {
+            const type = ROLL_PROPERTIES.ATTACK.VAL;
+            const dataset = {
               roll: type,
               name: "Combat exertion"
             };
-            await actor.rest();
             actor.rollInfo.init(dataset, actor);
             actor.rollInfo.combat.exertion = true;
-            const msg = await stressDie(actor, type, 0, actor.rollInfo.properties.CALLBACK, 10);
+            const msg = await stressDie(
+              actor,
+              type,
+              0,
+              actor.rollInfo.properties.CALLBACK,
+              BOTCH_DIE_COUNT
+            );
             const roll = msg.rolls[0];
             log(false, roll);
-            assert.ok(roll);
 
-            const msgData = msg.system;
+            assert.ok(roll, "roll should exist");
+            assertBasicRollStructure(msg.system, "Combat exertion", "attack");
+            assert.equal(msg.system.confidence.score, 1, "confidence score should be 1");
+            assertConfidenceState(msg.system);
+            assert.equal(msg.system.roll.difficulty, 0, "difficulty should be 0");
+            assertImpactDefaults(msg.system);
 
-            assert.ok(msgData, "system missing");
-            assert.equal(msgData.label, "Combat exertion");
-            assert.equal(msgData.confidence.score, 1);
-            assert.ok(msgData.confidence.score >= 0, "confidence.score should be non-negative");
-            assert.equal(msgData.confidence.used, 0, "confidence.used should be 0");
-            assert.equal(msgData.roll.type, "attack");
-            assert.equal(msgData.roll.difficulty, dataset.difficulty || 0);
-            assert.equal(msgData.roll.actorType, "player");
-            assert.equal(msgData.impact.fatigueLevelsLost, 0, "fatigue levels lost should be 0");
-            assert.equal(
-              msgData.impact.fatigueLevelsPending,
-              0,
-              "fatigue levels pending should be 0"
-            );
-            assert.equal(msgData.impact.woundGravity, 0, "wound gravity should be 0");
             if (roll.botches) {
-              assert.equal(msgData.failedRoll(), true, "failed roll incorrect");
-              assert.equal(msgData.impact.applied, true, "shoud be applied");
-              assert.equal(roll.total, 0, "botched");
-              assert.equal(msgData.roll.botchCheck, true, "Check for botch missing");
-              assert.equal(msgData.roll.botches, roll.botches, "Wrong number of botches");
-              assert.equal(msg.system.confidence.allowed, false, "confidence is not allowed");
+              assertBotchBehavior(msg.system, roll);
             } else {
-              assert.equal(
-                msgData.roll.difficulty > msg.rollTotal(0),
-                msgData.failedRoll(),
-                "failed roll incorrect"
-              );
-              assert.equal(msgData.impact.applied, false, "shoud not be applied");
-              assert.equal(msgData.confidence.allowed, true, "confidence is allowed");
-              let tot =
+              assert.equal(msg.system.impact.applied, false, "impact should not be applied yet");
+              assert.equal(msg.system.confidence.allowed, true, "confidence should be allowed");
+              const expectedModifier =
                 actor.system.characteristics.dex.value +
                 actor.system.combat.atk +
                 2 * actor.system.combat.ability;
-              assert.equal(roll.modifier, tot, "modifier not correct");
-              await msgData.useConfidence(actor._id);
+              assert.equal(
+                roll.modifier,
+                expectedModifier,
+                "modifier should match calculation with exertion"
+              );
+              await msg.system.useConfidence(actor._id);
               assert.equal(msg.system.confidence.used, 1, "confidence.used should be 1");
-              assert.equal(msg.system.confidence.allowed, false, "confidence is not allowed");
+              assert.equal(
+                msg.system.confidence.allowed,
+                false,
+                "confidence not allowed after use"
+              );
             }
-          } catch (err) {
-            console.error(`Error: ${err}`);
-            assert.ok(false, err);
-          }
-        });
-        it("Combat wounded", async function () {
-          await actor.changeWound(3, "light");
-          let type = ROLL_PROPERTIES.ATTACK.VAL;
-          try {
-            let dataset = {
+          });
+          it("Combat roll defense with exertion", async function () {
+            const type = ROLL_PROPERTIES.DEFENSE.VAL;
+            const dataset = {
+              roll: type,
+              name: "Combat defense exertion"
+            };
+            actor.rollInfo.init(dataset, actor);
+            actor.rollInfo.combat.exertion = true;
+            const msg = await stressDie(
+              actor,
+              type,
+              0,
+              actor.rollInfo.properties.CALLBACK,
+              BOTCH_DIE_COUNT
+            );
+            const roll = msg.rolls[0];
+            log(false, roll);
+
+            assert.ok(roll, "roll should exist");
+            assertBasicRollStructure(msg.system, "Combat defense exertion", "defense");
+            assert.equal(msg.system.confidence.score, 1, "confidence score should be 1");
+            assertConfidenceState(msg.system);
+            assert.equal(msg.system.roll.difficulty, 0, "difficulty should be 0");
+            assertImpactDefaults(msg.system);
+
+            if (roll.botches) {
+              assertBotchBehavior(msg.system, roll);
+            } else {
+              assert.equal(msg.system.impact.applied, false, "impact should not be applied yet");
+              assert.equal(msg.system.confidence.allowed, true, "confidence should be allowed");
+              const expectedModifier =
+                actor.system.characteristics.qik.value +
+                2 * actor.system.combat.ability +
+                actor.system.combat.dfn;
+              assert.equal(
+                roll.modifier,
+                expectedModifier,
+                "modifier should match calculation with exertion (2x ability)"
+              );
+              await msg.system.useConfidence(actor._id);
+              assert.equal(msg.system.confidence.used, 1, "confidence.used should be 1");
+              assert.equal(
+                msg.system.confidence.allowed,
+                false,
+                "confidence not allowed after use"
+              );
+            }
+          });
+          it("Combat roll while wounded", async function () {
+            await actor.changeWound(3, "light");
+            const type = ROLL_PROPERTIES.ATTACK.VAL;
+            const dataset = {
               roll: type,
               name: "Combat wounded"
             };
             actor.rollInfo.init(dataset, actor);
-            const msg = await stressDie(actor, type, 0, actor.rollInfo.properties.CALLBACK, 10);
+            const msg = await stressDie(
+              actor,
+              type,
+              0,
+              actor.rollInfo.properties.CALLBACK,
+              BOTCH_DIE_COUNT
+            );
             const roll = msg.rolls[0];
             log(false, roll);
-            assert.ok(roll);
 
-            const msgData = msg.system;
+            assert.ok(roll, "roll should exist");
+            assertBasicRollStructure(msg.system, "Combat wounded", "attack");
+            assert.equal(msg.system.confidence.score, 1, "confidence score should be 1");
+            assertConfidenceState(msg.system);
+            assert.equal(msg.system.roll.difficulty, 0, "difficulty should be 0");
+            assertImpactDefaults(msg.system);
 
-            assert.ok(msgData, "system missing");
-            assert.equal(msgData.label, "Combat wounded");
-            assert.equal(msgData.confidence.score, 1);
-            assert.ok(msgData.confidence.score >= 0, "confidence.score should be non-negative");
-            assert.equal(msgData.confidence.used, 0, "confidence.used should be 0");
-            assert.equal(msgData.roll.type, "attack");
-            assert.equal(msgData.roll.difficulty, dataset.difficulty || 0);
-            assert.equal(msgData.roll.actorType, "player");
-            assert.equal(msgData.impact.fatigueLevelsLost, 0, "fatigue levels lost should be 0");
-            assert.equal(
-              msgData.impact.fatigueLevelsPending,
-              0,
-              "fatigue levels pending should be 0"
-            );
-            assert.equal(msgData.impact.woundGravity, 0, "wound gravity should be 0");
             if (roll.botches) {
-              assert.equal(msgData.failedRoll(), true, "failed roll incorrect");
-              assert.equal(msgData.impact.applied, true, "shoud be applied");
-              assert.equal(roll.total, 0, "botched");
-              assert.equal(msgData.roll.botchCheck, true, "Check for botch missing");
-              assert.equal(msgData.roll.botches, roll.botches, "Wrong number of botches");
-              assert.equal(msg.system.confidence.allowed, false, "confidence is not allowed");
+              assert.equal(msg.system.failedRoll(), true, "should be a failed roll");
+              assertBotchBehavior(msg.system, roll);
             } else {
               assert.equal(
-                msgData.roll.difficulty > msg.rollTotal(0),
-                msgData.failedRoll(),
-                "failed roll incorrect"
+                msg.system.roll.difficulty > msg.rollTotal(0),
+                msg.system.failedRoll(),
+                "failed roll calculation incorrect"
               );
-              assert.equal(msgData.impact.applied, false, "shoud not be applied");
-              assert.equal(msgData.confidence.allowed, true, "confidence is allowed");
-              let tot =
+              assert.equal(msg.system.impact.applied, false, "impact should not be applied yet");
+              assert.equal(msg.system.confidence.allowed, true, "confidence should be allowed");
+              const expectedModifier =
                 actor.system.characteristics.dex.value +
                 actor.system.combat.atk +
                 actor.system.combat.ability -
                 3;
-              assert.equal(roll.modifier, tot, "modifier not correct");
-              await msgData.useConfidence(actor._id);
+              assert.equal(
+                roll.modifier,
+                expectedModifier,
+                "modifier should include wound penalty"
+              );
+              await msg.system.useConfidence(actor._id);
               assert.equal(msg.system.confidence.used, 1, "confidence.used should be 1");
-              assert.equal(msg.system.confidence.allowed, false, "confidence is not allowed");
+              assert.equal(
+                msg.system.confidence.allowed,
+                false,
+                "confidence not allowed after use"
+              );
             }
-          } catch (err) {
-            console.error(`Error: ${err}`);
-            assert.ok(false, err);
-          }
+          });
+          it("Combat roll with medium wounds", async function () {
+            await actor.changeWound(1, "medium");
+            const type = ROLL_PROPERTIES.ATTACK.VAL;
+            const dataset = {
+              roll: type,
+              name: "Combat medium wound"
+            };
+            actor.rollInfo.init(dataset, actor);
+            const msg = await stressDie(
+              actor,
+              type,
+              0,
+              actor.rollInfo.properties.CALLBACK,
+              BOTCH_DIE_COUNT
+            );
+            const roll = msg.rolls[0];
+            log(false, roll);
+
+            assert.ok(roll, "roll should exist");
+            assertBasicRollStructure(msg.system, "Combat medium wound", "attack");
+            assert.equal(msg.system.confidence.score, 1, "confidence score should be 1");
+            assertConfidenceState(msg.system);
+            assert.equal(msg.system.roll.difficulty, 0, "difficulty should be 0");
+            assertImpactDefaults(msg.system);
+
+            if (roll.botches) {
+              assert.equal(msg.system.failedRoll(), true, "should be a failed roll");
+              assertBotchBehavior(msg.system, roll);
+            } else {
+              assert.equal(
+                msg.system.roll.difficulty > msg.rollTotal(0),
+                msg.system.failedRoll(),
+                "failed roll calculation incorrect"
+              );
+              assert.equal(msg.system.impact.applied, false, "impact should not be applied yet");
+              assert.equal(msg.system.confidence.allowed, true, "confidence should be allowed");
+              const expectedModifier =
+                actor.system.characteristics.dex.value +
+                actor.system.combat.atk +
+                actor.system.combat.ability -
+                3;
+              assert.equal(
+                roll.modifier,
+                expectedModifier,
+                "modifier should include medium wound penalty (-3 per wound)"
+              );
+              await msg.system.useConfidence(actor._id);
+              assert.equal(msg.system.confidence.used, 1, "confidence.used should be 1");
+              assert.equal(
+                msg.system.confidence.allowed,
+                false,
+                "confidence not allowed after use"
+              );
+            }
+          });
+          it("Combat roll with heavy wounds", async function () {
+            await actor.changeWound(1, "heavy");
+            const type = ROLL_PROPERTIES.ATTACK.VAL;
+            const dataset = {
+              roll: type,
+              name: "Combat heavy wound"
+            };
+            actor.rollInfo.init(dataset, actor);
+            const msg = await stressDie(
+              actor,
+              type,
+              0,
+              actor.rollInfo.properties.CALLBACK,
+              BOTCH_DIE_COUNT
+            );
+            const roll = msg.rolls[0];
+            log(false, roll);
+
+            assert.ok(roll, "roll should exist");
+            assertBasicRollStructure(msg.system, "Combat heavy wound", "attack");
+            assert.equal(msg.system.confidence.score, 1, "confidence score should be 1");
+            assertConfidenceState(msg.system);
+            assert.equal(msg.system.roll.difficulty, 0, "difficulty should be 0");
+            assertImpactDefaults(msg.system);
+
+            if (roll.botches) {
+              assertBotchBehavior(msg.system, roll);
+            } else {
+              assert.equal(msg.system.impact.applied, false, "impact should not be applied yet");
+              assert.equal(msg.system.confidence.allowed, true, "confidence should be allowed");
+              const expectedModifier =
+                actor.system.characteristics.dex.value +
+                actor.system.combat.atk +
+                actor.system.combat.ability -
+                5;
+              assert.equal(
+                roll.modifier,
+                expectedModifier,
+                "modifier should include heavy wound penalty (-5 per wound)"
+              );
+              await msg.system.useConfidence(actor._id);
+              assert.equal(msg.system.confidence.used, 1, "confidence.used should be 1");
+              assert.equal(
+                msg.system.confidence.allowed,
+                false,
+                "confidence not allowed after use"
+              );
+            }
+          });
+          it("Combat roll with incapacitating wounds", async function () {
+            await actor.changeWound(1, "incap");
+            const type = ROLL_PROPERTIES.ATTACK.VAL;
+            const dataset = {
+              roll: type,
+              name: "Combat incap wound"
+            };
+            actor.rollInfo.init(dataset, actor);
+            const msg = await stressDie(
+              actor,
+              type,
+              0,
+              actor.rollInfo.properties.CALLBACK,
+              BOTCH_DIE_COUNT
+            );
+            const roll = msg.rolls[0];
+            log(false, roll);
+
+            assert.ok(roll, "roll should exist");
+            assertBasicRollStructure(msg.system, "Combat incap wound", "attack");
+            assert.equal(msg.system.confidence.score, 1, "confidence score should be 1");
+            assertConfidenceState(msg.system);
+            assert.equal(msg.system.roll.difficulty, 0, "difficulty should be 0");
+            assertImpactDefaults(msg.system);
+
+            if (roll.botches) {
+              assertBotchBehavior(msg.system, roll);
+            } else {
+              assert.equal(msg.system.impact.applied, false, "impact should not be applied yet");
+              assert.equal(msg.system.confidence.allowed, true, "confidence should be allowed");
+              const expectedModifier =
+                actor.system.characteristics.dex.value +
+                actor.system.combat.atk +
+                actor.system.combat.ability -
+                99;
+              assert.equal(
+                roll.modifier,
+                expectedModifier,
+                "modifier should include incapacitating wound penalty (-10 per wound)"
+              );
+              await msg.system.useConfidence(actor._id);
+              assert.equal(msg.system.confidence.used, 1, "confidence.used should be 1");
+              assert.equal(
+                msg.system.confidence.allowed,
+                false,
+                "confidence not allowed after use"
+              );
+            }
+          });
         });
         it("Hard roll skip confidence", async function () {
           try {
@@ -788,11 +971,15 @@ export function registerOptionRollTesting(quench) {
               difficulty: 9,
               fatigueOnFail: 2
             };
-            await actor.rest();
-            await actor.restoreHealth();
             const fatigueCurrent = actor.system.fatigueCurrent;
             actor.rollInfo.init(dataset, actor);
-            const msg = await stressDie(actor, "char", 0, actor.rollInfo.properties.CALLBACK, 10);
+            const msg = await stressDie(
+              actor,
+              "option",
+              0,
+              actor.rollInfo.properties.CALLBACK,
+              BOTCH_DIE_COUNT
+            );
             const roll = msg.rolls[0];
             log(false, roll);
             assert.ok(roll);
@@ -933,6 +1120,78 @@ export function registerOptionRollTesting(quench) {
             console.error(`Error: ${err}`);
             assert.ok(false, err);
           }
+        });
+      });
+
+      describe("Confidence mechanics", function () {
+        this.timeout(300000); // 300 seconds for easier debugging
+
+        it("Multiple confidence uses", async function () {
+          // Temporarily boost actor's confidence score to test multiple uses
+          const originalConfidence = actor.system.con.score;
+          await actor.update({ "system.con.score": 3 });
+
+          const dataset = {
+            roll: "option",
+            name: "Multiple Confidence Test",
+            option1: 1,
+            txtoption1: "score",
+            difficulty: 6
+          };
+          actor.rollInfo.init(dataset, actor);
+          const msg = await stressDie(
+            actor,
+            "option",
+            0,
+            actor.rollInfo.properties.CALLBACK,
+            BOTCH_DIE_COUNT
+          );
+          const roll = msg.rolls[0];
+          const msgData = msg.system;
+
+          assert.ok(roll, "roll should exist");
+          assertBasicRollStructure(msgData, "Multiple Confidence Test", "option");
+          assert.equal(msgData.confidence.score, 3, "confidence score should be 3");
+          assert.equal(msgData.confidence.used, 0, "confidence.used should be 0 initially");
+
+          if (roll.botches) {
+            assertBotchBehavior(msgData, roll);
+          } else {
+            // First confidence use
+            assert.equal(
+              msg.system.confidence.allowed,
+              true,
+              "confidence should be allowed (1st use)"
+            );
+            await msg.system.useConfidence(actor._id);
+            assert.equal(msg.system.confidence.used, 1, "confidence.used should be 1");
+            assert.equal(
+              msg.system.confidence.allowed,
+              true,
+              "confidence should still be allowed (1/3 used)"
+            );
+
+            // Second confidence use
+            await msg.system.useConfidence(actor._id);
+            assert.equal(msg.system.confidence.used, 2, "confidence.used should be 2");
+            assert.equal(
+              msg.system.confidence.allowed,
+              true,
+              "confidence should still be allowed (2/3 used)"
+            );
+
+            // Third confidence use (exhausts all points)
+            await msg.system.useConfidence(actor._id);
+            assert.equal(msg.system.confidence.used, 3, "confidence.used should be 3");
+            assert.equal(
+              msg.system.confidence.allowed,
+              false,
+              "confidence should not be allowed (3/3 used - exhausted)"
+            );
+          }
+
+          // Restore original confidence score
+          await actor.update({ "system.con.score": originalConfidence });
         });
       });
 

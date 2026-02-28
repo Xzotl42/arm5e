@@ -1,7 +1,7 @@
 import { ARM5E } from "../config.js";
 import { ARM5E_DEFAULT_ICONS } from "../constants/ui.js";
-import { convertToNumber, log } from "../tools.js";
-import { Scriptorium } from "../tools/scriptorium.js";
+import { convertToNumber, log } from "../tools/tools.js";
+import { Scriptorium } from "../apps/scriptorium.js";
 import { boolOption, itemBase } from "./commonSchemas.js";
 const fields = foundry.data.fields;
 export class InhabitantSchema extends foundry.abstract.TypeDataModel {

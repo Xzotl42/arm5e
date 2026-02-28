@@ -1,6 +1,6 @@
-import { stressDie } from "../dice.js";
-import { StressDieInternal } from "../helpers/stressdie.js";
-import { log } from "../tools.js";
+import { stressDie } from "../helpers/dice.js";
+import { StressDieInternal } from "../helpers/roll.js";
+import { log } from "../tools/tools.js";
 import { companionData } from "./testData.js";
 
 export function registerStressDieTesting(quench) {
@@ -14,6 +14,8 @@ export function registerStressDieTesting(quench) {
       }
       const { describe, it, assert, after, before } = context;
       describe(`Exploding die`, function () {
+        this.timeout(300000); // 300 seconds for easier debugging
+
         before(async function () {
           actor = await Actor.create({
             name: `BobTheCompanion`,

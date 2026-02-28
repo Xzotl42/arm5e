@@ -1,7 +1,7 @@
 import { getWoundStr } from "../config.js";
-import { ROLL_PROPERTIES } from "../helpers/rollWindow.js";
-import { SMSG_FIELDS, SMSG_TYPES } from "../helpers/socket-messages.js";
-import { log, putInFoldableLinkWithAnimation } from "../tools.js";
+import { ROLL_PROPERTIES } from "../ui/roll-window.js";
+import { SMSG_FIELDS, SMSG_TYPES } from "../tools/socket-messages.js";
+import { log, putInFoldableLinkWithAnimation } from "../tools/tools.js";
 import { BasicChatSchema } from "./basicChatSchema.js";
 import { basicIntegerField, boolOption } from "./commonSchemas.js";
 const fields = foundry.data.fields;
@@ -103,12 +103,13 @@ export class RollChatSchema extends BasicChatSchema {
   addListeners(html) {
     super.addListeners(html);
     if (this.parent.actor && this.parent.originatorOrGM) {
-      const itemImg = html.find(".item-image");
+      const itemImg = html.querySelector(".item-image");
       if (itemImg) {
-        itemImg.click(async (ev) => {
-          const img = $(ev.currentTarget.children[0]);
-          const uuid = img.data("uuid");
-          const item = await fromUuid(uuid);
+        itemImg.addEventListener("click", async (ev) => {
+          // const img = $(ev.currentTarget.children[0]);
+          // const uuid = img.data("uuid");
+
+          const item = await fromUuid(ev.currentTarget.children[0].dataset.uuid);
           if (item) {
             item.sheet.render(true);
           }
@@ -436,6 +437,7 @@ export class RollChatSchema extends BasicChatSchema {
 
   _applyChatMessageUpdate(data) {
     log(false, "applying chat message update", data);
+    // const woundDescription =
     const promises = [];
     promises.push(this.parent.actor.update(data.actorUpdate ?? {}));
     promises.push(this.parent.update(data.msgUpdate ?? {}));

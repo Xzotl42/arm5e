@@ -1,13 +1,13 @@
 import { ARM5E } from "../config.js";
 import ArM5eActiveEffect from "./active-effects.js";
 import { ArM5eActor } from "../actor/actor.js";
-import { log } from "../tools.js";
-import { getRollTypeProperties, ROLL_MODIFIERS, ROLL_PROPERTIES } from "./rollWindow.js";
+import { log } from "../tools/tools.js";
+import { getRollTypeProperties, ROLL_MODIFIERS, ROLL_PROPERTIES } from "../ui/roll-window.js";
 import Aura from "./aura.js";
 import { computeLevel, spellFormLabel, spellTechniqueLabel } from "./magic.js";
 import {
+  addAbilityListenersDialog,
   addCombatListenersDialog,
-  addCommonListenersDialog,
   addMagicListenersDialog,
   addPowersListenersDialog,
   addSoakListenersDialog
@@ -151,13 +151,13 @@ export class ArM5eRollInfo {
         break;
       case ROLL_PROPERTIES.CHAR.VAL:
         this.characteristic = dataset.characteristic;
-
+        this.listeners = addAbilityListenersDialog;
         break;
       case ROLL_PROPERTIES.ABILITY.VAL:
         if (dataset.defaultcharacteristic) {
           this.characteristic = dataset.defaultcharacteristic;
         }
-
+        this.listeners = addAbilityListenersDialog;
         const ab = this._actor.items.get(dataset.ability);
         if (this.img === "") this.img = ab.img;
         this.itemId = ab.id;
@@ -644,7 +644,7 @@ export class ArM5eRollInfo {
     this.combat.defenders = Array.from(
       game.user.targets
         .filter((e) => {
-          return e.actor.isCharacter();
+          return e.actor?.isCharacter();
         })
         .map((e) => {
           return { name: e.document.name, uuid: e.actor.uuid, defended: false };
@@ -887,7 +887,7 @@ export class ArM5eRollInfo {
     this.additionalData = {};
 
     this.botchNumber = -1;
-    this.listeners = addCommonListenersDialog;
+    this.listeners = null;
   }
 
   getAuraModifier() {

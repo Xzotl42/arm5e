@@ -1,4 +1,4 @@
-import { getDataset, log } from "../../tools.js";
+import { getDataset, log } from "../../tools/tools.js";
 import { ARM5E } from "../../config.js";
 import { ArM5eActorSheet } from "../../actor/actor-sheet.js";
 import { EnchantmentExtension, EnchantmentSchema } from "../../schemas/enchantmentSchema.js";
@@ -656,7 +656,7 @@ export class ArM5eItemEnchantmentSheet {
       const item = this.item;
       const enchantIdx = dataset.index;
       if (item.isOwned) {
-        dataset.name = item.name;
+        // dataset.name = item.name;
         dataset.roll = "item";
         dataset.id = item._id;
         dataset.physicalcondition = false;

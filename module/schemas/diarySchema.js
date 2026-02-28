@@ -1,7 +1,7 @@
 import { ARM5E } from "../config.js";
-import { ActivityFactory } from "../helpers/long-term-activities.js";
+import { ActivityFactory } from "../seasonal-activities/long-term-activities.js";
 import { Activity } from "../seasonal-activities/activity.js";
-import { convertToNumber, log } from "../tools.js";
+import { convertToNumber, log } from "../tools/tools.js";
 import { nextDate } from "../tools/time.js";
 import { BookSchema } from "./bookSchema.js";
 import {

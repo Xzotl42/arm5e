@@ -15,9 +15,9 @@
         {{>"systems/arm5e/templates/item/parts/cost.hbs" classes="fit"}}
       </div>
       {{#if locked}}
-        <i class="icon-Icon_Locked"></i>
+        <i class="ars-Icon_Locked"></i>
       {{/if}}
-      <h1 class="charname"><input name="name" {{noEdit}} type="text" value="{{item.name}}" placeholder="Name" /></h1>
+      <h1 class="bigname"><input name="name" {{noEdit}} type="text" value="{{item.name}}" placeholder="Name" /></h1>
       <div class="padding4 flexrow">
         {{> "systems/arm5e/templates/item/parts/authorship.html" }}
       </div>
@@ -28,7 +28,7 @@
         {{#if canBeRead}}
           <div class="modifier" style="margin-top: 10px;">
             <a class=" study-labtext" title='{{localize "arm5e.hints.read" item=(localize "arm5e.sheet.book")}}'
-              style="padding-left: 5px; padding-top: 5px;"><i class="icon-Icon_Readspell"></i></a>
+              style="padding-left: 5px; padding-top: 5px;"><i class="ars-Icon_Readspell"></i></a>
           </div>
         {{/if}}
       </div>
@@ -36,17 +36,17 @@
   </header>
   {{!-- Sheet Tab Navigation --}}
   <nav class="arm5eTabs sheet-tabs tabs" data-group="primary">
-    <a class="item posRelative" data-tab="description">
-      <div class="navItem-right-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
-      <div class="navItem-left-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
+    <a class="item posRelative flexrow" data-tab="description">
+      <div class="navItem-left-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
       {{localize "arm5e.sheet.description"}}
+      <div class="navItem-right-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
     </a>
 
 
-    <!-- <a class="item posRelative" data-tab="authorship">
-      <div class="navItem-right-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
-      <div class="navItem-left-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
+    <!-- <a class="item posRelative flexrow" data-tab="authorship">
+      <div class="navItem-left-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
       {{localize "arm5e.sheet.authorship.label"}}
+      <div class="navItem-right-ball"><img src="systems/arm5e/assets/bRight.png" /></div>
     </a> -->
   </nav>
   {{> "systems/arm5e/templates/generic/metalic-bar.html" }}

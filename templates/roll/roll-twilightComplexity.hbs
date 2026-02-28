@@ -1,0 +1,28 @@
+<div class="{{ cssClass }} arm5e-roll" autocomplete="off">
+  <div class="roll-options">
+    <div class="flexrow flex-group-center">
+      <label class="">{{localize "arm5e.twilight.complexity" }}</label>
+    </div>
+    <div class="flexrow flex-group-center">
+      <label class=""
+        >{{ lookup rollInfo.generic.txtOption 0 }} ({{lookup rollInfo.generic.option
+        0
+
+        }})</label
+      >
+    </div>
+    <div class="flexrow flex-group-center">
+      <label class="">+</label>
+    </div>
+    <div class="flexrow flex-group-center">
+      <label class="flex03">{{localize "arm5e.sheet.modifier"}}</label>
+      <input
+        type="Number"
+        name="rollInfo.modifier"
+        value="{{ rollInfo.modifier }}"
+        data-dtype="Number"
+        class="SelectedModifier select-on-focus"
+      />
+    </div>
+  </div>
+</div>

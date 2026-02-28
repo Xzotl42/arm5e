@@ -1,5 +1,5 @@
 import { ArM5eMagicSystem } from "../actor/subsheets/magic-system.js";
-import { log } from "../tools.js";
+import { log } from "../tools/tools.js";
 import {
   baseDescription,
   boolOption,

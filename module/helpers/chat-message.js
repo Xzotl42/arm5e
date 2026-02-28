@@ -1,6 +1,6 @@
-import { log, putInFoldableLink, putInFoldableLinkWithAnimation } from "../tools.js";
-import { SMSG_FIELDS } from "./socket-messages.js";
-import { ArsRoll } from "./stressdie.js";
+import { log, putInFoldableLink, putInFoldableLinkWithAnimation } from "../tools/tools.js";
+import { SMSG_FIELDS } from "../tools/socket-messages.js";
+import { ArsRoll } from "./roll.js";
 
 export class Arm5eChatMessage extends ChatMessage {
   static async handleSocketMessages(action, payload) {
@@ -64,8 +64,7 @@ export class Arm5eChatMessage extends ChatMessage {
     return game.users.get(game.userId).isGM || this.actor?.isOwner;
   }
 
-  /** @inheritDoc */
-  async getHTML(...args) {
+  async renderHTML(options) {
     if (this.system.getFlavor) {
       if (this.system.originalFlavor === "") {
         this.system.originalFlavor = this.flavor;
@@ -93,29 +92,27 @@ export class Arm5eChatMessage extends ChatMessage {
         }
       }
     }
+    let html = await super.renderHTML(options);
+    // html = `<header class="ars-chat-header"></header><div>${html.outerHTML}</div>`;
 
-    const html = await super.getHTML();
+    if (this.type === "base") return html;
+
     let actor = this.actor;
 
     if (this.isRoll) {
       if (this.system.obfuscate) {
         // obfuscate the first roll
-        const roll = html[0].getElementsByClassName("dice-roll")[0];
+        const roll = html.getElementsByClassName("dice-roll")[0];
         this.system.obfuscate(roll, actor);
       }
     }
 
-    // legacy chat messages, ignore them
-    // if (data.message.flags.arm5e) {
-    //   return;
-    // }
-
     if (actor !== null) {
       // Actor still exists in the world
 
-      const metadata = html.find(".message-metadata");
-      metadata.css("max-width", "fit-content");
-      const msgTitle = html[0].querySelector(".message-sender");
+      const metadata = html.querySelector(".message-metadata");
+      metadata.style["max-width"] = "fit-content";
+      const msgTitle = html.querySelector(".message-sender");
       // const sender = msgTitle.textContent.replace("GameMaster", actor.tokenName);
       const sender = actor.tokenName;
       msgTitle.removeChild(msgTitle.firstChild);
@@ -149,7 +146,7 @@ export class Arm5eChatMessage extends ChatMessage {
 
     // if (!this.isRoll) return html;
 
-    const flavor = html.find(".flavor-text");
+    const flavor = html.querySelector(".flavor-text");
     flavor.append(this.addActionButtons(html));
 
     // format any additional rolls
@@ -164,7 +161,7 @@ export class Arm5eChatMessage extends ChatMessage {
     const originatorOrGM = this.originatorOrGM;
 
     if (!originatorOrGM) {
-      html.find(".clickable").remove();
+      html.querySelector(".clickable").remove();
     }
 
     return html;

@@ -1,5 +1,18 @@
 <header class="sheet-header effect-options flexrow">
-  {{!> "systems/arm5e/templates/generic/largeDialog-header.hbs" header="Inputs" }}
-  <img class="item-small-img" src="{{data.ui.img}}" />
-  <h1 class="effect-title">{{data.ui.name}}</h1>
+  <img
+    src="{{source.img}}"
+    data-action="editImage"
+    data-edit="img"
+    class="item-small-img"
+    alt="{{localize 'EFFECT.FIELDS.img.label'}}"
+  />
+  <h1 class="effect-title bigname">
+    <input
+      name="name"
+      type="text"
+      value="{{source.name}}"
+      placeholder="{{localize 'EFFECT.FIELDS.name.label'}}"
+      aria-label="{{localize 'EFFECT.FIELDS.name.label'}}"
+    />
+  </h1>
 </header>

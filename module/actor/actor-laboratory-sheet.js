@@ -11,7 +11,7 @@ import {
 } from "../helpers/magic.js";
 import { resetOwnerFields } from "../item/item-converter.js";
 import { ArM5eItemMagicSheet } from "../item/item-magic-sheet.js";
-import { getDataset, log } from "../tools.js";
+import { getDataset, log } from "../tools/tools.js";
 import { ArM5eActorSheet } from "./actor-sheet.js";
 import { ArM5eItemDiarySheet } from "../item/item-diary-sheet.js";
 import {
@@ -23,7 +23,7 @@ import {
 import { DiaryEntrySchema } from "../schemas/diarySchema.js";
 import { LabActivity, NoLabActivity, SpellActivity } from "../seasonal-activities/labActivity.js";
 
-import { investigate } from "../helpers/long-term-activities.js";
+import { investigate } from "../seasonal-activities/long-term-activities.js";
 import { ArM5eItem } from "../item/item.js";
 /**
  * Extend the basic ArM5eActorSheet

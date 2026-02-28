@@ -1,5 +1,5 @@
-<form class="{{cssClass}} arm5eRoll" autocomplete="off">
-  {{> "systems/arm5e/templates/roll/parts/roll-header.html" header="Damage_Soak" }}
+<form class="{{cssClass}} arm5e-roll" autocomplete="off">
+  {{> "systems/arm5e/templates/roll/parts/roll-header.hbs" header="Damage_Soak" }}
   {{log "Roll Soak Form Data:" this}}
   <div class="roll-options">
     <div class="flexrow flex-group-center">
@@ -21,7 +21,7 @@
         <label class="">-</label>
       </div>
       <div class="flexrow flex-group-center">
-        <label class="" name="soak" value="{{actor.system.bonuses.traits.soak}}">{{localize "arm5e.sheet.soakBonus" }}
+        <label>{{localize "arm5e.sheet.soakBonus" }}
           ({{ numberFormat
           actor.system.bonuses.traits.soak decimals=0 sign=true
           }})</label>
@@ -32,8 +32,8 @@
         <label class="">-</label>
       </div>
       <div class="flexrow flex-group-center">
-        <label class="">{{localize "arm5e.sheet.formRes"}}</label>
-        <select name="formRes" data-type="String">
+        <label class="fit">{{localize "arm5e.sheet.formRes"}}</label>
+        <select name="formRes" data-type="String" style="max-width: fit-content;">
           {{selectOptions selection.formRes selected=formRes labelAttr="label" blank="" }}
         </select>
       </div>
@@ -43,8 +43,8 @@
         <label class="">-</label>
       </div>
       <div class="flexrow flex-group-center">
-        <label class="">{{localize "arm5e.sheet.natRes"}}</label>
-        <select name="natRes" data-type="String">
+        <label class="fit">{{localize "arm5e.sheet.natRes"}}</label>
+        <select name="natRes" data-type="String" style="max-width: fit-content;">
           {{selectOptions selection.natRes selected=natRes  labelAttr="label" blank="" }}
         </select>
       </div>
@@ -55,7 +55,7 @@
       <label class="">-</label>
     </div>
     <div class="flexrow flex-group-center">
-      <label class="" name="prot" value="{{actor.system.combat.prot}}">{{localize "arm5e.sheet.protection" }} ({{
+      <label>{{localize "arm5e.sheet.protection" }} ({{
         numberFormat
         actor.system.combat.prot decimals=0 sign=true
         }})</label>
@@ -71,5 +71,5 @@
         class="SelectedModifier select-on-focus modifier" />
     </div>
   </div>
-  {{> "systems/arm5e/templates/roll/parts/roll-footer.html" footer="Damage_Soak"}}
+  {{> "systems/arm5e/templates/roll/parts/roll-footer.hbs" footer="Damage_Soak"}}
 </form>

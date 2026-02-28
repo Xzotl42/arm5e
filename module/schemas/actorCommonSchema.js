@@ -1,5 +1,5 @@
 import { ARM5E } from "../config.js";
-import { compareBaseEffects, compareMagicalEffects, compareSpells } from "../tools.js";
+import { compareBaseEffects, compareMagicalEffects, compareSpells } from "../tools/tools.js";
 
 import { boolOption, SeasonField } from "./commonSchemas.js";
 
