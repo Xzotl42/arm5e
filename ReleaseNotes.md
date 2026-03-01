@@ -8,6 +8,7 @@
 
 ### Application V2 migration
 
+- Aura Config - done
 - Astrolabium - done
 - Activity Schedule - done
 - Group Schedule - done

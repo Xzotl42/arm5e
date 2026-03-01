@@ -258,7 +258,8 @@ button.create-compendium, */
 .arm5e.button,
 .arm5e.button.ui,
 .arm5e .sanatorium.button,
-.arm5e .astrolab.button {
+.arm5e .astrolab.button,
+.arm5e .scriptorium button {
   font-family: var(--font-header);
   display: flex;
   align-items: center;
@@ -1262,7 +1263,8 @@ span.player-name {
 .arm5e h1,
 .arm5e span,
 .arm5e .window-content,
-.arm5e label {
+.arm5e label,
+.aura-config label {
   color: var(--arm5e-c-dark);
 }
 
@@ -1497,7 +1499,8 @@ a.content-link i.fa-book-open {
 .arm5e-prompt button.dialog-button,
 .arm5e-dialog button.dialog-button,
 .arm5e-confirm button.dialog-button,
-.arm5e .astrolab.button {
+.arm5e .astrolab.button,
+.arm5e .aura-config button {
   font-family: var(--font-header);
   font-size: 13pt;
   background-image: url("../assets/buttons/forged_metal.webp");
@@ -2472,11 +2475,13 @@ img.tinyimg {
   border-bottom: 0;
 }
 
-fieldset .arm5e {
-  font-family: "var(--font-book-bold)";
+.aura-config fieldset {
+  font-family: var(--font-book-bold);
+  gap: 0px;
+  padding: 10px;
 }
 
-.arm5e .sheet-header h2.covenantname input {
+fielgr .arm5e .sheet-header h2.covenantname input {
   width: 100%;
   margin: 0;
   /* padding-top: 25px; */
