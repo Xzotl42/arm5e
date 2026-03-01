@@ -1,0 +1,37 @@
+<form class="{{ cssClass }} calendar calendar-sheet" autocomplete="off">
+  <h1 class="astrolab-title width: 100%;" text-align="center">{{ title }}</h1>
+  <div class="sheet-body">
+    <div class="flexrow">
+      <div class="img-container">
+        <img
+          class="nav-arrow clickable previous-step"
+          data-year="{{ displayYear }}"
+          src=" systems/arm5e/assets/bLeft.png"
+          style="height: 20px"
+        />
+      </div>
+      <div class="flex-center">
+        <input
+          type="number"
+          name="displayYear"
+          value="{{ displayYear }}"
+          data-dtype="Number"
+          class="calendar change-year select-on-focus"
+          style="font-size: 18pt; text-align: center; width: 100px"
+        />
+      </div>
+      <div class="img-container">
+        <img
+          class="nav-arrow clickable next-step"
+          data-year="{{ displayYear }}"
+          src="systems/arm5e/assets/bRight.png"
+          style="height: 20px"
+        />
+      </div>
+    </div>
+    <div class="flexrow"></div>
+    <div>
+      {{> "systems/arm5e/templates/generic/parts/schedule-grid.hbs" }}
+    </div>
+  </div>
+</form>

@@ -11,6 +11,7 @@
 - Astrolabium - done
 - Activity Schedule - done
 - Group Schedule - done
+- Character Schedule - done
 - ChatMessage - removed jquery usage
 - Active effects config - Ars theme
 - All dialogs are now DialogV2

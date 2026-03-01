@@ -144,7 +144,7 @@ export const ArM5ePreloadHandlebarsTemplates = async function () {
     "systems/arm5e/templates/generic/active-effects-tab.hbs",
     // "systems/arm5e/templates/generic/calendar-grid.hbs",
     // "systems/arm5e/templates/generic/group-schedule-grid.hbs",
-    "systems/arm5e/templates/generic/schedule-grid.html",
+    // "systems/arm5e/templates/generic/schedule-grid.hbs",
     "systems/arm5e/templates/generic/itemPickerDialog.html",
     "systems/arm5e/templates/generic/selectDialog.html",
     "systems/arm5e/templates/generic/textInput.html",

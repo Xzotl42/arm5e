@@ -8,10 +8,18 @@ import { compareDates } from "../tools/time.js";
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 export class ActivitySchedule extends HandlebarsApplicationMixin(ApplicationV2) {
+  /**
+   * Constructor expects options with nested document containing actor and activity.
+   * Activity is required and must not be null.
+   * @param {Object} options - ApplicationV2 options
+   * @param {Object} options.document - Container object
+   * @param {Actor} options.document.actor - The actor document (required)
+   * @param {Item} options.document.activity - The activity item (diary entry, required)
+   */
   constructor(options) {
     super(options);
     this.displayYear = null;
-    this.dates = options.document.activity.system.dates;
+    this.dates = [...(options.document.activity.system?.dates ?? [])]; // Copy array
     this.actor = options.document.actor;
     this.activity = options.document.activity;
 
@@ -27,7 +35,7 @@ export class ActivitySchedule extends HandlebarsApplicationMixin(ApplicationV2) 
   static DEFAULT_OPTIONS = {
     id: "activity-schedule",
     form: {
-      handler: ActivitySchedule.#onSubmit,
+      handler: ActivitySchedule.#onSubmitHandler,
       submitOnChange: false,
       closeOnSubmit: false
     },
@@ -38,10 +46,15 @@ export class ActivitySchedule extends HandlebarsApplicationMixin(ApplicationV2) 
       height: "auto"
     },
     tag: "form"
-    // actions: {
-    //   update: ActivitySchedule.#onSubmit
-    // }
   };
+
+  /**
+   * Static wrapper that routes form submission to instance method.
+   * This allows tests to invoke the submit logic directly via instance method.
+   */
+  static async #onSubmitHandler(event, form, formData) {
+    return this._onSubmitSchedule.call(this, event, form, formData);
+  }
 
   get title() {
     return game.i18n.localize("arm5e.activity.schedule.label");
@@ -61,6 +74,194 @@ export class ActivitySchedule extends HandlebarsApplicationMixin(ApplicationV2) 
     }
   };
 
+  /**
+   * Pure helper: check if selected season would conflict with existing activities.
+   * Returns conflict state and enforceability based on activity type rules.
+   */
+  #checkSeasonConflict(selectedSeason, thisYearSchedule, activity, enforceSchedule) {
+    if (!selectedSeason || thisYearSchedule.length === 0) {
+      return { conflict: false, enforceConflict: false };
+    }
+
+    if (thisYearSchedule[0].seasons[selectedSeason.season]?.length === 0) {
+      return { conflict: false, enforceConflict: false };
+    }
+
+    const currentEntry = {
+      id: activity.id,
+      img: activity.img,
+      name: activity.name,
+      applied: activity.system.done || activity.system.activity === "none",
+      type: activity.system.activity
+    };
+
+    const hasConflict = DiaryEntrySchema.hasConflict(
+      thisYearSchedule[0].seasons[selectedSeason.season],
+      currentEntry
+    );
+
+    const enforceConflict = hasConflict && enforceSchedule;
+    return { conflict: hasConflict, enforceConflict };
+  }
+
+  /**
+   * Pure helper: build a single year's season grid with selection/conflict state.
+   * Accounts for selected dates, other activities, and enforcement rules.
+   */
+  #buildActivityYear(
+    year,
+    actorSchedule,
+    currentActivity,
+    selectedDates,
+    curYear,
+    curSeason,
+    enforceSchedule
+  ) {
+    const notAppliedStyle =
+      'style="color: #000; box-shadow: 0 0 10px rgb(200, 0, 0); cursor: pointer;"';
+    const dateIndex = selectedDates.findIndex((d) => d.year === year);
+
+    let yearData = {
+      year,
+      seasons: {
+        [CONFIG.SEASON_ORDER_INV[0]]: {
+          future: false,
+          selected: false,
+          conflict: false,
+          others: []
+        },
+        [CONFIG.SEASON_ORDER_INV[1]]: {
+          future: false,
+          selected: false,
+          conflict: false,
+          others: []
+        },
+        [CONFIG.SEASON_ORDER_INV[2]]: {
+          future: false,
+          selected: false,
+          conflict: false,
+          others: []
+        },
+        [CONFIG.SEASON_ORDER_INV[3]]: {
+          future: false,
+          selected: false,
+          conflict: false,
+          others: []
+        }
+      }
+    };
+
+    let thisYearSchedule = actorSchedule.filter((e) => e.year === year);
+
+    for (let s of Object.keys(ARM5E.seasons)) {
+      // Mark future seasons
+      if (
+        year > curYear ||
+        (year === curYear && CONFIG.SEASON_ORDER[curSeason] < CONFIG.SEASON_ORDER[s])
+      ) {
+        yearData.seasons[s].future = true;
+      } else if (year === curYear && CONFIG.SEASON_ORDER[curSeason] === CONFIG.SEASON_ORDER[s]) {
+        yearData.seasons[s].today = true;
+      }
+
+      // Check if this season is selected
+      const isSelected = selectedDates.some((d) => d.year === year && d.season === s);
+      if (isSelected) {
+        yearData.seasons[s].selected = true;
+      }
+
+      // Process other activities and check conflicts
+      if (thisYearSchedule.length > 0 && thisYearSchedule[0].seasons[s].length > 0) {
+        if (!isSelected) {
+          // Not selected: just check if others conflict
+          yearData.seasons[s].conflict = DiaryEntrySchema.hasConflict(
+            thisYearSchedule[0].seasons[s]
+          );
+        } else {
+          // Selected: check if current activity conflicts with others
+          const conflictCheck = this.#checkSeasonConflict(
+            { year, season: s },
+            thisYearSchedule,
+            currentActivity,
+            enforceSchedule
+          );
+          yearData.seasons[s].conflict = conflictCheck.conflict;
+        }
+
+        // Add other activities to display
+        for (let busy of thisYearSchedule[0].seasons[s]) {
+          let tmpStyle = busy.applied ? "" : notAppliedStyle;
+          yearData.seasons[s].others.push({
+            id: busy.id,
+            name: busy.name,
+            img: busy.img,
+            style: tmpStyle
+          });
+        }
+      }
+    }
+
+    return yearData;
+  }
+
+  /**
+   * Pure helper: apply final style/editability state to season event.
+   */
+  #applySeasonStyling(
+    event,
+    isSelected,
+    others,
+    conflict,
+    isFuture,
+    isToday,
+    enforceSchedule,
+    actType,
+    selectedCount,
+    duration
+  ) {
+    event.style = "";
+
+    if (isSelected) {
+      // Current selection in this activity
+      event.edition = true;
+      event.style = conflict ? UI.STYLES.CALENDAR_CONFLICT : UI.STYLES.CALENDAR_CURRENT;
+      if (isFuture) {
+        event.style += " future";
+      } else if (isToday) {
+        event.style += " today";
+      }
+    } else {
+      // Not selected in this activity
+      if (others.length > 0) {
+        // Other activities exist
+        if (
+          enforceSchedule &&
+          !ARM5E.activities.conflictExclusion.includes(actType) &&
+          !ARM5E.activities.duplicateAllowed.includes(actType)
+        ) {
+          event.edition = false;
+        } else {
+          event.edition = true;
+        }
+        event.style = conflict ? UI.STYLES.CALENDAR_CONFLICT : UI.STYLES.CALENDAR_BUSY;
+      } else {
+        // Season is free
+        event.edition = true;
+      }
+
+      if (isFuture) {
+        event.style += " future";
+      } else if (isToday) {
+        event.style += " today";
+      }
+
+      // Disable further additions if activity duration is fully scheduled
+      if (selectedCount === duration) {
+        event.edition = false;
+      }
+    }
+  }
+
   async _prepareContext(options = {}) {
     const data = await super._prepareContext(options);
     data.actor = this.actor;
@@ -71,13 +272,12 @@ export class ActivitySchedule extends HandlebarsApplicationMixin(ApplicationV2) 
     let enforceSchedule = game.settings.get("arm5e", "enforceSchedule");
     data.curYear = Number(currentDate.year);
     data.curSeason = currentDate.season;
-    data.duration = data.activity.system.duration;
-    data.activityName = `${data.actor.name} : ${data.activity.name}`;
+    data.duration = this.activity.system.duration;
+    data.activityName = `${this.actor.name} : ${this.activity.name}`;
     data.title = game.i18n.localize("arm5e.activity.schedule.label");
 
-    // Determine the initial year/season to display (first selected date or current date)
-    if (this.dates.length == 0) {
-      // All seasons unselected, use current date as starting point
+    // Determine initial display year
+    if (this.dates.length === 0) {
       data.firstYear = data.curYear;
       data.firstSeason = data.curSeason;
     } else {
@@ -85,203 +285,76 @@ export class ActivitySchedule extends HandlebarsApplicationMixin(ApplicationV2) 
       data.firstSeason = this.dates[0].season;
     }
 
-    // Initialize update button state and display year
     data.updatePossible = "";
-    if (this.displayYear == null) {
+    if (this.displayYear === null) {
       this.displayYear = data.firstYear;
     }
 
-    // Initialize display year and data structures
+    // Build calendar grid
     data.selectedDates = [];
     const YEARS_BACK = 4;
     const YEARS_FORWARD = 5;
-    // Calculate the range of years to display based on current display year only
-    // This ensures the year window doesn't jump around when selecting/deselecting dates
     const MIN_YEAR = this.displayYear - YEARS_BACK;
     const MAX_YEAR = this.displayYear + YEARS_FORWARD;
 
-    // Fetch the actor's schedule for the calculated year range, excluding this activity
-    const actorSchedule = data.actor.getSchedule(MIN_YEAR, MAX_YEAR, [], [data.activity.id]);
-
-    // Initialize counters and data for building the calendar
-    let dateIndex = 0;
-    data.selectedCnt = 0;
+    const actorSchedule = this.actor.getSchedule(MIN_YEAR, MAX_YEAR, [], [this.activity.id]);
+    const actType = this.activity.system.activity;
+    let selectedCount = 0;
     data.message = "";
-    const actType = data.activity.system.activity;
-    const notAppliedStyle =
-      'style="color: #000; box-shadow: 0 0 10px rgb(200, 0, 0); cursor: pointer;"';
 
-    // Build calendar grid by iterating through all years and seasons in the range
+    // Build years using pure helper
     for (let y = MIN_YEAR; y <= MAX_YEAR; y++) {
-      // Initialize year object with empty season data
-      let year = {
-        year: y,
-        seasons: {
-          [CONFIG.SEASON_ORDER_INV[0]]: {
-            future: false,
-            selected: false,
-            conflict: false,
-            others: []
-          },
-          [CONFIG.SEASON_ORDER_INV[1]]: {
-            future: false,
-            selected: false,
-            conflict: false,
-            others: []
-          },
-          [CONFIG.SEASON_ORDER_INV[2]]: {
-            future: false,
-            selected: false,
-            conflict: false,
-            others: []
-          },
-          [CONFIG.SEASON_ORDER_INV[3]]: {
-            future: false,
-            selected: false,
-            conflict: false,
-            others: []
-          }
-        }
-      };
-
-      // Get all activities scheduled for this year
-      let thisYearSchedule = actorSchedule.filter((e) => {
-        return e.year == y;
-      });
-
-      // Process each season
-      for (let s of Object.keys(ARM5E.seasons)) {
-        // Mark seasons as future or today based on current date
-        if (
-          y > data.curYear ||
-          (y == data.curYear && CONFIG.SEASON_ORDER[data.curSeason] < CONFIG.SEASON_ORDER[s])
-        ) {
-          year.seasons[s].future = true;
-        } else if (
-          y == data.curYear &&
-          CONFIG.SEASON_ORDER[data.curSeason] == CONFIG.SEASON_ORDER[s]
-        ) {
-          // Mark the current season/year
-          year.seasons[s].today = true;
-        }
-
-        // Check if this season is selected in the current activity's schedule
-        if (dateIndex < this.dates.length) {
-          if (y == this.dates[dateIndex].year && s == this.dates[dateIndex].season) {
-            dateIndex++;
-            year.seasons[s].selected = true;
-            data.selectedCnt++;
-          }
-        }
-
-        // Process other activities in the same season
-        if (thisYearSchedule.length > 0) {
-          if (thisYearSchedule[0].seasons[s].length > 0) {
-            let currentEntry;
-            // Check for conflicts between this activity and existing activities
-            if (!year.seasons[s].selected) {
-              if (DiaryEntrySchema.hasConflict(thisYearSchedule[0].seasons[s])) {
-                year.seasons[s].conflict = true;
-              }
-            } else {
-              // If this season is selected, check if the current activity conflicts with others
-              currentEntry = {
-                id: data.activity.id,
-                img: data.activity.img,
-                name: data.activity.name,
-                applied: data.activity.system.done || data.activity.system.activity === "none",
-                type: data.activity.system.activity
-              };
-              if (DiaryEntrySchema.hasConflict(thisYearSchedule[0].seasons[s], currentEntry)) {
-                year.seasons[s].conflict = true;
-                data.message = game.i18n.localize("arm5e.activity.msg.scheduleConflict");
-              }
-            }
-
-            // Add other activities to the display, applying special styling for unapplied activities
-            for (let busy of thisYearSchedule[0].seasons[s]) {
-              let tmpStyle = busy.applied ? "" : notAppliedStyle;
-              year.seasons[s].others.push({
-                id: busy.id,
-                name: busy.name,
-                img: busy.img,
-                style: tmpStyle
-              });
-            }
-          }
-        }
-      }
+      let year = this.#buildActivityYear(
+        y,
+        actorSchedule,
+        this.activity,
+        this.dates,
+        data.curYear,
+        data.curSeason,
+        enforceSchedule
+      );
       data.selectedDates.push(year);
     }
-    // Apply visual styling to calendar events based on their state
+
+    // Apply styling and check for activity conflicts
     let activityConflicting = false;
     for (let y of data.selectedDates) {
-      for (let event of Object.values(y.seasons)) {
-        event.style = "";
-        if (event.selected) {
-          // Currently selected event in this activity
-          event.edition = true;
+      for (let [season, event] of Object.entries(y.seasons)) {
+        const isSelected = this.dates.some((d) => d.year === y.year && d.season === season);
+        if (isSelected) {
+          selectedCount++;
           if (event.conflict) {
-            // Highlight conflicts with red styling
-            event.style = UI.STYLES.CALENDAR_CONFLICT;
             activityConflicting = true;
-          } else {
-            // Use standard current event styling
-            event.style = UI.STYLES.CALENDAR_CURRENT;
-          }
-          if (event.future) {
-            event.style += " future";
-          } else if (event.today) {
-            event.style += " today";
-          }
-        } else {
-          // Event is not selected in this activity
-          if (event.others.length > 0) {
-            // Other activities are scheduled in this season
-            if (
-              enforceSchedule &&
-              !ARM5E.activities.conflictExclusion.includes(actType) &&
-              !ARM5E.activities.duplicateAllowed.includes(actType)
-            ) {
-              // Prevent editing if schedule enforcement is enabled and this activity type doesn't allow duplicates
-              event.edition = false;
-            } else {
-              event.edition = true;
-            }
-            if (!event.conflict) {
-              // Use busy season styling
-              event.style = UI.STYLES.CALENDAR_BUSY;
-            } else {
-              // Highlight conflicts
-              event.style = UI.STYLES.CALENDAR_CONFLICT;
-            }
-          } else {
-            // Season is free, allow editing
-            event.edition = true;
-          }
-          if (event.future) {
-            event.style += " future";
-          } else if (event.today) {
-            event.style += " today";
-          }
-          // Disable further additions if activity duration is fully scheduled
-          if (data.selectedCnt == data.activity.system.duration) {
-            event.edition = false;
           }
         }
+
+        this.#applySeasonStyling(
+          event,
+          isSelected,
+          event.others,
+          event.conflict,
+          event.future,
+          event.today,
+          enforceSchedule,
+          actType,
+          selectedCount,
+          data.duration
+        );
       }
     }
 
-    // Disable update button if schedule is invalid
-    // Invalid when: duration doesn't match selected seasons OR conflicts exist and schedule is enforced
+    // Determine if update is possible
+    data.selectedCnt = selectedCount;
     if (
-      data.activity.system.duration != data.selectedCnt ||
+      this.activity.system.duration !== selectedCount ||
       (activityConflicting && enforceSchedule)
     ) {
       data.updatePossible = "disabled";
+      if (activityConflicting && enforceSchedule) {
+        data.message = game.i18n.localize("arm5e.activity.msg.scheduleConflict");
+      }
     }
 
-    // Add remaining context data for template rendering
     data.displayYear = this.displayYear;
     log(false, data);
     data.config = CONFIG.ARM5E;
@@ -292,13 +365,7 @@ export class ActivitySchedule extends HandlebarsApplicationMixin(ApplicationV2) 
     super._onRender(context, options);
     const html = this.element;
     html.querySelector(".change-year").addEventListener("change", this._setYear.bind(this));
-    // html.addEventListener("change", (event) => {
-    //   const target = event.target;
-    //   if (!(target instanceof HTMLElement)) return;
-    //   if (target.classList.contains("selectedSeason")) {
-    //     this._selectSeason(event);
-    //   }
-    // });
+
     html.querySelectorAll(".selectedSeason").forEach((el) => {
       el.addEventListener("change", (event) => this._selectSeason(event));
     });
@@ -316,24 +383,23 @@ export class ActivitySchedule extends HandlebarsApplicationMixin(ApplicationV2) 
         item.sheet.render(true, { focus: true });
       }
     });
-    // html
-    //   .querySelector(".schedule-update")
-    //   .addEventListener("click", async (event) => await this.submit(event));
   }
 
-  // _onChangeForm(formConfig, event) {
-  //   super._onChangeForm(formConfig, event);
-  //   event.preventDefault();
-  //   const dataset = getDataset(event);
-  // }
-
-  static async #onSubmit(event, form, formData) {
+  /**
+   * Public submit handler for activity schedule updates.
+   * Callable directly for testing. Handles:
+   * 1. Updates dependent activities with new schedule
+   * 2. Updates this activity's schedule
+   * 3. Syncs local state
+   */
+  async _onSubmitSchedule(event, form, formData) {
+    // Update dependent items with this activity's new schedule
     for (let dependency of this.activity.system.externalIds) {
       if (game.actors.has(dependency.actorId)) {
         let actor = game.actors.get(dependency.actorId);
         if (actor.items.has(dependency.itemId)) {
-          if (dependency.flags == 2) {
-            // update schedule of dependency
+          if (dependency.flags === 2) {
+            // Flag 2 means update dependency schedule
             await actor.updateEmbeddedDocuments(
               "Item",
               [{ _id: dependency.itemId, system: { dates: this.dates } }],
@@ -343,18 +409,19 @@ export class ActivitySchedule extends HandlebarsApplicationMixin(ApplicationV2) 
         }
       }
     }
+
+    // Update this activity's schedule
     await this.actor.updateEmbeddedDocuments("Item", [
       { _id: this.activity.id, system: { dates: this.dates } }
     ]);
 
+    // Sync local state from form data (if present)
     if (formData.object.displayYear) {
       this.displayYear = formData.object.displayYear;
     }
     if (formData.object.dates) {
       this.dates = formData.object.dates;
     }
-
-    // this.close();
   }
   async _selectSeason(event) {
     event.preventDefault();
@@ -397,15 +464,4 @@ export class ActivitySchedule extends HandlebarsApplicationMixin(ApplicationV2) 
     this.displayYear = newYear;
     this.render();
   }
-
-  // async _updateObject(event, formData) {
-  //   if (formData.displayYear) {
-  //     this.displayYear = formData.displayYear;
-  //   }
-  //   if (formData.dates) {
-  //     this.dates = formData.dates;
-  //   }
-
-  //   return;
-  // }
 }

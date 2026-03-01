@@ -6,10 +6,14 @@ import { debug, getDataset, log } from "../tools/tools.js";
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 export class GroupSchedule extends HandlebarsApplicationMixin(ApplicationV2) {
-  constructor(options) {
+  /**
+   * Constructor initializes with default state.
+   * @param {Object} options - ApplicationV2 options (typically empty)
+   */
+  constructor(options = {}) {
     super(options);
     this.displayYear = null;
-    this.troupeFilter = "players";
+    this.troupeFilter = options.troupeFilter || "players";
   }
 
   static DEFAULT_OPTIONS = {
@@ -45,19 +49,14 @@ export class GroupSchedule extends HandlebarsApplicationMixin(ApplicationV2) {
     }
   };
 
-  async _prepareContext(options = {}) {
-    const data = await super._prepareContext(options);
-    let currentDate = game.settings.get("arm5e", "currentDate");
-    data.curYear = Number(currentDate.year);
-    data.curSeason = currentDate.season;
-    data.selectedActors = [];
-    data.title = this.title;
-    data.troupeFilters = ARM5E.activities.troupeFilters;
-    if (this.displayYear == null) {
-      this.displayYear = data.curYear;
-    }
+  /**
+   * Pure helper: filter actors by troupe type.
+   * @param {string} filter - Filter key (all, players, magi, companions, grogs, npcs)
+   * @returns {Array} Filtered array of actors
+   */
+  #filterActorsByTroupe(filter) {
     let actors = [];
-    switch (this.troupeFilter) {
+    switch (filter) {
       case "all":
         actors = game.actors.filter((e) => e.type === "player" || e.type === "npc");
         break;
@@ -83,49 +82,79 @@ export class GroupSchedule extends HandlebarsApplicationMixin(ApplicationV2) {
         actors = game.actors.filter((e) => e.type === "npc");
         break;
     }
+    return actors;
+  }
 
-    for (let actor of actors) {
-      const actorSchedule = actor.getSchedule(this.displayYear, this.displayYear, [], []);
+  /**
+   * Pure helper: build season aggregation for a single actor and year.
+   * @param {Object} actor - Actor document
+   * @param {number} year - Display year
+   * @returns {Object} Actor year object with aggregated activities per season
+   */
+  #buildActorYearRow(actor, year) {
+    const actorSchedule = actor.getSchedule(year, year, [], []);
+    let actorYear = {
+      id: actor._id,
+      actorName: actor.name,
+      year,
+      seasons: {
+        [CONFIG.SEASON_ORDER_INV[0]]: { selected: false, busy: false, activities: [] },
+        [CONFIG.SEASON_ORDER_INV[1]]: { selected: false, busy: false, activities: [] },
+        [CONFIG.SEASON_ORDER_INV[2]]: { selected: false, busy: false, activities: [] },
+        [CONFIG.SEASON_ORDER_INV[3]]: { selected: false, busy: false, activities: [] }
+      }
+    };
 
-      data.message = "";
-      let actorYear = {
-        id: actor._id,
-        actorName: actor.name,
-        year: this.displayYear,
-        seasons: {
-          [CONFIG.SEASON_ORDER_INV[0]]: { selected: false, busy: false, activities: [] },
-          [CONFIG.SEASON_ORDER_INV[1]]: { selected: false, busy: false, activities: [] },
-          [CONFIG.SEASON_ORDER_INV[2]]: { selected: false, busy: false, activities: [] },
-          [CONFIG.SEASON_ORDER_INV[3]]: { selected: false, busy: false, activities: [] }
-        }
-      };
-
-      for (let s of Object.keys(ARM5E.seasons)) {
-        if (actorSchedule.length > 0) {
-          if (actorSchedule[0].seasons[s].length > 0) {
-            actorYear.seasons[s].busy = DiaryEntrySchema.hasConflict(actorSchedule[0].seasons[s]);
-            for (let busy of actorSchedule[0].seasons[s]) {
-              actorYear.seasons[s].activities.push({ id: busy.id, name: busy.name, img: busy.img });
-            }
-          }
+    for (let s of Object.keys(ARM5E.seasons)) {
+      if (actorSchedule.length > 0 && actorSchedule[0].seasons[s].length > 0) {
+        actorYear.seasons[s].busy = DiaryEntrySchema.hasConflict(actorSchedule[0].seasons[s]);
+        for (let busy of actorSchedule[0].seasons[s]) {
+          actorYear.seasons[s].activities.push({ id: busy.id, name: busy.name, img: busy.img });
         }
       }
+    }
+
+    return actorYear;
+  }
+
+  /**
+   * Pure helper: apply styling to season event (busy/conflict/none).
+   */
+  #styleActorSeason(event, hasActivities, busy) {
+    event.edition = false;
+    if (hasActivities) {
+      event.style = busy ? UI.STYLES.CALENDAR_CONFLICT : UI.STYLES.CALENDAR_BUSY;
+    }
+  }
+
+  async _prepareContext(options = {}) {
+    const data = await super._prepareContext(options);
+    let currentDate = game.settings.get("arm5e", "currentDate");
+    data.curYear = Number(currentDate.year);
+    data.curSeason = currentDate.season;
+    data.selectedActors = [];
+    data.title = this.title;
+    data.troupeFilters = ARM5E.activities.troupeFilters;
+    if (this.displayYear == null) {
+      this.displayYear = data.curYear;
+    }
+
+    // Filter actors using pure helper
+    let actors = this.#filterActorsByTroupe(this.troupeFilter);
+
+    // Build actor rows using pure helper
+    for (let actor of actors) {
+      let actorYear = this.#buildActorYearRow(actor, this.displayYear);
       data.selectedActors.push(actorYear);
     }
 
-    // styling
+    // Apply styling using pure helper
     for (let a of data.selectedActors) {
       for (let event of Object.values(a.seasons)) {
-        event.edition = false;
-        if (event.activities.length > 0) {
-          if (!event.busy) {
-            event.style = UI.STYLES.CALENDAR_BUSY;
-          } else {
-            event.style = UI.STYLES.CALENDAR_CONFLICT;
-          }
-        }
+        this.#styleActorSeason(event, event.activities.length > 0, event.busy);
       }
     }
+
     log(false, data);
     data.config = CONFIG.ARM5E;
     data.displayYear = this.displayYear;
