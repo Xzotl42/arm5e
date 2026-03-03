@@ -46,8 +46,11 @@
   <section class="sheet-body">
     {{!-- Description Tab --}}
     <div class="tab" data-group="primary" data-tab="description">
-      {{editor system.baseEffectDescription target="system.baseEffectDescription" button=true owner=owner
-      editable=editable}}
+      {{> "systems/arm5e/templates/generic/ars-editor.hbs"
+        content=system.baseEffectDescription
+        target="system.baseEffectDescription"
+        editable=editable
+      }}
       {{#if metagame.view }}
         {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
         {{> "systems/arm5e/templates/generic/source.html" }}

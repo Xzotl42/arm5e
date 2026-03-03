@@ -1,29 +1,71 @@
 import { log } from "../tools/tools.js";
 
-export class SourcebookFilterConfig extends FormApplication {
-  static get defaultOptions() {
-    return foundry.utils.mergeObject(super.defaultOptions, {
-      id: "sourcebooks-filters-config",
-      template: "systems/arm5e/templates/generic/sourcebook-filter-config.html",
-      height: "auto",
-      classes: ["arm5e-config"],
-      closeOnSubmit: false,
+const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
+
+export class SourcebookFilterConfig extends HandlebarsApplicationMixin(ApplicationV2) {
+  constructor(options) {
+    super(options);
+    this.buttons = {
+      submit: {
+        label: game.i18n.localize("PERMISSION.Submit"),
+        icon: "fas fa-save",
+        action: "submit",
+        cssClass: ["dialog-button"]
+      },
+      reset: {
+        label: game.i18n.localize("PERMISSION.Reset"),
+        icon: "fas fa-sync",
+        action: "reset",
+        cssClass: ["dialog-button"]
+      }
+    };
+  }
+  static DEFAULT_OPTIONS = {
+    id: "sourcebooks-filters-config",
+    classes: ["arm5e", "arm5e-config"],
+    tag: "form",
+    form: {
+      handler: SourcebookFilterConfig.#onSubmitHandler,
       submitOnChange: false,
-      submitOnClose: false,
-      title: game.i18n.localize(`Sourcebooks filter`),
+      closeOnSubmit: true
+    },
+    window: {
+      title: "Sourcebooks filter",
+      resizable: false,
+      contentClasses: ["standard-form", "arm5e-config"]
+    },
+    position: {
       width: 400,
-      resizable: true
-    });
+      height: "auto"
+    },
+    actions: {
+      // submit: SourcebookFilterConfig.#onSubmitHandler,
+      reset: SourcebookFilterConfig.#onResetDefaults
+    }
+  };
+
+  static PARTS = {
+    form: {
+      template: "systems/arm5e/templates/generic/sourcebook-filter-config.html"
+    },
+    buttons: {
+      template: "systems/arm5e/templates/roll/parts/roll-buttons.hbs"
+    }
+  };
+
+  static async #onSubmitHandler(event, form, formData) {
+    await this._onSubmitFilters(event, formData);
   }
 
-  async getData() {
-    const data = super.getData();
+  async _prepareContext(options = {}) {
+    const data = await super._prepareContext(options);
+    data.buttons = this.buttons;
     let sources = Object.fromEntries(
       Object.entries(CONFIG.ARM5E.generic.sourcesTypes).map((e) => {
         return [
           e[0],
           {
-            display: e[1].display === undefined ? false : e[1].display, // true by default
+            display: e[1].display === undefined ? false : e[1].display,
             label: e[1].label,
             edit: e[1].edit ? "disabled" : ""
           }
@@ -39,20 +81,15 @@ export class SourcebookFilterConfig extends FormApplication {
     return data;
   }
 
-  activateListeners(html) {
-    super.activateListeners(html);
-    html.find("button[name='reset']").click(this._onResetDefaults.bind(this));
-  }
-
-  async _onResetDefaults(event) {
+  static async #onResetDefaults(event, target) {
     event.preventDefault();
     await game.settings.set(CONFIG.ARM5E.SYSTEM_ID, "sourcebookFilter", {});
     ui.notifications.info("Reset filters", { localize: true });
-    return this.render();
+    return this.render(true);
   }
 
-  async _updateObject(ev, formData) {
-    const filters = foundry.utils.expandObject(formData);
+  async _onSubmitFilters(ev, formData) {
+    const filters = foundry.utils.expandObject(formData.object);
 
     for (let [k, v] of Object.entries(filters)) {
       filters[k] = {

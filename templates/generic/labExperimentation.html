@@ -1,7 +1,4 @@
-<form class="{{cssClass}} scriptorium scriptorium-sheet" autocomplete="off">
-  <div class="scriptorium flex0">
-    <img src="systems/arm5e/assets/scriptorium/Scriptorium_header.png" style="border: 0px;" />
-  </div>
+<div class="{{cssClass}} scriptorium scriptorium-sheet" autocomplete="off">
   <h1 class="scriptorium-title width: 100%;" text-align="center">{{localize "arm5e.rolltables.experimentation.title" }}
   </h1>
   <header class="flexcol marginsides32">
@@ -41,8 +38,8 @@
         <input type="checkbox" class="select-on-focus slim" name="discovery" {{checked discovery}} />
       </div>
     </div>
-    <div class="flexrow">
-      <button class="arm5e experimentation-roll" style="font-family: bookAntika; margin:5px">
+    <div class="flexrow padding10">
+      <button class=" arm5e experimentation-roll" style="font-family: bookAntika; margin:5px">
         {{localize "arm5e.rolltables.experimentation.roll"}}
       </button>
       <button class="arm5e clear-all" style="font-family: bookAntika; margin:5px">
@@ -52,18 +49,19 @@
   </header>
 
   <div class="marginsides32">
-    {{> "systems/arm5e/templates/generic/metalic-bar.html" topoffset="-7px" }}
+    {{> "systems/arm5e/templates/generic/metalic-bar.html"  }}
   </div>
   {{!-- Sheet Body --}}
 
-  <section class="sheet-body">
-    <h2 class="marginsides32">{{localize "arm5e.rolltables.experimentation.report.label" }}</h2>
-    <div class="marginsides32" style="height: 250px ; min-height: 250px;">
-      {{editor reportBody target="reportBody" button=true engine="prosemirror" editable=true}}
+  <section class="sheet-body marginsides32 padding10 backSection">
+    <h2>{{localize "arm5e.rolltables.experimentation.report.label" }}</h2>
+    <div style="height: 250px ; min-height: 250px;">
+      {{> "systems/arm5e/templates/generic/ars-editor.hbs"
+        content=reportBody
+        target="reportBody"
+        editable=false
+      }}
     </div>
   </section>
 
-  <div class="footer-background flex0">
-    <img src="systems/arm5e/assets/scriptorium/Scriptorium_footer.png" />
-  </div>
-</form>
+</div>

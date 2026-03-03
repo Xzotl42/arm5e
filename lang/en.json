@@ -406,7 +406,8 @@
       "hint": {
         "compendiaRef": "Select the module that will serve as reference to the system for compendium content"
       },
-      "sourcebookFilter": "Sourcebooks filter"
+      "sourcebookFilter": "Sourcebooks filters",
+      "sourcebooks": "Sourcebooks"
     },
     "covenant": {
       "equipment": {
@@ -2048,7 +2049,6 @@
       }
     },
     "system": {
-      "V13Disclaimer": "DISCLAIMER: The Ars Magica system is currently supporting V13 with a best effort policy as the next V12 release is currently the focus. Everything should work but you may encounter minor layout problems, if not, please report any bug on the discord server.",
       "dependencyWarning": "The system requires module {name} to be at least version {minimum}, the current version is {current}. You may encounter errors and bugs, please update"
     },
     "time": {

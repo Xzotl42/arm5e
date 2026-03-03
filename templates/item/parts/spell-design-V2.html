@@ -5,8 +5,11 @@
   </div>
   <div class="foldable-section-small {{lookup visibility 'desc' }}" id="{{container}}-desc{{index}}-{{docId}}">
     <div class="flex01" style="height: 200px;">
-      {{editor spelldata.system.description target=(concat prefix "system.description") button=true 
-      owner=owner editable=true engine="prosemirror"}}
+      {{> "systems/arm5e/templates/generic/ars-editor.hbs"
+        content=spelldata.system.description
+        target=(concat prefix "system.description")
+        editable=true
+      }}
     </div>
   </div>
 </div>

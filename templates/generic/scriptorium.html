@@ -1,7 +1,5 @@
 <form class="{{cssClass}} scriptorium scriptorium-sheet" autocomplete="off">
-  <div class="scriptorium flex0">
-    <img src="systems/arm5e/assets/scriptorium/Scriptorium_header.png" style="border: 0px;" />
-  </div>
+  {{> "systems/arm5e/templates/generic/parts/scriptorium-header.hbs" }}
   <h1 class="scriptorium-title width: 100%;" text-align="center">Scriptorium</h1>
   <header class="scriptorium-header flex0">
     <div class="flexrow" style="margin-left: 32px; margin-right: 57px;">
@@ -58,7 +56,5 @@
      -->
   </section>
 
-  <div class="footer-background flex0">
-    <img src="systems/arm5e/assets/scriptorium/Scriptorium_footer.png" />
-  </div>
+  {{> "systems/arm5e/templates/generic/parts/scriptorium-footer.hbs"  }}
 </form>

@@ -56,7 +56,12 @@
         </div>
         <div class="margintop18" style="min-height:263px">
           <label class="smallTitle">{{localize "arm5e.sanatorium.log"}}</label>
-          {{editor log target="log" button=false owner=owner engine="prosemirror" editable=false}}
+          {{> "systems/arm5e/templates/generic/ars-editor.hbs"
+            content=log
+            target="log"
+            button=false
+            editable=false
+          }}
         </div>
       </div>
     </div>

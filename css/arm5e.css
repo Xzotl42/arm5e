@@ -67,18 +67,56 @@
 }
 
 /* Basic tweaks */
-* {
-  scrollbar-color: initial;
+.arm5e,
+.system-arm5e,
+.application.arm5e {
+  /* Variables used by Foundry's global scrollbar rule */
+  --color-scrollbar: #dfd7c6; /* PLACEHOLDER_THUMB */
+  --color-scrollbar-track: #c7ae85; /* PLACEHOLDER_TRACK */
+
+  /* Local aliases if needed elsewhere */
+  --scrollbar-thumb: var(--color-scrollbar);
+  --scrollbar-thumb-hover: #444444; /* PLACEHOLDER_THUMB_HOVER */
+  --scrollbar-track: var(--color-scrollbar-track);
 }
-::-webkit-scrollbar-thumb {
-  border-color: rgb(189, 162, 117);
-  background: rgb(189, 162, 117);
+
+/* Firefox: beat generic '*' rules from other layers */
+.arm5e,
+.arm5e *,
+.system-arm5e,
+.system-arm5e *,
+.application.arm5e,
+.application.arm5e * {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-scrollbar) var(--color-scrollbar-track);
 }
-@-moz-document url-prefix() {
-  * {
-    scrollbar-color: rgb(189, 162, 117) transparent;
-    scrollbar-width: thin;
-  }
+
+/* WebKit/Blink */
+.arm5e ::-webkit-scrollbar,
+.system-arm5e ::-webkit-scrollbar,
+.application.arm5e ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.arm5e ::-webkit-scrollbar-track,
+.system-arm5e ::-webkit-scrollbar-track,
+.application.arm5e ::-webkit-scrollbar-track {
+  background: var(--color-scrollbar-track);
+}
+
+.arm5e ::-webkit-scrollbar-thumb,
+.system-arm5e ::-webkit-scrollbar-thumb,
+.application.arm5e ::-webkit-scrollbar-thumb {
+  background-color: var(--color-scrollbar);
+  border: 1px solid var(--color-scrollbar-track);
+  border-radius: 6px;
+}
+
+.arm5e ::-webkit-scrollbar-thumb:hover,
+.system-arm5e ::-webkit-scrollbar-thumb:hover,
+.application.arm5e ::-webkit-scrollbar-thumb:hover {
+  background-color: var(--scrollbar-thumb-hover);
 }
 
 /* Theme variables */
@@ -145,6 +183,7 @@
 .arm5e .tabs .item,
 .arm5e .smallTitle,
 .arm5e .item-name {
+  color: var(--color-text-dark-primary);
   font-weight: 500;
   font-family: var(--font-header);
 }
@@ -171,13 +210,17 @@ label,
   background-size: auto;
 }
 
+
+
+
 /* ============================================
    WINDOW & DIALOG CONTENT BASELINE
    ============================================ */
 
 /* Base window-content for all applications */
 .window-app .window-content,
-.arm5e .window-content {
+.arm5e .window-content,
+.arm5e-config .window-content {
   padding: 0;
   border: 2px solid var(--border-main);
   /* background: var(--parchment); */
@@ -194,6 +237,7 @@ label,
 .arm5e-prompt .window-content,
 .arm5e-roll .window-content, /* for dialog */
 .window-content .arm5e-roll, /* for app roll */
+
 .arm5e-dialog .window-content {
   padding: 0;
   color: var(--color-text-dark-primary);
@@ -258,7 +302,8 @@ button.create-compendium, */
 .arm5e.button,
 .arm5e.button.ui,
 .arm5e .sanatorium.button,
-.arm5e .astrolab.button {
+.arm5e .astrolab.button,
+.arm5e .scriptorium button {
   font-family: var(--font-header);
   display: flex;
   align-items: center;
@@ -614,6 +659,11 @@ input:disabled:hover {
   background: var(--arm5e-c-shadow);
   height: 25px;
   font-family: var(--font-book);
+}
+
+.arm5e select option {
+  background-image: var(--parchment);
+  background-color: rgb(218, 216, 204);
 }
 
 /* Range styling grouped */
@@ -1195,9 +1245,7 @@ a.header-button.close {
 /* End of refactor - remaining component-specific rules intentionally preserved below */
 /* (ensures compatibility with layout requirements and minimizes functional regressions) */
 
-* {
-  scrollbar-color: initial;
-}
+
 
 /* General settings fonts */
 
@@ -1244,6 +1292,10 @@ li.macro.inactive {
   font-family: var(--font-header);
 }
 
+li .filter {
+  color : var(--arm5e-c-dark)
+}
+
 /* Removed redundant font-family from a, span.document-type, input, span.player-name - inherit from .arm5e */
 
 a.scene-name {
@@ -1254,10 +1306,10 @@ a.scene-name {
 span.player-name {
   font-family: var(--font-book);
 }
-.arm5e h1,
 .arm5e span,
 .arm5e .window-content,
-.arm5e label {
+.arm5e label,
+.aura-config label {
   color: var(--arm5e-c-dark);
 }
 
@@ -1464,11 +1516,12 @@ a.content-link i.fa-book-open {
 .arm5e-prompt .dialog-buttons,
 .arm5e-dialog .dialog-buttons,
 .arm5e-confirm .dialog-buttons,
+.arm5e-config .dialog-buttons,
 .arm5e .dialog-buttons {
   /* background-color: rgb(169 159 134 / 50%); */
   background-color: var(--arm5e-c-tan);
 }
-
+.arm5e .editor .editor-edit,
 .arm5e .window-content button {
   font-family: var(--font-header);
   font-size: 13pt;
@@ -1492,7 +1545,10 @@ a.content-link i.fa-book-open {
 .arm5e-prompt button.dialog-button,
 .arm5e-dialog button.dialog-button,
 .arm5e-confirm button.dialog-button,
-.arm5e .astrolab.button {
+.arm5e-config button.dialog-button,
+.arm5e .astrolab.button,
+/* .arm5e.arm5e-config .window-content button.dialog-button, */
+.arm5e .aura-config button {
   font-family: var(--font-header);
   font-size: 13pt;
   background-image: url("../assets/buttons/forged_metal.webp");
@@ -1522,6 +1578,10 @@ a.content-link i.fa-book-open {
   text-align: center;
 }
 
+.arm5e-config button.dialog-button span {
+  color: var(--arm5e-c-beige);
+}
+
 .arm5e button:hover {
   box-shadow: 0 0 10px black, 2px 2px 6px rgba(0, 0, 0, 0.6);
 }
@@ -1530,6 +1590,19 @@ a.content-link i.fa-book-open {
 .arm5e-dialog button.dialog-button:hover,
 .arm5e-prompt button.dialog-button:hover {
   box-shadow: 0 0 10px var(--arm5e-c-beige);
+}
+
+.arm5e button.pm-dropdown {
+  font-family: var(--font-book);
+}
+
+.arm5e .editor .editor-edit {
+  font-size: 10pt;
+}
+
+.arm5e .editor.prosemirror .editor-container {
+  /* max-height: 300px; */
+  overflow-y: auto;
 }
 
 /* Removed redundant .arm5e .window-app .window-content override; baseline already sets display:flex */
@@ -1544,6 +1617,7 @@ a.content-link i.fa-book-open {
 
 h1.window-title,
 h4.window-title {
+  color: var(--color-text-light)
   font-family: var(--font-header);
   font-size: 16pt;
 }
@@ -1861,7 +1935,7 @@ p,
   background-size: cover;
 } */
 
-.scriptorium.scriptorium-sheet {
+.scriptorium-sheet .window-content {
   background-image: url("../assets/scriptorium/Scriptorium_background.webp");
   background-repeat: repeat-y;
   background-size: contain;
@@ -2467,11 +2541,13 @@ img.tinyimg {
   border-bottom: 0;
 }
 
-fieldset .arm5e {
-  font-family: "var(--font-book-bold)";
+.aura-config fieldset {
+  font-family: var(--font-book-bold);
+  gap: 0px;
+  padding: 10px;
 }
 
-.arm5e .sheet-header h2.covenantname input {
+fielgr .arm5e .sheet-header h2.covenantname input {
   width: 100%;
   margin: 0;
   /* padding-top: 25px; */
@@ -2684,6 +2760,46 @@ div[class*="foldable-section"] {
 }
 .description-editor {
   min-height: 200px;
+}
+
+.arm5e .prosemirror-section {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  flex: 1 1 auto;
+}
+
+.arm5e .backSection:has(> .prosemirror-section) {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.arm5e .prosemirror-editor-box {
+  height: 210px;
+  width: 100%;
+  flex: 1 1 auto;
+}
+
+.arm5e .prosemirror-editor-box .editor,
+.arm5e .prosemirror-editor-box .editor.prosemirror {
+  height: 100%;
+  overflow: visible;
+  padding: 0;
+}
+
+.arm5e .prosemirror-editor-box .editor-container {
+  height: 100%;
+  overflow: hidden;
+}
+
+.arm5e .prosemirror-editor-box .editor-content,
+.arm5e .prosemirror-editor-box prose-mirror {
+  height: 100%;
+  max-height: 100%;
+  box-sizing: border-box;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 .arm5e .sheet-body .editor.prosemirror,
 .arm5e .sheet-body .tab .editor.prosemirror {

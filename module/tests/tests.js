@@ -18,6 +18,7 @@ import { registerRollTesting } from "./rollsTest.js";
 import { registerSheetDisplayTests } from "./sheetDisplayTests.js";
 import { registerStressDieTesting } from "./stressDieTesting.js";
 import { registerDiaryTesting } from "./testSchedule.js";
+import { registerScheduleIntegrationTesting } from "./scheduleIntegrationTests.js";
 
 export function registerTestSuites(quench) {
   registerDEBUGTest(quench);
@@ -25,6 +26,7 @@ export function registerTestSuites(quench) {
   registerLabActivityTesting(quench);
   registerActorLinkTesting(quench);
   registerDiaryTesting(quench);
+  registerScheduleIntegrationTesting(quench);
   registerStressDieTesting(quench);
   registerAbilityScoresTesting(quench);
   registerRollTesting(quench);

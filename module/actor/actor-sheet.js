@@ -2086,7 +2086,7 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
   async displaySchedule(event) {
     event.preventDefault();
     const schedule = new Schedule({
-      actor: this.actor,
+      document: this.actor,
       type: "character"
     });
     this.actor.apps[schedule.appId] = schedule;

@@ -15,10 +15,6 @@ export class ArsApps {
     const res = await scriptorium.render(true);
   }
 
-  static async openAuraConfig() {
-    new AuraConfig(canvas.scene).render(true);
-  }
-
   static async openLabExperimentation() {
     let exp = new LabExperimentation();
     const res = await exp.render(true);

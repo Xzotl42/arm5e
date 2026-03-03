@@ -1,0 +1,9 @@
+<div class="prosemirror-section {{ sectionClass }}">
+  <div class="description-editor prosemirror-editor-box {{ editorClass }}">
+    {{#if (eq button false)}}
+    {{editor content target=target button=false engine="prosemirror" editable=editable}}
+    {{else}}
+    {{editor content target=target button=true engine="prosemirror" editable=editable}}
+    {{/if}}
+  </div>
+</div>

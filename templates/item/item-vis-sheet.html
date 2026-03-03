@@ -31,7 +31,11 @@
     {{!-- Attributes Tab --}}
     <label for="system.description" class="">{{localize "arm5e.sheet.description"}}</label>
     <div style="height: 249px">
-      {{editor enrichedDescription target="system.description" button=true owner=owner engine="prosemirror" editable=editable}}
+      {{> "systems/arm5e/templates/generic/ars-editor.hbs"
+        content=enrichedDescription
+        target="system.description"
+        editable=editable
+      }}
     </div>
     {{#if metagame.view }}
       {{> "systems/arm5e/templates/generic/metalic-bar.html" }}

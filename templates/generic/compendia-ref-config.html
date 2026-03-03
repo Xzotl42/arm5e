@@ -1,9 +1,7 @@
-<form autocomplete="off" onsubmit="event.preventDefault();">
-    <header class="table-header flexrow">
-        <label class="index">{{ localize "Compendia" }}</label>
-    </header>
+<div autocomplete="off" class="{{cssClass}} arm5e-config">
+
     <!-- <section class="sheet-body" style="height: 800px"> -->
-    <div class="arm5e backSection padding12 flex-group-left ">
+    <div class="arm5e backSection padding12 flex-group-left " style="padding: 10px;">
         <div>
             <select name="referenceModule" data-type="String">
                 {{selectOptions arsModules selected=referenceModule labelAttr="label" nameAttr="id" valueAttr="id"}}
@@ -16,9 +14,9 @@
     </div>
     <!-- </section> -->
 
-    <div class="form-group">
-        <button type="submit">
+    <div class="dialog-buttons flexrow flex-end">
+        <button class="dialog-button" type="submit">
             <i class="fas fa-save"></i> {{localize 'PERMISSION.Submit'}}
         </button>
     </div>
-</form>
+</div>

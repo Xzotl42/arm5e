@@ -142,9 +142,9 @@ export const ArM5ePreloadHandlebarsTemplates = async function () {
     // "systems/arm5e/templates/roll/parts/combat-defense.hbs",
     // generic partials
     "systems/arm5e/templates/generic/active-effects-tab.hbs",
-    // "systems/arm5e/templates/generic/calendar-grid.html",s
-    "systems/arm5e/templates/generic/group-schedule-grid.html",
-    "systems/arm5e/templates/generic/schedule-grid.html",
+    // "systems/arm5e/templates/generic/calendar-grid.hbs",
+    // "systems/arm5e/templates/generic/group-schedule-grid.hbs",
+    // "systems/arm5e/templates/generic/schedule-grid.hbs",
     "systems/arm5e/templates/generic/itemPickerDialog.html",
     "systems/arm5e/templates/generic/selectDialog.html",
     "systems/arm5e/templates/generic/textInput.html",
@@ -155,6 +155,7 @@ export const ArM5ePreloadHandlebarsTemplates = async function () {
     "systems/arm5e/templates/generic/aging-dialog.html",
     "systems/arm5e/templates/generic/metalic-bar.html",
     "systems/arm5e/templates/generic/simpleFieldBacksection.html",
+    "systems/arm5e/templates/generic/ars-editor.hbs",
     "systems/arm5e/templates/generic/quick-combat.html",
     "systems/arm5e/templates/generic/quick-magic.html",
     "systems/arm5e/templates/generic/quick-vitals.html",
@@ -163,6 +164,8 @@ export const ArM5ePreloadHandlebarsTemplates = async function () {
     "systems/arm5e/templates/generic/parts/scriptorium-reading.html",
     "systems/arm5e/templates/generic/parts/scriptorium-writing.html",
     "systems/arm5e/templates/generic/parts/scriptorium-copying.html",
+    "systems/arm5e/templates/generic/parts/scriptorium-header.hbs",
+    "systems/arm5e/templates/generic/parts/scriptorium-footer.hbs",
     "systems/arm5e/templates/generic/parts/list-item.hbs",
     "systems/arm5e/templates/generic/largeDialog-header.hbs",
     "systems/arm5e/templates/generic/largeDialog-footer.hbs"

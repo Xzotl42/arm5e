@@ -60,13 +60,26 @@ Thanks to various contributors at https://game-icons.net for some default icons
 
 If you want to test the newest features in advance before release and give precious feedback and suggestions:
 
-Copy the following url in the Foundry dialog to install new systems (at the bottom, there is a text field) an click install
+### Install a separate Foundry VTT version
+
+The dev system and the official releases can not exist in parallel in the same Foundry data folder.
+
+**Never load a world with your current data folder, make a copy first!!!**
+Change the "Data" folder in the Foundry configuration to a new place, before loading any world. You can use a full or partial copy of your existing folder to have familiar data ready. That way you are guaranteed to not touch your current game data.
+
+[V13+] Install a new portable version of Foundry somewhere.
+
+[V12- Windows] To have two versions of Foundry installed on the same machine, you can follow this [tutorial video](https://youtu.be/B74ZAp3xx3o) by Encounter library: a very clear process on how to do it step by step.
+
+[Linux] Install a node version of Foundry in another location than the current one.
+
+### Install the dev version of the system
+
+Copy the following url in the Foundry dialog to install new systems (at the bottom, there is a text field) and click install
 
 https://raw.githubusercontent.com/xzotl42/arm5e/master/system.json
 
-IMPORTANT: It is recommended to do a backup of your world before updating.
-
-ALSO IMPORTANT: The dev system and the official releases can not exist in parallel in the same Foundry data folder. To have both versions, you can follow this [tutorial video](https://youtu.be/B74ZAp3xx3o) by Encounter library: a very clear process on how to do it step by step.
+IMPORTANT: It is recommended to do a backup of your world before loading it, this being a dev version, there may be some corner cases in your data that will break the system. Once the bug has been fixed, you can simply rollback.
 
 ## Release Notes
 
