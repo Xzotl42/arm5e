@@ -48,7 +48,11 @@
     {{!-- Description Tab --}}
     <div class="tab">
       <div class="tab editor" data-group="primary" data-tab="description" style="height:70%;">
-        {{editor enrichedDescription target="system.description" button=true owner=owner engine="prosemirror" editable=editable}}
+        {{> "systems/arm5e/templates/generic/ars-editor.hbs"
+          content=enrichedDescription
+          target="system.description"
+          editable=editable
+        }}
 
       </div>
       {{#if metagame.view }}

@@ -2,7 +2,9 @@ import { ArsRoll } from "../helpers/roll.js";
 import { log } from "../tools/tools.js";
 import { privateMessage } from "../helpers/chat-message.js";
 
-export class LabExperimentation extends FormApplication {
+const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
+
+export class LabExperimentation extends HandlebarsApplicationMixin(ApplicationV2) {
   constructor(
     data = {
       experimenter: game.user.character?.name || "Anonymous",
@@ -11,61 +13,100 @@ export class LabExperimentation extends FormApplication {
       aura: 0,
       discovery: false
     },
-    options
+    options = {}
   ) {
-    super(data, options);
+    super(options);
 
     const currentDate = game.settings.get("arm5e", "currentDate");
     if (data.year === undefined) {
-      this.object.year = currentDate.year;
+      data.year = currentDate.year;
     }
     if (data.season === undefined) {
-      this.object.season = currentDate.season;
+      data.season = currentDate.season;
     }
     if (data.subject === "") {
-      this.object.subject = game.i18n.localize("arm5e.rolltables.experimentation.subject");
+      data.subject = game.i18n.localize("arm5e.rolltables.experimentation.subject");
     }
     if (data.experimenter === undefined) {
-      this.object.experimenter = game.user.character.name;
+      data.experimenter = game.user.character.name;
     }
 
-    this.object.reportBody = "";
+    data.reportBody = "";
+    this.object = data;
   }
 
-  /** @override */
-  static get defaultOptions() {
-    return foundry.utils.mergeObject(super.defaultOptions, {
-      classes: ["arm5e", "sheet", "scriptorium-sheet"],
-      title: "arm5e.rolltables.experimentation.title",
-      template: "systems/arm5e/templates/generic/labExperimentation.html",
-      dragDrop: [],
-      tabs: [],
-      width: "600",
-      height: "750",
+  static DEFAULT_OPTIONS = {
+    id: "lab-experimentation",
+    classes: ["arm5e", "sheet", "scriptorium-sheet"],
+    tag: "form",
+    form: {
+      handler: LabExperimentation.#onSubmitHandler,
       submitOnChange: true,
       closeOnSubmit: false
-    });
+    },
+    window: {
+      title: "arm5e.rolltables.experimentation.title",
+      contentClasses: ["standard-form"]
+    },
+    position: {
+      width: 600,
+      height: "auto" // 828
+    }
+  };
+
+  static PARTS = {
+    header: { template: "systems/arm5e/templates/generic/parts/scriptorium-header.hbs" },
+    form: {
+      template: "systems/arm5e/templates/generic/labExperimentation.html"
+    },
+    footer: { template: "systems/arm5e/templates/generic/parts/scriptorium-footer.hbs" }
+  };
+
+  static async #onSubmitHandler(event, form, formData) {
+    const expanded = foundry.utils.expandObject(formData.object);
+    foundry.utils.mergeObject(this.object, expanded, { recursive: true });
   }
 
-  async getData(options = {}) {
-    const context = foundry.utils.expandObject(await super.getData().object);
+  async _prepareContext(options = {}) {
+    const context = await super._prepareContext(options);
     context.seasons = CONFIG.ARM5E.seasons;
+    context.experimenter = this.object.experimenter;
+    context.subject = this.object.subject;
+    context.riskModifier = this.object.riskModifier;
+    context.aura = this.object.aura;
+    context.discovery = this.object.discovery;
+    context.year = this.object.year;
+    context.season = this.object.season;
+    context.reportBody = this.object.reportBody;
     return context;
   }
 
-  activateListeners(html) {
-    super.activateListeners(html);
+  _onRender(context, options) {
+    super._onRender(context, options);
+    const html = this.element;
 
-    html.find(".select-on-focus").focus((ev) => {
-      ev.preventDefault();
-      ev.currentTarget.select();
+    html.querySelectorAll(".select-on-focus").forEach((el) => {
+      el.addEventListener("focus", (ev) => {
+        ev.preventDefault();
+        ev.currentTarget.select();
+      });
     });
-    html.find(".experimentation-roll").click(async (ev) => {
-      await this.rollForExperimentation(ev);
-    });
-    html.find(".clear-all").click(this._clearAll.bind(this));
 
-    html.find(".create-journal").click(this._createJournal.bind(this));
+    html
+      .querySelector(".experimentation-roll")
+      ?.addEventListener("click", (ev) => this.rollForExperimentation(ev));
+
+    html.querySelector(".clear-all")?.addEventListener("click", (ev) => this._clearAll(ev));
+
+    html
+      .querySelector(".create-journal")
+      ?.addEventListener("click", (ev) => this._createJournal(ev));
+  }
+
+  get title() {
+    return `${this.object.subject}, ${game.i18n.localize(
+      CONFIG.ARM5E.seasons[this.object.season].label
+    )} ${this.object.year}`;
   }
 
   async rollForExperimentation(event) {
@@ -78,12 +119,13 @@ export class LabExperimentation extends FormApplication {
     const report = `<h2>${this.title}</h2>${reportBody}`;
     const title = `${game.i18n.localize("arm5e.rolltables.experimentation.title")}`;
     await privateMessage("", game.user.character, title, report, "standard");
-    await this.submit({
-      updateData: { reportBody: reportBody }
-    });
+
+    this.object.reportBody = reportBody;
+    await this.render(true);
   }
 
-  async _createJournal() {
+  async _createJournal(event) {
+    event.preventDefault();
     const data = this.object;
     if (data.reportBody === "") {
       return;
@@ -93,7 +135,6 @@ export class LabExperimentation extends FormApplication {
     if (!folder) {
       [folder] = await Folder.create([{ name: folderName, type: "JournalEntry" }]);
     }
-    // TODO : better way to set the character name, constructor?
     let entry = game.journal.getName(data.experimenter);
     if (!entry) {
       [entry] = await JournalEntry.create([{ name: data.experimenter, folder: folder._id }]);
@@ -106,22 +147,8 @@ export class LabExperimentation extends FormApplication {
 
   async _clearAll(event) {
     event.preventDefault();
-
-    await this.submit({
-      updateData: { reportBody: "" }
-    });
-  }
-
-  async _updateObject(event, formData) {
-    const expanded = foundry.utils.expandObject(formData);
-    foundry.utils.mergeObject(this.object, expanded, { recursive: true });
-    this.render();
-  }
-
-  get title() {
-    return `${this.object.subject}, ${game.i18n.localize(
-      CONFIG.ARM5E.seasons[this.object.season].label
-    )} ${this.object.year}`;
+    this.object.reportBody = "";
+    await this.render(true);
   }
 
   ///////////////////////
@@ -157,17 +184,17 @@ export class LabExperimentation extends FormApplication {
       let res = await rt.getResultsForRoll(diceRoll);
       log(false, res);
       if (res.length == 1) {
-        reportBody += this._getTableResult("extraordinaryResults", res[0].text);
-        flavor += this._getTableResult("extraordinaryResults", res[0].text, true);
+        reportBody += this._getTableResult("extraordinaryResults", res[0].description);
+        flavor += this._getTableResult("extraordinaryResults", res[0].description, true);
         await roll.toMessage({ flavor: flavor });
-        if (res[0].text === "rollTwice") {
+        if (res[0].description === "rollTwice") {
           reportBody += await this._rollForExperimentation(risk, aura, discovery);
           reportBody += await this._rollForExperimentation(risk, aura, discovery);
         }
       } else {
         let tableRef = res.find((e) => e.type == "document");
-        const subRt = docs.find((e) => tableRef.documentId === e._id);
-        const subTitle = res.find((e) => e.type == "text").text;
+        const subRt = docs.find((e) => tableRef.documentUuid === e.uuid);
+        const subTitle = res.find((e) => e.type == "text").description;
         reportBody += this._getTableResult("extraordinaryResults", subTitle);
         flavor += this._getTableResult("extraordinaryResults", subTitle, true);
         await roll.toMessage({ flavor: flavor });
@@ -200,9 +227,9 @@ export class LabExperimentation extends FormApplication {
           reportBody += this._rollOnTableDesc(subTitle, subRoll);
           flavor = this._rollOnTableDesc(subTitle, subRoll, false);
 
-          if (subTitle === "discovery" && subRes[0].text == "rollTwice") {
-            reportBody += `<i>${this._getTableResult(subTitle, subRes[0].text)}</i>`;
-            flavor += `<i>${this._getTableResult(subTitle, subRes[0].text)}</i>`;
+          if (subTitle === "discovery" && subRes[0].description == "rollTwice") {
+            reportBody += `<i>${this._getTableResult(subTitle, subRes[0].description)}</i>`;
+            flavor += `<i>${this._getTableResult(subTitle, subRes[0].description)}</i>`;
             await subRoll.toMessage({ flavor: flavor });
             for (let i = 0; i < 2; i++) {
               let discoveryRoll = new ArsRoll(
@@ -212,7 +239,7 @@ export class LabExperimentation extends FormApplication {
               );
               await discoveryRoll.evaluate();
               let discoveryRes = await subRt.getResultsForRoll(discoveryRoll.total);
-              while (discoveryRes[0].text == "rollTwice") {
+              while (discoveryRes[0].description == "rollTwice") {
                 log(false, "RollTwice only once, reroll");
                 discoveryRoll = new ArsRoll(
                   subFormula,
@@ -224,14 +251,14 @@ export class LabExperimentation extends FormApplication {
               }
 
               reportBody += this._rollOnTableDesc(subTitle, discoveryRoll);
-              reportBody += this._getTableResult(subTitle, discoveryRes[0].text);
+              reportBody += this._getTableResult(subTitle, discoveryRes[0].description);
               flavor = this._rollOnTableDesc(subTitle, discoveryRoll, false);
-              flavor += this._getTableResult(subTitle, discoveryRes[0].text, true);
+              flavor += this._getTableResult(subTitle, discoveryRes[0].description, true);
               await discoveryRoll.toMessage({ flavor: flavor });
             }
           } else {
-            reportBody += this._getTableResult(subTitle, subRes[0].text);
-            flavor += this._getTableResult(subTitle, subRes[0].text, true);
+            reportBody += this._getTableResult(subTitle, subRes[0].description);
+            flavor += this._getTableResult(subTitle, subRes[0].description, true);
             await subRoll.toMessage({ flavor: flavor });
           }
         }

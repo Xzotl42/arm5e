@@ -75,7 +75,11 @@
 
     {{#if (eq system.state "inert")}}
       <div class="tab" data-group="primary" data-tab="description">
-        {{editor enrichedDescription target="system.description" button=true owner=owner engine="prosemirror" editable=editable}}
+        {{> "systems/arm5e/templates/generic/ars-editor.hbs"
+          content=enrichedDescription
+          target="system.description"
+          editable=editable
+        }}
       </div>
     {{else }}
       <div class="tab" data-group="primary" data-tab="description">

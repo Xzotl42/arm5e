@@ -39,9 +39,13 @@
 
       <div class="flex-group-left backSection padding12">
         <label for="system.sigil" class="smallTitle">{{localize "arm5e.sheet.sigil"}}</label>
-        <div class="flex-group-left marginbot6" style="height: 210px; overflow-y: auto;max-height: 210px;">
-          {{editor enrichedSigil target="system.sigil.value" button=true owner=owner engine="prosemirror" editable=editable}}
-        </div>
+        {{> "systems/arm5e/templates/generic/ars-editor.hbs"
+          content=enrichedSigil
+          target="system.sigil.value"
+          sectionClass=""
+          editorClass=""
+          editable=editable
+        }}
       </div>
     </div>
   </div>
@@ -52,12 +56,24 @@
   <div class="flexcol">
     <div class="flex-group-left padding12 backSection">
       <label class="smallTitle">{{localize "arm5e.sheet.biography"}}</label>
-      {{editor enrichedBiography target="system.biography" button=true owner=owner engine="prosemirror" editable=editable}}
+      {{> "systems/arm5e/templates/generic/ars-editor.hbs"
+        content=enrichedBiography
+        target="system.biography"
+        sectionClass=""
+        editorClass=""
+        editable=editable
+      }}
     </div>
     {{#if (or isGM isOwner)}}
       <div class="flex-group-left padding12 backSection">
         <label class="smallTitle">{{localize "arm5e.sheet.secrets"}}</label>
-        {{editor enrichedSecrets target="system.secrets" button=true owner=owner engine="prosemirror" editable=editable}}
+        {{> "systems/arm5e/templates/generic/ars-editor.hbs"
+          content=enrichedSecrets
+          target="system.secrets"
+          sectionClass=""
+          editorClass=""
+          editable=editable
+        }}
       </div>
     {{/if}}
 
@@ -87,10 +103,13 @@
         <div class="flexrow">
           <label for="system.decrepitude.effects" class="bold">{{localize "arm5e.sheet.effects"}}</label>
         </div>
-        <div class="flex-group-left marginbot6" style="height: auto; overflow-y: auto;">
-          {{editor enrichedDecrepitude target="system.decrepitude.effects" button=true owner=owner engine="prosemirror"
-      editable=editable}}
-        </div>
+        {{> "systems/arm5e/templates/generic/ars-editor.hbs"
+          content=enrichedDecrepitude
+          target="system.decrepitude.effects"
+          sectionClass="marginbot6"
+          editorClass=""
+          editable=editable
+        }}
         <div class="flexrow">
           <div class="flexrow flex-group-center">
             <label for="system.laboratory.longevityRitual.labTotal">{{localize "arm5e.sheet.labTotal"}}</label>
@@ -256,9 +275,13 @@
         <div class="flexrow">
           <label for="system.warping.effects" class="bold">{{localize "arm5e.sheet.effects"}}</label>
         </div>
-        <div class="flex-group-left">
-          {{editor enrichedWarping target="system.warping.effects" button=true owner=owner engine="prosemirror" editable=editable}}
-        </div>
+        {{> "systems/arm5e/templates/generic/ars-editor.hbs"
+          content=enrichedWarping
+          target="system.warping.effects"
+          sectionClass=""
+          editorClass=""
+          editable=editable
+        }}
       </div>
     {{/if}}
   </div>

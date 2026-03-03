@@ -1,4 +1,4 @@
-## 2.5.0.1 Stentorius
+## 3.0.0.0 Stentorius
 
 ### Compatibility
 
@@ -8,8 +8,11 @@
 
 ### Application V2 migration
 
+- SourcebookFilter config - done
+- CompendiaRef config - done
 - Aura Config - done
 - Astrolabium - done
+- Arcane experimentation - done
 - Activity Schedule - done
 - Group Schedule - done
 - Character Schedule - done
@@ -22,6 +25,7 @@
 
 - Added tint and condition statuses to Active Effect.
 - [technical] Converted most of the largest assets from png to webp format
+- New wrapper for prosemirror editor to have consistent behavior across the whole system.
 
 ### Bug fixes
 
@@ -33,6 +37,8 @@
 - Magus characters missing the virtue will receive "The Gift" making them aligned with magic realm (instead of a previous hack where all magi were magic aligned. As long as you have the virtue (ie: one with an index-key = "the-gift"), it won't be added again, so you can change the effects as you desire)
 - Buttons to create items and folders are now properly displayed
 - [technical] ars magica icons names in css are now prefixed with "ars-" to avoid conflicts with core Foundry
+- Various cosmetic improvement and fixes
+  - removed the dark line in the middle of dialogs and items sheets
 
 ## 2.4.1.14, Radislav, Cognizant Wisdom BF1
 

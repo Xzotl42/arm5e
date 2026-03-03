@@ -122,7 +122,11 @@
               class="foldable-section-small backSection item-description {{ui.sections.visibility.common.item-description}}"
               id="common-item-description-{{@root.item._id}}">
               <div class="flex-group-left book-scrollable">
-                {{editor enrichedDescription target="system.description" button=true owner=owner engine="prosemirror" editable=editable}}
+                {{> "systems/arm5e/templates/generic/ars-editor.hbs"
+                  content=enrichedDescription
+                  target="system.description"
+                  editable=editable
+                }}
               </div>
             </div>
 
@@ -278,8 +282,12 @@
                         class="ars-Icon_Read"></i></a>
 
                   </div>
-                  {{editor currentTopic.labtext.description target="currentTopic.labtext.description" button=false owner=owner editable=false
-                  engine="prosemirror"}}
+                  {{> "systems/arm5e/templates/generic/ars-editor.hbs"
+                    content=currentTopic.labtext.description
+                    target="currentTopic.labtext.description"
+                    button=false
+                    editable=false
+                  }}
                 {{/if}}
               {{/if}}
             </div>

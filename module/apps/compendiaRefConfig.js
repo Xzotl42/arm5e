@@ -1,23 +1,44 @@
 import { log } from "../tools/tools.js";
 
-export class CompendiaRefConfig extends FormApplication {
-  static get defaultOptions() {
-    return foundry.utils.mergeObject(super.defaultOptions, {
-      id: "sourcebooks-filters-config",
-      template: "systems/arm5e/templates/generic/compendia-ref-config.html",
-      classes: ["arm5e-config"],
-      closeOnSubmit: true,
-      height: "auto",
+const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
+
+export class CompendiaRefConfig extends HandlebarsApplicationMixin(ApplicationV2) {
+  static DEFAULT_OPTIONS = {
+    id: "compendia-ref-config",
+    classes: ["arm5e", "arm5e-config"],
+    tag: "form",
+    form: {
+      handler: CompendiaRefConfig.#onSubmitHandler,
       submitOnChange: false,
-      submitOnClose: false,
-      title: game.i18n.localize(`Compendia reference`),
+      closeOnSubmit: true
+    },
+    window: {
+      title: "Compendia reference",
+      resizable: false,
+      contentClasses: ["standard-form", "arm5e-config"]
+    },
+    position: {
       width: 400,
-      resizable: true
-    });
+      height: "auto"
+    }
+  };
+
+  static PARTS = {
+    form: {
+      template: "systems/arm5e/templates/generic/compendia-ref-config.html"
+    }
+  };
+
+  static async #onSubmitHandler(event, form, formData) {
+    const data = foundry.utils.expandObject(formData.object);
+
+    await game.settings.set(CONFIG.ARM5E.SYSTEM_ID, "compendiaRef", data.referenceModule);
+    await game.settings.set(CONFIG.ARM5E.SYSTEM_ID, "notifyMissingRef", data.nofifyMissingRef);
+    ui.notifications.info("Settings.updated", { localize: true });
   }
 
-  async getData() {
-    const context = super.getData();
+  async _prepareContext(options = {}) {
+    const context = await super._prepareContext(options);
     context.referenceModule = game.settings.get(CONFIG.ARM5E.SYSTEM_ID, "compendiaRef");
     context.nofifyMissingRef = game.settings.get(CONFIG.ARM5E.SYSTEM_ID, "notifyMissingRef");
     context.arsModules = game.modules.contents
@@ -38,13 +59,5 @@ export class CompendiaRefConfig extends FormApplication {
 
     log(false, context);
     return context;
-  }
-
-  async _updateObject(ev, formData) {
-    const data = foundry.utils.expandObject(formData);
-
-    await game.settings.set(CONFIG.ARM5E.SYSTEM_ID, "compendiaRef", data.referenceModule);
-    await game.settings.set(CONFIG.ARM5E.SYSTEM_ID, "notifyMissingRef", data.nofifyMissingRef);
-    ui.notifications.info("Settings.updated", { localize: true });
   }
 }

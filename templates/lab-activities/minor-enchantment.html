@@ -53,8 +53,11 @@
         <div class="foldable-section-small {{lookup @root.ui.sections.visibility.planning 'receptacle-desc' }}"
           id="planning-receptacle-desc{{index}}-{{@root.actor._id}}">
           <div class="flex01" style="height: 200px;">
-            {{editor planning.data.receptacle.system.description target=(concat planning.namePrefix "receptacle.system.description") button=true
-            owner=owner editable=true engine="prosemirror"}}
+            {{> "systems/arm5e/templates/generic/ars-editor.hbs"
+              content=planning.data.receptacle.system.description
+              target=(concat planning.namePrefix "receptacle.system.description")
+              editable=true
+            }}
           </div>
         </div>
         <!-- CAPACITY -->
