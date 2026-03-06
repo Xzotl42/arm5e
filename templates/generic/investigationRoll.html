@@ -1,8 +1,7 @@
-<form class="{{cssClass}} arm5InvestigateRoll" autocomplete="off">
-  {{> "systems/arm5e/templates/generic/largeDialog-header.hbs" flavor="Inputs" }}
+<div class="{{cssClass}} arm5InvestigateRoll" autocomplete="off">
   <!-- Effect Header -->
   <header class="flexcol marginsides32">
-    <h1 class="charName">
+    <h1 class="bigname">
       <input type="text" readonly value="{{name}}" style="height: 30px;" />
     </h1>
     <div class="padding4">
@@ -19,7 +18,7 @@
   <section class="sheet-body flexcol marginsides32" style="height: auto; min-height: 495px;">
     <div class="padding4">
       <div class="padding4 effect-list">{{localize "arm5e.lab.planning.knownEffects"}}</div>
-      {{> "systems/arm5e/templates/generic/metalic-bar.html" topoffset="-7px" }}
+      {{> "systems/arm5e/templates/generic/metalic-bar.html"  }}
       <div class="effect-list">
         {{#each visibleEffects as |effect idx|}}
           <div style="border-bottom: 1px; border-bottom-style: double; padding-bottom: 3px;">
@@ -66,7 +65,7 @@
         {{/each}}
       </div>
       <div class="padding4">{{localize "arm5e.lab.planning.discoveredEffects"}}</div>
-      {{> "systems/arm5e/templates/generic/metalic-bar.html" topoffset="-7px"}}
+      {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
       <div class="effect-list">
         {{#each discoveredEffects as |effect idx|}}
           <div style="border-bottom: 1px; border-bottom-style: double; padding-bottom: 3px;">
@@ -121,7 +120,4 @@
       {{/if}}
     </div>
   </section>
-
-  {{> "systems/arm5e/templates/generic/largeDialog-footer.html" footer="Inputs"}}
-  <!-- <button type="submit"><i class="fas fa-save"></i> {{localize submitText}}</button> -->
-</form>
+</div>

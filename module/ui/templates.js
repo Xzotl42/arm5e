@@ -167,8 +167,8 @@ export const ArM5ePreloadHandlebarsTemplates = async function () {
     // "systems/arm5e/templates/generic/parts/scriptorium-header.hbs",
     // "systems/arm5e/templates/generic/parts/scriptorium-footer.hbs",
     "systems/arm5e/templates/generic/parts/list-item.hbs",
-    "systems/arm5e/templates/generic/largeDialog-header.hbs",
-    "systems/arm5e/templates/generic/largeDialog-footer.hbs"
+    "systems/arm5e/templates/generic/parts/largeDialog-header.hbs",
+    "systems/arm5e/templates/generic/parts/largeDialog-footer.hbs"
     // Apps partials
     // "systems/arm5e/templates/generic/astrolab.hbs"
   ]);

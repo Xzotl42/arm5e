@@ -3,8 +3,12 @@ import { GetEffectAttributesLabel, computeLevel } from "../helpers/magic.js";
 import { ROLL_MODES } from "../ui/roll-window.js";
 import { log } from "../tools/tools.js";
 
-export class InvestigationRoll extends FormApplication {
-  constructor(diary, data, options) {
+export class InvestigationRoll extends foundry.applications.api.HandlebarsApplicationMixin(
+  foundry.applications.api.ApplicationV2
+) {
+  constructor(diary, data, options = {}) {
+    super(options);
+
     data.effects = data.system.enchantments.effects.map((e) => {
       return {
         name: e.name,
@@ -26,34 +30,56 @@ export class InvestigationRoll extends FormApplication {
         visible: data.system.enchantments.attunementVisible
       });
     }
-    super(data, options);
+
+    this.object = data;
     this.actor = diary.actor;
     this.diary = diary;
     this.object.botchDice = 1;
     this.object.failedInvestigation = false;
     this.object.diaryDescription = "<br/><ul>";
-
-    Hooks.on("closeApplication", (app, html) => this.onClose(app));
   }
 
-  /** @override */
-  static get defaultOptions() {
-    return foundry.utils.mergeObject(super.defaultOptions, {
-      classes: ["arm5e", "sheet", "sanatorium-sheet"],
-      title: game.i18n.localize("arm5e.lab.activity.itemInvestigation"),
-      template: "systems/arm5e/templates/generic/investigationRoll.html",
-      scrollY: [".years"],
-      width: "600",
-      height: "800",
+  static DEFAULT_OPTIONS = {
+    id: "investigation-roll",
+    classes: ["arm5e", "arm5eLargeDialog", "investigation-roll"],
+    window: {
+      title: "arm5e.lab.activity.itemInvestigation",
+      resizable: false
+    },
+    position: {
+      width: 600,
+      height: "auto"
+    },
+    tag: "form",
+    form: {
+      handler: InvestigationRoll.#onSubmitHandler,
       submitOnChange: true,
       closeOnSubmit: false
-    });
+    }
+  };
+
+  static PARTS = {
+    header: {
+      template: "systems/arm5e/templates/generic/parts/largeDialog-header.hbs"
+    },
+    form: {
+      template: "systems/arm5e/templates/generic/investigationRoll.html",
+      scrollable: [".years"]
+    },
+    footer: {
+      template: "systems/arm5e/templates/generic/parts/largeDialog-footer.hbs"
+    }
+  };
+
+  static async #onSubmitHandler(event, form, formData) {
+    const expanded = foundry.utils.expandObject(formData.object);
+    foundry.utils.mergeObject(this.object, expanded, { recursive: true });
+    this.render();
   }
 
-  onClose(app) {}
+  async _prepareContext(options = {}) {
+    const context = foundry.utils.deepClone(this.object);
 
-  async getData(options = {}) {
-    const context = await super.getData().object;
     context.visibleEffects = context.effects
       .filter((e) => e.visible)
       .sort((a, b) => a.level - b.level);
@@ -73,14 +99,36 @@ export class InvestigationRoll extends FormApplication {
     return context;
   }
 
-  activateListeners(html) {
-    super.activateListeners(html);
-    html.find(".select-on-focus").focus((ev) => {
-      ev.preventDefault();
-      ev.currentTarget.select();
+  async _preparePartContext(partId, context) {
+    switch (partId) {
+      case "header":
+        context.flavor = "Inputs";
+        break;
+      case "footer":
+        context.footer = "Inputs";
+        break;
+    }
+    return context;
+  }
+
+  _onRender(context, options) {
+    const selectElements = this.element.querySelectorAll(".select-on-focus");
+    selectElements.forEach((el) => {
+      el.addEventListener("focus", (ev) => {
+        ev.preventDefault();
+        ev.currentTarget.select();
+      });
     });
-    html.find(".investigate").click(this._investigate.bind(this));
-    html.find(".end-investigate").click(this._endInvestigation.bind(this));
+
+    const investigateBtn = this.element.querySelector(".investigate");
+    if (investigateBtn) {
+      investigateBtn.addEventListener("click", (ev) => this._investigate(ev));
+    }
+
+    const endInvestigateBtn = this.element.querySelector(".end-investigate");
+    if (endInvestigateBtn) {
+      endInvestigateBtn.addEventListener("click", (ev) => this._endInvestigation(ev));
+    }
   }
   async _endInvestigation(event) {
     const magicItem = await fromUuid(this.object.uuid);
@@ -163,27 +211,17 @@ export class InvestigationRoll extends FormApplication {
       hiddenEffects[0].discovered = true;
     } else {
       desc += `<br/>${game.i18n.localize(
-        "arm5e.lab.planning.investigation.nothingFound."
+        "arm5e.lab.planning.investigation.nothingFound"
       )}</li></ul>`;
       failed = true;
     }
 
-    const updateData = {
-      diaryDescription: desc,
-      failedInvestigation: failed,
-      effects: effects
-    };
+    // Update object directly
+    this.object.diaryDescription = desc;
+    this.object.failedInvestigation = failed;
+    this.object.effects = effects;
 
-    // this.render(true);
-    await this.submit({
-      preventClose: true,
-      updateData: updateData
-    });
-  }
-
-  async _updateObject(event, formData) {
-    const expanded = foundry.utils.expandObject(formData);
-    foundry.utils.mergeObject(this.object, expanded, { recursive: true });
+    // Re-render to update UI
     this.render();
   }
 }

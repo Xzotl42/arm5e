@@ -14,9 +14,28 @@
   <div class="marginsides32 marginbot6 margintop6">
     {{> "systems/arm5e/templates/generic/metalic-bar.html"  }}
   </div>
-  <div class="sheet-body backSection marginsides32" style="min-height: 367px">
+  <div class="sheet-body backSection marginsides32">
+    {{!-- tyle="min-height: 367px"> --}}
     <div class="flexcol" style="margin: 10px">
-      <div class="resource-content flexrow">
+      <div class="resource-content flexrow flex-between">
+        <div class="resource-content flexrow flex-center flex-between margintop6">
+          <label
+            for="availableDays"
+            class="smallTitle"
+            style="font-size: 14pt"
+            >{{localize "arm5e.sanatorium.daysAvailbable"}}</label
+          >
+
+          <input
+            type="number"
+            name="availableDays"
+            {{dateChange}}
+            value="{{ availableDays }}"
+            data-dtype="Number"
+            class="sanatorium change-available-days select-on-focus"
+            style="font-size: 14pt"
+          />
+        </div>
         <div class="resource-content flexrow flex-center flex-between margintop6">
           <label
             class="smallTitle"
@@ -29,7 +48,7 @@
             value="{{ curSeasonLabel }}"
             data-dtype="String"
             class="sanatorium change-season"
-            style="font-size: 18pt"
+            style="font-size: 14pt"
           />
         </div>
         <div class="resource-content flexrow flex-center flex-between margintop6">
@@ -62,7 +81,11 @@
               style="max-height: 48px; max-width: 48px; margin: 3px"
             />
             {{#if this.locked}}
-            <a class="" title="Locked" style="position: relative; right: 14px; max-width: 0px">
+            <a
+              class=""
+              title="Locked"
+              style="position: relative; right: 14px; top: -14px; max-width: 0px"
+            >
               <i class="ars-Icon_Locked_Small"></i>
             </a>
             {{/if}}
@@ -82,24 +105,6 @@
       </div>
     </div>
     <div class="flexrow">
-      <div class="flex-center" style="max-width: 100px; margin: 3px">
-        <label
-          for="availableDays"
-          class="smallTitle"
-          style="font-size: 14pt"
-          >{{localize "arm5e.sanatorium.daysAvailbable"}}</label
-        >
-
-        <input
-          type="number"
-          name="availableDays"
-          {{dateChange}}
-          value="{{ availableDays }}"
-          data-dtype="Number"
-          class="sanatorium change-available-days select-on-focus"
-          style="font-size: 14pt"
-        />
-      </div>
       <div class="flex-center marginsides10" style="padding-top: 16px">
         <label>{{ daysLeftLabel }}</label>
         <div class="progressbar">

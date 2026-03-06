@@ -42,7 +42,8 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
     window: {
       title: "Sanatorium",
       icon: "fas fa-hospital",
-      resizable: true
+      resizable: true,
+      contentClasses: ["standard-form"]
     },
     position: {
       width: 600,
@@ -52,7 +53,8 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
       handler: Sanatorium.#onSubmitHandler,
       submitOnChange: true,
       closeOnSubmit: false
-    }
+    },
+    tag: "form"
   };
 
   static PARTS = {

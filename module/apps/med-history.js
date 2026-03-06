@@ -2,42 +2,66 @@ import { ArM5eActorSheet } from "../actor/actor-sheet.js";
 import { getConfirmation } from "../ui/dialogs.js";
 import { compareDates, nextDate } from "../tools/time.js";
 
-export class MedicalHistory extends FormApplication {
-  constructor(data, options) {
-    super(data, options);
-    Hooks.on("closeApplication", (app, html) => this.onClose(app));
+export class MedicalHistory extends foundry.applications.api.HandlebarsApplicationMixin(
+  foundry.applications.api.ApplicationV2
+) {
+  constructor(data, options = {}) {
+    super(options);
+    this.object = data;
   }
 
   static async createDialog(actor) {
-    const medHist = new MedicalHistory(
-      { title: game.i18n.localize("arm5e.sanatorium.medicalHistory"), patient: actor },
-      {}
-    ); // data, options
-
+    const medHist = new MedicalHistory({
+      title: game.i18n.localize("arm5e.sanatorium.medicalHistory"),
+      patient: actor
+    });
     const res = await medHist.render(true);
     actor.apps[medHist.appId] = medHist;
   }
-  /** @override */
-  static get defaultOptions() {
-    return foundry.utils.mergeObject(super.defaultOptions, {
-      classes: ["arm5e", "sheet", "sanatorium-sheet"],
-      title: game.i18n.localize("arm5e.sanatorium.medicalHistory"),
-      template: "systems/arm5e/templates/generic/medical-history.html",
-      scrollY: [".years"],
-      width: "400",
-      height: "400",
+
+  static DEFAULT_OPTIONS = {
+    id: "medical-history",
+    classes: ["arm5e", "sheet", "med-history"],
+    window: {
+      title: "arm5e.sanatorium.medicalHistory",
+      icon: "fas fa-notes-medical",
+      resizable: true
+    },
+    position: {
+      width: 400,
+      height: "auto"
+    },
+    form: {
+      handler: MedicalHistory.#onSubmitHandler,
       submitOnChange: true,
       closeOnSubmit: false
-    });
+    },
+    tag: "form"
+  };
+
+  static PARTS = {
+    header: {
+      template: "systems/arm5e/templates/generic/parts/medical-history-header.hbs"
+    },
+    form: {
+      template: "systems/arm5e/templates/generic/medical-history.html",
+      scrollable: [".years"]
+    },
+    footer: {
+      template: "systems/arm5e/templates/generic/parts/medical-history-footer.hbs"
+    }
+  };
+
+  static async #onSubmitHandler(event, form, formData) {
+    for (let [key, value] of Object.entries(formData.object)) {
+      this.object[key] = value;
+    }
+    this.object = foundry.utils.expandObject(this.object);
+    this.render();
   }
 
-  onClose(app) {
-    if (app.object?.patient) {
-      delete app.object.patient.apps[app.appId];
-    }
-  }
-  async getData(options = {}) {
-    const context = await super.getData().object;
+  async _prepareContext() {
+    const context = foundry.utils.deepClone(this.object);
     let scars = context.patient.system.wounds["healthy"] ?? [].sort(compareDates);
     context.scars = scars.map((e) => {
       return {
@@ -61,15 +85,25 @@ export class MedicalHistory extends FormApplication {
     return context;
   }
 
-  activateListeners(html) {
-    super.activateListeners(html);
-    html.find(".select-on-focus").focus((ev) => {
-      ev.preventDefault();
-      ev.currentTarget.select();
+  _onRender(context, options) {
+    // Handle select on focus
+    const selectElements = this.element.querySelectorAll(".select-on-focus");
+    selectElements.forEach((el) => {
+      el.addEventListener("focus", (ev) => {
+        ev.preventDefault();
+        ev.currentTarget.select();
+      });
     });
 
-    html.find(".clear-history").click(this._clearHistory.bind(this));
-    html.find(".wound-edit").click(this._displayWound.bind(this));
+    // Handle clear history button
+    this.element.querySelector(".clear-history")?.addEventListener("click", (ev) => {
+      this._clearHistory(ev);
+    });
+
+    // Handle wound edit buttons
+    this.element.querySelectorAll(".wound-edit").forEach((btn) => {
+      btn.addEventListener("click", (ev) => this._displayWound(ev));
+    });
   }
 
   async _clearHistory(event) {
@@ -92,19 +126,8 @@ export class MedicalHistory extends FormApplication {
 
   _displayWound(event) {
     event.preventDefault();
-    const target = $(event.currentTarget);
-    const item = this.object.patient.getEmbeddedDocument("Item", target.data("itemId"));
+    const itemId = event.currentTarget.dataset.itemId;
+    const item = this.object.patient.getEmbeddedDocument("Item", itemId);
     item.sheet.render(true, { focus: true });
-  }
-
-  async _updateObject(event, formData) {
-    for (let [key, value] of Object.entries(formData)) {
-      log(false, `Updated ${key} : ${value}`);
-      this.object[key] = value;
-    }
-    this.object = foundry.utils.expandObject(this.object);
-    this.render();
-
-    return;
   }
 }

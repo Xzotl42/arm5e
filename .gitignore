@@ -22,3 +22,6 @@ CommitChangeNotes.md
 
 .vscode/settings.json
 *.code-workspace
+
+# copilot ramblings
+zzz_copilot/**

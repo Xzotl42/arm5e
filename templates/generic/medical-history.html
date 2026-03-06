@@ -1,8 +1,4 @@
-<form class="{{cssClass}} sanatorium sanatorium-sheet flexcol" autocomplete="off" style="background-size:contain">
-    <div class="sanatorium header-background" style="width:inherit; margin: 0px;">
-        <img src="systems/arm5e/assets/sanatorium/Header_Sanatorium.png"
-            style="width:400px; margin: 0px; background-size: contain" />
-    </div>
+<div class="{{cssClass}} sanatorium sanatorium-sheet flexcol" autocomplete="off" style="background-size:contain">
     <div class="flexrow marginsides32">
         <h1 class="medhistory-title width: 100%;" text-align="center">{{title}}</h1>
         <div class="item-controls" style="max-width: 50px;">
@@ -19,7 +15,7 @@
             <label class="label-light">{{localize "arm5e.sheet.wound.recovery"}}</label>
         </div>
         <div style="margin-top: 10px;">
-            {{> "systems/arm5e/templates/generic/metalic-bar.html" topoffset="-7px" }}
+            {{> "systems/arm5e/templates/generic/metalic-bar.html"}}
         </div>
         <div class="years flexcol" style="min-height: 210px; overflow-y: auto;">
             {{#each scars }}
@@ -43,7 +39,4 @@
         </div>
 
     </div>
-    <div class="sanatorium footer-background" style="width:inherit; margin: 0px;">
-        <img src="systems/arm5e/assets/sanatorium/Footer_Sanatorium.png" />
-    </div>
-</form>
+</div>
