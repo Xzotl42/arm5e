@@ -40,40 +40,35 @@ export function computeCombatStats(actor) {
   };
 }
 
-export class QuickCombat extends FormApplication {
-  constructor(data, options) {
-    super(data, options);
-
-    Hooks.on("closeApplication", (app, html) => this.onClose(app));
-  }
-  /** @override */
-  static get defaultOptions() {
-    return foundry.utils.mergeObject(super.defaultOptions, {
-      classes: ["arm5e-dialog", "dialog"],
-      title: game.i18n.localize("arm5e.sheet.combat.label"),
-      template: "systems/arm5e/templates/generic/quick-combat.html",
-      width: "auto",
-      height: "auto",
-      submitOnChange: true,
-      closeOnSubmit: false
-    });
+export class QuickCombat extends foundry.applications.api.HandlebarsApplicationMixin(
+  foundry.applications.api.ApplicationV2
+) {
+  constructor(data, options = {}) {
+    super(options);
+    this.object = data;
   }
 
-  async _render(force, options = {}) {
-    // Parent class rendering workflow
-    await super._render(force, options);
+  static DEFAULT_OPTIONS = {
+    id: "quick-combat",
+    classes: ["arm5e-dialog", "dialog"],
+    window: {
+      title: "arm5e.sheet.combat.label",
+      resizable: true
+    },
+    position: {
+      width: 260,
+      height: "auto"
+    },
+    tag: "form"
+  };
 
-    // Register the active Application with the referenced Documents
-    this.object.actor.apps[this.appId] = this;
-  }
-
-  onClose(app) {
-    if (this.object?.actor?.apps[app.appId]) {
-      delete this.object.actor.apps[app.appId];
+  static PARTS = {
+    main: {
+      template: "systems/arm5e/templates/generic/quick-combat.html"
     }
-  }
+  };
 
-  async getData(options = {}) {
+  async _prepareContext() {
     let sys = {
       combat: this.object.actor.system.combat,
       characteristics: this.object.actor.system.characteristics
@@ -87,12 +82,13 @@ export class QuickCombat extends FormApplication {
     return context;
   }
 
-  activateListeners(html) {
-    super.activateListeners(html);
-    html
-      .querySelector(".rollable")
-      .addEventListener("click", async (event) => await this.object.actor.sheet.roll(event));
-    html.querySelector(".soak-damage").addEventListener("click", async (event) => {
+  _onRender(context, options) {
+    this.object.actor.apps[this.appId] = this;
+
+    this.element.querySelectorAll(".rollable").forEach((element) => {
+      element.addEventListener("click", async (event) => await this.object.actor.sheet.roll(event));
+    });
+    this.element.querySelector(".soak-damage")?.addEventListener("click", async (event) => {
       const msg = await this.object.actor.sheet._onSoakDamage(getDataset(event));
       if (msg == null) return;
       if (msg.system.impact.woundGravity) {
@@ -103,9 +99,16 @@ export class QuickCombat extends FormApplication {
       }
       Arm5eChatMessage.create(msg.toObject());
     });
-    html.querySelector(".damage").addEventListener("click", async (event) => {
+    this.element.querySelector(".damage")?.addEventListener("click", async () => {
       await computeDamage(this.object.actor);
     });
+  }
+
+  async close(options = {}) {
+    if (this.object?.actor?.apps?.[this.appId]) {
+      delete this.object.actor.apps[this.appId];
+    }
+    return super.close(options);
   }
 }
 
@@ -141,40 +144,35 @@ export async function quickCombat(tokenName, actor) {
   const res = await combat.render(true);
 }
 
-export class QuickVitals extends FormApplication {
-  constructor(data, options) {
-    super(data, options);
-
-    Hooks.on("closeApplication", (app, html) => this.onClose(app));
-  }
-  /** @override */
-  static get defaultOptions() {
-    return foundry.utils.mergeObject(super.defaultOptions, {
-      classes: ["arm5e-dialog", "dialog"],
-      title: game.i18n.localize("arm5e.sheet.vitals"),
-      template: "systems/arm5e/templates/generic/quick-vitals.html",
-      width: 200,
-      height: "auto",
-      submitOnChange: true,
-      closeOnSubmit: false
-    });
+export class QuickVitals extends foundry.applications.api.HandlebarsApplicationMixin(
+  foundry.applications.api.ApplicationV2
+) {
+  constructor(data, options = {}) {
+    super(options);
+    this.object = data;
   }
 
-  async _render(force, options = {}) {
-    // Parent class rendering workflow
-    await super._render(force, options);
+  static DEFAULT_OPTIONS = {
+    id: "quick-vitals",
+    classes: ["arm5e-dialog", "dialog"],
+    window: {
+      title: "arm5e.sheet.vitals",
+      resizable: true
+    },
+    position: {
+      width: 260,
+      height: "auto"
+    },
+    tag: "form"
+  };
 
-    // Register the active Application with the referenced Documents
-    this.object.actor.apps[this.appId] = this;
-  }
-
-  onClose(app) {
-    if (this.object?.actor?.apps[app.appId] != undefined) {
-      delete this.object.actor.apps[app.appId];
+  static PARTS = {
+    main: {
+      template: "systems/arm5e/templates/generic/quick-vitals.html"
     }
-  }
+  };
 
-  async getData(options = {}) {
+  async _prepareContext() {
     const context = {
       name: this.object.name,
       actor: this.object.actor,
@@ -185,32 +183,41 @@ export class QuickVitals extends FormApplication {
     return context;
   }
 
-  activateListeners(html) {
-    super.activateListeners(html);
-    html.querySelector(".rest").addEventListener("click", async () => {
+  _onRender(context, options) {
+    this.object.actor.apps[this.appId] = this;
+
+    this.element.querySelector(".rest")?.addEventListener("click", async () => {
       await this.object.actor.rest();
       this.render();
     });
-    html.querySelector(".addFatigue").addEventListener("click", async () => {
+    this.element.querySelector(".addFatigue")?.addEventListener("click", async () => {
       await this.object.actor.loseFatigueLevel(1, false);
       this.render();
     });
-    html.querySelector(".removeFatigue").addEventListener("click", async () => {
+    this.element.querySelector(".removeFatigue")?.addEventListener("click", async () => {
       await this.object.actor.recoverFatigueLevel(1);
       this.render();
     });
-    html.querySelector(".addWound").addEventListener("click", async (event) => {
-      event.preventDefault();
-      const dataset = event.currentTarget.dataset;
-      await this.object.actor.changeWound(1, dataset.type);
-      this.render();
+    this.element.querySelectorAll(".addWound")?.forEach((element) => {
+      element.addEventListener("click", async (event) => {
+        event.preventDefault();
+        const dataset = event.currentTarget.dataset;
+        await this.object.actor.changeWound(1, dataset.type);
+        this.render();
+      });
     });
-    html.querySelector(".recovery").addEventListener("click", async (event) => {
+    this.element.querySelector(".recovery")?.addEventListener("click", async (event) => {
       event.preventDefault();
-      const dataset = event.currentTarget.dataset;
       await this.object.actor.sheet.render(true);
       this.render();
     });
+  }
+
+  async close(options = {}) {
+    if (this.object?.actor?.apps?.[this.appId] != undefined) {
+      delete this.object.actor.apps[this.appId];
+    }
+    return super.close(options);
   }
 }
 

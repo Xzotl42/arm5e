@@ -722,9 +722,7 @@
           "botched": "Botched investigation with {botches} botches.",
           "diaryTitle": "Investigation of \"{name}\"",
           "foundEffect": "Found new effect! : {effect}.",
-          "nothingFound": {
-            "": "Nothing else found."
-          },
+          "nothingFound": "Nothing else found.",
           "rolled": "Rolled {total} (die + {labTotal})"
         },
         "knownEffects": "Known effects",

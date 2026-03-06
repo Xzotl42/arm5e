@@ -1,4 +1,4 @@
-## 3.0.0.1 Stentorius
+## 3.0.0.2 Stentorius
 
 ### Compatibility
 
@@ -8,6 +8,11 @@
 
 ### Application V2 migration
 
+- Quick Magic - done
+- Quick Combat - done
+- Quick Vitals - done
+- Medical history - done
+- Investigation rolls - done
 - Sanatorium -done
 - SourcebookFilter config - done
 - CompendiaRef config - done
@@ -27,6 +32,7 @@
 - Added tint and condition statuses to Active Effect.
 - [technical] Converted most of the largest assets from png to webp format
 - New wrapper for prosemirror editor to have consistent behavior across the whole system.
+- New icon to make it more obvious that lab total details are available on hovering.
 
 ### Bug fixes
 

@@ -210,9 +210,6 @@ label,
   background-size: auto;
 }
 
-
-
-
 /* ============================================
    WINDOW & DIALOG CONTENT BASELINE
    ============================================ */
@@ -501,15 +498,11 @@ h3.dice-msg {
 .arm5e-prompt,
 .arm5e-dialog,
 .arm5eMain {
-  /* background-image: var(--bg-main); */
-  /* background-size: 100%; */
-  /* padding: 32px; */
   font-family: var(--font-book-bold);
 }
 .arm5eInfo,
 .arm5eEffect,
 .arm5e-roll,
-.arm5InvestigateRoll,
 .arm5eActiveEffect {
   background-image: var(--dialog-bg);
   background-repeat: repeat-y;
@@ -555,6 +548,7 @@ h3.dice-msg {
 .arm5e-prompt input[type="text"],
 .arm5e-prompt input[type="number"],
 .arm5e-dialog input[type="number"],
+.arm5e-dialog input[type="text"],
 .arm5e-roll input[type="number"],
 .arm5e-roll input[type="text"],
 .arm5e input[type="text"],
@@ -1188,6 +1182,13 @@ a.header-button.close {
   background-image: url("../assets/sanatorium/Background_Sanatorium.webp");
   background-repeat: repeat-y;
 }
+
+.arm5e.med-history .window-content {
+  background-image: url("../assets/sanatorium/Background_Sanatorium.webp");
+  background-repeat: repeat-y;
+  background-size: 100%;
+}
+
 .arm5e .sanatorium-title,
 .arm5e .medhistory-title {
   text-align: center;
@@ -1240,12 +1241,6 @@ a.header-button.close {
   margin-right: 8px;
   margin-bottom: 8px;
 }
-/* Removed duplicate .arm5eV2 inputs/select overrides; covered by consolidated base block */
-
-/* End of refactor - remaining component-specific rules intentionally preserved below */
-/* (ensures compatibility with layout requirements and minimizes functional regressions) */
-
-
 
 /* General settings fonts */
 
@@ -1293,7 +1288,7 @@ li.macro.inactive {
 }
 
 li .filter {
-  color : var(--arm5e-c-dark)
+  color: var(--arm5e-c-dark);
 }
 
 /* Removed redundant font-family from a, span.document-type, input, span.player-name - inherit from .arm5e */
@@ -1582,6 +1577,12 @@ a.content-link i.fa-book-open {
   color: var(--arm5e-c-beige);
 }
 
+.arm5e-dialog button.dialog-button.long-label {
+  font-size: 10pt;
+  line-height: 1;
+  padding: 5px;
+}
+
 .arm5e button:hover {
   box-shadow: 0 0 10px black, 2px 2px 6px rgba(0, 0, 0, 0.6);
 }
@@ -1617,7 +1618,7 @@ a.content-link i.fa-book-open {
 
 h1.window-title,
 h4.window-title {
-  color: var(--color-text-light)
+  color: var(--color-text-light);
   font-family: var(--font-header);
   font-size: 16pt;
 }
@@ -2101,14 +2102,6 @@ p,
   max-width: 100px;
 } */
 
-/* Roll dialogs */
-.arm5InvestigateRoll {
-  background-image: var(--dialog-bg-large);
-  background-repeat: repeat-y;
-  background-size: contain;
-  font-family: "var(--font-book-bold)";
-}
-
 /* Active Effect dialog */
 .arm5eActiveEffect {
   background-image: var(--dialog-bg-large);
@@ -2519,7 +2512,7 @@ img.tinyimg {
   border-bottom: 0;
 }
 
-.arm5e .sheet-header h1.bigname input {
+.arm5e h1.bigname input {
   width: 100%;
   margin: 0;
   /* padding-top: 30px; */

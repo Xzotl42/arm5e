@@ -87,9 +87,12 @@
         <div class="flexcol flex01">
           <div class="flexrow flex01">
             <div class="lab-total backSection flex-group-center ">
-              <label class="smallTitle"
-                title="{{{planning.labTotal.label}}}">{{localize "arm5e.sheet.labTotal"}}</label>
-              <div class="resource-content flexrow flex-center flex-between margintop6">
+              <div>
+                <label class="smallTitle"
+                  title="{{{planning.labTotal.label}}}">{{localize "arm5e.sheet.labTotal"}}</label>
+                <i class="ars-Icon_Readspell" title="{{{planning.labTotal.label}}}"></i>
+              </div>
+              <div class="resource-content flexrow flex-center margintop6">
                 <input type="number" name="labTotal" value={{planning.labTotal.score}} data-dtype="Number" readonly
                   style="font-size: 14pt;" />
               </div>

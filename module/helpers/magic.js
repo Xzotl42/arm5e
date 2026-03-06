@@ -207,42 +207,52 @@ function _setRequisites(selector, updatePath) {
   return itemUpdate;
 }
 
-export class QuickMagic extends FormApplication {
-  constructor(data, options) {
-    super(data, options);
-    this.object.technique = "cr";
-    this.object.form = "an";
-    Hooks.on("closeApplication", (app, html) => this.onClose(app));
+export class QuickMagic extends foundry.applications.api.HandlebarsApplicationMixin(
+  foundry.applications.api.ApplicationV2
+) {
+  constructor(data, options = {}) {
+    super(options);
+    this.object = data;
+    this.object.technique ??= "cr";
+    this.object.form ??= "an";
   }
 
-  /** @override */
-  static get defaultOptions() {
-    return foundry.utils.mergeObject(super.defaultOptions, {
-      classes: ["arm5e-dialog", "dialog"],
-      title: game.i18n.localize("arm5e.sheet.magicLabel"),
-      template: "systems/arm5e/templates/generic/quick-magic.html",
-      width: "auto",
-      height: "auto",
+  static DEFAULT_OPTIONS = {
+    id: "quick-magic",
+    classes: ["arm5e-dialog", "dialog"],
+    window: {
+      title: "arm5e.sheet.magicLabel",
+      resizable: true
+    },
+    position: {
+      width: 260,
+      height: "auto"
+    },
+    form: {
+      handler: QuickMagic.#onSubmitHandler,
       submitOnChange: true,
       closeOnSubmit: false
-    });
-  }
+    },
+    tag: "form"
+  };
 
-  async _render(force, options = {}) {
-    // Parent class rendering workflow
-    await super._render(force, options);
-
-    // Register the active Application with the referenced Documents
-    this.object.actor.apps[this.appId] = this;
-  }
-
-  onClose(app) {
-    if (this.object?.actor?.apps[app.appId]) {
-      delete this.object.actor.apps[app.appId];
+  static PARTS = {
+    main: {
+      template: "systems/arm5e/templates/generic/quick-magic.html"
     }
+  };
+
+  static async #onSubmitHandler(event, form, formData) {
+    if (formData.object.technique) {
+      this.object.technique = formData.object.technique;
+    }
+    if (formData.object.form) {
+      this.object.form = formData.object.form;
+    }
+    this.render();
   }
 
-  async getData(options = {}) {
+  async _prepareContext() {
     let sys = {
       stances: this.object.actor.system.stances,
       arts: this.object.actor.system.arts,
@@ -282,36 +292,33 @@ export class QuickMagic extends FormApplication {
     return context;
   }
 
-  activateListeners(html) {
-    super.activateListeners(html);
-    html.find(".rollable").click(async (event) => {
-      event.preventDefault();
-      let dataset = event.currentTarget.dataset;
-      dataset.technique = this.object.technique;
-      dataset.form = this.object.form;
-      await this.object.actor.sheet.roll(dataset);
+  _onRender(context, options) {
+    this.object.actor.apps[this.appId] = this;
+
+    this.element.querySelectorAll(".rollable").forEach((element) => {
+      element.addEventListener("click", async (event) => {
+        event.preventDefault();
+        let dataset = event.currentTarget.dataset;
+        dataset.technique = this.object.technique;
+        dataset.form = this.object.form;
+        await this.object.actor.sheet.roll(dataset);
+      });
     });
-    html.find(".voice-and-gestures").change(async (event) => {
-      event.preventDefault();
-      const name = $(event.target).attr("effect");
-      await this.object.actor.selectVoiceAndGestures(name, $(event.target).val());
+
+    this.element.querySelectorAll(".voice-and-gestures").forEach((element) => {
+      element.addEventListener("change", async (event) => {
+        event.preventDefault();
+        const name = event.currentTarget.getAttribute("effect");
+        await this.object.actor.selectVoiceAndGestures(name, event.currentTarget.value);
+      });
     });
   }
 
-  async _updateObject(event, formData) {
-    if (formData.technique) {
-      this.object.technique = formData.technique;
+  async close(options = {}) {
+    if (this.object?.actor?.apps?.[this.appId]) {
+      delete this.object.actor.apps[this.appId];
     }
-    if (formData.form) {
-      this.object.form = formData.form;
-    }
-    // For (let [key, value] of Object.entries(formData)) {
-    //   log(false, `Updated ${key} : ${value}`);
-    //   this.object[key] = value;
-    // }
-    // this.object = foundry.utils.expandObject(this.object);
-    // log(false, `Scriptorium object: ${JSON.stringify(this.object)}`);
-    this.render();
+    return super.close(options);
   }
 }
 /**
