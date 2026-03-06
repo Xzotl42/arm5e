@@ -18,7 +18,7 @@ import {
 } from "../seasonal-activities/long-term-activities.js";
 import { damageRoll, exertSelf, soakRoll } from "../helpers/combat.js";
 import { MagicalEffectSchema, SpellSchema } from "../schemas/magicSchemas.js";
-import { getDataset, log } from "../tools/tools.js";
+import { getDataset, isDebugging, log } from "../tools/tools.js";
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 // below is a bitmap
 const ROLL_MODES = {
@@ -329,8 +329,7 @@ export class RollWindow extends HandlebarsApplicationMixin(ApplicationV2) {
       });
     }
 
-    if (true) {
-      // if (game.modules.get("_dev-mode")?.api?.getPackageDebugValue(ARM5E.SYSTEM_ID)) {
+    if (isDebugging()) {
       btns.push({
         label: "DEV Explode",
         action: "explodingRoll",

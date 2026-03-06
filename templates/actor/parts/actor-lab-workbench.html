@@ -2,15 +2,15 @@
   <div class="flexcol flex02 ">
     <img class="profile-img moreinfo" src="{{system.owner.document.img}}" data-id="{{system.owner.actorId}}"
       title="{{system.owner.value}}" height="75" width="75" />
-    {{>"systems/arm5e/templates/generic/simpleFieldBacksection.html" label="arm5e.sheet.intelligence" 
+    {{>"systems/arm5e/templates/generic/parts/simpleFieldBacksection.hbs" label="arm5e.sheet.intelligence" 
         name="int" attributes="readonly" value=system.owner.document.system.characteristics.int.value type="number" dtype="Number"}}
-    {{>"systems/arm5e/templates/generic/simpleFieldBacksection.html" label="arm5e.skill.arcane.magicTheory" 
+    {{>"systems/arm5e/templates/generic/parts/simpleFieldBacksection.hbs" label="arm5e.skill.arcane.magicTheory" 
         name="magicTheory" attributes="readonly" value=system.owner.magicTheory.score type="number" dtype="Number"}}
-    {{>"systems/arm5e/templates/generic/simpleFieldBacksection.html" label="arm5e.lab.bonus.activity" 
+    {{>"systems/arm5e/templates/generic/parts/simpleFieldBacksection.hbs" label="arm5e.lab.bonus.activity" 
         name="activityBonus" attributes="readonly" value=planning.activityBonus type="number" dtype="Number"}}
-    {{>"systems/arm5e/templates/generic/simpleFieldBacksection.html" label="arm5e.lab.bonus.apprentice" 
+    {{>"systems/arm5e/templates/generic/parts/simpleFieldBacksection.hbs" label="arm5e.lab.bonus.apprentice" 
         name="apprentice" attributes="readonly" value=planning.modifiers.apprentice type="number" dtype="Number"}}
-    {{>"systems/arm5e/templates/generic/simpleFieldBacksection.html" label="arm5e.generic.other" 
+    {{>"systems/arm5e/templates/generic/parts/simpleFieldBacksection.hbs" label="arm5e.generic.other" 
         name="flags.arm5e.planning.modifiers.generic" attributes="" classes="editable" value=planning.modifiers.generic type="number" dtype="Number"}}
 
   </div>
@@ -128,15 +128,15 @@
         </select>
       </div>
     </div>
-    {{>"systems/arm5e/templates/generic/simpleFieldBacksection.html" label="arm5e.sheet.year" 
+    {{>"systems/arm5e/templates/generic/parts/simpleFieldBacksection.hbs" label="arm5e.sheet.year" 
         name="flags.arm5e.planning.date.year" attributes="" classes="editable" value=planning.date.year type="number" dtype="Number"}}
-    {{>"systems/arm5e/templates/generic/simpleFieldBacksection.html" label="arm5e.sheet.aura" hint=tooltip.aura
+    {{>"systems/arm5e/templates/generic/parts/simpleFieldBacksection.hbs" label="arm5e.sheet.aura" hint=tooltip.aura
         name="flags.arm5e.planning.modifiers.aura" classes=classes.aura attributes=edition.aura value=planning.modifiers.aura type="number" dtype="Number"}}
-    {{>"systems/arm5e/templates/generic/simpleFieldBacksection.html" label="arm5e.lab.planning.labQuality" 
+    {{>"systems/arm5e/templates/generic/parts/simpleFieldBacksection.hbs" label="arm5e.lab.planning.labQuality" 
         name="quality" attributes="readonly" value=system.generalQuality.total type="number" dtype="Number"}}
-    {{>"systems/arm5e/templates/generic/simpleFieldBacksection.html" label="arm5e.lab.bonus.specialties" 
+    {{>"systems/arm5e/templates/generic/parts/simpleFieldBacksection.hbs" label="arm5e.lab.bonus.specialties" 
         name="specialty" attributes="readonly" value=planning.labSpecTotal.mod type="number" dtype="Number"}}
-    {{>"systems/arm5e/templates/generic/simpleFieldBacksection.html" label="arm5e.sheet.duration" 
+    {{>"systems/arm5e/templates/generic/parts/simpleFieldBacksection.hbs" label="arm5e.sheet.duration" 
         name="duration" attributes="readonly" value=planning.duration type="number" dtype="Number"}}
   </div>
 </div>

@@ -7,10 +7,16 @@ import { ARM5E } from "../config.js";
  */
 export function log(force, ...args) {
   try {
-    const isDebugging = game.modules.get("_dev-mode")?.api?.getPackageDebugValue(ARM5E.SYSTEM_ID);
+    if (force || isDebugging()) {
+      // Capture caller information from stack trace
+      const stack = new Error().stack;
+      const callerLine = stack.split("\n")[2]; // Line 0 is "Error", line 1 is this function, line 2 is caller
+      const callerMatch = callerLine?.match(/at\s+(.+?)\s+\((.+):(\d+):(\d+)\)/);
+      const caller = callerMatch
+        ? `${callerMatch[1]} (${callerMatch[2].split("/").pop()}:${callerMatch[3]})`
+        : callerLine?.trim() || "unknown";
 
-    if (force || isDebugging) {
-      console.log(ARM5E.SYSTEM_ID, "|", ...args);
+      console.log(ARM5E.SYSTEM_ID, "|", `[${caller}]`, ...args);
     }
   } catch (e) {
     console.log(e);
@@ -25,6 +31,15 @@ export function debug(str) {
   log(false, `DEBUG: ${str}`);
 }
 
+export function isDebugging() {
+  try {
+    return game.modules.get("_dev-mode")?.api?.getPackageDebugValue(ARM5E.SYSTEM_ID) || false;
+  } catch (e) {
+    console.error(e);
+    return false;
+  }
+}
+
 /**
  *
  * @param force
@@ -32,10 +47,16 @@ export function debug(str) {
  */
 export function error(force, ...args) {
   try {
-    const isDebugging = game.modules.get("_dev-mode")?.api?.getPackageDebugValue(ARM5E.SYSTEM_ID);
+    if (force || isDebugging()) {
+      // Capture caller information from stack trace
+      const stack = new Error().stack;
+      const callerLine = stack.split("\n")[2]; // Line 0 is "Error", line 1 is this function, line 2 is caller
+      const callerMatch = callerLine?.match(/at\s+(.+?)\s+\((.+):(\d+):(\d+)\)/);
+      const caller = callerMatch
+        ? `${callerMatch[1]} (${callerMatch[2].split("/").pop()}:${callerMatch[3]})`
+        : callerLine?.trim() || "unknown";
 
-    if (force || isDebugging) {
-      console.error(ARM5E.SYSTEM_ID, "|", ...args);
+      console.error(ARM5E.SYSTEM_ID, "|", `[${caller}]`, ...args);
     }
   } catch (e) {
     console.error(e);
