@@ -1,4 +1,4 @@
-## 3.0.0.0 Stentorius
+## 3.0.0.1 Stentorius
 
 ### Compatibility
 
@@ -8,6 +8,7 @@
 
 ### Application V2 migration
 
+- Sanatorium -done
 - SourcebookFilter config - done
 - CompendiaRef config - done
 - Aura Config - done

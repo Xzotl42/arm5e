@@ -1184,7 +1184,7 @@ a.header-button.close {
   border: 4px outset;
 }
 
-.arm5e .sanatorium.sanatorium-sheet {
+.arm5e.sanatorium-sheet .window-content {
   background-image: url("../assets/sanatorium/Background_Sanatorium.webp");
   background-repeat: repeat-y;
 }
@@ -1949,11 +1949,6 @@ p,
   min-height: 32px;
   margin-bottom: 12px !important; /* Override Foundry core margin */
   position: relative;
-}
-
-.arm5e .sanatorium.sanatorium-sheet {
-  background-image: url("../assets/sanatorium/Background_Sanatorium.webp");
-  background-repeat: repeat-y;
 }
 
 .arm5e .sanatorium-title {
@@ -3231,7 +3226,7 @@ img.art-icon {
   border: 0px;
   border-radius: var(--radius-small);
   box-shadow: var(--shadow-card);
-  margin-right: 10px;
+  /* margin-right: 10px; */
   margin-bottom: 5px;
   max-height: 100px;
 }
