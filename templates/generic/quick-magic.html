@@ -34,12 +34,12 @@
         </select>
       </div>
       <div class="flexrow flex-group-left">
-        <button class="arm5e rollable dialog-button marginsides10"
+        <button class="arm5e rollable dialog-button marginsides10" data-action="roll"
           data-roll="spont">{{localize "arm5e.sheet.spontaneousMagic"}}</button>
       </div>
       <div class="flexrow flex-group-left">
         <div>
-          <button class="arm5e dialog-button long-label rollable  marginsides10" data-roll="option"
+          <button class="arm5e dialog-button long-label rollable  marginsides10" data-action="roll" data-roll="option"
             data-name='{{localize "arm5e.sheet.targeting.label"}}' data-option1="{{ system.characteristics.per.value }}"
             data-txtoption1='{{ localize "arm5e.sheet.perception" }}'
             data-option2="{{ system.laboratory.abilitiesSelected.finesse.value }}"
@@ -54,7 +54,7 @@
 
       <div class="flexrow flex-group-left">
         <div>
-          <button class="arm5e dialog-button long-label rollable  marginsides10" data-roll="option"
+          <button class="arm5e dialog-button long-label rollable  marginsides10" data-action="roll" data-roll="option"
             data-name='{{localize "arm5e.sheet.fastCastingSpeed.label"}}'
             data-option1="{{ system.characteristics.qik.value }}"
             data-txtoption1='{{ localize "arm5e.sheet.quickness" }}'
@@ -70,7 +70,7 @@
 
       <div class="flexrow flex-group-left">
         <div>
-          <button class="arm5e rollable dialog-button long-label marginsides10" data-roll="option"
+          <button class="arm5e rollable dialog-button long-label marginsides10" data-action="roll" data-roll="option"
             data-name='{{localize "arm5e.sheet.determiningEffect.label"}}'
             data-option1="{{ system.characteristics.per.value }}"
             data-txtoption1='{{ localize "arm5e.sheet.perception" }}'
@@ -85,7 +85,7 @@
       </div>
       <div class="flexrow flex-group-left">
         <div>
-          <button class="arm5e rollable dialog-button long-label marginsides10" data-roll="option"
+          <button class="arm5e rollable dialog-button long-label marginsides10" data-action="roll" data-roll="option"
             data-name='{{localize "arm5e.skill.general.concentration"}}'
             data-option1="{{ system.characteristics.sta.value }}" data-txtoption1='{{ localize "arm5e.sheet.stamina" }}'
             data-option2="{{ system.laboratory.abilitiesSelected.concentration.value }}"

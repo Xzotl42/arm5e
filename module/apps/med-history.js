@@ -36,7 +36,11 @@ export class MedicalHistory extends foundry.applications.api.HandlebarsApplicati
       submitOnChange: true,
       closeOnSubmit: false
     },
-    tag: "form"
+    tag: "form",
+    actions: {
+      clearHistory: MedicalHistory.clearHistory,
+      displayWound: MedicalHistory.displayWound
+    }
   };
 
   static PARTS = {
@@ -94,16 +98,16 @@ export class MedicalHistory extends foundry.applications.api.HandlebarsApplicati
         ev.currentTarget.select();
       });
     });
+  }
 
-    // Handle clear history button
-    this.element.querySelector(".clear-history")?.addEventListener("click", (ev) => {
-      this._clearHistory(ev);
-    });
+  static async clearHistory(event, target) {
+    await this._clearHistory();
+  }
 
-    // Handle wound edit buttons
-    this.element.querySelectorAll(".wound-edit").forEach((btn) => {
-      btn.addEventListener("click", (ev) => this._displayWound(ev));
-    });
+  static async displayWound(event, target) {
+    const itemId = target.dataset.itemId;
+    const item = this.object.patient.getEmbeddedDocument("Item", itemId);
+    item.sheet.render(true, { focus: true });
   }
 
   async _clearHistory(event) {

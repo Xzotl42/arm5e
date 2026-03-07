@@ -20,7 +20,8 @@
 
       </div>
       <div class="resource-content flexrow flex-center" style="padding:10px">
-        <button class="create-journal">{{localize "arm5e.rolltables.experimentation.createJournal"}}</button>
+        <button class="create-journal"
+          data-action="createJournal">{{localize "arm5e.rolltables.experimentation.createJournal"}}</button>
       </div>
     </div>
     <div class="flexrow">
@@ -39,10 +40,11 @@
       </div>
     </div>
     <div class="flexrow padding10">
-      <button class=" arm5e experimentation-roll" style="font-family: bookAntika; margin:5px">
+      <button class=" arm5e experimentation-roll" data-action="rollExperimentation"
+        style="font-family: bookAntika; margin:5px">
         {{localize "arm5e.rolltables.experimentation.roll"}}
       </button>
-      <button class="arm5e clear-all" style="font-family: bookAntika; margin:5px">
+      <button class="arm5e clear-all" data-action="clearAll" style="font-family: bookAntika; margin:5px">
         {{localize "arm5e.generic.clear"}}
       </button>
     </div>

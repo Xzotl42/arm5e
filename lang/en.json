@@ -1106,6 +1106,7 @@
         "dropBookTopic": "Drop a book and pick a topic type.",
         "dropCharacter": "Drop a character here.",
         "dropLabText": "Drop a owned spell or draft laboratory text.",
+        "emptyBook": "The book is empty, you cannot learn anything from it.",
         "illiterate": "The reader doesn't know how to read. (Artes Liberales 1+)",
         "invalidLevel": "Invalid level.",
         "invalidQuality": "Invalid quality.",
@@ -1125,7 +1126,8 @@
         "unconfirmedLang": "Please confirm that the scribe speaks all languages listed.",
         "unfamiliarTopic": "Unfamiliar topic ({topic}), any copy may be corrupted and useless (Confirm with storyguide).",
         "unfamiliarTopic2": "Confirm with the Storyguide that the scribe is skilled enough in a related ability.",
-        "whichItem": "Couldn't match any {item} known by the reader. Pick one if applicable."
+        "whichItem": "Couldn't match any {item} known by the reader. Pick one if applicable.",
+        "error": "An unexpected error occurred in the Scriptorium. Please check the browser console (F12) for details."
       },
       "quickCopy": "Quick copy",
       "reader": {

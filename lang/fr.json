@@ -1085,7 +1085,8 @@
         "unconfirmedLang": "Merci de confirmer que le scribe parle toute les langues listées.",
         "unfamiliarTopic": "Sujet inconnu ({topic}), toute copie peut être corrompue et inutile (Confirmer avec le maître de jeu).",
         "unfamiliarTopic2": "Confirmer auprès du Maitre de jeu que le scribe est suffisamment compétent dans une compétence connexe.",
-        "whichItem": "Ne correspond à aucune {item} connu du lecteur. Choisissez-en un, le cas échéant."
+        "whichItem": "Ne correspond à aucune {item} connu du lecteur. Choisissez-en un, le cas échéant.",
+        "error": "Une erreur inattendue s'est produite dans le Scriptorium. Vérifiez la console du navigateur (F12) pour plus de détails."
       },
       "quickCopy": "Copie rapide",
       "reader": {

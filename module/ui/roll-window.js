@@ -369,7 +369,8 @@ export class RollWindow extends HandlebarsApplicationMixin(ApplicationV2) {
       explodingRoll: RollWindow.explodingRoll,
       botchingRoll: RollWindow.botchingRoll,
       cancel: RollWindow.onCancel,
-      altAction: RollWindow.onAltAction
+      altAction: RollWindow.onAltAction,
+      expend: RollWindow.expend
     }
   };
 
@@ -547,12 +548,6 @@ export class RollWindow extends HandlebarsApplicationMixin(ApplicationV2) {
   }
 
   async _onRender(context, options) {
-    this.element.querySelectorAll(".expend").forEach((el) => {
-      el.addEventListener("click", (ev) => {
-        ev.currentTarget.nextElementSibling.classList.toggle("hide");
-      });
-    });
-
     this.element.querySelectorAll(".select-on-focus").forEach((el) => {
       el.addEventListener("focus", (ev) => {
         ev.preventDefault();
@@ -563,6 +558,10 @@ export class RollWindow extends HandlebarsApplicationMixin(ApplicationV2) {
     if (this.data.rollInfo.listeners) {
       this.data.rollInfo.listeners(this.data, this.element);
     }
+  }
+
+  static async expend(event, target) {
+    target.nextElementSibling.classList.toggle("hide");
   }
 
   static async stressRoll(event, target) {
@@ -864,7 +863,10 @@ export class NoRollWindow extends HandlebarsApplicationMixin(ApplicationV2) {
     window: {
       contentClasses: ["standard-form"]
     },
-    tag: "form"
+    tag: "form",
+    actions: {
+      toggle: NoRollWindow.toggle
+    }
   };
 
   static PARTS = {
@@ -874,18 +876,16 @@ export class NoRollWindow extends HandlebarsApplicationMixin(ApplicationV2) {
   };
 
   async _onRender(context, options) {
-    this.element.querySelectorAll(".clickable").forEach((el) => {
-      el.addEventListener("click", (ev) => {
-        ev.currentTarget.nextElementSibling.classList.toggle("hide");
-      });
-    });
-
     this.element.querySelectorAll(".select-on-focus").forEach((el) => {
       el.addEventListener("focus", (ev) => {
         ev.preventDefault();
         ev.currentTarget.select();
       });
     });
+  }
+
+  static async toggle(event, target) {
+    target.nextElementSibling.classList.toggle("hide");
   }
 
   async _prepareContext(options) {

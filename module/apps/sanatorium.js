@@ -54,7 +54,11 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
       submitOnChange: true,
       closeOnSubmit: false
     },
-    tag: "form"
+    tag: "form",
+    actions: {
+      recoveryRoll: Sanatorium.recoveryRoll,
+      createDiaryEntry: Sanatorium.createDiaryEntry
+    }
   };
 
   static PARTS = {
@@ -204,18 +208,14 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
         ev.currentTarget.select();
       });
     });
+  }
 
-    // Bind recovery roll button to main game mechanic
-    const recoveryBtn = this.element.querySelector(".recovery-roll");
-    if (recoveryBtn) {
-      recoveryBtn.addEventListener("click", (ev) => this._recoveryRoll(ev));
-    }
+  static async recoveryRoll(event, target) {
+    await this._recoveryRoll(event);
+  }
 
-    // Bind diary entry button to finalization method
-    const diaryBtn = this.element.querySelector(".diary-entry");
-    if (diaryBtn) {
-      diaryBtn.addEventListener("click", (ev) => this._createDiaryEntry(ev));
-    }
+  static async createDiaryEntry(event, target) {
+    await this._createDiaryEntry(event);
   }
 
   /**

@@ -114,10 +114,20 @@
     </div>
   </div>
   <div class="flexrow marginsides32">
-    <button class="sanatorium button recovery-roll" style="font-size: 16pt" {{canRoll}}>
+    <button
+      class="sanatorium button recovery-roll"
+      data-action="recoveryRoll"
+      style="font-size: 16pt"
+      {{canRoll}}
+    >
       {{localize "arm5e.sanatorium.button.recovery"}}
     </button>
-    <button class="sanatorium button diary-entry" style="font-size: 16pt" {{diary}}>
+    <button
+      class="sanatorium button diary-entry"
+      data-action="createDiaryEntry"
+      style="font-size: 16pt"
+      {{diary}}
+    >
       {{localize "arm5e.sanatorium.button.endSeason"}}
     </button>
   </div>

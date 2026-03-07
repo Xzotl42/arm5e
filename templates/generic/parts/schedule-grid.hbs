@@ -16,6 +16,7 @@
       {{#each this.seasons }}
       <div
         class="calendar-season {{ this.style }} flexrow item-create"
+        data-action="createItem"
         data-type="diaryEntry"
         data-year="{{../this.year}}"
         data-season="{{@key}}"
@@ -23,7 +24,7 @@
       >
         <div class="flexrow">
           {{#each this.others}}
-          <div class="vignette" data-id="{{ this.id }}">
+          <div class="vignette" data-action="openItem" data-id="{{ this.id }}">
             <img src="{{ this.img }}" title="{{ this.name }}" {{{this.style}}} />
           </div>
           {{/each}}

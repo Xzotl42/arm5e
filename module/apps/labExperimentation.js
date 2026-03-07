@@ -37,7 +37,7 @@ export class LabExperimentation extends HandlebarsApplicationMixin(ApplicationV2
 
   static DEFAULT_OPTIONS = {
     id: "lab-experimentation",
-    classes: ["arm5e", "sheet", "scriptorium-sheet"],
+    classes: ["arm5e", "scriptorium"],
     tag: "form",
     form: {
       handler: LabExperimentation.#onSubmitHandler,
@@ -51,11 +51,16 @@ export class LabExperimentation extends HandlebarsApplicationMixin(ApplicationV2
     position: {
       width: 600,
       height: "auto" // 828
+    },
+    actions: {
+      rollExperimentation: LabExperimentation.rollExperimentation,
+      clearAll: LabExperimentation.clearAll,
+      createJournal: LabExperimentation.createJournal
     }
   };
 
   static PARTS = {
-    header: { template: "systems/arm5e/templates/generic/parts/scriptorium-header.hbs" },
+    header: { template: "systems/arm5e/templates/generic/parts/experimentation-header.hbs" },
     form: {
       template: "systems/arm5e/templates/generic/labExperimentation.html"
     },
@@ -91,16 +96,18 @@ export class LabExperimentation extends HandlebarsApplicationMixin(ApplicationV2
         ev.currentTarget.select();
       });
     });
+  }
 
-    html
-      .querySelector(".experimentation-roll")
-      ?.addEventListener("click", (ev) => this.rollForExperimentation(ev));
+  static async rollExperimentation(event, target) {
+    await this.rollForExperimentation(event);
+  }
 
-    html.querySelector(".clear-all")?.addEventListener("click", (ev) => this._clearAll(ev));
+  static async clearAll(event, target) {
+    await this._clearAll(event);
+  }
 
-    html
-      .querySelector(".create-journal")
-      ?.addEventListener("click", (ev) => this._createJournal(ev));
+  static async createJournal(event, target) {
+    await this._createJournal(event);
   }
 
   get title() {

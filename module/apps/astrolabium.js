@@ -31,7 +31,13 @@ export class Astrolabium extends HandlebarsApplicationMixin(ApplicationV2) {
       width: 600,
       height: "auto"
     },
-    tag: "form"
+    tag: "form",
+    actions: {
+      setDate: Astrolabium.setDate,
+      restAll: Astrolabium.restAll,
+      displaySchedule: Astrolabium.displaySchedule,
+      showCalendar: Astrolabium.showCalendar
+    }
   };
 
   get title() {
@@ -75,11 +81,6 @@ export class Astrolabium extends HandlebarsApplicationMixin(ApplicationV2) {
   _onRender(context, options) {
     super._onRender(context, options);
     const html = this.element;
-    html.querySelector(".set-date").addEventListener("click", this.setDate.bind(this));
-    html.querySelector(".rest-all").addEventListener("click", this.restEveryone.bind(this));
-    html
-      .querySelector(".group-schedule")
-      .addEventListener("click", this.displaySchedule.bind(this));
     html.querySelector(".trackRes").addEventListener("change", async (e) => {
       e.preventDefault();
       let value = e.target.checked;
@@ -87,10 +88,23 @@ export class Astrolabium extends HandlebarsApplicationMixin(ApplicationV2) {
       log(false, `value=${value}, settting=${oldValue}`);
       await game.settings.set("arm5e", "trackResources", !oldValue);
     });
+  }
+
+  static async setDate(event, target) {
+    await this.setDate(event);
+  }
+
+  static async restAll(event, target) {
+    await this.restEveryone(event);
+  }
+
+  static async displaySchedule(event, target) {
+    await this.displaySchedule(event);
+  }
+
+  static async showCalendar(event, target) {
     if (game.modules.get("foundryvtt-simple-calendar")?.active) {
-      html.querySelector(".show-calendar").addEventListener("click", (e) => {
-        SimpleCalendar.api.showCalendar(null, true);
-      });
+      SimpleCalendar.api.showCalendar(null, true);
     }
   }
   async displaySchedule(event) {

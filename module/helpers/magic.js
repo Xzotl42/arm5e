@@ -233,7 +233,10 @@ export class QuickMagic extends foundry.applications.api.HandlebarsApplicationMi
       submitOnChange: true,
       closeOnSubmit: false
     },
-    tag: "form"
+    tag: "form",
+    actions: {
+      roll: QuickMagic.roll
+    }
   };
 
   static PARTS = {
@@ -295,16 +298,6 @@ export class QuickMagic extends foundry.applications.api.HandlebarsApplicationMi
   _onRender(context, options) {
     this.object.actor.apps[this.appId] = this;
 
-    this.element.querySelectorAll(".rollable").forEach((element) => {
-      element.addEventListener("click", async (event) => {
-        event.preventDefault();
-        let dataset = event.currentTarget.dataset;
-        dataset.technique = this.object.technique;
-        dataset.form = this.object.form;
-        await this.object.actor.sheet.roll(dataset);
-      });
-    });
-
     this.element.querySelectorAll(".voice-and-gestures").forEach((element) => {
       element.addEventListener("change", async (event) => {
         event.preventDefault();
@@ -312,6 +305,12 @@ export class QuickMagic extends foundry.applications.api.HandlebarsApplicationMi
         await this.object.actor.selectVoiceAndGestures(name, event.currentTarget.value);
       });
     });
+  }
+
+  static async roll(event, target) {
+    target.dataset.technique = this.object.technique;
+    target.dataset.form = this.object.form;
+    await this.object.actor.sheet.roll(target.dataset);
   }
 
   async close(options = {}) {

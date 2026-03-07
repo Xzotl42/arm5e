@@ -501,7 +501,6 @@ h3.dice-msg {
   font-family: var(--font-book-bold);
 }
 .arm5eInfo,
-.arm5eEffect,
 .arm5e-roll,
 .arm5eActiveEffect {
   background-image: var(--dialog-bg);
@@ -1542,6 +1541,7 @@ a.content-link i.fa-book-open {
 .arm5e-confirm button.dialog-button,
 .arm5e-config button.dialog-button,
 .arm5e .astrolab.button,
+.arm5e .scriptorium.button,
 /* .arm5e.arm5e-config .window-content button.dialog-button, */
 .arm5e .aura-config button {
   font-family: var(--font-header);
@@ -1899,19 +1899,7 @@ p,
   height: auto;
 }
 
-.arm5eEffect .sheet-body {
-  height: auto;
-  background-image: var(--dialog-bg);
-  background-repeat: repeat-y;
-  background-size: cover;
-  font-family: "var(--font-book-bold)";
-  font-size: 12pt;
-  padding-left: 32px;
-  padding-right: 32px;
-}
-
 /* .arm5eInfo .footer-background,
-.arm5eEffect .footer-background,
 .arm5e-prompt .footer-background {
   height: 50px;
 } */
@@ -1922,12 +1910,6 @@ p,
 
 /* Window-content rules consolidated at top of file */
 
-/* Dialog header backgrounds */
-.arm5eEffect .header-background img {
-  height: 30px;
-  background-size: cover;
-}
-
 /* .pickAmount.arm5e-prompt,
 .arm5e-prompt.aging,
 .arm5e-prompt.vis-study,
@@ -1936,7 +1918,7 @@ p,
   background-size: cover;
 } */
 
-.scriptorium-sheet .window-content {
+.scriptorium .window-content {
   background-image: url("../assets/scriptorium/Scriptorium_background.webp");
   background-repeat: repeat-y;
   background-size: contain;
@@ -2336,7 +2318,6 @@ input[type="number"].design-level {
 .arm5e .header-background img,
 .arm5e-prompt .header-background img,
 .arm5e-confirm .header-background img,
-.arm5eEffect .header-background img,
 .arm5eRequisite .header-background img,
 .arm5e .arm5eActiveEffect .header-background img,
 .arm5e-roll .header-background img,

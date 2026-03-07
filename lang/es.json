@@ -612,7 +612,8 @@
         "notMagus": "El lector no es un magus.",
         "tooSkilled": "El lector es demasiado experto para ese libro.",
         "tractAlreadyRead": "El lector ya ha leído un tractatus con el mismo título.",
-        "whichItem": "No se ha encontrado ningún {item} conocido por el lector. Elige uno si es aplicable."
+        "whichItem": "No se ha encontrado ningún {item} conocido por el lector. Elige uno si es aplicable.",
+        "error": "Se ha producido un error inesperado en el Scriptorium. Consulte la consola del navegador (F12) para más detalles."
       },
       "reader": {
         "name": "Nombre de lector",

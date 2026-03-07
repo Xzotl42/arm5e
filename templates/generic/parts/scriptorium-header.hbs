@@ -1,3 +1,26 @@
-<div class="scriptorium header-background">
-  <img src="systems/arm5e/assets/scriptorium/Scriptorium_header.webp" style="border: 0px" />
+<div class="scriptorium-header-part">
+  <div class="scriptorium header-background">
+    <img src="systems/arm5e/assets/scriptorium/Scriptorium_header.webp" style="border: 0px" />
+  </div>
+  <h1 class="scriptorium-title" style="width: 100%; text-align: center">Scriptorium</h1>
+  <header class="scriptorium-header flex0">
+    <div class="flexrow" style="margin-left: 32px; margin-right: 57px">
+      <div class="resource-content flexrow flex-center flex-between margintop6">
+        <label for="season" class="smallTitle">{{localize "arm5e.sheet.season"}}</label>
+        <select name="season" data-type="String" class="change-season flex0 scriptorium seasons">
+          {{selectOptions seasons selected=season localize=true labelAttr="label"}}
+        </select>
+      </div>
+      <div class="resource-content flexrow flex-center flex-between margintop6">
+        <label for="year" class="smallTitle">{{localize "arm5e.sheet.year"}}</label>
+        <input
+          type="number"
+          name="year"
+          value="{{ year }}"
+          data-dtype="Number"
+          class="scriptorium change-year select-on-focus"
+        />
+      </div>
+    </div>
+  </header>
 </div>

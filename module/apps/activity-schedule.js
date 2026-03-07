@@ -45,7 +45,11 @@ export class ActivitySchedule extends HandlebarsApplicationMixin(ApplicationV2) 
       width: 600,
       height: "auto"
     },
-    tag: "form"
+    tag: "form",
+    actions: {
+      changeYear: ActivitySchedule.changeYear,
+      openItem: ActivitySchedule.openItem
+    }
   };
 
   /**
@@ -369,20 +373,22 @@ export class ActivitySchedule extends HandlebarsApplicationMixin(ApplicationV2) 
     html.querySelectorAll(".selectedSeason").forEach((el) => {
       el.addEventListener("change", (event) => this._selectSeason(event));
     });
-    html
-      .querySelector(".next-step")
-      .addEventListener("click", async (event) => this._changeYear(event, 1));
-    html
-      .querySelector(".previous-step")
-      .addEventListener("click", async (event) => this._changeYear(event, -1));
-    html.querySelector(".vignette")?.addEventListener("click", async (event) => {
-      event.stopPropagation();
-      const item = this.actor.items.get(event.currentTarget.dataset.id);
-      if (item) {
-        item.apps[this.appId] = this;
-        item.sheet.render(true, { focus: true });
-      }
-    });
+  }
+
+  static async changeYear(event, target) {
+    const newYear = Number(target.dataset.year) + parseInt(target.dataset.offset);
+    if (newYear < 0) return;
+    this.displayYear = newYear;
+    this.render();
+  }
+
+  static async openItem(event, target) {
+    event.stopPropagation();
+    const item = this.actor.items.get(target.dataset.id);
+    if (item) {
+      item.apps[this.appId] = this;
+      item.sheet.render(true, { focus: true });
+    }
   }
 
   /**

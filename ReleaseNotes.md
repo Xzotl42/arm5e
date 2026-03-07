@@ -1,4 +1,4 @@
-## 3.0.0.2 Stentorius
+## 3.0.0.3 Stentorius
 
 ### Compatibility
 
@@ -8,6 +8,8 @@
 
 ### Application V2 migration
 
+- Scriptorium- done
+- Sanatorium - done
 - Quick Magic - done
 - Quick Combat - done
 - Quick Vitals - done
@@ -44,6 +46,8 @@
 - Magus characters missing the virtue will receive "The Gift" making them aligned with magic realm (instead of a previous hack where all magi were magic aligned. As long as you have the virtue (ie: one with an index-key = "the-gift"), it won't be added again, so you can change the effects as you desire)
 - Buttons to create items and folders are now properly displayed
 - [technical] ars magica icons names in css are now prefixed with "ars-" to avoid conflicts with core Foundry
+- Dropping an empty book no longer raises an error and close the Scriptorium
+- The diary's description of an ability book, no longer states the topic as undefined if no specific topic name was defined in the read book
 - Various cosmetic improvement and fixes
   - removed the dark line in the middle of dialogs and items sheets
 

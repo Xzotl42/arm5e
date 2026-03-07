@@ -1,8 +1,8 @@
-<div class="tab" data-group="primary" data-tab="copying">
+<div class="tab {{tab.cssClass}}" data-group="primary" data-tab="copying">
   <div style="min-height: 418px;">
     <div class="flexcol marginsides32">
       <div class="padding4 flexrow flex-group-left">
-        <label class="section-handle  clickable" data-section="scribe"
+        <label class="section-handle  clickable" data-action="handleSection" data-section="scribe"
           data-category="scriptorium">{{localize "arm5e.scriptorium.scribe.title"}}</label>
       </div>
       <!-- COPYING - SCRIBE -->
@@ -17,10 +17,10 @@
           <div class="scriptorium item-header resource flexrow" style="width: 100%; max-height: 32px;">
             <div class="item-image"></div>
             <label>{{copying.scribe.name}}</label>
-            <a class="unlink-scribe" title="Break link to scribe"><i class="fas fa-link"
+            <a class="unlink-scribe" data-action="unlinkScribe" title="Break link to scribe"><i class="fas fa-link"
                 style="font-size: 12pt;"></i></a>
           </div>
-          {{> "systems/arm5e/templates/generic/metalic-bar.html" topoffset="-7px"}}
+          {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
 
           {{#unless (eq copying.scribe.id null)}}
             <div class="scriptorium resource">
@@ -61,7 +61,7 @@
         {{/if}}
       </div>
       <div class="padding4 flexrow flex-group-left">
-        <label class="section-handle  clickable" data-section="book-copy"
+        <label class="section-handle  clickable" data-action="handleSection" data-section="book-copy"
           data-category="scriptorium">{{localize "arm5e.sheet.books"}} : {{copying.topicType}}</label>
       </div>
       <!-- COPYING - BOOK -->
@@ -78,7 +78,7 @@
             <label>{{localize "arm5e.scriptorium.msg.dropBookTopic"}}</label>
           </div>
         {{/unless}}
-        {{> "systems/arm5e/templates/generic/metalic-bar.html" topoffset="-7px" }}
+        {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
         <div class="drop-book" data-drop="copy-book">
           {{#unless (or (eq this.currentTopic.category "labText") (eq copying.topicType "labText"))}}
             {{#each copying.books}}
@@ -110,15 +110,15 @@
                   {{#if (gt this.system.topics.length 1)}}
                     <div class="flexrow" style="max-width: 180px;">
                       <div class="img-container"><img class="nav-arrow previous-topicToCopy clickable"
-                          data-index="{{this.system.topicIndex}}" data-book-index="{{@index}}"
-                          src="systems/arm5e/assets/bLeft.png" />
+                          data-action="previousTopicToCopy" data-index="{{this.system.topicIndex}}"
+                          data-book-index="{{@index}}" src="systems/arm5e/assets/bLeft.png" />
                       </div>
                       <div style="align-items:center;justify-content: center;display: flex;">
                         <label>{{localize "arm5e.sheet.topics.current" current=currentTopicToCopyNumber total=copyTopicNum}}</label>
                       </div>
                       <div class="img-container"><img class="nav-arrow next-topicToCopy clickable"
-                          data-index="{{this.system.topicIndex}}" data-book-index="{{@index}}"
-                          src="systems/arm5e/assets/bRight.png" /></div>
+                          data-action="nextTopicToCopy" data-index="{{this.system.topicIndex}}"
+                          data-book-index="{{@index}}" src="systems/arm5e/assets/bRight.png" /></div>
                     </div>
                   {{/if}}
                 </div>
@@ -191,8 +191,8 @@
                         {{/unless}}
                     </fieldset>
                     <div class="flex0">
-                      <a class="item-control remove-book" title="Remove book from list" data-book-index="{{@index}}"
-                        style="padding-left: 5px; top: 30px; position: relative;"><i
+                      <a class="item-control remove-book" data-action="removeBook" title="Remove book from list"
+                        data-book-index="{{@index}}" style="padding-left: 5px; top: 30px; position: relative;"><i
                           class="ars-Icon_Delete_Hand_Gesture"></i></a>
                     </div>
                   </div>
@@ -210,8 +210,8 @@
                     <ul>
                       {{#each copying.labTexts}}
                         <li data-index="{{@index}}" data-uuid="{{this.uuid}}"><label>"{{this.name}}" :
-                            {{this.label}}{{this.level}}</label><a class="remove-labTextCopy" data-index="{{@index}}"
-                            title="Delete lab text">
+                            {{this.label}}{{this.level}}</label><a class="remove-labTextCopy"
+                            data-action="removeLabTextCopy" data-index="{{@index}}" title="Delete lab text">
                             <i class="ars-Icon_Delete_Hand_Gesture"></i></a>
                         </li>
                       {{/each}}
@@ -237,9 +237,9 @@
           {{/each}}
         </ul>
         <div class="scriptorium resource">
-          <button class="arm5e flex02 create-copying-activity" style="font-family: bookAntika"
-            data-index="{{copyingTopicIndex}}" data-ability-id="{{copying.scribe.ability}}"
-            data-spell-id="{{copying.scribe.spell}}"
+          <button class="arm5e flex02 create-copying-activity" data-action="createCopyingActivity"
+            style="font-family: bookAntika" data-index="{{copyingTopicIndex}}"
+            data-ability-id="{{copying.scribe.ability}}" data-spell-id="{{copying.scribe.spell}}"
             {{ui.copying.createPossible}}>{{localize "arm5e.scriptorium.button"}}</button>
         </div>
 

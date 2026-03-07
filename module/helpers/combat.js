@@ -59,7 +59,12 @@ export class QuickCombat extends foundry.applications.api.HandlebarsApplicationM
       width: 260,
       height: "auto"
     },
-    tag: "form"
+    tag: "form",
+    actions: {
+      roll: QuickCombat.roll,
+      soakDamage: QuickCombat.soakDamage,
+      computeDamage: QuickCombat.computeDamage
+    }
   };
 
   static PARTS = {
@@ -84,24 +89,26 @@ export class QuickCombat extends foundry.applications.api.HandlebarsApplicationM
 
   _onRender(context, options) {
     this.object.actor.apps[this.appId] = this;
+  }
 
-    this.element.querySelectorAll(".rollable").forEach((element) => {
-      element.addEventListener("click", async (event) => await this.object.actor.sheet.roll(event));
-    });
-    this.element.querySelector(".soak-damage")?.addEventListener("click", async (event) => {
-      const msg = await this.object.actor.sheet._onSoakDamage(getDataset(event));
-      if (msg == null) return;
-      if (msg.system.impact.woundGravity) {
-        await this.object.actor.changeWound(
-          1,
-          CONFIG.ARM5E.recovery.rankMapping[msg.system.impact.woundGravity]
-        );
-      }
-      Arm5eChatMessage.create(msg.toObject());
-    });
-    this.element.querySelector(".damage")?.addEventListener("click", async () => {
-      await computeDamage(this.object.actor);
-    });
+  static async roll(event, target) {
+    await this.object.actor.sheet.roll(target.dataset);
+  }
+
+  static async soakDamage(event, target) {
+    const msg = await this.object.actor.sheet._onSoakDamage(target.dataset);
+    if (msg == null) return;
+    if (msg.system.impact.woundGravity) {
+      await this.object.actor.changeWound(
+        1,
+        CONFIG.ARM5E.recovery.rankMapping[msg.system.impact.woundGravity]
+      );
+    }
+    Arm5eChatMessage.create(msg.toObject());
+  }
+
+  static async computeDamage(event, target) {
+    await computeDamage(this.object.actor);
   }
 
   async close(options = {}) {
@@ -163,7 +170,14 @@ export class QuickVitals extends foundry.applications.api.HandlebarsApplicationM
       width: 260,
       height: "auto"
     },
-    tag: "form"
+    tag: "form",
+    actions: {
+      rest: QuickVitals.rest,
+      addFatigue: QuickVitals.addFatigue,
+      removeFatigue: QuickVitals.removeFatigue,
+      addWound: QuickVitals.addWound,
+      recovery: QuickVitals.recovery
+    }
   };
 
   static PARTS = {
@@ -185,32 +199,31 @@ export class QuickVitals extends foundry.applications.api.HandlebarsApplicationM
 
   _onRender(context, options) {
     this.object.actor.apps[this.appId] = this;
+  }
 
-    this.element.querySelector(".rest")?.addEventListener("click", async () => {
-      await this.object.actor.rest();
-      this.render();
-    });
-    this.element.querySelector(".addFatigue")?.addEventListener("click", async () => {
-      await this.object.actor.loseFatigueLevel(1, false);
-      this.render();
-    });
-    this.element.querySelector(".removeFatigue")?.addEventListener("click", async () => {
-      await this.object.actor.recoverFatigueLevel(1);
-      this.render();
-    });
-    this.element.querySelectorAll(".addWound")?.forEach((element) => {
-      element.addEventListener("click", async (event) => {
-        event.preventDefault();
-        const dataset = event.currentTarget.dataset;
-        await this.object.actor.changeWound(1, dataset.type);
-        this.render();
-      });
-    });
-    this.element.querySelector(".recovery")?.addEventListener("click", async (event) => {
-      event.preventDefault();
-      await this.object.actor.sheet.render(true);
-      this.render();
-    });
+  static async rest(event, target) {
+    await this.object.actor.rest();
+    this.render();
+  }
+
+  static async addFatigue(event, target) {
+    await this.object.actor.loseFatigueLevel(1, false);
+    this.render();
+  }
+
+  static async removeFatigue(event, target) {
+    await this.object.actor.recoverFatigueLevel(1);
+    this.render();
+  }
+
+  static async addWound(event, target) {
+    await this.object.actor.changeWound(1, target.dataset.type);
+    this.render();
+  }
+
+  static async recovery(event, target) {
+    await this.object.actor.sheet.render(true);
+    this.render();
   }
 
   async close(options = {}) {

@@ -1,5 +1,4 @@
-<form class="{{cssClass}} scriptorium scriptorium-sheet" autocomplete="off">
-  {{> "systems/arm5e/templates/generic/parts/scriptorium-header.hbs" }}
+<div class="{{cssClass}} scriptorium scriptorium-sheet" autocomplete="off">
   <h1 class="scriptorium-title width: 100%;" text-align="center">Scriptorium</h1>
   <header class="scriptorium-header flex0">
     <div class="flexrow" style="margin-left: 32px; margin-right: 57px;">
@@ -37,7 +36,7 @@
 
   </nav>
   <div class="marginsides32">
-    {{> "systems/arm5e/templates/generic/metalic-bar.html" topoffset="-7px" }}
+    {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
   </div>
   {{!-- Sheet Body --}}
 
@@ -51,10 +50,6 @@
     *** COPYING ****
     **************** -->
     {{> "systems/arm5e/templates/generic/parts/scriptorium-copying.html"  }}
-    <!-- <div class="tab marginsides32" data-group="primary" data-tab="other">
-      <label>WIP</label>
-     -->
   </section>
 
-  {{> "systems/arm5e/templates/generic/parts/scriptorium-footer.hbs"  }}
-</form>
+</div>

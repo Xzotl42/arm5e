@@ -45,21 +45,25 @@
       </div> -->
       <div class="flexrow">
         <div class="flex0">
-          <a class="group-schedule flex0" style="width: 36px"
+          <a class="group-schedule flex0" data-action="displaySchedule" style="width: 36px"
             ><i class="ars-icon-Tool_AstrolabBig"></i
           ></a>
         </div>
         <div class="flexrow" style="margin: 10px">
           {{#if (eq dateChange "disabled")}}
-          <div class="show-calendar" style="height: 48px; width: 48px; max-width: 48px">
+          <div
+            class="show-calendar"
+            data-action="showCalendar"
+            style="height: 48px; width: 48px; max-width: 48px"
+          >
             <i class="fas fa-calendar simple-calendar-icon"></i>
           </div>
           {{else}}
-          <button class="astrolab button set-date" style="font-size: 16pt">
+          <button class="astrolab button set-date" data-action="setDate" style="font-size: 16pt">
             {{localize "arm5e.astrolab.setWorldDate"}}
           </button>
           {{/if}}
-          <button class="astrolab button rest-all" style="font-size: 16pt">
+          <button class="astrolab button rest-all" data-action="restAll" style="font-size: 16pt">
             {{localize "arm5e.astrolab.restAll"}}
           </button>
         </div>

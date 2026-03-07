@@ -920,7 +920,8 @@
         "unconfirmedLang": "Por favor, confirme se o escriba fala todas as línguas listadas.",
         "unfamiliarTopic": "Tópico incomun ({topic}), qualquer cópica pode ser corrompida (Confirmar com narrador).",
         "unfamiliarTopic2": "Confirme com o narrador se o escriba é talentoso o suficiente na habilidade relacionada.",
-        "whichItem": "Não conseguiu encontrar nenhum {item} conhecido pelo leitor. Selecione um se disponível."
+        "whichItem": "Não conseguiu encontrar nenhum {item} conhecido pelo leitor. Selecione um se disponível.",
+        "error": "Ocorreu um erro inesperado no Scriptorium. Verifique o console do navegador (F12) para mais detalhes."
       },
       "quickCopy": "Cópia rápida",
       "reader": {
