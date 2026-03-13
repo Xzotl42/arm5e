@@ -355,6 +355,8 @@
       "summary": "Aging summary"
     },
     "astrolab": {
+      "nextSeason": "Next season",
+      "prevSeason": "Previous season",
       "restAll": "Rest everyone",
       "setWorldDate": "Set world date",
       "trackResources": "Track resources",
@@ -1047,9 +1049,15 @@
       "button": {
         "endRecovery": "End the recovery",
         "endSeason": "End the season",
-        "recovery": "Roll for recovery"
+        "fastRecovery": "Fast recovery (auto-roll)",
+        "recovery": "Roll for recovery",
+        "rollSingle": "Roll wound recovery"
       },
+      "woundRecovery": "Wound recovery",
+      "woundsRecovery": "Wounds recovery",
+      "overstrain": "Overstrain check",
       "daysAvailbable": "Days available",
+      "dayOfSeason": "Season day",
       "daysLeft": "{days} days left on next recovery roll",
       "labHealth": "Sanctum help",
       "log": "Patient's file",
@@ -1057,6 +1065,7 @@
       "medicalHistory": "Medical history",
       "msg": {
         "clearHistory": "Clear medical history",
+        "incapDeath": "The patient dies! (incapacitating wound check botched)",
         "logDay": "Recovery period, day {day}",
         "logDone": "Nothing else can be done this season.",
         "logHealed": "Wound completly healed in {days} days",
@@ -1065,9 +1074,22 @@
         "logWoundBetter": "Wound improvement in {days} days",
         "logWoundStable": "Wound stabilized",
         "logWoundWorse": "Wound gets worse in {days} days",
+        "noWoundsForOverstrain": "No active wounds to apply an overstrain check.",
+        "notOpen": "Open the Sanatorium window first, then roll from here.",
+        "incapMustBeFirst": "Incapacitating wounds must be treated before lighter wounds can be rolled individually.",
+        "nextSeason": "Advancing to {season} {year}.",
+        "overstrainNote": "Worsened by overstrain in {season} {year}.",
+        "overstrainStable": "Wound holds — no worsening from overstraining.",
+        "overstrainWorsened": "{name} worsened to {type} due to overstraining!",
+        "sunriseRoll": "Sunrise",
+        "sunsetRoll": "Sunset",
         "patientDead": "The patient is dead!",
         "patientDied": "The patient died!",
-        "patientHealthy": "The patient is healthy!"
+        "patientHealthy": "The patient is healthy!",
+        "worstPenaltyNote": "Wound penalty of {penalty} was sustained for {days} days this season.",
+        "penaltyAdviceLight": "The character can travel and study normally, but cannot undertake strenuous activities, including casting spells that cost Fatigue. Hermetic Lab work and craft work can be undertaken as normal.",
+        "penaltyAdviceMedium": "The character can walk, provided he is allowed to go slowly and take frequent rests. All long-distance travel rates are halved. The character may study, but his Advancement Total is halved if he is at this level of penalty for one month or more of the season. Hermetic Lab work and craft work are impossible.",
+        "penaltyAdviceHeavy": "The character can talk, eat, and move himself short distances given time and assistance. Productive activities (including study, Hermetic Lab work, and craft work) are impossible."
       },
       "mundaneHelp": "Mundane help",
       "recoveryBonus": "Recovery bonus",
@@ -1106,6 +1128,7 @@
         "dropBookTopic": "Drop a book and pick a topic type.",
         "dropCharacter": "Drop a character here.",
         "dropLabText": "Drop a owned spell or draft laboratory text.",
+        "emptyBook": "The book is empty, you cannot learn anything from it.",
         "illiterate": "The reader doesn't know how to read. (Artes Liberales 1+)",
         "invalidLevel": "Invalid level.",
         "invalidQuality": "Invalid quality.",
@@ -1125,7 +1148,8 @@
         "unconfirmedLang": "Please confirm that the scribe speaks all languages listed.",
         "unfamiliarTopic": "Unfamiliar topic ({topic}), any copy may be corrupted and useless (Confirm with storyguide).",
         "unfamiliarTopic2": "Confirm with the Storyguide that the scribe is skilled enough in a related ability.",
-        "whichItem": "Couldn't match any {item} known by the reader. Pick one if applicable."
+        "whichItem": "Couldn't match any {item} known by the reader. Pick one if applicable.",
+        "error": "An unexpected error occurred in the Scriptorium. Please check the browser console (F12) for details."
       },
       "quickCopy": "Quick copy",
       "reader": {

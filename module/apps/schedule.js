@@ -15,11 +15,12 @@ export class Schedule extends HandlebarsApplicationMixin(ApplicationV2) {
     super(options);
     this.displayYear = null;
     this.actor = options.document;
+    this.actor.apps[this.options.uniqueId] = this; // Register with actor's app management
   }
 
   async close(options = {}) {
-    if (this.actor?.apps) {
-      delete this.actor.apps[this.appId];
+    if (this.actor?.apps?.[this.options.uniqueId] != undefined) {
+      delete this.actor.apps[this.options.uniqueId];
     }
     return super.close(options);
   }
@@ -32,7 +33,12 @@ export class Schedule extends HandlebarsApplicationMixin(ApplicationV2) {
       width: 600,
       height: "auto"
     },
-    tag: "form"
+    tag: "form",
+    actions: {
+      changeYear: Schedule.changeYear,
+      openItem: Schedule.openItem,
+      createItem: Schedule.createItem
+    }
   };
 
   get title() {
@@ -214,33 +220,28 @@ export class Schedule extends HandlebarsApplicationMixin(ApplicationV2) {
     super._onRender(context, options);
     const html = this.element;
     html.querySelector(".change-year").addEventListener("change", this._setYear.bind(this));
-    html
-      .querySelector(".next-step")
-      .addEventListener("click", async (event) => this._changeYear(event, 1));
-    html
-      .querySelector(".previous-step")
-      .addEventListener("click", async (event) => this._changeYear(event, -1));
-    html.querySelectorAll(".vignette").forEach((el) => {
-      el.addEventListener("click", async (event) => {
-        event.stopPropagation();
-        const item = this.actor.items.get(event.currentTarget.dataset.id);
-        if (item) {
-          item.apps[this.appId] = this;
-          item.sheet.render(true, { focus: true });
-        }
-      });
-    });
+  }
 
-    // Add Inventory Item
-    html.querySelectorAll(".item-create").forEach((el) => {
-      el.addEventListener("click", async (event) => {
-        const dataset = getDataset(event);
-        if (event.stopPropagation) event.stopPropagation();
-        let data = { type: dataset.type, dates: [{ season: dataset.season, year: dataset.year }] };
-        await this.actor.sheet._onItemCreate(data);
-        this.render();
-      });
-    });
+  static async changeYear(event, target) {
+    const newYear = Number(target.dataset.year) + parseInt(target.dataset.offset);
+    if (newYear < 0) return;
+    this.displayYear = newYear;
+    this.render();
+  }
+
+  static async openItem(event, target) {
+    event.stopPropagation();
+    const item = this.actor.items.get(target.dataset.id);
+  }
+
+  static async createItem(event, target) {
+    event.stopPropagation();
+    const data = {
+      type: target.dataset.type,
+      dates: [{ season: target.dataset.season, year: target.dataset.year }]
+    };
+    await this.actor.sheet._onItemCreate(data);
+    this.render();
   }
 
   async _changeYear(event, offset) {

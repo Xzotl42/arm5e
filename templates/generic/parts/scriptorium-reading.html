@@ -1,8 +1,8 @@
-<div class="tab" data-group="primary" data-tab="reading">
-  <div style="min-height: 418px;">
+<div class="tab {{tab.cssClass}}" data-group="primary" data-tab="reading">
+  <div class="remember">
     <div class="flexcol marginsides32">
       <div class="padding4 flexrow flex-group-left">
-        <label class="section-handle  clickable" data-section="book-read"
+        <label class="section-handle  clickable" data-action="handleSection" data-section="book-read"
           data-category="scriptorium">{{localize "arm5e.sheet.book"}}</label>
       </div>
       <!-- READING - BOOK -->
@@ -17,10 +17,10 @@
           <div class="scriptorium item-header resource flexrow" style="width: 100%;">
             <div class="item-image"></div>
             <label>{{reading.book.name}}</label>
-            <a class="modifier unlink-read-book" title="Break link to book" data-index="{{topicIndex}}"><i
-                class="fas fa-link" style="font-size: 12pt;"></i></a>
+            <a class="modifier unlink-read-book" data-action="unlinkReadBook" title="Break link to book"
+              data-index="{{topicIndex}}"><i class="fas fa-link" style="font-size: 12pt;"></i></a>
           </div>
-          {{> "systems/arm5e/templates/generic/metalic-bar.html" topoffset="-7px" }}
+          {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
         {{/if}}
         <div class="scriptorium item-header resource">
           <label class="">{{localize "arm5e.activity.book.title"}}</label>
@@ -57,14 +57,14 @@
           </div>
           {{#unless (eq topicNum 1)}}
             <div class="flexrow" style="max-width: 180px;">
-              <div class="img-container"><img class="nav-arrow previous-topic clickable" data-index="{{topicIndex}}"
-                  src="systems/arm5e/assets/bLeft.png" />
+              <div class="img-container"><img class="nav-arrow previous-topic clickable" data-action="previousTopic"
+                  data-index="{{topicIndex}}" src="systems/arm5e/assets/bLeft.png" />
               </div>
               <div style="align-items:center;justify-content: center;display: flex;">
                 <label>{{localize "arm5e.sheet.topics.current" current=currentTopicNumber total=topicNum}}</label>
               </div>
-              <div class="img-container"><img class="nav-arrow next-topic clickable" data-index="{{topicIndex}}"
-                  src="systems/arm5e/assets/bRight.png" /></div>
+              <div class="img-container"><img class="nav-arrow next-topic clickable" data-action="nextTopic"
+                  data-index="{{topicIndex}}" src="systems/arm5e/assets/bRight.png" /></div>
             </div>
           {{/unless}}
         </div>
@@ -142,7 +142,7 @@
         </div>
       </div>
       <div class="padding4 flexrow flex-group-left">
-        <label class="section-handle  clickable" data-section="reader"
+        <label class="section-handle  clickable" data-action="handleSection" data-section="reader"
           data-category="scriptorium">{{localize "arm5e.scriptorium.reader.title"}}</label>
       </div>
       <!-- READING - READER -->
@@ -157,10 +157,10 @@
           <div class="scriptorium item-header resource flexrow" style="width: 100%; max-height: 32px;">
             <div class="item-image"></div>
             <label>{{reading.reader.name}}</label>
-            <a class="unlink-reader" title="Break link to reader"><i class="fas fa-link"
+            <a class="unlink-reader" data-action="unlinkReader" title="Break link to reader"><i class="fas fa-link"
                 style="font-size: 12pt;"></i></a>
           </div>
-          {{> "systems/arm5e/templates/generic/metalic-bar.html" topoffset="-7px"}}
+          {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
         {{/if}}
         {{#unless (eq reading.reader.id null)}}
           <div class="scriptorium resource">
@@ -175,8 +175,6 @@
                 valueAttr="id" nameAttr="id"}}
             </select>
           </div>
-          <div class="scriptorium resource"></div>
-          <div class="scriptorium resource"></div>
           {{#if (eq reading.book.currentTopic.category "ability")}}
             {{#unless ui.reading.error}}
               <div class="scriptorium resource">
@@ -187,7 +185,7 @@
                 </select>
               </div>
             {{/unless}}
-            <div class="scriptorium resource"></div>
+            <!-- <div class="scriptorium resource"></div> -->
           {{/if}}
           {{#if (eq reading.book.currentTopic.category "mastery")}}
             {{#unless ui.reading.error}}
@@ -200,18 +198,20 @@
               </div>
             {{/unless}}
           {{/if}}
-          <ul>
-            {{#each ui.reading.warning }}
-              <li>
-                <div class="scriptorium resource"><label class=""
-                    style="color:red; padding: 10px; text-align: center;">{{this}}</label>
-                </div>
-              </li>
-            {{/each}}
-          </ul>
+          {{#if ui.reading.warning }}
+            <ul>
+              {{#each ui.reading.warning }}
+                <li>
+                  <div class="scriptorium resource"><label class=""
+                      style="color:red; padding: 10px; text-align: center;">{{this}}</label>
+                  </div>
+                </li>
+              {{/each}}
+            </ul>
+          {{/if}}
           <div class="scriptorium resource">
-            <button class="arm5e flex02 create-reading-activity" style="font-family: bookAntika"
-              data-index="{{topicIndex}}" data-ability-id="{{reading.reader.ability}}"
+            <button class="arm5e flex02 create-reading-activity" data-action="createReadingActivity"
+              style="font-family: bookAntika" data-index="{{topicIndex}}" data-ability-id="{{reading.reader.ability}}"
               data-spell-id="{{reading.reader.spell}}"
               {{ui.reading.createPossible}}>{{localize "arm5e.scriptorium.button"}}</button>
           </div>

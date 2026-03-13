@@ -501,7 +501,6 @@ h3.dice-msg {
   font-family: var(--font-book-bold);
 }
 .arm5eInfo,
-.arm5eEffect,
 .arm5e-roll,
 .arm5eActiveEffect {
   background-image: var(--dialog-bg);
@@ -1534,6 +1533,8 @@ a.content-link i.fa-book-open {
 
   color: var(--arm5e-c-black);
   padding: 5px;
+  height: auto;
+  margin: 2px;
 }
 
 .arm5e-roll button.dialog-button,
@@ -1542,6 +1543,7 @@ a.content-link i.fa-book-open {
 .arm5e-confirm button.dialog-button,
 .arm5e-config button.dialog-button,
 .arm5e .astrolab.button,
+.arm5e .scriptorium.button,
 /* .arm5e.arm5e-config .window-content button.dialog-button, */
 .arm5e .aura-config button {
   font-family: var(--font-header);
@@ -1583,14 +1585,32 @@ a.content-link i.fa-book-open {
   padding: 5px;
 }
 
-.arm5e button:hover {
+.arm5e button:not(:disabled):hover {
   box-shadow: 0 0 10px black, 2px 2px 6px rgba(0, 0, 0, 0.6);
 }
-.arm5e .astrolab.button:hover,
-.arm5e-confirm button.dialog-button:hover,
-.arm5e-dialog button.dialog-button:hover,
-.arm5e-prompt button.dialog-button:hover {
+.arm5e .astrolab.button:not(:disabled):hover,
+.arm5e-confirm button.dialog-button:not(:disabled):hover,
+.arm5e-dialog button.dialog-button:not(:disabled):hover,
+.arm5e-prompt button.dialog-button:not(:disabled):hover {
   box-shadow: 0 0 10px var(--arm5e-c-beige);
+}
+
+.arm5e-roll button.dialog-button:disabled,
+.arm5e-prompt button.dialog-button:disabled,
+.arm5e-dialog button.dialog-button:disabled,
+.arm5e-confirm button.dialog-button:disabled,
+.arm5e-config button.dialog-button:disabled,
+.arm5e .astrolab.button:disabled,
+.arm5e .scriptorium.button:disabled,
+.arm5e button.sanatorium:disabled,
+.arm5e .aura-config button:disabled {
+  filter: grayscale(70%) brightness(-0.55);
+  box-shadow: none;
+  border-style: inset;
+  cursor: not-allowed;
+  opacity: 0.6;
+  height: auto;
+  margin: 2px;
 }
 
 .arm5e button.pm-dropdown {
@@ -1821,9 +1841,9 @@ p,
 }
 
 .astrolab-sheet .sheet-body {
-  padding: 36px;
-  padding-top: 20px;
-  padding-bottom: 0px;
+  padding: 5px;
+  /* padding-top: 20px;
+  padding-bottom: 0px; */
 }
 
 .calendar-sheet .schedule-years {
@@ -1899,19 +1919,7 @@ p,
   height: auto;
 }
 
-.arm5eEffect .sheet-body {
-  height: auto;
-  background-image: var(--dialog-bg);
-  background-repeat: repeat-y;
-  background-size: cover;
-  font-family: "var(--font-book-bold)";
-  font-size: 12pt;
-  padding-left: 32px;
-  padding-right: 32px;
-}
-
 /* .arm5eInfo .footer-background,
-.arm5eEffect .footer-background,
 .arm5e-prompt .footer-background {
   height: 50px;
 } */
@@ -1922,12 +1930,6 @@ p,
 
 /* Window-content rules consolidated at top of file */
 
-/* Dialog header backgrounds */
-.arm5eEffect .header-background img {
-  height: 30px;
-  background-size: cover;
-}
-
 /* .pickAmount.arm5e-prompt,
 .arm5e-prompt.aging,
 .arm5e-prompt.vis-study,
@@ -1936,7 +1938,7 @@ p,
   background-size: cover;
 } */
 
-.scriptorium-sheet .window-content {
+.scriptorium .window-content {
   background-image: url("../assets/scriptorium/Scriptorium_background.webp");
   background-repeat: repeat-y;
   background-size: contain;
@@ -2336,7 +2338,6 @@ input[type="number"].design-level {
 .arm5e .header-background img,
 .arm5e-prompt .header-background img,
 .arm5e-confirm .header-background img,
-.arm5eEffect .header-background img,
 .arm5eRequisite .header-background img,
 .arm5e .arm5eActiveEffect .header-background img,
 .arm5e-roll .header-background img,
@@ -2620,6 +2621,7 @@ fielgr .arm5e .sheet-header h2.covenantname input {
   height: 20px;
   width: 30px;
   border: 0px;
+  max-width: 30px;
 }
 
 .section-title {
@@ -2755,12 +2757,14 @@ div[class*="foldable-section"] {
   flex-direction: column;
   align-items: stretch;
   flex: 1 1 auto;
+  user-select: text;
 }
 
 .arm5e .backSection:has(> .prosemirror-section) {
   display: flex;
   flex-direction: column;
   align-items: stretch;
+  user-select: text;
 }
 
 .arm5e .prosemirror-editor-box {

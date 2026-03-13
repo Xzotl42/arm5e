@@ -1,4 +1,4 @@
-<div class="flexrow flex-group-center clickable expend">
+<div class="flexrow flex-group-center clickable expend" data-action="expend">
   <label class="" data-hidden="penetration">{{localize "arm5e.sheet.penetrationOptions"}}</label>
 </div>
 <div id="penetration" class="penetration hide">
@@ -6,35 +6,39 @@
     <label class="">***</label>
   </div>
   {{#unless (eq rollInfo.penetration.score 0)}}
-    <div class="flexrow flex-group-center sub">
-      <label class="">{{localize "arm5e.sheet.penetration"}}
-        ({{numberFormat rollInfo.penetration.score decimals=0 sign=true}})
-      </label>
-    </div>
-    <div class="flexrow flex-group-center sub">
-      <label class="flex02">{{localize "arm5e.sheet.speciality"}}
-        ({{rollInfo.penetration.speciality}})</label>
-      <input
-        type="checkbox"
-        class="penSpeciality"
-        name="penetration.specApply"
-        {{checked rollInfo.specApply}}
-      />
-    </div>
+  <div class="flexrow flex-group-center sub">
+    <label class=""
+      >{{localize "arm5e.sheet.penetration"}}
+      ({{numberFormat rollInfo.penetration.score decimals=0 sign=true}})
+    </label>
+  </div>
+  <div class="flexrow flex-group-center sub">
+    <label class="flex02"
+      >{{localize "arm5e.sheet.speciality"}} ({{ rollInfo.penetration.speciality }})</label
+    >
+    <input
+      type="checkbox"
+      class="penSpeciality"
+      name="penetration.specApply"
+      {{checked
+      rollInfo.specApply}}
+    />
+  </div>
   {{/unless}}
   {{#if (eq rollInfo.type "spell")}}
-    <div class="flexrow flex-group-center sub">
-      <label class="">+</label>
-    </div>
-    <div class="flexrow flex-group-center sub">
-      <label class="flex02">{{localize "arm5e.spell.masteries.penetration"}}</label>
-      <input
-        type="checkbox"
-        class="spellMastery"
-        name="penetration.spellMastery"
-        {{checked rollInfo.spellMastery}}
-      />
-    </div>
+  <div class="flexrow flex-group-center sub">
+    <label class="">+</label>
+  </div>
+  <div class="flexrow flex-group-center sub">
+    <label class="flex02">{{localize "arm5e.spell.masteries.penetration"}}</label>
+    <input
+      type="checkbox"
+      class="spellMastery"
+      name="penetration.spellMastery"
+      {{checked
+      rollInfo.spellMastery}}
+    />
+  </div>
   {{/if}}
   <div class="flexrow flex-group-center sub">
     <label class="">*</label>

@@ -1,5 +1,3 @@
-import { ARM5E } from "../config.js";
-
 import { log, error, slugify } from "../tools/tools.js";
 
 import { ACTIVE_EFFECTS_TYPES } from "../constants/activeEffectsTypes.js";
@@ -24,7 +22,9 @@ export class ArM5eActiveEffectConfig extends foundry.applications.sheets.ActiveE
       closeOnSubmit: false
     },
     actions: {
-      add: ArM5eActiveEffectConfig.addEffect
+      add: ArM5eActiveEffectConfig.addEffect,
+      option: ArM5eActiveEffectConfig.setOption,
+      deleteChange: ArM5eActiveEffectConfig.deleteChange
     }
   };
 
@@ -42,7 +42,7 @@ export class ArM5eActiveEffectConfig extends foundry.applications.sheets.ActiveE
 
   /** @override */
   static PARTS = {
-    headerFalvor: { template: "systems/arm5e/templates/generic/largeDialog-header.hbs" },
+    headerFlavor: { template: "systems/arm5e/templates/generic/parts/largeDialog-header.hbs" },
     header: {
       template: "systems/arm5e/templates/sheets/active-effect/header.hbs",
       classes: ["marginsides32"]
@@ -58,11 +58,11 @@ export class ArM5eActiveEffectConfig extends foundry.applications.sheets.ActiveE
     // duration: { template: "systems/arm5e/templates/sheets/active-effect/duration.hbs" },
     changes: {
       template: "systems/arm5e/templates/sheets/active-effect/changes.hbs",
-      scrollable: ["ol[changes-list]"],
+      scrollable: [".changes-list"],
       classes: ["marginsides32"]
     },
     // footer: { template: "templates/generic/form-footer.hbs" }
-    footer: { template: "systems/arm5e/templates/generic/largeDialog-footer.hbs" }
+    footer: { template: "systems/arm5e/templates/generic/parts/largeDialog-footer.hbs" }
   };
 
   // /** @inheritDoc */
@@ -173,6 +173,7 @@ export class ArM5eActiveEffectConfig extends foundry.applications.sheets.ActiveE
   /** @override */
 
   _onRender(context, options) {
+    super._onRender(context, options);
     // keep in mind that if your callback is a named function instead of an arrow function expression
     // you'll need to use `bind(this)` to maintain context
 
@@ -209,30 +210,16 @@ export class ArM5eActiveEffectConfig extends foundry.applications.sheets.ActiveE
         await this._setValue(e.currentTarget.value, index);
       });
     }
+  }
 
-    const changeOptions = this.element.querySelectorAll(".effect-option");
-    for (const input of changeOptions) {
-      input.addEventListener("click", async (e) => {
-        e.preventDefault();
-        e.stopImmediatePropagation();
+  static async setOption(event, target) {
+    const index = parseInt(target.dataset.index);
+    await this._setOption(index);
+  }
 
-        const index = parseInt(e.currentTarget.dataset.index);
-
-        await this._setOption(index);
-      });
-    }
-
-    const deletesChange = this.element.querySelectorAll(".effect-delete");
-    for (const input of deletesChange) {
-      input.addEventListener("click", async (e) => {
-        e.preventDefault();
-        e.stopImmediatePropagation();
-
-        const index = parseInt(e.currentTarget.dataset.index);
-
-        await this._deleteChange(index);
-      });
-    }
+  static async deleteChange(event, target) {
+    const index = parseInt(target.dataset.index);
+    await this._deleteChange(index);
   }
 
   // _castType(type, value) {
@@ -258,7 +245,8 @@ export class ArM5eActiveEffectConfig extends foundry.applications.sheets.ActiveE
         }
       }
     };
-    await this.submit({ preventClose: true, updateData: updateFlags }).then(() => this.render());
+    await this.document.update(updateFlags);
+    this.render();
   }
 
   async _setValue(value, index) {
@@ -283,7 +271,8 @@ export class ArM5eActiveEffectConfig extends foundry.applications.sheets.ActiveE
     let updateFlags = {
       changes: changesData
     };
-    await this.submit({ preventClose: true, updateData: updateFlags }).then(() => this.render());
+    await this.document.update(updateFlags);
+    this.render();
   }
 
   async _setType(value, index) {
@@ -310,7 +299,8 @@ export class ArM5eActiveEffectConfig extends foundry.applications.sheets.ActiveE
       },
       changes: changesData
     };
-    await this.submit({ preventClose: true, updateData: updateFlags }).then(() => this.render());
+    await this.document.update(updateFlags);
+    this.render();
   }
   async _setSubtype(value, index) {
     let arrayTypes = this.document.getFlag("arm5e", "type");
@@ -340,7 +330,8 @@ export class ArM5eActiveEffectConfig extends foundry.applications.sheets.ActiveE
       changes: changesData
     };
 
-    await this.submit({ preventClose: true, updateData: update }).then(() => this.render());
+    await this.document.update(update);
+    this.render();
   }
 
   static async addEffect(context) {
@@ -398,18 +389,15 @@ export class ArM5eActiveEffectConfig extends foundry.applications.sheets.ActiveE
     const changesData = this.document.changes;
     changesData[index].key = computedKey.replace("#OPTION#", chosenOption);
     updateData.changes = changesData;
-    return await this.submit({ preventClose: true, updateData: updateData });
+    return await this.document.update(updateData);
   }
 
   async _addEffectChange(updateFlags) {
     const changesData = this.document.changes;
     changesData.push({ key: "", mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: "" });
-    return await this.submit({
-      preventClose: true,
-      updateData: {
-        changes: changesData,
-        flags: updateFlags
-      }
+    return await this.document.update({
+      changes: changesData,
+      flags: updateFlags
     });
   }
 }

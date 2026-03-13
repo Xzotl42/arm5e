@@ -1,4 +1,4 @@
-<div class="{{ cssClass }} sanatorium sanatorium-sheet" autocomplete="off">
+<div class="{{ cssClass }} sanatorium" autocomplete="off">
   <div class="flexrow flex-between marginsides32">
     {{>"systems/arm5e/templates/generic/parts/simpleFieldBacksection.hbs" label="arm5e.sheet.stamina" name="sta"
     attributes="readonly" value=patient.system.characteristics.sta.value type="number" dtype="Number" classes="wide"}}
@@ -20,17 +20,17 @@
       <div class="resource-content flexrow flex-between">
         <div class="resource-content flexrow flex-center flex-between margintop6">
           <label
-            for="availableDays"
+            for="dayOfSeason"
             class="smallTitle"
             style="font-size: 14pt"
-            >{{localize "arm5e.sanatorium.daysAvailbable"}}</label
+            >{{localize "arm5e.sanatorium.dayOfSeason"}}</label
           >
 
           <input
             type="number"
-            name="availableDays"
+            name="dayOfSeason"
             {{dateChange}}
-            value="{{ availableDays }}"
+            value="{{ dayOfSeason }}"
             data-dtype="Number"
             class="sanatorium change-available-days select-on-focus"
             style="font-size: 14pt"
@@ -39,7 +39,7 @@
         <div class="resource-content flexrow flex-center flex-between margintop6">
           <label
             class="smallTitle"
-            style="font-size: 16pt"
+            style="font-size: 14pt"
             >{{localize "arm5e.sheet.season"}}</label
           >
           <input
@@ -55,7 +55,7 @@
           <label
             for="curYear"
             class="smallTitle"
-            style="font-size: 16pt"
+            style="font-size: 14pt"
             >{{localize "arm5e.sheet.year"}}</label
           >
           <input
@@ -113,12 +113,39 @@
       </div>
     </div>
   </div>
-  <div class="flexrow marginsides32">
-    <button class="sanatorium button recovery-roll" style="font-size: 16pt" {{canRoll}}>
+  <div class="flexrow marginsides32" style="align-items: stretch">
+    <button
+      class="sanatorium recovery-roll"
+      data-action="recoveryRoll"
+      style="font-size: 16pt"
+      {{canRoll}}
+    >
       {{localize "arm5e.sanatorium.button.recovery"}}
     </button>
-    <button class="sanatorium button diary-entry" style="font-size: 16pt" {{diary}}>
-      {{localize "arm5e.sanatorium.button.endSeason"}}
+    <button
+      class="dialog-button long-label sanatorium fast-recovery"
+      data-action="fastRecovery"
+      style="font-size: 16pt"
+      {{#if (eq rollMode "none")}}{{else}}disabled{{/if}}
+      {{canRoll}}
+    >
+      {{localize "arm5e.sanatorium.button.fastRecovery"}}
+    </button>
+    <button
+      class="sanatorium overstrain-roll"
+      data-action="overstrainRoll"
+      style="font-size: 16pt"
+      {{canOverstrain}}
+    >
+      {{localize "arm5e.sanatorium.overstrain"}}
+    </button>
+    <button
+      class="sanatorium diary-entry"
+      data-action="createDiaryEntry"
+      style="font-size: 16pt"
+      {{diary}}
+    >
+      {{localize diaryLabel}}
     </button>
   </div>
 </div>

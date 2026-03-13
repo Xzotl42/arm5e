@@ -1,4 +1,5 @@
 import { convertToNumber, debug, log } from "../tools/tools.js";
+import { getShiftedDate } from "../tools/time.js";
 import { GroupSchedule } from "./group-schedule.js";
 
 // Similar syntax to importing, but note that
@@ -31,7 +32,15 @@ export class Astrolabium extends HandlebarsApplicationMixin(ApplicationV2) {
       width: 600,
       height: "auto"
     },
-    tag: "form"
+    tag: "form",
+    actions: {
+      setDate: Astrolabium.setDate,
+      restAll: Astrolabium.restAll,
+      displaySchedule: Astrolabium.displaySchedule,
+      showCalendar: Astrolabium.showCalendar,
+      prevSeason: Astrolabium.prevSeason,
+      nextSeason: Astrolabium.nextSeason
+    }
   };
 
   get title() {
@@ -75,11 +84,6 @@ export class Astrolabium extends HandlebarsApplicationMixin(ApplicationV2) {
   _onRender(context, options) {
     super._onRender(context, options);
     const html = this.element;
-    html.querySelector(".set-date").addEventListener("click", this.setDate.bind(this));
-    html.querySelector(".rest-all").addEventListener("click", this.restEveryone.bind(this));
-    html
-      .querySelector(".group-schedule")
-      .addEventListener("click", this.displaySchedule.bind(this));
     html.querySelector(".trackRes").addEventListener("change", async (e) => {
       e.preventDefault();
       let value = e.target.checked;
@@ -87,16 +91,51 @@ export class Astrolabium extends HandlebarsApplicationMixin(ApplicationV2) {
       log(false, `value=${value}, settting=${oldValue}`);
       await game.settings.set("arm5e", "trackResources", !oldValue);
     });
+  }
+
+  static async setDate(event, target) {
+    await this.setDate(event);
+  }
+
+  static async restAll(event, target) {
+    await this.restEveryone(event);
+  }
+
+  static async displaySchedule(event, target) {
+    await this.displaySchedule(event);
+  }
+
+  static async showCalendar(event, target) {
     if (game.modules.get("foundryvtt-simple-calendar")?.active) {
-      html.querySelector(".show-calendar").addEventListener("click", (e) => {
-        SimpleCalendar.api.showCalendar(null, true);
-      });
+      SimpleCalendar.api.showCalendar(null, true);
     }
+  }
+
+  static async prevSeason(event, target) {
+    await this.shiftSeason(-1);
+  }
+
+  static async nextSeason(event, target) {
+    await this.shiftSeason(1);
   }
   async displaySchedule(event) {
     event.preventDefault();
     const schedule = new GroupSchedule();
     const res = await schedule.render(true);
+  }
+
+  async shiftSeason(offset) {
+    const currentDate = game.settings.get("arm5e", "currentDate");
+    const newDate = getShiftedDate(currentDate, offset);
+    ui.notifications.info(
+      game.i18n.format("arm5e.notification.setDate", {
+        year: newDate.year,
+        season: game.i18n.localize(CONFIG.ARM5E.seasons[newDate.season].label)
+      })
+    );
+    await game.settings.set("arm5e", "currentDate", newDate);
+    Hooks.callAll("arm5e-date-change", newDate);
+    this.render();
   }
 
   async setDate(event) {

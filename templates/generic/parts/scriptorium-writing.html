@@ -1,8 +1,8 @@
-<div class="tab " data-group="primary" data-tab="writing">
-  <div style="min-height: 418px;">
+<div class="tab {{tab.cssClass}}" data-group="primary" data-tab="writing">
+  <div class="remember">
     <div class="flexcol marginsides32">
       <div class="padding4 flexrow flex-group-left">
-        <label class="section-handle  clickable" data-section="writer"
+        <label class="section-handle  clickable" data-action="handleSection" data-section="writer"
           data-category="scriptorium">{{localize "arm5e.scriptorium.writer.title"}}</label>
       </div>
       <div
@@ -17,10 +17,10 @@
           <div class="scriptorium item-header resource flexrow" style="width: 100%; max-height: 32px;">
             <div class="item-image"></div>
             <label>{{writing.writer.name}}</label>
-            <a class="unlink-writer" title="Break link to writer"><i class="fas fa-link"
+            <a class="unlink-writer" data-action="unlinkWriter" title="Break link to writer"><i class="fas fa-link"
                 style="font-size: 12pt;"></i></a>
           </div>
-          {{> "systems/arm5e/templates/generic/metalic-bar.html" topoffset="-7px"}}
+          {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
         {{/if}}
         {{#unless (eq writing.writer.id null)}}
           <div class="scriptorium resource">
@@ -69,7 +69,7 @@
         {{/unless}}
       </div>
       <div class="padding4 flexrow flex-group-left">
-        <label class="section-handle  clickable" data-section="book-write"
+        <label class="section-handle  clickable" data-action="handleSection" data-section="book-write"
           data-category="scriptorium">{{localize "arm5e.sheet.book"}}</label>
       </div>
       <div
@@ -143,8 +143,8 @@
                     <ul>
                       {{#each labTexts}}
                         <li data-index="{{@index}}" data-uuid="{{this.uuid}}"><label>"{{this.name}}" :
-                            {{this.label}}{{this.level}}</label><a class="remove-labText" data-index="{{@index}}"
-                            title="Delete lab text">
+                            {{this.label}}{{this.level}}</label><a class="remove-labText" data-action="removeLabText"
+                            data-index="{{@index}}" title="Delete lab text">
                             <i class="ars-Icon_Delete_Hand_Gesture"></i></a>
                         </li>
                       {{/each}}
@@ -175,8 +175,8 @@
           {{else}}
             <div class="padding12">
               <label>{{localize "arm5e.scriptorium.msg.appendTopicTitle" title=writing.book.name}}</label><a
-                class="unlink-bookAppend" title="Break link to book"><i class="fas fa-link"
-                  style="font-size: 12pt;"></i></a>
+                class="unlink-bookAppend" data-action="unlinkWriteBook" title="Break link to book"><i
+                  class="fas fa-link" style="font-size: 12pt;"></i></a>
             </div>
           {{/unless}}
         {{/unless}}
@@ -189,8 +189,8 @@
         {{/each}}
       </ul>
       <div class="scriptorium resource">
-        <button class="arm5e flex02 create-writing-activity" style="font-family: bookAntika"
-          data-index="{{newTopicIndex}}" data-ability-id="{{writing.writer.ability}}"
+        <button class="arm5e flex02 create-writing-activity" data-action="createWritingActivity"
+          style="font-family: bookAntika" data-index="{{newTopicIndex}}" data-ability-id="{{writing.writer.ability}}"
           data-category="{{writing.book.newTopic.category}}" data-spell-id="{{writing.writer.spell}}"
           {{ui.writing.createPossible}}>{{localize "arm5e.scriptorium.button"}}</button>
       </div>

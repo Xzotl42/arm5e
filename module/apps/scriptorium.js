@@ -1,5 +1,7 @@
 import { ArM5eActor } from "../actor/actor.js";
 import { FLAVORS } from "../constants/ui.js";
+const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
+const { DragDrop } = foundry.applications.ux;
 import ArM5eActiveEffect from "../helpers/active-effects.js";
 import { computeLevel, spellFormLabel, spellTechniqueLabel } from "../helpers/magic.js";
 import { getTopicDescription } from "../item/item-book-sheet.js";
@@ -82,7 +84,7 @@ export class ScriptoriumObject {
             language: game.i18n.localize("arm5e.skill.commonCases.latin"),
             quality: 1,
             level: 1,
-            key: "",
+            key: "animalHandling",
             option: "",
             spellName: "",
             art: "",
@@ -113,7 +115,7 @@ export class ScriptoriumObject {
             language: game.i18n.localize("arm5e.skill.commonCases.latin"),
             quality: 1,
             level: 1,
-            key: "",
+            key: "animalHandling",
             option: "",
             name: "",
             spellName: "",
@@ -133,105 +135,208 @@ export class ScriptoriumObject {
   labTexts = [];
 }
 
-export class Scriptorium extends FormApplication {
-  constructor(data, options) {
-    super(data, options);
+export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
+  #dragDrop;
+
+  constructor(data, options = {}) {
+    super(options);
+    this.object = data;
     data.lists = {
       books: game.items.filter((i) => i.type === "book"),
       labTexts: game.items.filter((i) => i.type === "laboratoryText"),
       characters: game.actors.filter((a) => a.type === "player" || a.type === "npc")
     };
     data.selected = null;
+    this.#dragDrop = this.#createDragDropHandlers();
     // Hooks.on("closeApplication", (app, html) => this.onClose(app));
   }
 
   /** @override */
-  static get defaultOptions() {
-    return foundry.utils.mergeObject(super.defaultOptions, {
-      classes: ["arm5e", "sheet", "scriptorium-sheet"],
-      title: "Scriptorium",
-      template: "systems/arm5e/templates/generic/scriptorium.html",
-      dragDrop: [
-        { dragSelector: null, dropSelector: ".drop-book" },
-        { dragSelector: null, dropSelector: ".drop-reader" },
-        { dragSelector: null, dropSelector: ".drop-scribe" },
-        { dragSelector: null, dropSelector: ".drop-writer" },
-        { dragSelector: null, dropSelector: ".append-book" },
-        { dragSelector: null, dropSelector: ".add-labtext" }
-      ],
-      tabs: [
-        {
-          navSelector: ".sheet-tabs",
-          contentSelector: ".sheet-body",
-          initial: "reading"
-        }
-      ],
-      width: "600",
-      height: "800",
+  static DEFAULT_OPTIONS = {
+    tag: "form",
+    classes: ["arm5e", "sheet", "scriptorium"],
+    window: {
+      title: "Scriptorium"
+    },
+    position: {
+      width: 600,
+      height: "auto"
+    },
+    form: {
+      handler: Scriptorium.#onSubmitHandler,
       submitOnChange: true,
       closeOnSubmit: false
-    });
-  }
+    },
+    dragDrop: [
+      { dragSelector: null, dropSelector: ".drop-book" },
+      { dragSelector: null, dropSelector: ".drop-reader" },
+      { dragSelector: null, dropSelector: ".drop-scribe" },
+      { dragSelector: null, dropSelector: ".drop-writer" },
+      { dragSelector: null, dropSelector: ".append-book" },
+      { dragSelector: null, dropSelector: ".add-labtext" }
+    ],
+    actions: {
+      setDate: Scriptorium.setDate,
+      unlinkReadBook: Scriptorium.unlinkReadBook,
+      unlinkWriteBook: Scriptorium.unlinkWriteBook,
+      removeLabText: Scriptorium.removeLabText,
+      removeLabTextCopy: Scriptorium.removeLabTextCopy,
+      unlinkReader: Scriptorium.unlinkReader,
+      unlinkWriter: Scriptorium.unlinkWriter,
+      unlinkScribe: Scriptorium.unlinkScribe,
+      createReadingActivity: Scriptorium.createReadingActivity,
+      createWritingActivity: Scriptorium.createWritingActivity,
+      createCopyingActivity: Scriptorium.createCopyingActivity,
+      handleSection: Scriptorium.handleSection,
+      nextTopic: Scriptorium.nextTopic,
+      previousTopic: Scriptorium.previousTopic,
+      nextTopicToCopy: Scriptorium.nextTopicToCopy,
+      previousTopicToCopy: Scriptorium.previousTopicToCopy,
+      removeBook: Scriptorium.removeBook
+    }
+  };
+
+  /** @override */
+  static PARTS = {
+    header: {
+      template: "systems/arm5e/templates/generic/parts/scriptorium-header.hbs"
+    },
+    tabs: {
+      template: "templates/generic/tab-navigation.hbs"
+    },
+    reading: {
+      template: "systems/arm5e/templates/generic/parts/scriptorium-reading.html",
+      scrollable: ["remember"]
+    },
+    writing: {
+      template: "systems/arm5e/templates/generic/parts/scriptorium-writing.html",
+      scrollable: ["remember"]
+    },
+    copying: {
+      template: "systems/arm5e/templates/generic/parts/scriptorium-copying.html",
+      scrollable: ["remember"]
+    },
+    footer: {
+      template: "systems/arm5e/templates/generic/parts/scriptorium-footer.hbs"
+    }
+  };
+
+  /** @override */
+  static TABS = {
+    primary: {
+      tabs: [
+        { id: "reading", label: "arm5e.activity.reading" },
+        { id: "writing", label: "arm5e.activity.writing" },
+        { id: "copying", label: "arm5e.activity.copying" }
+      ],
+      initial: "reading"
+    }
+  };
 
   _canDragDrop(selector) {
     return true;
   }
 
-  onClose(app) {
-    // If (app.object.reading.book.uuid != null) {
-    //   fromUuidSync(app.object.reading.book.uuid).apps[app.appId] = undefined;
-    // }
-    if (app.object?.reading?.reader.id != null) {
-      let reader = game.actors.get(app.object.reading.reader.id);
-      delete reader.apps[app.appId];
+  _canDragStart(selector) {
+    return true;
+  }
+
+  _onDragStart(event) {}
+
+  _onDragOver(event) {}
+
+  /**
+   * Create drag-and-drop workflow handlers for this Application
+   * @returns {DragDrop[]}
+   */
+  #createDragDropHandlers() {
+    return this.options.dragDrop.map((d) => {
+      d.permissions = {
+        dragstart: this._canDragStart.bind(this),
+        drop: this._canDragDrop.bind(this)
+      };
+      d.callbacks = {
+        dragstart: this._onDragStart.bind(this),
+        dragover: this._onDragOver.bind(this),
+        drop: this._onDrop.bind(this)
+      };
+      return new DragDrop.implementation(d);
+    });
+  }
+
+  /** @returns {DragDrop[]} */
+  get dragDrop() {
+    return this.#dragDrop;
+  }
+
+  /** @override */
+  async close(options = {}) {
+    if (this.object?.reading?.reader?.id) {
+      const reader = game.actors.get(this.object.reading.reader.id);
+      if (reader) delete reader.apps[this.options.uniqueId];
     }
+    if (this.object?.writing?.writer?.id) {
+      const writer = game.actors.get(this.object.writing.writer.id);
+      if (writer) delete writer.apps[this.options.uniqueId];
+    }
+    if (this.object?.copying?.scribe?.id) {
+      const scribe = game.actors.get(this.object.copying.scribe.id);
+      if (scribe) delete scribe.apps[this.options.uniqueId];
+    }
+    return super.close(options);
   }
 
   async _onDrop(event) {
-    const dropData = foundry.applications.ux.TextEditor.getDragEventData(event);
-    if (dropData.type == "Item") {
-      // If (this.item.system.activity === "teaching" || this.item.system.activity === "training") {
+    try {
+      const dropData = foundry.applications.ux.TextEditor.getDragEventData(event);
+      if (dropData.type == "Item") {
+        // If (this.item.system.activity === "teaching" || this.item.system.activity === "training") {
 
-      if (event.currentTarget.dataset.drop === "book") {
-        const book = await Item.implementation.fromDropData(dropData);
-        if (book.type === "book") {
-          await this._setReadingBook(book);
+        if (event.currentTarget.dataset.drop === "book") {
+          const book = await Item.implementation.fromDropData(dropData);
+          if (book.type === "book") {
+            await this._setReadingBook(book);
+          }
+        } else if (event.currentTarget.dataset.drop === "append-book") {
+          const book = await Item.implementation.fromDropData(dropData);
+          if (book.type === "book") {
+            await this._setWritingBook(book);
+          }
+        } else if (event.currentTarget.dataset.drop === "add-labtext") {
+          const text = await Item.implementation.fromDropData(dropData);
+          if (text.type == "laboratoryText") {
+            await this._addLabText(text);
+          }
+        } else if (event.currentTarget.dataset.drop === "copy-book") {
+          const book = await Item.implementation.fromDropData(dropData);
+          if (book.type === "book") {
+            await this._addBookToCopy(book, dropData.topicIdx);
+          } else if (book.type === "laboratoryText") {
+            await this._addLabTextToCopy(book);
+          }
         }
-      } else if (event.currentTarget.dataset.drop === "append-book") {
-        const book = await Item.implementation.fromDropData(dropData);
-        if (book.type === "book") {
-          await this._setWritingBook(book);
-        }
-      } else if (event.currentTarget.dataset.drop === "add-labtext") {
-        const text = await Item.implementation.fromDropData(dropData);
-        if (text.type == "laboratoryText") {
-          await this._addLabText(text);
-        }
-      } else if (event.currentTarget.dataset.drop === "copy-book") {
-        const book = await Item.implementation.fromDropData(dropData);
-        if (book.type === "book") {
-          await this._addBookToCopy(book, dropData.topicIdx);
-        } else if (book.type === "laboratoryText") {
-          await this._addLabTextToCopy(book);
+      } else if (dropData.type == "Actor") {
+        if (event.currentTarget.dataset.drop === "reader") {
+          const reader = await Actor.implementation.fromDropData(dropData);
+          if (reader.type === "player" || reader.type === "npc") {
+            await this._setReader(reader);
+          }
+        } else if (event.currentTarget.dataset.drop === "writer") {
+          const writer = await Actor.implementation.fromDropData(dropData);
+          if (writer.type === "player" || writer.type === "npc") {
+            await this._setWriter(writer);
+          }
+        } else if (event.currentTarget.dataset.drop === "scribe") {
+          const scribe = await Actor.implementation.fromDropData(dropData);
+          if (scribe.type === "player" || scribe.type === "npc") {
+            await this._setScribe(scribe);
+          }
         }
       }
-    } else if (dropData.type == "Actor") {
-      if (event.currentTarget.dataset.drop === "reader") {
-        const reader = await Actor.implementation.fromDropData(dropData);
-        if (reader.type === "player" || reader.type === "npc") {
-          await this._setReader(reader);
-        }
-      } else if (event.currentTarget.dataset.drop === "writer") {
-        const writer = await Actor.implementation.fromDropData(dropData);
-        if (writer.type === "player" || writer.type === "npc") {
-          await this._setWriter(writer);
-        }
-      } else if (event.currentTarget.dataset.drop === "scribe") {
-        const scribe = await Actor.implementation.fromDropData(dropData);
-        if (scribe.type === "player" || scribe.type === "npc") {
-          await this._setScribe(scribe);
-        }
-      }
+    } catch (err) {
+      console.error("Scriptorium | _onDrop failed:", err);
+      ui.notifications.error(game.i18n.localize("arm5e.scriptorium.msg.error"));
+      this.render();
     }
   }
 
@@ -251,8 +356,16 @@ export class Scriptorium extends FormApplication {
     return usercache.scriptorium;
   }
 
-  async getData(options = {}) {
-    const context = foundry.utils.expandObject(await super.getData().object);
+  async _updateData(updateData) {
+    foundry.utils.mergeObject(this.object, foundry.utils.expandObject(updateData), {
+      recursive: true
+    });
+    this.render();
+  }
+
+  async _prepareContext(options) {
+    const context = foundry.utils.expandObject(this.object);
+    context.tabs = this._prepareTabs("primary");
     context.ui = {
       ...this.getUserCache(),
       reading: { warning: [], error: false, createPossible: "disabled" },
@@ -260,19 +373,17 @@ export class Scriptorium extends FormApplication {
       copying: { warning: [], error: false, createPossible: "disabled" },
       editItem: ""
     };
-    let currentDate = game.settings.get("arm5e", "currentDate");
+    const currentDate = game.settings.get("arm5e", "currentDate");
     context.curYear = currentDate.year;
     context.curSeason = currentDate.season;
+
+    return context;
+  }
+
+  // --- per-part context helpers (called from _preparePartContext) ---
+
+  _prepareReadingContext(context) {
     if (context.reading.book.uuid !== null) {
-      context.ui.canEditBook = "readonly";
-      context.ui.disabledBook = "disabled";
-    }
-
-    if (context.writing.book.uuid !== null) {
-      context.ui.canEditTitle = "readonly";
-    }
-
-    if (context.copying.books.length) {
       context.ui.canEditBook = "readonly";
       context.ui.disabledBook = "disabled";
     }
@@ -280,34 +391,14 @@ export class Scriptorium extends FormApplication {
     let maxLevel = 99;
     const topicIndex = Number(context.reading.book.system.topicIndex);
     // For convenience
-
-    context.topicIndex = Number(topicIndex);
-    const currentTopic = context.reading.book.system.topics[context.topicIndex];
+    context.topicIndex = topicIndex;
+    const currentTopic = context.reading.book.system.topics[topicIndex];
     if (currentTopic.type === "Summa" || currentTopic.level) {
       maxLevel = currentTopic.level;
     }
-
     context.reading.book.currentTopic = currentTopic;
-    context.currentTopicNumber = context.topicIndex + 1 ?? 1;
+    context.currentTopicNumber = topicIndex + 1 ?? 1;
     context.topicNum = context.reading.book.system.topics.length ?? 1;
-    // New topic => writing
-
-    context.newTopicIndex = context.writing.book.system.topics.length - 1;
-    const newTopic = context.writing.book.system.topics[context.newTopicIndex];
-    context.writing.book.newTopic = newTopic;
-    context.copying.copyTypes = {
-      ...CONFIG.ARM5E.books.types,
-      labText: game.i18n.localize("ITEM.TypeLaboratorytext")
-    };
-
-    // Copied topic
-    for (const book of context.copying.books) {
-      const copyingTopicIndex = book.system.topicIndex;
-      book.currentTopicToCopyNumber = copyingTopicIndex + 1 ?? 1;
-      book.copyTopicNum = book.system.topics.length ?? 1;
-      book.currentTopic = book.system.topics[copyingTopicIndex];
-    }
-    // Context.copyingTopicIndex = context.copying.currentTopic;
 
     // READING SECTION
 
@@ -487,11 +578,23 @@ export class Scriptorium extends FormApplication {
       this.checkReading(context, reader);
       // Log(false, `Scriptorium reading data: ${JSON.stringify(context.reading)}`);
     }
+    if (context.ui.reading.error === false) {
+      context.ui.reading.createPossible = "";
+    }
+  }
 
-    // //////////////
+  _prepareWritingContext(context) {
+    if (context.writing.book.uuid !== null) {
+      context.ui.canEditTitle = "readonly";
+    }
+    // New topic => writing
+    context.newTopicIndex = context.writing.book.system.topics.length - 1;
+    const newTopic = context.writing.book.system.topics[context.newTopicIndex];
+    context.writing.book.newTopic = newTopic;
+
     // WRITING section
-    // /////////////
     if (context.writing.writer?.id) {
+      let maxLevel = 99;
       if (newTopic.type === "Summa" || newTopic.level) {
         maxLevel = newTopic.level;
       }
@@ -720,6 +823,27 @@ export class Scriptorium extends FormApplication {
     } else {
       context.ui.writing.error = true;
     }
+    if (context.ui.writing.error === false) {
+      context.ui.writing.createPossible = "";
+    }
+  }
+
+  _prepareCopyingContext(context) {
+    if (context.copying.books.length) {
+      context.ui.canEditBook = "readonly";
+      context.ui.disabledBook = "disabled";
+    }
+    context.copying.copyTypes = {
+      ...CONFIG.ARM5E.books.types,
+      labText: game.i18n.localize("ITEM.TypeLaboratorytext")
+    };
+    // Copied topic
+    for (const book of context.copying.books) {
+      const copyingTopicIndex = book.system.topicIndex;
+      book.currentTopicToCopyNumber = copyingTopicIndex + 1 ?? 1;
+      book.copyTopicNum = book.system.topics.length ?? 1;
+      book.currentTopic = book.system.topics[copyingTopicIndex];
+    }
 
     // COPYING SECTION
 
@@ -812,75 +936,228 @@ export class Scriptorium extends FormApplication {
       }
 
       this.checkCopying(context, scribe);
-
       // Log(false, `Scriptorium copying data: ${JSON.stringify(context.copying)}`);
     } else {
       context.ui.copying.error = true;
     }
     context.copying.topicTypeChange =
       context.copying.books.length || context.copying.labTexts.length ? "disabled" : "";
-
-    if (context.ui.reading.error === false) {
-      context.ui.reading.createPossible = "";
-    }
-    if (context.ui.writing.error === false) {
-      context.ui.writing.createPossible = "";
-    }
     if (context.ui.copying.error === false) {
       context.ui.copying.createPossible = "";
     }
+  }
 
-    // Log(false, `Scriptorium ui: ${JSON.stringify(context.ui)}`);
+  /** @override */
+  async _preparePartContext(partId, context) {
+    switch (partId) {
+      case "reading":
+        context.tab = context.tabs[partId];
+        this._prepareReadingContext(context);
+        break;
+      case "writing":
+        context.tab = context.tabs[partId];
+        this._prepareWritingContext(context);
+        break;
+      case "copying":
+        context.tab = context.tabs[partId];
+        this._prepareCopyingContext(context);
+        break;
+      default:
+        break;
+    }
     return context;
   }
 
-  activateListeners(html) {
-    super.activateListeners(html);
-    html.find(".set-date").click(this.setDate.bind(this));
-    html.find(".change-season").change(this._changeSeason.bind(this));
-    html.find(".change-year").change(this._changeYear.bind(this));
-    html.find(".book-topic-change").change(this._changeBookTopic.bind(this));
-    html.find(".unlink-read-book").click(this._resetReadBook.bind(this));
+  _onRender(context, options) {
+    super._onRender(context, options);
+    const html = this.element;
+    html
+      .querySelectorAll(".change-season")
+      .forEach((el) => el.addEventListener("change", this._changeSeason.bind(this)));
+    html
+      .querySelectorAll(".change-year")
+      .forEach((el) => el.addEventListener("change", this._changeYear.bind(this)));
+    html
+      .querySelectorAll(".book-topic-change")
+      .forEach((el) => el.addEventListener("change", this._changeBookTopic.bind(this)));
+    html
+      .querySelectorAll(".language-writer")
+      .forEach((el) => el.addEventListener("change", async (e) => this._changeWritenLanguage(e)));
+    this.#dragDrop.forEach((d) => d.bind(this.element));
+  }
 
-    html.find(".unlink-bookAppend").click(this._resetWriteBook.bind(this));
+  static async setDate(event, target) {
+    try {
+      await this.setDate(target.dataset);
+    } catch (err) {
+      console.error("Scriptorium | setDate failed:", err);
+      ui.notifications.error(game.i18n.localize("arm5e.scriptorium.msg.error"));
+      this.render();
+    }
+  }
 
-    html.find(".remove-labText").click(this._removeLabText.bind(this));
-    html.find(".remove-labTextCopy").click(this._removeLabTextCopy.bind(this));
+  static async unlinkReadBook(event, target) {
+    try {
+      await this._resetReadBook(target.dataset);
+    } catch (err) {
+      console.error("Scriptorium | unlinkReadBook failed:", err);
+      ui.notifications.error(game.i18n.localize("arm5e.scriptorium.msg.error"));
+      this.render();
+    }
+  }
 
-    html.find(".unlink-reader").click(this._resetReader.bind(this));
-    html.find(".unlink-writer").click(this._resetWriter.bind(this));
-    html.find(".unlink-scribe").click(this._resetScribe.bind(this));
-    html.find(".create-reading-activity").click(this._createReadingDiaryEntry.bind(this));
-    html.find(".create-writing-activity").click(async (event) => {
-      const dataset = getDataset(event);
-      if (dataset.category == "labText") {
-        await this._createTranslatingDiaryEntry(event);
+  static async unlinkWriteBook(event, target) {
+    try {
+      await this._resetWriteBook();
+    } catch (err) {
+      console.error("Scriptorium | unlinkWriteBook failed:", err);
+      ui.notifications.error(game.i18n.localize("arm5e.scriptorium.msg.error"));
+      this.render();
+    }
+  }
+
+  static async removeLabText(event, target) {
+    try {
+      await this._removeLabText(target.dataset);
+    } catch (err) {
+      console.error("Scriptorium | removeLabText failed:", err);
+      ui.notifications.error(game.i18n.localize("arm5e.scriptorium.msg.error"));
+      this.render();
+    }
+  }
+
+  static async removeLabTextCopy(event, target) {
+    try {
+      await this._removeLabTextCopy(target.dataset);
+    } catch (err) {
+      console.error("Scriptorium | removeLabTextCopy failed:", err);
+      ui.notifications.error(game.i18n.localize("arm5e.scriptorium.msg.error"));
+      this.render();
+    }
+  }
+
+  static async unlinkReader(event, target) {
+    try {
+      await this._resetReader();
+    } catch (err) {
+      console.error("Scriptorium | unlinkReader failed:", err);
+      ui.notifications.error(game.i18n.localize("arm5e.scriptorium.msg.error"));
+      this.render();
+    }
+  }
+
+  static async unlinkWriter(event, target) {
+    try {
+      await this._resetWriter();
+    } catch (err) {
+      console.error("Scriptorium | unlinkWriter failed:", err);
+      ui.notifications.error(game.i18n.localize("arm5e.scriptorium.msg.error"));
+      this.render();
+    }
+  }
+
+  static async unlinkScribe(event, target) {
+    try {
+      await this._resetScribe();
+    } catch (err) {
+      console.error("Scriptorium | unlinkScribe failed:", err);
+      ui.notifications.error(game.i18n.localize("arm5e.scriptorium.msg.error"));
+      this.render();
+    }
+  }
+
+  static async createReadingActivity(event, target) {
+    try {
+      await this._createReadingDiaryEntry(target.dataset);
+    } catch (err) {
+      console.error("Scriptorium | createReadingActivity failed:", err);
+      ui.notifications.error(game.i18n.localize("arm5e.scriptorium.msg.error"));
+      this.render();
+    }
+  }
+
+  static async createWritingActivity(event, target) {
+    try {
+      if (target.dataset.category === "labText") {
+        await this._createTranslatingDiaryEntry(target.dataset);
       } else {
-        await this._createWritingDiaryEntry(event);
+        await this._createWritingDiaryEntry(target.dataset);
       }
-    });
-    html.find(".create-copying-activity").click(this._createCopyingDiaryEntry.bind(this));
-    html.find(".section-handle").click(this._handle_section.bind(this));
+    } catch (err) {
+      console.error("Scriptorium | createWritingActivity failed:", err);
+      ui.notifications.error(game.i18n.localize("arm5e.scriptorium.msg.error"));
+      this.render();
+    }
+  }
 
-    html.find(".next-topic").click(async (event) => this._changeCurrentTopic("reading", event, 1));
-    html
-      .find(".previous-topic")
-      .click(async (event) => this._changeCurrentTopic("reading", event, -1));
-    html.find(".next-topicToCopy").click(async (event) => this._changeTopic("copying", event, 1));
-    html
-      .find(".previous-topicToCopy")
-      .click(async (event) => this._changeTopic("copying", event, -1));
+  static async createCopyingActivity(event, target) {
+    try {
+      await this._createCopyingDiaryEntry();
+    } catch (err) {
+      console.error("Scriptorium | createCopyingActivity failed:", err);
+      ui.notifications.error(game.i18n.localize("arm5e.scriptorium.msg.error"));
+      this.render();
+    }
+  }
 
-    html.find(".remove-book").click(async (event) => this._removeBook(event));
+  static async handleSection(event, target) {
+    try {
+      await this._handle_section(target.dataset);
+    } catch (err) {
+      console.error("Scriptorium | handleSection failed:", err);
+      ui.notifications.error(game.i18n.localize("arm5e.scriptorium.msg.error"));
+      this.render();
+    }
+  }
 
-    html.find(".language-writer").change(async (e) => this._changeWritenLanguage(e));
+  static async nextTopic(event, target) {
+    try {
+      await this._changeCurrentTopic("reading", target.dataset, 1);
+    } catch (err) {
+      console.error("Scriptorium | nextTopic failed:", err);
+      ui.notifications.error(game.i18n.localize("arm5e.scriptorium.msg.error"));
+      this.render();
+    }
+  }
 
-    // html.find(".drop-book").click(this.pickItem.bind(this, "book"));
-    // html.find(".drop-reader").click(this.pickItem.bind(this, "character"));
-    // html.find(".drop-scribe").click(this.pickItem.bind(this, "character"));
-    // html.find(".drop-writer").click(this.pickItem.bind(this, "character"));
-    // html.find(".append-book").click(this.pickItem.bind(this, "book"));
-    // html.find(".add-labtext").click(this.pickItem.bind(this, "laboratoryText"));
+  static async previousTopic(event, target) {
+    try {
+      await this._changeCurrentTopic("reading", target.dataset, -1);
+    } catch (err) {
+      console.error("Scriptorium | previousTopic failed:", err);
+      ui.notifications.error(game.i18n.localize("arm5e.scriptorium.msg.error"));
+      this.render();
+    }
+  }
+
+  static async nextTopicToCopy(event, target) {
+    try {
+      await this._changeTopic("copying", target.dataset, 1);
+    } catch (err) {
+      console.error("Scriptorium | nextTopicToCopy failed:", err);
+      ui.notifications.error(game.i18n.localize("arm5e.scriptorium.msg.error"));
+      this.render();
+    }
+  }
+
+  static async previousTopicToCopy(event, target) {
+    try {
+      await this._changeTopic("copying", target.dataset, -1);
+    } catch (err) {
+      console.error("Scriptorium | previousTopicToCopy failed:", err);
+      ui.notifications.error(game.i18n.localize("arm5e.scriptorium.msg.error"));
+      this.render();
+    }
+  }
+
+  static async removeBook(event, target) {
+    try {
+      await this._removeBook(target.dataset);
+    } catch (err) {
+      console.error("Scriptorium | removeBook failed:", err);
+      ui.notifications.error(game.i18n.localize("arm5e.scriptorium.msg.error"));
+      this.render();
+    }
   }
 
   async pickItem(type) {
@@ -903,26 +1180,21 @@ export class Scriptorium extends FormApplication {
       "writing.writer.languageSpec": lang.system.speciality,
       "writing.writer.languageSpecApply": false
     };
-    await this.submit({
-      preventClose: true,
-      updateData: updateData
-    });
+    await this._updateData(updateData);
   }
 
-  async _removeBook(event) {
-    const dataset = getDataset(event);
+  async _removeBook(dataset) {
     const bookIndex = Number(dataset.bookIndex);
     const index = Number(dataset.index);
     this.object.copying.books.splice(bookIndex, 1);
-    this.render(true);
-    // Await this.submit({
+    this.render();
+    // Await this._updateData({
     //   preventClose: true,
     //   updateData: { "copying.books": books }
     // });
   }
 
-  async _changeTopic(activity, event, offset) {
-    const dataset = getDataset(event);
+  async _changeTopic(activity, dataset, offset) {
     const bookIndex = Number(dataset.bookIndex);
     const newIndex = Number(dataset.index) + offset;
     if (
@@ -935,15 +1207,11 @@ export class Scriptorium extends FormApplication {
     const books = structuredClone(this.object[activity].books);
     books[bookIndex].system.topicIndex = newIndex;
     const str = `${activity}.books`;
-    await this.submit({
-      preventClose: true,
-      updateData: { [str]: books }
-    });
+    await this._updateData({ [str]: books });
   }
 
-  async _changeCurrentTopic(activity, event, offset) {
-    event.preventDefault();
-    const newIndex = Number(getDataset(event).index) + offset;
+  async _changeCurrentTopic(activity, dataset, offset) {
+    const newIndex = Number(dataset.index) + offset;
     if (newIndex > this.object[activity].book.system.topics.length - 1 || newIndex < 0) {
       // No effect
       return;
@@ -951,14 +1219,10 @@ export class Scriptorium extends FormApplication {
     // Let updateData = ;
     // updateData["reading.book.system.topicIndex"] = newIndex;
     const str = `${activity}.book.system.topicIndex`;
-    await this.submit({
-      preventClose: true,
-      updateData: { [str]: newIndex }
-    });
+    await this._updateData({ [str]: newIndex });
   }
 
-  async _handle_section(ev) {
-    const dataset = getDataset(ev);
+  async _handle_section(dataset) {
     log(false, `DEBUG section: ${dataset.section}, category: ${dataset.category}`);
     let usercache = JSON.parse(sessionStorage.getItem(`usercache-${game.user.id}`));
     let scope = usercache.scriptorium.sections.visibility[dataset.category];
@@ -977,13 +1241,12 @@ export class Scriptorium extends FormApplication {
     classes.toggle("hide");
   }
 
-  async _createTranslatingDiaryEntry(event) {
+  async _createTranslatingDiaryEntry(dataset) {
     const objectData = foundry.utils.expandObject(this.object);
     const writer = game.actors.get(objectData.writing.writer.id);
 
     const writerData = objectData.writing.writer;
     const book = foundry.utils.deepClone(objectData.writing.book);
-    const dataset = event.currentTarget.dataset;
     // Create a safe copy of the topics
     const bookTopics = book.system.topics;
     // Remove the placeholder topic
@@ -1075,7 +1338,7 @@ export class Scriptorium extends FormApplication {
     entry[0].sheet.render(true);
   }
 
-  async _createCopyingDiaryEntry(event) {
+  async _createCopyingDiaryEntry() {
     const objectData = foundry.utils.expandObject(this.object);
     const scribe = game.actors.get(objectData.copying.scribe.id);
     const books = structuredClone(objectData.copying.books);
@@ -1233,13 +1496,12 @@ export class Scriptorium extends FormApplication {
     entry[0].sheet.render(true);
   }
 
-  async _createWritingDiaryEntry(event) {
+  async _createWritingDiaryEntry(dataset) {
     const objectData = foundry.utils.expandObject(this.object);
     const writer = game.actors.get(objectData.writing.writer.id);
 
     const writerData = objectData.writing.writer;
     const book = objectData.writing.book;
-    const dataset = event.currentTarget.dataset;
     const topic = book.system.topics[dataset.index];
 
     let activityName = game.i18n.format("arm5e.scriptorium.writing.activity", {
@@ -1315,12 +1577,11 @@ export class Scriptorium extends FormApplication {
     entry[0].sheet.render(true);
   }
 
-  async _createReadingDiaryEntry(event) {
+  async _createReadingDiaryEntry(dataset) {
     const objectData = foundry.utils.expandObject(this.object);
     const reader = game.actors.get(objectData.reading.reader.id);
     const readerData = objectData.reading.reader;
     const book = objectData.reading.book;
-    const dataset = event.currentTarget.dataset;
     const topic = book.system.topics[dataset.index];
     let activityName = game.i18n.format("arm5e.scriptorium.reading.activity", {
       title: book.name
@@ -1433,9 +1694,9 @@ export class Scriptorium extends FormApplication {
     entry[0].sheet.render(true);
   }
 
-  async _resetReader(event) {
+  async _resetReader() {
     let reader = game.actors.get(this.object.reading.reader.id);
-    delete reader.apps[this.appId];
+    delete reader.apps[this.options.uniqueId];
     let updatedData = {
       "reading.reader.id": null,
       "reading.reader.name": "",
@@ -1443,15 +1704,12 @@ export class Scriptorium extends FormApplication {
       "reading.reader.spellName": "",
       "reading.reader.language": ""
     };
-    await this.submit({
-      preventClose: true,
-      updateData: updatedData
-    });
+    await this._updateData(updatedData);
   }
 
-  async _resetWriter(event) {
+  async _resetWriter() {
     let writer = game.actors.get(this.object.writing.writer.id);
-    delete writer.apps[this.appId];
+    delete writer.apps[this.options.uniqueId];
     let updatedData = {
       "writing.writer.id": null,
       "writing.writer.name": "",
@@ -1459,15 +1717,12 @@ export class Scriptorium extends FormApplication {
       "writing.writer.spellName": "",
       "writing.writer.language": ""
     };
-    await this.submit({
-      preventClose: true,
-      updateData: updatedData
-    });
+    await this._updateData(updatedData);
   }
 
-  async _resetScribe(event) {
+  async _resetScribe() {
     let scribe = game.actors.get(this.object.copying.scribe.id);
-    delete scribe.apps[this.appId];
+    delete scribe.apps[this.options.uniqueId];
     let updatedData = {
       "copying.scribe.id": null,
       "copying.scribe.name": "",
@@ -1475,15 +1730,12 @@ export class Scriptorium extends FormApplication {
       "copying.scribe.spellName": "",
       "copying.scribe.language": ""
     };
-    await this.submit({
-      preventClose: true,
-      updateData: updatedData
-    });
+    await this._updateData(updatedData);
   }
 
-  async _resetReadBook(event) {
+  async _resetReadBook(dataset) {
     const objectData = foundry.utils.expandObject(this.object);
-    const index = event.currentTarget.dataset.index;
+    const index = dataset.index;
     const singleTopic = objectData.reading.book.system.topics[index];
     singleTopic.level = singleTopic.type === "Tractatus" ? 0 : singleTopic.level;
     let updatedData = {
@@ -1492,13 +1744,10 @@ export class Scriptorium extends FormApplication {
       "reading.book.system.topics": [singleTopic],
       "reading.book.system.topicIndex": 0
     };
-    await this.submit({
-      preventClose: true,
-      updateData: updatedData
-    });
+    await this._updateData(updatedData);
   }
 
-  async _resetWriteBook(event) {
+  async _resetWriteBook() {
     const objectData = foundry.utils.expandObject(this.object);
     const index = objectData.writing.book.system.topics.length - 1;
     const singleTopic = objectData.writing.book.system.topics[index];
@@ -1510,24 +1759,15 @@ export class Scriptorium extends FormApplication {
       "writing.book.system.topicIndex": 0
     };
     objectData.writing.book.system.topics = [];
-    await this.submit({
-      preventClose: true,
-      updateData: updatedData
-    });
+    await this._updateData(updatedData);
   }
 
   async _changeSeason(event) {
-    await this.submit({
-      preventClose: true,
-      updateData: { season: event.currentTarget.value }
-    });
+    await this._updateData({ season: event.currentTarget.value });
   }
 
   async _changeYear(event) {
-    await this.submit({
-      preventClose: true,
-      updateData: { year: event.currentTarget.value }
-    });
+    await this._updateData({ year: event.currentTarget.value });
   }
 
   async _setReadingBook(book) {
@@ -1535,15 +1775,15 @@ export class Scriptorium extends FormApplication {
       ui.notifications.info(game.i18n.localize("arm5e.scriptorium.msg.bookNoAccess"));
       return;
     }
+    if (book.system.topics.length == 0) {
+      ui.notifications.info(game.i18n.localize("arm5e.scriptorium.msg.emptyBook"));
+      return;
+    }
     let index = book.getFlag("arm5e", "currentBookTopic") ?? 0;
     book.system.topicIndex = index;
-    // Book.apps[this.appId] = this;
 
-    await this.submit({
-      preventClose: true,
-      updateData: {
-        "reading.book": { name: book.name, id: book.id, uuid: book.uuid, system: book.system }
-      }
+    await this._updateData({
+      "reading.book": { name: book.name, id: book.id, uuid: book.uuid, system: book.system }
     });
   }
 
@@ -1555,15 +1795,11 @@ export class Scriptorium extends FormApplication {
     const newTopicIndex = book.system.topics.length;
     let newTopic =
       this.object.writing.book.system.topics[this.object.writing.book.system.topics.length - 1];
-    // Book.apps[this.appId] = this;
     book.system.topics.push(newTopic);
     book.system.topicIndex = book.system.topics.length - 1;
 
-    await this.submit({
-      preventClose: true,
-      updateData: {
-        "writing.book": { name: book.name, id: book.id, uuid: book.uuid, system: book.system }
-      }
+    await this._updateData({
+      "writing.book": { name: book.name, id: book.id, uuid: book.uuid, system: book.system }
     });
   }
 
@@ -1610,12 +1846,9 @@ export class Scriptorium extends FormApplication {
     }
 
     books.push({ name: bookToAdd.name, id: bookToAdd.id, uuid: bookToAdd.uuid, system: bookData });
-    await this.submit({
-      preventClose: true,
-      updateData: {
-        "copying.topicType": topicType,
-        "copying.books": books
-      }
+    await this._updateData({
+      "copying.topicType": topicType,
+      "copying.books": books
     });
   }
 
@@ -1633,12 +1866,7 @@ export class Scriptorium extends FormApplication {
       level: text.system.level,
       img: text.img
     });
-    await this.submit({
-      preventClose: true,
-      updateData: {
-        labTexts: labtexts
-      }
-    });
+    await this._updateData({ labTexts: labtexts });
   }
 
   async _addLabTextToCopy(text) {
@@ -1662,39 +1890,22 @@ export class Scriptorium extends FormApplication {
       img: CONFIG.ARM5E_DEFAULT_ICONS.laboratoryText,
       system: text.system
     });
-    await this.submit({
-      preventClose: true,
-      updateData: {
-        "copying.labTexts": labtexts,
-        "copying.topicType": "labText"
-      }
+    await this._updateData({
+      "copying.labTexts": labtexts,
+      "copying.topicType": "labText"
     });
   }
 
-  async _removeLabText(event) {
-    const dataset = getDataset(event);
-
+  async _removeLabText(dataset) {
     let labtexts = foundry.utils.duplicate(this.object.labTexts);
     labtexts.splice(Number(dataset.index), 1);
-    await this.submit({
-      preventClose: true,
-      updateData: {
-        labTexts: labtexts
-      }
-    });
+    await this._updateData({ labTexts: labtexts });
   }
 
-  async _removeLabTextCopy(event) {
-    const dataset = getDataset(event);
-
+  async _removeLabTextCopy(dataset) {
     let labtexts = foundry.utils.duplicate(this.object.copying.labTexts);
     labtexts.splice(Number(dataset.index), 1);
-    await this.submit({
-      preventClose: true,
-      updateData: {
-        "copying.labTexts": labtexts
-      }
-    });
+    await this._updateData({ "copying.labTexts": labtexts });
   }
 
   async _setReader(reader) {
@@ -1707,12 +1918,9 @@ export class Scriptorium extends FormApplication {
       id: reader._id,
       name: reader.name
     };
-    reader.apps[this.appId] = this;
+    reader.apps[this.options.uniqueId] = this;
     const readingData = { reader: readerInfo };
-    await this.submit({
-      preventClose: true,
-      updateData: { reading: readingData }
-    });
+    await this._updateData({ reading: readingData });
   }
 
   async _setWriter(writer) {
@@ -1725,12 +1933,9 @@ export class Scriptorium extends FormApplication {
       id: writer._id,
       name: writer.name
     };
-    writer.apps[this.appId] = this;
+    writer.apps[this.options.uniqueId] = this;
     const writingData = { writer: writerInfo };
-    await this.submit({
-      preventClose: true,
-      updateData: { writing: writingData }
-    });
+    await this._updateData({ writing: writingData });
   }
 
   async _setScribe(scribe) {
@@ -1743,17 +1948,12 @@ export class Scriptorium extends FormApplication {
       id: scribe._id,
       name: scribe.name
     };
-    scribe.apps[this.appId] = this;
+    scribe.apps[this.options.uniqueId] = this;
     const copyingData = { scribe: scribeInfo };
-    await this.submit({
-      preventClose: true,
-      updateData: { copying: copyingData }
-    });
+    await this._updateData({ copying: copyingData });
   }
 
-  async setDate(event) {
-    event.preventDefault();
-    const dataset = event.currentTarget.dataset;
+  async setDate(dataset) {
     ui.notifications.info(
       game.i18n.format("arm5e.notification.setDate", {
         year: dataset.year,
@@ -1767,58 +1967,51 @@ export class Scriptorium extends FormApplication {
     this.render();
   }
 
-  async _updateObject(event, formData) {
-    const expanded = foundry.utils.expandObject(formData);
+  static async #onSubmitHandler(event, form, formData) {
+    try {
+      const expanded = foundry.utils.expandObject(formData.object);
 
-    if (expanded.reading?.book?.system?.topics) {
-      const topics = this.object.reading.book.system.topics;
-      foundry.utils.mergeObject(topics, expanded.reading.book.system.topics);
-      delete expanded.reading.book.system.topics;
-    }
-    if (expanded.writing?.book?.system?.topics) {
-      const topics = this.object.writing.book.system.topics;
-      foundry.utils.mergeObject(topics, expanded.writing.book.system.topics);
-      delete expanded.writing.book.system.topics;
-    }
-
-    if (expanded.copying?.books) {
-      const bookIndexes = Object.keys(expanded.copying.books);
-      for (const index of bookIndexes) {
-        if (expanded.copying.books[index].system?.topics) {
-          const topics = this.object.copying.books[index].system.topics;
-          foundry.utils.mergeObject(topics, expanded.copying.books[index].system.topics, {
-            recursive: true
-          });
-          delete expanded.copying.books[index].system.topics;
-        }
+      if (expanded.reading?.book?.system?.topics) {
+        const topics = this.object.reading.book.system.topics;
+        foundry.utils.mergeObject(topics, expanded.reading.book.system.topics);
+        delete expanded.reading.book.system.topics;
       }
-      const books = this.object.copying.books;
-      foundry.utils.mergeObject(books, expanded.copying.books);
-      delete expanded.copying.books;
-    }
+      if (expanded.writing?.book?.system?.topics) {
+        const topics = this.object.writing.book.system.topics;
+        foundry.utils.mergeObject(topics, expanded.writing.book.system.topics);
+        delete expanded.writing.book.system.topics;
+      }
 
-    foundry.utils.mergeObject(this.object, expanded, { recursive: true });
-    this.render();
-    // If (formData.season) {
-    //   this.object.season = formData.season;
-    // }
-    // if (formData.year) {
-    //   this.object.year = formData.year;
-    // }
-    // for (let [key, value] of Object.entries(formData)) {
-    //   log(false, `Updated ${key} : ${value}`);
-    //   this.object[key] = value;
-    // }
-    // this.object = foundry.utils.expandObject(this.object);
-    // // log(false, `Scriptorium object: ${JSON.stringify(this.object)}`);
-    // this.render();
+      if (expanded.copying?.books) {
+        const bookIndexes = Object.keys(expanded.copying.books);
+        for (const index of bookIndexes) {
+          if (expanded.copying.books[index].system?.topics) {
+            const topics = this.object.copying.books[index].system.topics;
+            foundry.utils.mergeObject(topics, expanded.copying.books[index].system.topics, {
+              recursive: true
+            });
+            delete expanded.copying.books[index].system.topics;
+          }
+        }
+        const books = this.object.copying.books;
+        foundry.utils.mergeObject(books, expanded.copying.books);
+        delete expanded.copying.books;
+      }
+
+      foundry.utils.mergeObject(this.object, expanded, { recursive: true });
+      this.render();
+    } catch (err) {
+      console.error("Scriptorium | submit failed:", err);
+      ui.notifications.error(game.i18n.localize("arm5e.scriptorium.msg.error"));
+      this.render();
+    }
   }
 
   async _changeBookTopic(event) {
     event.preventDefault();
     const index = Number(event.currentTarget.dataset.index);
     const activity = event.currentTarget.dataset.activity;
-    let chosenTopic = $(`.book-topic-change.${activity}`).val();
+    let chosenTopic = this.element.querySelector(`.book-topic-change.${activity}`).value;
     const topicData = this.object[activity].book.system.topics[index];
     if (chosenTopic === "ability") {
       topicData.art = null;
@@ -1855,10 +2048,7 @@ export class Scriptorium extends FormApplication {
       topicData.category = "labText";
       // TODO
     }
-    await this.submit({
-      preventClose: true,
-      updateData: { [`${activity}.book.system.topics.${index}`]: topicData }
-    });
+    await this._updateData({ [`${activity}.book.system.topics.${index}`]: topicData });
     // Log(false, `Book topic: ${item.system.topic}`);
   }
 

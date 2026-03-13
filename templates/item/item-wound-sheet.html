@@ -4,9 +4,13 @@
       <div class="flexrow"><img class="item-small-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" />
         <h1 class="bigname"><input name="name" type="text" value="{{item.name}}" placeholder="Name" /></h1>
         {{#if isOwned}}
-          <div style="max-width: 50px;"><a class="item-control item-delete-confirm"
+          <div style="max-width:fit-content"><a class="item-control item-delete-confirm"
               title='{{localize "arm5e.hints.delete" item=(localize "arm5e.sheet.wound.label")}}'><i
                 class="ars-Icon_Delete_Big_Hand_Gesture"></i></a>
+            <a class="sanatorium-single-roll clickable" title="{{localize 'arm5e.sanatorium.button.rollSingle'}}"
+              style="text-align: right; font-size: 16pt;">
+              <i class="ars-Icon_Sanatorium2"></i>
+            </a>
           </div>
         {{/if}}
       </div>

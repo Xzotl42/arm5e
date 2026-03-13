@@ -250,6 +250,8 @@
       "summary": "Resumen de envejecimiento"
     },
     "astrolab": {
+      "nextSeason": "Estación siguiente",
+      "prevSeason": "Estación anterior",
       "restAll": "Descanso general",
       "setWorldDate": "Establecer fecha",
       "updateActors": "Actualizar actores"
@@ -566,7 +568,9 @@
     "sanatorium": {
       "button": {
         "endSeason": "Fin de la estación",
-        "recovery": "Tira por recuperación"
+        "fastRecovery": "Recuperación rápida (tiradas automáticas)",
+        "recovery": "Tira por recuperación",
+        "rollSingle": "Tirar recuperación de la herida"
       },
       "daysAvailbable": "Días disponibles",
       "daysLeft": "Quedan {days} días para la siguiente tirada de recuperación",
@@ -575,6 +579,7 @@
       "magicalHelp": "Bono mágico",
       "medicalHistory": "Historia médica",
       "msg": {
+        "incapDeath": "¡El paciente muere! (fallo crítico en jet de herida incapacitante)",
         "logDay": "Periodo de recuperación, día {day}",
         "logDone": "No se puede hacer nada más esta estación.",
         "logHealed": "La herida se ha curado por completo en {days} días",
@@ -583,9 +588,21 @@
         "logWoundBetter": "La herida mejora en {days} días",
         "logWoundStable": "Herida estabilizada",
         "logWoundWorse": "La herida empeora en {days} días",
+        "noWoundsForOverstrain": "No hay heridas activas para aplicar un test de sobreesfuerzo.",
+        "notOpen": "Abre primero la ventana del Sanatorio y luego tira desde aquí.",
+        "nextSeason": "Avanzando a {season} {year}.",
+        "overstrainNote": "Empeorada por sobreesfuerzo en {season} {year}.",
+        "overstrainStable": "La herida aguanta — no empeora por sobreesfuerzo.",
+        "overstrainWorsened": "¡{name} ha empeorado a {type} por sobreesfuerzo!",
+        "sunriseRoll": "Amanecer",
+        "sunsetRoll": "Atardecer",
         "patientDead": "¡El paciente está muerto!",
         "patientDied": "¡El paciente ha muerto!",
-        "patientHealthy": "¡El paciente está sano!"
+        "patientHealthy": "¡El paciente está sano!",
+        "worstPenaltyNote": "Penalización por heridas de {penalty} sostenida durante {days} días esta estación.",
+        "penaltyAdviceLight": "El personaje puede viajar y estudiar con normalidad, pero no puede realizar actividades extenuantes, incluido lanzar conjuros que cuesten Fatiga. El trabajo en laboratorio hermético y el trabajo artesanal pueden realizarse con normalidad.",
+        "penaltyAdviceMedium": "El personaje puede caminar, siempre que se le permita ir despacio y descansar con frecuencia. Todas las velocidades de viaje de larga distancia se reducen a la mitad. El personaje puede estudiar, pero su Total de Avance se reduce a la mitad si está en este nivel de penalización durante un mes o más de la temporada. El trabajo en laboratorio hermético y el trabajo artesanal son imposibles.",
+        "penaltyAdviceHeavy": "El personaje puede hablar, comer y moverse cortas distancias con tiempo y ayuda. Las actividades productivas (incluyendo el estudio, el trabajo en laboratorio hermético y el trabajo artesanal) son imposibles."
       },
       "mundaneHelp": "Bono mundano",
       "recoveryBonus": "Bono de recuperación",
@@ -612,7 +629,8 @@
         "notMagus": "El lector no es un magus.",
         "tooSkilled": "El lector es demasiado experto para ese libro.",
         "tractAlreadyRead": "El lector ya ha leído un tractatus con el mismo título.",
-        "whichItem": "No se ha encontrado ningún {item} conocido por el lector. Elige uno si es aplicable."
+        "whichItem": "No se ha encontrado ningún {item} conocido por el lector. Elige uno si es aplicable.",
+        "error": "Se ha producido un error inesperado en el Scriptorium. Consulte la consola del navegador (F12) para más detalles."
       },
       "reader": {
         "name": "Nombre de lector",

@@ -114,9 +114,11 @@
     </div>
     <div class="padding4 flex0">
       {{#if failedInvestigation}}
-        <button class="arm5e end-investigate">{{localize "arm5e.activity.roll.investigationEnd"}}</button>
+        <button class="arm5e end-investigate"
+          data-action="endInvestigation">{{localize "arm5e.activity.roll.investigationEnd"}}</button>
       {{else}}
-        <button class="arm5e investigate">{{localize "arm5e.activity.roll.investigate"}}</button>
+        <button class="arm5e investigate"
+          data-action="investigate">{{localize "arm5e.activity.roll.investigate"}}</button>
       {{/if}}
     </div>
   </section>

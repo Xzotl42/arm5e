@@ -8,9 +8,9 @@
     </div>
   {{/each}}
 </div>
-<div style="margin-left:-10px; margin-right: -16px;">
-  {{> "systems/arm5e/templates/generic/metalic-bar.html" topoffset="-3px" }}
-</div>
+{{!-- <div style="margin-left:-10px; margin-right: -16px;"> --}}
+  {{> "systems/arm5e/templates/generic/metalic-bar.html"  }}
+{{!-- </div> --}}
 <div class="years flexcol">
   {{#each selectedActors }}
     <div class="backSection calendar-year flex-center flex-between flexrow">
@@ -18,11 +18,11 @@
         <label class="smallTitle "
           style="padding:5px; overflow-wrap: break-word; min-width: 150px; font-size:13pt; font-family:bookAntiquaBold; background-color: rgb(203, 168, 121,40%);">{{this.actorName}}</label>
         {{#each this.seasons }}
-          <div class="calendar-season {{this.style}} flexrow item-create" data-type="diaryEntry"
+          <div class="calendar-season {{this.style}} flexrow item-create" data-action="createItem" data-type="diaryEntry"
             data-year="{{../this.year}}" data-season="{{@key}}" data-actor="{{../this.id}}" title="Create activity">
             <div class="flexrow">
               {{#each this.activities}}
-                <div class="vignette" data-actorid={{../../this.id}} data-id="{{this.id}}" {{{this.style}}}><img
+                <div class="vignette" data-action="openItem" data-actorid={{../../this.id}} data-id="{{this.id}}" {{{this.style}}}><img
                     src="{{this.img}}" title="{{this.name}}" />
                 </div>
               {{/each}}

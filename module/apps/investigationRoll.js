@@ -9,6 +9,10 @@ export class InvestigationRoll extends foundry.applications.api.HandlebarsApplic
   constructor(diary, data, options = {}) {
     super(options);
 
+    if (!data.labTotal) {
+      throw new Error("InvestigationRoll: labTotal is required in data argument");
+    }
+
     data.effects = data.system.enchantments.effects.map((e) => {
       return {
         name: e.name,
@@ -55,6 +59,10 @@ export class InvestigationRoll extends foundry.applications.api.HandlebarsApplic
       handler: InvestigationRoll.#onSubmitHandler,
       submitOnChange: true,
       closeOnSubmit: false
+    },
+    actions: {
+      investigate: InvestigationRoll.investigate,
+      endInvestigation: InvestigationRoll.endInvestigation
     }
   };
 
@@ -119,17 +127,16 @@ export class InvestigationRoll extends foundry.applications.api.HandlebarsApplic
         ev.currentTarget.select();
       });
     });
-
-    const investigateBtn = this.element.querySelector(".investigate");
-    if (investigateBtn) {
-      investigateBtn.addEventListener("click", (ev) => this._investigate(ev));
-    }
-
-    const endInvestigateBtn = this.element.querySelector(".end-investigate");
-    if (endInvestigateBtn) {
-      endInvestigateBtn.addEventListener("click", (ev) => this._endInvestigation(ev));
-    }
   }
+
+  static async investigate(event, target) {
+    await this._investigate(event);
+  }
+
+  static async endInvestigation(event, target) {
+    await this._endInvestigation(event);
+  }
+
   async _endInvestigation(event) {
     const magicItem = await fromUuid(this.object.uuid);
     // const effects = magicItem.system.enchantments.effects.map((a) => {
