@@ -371,9 +371,12 @@ export function registerScheduleIntegrationTesting(quench) {
         it("Schedule: close removes app from actor.apps", async function () {
           this.timeout(300000);
           const sched = new Schedule({ document: companion });
-          companion.apps[sched.appId] = sched;
+          companion.apps[sched.options.uniqueId] = sched;
           await sched.close();
-          assert.isUndefined(companion.apps[sched.appId], "app should be removed from actor.apps");
+          assert.isUndefined(
+            companion.apps[sched.options.uniqueId],
+            "app should be removed from actor.apps"
+          );
         });
 
         it("GroupSchedule: close completes without error", async function () {

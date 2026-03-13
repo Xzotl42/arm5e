@@ -360,7 +360,8 @@ export class RollWindow extends HandlebarsApplicationMixin(ApplicationV2) {
     },
     // classes: ["arm5e-roll"],
     window: {
-      contentClasses: ["standard-form", "arm5e-roll"]
+      contentClasses: ["standard-form", "arm5e-roll"],
+      resizable: false
     },
     tag: "form",
     actions: {

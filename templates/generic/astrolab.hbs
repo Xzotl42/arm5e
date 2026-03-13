@@ -6,22 +6,38 @@
     }}
     {{ curYear }}</label
   >
-  <div class="sheet-body backSection" style="height: 228px; margin-left: 32px; margin-right: 32px">
+  <div class="sheet-body backSection marginsides32" style="height: auto">
     <div class="flexcol" style="margin: 10px">
       <div class="resource-content flexrow">
         <div class="resource-content flexrow flex-center flex-between margintop6">
-          <label for="season" class="smallTitle" style="font-size: 16pt">{{localize
+          <label for="season" class="smallTitle flex0" style="font-size: 16pt">{{localize
               "arm5e.sheet.season"
           }}</label>
-          <select
-            name="season"
-            {{dateChange}}
-            data-type="String"
-            class="change-season flex0 seasons"
-            style="font-size: 14pt"
-          >
-            {{selectOptions seasons selected=season localize=true labelAttr="label"}}
-          </select>
+          <div class="flexrow">
+            <img
+              class="nav-arrow clickable season-arrow"
+              data-action="prevSeason"
+              data-change="{{ dateChange }}"
+              title="{{localize 'arm5e.astrolab.prevSeason'}}"
+              src="systems/arm5e/assets/bLeft.png"
+            />
+            <select
+              name="season"
+              {{dateChange}}
+              data-type="String"
+              class="change-season flex0 seasons"
+              style="font-size: 14pt"
+            >
+              {{selectOptions seasons selected=season localize=true labelAttr="label"}}
+            </select>
+            <img
+              class="nav-arrow clickable season-arrow"
+              data-action="nextSeason"
+              data-change="{{ dateChange }}"
+              src="systems/arm5e/assets/bRight.png"
+              title="{{localize 'arm5e.astrolab.nextSeason'}}"
+            />
+          </div>
         </div>
         <div class="resource-content flexrow flex-center flex-between margintop6">
           <label for="year" class="smallTitle" style="font-size: 16pt">{{localize

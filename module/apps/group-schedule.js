@@ -189,7 +189,7 @@ export class GroupSchedule extends HandlebarsApplicationMixin(ApplicationV2) {
     if (actor) {
       const item = actor.items.get(target.dataset.id);
       if (item) {
-        item.apps[this.appId] = this;
+        item.apps[this.options.uniqueId] = this;
         item.sheet.render(true, { focus: true });
       }
     }

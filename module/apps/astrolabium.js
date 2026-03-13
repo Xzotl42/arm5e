@@ -1,4 +1,5 @@
 import { convertToNumber, debug, log } from "../tools/tools.js";
+import { getShiftedDate } from "../tools/time.js";
 import { GroupSchedule } from "./group-schedule.js";
 
 // Similar syntax to importing, but note that
@@ -36,7 +37,9 @@ export class Astrolabium extends HandlebarsApplicationMixin(ApplicationV2) {
       setDate: Astrolabium.setDate,
       restAll: Astrolabium.restAll,
       displaySchedule: Astrolabium.displaySchedule,
-      showCalendar: Astrolabium.showCalendar
+      showCalendar: Astrolabium.showCalendar,
+      prevSeason: Astrolabium.prevSeason,
+      nextSeason: Astrolabium.nextSeason
     }
   };
 
@@ -107,10 +110,32 @@ export class Astrolabium extends HandlebarsApplicationMixin(ApplicationV2) {
       SimpleCalendar.api.showCalendar(null, true);
     }
   }
+
+  static async prevSeason(event, target) {
+    await this.shiftSeason(-1);
+  }
+
+  static async nextSeason(event, target) {
+    await this.shiftSeason(1);
+  }
   async displaySchedule(event) {
     event.preventDefault();
     const schedule = new GroupSchedule();
     const res = await schedule.render(true);
+  }
+
+  async shiftSeason(offset) {
+    const currentDate = game.settings.get("arm5e", "currentDate");
+    const newDate = getShiftedDate(currentDate, offset);
+    ui.notifications.info(
+      game.i18n.format("arm5e.notification.setDate", {
+        year: newDate.year,
+        season: game.i18n.localize(CONFIG.ARM5E.seasons[newDate.season].label)
+      })
+    );
+    await game.settings.set("arm5e", "currentDate", newDate);
+    Hooks.callAll("arm5e-date-change", newDate);
+    this.render();
   }
 
   async setDate(event) {

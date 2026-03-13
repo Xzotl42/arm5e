@@ -8,6 +8,7 @@ export class MedicalHistory extends foundry.applications.api.HandlebarsApplicati
   constructor(data, options = {}) {
     super(options);
     this.object = data;
+    this.object.patient.apps[this.options.uniqueId] = this;
   }
 
   static async createDialog(actor) {
@@ -16,7 +17,13 @@ export class MedicalHistory extends foundry.applications.api.HandlebarsApplicati
       patient: actor
     });
     const res = await medHist.render(true);
-    actor.apps[medHist.appId] = medHist;
+  }
+
+  async close(options = {}) {
+    if (this.object?.patient?.apps?.[this.options.uniqueId] != undefined) {
+      delete this.object.patient.apps[this.options.uniqueId];
+    }
+    return super.close(options);
   }
 
   static DEFAULT_OPTIONS = {

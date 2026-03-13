@@ -1,4 +1,4 @@
-## 3.0.0.3 Stentorius
+## 3.0.0.4 Stentorius
 
 ### Compatibility
 
@@ -35,6 +35,13 @@
 - [technical] Converted most of the largest assets from png to webp format
 - New wrapper for prosemirror editor to have consistent behavior across the whole system.
 - New icon to make it more obvious that lab total details are available on hovering.
+- [Astrolabium] New arrow buttons to switch quickly between seasons
+- [Sanatorium]
+  - New button to do an overstrain check (ie: doing activities that are not advised during recovery) the worst wound has a chance to get worse
+  - New option to do a fast recovery, all the rolls for the season in one click
+  - New possibility to roll for a single wound.
+  - The Sanatorium is aware of seasons changes
+  - Instead of asking for the number of days remaining in the season, it asks which day of the season the treatment of a fresh wound starts
 
 ### Bug fixes
 
@@ -50,6 +57,11 @@
 - The diary's description of an ability book, no longer states the topic as undefined if no specific topic name was defined in the read book
 - Various cosmetic improvement and fixes
   - removed the dark line in the middle of dialogs and items sheets
+- [Sanatorium]
+  - Recovery roll is done for all incapacitating wounds instead of each individually
+  - For simplicity, half days have been removed from the recovery period. Two rolls per day will be done for incapacitating wounds
+  - A dead patient will stop recovery immediately instead of trying to heal remaining wounds until the end of the season.
+  - Fixed a case where a wound was never healed and the diary entry was empty.
 
 ## 2.4.1.14, Radislav, Cognizant Wisdom BF1
 

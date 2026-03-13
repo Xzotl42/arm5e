@@ -273,15 +273,15 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
   async close(options = {}) {
     if (this.object?.reading?.reader?.id) {
       const reader = game.actors.get(this.object.reading.reader.id);
-      if (reader) delete reader.apps[this.appId];
+      if (reader) delete reader.apps[this.options.uniqueId];
     }
     if (this.object?.writing?.writer?.id) {
       const writer = game.actors.get(this.object.writing.writer.id);
-      if (writer) delete writer.apps[this.appId];
+      if (writer) delete writer.apps[this.options.uniqueId];
     }
     if (this.object?.copying?.scribe?.id) {
       const scribe = game.actors.get(this.object.copying.scribe.id);
-      if (scribe) delete scribe.apps[this.appId];
+      if (scribe) delete scribe.apps[this.options.uniqueId];
     }
     return super.close(options);
   }
@@ -1696,7 +1696,7 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
 
   async _resetReader() {
     let reader = game.actors.get(this.object.reading.reader.id);
-    delete reader.apps[this.appId];
+    delete reader.apps[this.options.uniqueId];
     let updatedData = {
       "reading.reader.id": null,
       "reading.reader.name": "",
@@ -1709,7 +1709,7 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
 
   async _resetWriter() {
     let writer = game.actors.get(this.object.writing.writer.id);
-    delete writer.apps[this.appId];
+    delete writer.apps[this.options.uniqueId];
     let updatedData = {
       "writing.writer.id": null,
       "writing.writer.name": "",
@@ -1722,7 +1722,7 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
 
   async _resetScribe() {
     let scribe = game.actors.get(this.object.copying.scribe.id);
-    delete scribe.apps[this.appId];
+    delete scribe.apps[this.options.uniqueId];
     let updatedData = {
       "copying.scribe.id": null,
       "copying.scribe.name": "",
@@ -1781,7 +1781,6 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
     }
     let index = book.getFlag("arm5e", "currentBookTopic") ?? 0;
     book.system.topicIndex = index;
-    // Book.apps[this.appId] = this;
 
     await this._updateData({
       "reading.book": { name: book.name, id: book.id, uuid: book.uuid, system: book.system }
@@ -1796,7 +1795,6 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
     const newTopicIndex = book.system.topics.length;
     let newTopic =
       this.object.writing.book.system.topics[this.object.writing.book.system.topics.length - 1];
-    // Book.apps[this.appId] = this;
     book.system.topics.push(newTopic);
     book.system.topicIndex = book.system.topics.length - 1;
 
@@ -1920,7 +1918,7 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
       id: reader._id,
       name: reader.name
     };
-    reader.apps[this.appId] = this;
+    reader.apps[this.options.uniqueId] = this;
     const readingData = { reader: readerInfo };
     await this._updateData({ reading: readingData });
   }
@@ -1935,7 +1933,7 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
       id: writer._id,
       name: writer.name
     };
-    writer.apps[this.appId] = this;
+    writer.apps[this.options.uniqueId] = this;
     const writingData = { writer: writerInfo };
     await this._updateData({ writing: writingData });
   }
@@ -1950,7 +1948,7 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
       id: scribe._id,
       name: scribe.name
     };
-    scribe.apps[this.appId] = this;
+    scribe.apps[this.options.uniqueId] = this;
     const copyingData = { scribe: scribeInfo };
     await this._updateData({ copying: copyingData });
   }

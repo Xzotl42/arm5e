@@ -3318,7 +3318,7 @@ ARM5E.recovery = {
       penalty: -99,
       stability: 1,
       improvement: 9,
-      interval: 0.5,
+      interval: 1, // One day per period; two rolls (sunrise/sunset) are auto-triggered per period
       icon: "systems/arm5e/assets/icons/recovery/incap.svg",
       label: "arm5e.sheet.incap"
     },
@@ -3332,7 +3332,15 @@ ARM5E.recovery = {
       label: "arm5e.sheet.dead"
     }
   },
-  daysInSeason: 92,
+  // Days per season measured from the medieval conventional equinox/solstice dates
+  // (all four turns fall on the 21st of their month; ignoring leap years):
+  //   Spring March 21 – June 20    = 92 days  (vernal equinox → day before summer solstice)
+  //   Summer June 21 – Sept 20     = 92 days  (summer solstice → day before autumnal equinox)
+  //   Autumn Sept 21 – Dec 20      = 91 days  (autumnal equinox → day before winter solstice)
+  //   Winter Dec 21  – March 20    = 90 days  (winter solstice → day before vernal equinox)
+  //   Total                        = 365 days
+  daysInSeason: { spring: 92, summer: 92, autumn: 91, winter: 90 },
+  maxDaysInSeason: 92, // longest season (spring/summer); used for interval-to-seasons conversion
   rollMode: 40 // no chat message, no confidence
 };
 

@@ -91,18 +91,15 @@ export function compareDates(e1, e2) {
 
 // get a date shifted by offset seasons
 export function getShiftedDate(date, offset) {
-  let res = {};
-
   if (offset == 0) return { year: date.year, season: date.season };
 
-  let yearOffset = Math.floor(offset / 4);
-  let seasonOffset = offset % 4;
+  const totalSeasons = CONFIG.SEASON_ORDER[date.season] + offset;
+  // Use ((x % 4) + 4) % 4 to get a positive modulo, which JavaScript's % does not guarantee
+  const newSeasonIndex = ((totalSeasons % 4) + 4) % 4;
+  const yearOffset = Math.floor(totalSeasons / 4);
 
-  res.season = CONFIG.SEASON_ORDER_INV[(offset + CONFIG.SEASON_ORDER[date.season]) % 4];
-  if (seasonOffset + CONFIG.SEASON_ORDER[date.season] > 3) {
-    yearOffset++;
-  }
-
-  res.year = date.year + yearOffset;
-  return res;
+  return {
+    season: CONFIG.SEASON_ORDER_INV[newSeasonIndex],
+    year: date.year + yearOffset
+  };
 }

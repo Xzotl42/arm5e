@@ -15,11 +15,12 @@ export class Schedule extends HandlebarsApplicationMixin(ApplicationV2) {
     super(options);
     this.displayYear = null;
     this.actor = options.document;
+    this.actor.apps[this.options.uniqueId] = this; // Register with actor's app management
   }
 
   async close(options = {}) {
-    if (this.actor?.apps) {
-      delete this.actor.apps[this.appId];
+    if (this.actor?.apps?.[this.options.uniqueId] != undefined) {
+      delete this.actor.apps[this.options.uniqueId];
     }
     return super.close(options);
   }
@@ -231,10 +232,6 @@ export class Schedule extends HandlebarsApplicationMixin(ApplicationV2) {
   static async openItem(event, target) {
     event.stopPropagation();
     const item = this.actor.items.get(target.dataset.id);
-    if (item) {
-      item.apps[this.appId] = this;
-      item.sheet.render(true, { focus: true });
-    }
   }
 
   static async createItem(event, target) {

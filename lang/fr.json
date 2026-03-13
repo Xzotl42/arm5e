@@ -348,6 +348,8 @@
       "summary": "Résumé du vieillissement"
     },
     "astrolab": {
+      "nextSeason": "Saison suivante",
+      "prevSeason": "Saison précédente",
       "restAll": "Reposez tout le monde",
       "setWorldDate": "Définir la date du monde",
       "trackResources": "Suivre les resources",
@@ -1007,7 +1009,9 @@
       "button": {
         "endRecovery": "Fin de la récupération",
         "endSeason": "Fin de la saison",
-        "recovery": "Jet de récupération"
+        "fastRecovery": "Récupération rapide (jets automatiques)",
+        "recovery": "Jet de récupération",
+        "rollSingle": "Jet de récupération de la blessure"
       },
       "daysAvailbable": "Jours disponibles",
       "daysLeft": "{days} jours restants avant le prochain jet de récupération",
@@ -1017,6 +1021,7 @@
       "medicalHistory": "Antécédents médicaux",
       "msg": {
         "clearHistory": "Effacer les antécédents médicaux",
+        "incapDeath": "Le patient meurt ! (jet de blessure incapacitante raté)",
         "logDay": "Période de récupération, {day} jours",
         "logDone": "Rien d'autre ne peut être fait cette saison.",
         "logHealed": "Blessure complétement guérie en {days} jours",
@@ -1025,9 +1030,21 @@
         "logWoundBetter": "Amélioration de la blessure en {days} jours",
         "logWoundStable": "Blessure stabilisée",
         "logWoundWorse": "La blessure s'aggrave au bout de {days} jours",
+        "noWoundsForOverstrain": "Aucune blessure active pour un jet de surmenage.",
+        "notOpen": "Ouvrez d'abord la fenêtre du Sanatorium, puis lancez le dé depuis ici.",
+        "nextSeason": "Passage à {season} {year}.",
+        "overstrainNote": "Aggravée par surmenage en {season} {year}.",
+        "overstrainStable": "La blessure tient — pas d'aggravation due au surmenage.",
+        "overstrainWorsened": "{name} s'est aggravée en {type} à cause du surmenage !",
+        "sunriseRoll": "Lever du soleil",
+        "sunsetRoll": "Coucher du soleil",
         "patientDead": "Le patient est mort !",
         "patientDied": "Le patient est mourrant !",
-        "patientHealthy": "Le patient est en bonne santé !"
+        "patientHealthy": "Le patient est en bonne santé !",
+        "worstPenaltyNote": "Pénalité de blessure de {penalty} soutenue pendant {days} jours cette saison.",
+        "penaltyAdviceLight": "Le personnage peut voyager et étudier normalement, mais ne peut pas entreprendre d'activités épuisantes, notamment lancer des sorts qui coûtent de la Fatigue. Le travail en laboratoire hermétique et les travaux artisanaux peuvent être effectués normalement.",
+        "penaltyAdviceMedium": "Le personnage peut marcher, à condition qu'on lui permette d'aller lentement et de se reposer fréquemment. Toutes les vitesses de déplacement longue distance sont réduites de moitié. Le personnage peut étudier, mais son Total d'Avancement est divisé par deux s'il est à ce niveau de pénalité pendant un mois ou plus de la saison. Le travail en laboratoire hermétique et les travaux artisanaux sont impossibles.",
+        "penaltyAdviceHeavy": "Le personnage peut parler, manger et se déplacer sur de courtes distances avec du temps et de l'aide. Les activités productives (y compris l'étude, le travail en laboratoire hermétique et les travaux artisanaux) sont impossibles."
       },
       "mundaneHelp": "Aide vulgaire",
       "recoveryBonus": "Bonus de récupération",

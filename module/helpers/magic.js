@@ -291,12 +291,12 @@ export class QuickMagic extends foundry.applications.api.HandlebarsApplicationMi
         )
       }
     };
-    log(false, `QuickMagic: ${JSON.stringify(context)}`);
+    // log(false, `QuickMagic: ${JSON.stringify(context)}`);
     return context;
   }
 
   _onRender(context, options) {
-    this.object.actor.apps[this.appId] = this;
+    this.object.actor.apps[this.options.uniqueId] = this;
 
     this.element.querySelectorAll(".voice-and-gestures").forEach((element) => {
       element.addEventListener("change", async (event) => {
@@ -314,8 +314,8 @@ export class QuickMagic extends foundry.applications.api.HandlebarsApplicationMi
   }
 
   async close(options = {}) {
-    if (this.object?.actor?.apps?.[this.appId]) {
-      delete this.object.actor.apps[this.appId];
+    if (this.object?.actor?.apps?.[this.options.uniqueId]) {
+      delete this.object.actor.apps[this.options.uniqueId];
     }
     return super.close(options);
   }

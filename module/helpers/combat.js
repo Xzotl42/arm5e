@@ -46,6 +46,7 @@ export class QuickCombat extends foundry.applications.api.HandlebarsApplicationM
   constructor(data, options = {}) {
     super(options);
     this.object = data;
+    this.object.actor.apps[this.options.uniqueId] = this;
   }
 
   static DEFAULT_OPTIONS = {
@@ -83,13 +84,13 @@ export class QuickCombat extends foundry.applications.api.HandlebarsApplicationM
       system: sys,
       combat: computeCombatStats(this.object.actor)
     };
-    log(false, `QuickCombat: ${JSON.stringify(context)}`);
+    // log(false, `QuickCombat: ${JSON.stringify(context)}`);
     return context;
   }
 
-  _onRender(context, options) {
-    this.object.actor.apps[this.appId] = this;
-  }
+  // _onRender(context, options) {
+  //   this.object.actor.apps[this.options.uniqueId] = this;
+  // }
 
   static async roll(event, target) {
     await this.object.actor.sheet.roll(target.dataset);
@@ -112,8 +113,8 @@ export class QuickCombat extends foundry.applications.api.HandlebarsApplicationM
   }
 
   async close(options = {}) {
-    if (this.object?.actor?.apps?.[this.appId]) {
-      delete this.object.actor.apps[this.appId];
+    if (this.object?.actor?.apps?.[this.options.uniqueId] != undefined) {
+      delete this.object.actor.apps[this.options.uniqueId];
     }
     return super.close(options);
   }
@@ -157,6 +158,7 @@ export class QuickVitals extends foundry.applications.api.HandlebarsApplicationM
   constructor(data, options = {}) {
     super(options);
     this.object = data;
+    this.object.actor.apps[this.options.uniqueId] = this;
   }
 
   static DEFAULT_OPTIONS = {
@@ -197,9 +199,9 @@ export class QuickVitals extends foundry.applications.api.HandlebarsApplicationM
     return context;
   }
 
-  _onRender(context, options) {
-    this.object.actor.apps[this.appId] = this;
-  }
+  // _onRender(context, options) {
+  //   this.object.actor.apps[this.options.uniqueId] = this;
+  // }
 
   static async rest(event, target) {
     await this.object.actor.rest();
@@ -227,8 +229,8 @@ export class QuickVitals extends foundry.applications.api.HandlebarsApplicationM
   }
 
   async close(options = {}) {
-    if (this.object?.actor?.apps?.[this.appId] != undefined) {
-      delete this.object.actor.apps[this.appId];
+    if (this.object?.actor?.apps?.[this.options.uniqueId] != undefined) {
+      delete this.object.actor.apps[this.options.uniqueId];
     }
     return super.close(options);
   }

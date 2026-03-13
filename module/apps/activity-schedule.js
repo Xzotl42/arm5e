@@ -386,7 +386,7 @@ export class ActivitySchedule extends HandlebarsApplicationMixin(ApplicationV2) 
     event.stopPropagation();
     const item = this.actor.items.get(target.dataset.id);
     if (item) {
-      item.apps[this.appId] = this;
+      item.apps[this.options.uniqueId] = this;
       item.sheet.render(true, { focus: true });
     }
   }

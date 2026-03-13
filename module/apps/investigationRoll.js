@@ -9,6 +9,10 @@ export class InvestigationRoll extends foundry.applications.api.HandlebarsApplic
   constructor(diary, data, options = {}) {
     super(options);
 
+    if (!data.labTotal) {
+      throw new Error("InvestigationRoll: labTotal is required in data argument");
+    }
+
     data.effects = data.system.enchantments.effects.map((e) => {
       return {
         name: e.name,

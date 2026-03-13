@@ -1533,6 +1533,8 @@ a.content-link i.fa-book-open {
 
   color: var(--arm5e-c-black);
   padding: 5px;
+  height: auto;
+  margin: 2px;
 }
 
 .arm5e-roll button.dialog-button,
@@ -1583,14 +1585,32 @@ a.content-link i.fa-book-open {
   padding: 5px;
 }
 
-.arm5e button:hover {
+.arm5e button:not(:disabled):hover {
   box-shadow: 0 0 10px black, 2px 2px 6px rgba(0, 0, 0, 0.6);
 }
-.arm5e .astrolab.button:hover,
-.arm5e-confirm button.dialog-button:hover,
-.arm5e-dialog button.dialog-button:hover,
-.arm5e-prompt button.dialog-button:hover {
+.arm5e .astrolab.button:not(:disabled):hover,
+.arm5e-confirm button.dialog-button:not(:disabled):hover,
+.arm5e-dialog button.dialog-button:not(:disabled):hover,
+.arm5e-prompt button.dialog-button:not(:disabled):hover {
   box-shadow: 0 0 10px var(--arm5e-c-beige);
+}
+
+.arm5e-roll button.dialog-button:disabled,
+.arm5e-prompt button.dialog-button:disabled,
+.arm5e-dialog button.dialog-button:disabled,
+.arm5e-confirm button.dialog-button:disabled,
+.arm5e-config button.dialog-button:disabled,
+.arm5e .astrolab.button:disabled,
+.arm5e .scriptorium.button:disabled,
+.arm5e button.sanatorium:disabled,
+.arm5e .aura-config button:disabled {
+  filter: grayscale(70%) brightness(-0.55);
+  box-shadow: none;
+  border-style: inset;
+  cursor: not-allowed;
+  opacity: 0.6;
+  height: auto;
+  margin: 2px;
 }
 
 .arm5e button.pm-dropdown {
@@ -1821,9 +1841,9 @@ p,
 }
 
 .astrolab-sheet .sheet-body {
-  padding: 36px;
-  padding-top: 20px;
-  padding-bottom: 0px;
+  padding: 5px;
+  /* padding-top: 20px;
+  padding-bottom: 0px; */
 }
 
 .calendar-sheet .schedule-years {
@@ -2601,6 +2621,7 @@ fielgr .arm5e .sheet-header h2.covenantname input {
   height: 20px;
   width: 30px;
   border: 0px;
+  max-width: 30px;
 }
 
 .section-title {
@@ -2736,12 +2757,14 @@ div[class*="foldable-section"] {
   flex-direction: column;
   align-items: stretch;
   flex: 1 1 auto;
+  user-select: text;
 }
 
 .arm5e .backSection:has(> .prosemirror-section) {
   display: flex;
   flex-direction: column;
   align-items: stretch;
+  user-select: text;
 }
 
 .arm5e .prosemirror-editor-box {
