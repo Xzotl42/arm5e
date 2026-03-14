@@ -1,5 +1,6 @@
 import { LabExperimentation } from "../apps/labExperimentation.js";
 import { getMagus } from "./testData.js";
+import { makeEvent } from "./testHelpers.js";
 
 function buildExperimentationData(options = {}) {
   const {
@@ -24,10 +25,7 @@ function buildExperimentationData(options = {}) {
 }
 
 function buildMockEvent() {
-  return {
-    preventDefault: () => {},
-    stopPropagation: () => {}
-  };
+  return makeEvent({ stopPropagation: () => {} });
 }
 
 export function registerLabExperimentationTesting(quench) {

@@ -1,11 +1,28 @@
 import { log } from "../tools/tools.js";
-import { getCompanion, getMagus } from "./testData.js";
+import { getCompanion, getMagus, calculateMagicModifier } from "./testData.js";
 import { ArsLayer } from "../ui/ars-layer.js";
 import { ARM5E } from "../config.js";
 import { simpleDie, stressDie } from "../helpers/dice.js";
 import Aura from "../helpers/aura.js";
 import { ROLL_PROPERTIES } from "../ui/roll-window.js";
 import { TWILIGHT_STAGES } from "../seasonal-activities/long-term-activities.js";
+import {
+  assertBasicRollStructure as _assertBasicRollStructure,
+  assertMagicDataStructure,
+  assertBotchBehavior as _assertBotchBehavior,
+  assertStandardImpact,
+  testConfidenceUsage,
+  EXPECTED_CONFIDENCE_SCORE,
+  VALID_REALMS,
+  PHILOSOPHY_ARTES_BONUS,
+  TWILIGHT_BOTCH_THRESHOLD
+} from "./rollAssertions.js";
+import {
+  applyStandardMagusEffects,
+  captureActorState,
+  createLinkedToken,
+  guardDiceRolls
+} from "./testHelpers.js";
 
 export function registerMagicRollTesting(quench) {
   quench.registerBatch(
@@ -25,194 +42,17 @@ export function registerMagicRollTesting(quench) {
       let magusToken;
       let aura;
 
-      if (game.modules.get("dice-so-nice")?.active) {
-        ui.notifications.warn("Disable dice-so-nice to test dice rolls");
-        return;
-      }
-      let hasScene = false;
-      if (game.scenes.viewed) {
-        hasScene = true;
-      }
+      if (guardDiceRolls()) return;
+      const hasScene = !!game.scenes.viewed;
 
-      // Constants for expected values
-      const EXPECTED_CONFIDENCE_SCORE = 2;
-      const VALID_REALMS = ["magic", "faeric", "infernal", "divine"];
-      const PHILOSOPHY_ARTES_BONUS = 5; // Philosophy and Artes Liberales bonus for ritual spells
-      const TWILIGHT_BOTCH_THRESHOLD = 2; // Number of botches needed to trigger twilight
-
-      // Helper functions to reduce duplication
+      // Compatibility wrappers that preserve the existing positional call signatures
+      // while delegating to the centralised helpers in rollAssertions.js.
       function assertBasicMagicStructure(assert, msgData, type, difficulty, divider) {
-        assert.ok(msgData, "system missing");
-        assert.equal(
-          msgData.confidence.score,
-          EXPECTED_CONFIDENCE_SCORE,
-          "confidence.score should be 2"
-        );
-        assert.ok(msgData.confidence.score >= 0, "confidence.score should be non-negative");
-        assert.equal(msgData.confidence.used, 0, "confidence.used should be 0");
-        assert.equal(msgData.roll.type, type, `roll.type should be ${type}`);
-        assert.equal(
-          msgData.roll.difficulty,
-          difficulty,
-          `roll.difficulty should be ${difficulty}`
-        );
-        assert.equal(msgData.roll.divider, divider, `divider should be ${divider}`);
-        assert.equal(msgData.roll.actorType, "player");
-      }
-
-      function assertMagicDataStructure(assert, msg, isRitual = false) {
-        assert.ok(msg.system.magic, "magic data missing");
-        assert.ok(msg.system.magic.caster, "caster missing");
-        assert.equal(msg.system.magic.caster.form, null, "caster form is not null");
-        assert.ok(msg.system.magic.caster.penetration, "penetration missing");
-        assert.equal(
-          msg.system.magic.caster.penetration.total,
-          msg.system.magic.caster.penetration.score *
-            msg.system.magic.caster.penetration.multiplier,
-          "penetration total incorrect"
-        );
-        assert.ok(Array.isArray(msg.system.magic.targets), "targets should be array");
-        assert.equal(msg.system.magic.ritual, isRitual, `ritual should be ${isRitual}`);
-        assert.equal(msg.system.magic.realm, "magic", "realm is not magic");
-        assert.ok(VALID_REALMS.includes(msg.system.magic.realm), "realm value unexpected");
+        return _assertBasicRollStructure(assert, msgData, { type, difficulty, divider });
       }
 
       function assertBotchBehavior(assert, roll, msgData, actor, initialWarping) {
-        assert.equal(msgData.failedRoll(), true, "failed roll incorrect");
-        assert.equal(msgData.impact.applied, true, "should be applied");
-        assert.equal(roll.total, 0, "botched");
-        assert.equal(msgData.roll.botchCheck, true, "Check for botch missing");
-        assert.equal(msgData.roll.botches, roll.botches, "Wrong number of botches");
-        assert.equal(msgData.confidence.allowed, false, "confidence is not allowed");
-        assert.equal(
-          initialWarping + roll.botches,
-          actor.system.warping.points,
-          "warping should have increased"
-        );
-        if (roll.botches >= TWILIGHT_BOTCH_THRESHOLD) {
-          assert.equal(actor.system.twilight.stage, TWILIGHT_STAGES.PENDING_STRENGTH);
-        }
-      }
-
-      // Helper to assert standard fatigue/wound impact (non-ritual, non-failing spells)
-      function assertStandardImpact(assert, msgData, originalFatigue, actor, options = {}) {
-        const {
-          fatigueLost = 0,
-          fatiguePending = 0,
-          fatigueFail = 0,
-          woundGravity = 0,
-          fatigueChanged = fatigueLost
-        } = options;
-
-        assert.equal(
-          msgData.impact.fatigueLevelsLost,
-          fatigueLost,
-          `fatigue levels lost should be ${fatigueLost}`
-        );
-        assert.equal(
-          msgData.impact.fatigueLevelsPending,
-          fatiguePending,
-          `fatigue levels pending should be ${fatiguePending}`
-        );
-        if (fatigueFail !== undefined) {
-          assert.equal(
-            msgData.impact.fatigueLevelsFail,
-            fatigueFail,
-            `fatigue levels on fail should be ${fatigueFail}`
-          );
-        }
-        assert.equal(
-          msgData.impact.woundGravity,
-          woundGravity,
-          `wound gravity should be ${woundGravity}`
-        );
-        assert.equal(
-          originalFatigue + fatigueChanged,
-          actor.system.fatigueCurrent,
-          "fatigue should have changed"
-        );
-      }
-
-      async function testConfidenceUsage(assert, msg, actor) {
-        await msg.system.useConfidence(actor._id);
-        assert.equal(msg.system.confidence.used, 1, "confidence.used should be 1");
-        assert.equal(msg.system.confidence.allowed, true, "confidence should still be allowed");
-        await msg.system.useConfidence(actor._id);
-        assert.equal(msg.system.confidence.used, 2, "confidence.used should be 2");
-        assert.equal(msg.system.confidence.allowed, false, "confidence should not be allowed");
-      }
-
-      // Helper to calculate total modifier for magic rolls
-      function calculateMagicModifier(magus, aura, options = {}) {
-        const { technique, form, formMultiplier = 1, spell, philosophyBonus = 0 } = options;
-        let total =
-          magus.system.characteristics.sta.value +
-          magus.system.penalties.wounds.total +
-          magus.system.fatigueTotal +
-          aura.modifier;
-
-        if (spell) {
-          // For spells: use lowest technique and lowest form from requisites
-          let lowestTech = spell.system.technique.value;
-          let lowestTechScore = magus.system.arts.techniques[lowestTech].finalScore;
-
-          // Check technique requisites for lower score
-          if (spell.system["technique-req"]) {
-            for (const [tech, required] of Object.entries(spell.system["technique-req"])) {
-              if (required && tech !== lowestTech) {
-                const techScore = magus.system.arts.techniques[tech].finalScore;
-                if (techScore < lowestTechScore) {
-                  lowestTech = tech;
-                  lowestTechScore = techScore;
-                }
-              }
-            }
-          }
-
-          let lowestForm = spell.system.form.value;
-          let lowestFormScore = magus.system.arts.forms[lowestForm].finalScore;
-
-          // Check form requisites for lower score
-          if (spell.system["form-req"]) {
-            for (const [frm, required] of Object.entries(spell.system["form-req"])) {
-              if (required && frm !== lowestForm) {
-                const formScore = magus.system.arts.forms[frm].finalScore;
-                if (formScore < lowestFormScore) {
-                  lowestForm = frm;
-                  lowestFormScore = formScore;
-                }
-              }
-            }
-          }
-
-          // Apply focus if applicable - doubles the lowest art
-          let techTotal = lowestTechScore;
-          let formTotal = lowestFormScore;
-          if (spell.system.applyFocus) {
-            if (lowestTechScore <= lowestFormScore) {
-              techTotal = lowestTechScore * 2;
-            } else {
-              formTotal = lowestFormScore * 2;
-            }
-          }
-
-          total += techTotal + formTotal;
-
-          // Add mastery (finalScore) and bonus
-          total += spell.system.finalScore + spell.system.bonus;
-
-          // Philosophy and Artes Liberales bonus ONLY for ritual spells
-          if (spell.system.ritual && philosophyBonus) {
-            total += philosophyBonus;
-          }
-        } else if (technique && form) {
-          // Spontaneous magic - simple technique + form calculation
-          total +=
-            magus.system.arts.techniques[technique].finalScore +
-            magus.system.arts.forms[form].finalScore * formMultiplier;
-        }
-
-        return total;
+        return _assertBotchBehavior(assert, roll, msgData, { actor, initialWarping });
       }
 
       // Helper to enable or disable an active effect by type and subtype
@@ -234,14 +74,6 @@ export function registerMagicRollTesting(quench) {
         return effects.length;
       }
 
-      // Helper to track initial state before a test
-      function captureActorState(actor) {
-        return {
-          fatigueCurrent: actor.system.fatigueCurrent,
-          warpingPoints: actor.system.warping.points
-        };
-      }
-
       describe("Magic rolls", function () {
         this.timeout(300000); // 300 seconds for easier debugging
 
@@ -258,15 +90,10 @@ export function registerMagicRollTesting(quench) {
           Sp4 = magus.items.getName("Spell: Pe Vi with Deficiency");
           Sp5 = magus.items.getName("Spell: Re Au Partial Fail");
 
-          await magus.addActiveEffect("Affinity Corpus", "affinity", "co", 2, null);
-          await magus.addActiveEffect("Puissant Muto", "art", "mu", 3, null);
-          await magus.addActiveEffect("Deficient Perdo", "deficiency", "pe", undefined, null);
+          await applyStandardMagusEffects(magus, 2);
 
           if (hasScene) {
-            const data = await magus.getTokenDocument({ x: 1000, y: 1000 });
-            data.actorLink = true;
-            magusToken = (await canvas.scene.createEmbeddedDocuments("Token", [data]))[0];
-            await magusToken.update({ actorLink: true });
+            magusToken = await createLinkedToken(magus);
             aura = new Aura(canvas.scene.id);
             await aura.set("faeric", 6);
           } else {

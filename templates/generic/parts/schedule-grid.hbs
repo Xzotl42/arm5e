@@ -10,9 +10,11 @@
 </div>
 <div class="{{ type }}-years flexcol">
   {{#each selectedDates }}
-  <div class="backSection calendar-year flex-center flex-between">
-    <label for="year" class="smallTitle" style="font-size: 16pt">{{ this.year }}</label>
-    <div class="flexrow">
+  <div class="backSection calendar-year flex-center flex-between flexrow">
+    <label for="year" class="smallTitle" style="font-size: 16pt; flex: 0 0 50px">{{
+      this.year
+    }}</label>
+    <div class="flexrow" style="flex: 1">
       {{#each this.seasons }}
       <div
         class="calendar-season {{ this.style }} flexrow item-create"

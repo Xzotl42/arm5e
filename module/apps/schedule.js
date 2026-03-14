@@ -30,7 +30,7 @@ export class Schedule extends HandlebarsApplicationMixin(ApplicationV2) {
     classes: ["arm5e", "sheet", "calendar-sheet"],
     window: { contentClasses: ["standard-form"] },
     position: {
-      width: 600,
+      width: 660,
       height: "auto"
     },
     tag: "form",
@@ -177,7 +177,7 @@ export class Schedule extends HandlebarsApplicationMixin(ApplicationV2) {
     }
 
     data.selectedDates = [];
-    const YEARS_BACK = 12;
+    const YEARS_BACK = 8;
     const YEARS_FORWARD = 2;
     const MIN_YEAR = this.displayYear - YEARS_BACK;
     const MAX_YEAR = this.displayYear + YEARS_FORWARD;
@@ -232,6 +232,10 @@ export class Schedule extends HandlebarsApplicationMixin(ApplicationV2) {
   static async openItem(event, target) {
     event.stopPropagation();
     const item = this.actor.items.get(target.dataset.id);
+    if (item) {
+      item.apps[this.options.uniqueId] = this;
+      item.sheet.render(true, { focus: true });
+    }
   }
 
   static async createItem(event, target) {

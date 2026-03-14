@@ -2,16 +2,14 @@ import { stressDie } from "../helpers/dice.js";
 import { StressDieInternal } from "../helpers/roll.js";
 import { log } from "../tools/tools.js";
 import { companionData } from "./testData.js";
+import { guardDiceRolls } from "./testHelpers.js";
 
 export function registerStressDieTesting(quench) {
   quench.registerBatch(
     "Ars-StressDie",
     (context) => {
       let actor;
-      if (game.modules.get("dice-so-nice")?.active) {
-        ui.notifications.warn("Disable dice-so-nice to test dice rolls");
-        return;
-      }
+      if (guardDiceRolls()) return;
       const { describe, it, assert, after, before } = context;
       describe(`Exploding die`, function () {
         this.timeout(300000); // 300 seconds for easier debugging

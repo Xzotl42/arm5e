@@ -2021,19 +2021,20 @@ p,
 .astrolab-sheet .window-content {
   background-image: url("../assets/astrolab/Astrolab_Background.webp");
   background-repeat: repeat-y;
+  background-size: 100% auto;
   gap: 0px;
 }
 
 /* Astrolab-specific */
 .arm5e .astrolab .header-background {
   height: 120px;
-  width: 600px;
+  width: 100%;
   margin: 0;
 }
 
 .arm5e .astrolab .footer-background {
   height: 75px;
-  width: 600px;
+  width: 100%;
   margin: 0;
   background-image: none;
 }

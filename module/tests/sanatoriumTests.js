@@ -2,6 +2,7 @@ import { log, sleep } from "../tools/tools.js";
 import { getMagus } from "./testData.js";
 import { ArsLayer } from "../ui/ars-layer.js";
 import { Sanatorium } from "../apps/sanatorium.js";
+import { makeEvent } from "./testHelpers.js";
 
 export function registerSanatoriumTesting(quench) {
   quench.registerBatch(
@@ -11,7 +12,7 @@ export function registerSanatoriumTesting(quench) {
 
       let magus;
       const getDatetime = () => game.settings.get("arm5e", "currentDate");
-      const fakeEvent = { preventDefault: () => {} };
+      const fakeEvent = makeEvent();
 
       // ─── helpers ─────────────────────────────────────────────────────────────
 
@@ -604,7 +605,10 @@ export function registerSanatoriumTesting(quench) {
             const sunriseLabel = game.i18n.localize("arm5e.sanatorium.msg.sunriseRoll");
             const sunsetLabel = game.i18n.localize("arm5e.sanatorium.msg.sunsetRoll");
             assert.ok(logText.includes(sunriseLabel), "log contains Sunrise label");
-            assert.ok(!logText.includes(sunsetLabel), "log does NOT contain Sunset label (resolved = true, sunset skipped)");
+            assert.ok(
+              !logText.includes(sunsetLabel),
+              "log does NOT contain Sunset label (resolved = true, sunset skipped)"
+            );
             // First step: wound stays in incap with trend=-1
             const incapWound = (san.object.wounds["incap"] ?? [])[0];
             assert.ok(incapWound, "wound still in incap bucket after first improvement step");
@@ -628,8 +632,16 @@ export function registerSanatoriumTesting(quench) {
             san.object.wounds["incap"][0].trend = -1;
             san.object.wounds["incap"][0].bonus = 200;
             await san._recoveryRoll(fakeEvent);
-            assert.equal((san.object.wounds["medium"] ?? []).length, 1, "wound resolved to medium via Heavy-grade improvement");
-            assert.equal((san.object.wounds["incap"] ?? []).length, 0, "incap bucket empty after second step");
+            assert.equal(
+              (san.object.wounds["medium"] ?? []).length,
+              1,
+              "wound resolved to medium via Heavy-grade improvement"
+            );
+            assert.equal(
+              (san.object.wounds["incap"] ?? []).length,
+              0,
+              "incap bucket empty after second step"
+            );
             san.close();
           } catch (err) {
             console.error(`Error: ${err}`);
@@ -1010,9 +1022,17 @@ export function registerSanatoriumTesting(quench) {
             const san = makeSan();
             // First roll: targets the light wound only
             await san._recoveryRollSingle(lightWound._id ?? lightWound.id);
-            assert.equal(san.object.individualRollDone, true, "individualRollDone true after first roll");
+            assert.equal(
+              san.object.individualRollDone,
+              true,
+              "individualRollDone true after first roll"
+            );
             const lightRank = CONFIG.ARM5E.recovery.wounds["light"].rank;
-            assert.equal(san.object.individualRollMaxRank, lightRank, "individualRollMaxRank = light rank");
+            assert.equal(
+              san.object.individualRollMaxRank,
+              lightRank,
+              "individualRollMaxRank = light rank"
+            );
             // Capture medium wound state before the second roll
             const medRecoveryBefore = san.object.wounds["medium"][0].recoveryTime;
             const medNextBefore = san.object.wounds["medium"][0].nextRoll;

@@ -1,4 +1,4 @@
-import { log } from "../tools/tools.js";
+import { log, sleep as pause } from "../tools/tools.js";
 import { getCompanion, getMagus } from "./testData.js";
 import {
   getConfirmation,
@@ -17,8 +17,6 @@ export function registerDialogTesting(quench) {
       const { describe, it, assert, before } = context;
       let actor;
       let magus;
-
-      const pause = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
       before(async function () {
         actor = await getCompanion(`BobTheCompanion`);

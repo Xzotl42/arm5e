@@ -1397,11 +1397,16 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
       }
       const name = this.actor.system.combatPreps.list[current].name;
       const question = game.i18n.localize("arm5e.dialog.delete-question");
-      const confirmed = await getConfirmation(
-        name,
-        question,
-        ArM5eActorSheet.getFlavor(this.actor.type)
-      );
+      let confirmed = false;
+      if (ev.shiftKey) {
+        confirmed = true;
+      } else {
+        confirmed = await getConfirmation(
+          name,
+          question,
+          ArM5eActorSheet.getFlavor(this.actor.type)
+        );
+      }
 
       if (confirmed) {
         const updateData = {};
@@ -1505,13 +1510,18 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
       const question = game.i18n.localize("arm5e.dialog.delete-question");
       const li = $(event.currentTarget).parents(".item");
       let itemId = li.data("itemId");
-      let confirm = await getConfirmation(
-        li[0].dataset.name,
-        question,
-        ArM5eActorSheet.getFlavor(this.actor.type)
-      );
+      let confirmed = false;
+      if (event.shiftKey) {
+        confirmed = true;
+      } else {
+        confirmed = await getConfirmation(
+          li[0].dataset.name,
+          question,
+          ArM5eActorSheet.getFlavor(this.actor.type)
+        );
+      }
 
-      if (confirm) {
+      if (confirmed) {
         itemId = itemId instanceof Array ? itemId : [itemId];
         await this.actor.deleteEmbeddedDocuments("Item", itemId, {});
         li.slideUp(200, () => this.render(false));
@@ -1651,14 +1661,18 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
     const li = $(ev.currentTarget).parents(".item");
     let itemId = li.data("itemId");
     itemId = itemId instanceof Array ? itemId : [itemId];
-    let confirmed = true;
-    if (game.settings.get("arm5e", "confirmDelete")) {
-      const question = game.i18n.localize("arm5e.dialog.delete-question");
-      confirmed = await getConfirmation(
-        li[0].dataset.name,
-        question,
-        ArM5eActorSheet.getFlavor(this.actor.type)
-      );
+    let confirmed = false;
+    if (ev.shiftKey) {
+      confirmed = true;
+    } else {
+      if (game.settings.get("arm5e", "confirmDelete")) {
+        const question = game.i18n.localize("arm5e.dialog.delete-question");
+        confirmed = await getConfirmation(
+          li[0].dataset.name,
+          question,
+          ArM5eActorSheet.getFlavor(this.actor.type)
+        );
+      }
     }
     if (confirmed) {
       itemId = itemId instanceof Array ? itemId : [itemId];

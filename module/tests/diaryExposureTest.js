@@ -3,46 +3,9 @@ import { getCompanion, getMagus, newSpell1 } from "./testData.js";
 import { ArsLayer } from "../ui/ars-layer.js";
 import { ARM5E } from "../config.js";
 import Aura from "../helpers/aura.js";
+import { addProgressItem, applyStandardMagusEffects, makeDiaryTemplate } from "./testHelpers.js";
 
 // import { Quench } from "../quench.js";
-
-const diaryTemplate = {
-  name: `Placeholder`,
-  type: "diaryEntry",
-  system: {
-    done: false,
-    cappedGain: false,
-    sourceQuality: 240,
-    activity: "none",
-    progress: {
-      abilities: [],
-      arts: [],
-      spells: [],
-      newSpells: []
-    },
-    optionKey: "standard",
-    duration: 60,
-    description: `Some description`,
-    externalIds: []
-  }
-};
-
-async function addProgressItem(entry, type, defaultItem, sheetData) {
-  const event = {
-    preventDefault: () => {},
-    currentTarget: {
-      dataset: {
-        type: type,
-        action: "add",
-        default: defaultItem,
-        secondary: "false",
-        teacherscore: sheetData.system.teacherScore
-      }
-    }
-  };
-
-  return await entry.sheet._onProgressControl(event);
-}
 
 export function registerExposureTesting(quench) {
   quench.registerBatch(
@@ -59,10 +22,9 @@ export function registerExposureTesting(quench) {
         ArsLayer.clearAura(true);
         magus = await getMagus("Tiberius");
 
-        await magus.addActiveEffect("Affinity Corpus", "affinity", "co", 1.5, null);
-        await magus.addActiveEffect("Puissant Muto", "art", "mu", 3, null);
-        await magus.addActiveEffect("Deficient Perdo", "deficiency", "pe", undefined, null);
+        await applyStandardMagusEffects(magus);
 
+        const diaryTemplate = makeDiaryTemplate(240, 60);
         diaryTemplate.system.activity = "exposure";
         diaryTemplate.system.sourceQuality = 3;
         entry = await magus.createEmbeddedDocuments("Item", [diaryTemplate], {});

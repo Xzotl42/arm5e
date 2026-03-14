@@ -5,6 +5,7 @@ import { ARM5E } from "../config.js";
 import { simpleDie, stressDie } from "../helpers/dice.js";
 import Aura from "../helpers/aura.js";
 import { ROLL_PROPERTIES } from "../ui/roll-window.js";
+import { applyStandardMagusEffects, createLinkedToken, guardDiceRolls } from "./testHelpers.js";
 
 export function registerRollTesting(quench) {
   quench.registerBatch(
@@ -23,14 +24,8 @@ export function registerRollTesting(quench) {
       let magusToken;
       let aura;
 
-      if (game.modules.get("dice-so-nice")?.active) {
-        ui.notifications.warn("Disable dice-so-nice to test dice rolls");
-        return;
-      }
-      let hasScene = false;
-      if (game.scenes.viewed) {
-        hasScene = true;
-      }
+      if (guardDiceRolls()) return;
+      const hasScene = !!game.scenes.viewed;
 
       before(async function () {
         actor = await getCompanion(`BobTheCompanion`);
@@ -44,14 +39,9 @@ export function registerRollTesting(quench) {
         Sp3 = magus.items.getName("Ritual spell");
         Sp4 = magus.items.getName("Spell with deficiency");
 
-        await magus.addActiveEffect("Affinity Corpus", "affinity", "co", 2, null);
-        await magus.addActiveEffect("Puissant Muto", "art", "mu", 3, null);
-        await magus.addActiveEffect("Deficient Perdo", "deficiency", "pe", undefined, null);
+        await applyStandardMagusEffects(magus, 2);
         if (hasScene) {
-          const data = await magus.getTokenDocument({ x: 1000, y: 1000 });
-          data.actorLink = true;
-          magusToken = (await canvas.scene.createEmbeddedDocuments("Token", [data]))[0];
-          await magusToken.update({ actorLink: true });
+          magusToken = await createLinkedToken(magus);
           aura = new Aura(canvas.scene.id);
           await aura.set("faeric", 6);
         } else {

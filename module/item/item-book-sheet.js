@@ -196,8 +196,9 @@ export class ArM5eBookSheet extends ArM5eItemSheet {
     if (this.item.isOwned) {
       flavor = ArM5eActorSheet.getFlavor(this.item.actor.type);
     }
-
-    if (game.settings.get("arm5e", "confirmDelete")) {
+    if (event.shiftKey) {
+      confirm = true;
+    } else if (game.settings.get("arm5e", "confirmDelete")) {
       confirm = await getConfirmation(
         game.i18n.localize("arm5e.dialog.delete-topic"),
         game.i18n.localize("arm5e.dialog.delete-question"),

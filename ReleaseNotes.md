@@ -1,4 +1,4 @@
-## 3.0.0.4 Stentorius
+## 3.0.0.6 Stentorius
 
 ### Compatibility
 
@@ -8,24 +8,7 @@
 
 ### Application V2 migration
 
-- Scriptorium- done
-- Sanatorium - done
-- Quick Magic - done
-- Quick Combat - done
-- Quick Vitals - done
-- Medical history - done
-- Investigation rolls - done
-- Sanatorium -done
-- SourcebookFilter config - done
-- CompendiaRef config - done
-- Aura Config - done
-- Astrolabium - done
-- Arcane experimentation - done
-- Activity Schedule - done
-- Group Schedule - done
-- Character Schedule - done
-- ChatMessage - removed jquery usage
-- Active effects config - Ars theme
+- All Form Applications are now ApplicationV2
 - All dialogs are now DialogV2
 - All roll dialogs are now ApplicationV2
 
@@ -42,6 +25,10 @@
   - New possibility to roll for a single wound.
   - The Sanatorium is aware of seasons changes
   - Instead of asking for the number of days remaining in the season, it asks which day of the season the treatment of a fresh wound starts
+- Shift clicking when deleting an item will bypass the confirmation dialog.
+- [technical] Non-regression testing
+  - Extended coverage
+  - Helper functions factorized in a shared file.
 
 ### Bug fixes
 
@@ -53,7 +40,6 @@
 - Magus characters missing the virtue will receive "The Gift" making them aligned with magic realm (instead of a previous hack where all magi were magic aligned. As long as you have the virtue (ie: one with an index-key = "the-gift"), it won't be added again, so you can change the effects as you desire)
 - Buttons to create items and folders are now properly displayed
 - [technical] ars magica icons names in css are now prefixed with "ars-" to avoid conflicts with core Foundry
-- Dropping an empty book no longer raises an error and close the Scriptorium
 - The diary's description of an ability book, no longer states the topic as undefined if no specific topic name was defined in the read book
 - Various cosmetic improvement and fixes
   - removed the dark line in the middle of dialogs and items sheets
@@ -62,6 +48,9 @@
   - For simplicity, half days have been removed from the recovery period. Two rolls per day will be done for incapacitating wounds
   - A dead patient will stop recovery immediately instead of trying to heal remaining wounds until the end of the season.
   - Fixed a case where a wound was never healed and the diary entry was empty.
+- [Scriptoirum]
+  - Dropping an empty book no longer raises an error and close the Scriptorium
+  - When the writer has no qualifying abilities, warnings were pushed to the reading tab so the Writing tab never showed an error.
 
 ## 2.4.1.17, Radislav, Cognizant Wisdom BF3
 

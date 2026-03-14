@@ -336,7 +336,9 @@ export class ArM5eCovenantActorSheet extends ArM5eActorSheet {
       const li = $(ev.currentTarget).parents(".item");
       let itemId = li.data("itemId");
       let confirmed = true;
-      if (game.settings.get("arm5e", "confirmDelete")) {
+      if (ev.shiftKey) {
+        confirmed = true;
+      } else if (game.settings.get("arm5e", "confirmDelete")) {
         const question = game.i18n.localize("arm5e.dialog.delete-question");
         confirmed = await getConfirmation(
           li[0].dataset.name,

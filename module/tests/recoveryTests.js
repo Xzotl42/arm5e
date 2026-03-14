@@ -5,6 +5,7 @@ import { ARM5E } from "../config.js";
 import { simpleDie, stressDie } from "../helpers/dice.js";
 import Aura from "../helpers/aura.js";
 import { Sanatorium } from "../apps/sanatorium.js";
+import { makeEvent } from "./testHelpers.js";
 
 const DEFAULT_ROLL = (sanatorium) => {
   return {
@@ -41,9 +42,7 @@ export function registerRecoveryTesting(quench) {
         ArsLayer.clearAura(true);
         magus = await getMagus("Tiberius");
 
-        event = {
-          preventDefault: () => {}
-        };
+        event = makeEvent();
         await magus.addActiveEffect("Recovery bonus", "vitals", "recovery", 4, null);
       });
 

@@ -4,9 +4,15 @@ import { simpleDie, stressDie } from "../helpers/dice.js";
 import Aura from "../helpers/aura.js";
 import { ROLL_PROPERTIES } from "../ui/roll-window.js";
 import { log } from "../tools/tools.js";
-
-// Test constants
-const BOTCH_DIE_COUNT = 10;
+import {
+  assertBasicRollStructure as _assertBasicRollStructure,
+  assertConfidenceState as _assertConfidenceState,
+  assertImpactDefaults as _assertImpactDefaults,
+  assertBotchBehavior as _assertBotchBehavior,
+  assertSuccessWithConfidence as _assertSuccessWithConfidence,
+  BOTCH_DIE_COUNT
+} from "./rollAssertions.js";
+import { guardDiceRolls, createLinkedToken } from "./testHelpers.js";
 
 export function registerOptionRollTesting(quench) {
   quench.registerBatch(
@@ -18,62 +24,33 @@ export function registerOptionRollTesting(quench) {
       let magusToken;
       let aura;
 
-      // Helper functions
+      // Compatibility wrappers: preserve the existing closure-style call signatures
+      // (no leading `assert` parameter) by closing over `assert` from quench context.
       function assertBasicRollStructure(msgData, expectedLabel, expectedType) {
-        assert.ok(msgData, "system missing");
-        assert.equal(msgData.label, expectedLabel, `label should be "${expectedLabel}"`);
-        assert.equal(msgData.roll.type, expectedType, `roll type should be "${expectedType}"`);
-        assert.equal(msgData.roll.actorType, "player", "actor type should be 'player'");
+        return _assertBasicRollStructure(assert, msgData, {
+          expectedLabel,
+          type: expectedType,
+          confidenceScore: null
+        });
       }
 
       function assertConfidenceState(msgData) {
-        assert.ok(msgData.confidence.score >= 0, "confidence.score should be non-negative");
-        assert.equal(msgData.confidence.used, 0, "confidence.used should be 0 initially");
+        return _assertConfidenceState(assert, msgData);
       }
 
       function assertImpactDefaults(msgData) {
-        assert.equal(msgData.impact.fatigueLevelsLost, 0, "fatigue levels lost should be 0");
-        assert.equal(msgData.impact.fatigueLevelsPending, 0, "fatigue levels pending should be 0");
-        assert.equal(msgData.impact.woundGravity, 0, "wound gravity should be 0");
+        return _assertImpactDefaults(assert, msgData);
       }
 
       function assertBotchBehavior(msgData, roll) {
-        assert.equal(msgData.impact.applied, true, "impact should be applied on botch");
-        assert.equal(roll.total, 0, "botch total should be 0");
-        assert.equal(msgData.roll.botchCheck, true, "botch check should be true");
-        assert.equal(msgData.roll.botches, roll.botches, "botch count should match");
-        assert.equal(msgData.confidence.allowed, false, "confidence not allowed on botch");
+        return _assertBotchBehavior(assert, roll, msgData);
       }
 
       async function assertSuccessWithConfidence(msg, actor, expectedModifier) {
-        assert.equal(msg.system.impact.applied, false, "impact should not be applied yet");
-        assert.equal(msg.system.confidence.allowed, true, "confidence should be allowed");
-        if (expectedModifier !== undefined) {
-          assert.equal(msg.rolls[0].modifier, expectedModifier, "modifier not correct");
-        }
-        const initialUsed = msg.system.confidence.used;
-        await msg.system.useConfidence(actor._id);
-
-        assert.equal(
-          msg.system.confidence.used,
-          initialUsed + 1,
-          `confidence.used should be ${initialUsed + 1}`
-        );
-        // Confidence is only disallowed if all confidence points have been spent
-        const expectedAllowed = msg.system.confidence.used < msg.system.confidence.score;
-        assert.equal(
-          msg.system.confidence.allowed,
-          expectedAllowed,
-          `confidence ${expectedAllowed ? "should" : "should not"} be allowed (${
-            msg.system.confidence.used
-          }/${msg.system.confidence.score} used)`
-        );
+        return _assertSuccessWithConfidence(assert, msg, actor, expectedModifier);
       }
 
-      if (game.modules.get("dice-so-nice")?.active) {
-        ui.notifications.warn("Disable dice-so-nice to test dice rolls");
-        return;
-      }
+      if (guardDiceRolls()) return;
 
       before(async function () {
         actor = await getCompanion(`BobTheCompanion`);
@@ -82,10 +59,7 @@ export function registerOptionRollTesting(quench) {
 
         const hasScene = !!game.scenes.viewed;
         if (hasScene) {
-          const data = await magus.getTokenDocument({ x: 1000, y: 1000 });
-          data.actorLink = true;
-          magusToken = (await canvas.scene.createEmbeddedDocuments("Token", [data]))[0];
-          await magusToken.update({ actorLink: true });
+          magusToken = await createLinkedToken(magus);
           aura = new Aura(canvas.scene.id);
           await aura.set("faeric", 6);
         } else {

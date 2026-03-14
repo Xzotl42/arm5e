@@ -23,6 +23,7 @@ import { registerScheduleIntegrationTesting } from "./scheduleIntegrationTests.j
 import { registerQuickAppsIntegrationTesting } from "./quickAppsTests.js";
 import { registerLabExperimentationTesting } from "./labExperimentationTests.js";
 import { registerSanatoriumTesting } from "./sanatoriumTests.js";
+import { registerScriptoriumTesting } from "./scriptoriumTests.js";
 
 export function registerTestSuites(quench) {
   registerDEBUGTest(quench);
@@ -35,6 +36,7 @@ export function registerTestSuites(quench) {
   registerQuickAppsIntegrationTesting(quench);
   registerLabExperimentationTesting(quench);
   registerSanatoriumTesting(quench);
+  registerScriptoriumTesting(quench);
   registerStressDieTesting(quench);
   registerAbilityScoresTesting(quench);
   registerRollTesting(quench);

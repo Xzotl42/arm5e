@@ -1,9 +1,15 @@
-import { log } from "../tools.js";
+import { log } from "../tools/tools.js";
 import { getCompanion, getMagus } from "./testData.js";
 import { ArsLayer } from "../ui/ars-layer.js";
 import { ARM5E } from "../config.js";
-import { simpleDie, stressDie } from "../dice.js";
+import { simpleDie, stressDie } from "../helpers/dice.js";
 import Aura from "../helpers/aura.js";
+import {
+  applyStandardMagusEffects,
+  captureActorState,
+  createLinkedToken,
+  guardDiceRolls
+} from "./testHelpers.js";
 
 export function register__TEMPLATE__Testing(quench) {
   quench.registerBatch(
@@ -16,24 +22,23 @@ export function register__TEMPLATE__Testing(quench) {
       let magusToken;
       let aura;
 
-      let hasScene = false;
-      if (game.scenes.viewed) {
-        hasScene = true;
-      }
+      // Guard: skip if dice-so-nice is active (would break deterministic roll tests).
+      // Remove this line if this suite does not perform dice rolls.
+      if (guardDiceRolls()) return;
+
+      const hasScene = !!game.scenes.viewed;
 
       before(async function () {
         actor = await getCompanion(`BobTheCompanion`);
         ArsLayer.clearAura(true);
         magus = await getMagus("Tiberius");
 
-        await magus.addActiveEffect("Affinity Corpus", "affinity", "co", 2, null);
-        await magus.addActiveEffect("Puissant Muto", "art", "mu", 3, null);
-        await magus.addActiveEffect("Deficient Perdo", "deficiency", "pe", undefined, null);
+        // Apply the standard trio of active effects used by most test suites.
+        await applyStandardMagusEffects(magus);
+
+        // Create a linked token on the current scene (skipped when no scene is open).
         if (hasScene) {
-          const data = await magus.getTokenDocument({ x: 1000, y: 1000 });
-          data.actorLink = true;
-          magusToken = (await canvas.scene.createEmbeddedDocuments("Token", [data]))[0];
-          await magusToken.update({ actorLink: true });
+          magusToken = await createLinkedToken(magus);
           aura = new Aura(canvas.scene.id);
           await aura.set("faeric", 6);
         }
@@ -42,8 +47,9 @@ export function register__TEMPLATE__Testing(quench) {
       describe("__TEMPLATE__ nominal", function () {
         it("__TEMPLATE__1: ", async function () {
           try {
-            let dataset = { roll: "char", characteristic: c };
+            let dataset = { roll: "char", characteristic: "sta" };
             actor.rollInfo.init(dataset, actor);
+            const initialState = captureActorState(actor);
             const msg = await stressDie(actor, "char", 0, null, 10);
             const roll = msg.rolls[0];
             log(false, roll);
@@ -54,7 +60,7 @@ export function register__TEMPLATE__Testing(quench) {
             }
             assert.equal(
               roll.modifier,
-              actor.system.characteristics[c].value,
+              actor.system.characteristics.sta.value,
               "modifier not correct"
             );
           } catch (err) {
