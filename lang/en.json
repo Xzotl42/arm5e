@@ -1169,6 +1169,7 @@
       "writer": {
         "name": "Writer's name",
         "nothingToWrite": "The writer has nothing to write about.",
+        "noQualifyingArts": "The writer has no arts with a score of 5 or more.",
         "title": "Writer",
         "writingScoreLabel": "Writing score (Com + language)",
         "writingScoreLabel2": "Translating score (Language x 20) levels."

@@ -40,17 +40,20 @@
           {{/unless}}
           <fieldset>
             <div class="scriptorium item-header resource">
-              <label class=" checkbox-label">{{localize "arm5e.scriptorium.quickCopy"}}</label>
-              <input type="checkbox" name="copying.quickCopy" {{checked copying.quickCopy }} />
-              <label class=" checkbox-label">{{localize "arm5e.scriptorium.individualCopies"}}</label>
-              <input type="checkbox" name="copying.individualCopies" {{checked copying.individualCopies }} />
-            </div>
-            <div class="scriptorium item-header resource">
-              <label for="copying.scribe.copyingScore" class="">{{copying.scribe.writingScoreLabel}} :
-                {{copying.scribe.writingScore}}</label>
-              <input class="flex01" title="{{copying.scribe.speciality}}" type="text"
-                value="{{copying.scribe.speciality}}" readonly style="max-width: 150px" />
-              <input type="checkbox" name="copying.scribe.specApply" {{checked copying.scribe.specApply }} />
+              <div class="flexrow"><label class=" checkbox-label">{{localize "arm5e.scriptorium.quickCopy"}}</label>
+                <input type="checkbox" name="copying.quickCopy" {{checked copying.quickCopy }} />
+              </div>
+              <div class="flexrow"><label
+                  class=" checkbox-label">{{localize "arm5e.scriptorium.individualCopies"}}</label>
+                <input type="checkbox" name="copying.individualCopies" {{checked copying.individualCopies }} />
+              </div>
+              <div class="flexrow"><label for="copying.scribe.copyingScore"
+                  class="">{{copying.scribe.writingScoreLabel}} :
+                  {{copying.scribe.writingScore}}</label>
+                <input class="flex01" title="{{copying.scribe.speciality}}" type="text"
+                  value="{{copying.scribe.speciality}}" readonly style="min-width:130px;max-width: 150px" />
+                <input type="checkbox" name="copying.scribe.specApply" {{checked copying.scribe.specApply }} />
+              </div>
             </div>
             <div class="scriptorium item-header resource">
               <label for="copying.scribe.copyingScore" class="">{{localize "arm5e.sheet.duration"}} :

@@ -98,6 +98,8 @@ export class GroupSchedule extends HandlebarsApplicationMixin(ApplicationV2) {
    */
   #buildActorYearRow(actor, year) {
     const actorSchedule = actor.getSchedule(year, year, [], []);
+    const agingStart = 35 + actor.system.bonuses.traits.agingStart;
+    const born = Number(actor.system.description?.born.value);
     let actorYear = {
       id: actor._id,
       actorName: actor.name,
@@ -117,6 +119,18 @@ export class GroupSchedule extends HandlebarsApplicationMixin(ApplicationV2) {
           actorYear.seasons[s].activities.push({ id: busy.id, name: busy.name, img: busy.img });
         }
       }
+      // if (
+      //   agingStart + born <= year &&
+      //   s === "winter" &&
+      //   (actorYear.seasons[s].activities.length === 0 ||
+      //     !actorYear.seasons[s].activities.some((a) => a.type === "aging"))
+      // ) {
+      //   actorYear.seasons[s].activities.push({
+      //     id: 0,
+      //     name: game.i18n.localize("arm5e.agingRoll"),
+      //     img: CONFIG.ARM5E_DEFAULT_ICONS.aging
+      //   });
+      // }
     }
 
     return actorYear;
