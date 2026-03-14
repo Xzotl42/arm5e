@@ -3,6 +3,7 @@ import { getCompanion, getLab, getMagus } from "./testData.js";
 import { ArsLayer } from "../ui/ars-layer.js";
 import { ARM5E } from "../config.js";
 import { simpleDie, stressDie } from "../helpers/dice.js";
+import { applyStandardMagusEffects } from "./testHelpers.js";
 
 export function registerLabActivityTesting(quench) {
   quench.registerBatch(
@@ -18,9 +19,7 @@ export function registerLabActivityTesting(quench) {
       before(async function () {
         magus = await getMagus("Tiberius");
 
-        await magus.addActiveEffect("Affinity Corpus", "affinity", "co", 2, null);
-        await magus.addActiveEffect("Puissant Muto", "art", "mu", 3, null);
-        await magus.addActiveEffect("Deficient Perdo", "deficiency", "pe", undefined, null);
+        await applyStandardMagusEffects(magus, 2);
         magus.sheet.render(true);
         lab = await getLab("The Lair of Tiberius");
         lab.sheet.render(true);

@@ -1,4 +1,4 @@
-<form class="{{ cssClass }} calendar calendar-sheet" autocomplete="off">
+<div class="{{ cssClass }} calendar calendar-sheet" autocomplete="off">
   <h1 class="astrolab-title width: 100%;" text-align="center">{{ title }}</h1>
   <div class="sheet-body">
     <div class="flexrow">
@@ -33,9 +33,8 @@
         />
       </div>
     </div>
-    <div class="flexrow"></div>
     <div>
       {{> "systems/arm5e/templates/generic/parts/schedule-grid.hbs" }}
     </div>
   </div>
-</form>
+</div>

@@ -4,46 +4,9 @@ import { ArsLayer } from "../ui/ars-layer.js";
 import { ARM5E } from "../config.js";
 import Aura from "../helpers/aura.js";
 import { VisExtractionActivity } from "../seasonal-activities/labActivity.js";
+import { applyStandardMagusEffects } from "./testHelpers.js";
 
 // import { Quench } from "../quench.js";
-
-const diaryTemplate = {
-  name: `Placeholder`,
-  type: "diaryEntry",
-  system: {
-    done: false,
-    cappedGain: false,
-    sourceQuality: 240,
-    activity: "none",
-    progress: {
-      abilities: [],
-      arts: [],
-      spells: [],
-      newSpells: []
-    },
-    optionKey: "standard",
-    duration: 60,
-    description: `Some description`,
-    externalIds: []
-  }
-};
-
-async function addProgressItem(entry, type, defaultItem, sheetData) {
-  const event = {
-    preventDefault: () => {},
-    currentTarget: {
-      dataset: {
-        type: type,
-        action: "add",
-        default: defaultItem,
-        secondary: "false",
-        teacherscore: sheetData.system.teacherScore
-      }
-    }
-  };
-
-  return await entry.sheet._onProgressControl(event);
-}
 
 export function registerVisTesting(quench) {
   quench.registerBatch(
@@ -61,9 +24,7 @@ export function registerVisTesting(quench) {
         ArsLayer.clearAura(true);
         magus = await getMagus("Tiberius");
         lab = await getLab("The lair of Tiberius");
-        await magus.addActiveEffect("Affinity Corpus", "affinity", "co", 1.5, null);
-        await magus.addActiveEffect("Puissant Muto", "art", "mu", 3, null);
-        await magus.addActiveEffect("Deficient Perdo", "deficiency", "pe", undefined, null);
+        await applyStandardMagusEffects(magus);
         await lab.sheet.setOwner(magus);
 
         // diaryTemplate.system.activity = "visExtraction";

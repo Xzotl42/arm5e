@@ -1083,3 +1083,85 @@ export async function getTeacher(magusName = "Master", items = [], override = {}
 
   return character;
 }
+
+/**
+ * Calculate the expected total modifier for a magic roll.
+ *
+ * Used by roll test suites to cross-check the modifier value produced by the
+ * system against an independently-computed reference.
+ *
+ * @param {Actor}  magus
+ * @param {object} aura           Aura instance with a `.modifier` property.
+ * @param {object} [options={}]
+ * @param {string}  [options.technique]         Technique key for spontaneous magic (e.g. "mu").
+ * @param {string}  [options.form]              Form key for spontaneous magic (e.g. "co").
+ * @param {number}  [options.formMultiplier=1]  Multiplier applied to the form score.
+ * @param {Item}    [options.spell]             Spell item; when supplied, uses spell logic.
+ * @param {number}  [options.philosophyBonus=0] Extra bonus from Philosophy/Artes Liberales (rituals).
+ * @returns {number}
+ */
+export function calculateMagicModifier(magus, aura, options = {}) {
+  const { technique, form, formMultiplier = 1, spell, philosophyBonus = 0 } = options;
+  let total =
+    magus.system.characteristics.sta.value +
+    magus.system.penalties.wounds.total +
+    magus.system.fatigueTotal +
+    aura.modifier;
+
+  if (spell) {
+    // For spells: use lowest technique and lowest form from requisites
+    let lowestTech = spell.system.technique.value;
+    let lowestTechScore = magus.system.arts.techniques[lowestTech].finalScore;
+
+    if (spell.system["technique-req"]) {
+      for (const [tech, required] of Object.entries(spell.system["technique-req"])) {
+        if (required && tech !== lowestTech) {
+          const techScore = magus.system.arts.techniques[tech].finalScore;
+          if (techScore < lowestTechScore) {
+            lowestTech = tech;
+            lowestTechScore = techScore;
+          }
+        }
+      }
+    }
+
+    let lowestForm = spell.system.form.value;
+    let lowestFormScore = magus.system.arts.forms[lowestForm].finalScore;
+
+    if (spell.system["form-req"]) {
+      for (const [frm, required] of Object.entries(spell.system["form-req"])) {
+        if (required && frm !== lowestForm) {
+          const formScore = magus.system.arts.forms[frm].finalScore;
+          if (formScore < lowestFormScore) {
+            lowestForm = frm;
+            lowestFormScore = formScore;
+          }
+        }
+      }
+    }
+
+    // Apply focus if applicable – doubles the lowest art
+    let techTotal = lowestTechScore;
+    let formTotal = lowestFormScore;
+    if (spell.system.applyFocus) {
+      if (lowestTechScore <= lowestFormScore) {
+        techTotal = lowestTechScore * 2;
+      } else {
+        formTotal = lowestFormScore * 2;
+      }
+    }
+
+    total += techTotal + formTotal;
+    total += spell.system.finalScore + spell.system.bonus;
+
+    if (spell.system.ritual && philosophyBonus) {
+      total += philosophyBonus;
+    }
+  } else if (technique && form) {
+    total +=
+      magus.system.arts.techniques[technique].finalScore +
+      magus.system.arts.forms[form].finalScore * formMultiplier;
+  }
+
+  return total;
+}

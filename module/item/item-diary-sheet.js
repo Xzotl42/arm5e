@@ -1534,6 +1534,9 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
       log(false, "WARNING: something weird is happening");
       return;
     }
+    if (event?.shiftKey) {
+      toConfirm = false;
+    }
     if (toConfirm) {
       const question = game.i18n.localize("arm5e.dialog.rollback-question");
       let itemId = this.item._id;

@@ -1,8 +1,7 @@
-import { log } from "../tools/tools.js";
+import { log, getDataset, sleep as pause } from "../tools/tools.js";
 import { getCompanion, getMagus } from "./testData.js";
 import { ROLL_PROPERTIES, getRollDialog } from "../ui/roll-window.js";
 import { prepareRollVariables } from "../ui/roll-window.js";
-import { getDataset } from "../tools/tools.js";
 
 export function registerRollDialogTesting(quench) {
   quench.registerBatch(
@@ -11,8 +10,6 @@ export function registerRollDialogTesting(quench) {
       const { describe, it, assert, before } = context;
       let actor;
       let magus;
-
-      const pause = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
       before(async function () {
         actor = await getCompanion(`BobTheCompanion`);

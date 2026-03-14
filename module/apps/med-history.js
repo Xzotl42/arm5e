@@ -118,8 +118,10 @@ export class MedicalHistory extends foundry.applications.api.HandlebarsApplicati
   }
 
   async _clearHistory(event) {
-    let confirmed = true;
-    if (game.settings.get("arm5e", "confirmDelete")) {
+    let confirmed = false;
+    if (event.shiftKey) {
+      confirmed = true;
+    } else if (game.settings.get("arm5e", "confirmDelete")) {
       const question = game.i18n.localize("arm5e.dialog.sure");
       confirmed = await getConfirmation(
         game.i18n.localize("arm5e.sanatorium.msg.clearHistory"),

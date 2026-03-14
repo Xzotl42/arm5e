@@ -1,5 +1,6 @@
 import { InvestigationRoll } from "../apps/investigationRoll.js";
 import { getMagus } from "./testData.js";
+import { guardDiceRolls } from "./testHelpers.js";
 
 function buildDiaryMock(actor) {
   return {
@@ -52,10 +53,7 @@ export function registerInvestigationRollTesting(quench) {
       let magus;
       let diary;
 
-      if (game.modules.get("dice-so-nice")?.active) {
-        ui.notifications.warn("Disable dice-so-nice to test investigation roll");
-        return;
-      }
+      if (guardDiceRolls()) return;
 
       before(async function () {
         this.timeout(300000);

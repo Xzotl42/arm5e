@@ -1,4 +1,4 @@
-## 3.0.0.4 Stentorius
+## 3.0.0.5 Stentorius
 
 ### Compatibility
 
@@ -8,24 +8,7 @@
 
 ### Application V2 migration
 
-- Scriptorium- done
-- Sanatorium - done
-- Quick Magic - done
-- Quick Combat - done
-- Quick Vitals - done
-- Medical history - done
-- Investigation rolls - done
-- Sanatorium -done
-- SourcebookFilter config - done
-- CompendiaRef config - done
-- Aura Config - done
-- Astrolabium - done
-- Arcane experimentation - done
-- Activity Schedule - done
-- Group Schedule - done
-- Character Schedule - done
-- ChatMessage - removed jquery usage
-- Active effects config - Ars theme
+- All Form Applications are now ApplicationV2
 - All dialogs are now DialogV2
 - All roll dialogs are now ApplicationV2
 
@@ -42,6 +25,10 @@
   - New possibility to roll for a single wound.
   - The Sanatorium is aware of seasons changes
   - Instead of asking for the number of days remaining in the season, it asks which day of the season the treatment of a fresh wound starts
+- Shift clicking when deleting an item will bypass the confirmation dialog.
+- [technical] Non-regression testing
+  - Extended coverage
+  - Helper functions factorized in a shared file.
 
 ### Bug fixes
 
