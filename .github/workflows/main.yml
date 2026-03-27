@@ -16,6 +16,21 @@ env:
 on:
   release:
     types: [published]
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: "Tag to test against (e.g. v3.0.0.8)"
+        required: true
+        type: string
+      mode:
+        description: "echo-only = print payload only; dry-run = also validate with Foundry API; full = dry-run + publish"
+        required: true
+        type: choice
+        default: echo-only
+        options:
+          - echo-only
+          - dry-run
+          - full
 
 jobs:
   build:
@@ -43,28 +58,38 @@ jobs:
       #   env:
       #     esmodules: '["dist/arm5e.min.js"]'
 
-      # get part of the tag after the `v`
-      - name: Extract tag version number
-        id: get_version
-        uses: maltoze/get-version-action@v1
+      # Resolve tag and version for both release events and manual dispatch
+      - name: Resolve tag and version
+        id: resolve
+        run: |
+          if [ "${{ github.event_name }}" = "release" ]; then
+            TAG="${{ github.event.release.tag_name }}"
+          else
+            TAG="${{ inputs.tag_name }}"
+          fi
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+          echo "version=${TAG#v}" >> $GITHUB_OUTPUT
 
       # Substitute the Manifest and Download URLs in the system.json
       - name: Substitute Manifest and Download Links For Versioned Ones
+        if: github.event_name == 'release'
         id: sub_manifest_link_version
         uses: microsoft/variable-substitution@v1
         with:
           files: "system.json"
         env:
-          version: ${{steps.get_version.outputs.version-without-v}}
+          version: ${{ steps.resolve.outputs.version }}
           url: ${{ env.project_url }}
           manifest: ${{ env.latest_manifest_url }}
           download: ${{ env.release_module_url }}
 
       # Create a zip file with all files required by the module to add to the release
-      - run: zip -r ./arm5e.zip system.json LICENSE.txt README.md ReleaseNotes.md FAQ.md css/ assets/ templates/ lang/ module/ packs/ tours/ template.json
+      - if: github.event_name == 'release'
+        run: zip -r ./arm5e.zip system.json LICENSE.txt README.md ReleaseNotes.md FAQ.md css/ assets/ templates/ lang/ module/ packs/ tours/ template.json
 
       # Create a release for this specific version
       - name: Update Release with Files
+        if: github.event_name == 'release'
         id: create_version_release
         uses: ncipollo/release-action@v1
         with:
@@ -76,3 +101,75 @@ jobs:
           artifacts: "./system.json, ./arm5e.zip"
           tag: ${{ github.event.release.tag_name }}
           body: ${{ github.event.release.body }}
+
+      # Build the Foundry payload once and echo it — visible in every run and required
+      # for dry-run and publish steps. Reads compatibility from system.json (post-substitution
+      # on release events, or from the checked-out file on manual dispatch).
+      - name: Build and echo Foundry payload
+        run: |
+          MINIMUM=$(jq -r '.compatibility.minimum // ""' system.json)
+          VERIFIED=$(jq -r '.compatibility.verified // ""' system.json)
+          MAXIMUM=$(jq -r '.compatibility.maximum // ""' system.json)
+
+          jq -n \
+            --arg id       "arm5e" \
+            --arg version  "${{ steps.resolve.outputs.version }}" \
+            --arg manifest "https://github.com/${{ github.repository }}/releases/download/${{ steps.resolve.outputs.tag }}/system.json" \
+            --arg notes    "https://github.com/${{ github.repository }}/releases/tag/${{ steps.resolve.outputs.tag }}" \
+            --arg minimum  "$MINIMUM" \
+            --arg verified "$VERIFIED" \
+            --arg maximum  "$MAXIMUM" \
+            '{
+              id: $id,
+              release: {
+                version: $version,
+                manifest: $manifest,
+                notes: $notes,
+                compatibility: (
+                  { minimum: $minimum, verified: $verified }
+                  + if $maximum != "" then { maximum: $maximum } else {} end
+                )
+              }
+            }' | tee /tmp/foundry_payload.json
+
+      # Validate the payload against the Foundry API without saving anything.
+      - name: Validate Foundry Release (dry-run)
+        if: github.event_name == 'release' || inputs.mode == 'dry-run' || inputs.mode == 'full'
+        env:
+          FOUNDRY_TOKEN: ${{ secrets.FOUNDRY_RELEASE_TOKEN }}
+        run: |
+          PAYLOAD=$(jq '. + {"dry-run": true}' /tmp/foundry_payload.json)
+
+          HTTP_STATUS=$(curl -s -o /tmp/foundry_dryrun.json -w "%{http_code}" \
+            -X POST "https://foundryvtt.com/_api/packages/release_version/" \
+            -H "Content-Type: application/json" \
+            -H "Authorization: ${FOUNDRY_TOKEN}" \
+            -d "$PAYLOAD")
+
+          echo "Dry-run response (HTTP $HTTP_STATUS):"
+          cat /tmp/foundry_dryrun.json
+
+          if [ "$HTTP_STATUS" != "200" ]; then
+            echo "::error::Foundry dry-run failed with HTTP $HTTP_STATUS"
+            exit 1
+          fi
+
+      # Publish the release to the Foundry VTT package registry.
+      - name: Publish to Foundry VTT Package Registry
+        if: github.event_name == 'release' || inputs.mode == 'full'
+        env:
+          FOUNDRY_TOKEN: ${{ secrets.FOUNDRY_RELEASE_TOKEN }}
+        run: |
+          HTTP_STATUS=$(curl -s -o /tmp/foundry_publish.json -w "%{http_code}" \
+            -X POST "https://foundryvtt.com/_api/packages/release_version/" \
+            -H "Content-Type: application/json" \
+            -H "Authorization: ${FOUNDRY_TOKEN}" \
+            --data-binary @/tmp/foundry_payload.json)
+
+          echo "Publish response (HTTP $HTTP_STATUS):"
+          cat /tmp/foundry_publish.json
+
+          if [ "$HTTP_STATUS" != "200" ]; then
+            echo "::error::Foundry publish failed with HTTP $HTTP_STATUS"
+            exit 1
+          fi
