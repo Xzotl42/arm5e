@@ -56,6 +56,19 @@ export class LabTextSchema extends AbstractMagicEntity {
     };
   }
 
+  toString() {
+    let type = game.i18n.localize("arm5e.generic.other");
+    switch (this.type) {
+      case "spell":
+        type = game.i18n.localize("TYPES.Item.spell");
+        break;
+      case "enchantment":
+        type = game.i18n.localize("TYPES.Item.enchantment");
+        break;
+    }
+    return `<li>${game.i18n.localize("TYPES.Item.laboratoryText")} (${type}) "${this.parent.name}"`;
+  }
+
   sanitize() {
     return LabTextSchema.sanitizeData(this.toObject());
   }

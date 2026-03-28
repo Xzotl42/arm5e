@@ -1,4 +1,4 @@
-## 3.0.0.6 Stentorius
+## 3.0.0.7 Stentorius
 
 ### Compatibility
 
@@ -29,6 +29,14 @@
 - [technical] Non-regression testing
   - Extended coverage
   - Helper functions factorized in a shared file.
+- Cosmetic improvements left and right
+- [Technical] Updated github actions at release
+  - Compatibility node 24
+  - Parse the module.json for any syntax problem
+  - Automatic publish on Foundry listing on successful release
+- New dialog to pick any kind of documents from a filtered list.
+  - Available for macros
+  - Replace the drag and drop zones for non-GM users
 
 ### Bug fixes
 
@@ -51,6 +59,7 @@
 - [Scriptoirum]
   - Dropping an empty book no longer raises an error and close the Scriptorium
   - When the writer has no qualifying abilities, warnings were pushed to the reading tab so the Writing tab never showed an error.
+  - Copying Ability summae takes now the proper time.
 
 ## 2.4.1.17, Radislav, Cognizant Wisdom BF3
 

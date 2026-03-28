@@ -18,6 +18,7 @@ import { prepareDatasetByTypeOfItem } from "./helpers/hotbar-helpers.js";
 import { ArM5ePreloadHandlebarsTemplates } from "./ui/templates.js";
 import { ArM5eActiveEffectConfig } from "./sheets/active-effect-config-sheet.js";
 import { Astrolabium } from "./apps/astrolabium.js";
+import { DocumentPicker } from "./apps/document-picker.js";
 // Experiment
 import { ArsLayer, addArsButtons } from "./ui/ars-layer.js";
 import { customizePause } from "./ui/ars-pause.js";
@@ -93,6 +94,7 @@ Hooks.once("init", async function () {
     ArM5eItem,
     // ArtSchema,
     ArsApps,
+    DocumentPicker,
     socketHandler,
     rollItemMacro,
     migrateCompendium

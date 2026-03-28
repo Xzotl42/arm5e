@@ -2,6 +2,73 @@
   <div class="remember">
     <div class="flexcol marginsides32">
       <div class="padding4 flexrow flex-group-left">
+        <label class="section-handle  clickable" data-action="handleSection" data-section="reader"
+          data-category="scriptorium">{{localize "arm5e.scriptorium.reader.title"}}</label>
+      </div>
+      <!-- READING - READER -->
+      <div
+        class="scriptorium foldable-section backSection resource flexcol  {{@root.ui.sections.visibility.scriptorium.reader}}"
+        style="margin-left: 5px;" id="scriptorium-reader">
+        {{#if (eq reading.reader.id null)}}
+          <div class="flexrow">
+            <button class="dialog-button" data-action="selectReader">
+              {{localize "arm5e.scriptorium.button.selectReader"}}</button>
+            {{#if isGM}}
+              <div class="drop-box drop-reader flex0" data-drop="reader">
+                <label>{{localize "arm5e.scriptorium.msg.dropCharacter"}}</label>
+              </div>
+            {{/if}}
+          </div>
+        {{else}}
+          <div class="scriptorium item-header resource flexrow" style="width: 100%; max-height: 32px;">
+            <div class="item-image"></div>
+            <label>{{reading.reader.name}}</label>
+            <a class="unlink-reader" data-action="unlinkReader" title="Break link to reader"><i class="fas fa-link"
+                style="font-size: 12pt;"></i></a>
+          </div>
+          {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+        {{/if}}
+        {{#unless (eq reading.reader.id null)}}
+          <div class="scriptorium resource">
+            <label class="">{{localize "arm5e.scriptorium.reader.name"}}</label>
+            <input type="text" name="reading.reader.name" value="{{reading.reader.name}}" data-dtype="String"
+              style="max-width: 220px;" readonly>
+          </div>
+          <div class="scriptorium resource">
+            <label for="reading.reader.language" class="">{{localize "arm5e.scriptorium.languages"}}</label>
+            <select name="reading.reader.language" data-dtype="String" class="ability-key">
+              {{selectOptions reading.reader.languages selected=reading.reader.language labelAttr="name" 
+                valueAttr="id" nameAttr="id"}}
+            </select>
+          </div>
+          {{#if (eq reading.book.currentTopic.category "ability")}}
+            {{#unless ui.reading.error}}
+              <div class="scriptorium resource">
+                <label for="reading.reader.ability" class="">{{localize "arm5e.sheet.abilities"}}</label>
+                <select name="reading.reader.ability" data-dtype="String" class="ability-key" {{ui.editItem}}>
+                  {{selectOptions reading.reader.abilities selected=reading.reader.ability labelAttr="name" 
+                nameAttr="_id" valueAttr="_id"}}
+                </select>
+              </div>
+            {{/unless}}
+            <!-- <div class="scriptorium resource"></div> -->
+          {{/if}}
+          {{#if (eq reading.book.currentTopic.category "mastery")}}
+            {{#unless ui.reading.error}}
+              <div class="scriptorium resource">
+                <label for="reading.reader.spell" class="">{{localize "arm5e.sheet.spells"}}</label>
+                <select name="reading.reader.spell" data-dtype="String" class="ability-key" {{ui.editItem}}>
+                  {{selectOptions reading.reader.spells selected=reading.reader.spell labelAttr="name" 
+                 nameAttr="id" valueAttr="id"}}
+                </select>
+              </div>
+            {{/unless}}
+          {{/if}}
+
+        {{/unless}}
+
+      </div>
+      <div class="padding4 flexrow flex-group-left">
         <label class="section-handle  clickable" data-action="handleSection" data-section="book-read"
           data-category="scriptorium">{{localize "arm5e.sheet.book"}}</label>
       </div>
@@ -10,8 +77,14 @@
         class="scriptorium foldable-section backSection padding10 resource flexcol {{@root.ui.sections.visibility.scriptorium.book-read}}"
         id="scriptorium-book-read">
         {{#if (eq reading.book.uuid null)}}
-          <div class="drop-box drop-book" data-drop="book">
-            <label>{{localize "arm5e.scriptorium.msg.dropBook"}}</label>
+          <div class="flexrow">
+            <button class="dialog-button" data-action="selectReadingBook">
+              {{localize "arm5e.scriptorium.button.selectBookToRead"}}</button>
+            {{#if isGM}}
+              <div class="drop-box drop-book flex0" data-drop="book">
+                <label>{{localize "arm5e.scriptorium.msg.dropBook"}}</label>
+              </div>
+            {{/if}}
           </div>
         {{else}}
           <div class="scriptorium item-header resource flexrow" style="width: 100%;">
@@ -141,83 +214,25 @@
           {{/unless}}
         </div>
       </div>
-      <div class="padding4 flexrow flex-group-left">
-        <label class="section-handle  clickable" data-action="handleSection" data-section="reader"
-          data-category="scriptorium">{{localize "arm5e.scriptorium.reader.title"}}</label>
-      </div>
-      <!-- READING - READER -->
-      <div
-        class="scriptorium foldable-section backSection resource flexcol  {{@root.ui.sections.visibility.scriptorium.reader}}"
-        style="margin-left: 5px;" id="scriptorium-reader">
-        {{#if (eq reading.reader.id null)}}
-          <div class="drop-box drop-reader" data-drop="reader">
-            <label>{{localize "arm5e.scriptorium.msg.dropCharacter"}}</label>
-          </div>
-        {{else}}
-          <div class="scriptorium item-header resource flexrow" style="width: 100%; max-height: 32px;">
-            <div class="item-image"></div>
-            <label>{{reading.reader.name}}</label>
-            <a class="unlink-reader" data-action="unlinkReader" title="Break link to reader"><i class="fas fa-link"
-                style="font-size: 12pt;"></i></a>
-          </div>
-          {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+      {{#unless (eq reading.reader.id null)}}
+        {{#if ui.reading.warning }}
+          <ul>
+            {{#each ui.reading.warning }}
+              <li>
+                <div class="scriptorium resource"><label class=""
+                    style="color:red; padding: 10px; text-align: center;">{{this}}</label>
+                </div>
+              </li>
+            {{/each}}
+          </ul>
         {{/if}}
-        {{#unless (eq reading.reader.id null)}}
-          <div class="scriptorium resource">
-            <label class="">{{localize "arm5e.scriptorium.reader.name"}}</label>
-            <input type="text" name="reading.reader.name" value="{{reading.reader.name}}" data-dtype="String"
-              style="max-width: 220px;" readonly>
-          </div>
-          <div class="scriptorium resource">
-            <label for="reading.reader.language" class="">{{localize "arm5e.scriptorium.languages"}}</label>
-            <select name="reading.reader.language" data-dtype="String" class="ability-key">
-              {{selectOptions reading.reader.languages selected=reading.reader.language labelAttr="name" 
-                valueAttr="id" nameAttr="id"}}
-            </select>
-          </div>
-          {{#if (eq reading.book.currentTopic.category "ability")}}
-            {{#unless ui.reading.error}}
-              <div class="scriptorium resource">
-                <label for="reading.reader.ability" class="">{{localize "arm5e.sheet.abilities"}}</label>
-                <select name="reading.reader.ability" data-dtype="String" class="ability-key" {{ui.editItem}}>
-                  {{selectOptions reading.reader.abilities selected=reading.reader.ability labelAttr="name" 
-                nameAttr="_id" valueAttr="_id"}}
-                </select>
-              </div>
-            {{/unless}}
-            <!-- <div class="scriptorium resource"></div> -->
-          {{/if}}
-          {{#if (eq reading.book.currentTopic.category "mastery")}}
-            {{#unless ui.reading.error}}
-              <div class="scriptorium resource">
-                <label for="reading.reader.spell" class="">{{localize "arm5e.sheet.spells"}}</label>
-                <select name="reading.reader.spell" data-dtype="String" class="ability-key" {{ui.editItem}}>
-                  {{selectOptions reading.reader.spells selected=reading.reader.spell labelAttr="name" 
-                 nameAttr="id" valueAttr="id"}}
-                </select>
-              </div>
-            {{/unless}}
-          {{/if}}
-          {{#if ui.reading.warning }}
-            <ul>
-              {{#each ui.reading.warning }}
-                <li>
-                  <div class="scriptorium resource"><label class=""
-                      style="color:red; padding: 10px; text-align: center;">{{this}}</label>
-                  </div>
-                </li>
-              {{/each}}
-            </ul>
-          {{/if}}
-          <div class="scriptorium resource">
-            <button class="arm5e flex02 create-reading-activity" data-action="createReadingActivity"
-              style="font-family: bookAntika" data-index="{{topicIndex}}" data-ability-id="{{reading.reader.ability}}"
-              data-spell-id="{{reading.reader.spell}}"
-              {{ui.reading.createPossible}}>{{localize "arm5e.scriptorium.button"}}</button>
-          </div>
-        {{/unless}}
-
-      </div>
+        <div class="scriptorium resource">
+          <button class="arm5e flex02 create-reading-activity" data-action="createReadingActivity"
+            data-index="{{topicIndex}}" data-ability-id="{{reading.reader.ability}}"
+            data-spell-id="{{reading.reader.spell}}"
+            {{ui.reading.createPossible}}>{{localize "arm5e.scriptorium.button.createActivity"}}</button>
+        </div>
+      {{/unless}}
     </div>
   </div>
 </div>
