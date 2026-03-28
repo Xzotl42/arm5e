@@ -10,12 +10,19 @@
         class="scriptorium foldable-section backSection resource flexcol  {{@root.ui.sections.visibility.scriptorium.scribe}}"
         style="margin-left: 5px;" id="scriptorium-scribe">
         {{#if (eq copying.scribe.id null)}}
-          <div class="drop-box drop-scribe" data-drop="scribe">
-            <label>{{localize "arm5e.scriptorium.msg.dropCharacter"}}</label>
+          <div class="flexrow">
+            <button class="dialog-button" data-action="selectScribe">
+              {{localize "arm5e.scriptorium.button.selectScribe"}}</button>
+            {{#if isGM}}
+              <div class="drop-box drop-scribe flex0" data-drop="scribe">
+                <label>{{localize "arm5e.scriptorium.msg.dropCharacter"}}</label>
+              </div>
+            {{/if}}
           </div>
+
         {{else}}
           <div class="scriptorium item-header resource flexrow" style="width: 100%; max-height: 32px;">
-            <div class="item-image"></div>
+            <!-- <div class="item-image"></div> -->
             <label>{{copying.scribe.name}}</label>
             <a class="unlink-scribe" data-action="unlinkScribe" title="Break link to scribe"><i class="fas fa-link"
                 style="font-size: 12pt;"></i></a>
@@ -76,11 +83,19 @@
             {{selectOptions copying.copyTypes selected=copying.topicType  }}
           </select>
         </div>
-        {{#unless copying.books.length}}
-          <div class="drop-box drop-book" data-drop="copy-book">
-            <label>{{localize "arm5e.scriptorium.msg.dropBookTopic"}}</label>
-          </div>
-        {{/unless}}
+        {{log "copying.books.length: " copying.books.length}}
+        <!-- {{#unless copying.books.length}} -->
+        <div class="flexrow">
+          <button class="dialog-button" data-action="selectCopyingBook">
+            {{localize "arm5e.scriptorium.button.selectBookToCopy"}}</button>
+
+          {{#if isGM}}
+            <div class="drop-box drop-book flex0" data-drop="copy-book">
+              <label>{{localize "arm5e.scriptorium.msg.dropBook"}}</label>
+            </div>
+          {{/if}}
+        </div>
+        <!-- {{/unless}} -->
         {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
         <div class="drop-book" data-drop="copy-book">
           {{#unless (or (eq this.currentTopic.category "labText") (eq copying.topicType "labText"))}}
@@ -110,6 +125,7 @@
                         data-dtype="String" readonly>
                     </div>
                   </div>
+                  {{log "topic length: " this.system.topics.length }}
                   {{#if (gt this.system.topics.length 1)}}
                     <div class="flexrow" style="max-width: 180px;">
                       <div class="img-container"><img class="nav-arrow previous-topicToCopy clickable"
@@ -126,8 +142,6 @@
                   {{/if}}
                 </div>
                 <div class="scriptorium resource">
-
-
                   <div class="flexrow">
                     <fieldset>
                       <legend>{{localize "arm5e.generic.params"}}</legend>
@@ -241,9 +255,9 @@
         </ul>
         <div class="scriptorium resource">
           <button class="arm5e flex02 create-copying-activity" data-action="createCopyingActivity"
-            style="font-family: bookAntika" data-index="{{copyingTopicIndex}}"
-            data-ability-id="{{copying.scribe.ability}}" data-spell-id="{{copying.scribe.spell}}"
-            {{ui.copying.createPossible}}>{{localize "arm5e.scriptorium.button"}}</button>
+            data-index="{{copyingTopicIndex}}" data-ability-id="{{copying.scribe.ability}}"
+            data-spell-id="{{copying.scribe.spell}}"
+            {{ui.copying.createPossible}}>{{localize "arm5e.scriptorium.button.createActivity"}}</button>
         </div>
 
 

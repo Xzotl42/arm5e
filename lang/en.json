@@ -472,6 +472,10 @@
         "yes": "Yes"
       },
       "chooseCovenant": "Choose a covenant",
+      "noDocuments": "No documents found.",
+      "pickActors": "Pick Actors",
+      "pickDocuments": "Pick Documents",
+      "pickItems": "Pick Items",
       "combatDamage": "Combat damage",
       "confirmClearAura": "Are you sure you wish to clear the aura from this scene?",
       "confirmTransfer-amount": "Which quantity do you want to transfer? (Max {max})",
@@ -1096,7 +1100,16 @@
       "viewMedicalHistory": "View medical history"
     },
     "scriptorium": {
-      "button": "Create activity",
+      "button": {
+        "createActivity": "Create activity",
+        "selectBookToRead": "Select a book to read",
+        "selectBookToAppend": "Select a book to append to",
+        "selectBookToCopy": "Select a book to copy",
+        "selectReader": "Select reader",
+        "selectScribe": "Select scribe",
+        "selectWriter": "Select writer"
+      },
+
       "copying": {
         "activity": "Copying book",
         "finalQuality": "Final quality",
@@ -1125,6 +1138,7 @@
           "spell": "the mastery of the \"{spell}\" spell"
         },
         "dropBook": "Drop a book here to fill the blanks.",
+        "dropBookOrClick": "Drop a book here to fill the blanks, or click to select one of your books.",
         "dropBookTopic": "Drop a book and pick a topic type.",
         "dropCharacter": "Drop a character here.",
         "dropLabText": "Drop a owned spell or draft laboratory text.",

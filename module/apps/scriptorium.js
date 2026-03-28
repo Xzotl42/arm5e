@@ -10,8 +10,9 @@ import { ArM5eItem } from "../item/item.js";
 import { BookSchema } from "../schemas/bookSchema.js";
 import { boolOption } from "../schemas/commonSchemas.js";
 import { DiaryEntrySchema } from "../schemas/diarySchema.js";
+import { LabTextSchema } from "../schemas/labTextSchema.js";
 import { compareTopics, debug, getDataset, log } from "../tools/tools.js";
-import { selectItemDialog } from "../ui/dialogs.js";
+import { DocumentPicker } from "./document-picker.js";
 
 /**
  * Plain data-carrier object that holds the mutable UI state of the Scriptorium application.
@@ -174,15 +175,9 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
   constructor(data, options = {}) {
     super(options);
     this.object = data;
-    // Snapshot world lists once at construction; refreshed on re-open if needed.
-    data.lists = {
-      books: game.items.filter((i) => i.type === "book"),
-      labTexts: game.items.filter((i) => i.type === "laboratoryText"),
-      characters: game.actors.filter((a) => a.type === "player" || a.type === "npc")
-    };
+
     data.selected = null;
     this.#dragDrop = this.#createDragDropHandlers();
-    // Hooks.on("closeApplication", (app, html) => this.onClose(app));
   }
 
   /** @override */
@@ -226,7 +221,13 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
       previousTopic: Scriptorium.previousTopic,
       nextTopicToCopy: Scriptorium.nextTopicToCopy,
       previousTopicToCopy: Scriptorium.previousTopicToCopy,
-      removeBook: Scriptorium.removeBook
+      removeBook: Scriptorium.removeBook,
+      selectReader: Scriptorium.selectReader,
+      selectScribe: Scriptorium.selectScribe,
+      selectWriter: Scriptorium.selectWriter,
+      selectReadingBook: Scriptorium.selectReadingBook,
+      selectWritingBook: Scriptorium.selectWritingBook,
+      selectCopyingBook: Scriptorium.selectCopyingBook
     }
   };
 
@@ -236,7 +237,7 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
       template: "systems/arm5e/templates/generic/parts/scriptorium-header.hbs"
     },
     tabs: {
-      template: "templates/generic/tab-navigation.hbs"
+      template: "systems/arm5e/templates/generic/parts/ars-tab-navigation.hbs"
     },
     reading: {
       template: "systems/arm5e/templates/generic/parts/scriptorium-reading.html",
@@ -259,9 +260,9 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
   static TABS = {
     primary: {
       tabs: [
-        { id: "reading", label: "arm5e.activity.reading" },
-        { id: "writing", label: "arm5e.activity.writing" },
-        { id: "copying", label: "arm5e.activity.copying" }
+        { id: "reading", label: "arm5e.activity.reading", cssClass: "item flexrow" },
+        { id: "writing", label: "arm5e.activity.writing", cssClass: "item flexrow" },
+        { id: "copying", label: "arm5e.activity.copying", cssClass: "item flexrow" }
       ],
       initial: "reading"
     }
@@ -427,9 +428,33 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
    * @param {object} updateData - Flat dot-notation keys (e.g. `"reading.reader.id": null`).
    */
   async _updateData(updateData) {
-    foundry.utils.mergeObject(this.object, foundry.utils.expandObject(updateData), {
-      recursive: true
-    });
+    const expanded = foundry.utils.expandObject(updateData);
+    if (expanded.reading?.book?.system?.topics) {
+      const topics = this.object.reading.book.system.topics;
+      foundry.utils.mergeObject(topics, expanded.reading.book.system.topics);
+      delete expanded.reading.book.system.topics;
+    }
+    if (expanded.writing?.book?.system?.topics) {
+      const topics = this.object.writing.book.system.topics;
+      foundry.utils.mergeObject(topics, expanded.writing.book.system.topics);
+      delete expanded.writing.book.system.topics;
+    }
+    if (expanded.copying?.books) {
+      const bookIndexes = Object.keys(expanded.copying.books);
+      for (const index of bookIndexes) {
+        if (expanded.copying.books[index].system?.topics) {
+          const topics = this.object.copying.books[index].system.topics;
+          foundry.utils.mergeObject(topics, expanded.copying.books[index].system.topics, {
+            recursive: true
+          });
+          delete expanded.copying.books[index].system.topics;
+        }
+      }
+      const books = this.object.copying.books;
+      foundry.utils.mergeObject(books, expanded.copying.books);
+      delete expanded.copying.books;
+    }
+    foundry.utils.mergeObject(this.object, expanded, { recursive: true });
     this.render();
   }
 
@@ -451,7 +476,7 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
     const currentDate = game.settings.get("arm5e", "currentDate");
     context.curYear = currentDate.year;
     context.curSeason = currentDate.season;
-
+    context.isGM = game.user.isGM;
     return context;
   }
 
@@ -797,15 +822,15 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
             context.writing.book.system.topics[context.newTopicIndex].key = ab.system.key;
             context.writing.book.system.topics[context.newTopicIndex].option = ab.system.option;
             if (newTopic.type === "Summa") {
-              qualityBonus =
-                (context.writing.book.system.topics[context.newTopicIndex].maxLevel -
-                  context.writing.book.system.topics[context.newTopicIndex].level) *
-                3;
-              // Adjust the level if it is above the max
+              // Clamp level before computing bonus so qualityBonus is never negative
               context.writing.book.system.topics[context.newTopicIndex].level = Math.min(
                 context.writing.book.system.topics[context.newTopicIndex].level,
                 context.writing.book.system.topics[context.newTopicIndex].maxLevel
               );
+              qualityBonus =
+                (context.writing.book.system.topics[context.newTopicIndex].maxLevel -
+                  context.writing.book.system.topics[context.newTopicIndex].level) *
+                3;
               work = context.writing.book.system.topics[context.newTopicIndex].level * 5;
             }
           } else {
@@ -852,14 +877,14 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
               writer.getArtScore(context.writing.writer.art).derivedScore / 2
             );
             if (newTopic.type === "Summa") {
-              qualityBonus =
-                context.writing.book.system.topics[context.newTopicIndex].maxLevel -
-                context.writing.book.system.topics[context.newTopicIndex].level;
-              // Adjust the level if it is above the max
+              // Clamp level before computing bonus so qualityBonus is never negative
               context.writing.book.system.topics[context.newTopicIndex].level = Math.min(
                 context.writing.book.system.topics[context.newTopicIndex].level,
                 context.writing.book.system.topics[context.newTopicIndex].maxLevel
               );
+              qualityBonus =
+                context.writing.book.system.topics[context.newTopicIndex].maxLevel -
+                context.writing.book.system.topics[context.newTopicIndex].level;
               work = context.writing.book.system.topics[context.newTopicIndex].level;
             }
           } else {
@@ -945,7 +970,7 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
     }
     context.copying.copyTypes = {
       ...CONFIG.ARM5E.books.types,
-      labText: game.i18n.localize("ITEM.TypeLaboratorytext")
+      labText: game.i18n.localize("TYPES.Item.laboratoryText")
     };
     // Copied topic
     for (const book of context.copying.books) {
@@ -1036,7 +1061,8 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
           context.copying.total = 0;
           for (const b of context.copying.books) {
             const topic = b.system.topics[b.system.topicIndex];
-            context.copying.total += topic.level;
+            // Ability summae need 5× level points to copy; Art summae need level points (RAW p.166)
+            context.copying.total += topic.category === "ability" ? topic.level * 5 : topic.level;
             topic.finalQuality = context.copying.quickCopy ? topic.quality - 1 : topic.quality;
           }
           context.copying.duration = Math.ceil(
@@ -1284,19 +1310,144 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
     }
   }
 
-  /**
-   * Open a world-item picker dialog from the sidebar.
-   * NOTE: this method is not currently wired to any action/button in the templates.
-   * @param {"book"|"character"|"laboratoryText"} type
-   */
-  async pickItem(type) {
-    if (type === "book") {
-      await selectItemDialog(this.object.lists.books, FLAVORS.LABORATORY);
-    } else if (type === "character") {
-      await selectItemDialog(this.object.lists.characters, FLAVORS.LABORATORY);
-    } else if (type === "laboratoryText") {
-      await selectItemDialog(this.object.lists.labTexts, FLAVORS.LABORATORY);
+  static async selectReader(event, target) {
+    const [reader] = await DocumentPicker.selectOwnedCharacter(
+      "arm5e.scriptorium.button.selectReader"
+    );
+    if (reader) {
+      await this._setReader(reader);
     }
+  }
+
+  static async selectWriter(event, target) {
+    const [writer] = await DocumentPicker.selectOwnedCharacter(
+      "arm5e.scriptorium.button.selectWriter"
+    );
+    if (writer) {
+      await this._setWriter(writer);
+    }
+  }
+
+  static async selectScribe(event, target) {
+    const [scribe] = await DocumentPicker.selectOwnedCharacter(
+      "arm5e.scriptorium.button.selectScribe"
+    );
+    if (scribe) {
+      await this._setScribe(scribe);
+    }
+  }
+
+  static async selectReadingBook(event, target) {
+    // if there is a reader already linked
+    let reader = null;
+    if (this.object.reading.reader.id !== null) {
+      reader = game.actors.get(this.object.reading.reader.id);
+    }
+
+    const [book] = await this.selectBook("arm5e.scriptorium.button.selectBookToRead", reader);
+
+    if (book) {
+      await this._setReadingBook(book);
+    }
+  }
+
+  static async selectWritingBook(event, target) {
+    // if there is a writer already linked
+    let writer = null;
+    if (this.object.writing.writer.id !== null) {
+      writer = game.actors.get(this.object.writing.writer.id);
+    }
+
+    const [book] = await this.selectBook("arm5e.scriptorium.button.selectWritingBook", writer);
+
+    if (book) {
+      await this._setWritingBook(book);
+    }
+  }
+
+  static async selectCopyingBook(event, target) {
+    // if there is a scribe already linked
+    let scribe = null;
+    if (this.object.copying.scribe.id !== null) {
+      scribe = game.actors.get(this.object.copying.scribe.id);
+    }
+
+    const [book] = await this.selectBook(
+      "arm5e.scriptorium.button.selectBookToAppend",
+      scribe,
+      true
+    );
+
+    if (book) {
+      if (book.type === "laboratoryText") {
+        await this._addLabTextToCopy(book);
+      } else {
+        await this._addBookToCopy(book, book.system.topicIndex ?? 0);
+      }
+    }
+  }
+
+  async selectBook(title, actor, withLabTexts = false) {
+    let types = ["book"];
+    if (withLabTexts) {
+      types.push("laboratoryText");
+    }
+    const filters = [
+      {
+        label: "World Books",
+        fn: (e) => types.includes(e.type) && e.testUserPermission(game.user, "OBSERVER")
+      }
+    ];
+    let source = game.items.contents.filter(
+      (e) => types.includes(e.type) && e.testUserPermission(game.user, "OBSERVER")
+    );
+
+    // if there is a reader already linked
+    if (actor) {
+      source.push(...actor.items.filter((e) => types.includes(e.type)));
+      if (actor.system.covenant?.linked) {
+        const covenant = actor.system.covenant.document;
+        source.push(...covenant.items.filter((e) => types.includes(e.type)));
+        filters.push({
+          label: "Covenant Books",
+          fn: (e) => types.includes(e.type) && e.parent?.uuid === covenant.uuid
+        });
+      }
+      if (actor.system.sanctum?.linked) {
+        const sanctum = actor.system.sanctum.document;
+        source.push(...sanctum.items.filter((e) => types.includes(e.type)));
+        filters.push({
+          label: "Sanctum Books",
+          fn: (e) => types.includes(e.type) && e.parent?.uuid === sanctum.uuid
+        });
+      }
+    }
+
+    const fields = [
+      {
+        label: "Table of Contents",
+        fn: (doc) => {
+          let toc =
+            doc.type == "book"
+              ? BookSchema.getTableOfContentsSynthetic(doc.system, false)
+              : doc.system.toString();
+
+          return `<i class="ars-Icon_Readspell" data-tooltip="${toc.replaceAll(
+            '"',
+            "&quot;"
+          )}" data-tooltip-class="doc-picker-tooltip"></i>`;
+        }
+      }
+    ];
+    const flavor = CONFIG.ARM5E.FLAVORS.Laboratory;
+    const singleSelect = true;
+    return await DocumentPicker.pick(source, {
+      title: game.i18n.localize(title),
+      filters,
+      singleSelect,
+      fields,
+      flavor
+    });
   }
 
   async _changeWritenLanguage(event) {

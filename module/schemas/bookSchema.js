@@ -192,8 +192,8 @@ export class BookSchema extends foundry.abstract.TypeDataModel {
     return "TODO";
   }
 
-  static getTableOfContentsSynthetic(systemData) {
-    let res = `<h3>${game.i18n.localize("arm5e.book.tableContents")}</h3><ol>`;
+  static getTableOfContentsSynthetic(systemData, withTitle = true) {
+    let res = withTitle ? `<h3>${game.i18n.localize("arm5e.book.tableContents")}</h3><ol>` : "<ol>";
     for (const topic of systemData.topics) {
       let about;
       switch (topic.category) {
@@ -221,17 +221,16 @@ export class BookSchema extends foundry.abstract.TypeDataModel {
       }
 
       if (topic.category == "labText") {
-        let type = "other";
+        let type = game.i18n.localize("arm5e.generic.other");
         switch (topic.labtext.type) {
           case "spell":
-            type = game.i18n.localize("ITEM.TypeSpell");
-
+            type = game.i18n.localize("TYPES.Item.spell");
             break;
           case "enchantment":
-            type = game.i18n.localize("ITEM.TypeEnchantment");
+            type = game.i18n.localize("TYPES.Item.enchantment");
             break;
         }
-        res += `<li>${game.i18n.localize("ITEM.TypeLaboratorytext")} (${type}) "${about}"`;
+        res += `<li>${game.i18n.localize("TYPES.Item.laboratoryText")} (${type}) "${about}"`;
       } else {
         switch (topic.type) {
           case "Summa":

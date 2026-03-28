@@ -4,6 +4,7 @@ import { AuraConfig } from "../apps/aura-config.js";
 import { getConfirmation } from "./dialogs.js";
 import { LabExperimentation } from "../apps/labExperimentation.js";
 import { Scriptorium, ScriptoriumObject } from "../apps/scriptorium.js";
+import { DocumentPicker } from "../apps/document-picker.js";
 
 export class ArsApps {
   static async openAstrolab() {
@@ -38,6 +39,91 @@ export class ArsApps {
       }
     }
   }
+
+  /* -------------------------------------------- */
+  /*  Document Picker helpers                     */
+  /* -------------------------------------------- */
+
+  /**
+   * Open a picker over any WorldCollection or Map.
+   * Thin wrapper around {@link DocumentPicker.pick}.
+   * @param {WorldCollection|Map<string,Document>} source
+   * @param {object} [options]  Forwarded to DocumentPicker.pick
+   * @returns {Promise<Document[]>}
+   */
+  static async pickDocuments(source, options = {}) {
+    return DocumentPicker.pick(source, options);
+  }
+
+  /**
+   * Pick one or more actors from `game.actors`.
+   * @param {object} [options]
+   * @param {Array<{label:string, fn:Function}>} [options.filters]
+   *   Pre-built filter list. If omitted a set of common actor-type filters is generated
+   *   from the types actually present in the world.
+   * @param {string}  [options.title]         Dialog title
+   * @param {boolean} [options.singleSelect=false]
+   * @param {"Neutral"|"PC"|"NPC"|"Lab"|"covenant"|"codex"} [options.flavor="PC"]
+   * @returns {Promise<Actor[]>}
+   */
+  static async pickActors({ filters, title, singleSelect = false, flavor = "PC", ...rest } = {}) {
+    if (!filters) {
+      const types = [...new Set(game.actors.map((a) => a.type))];
+      filters = [
+        { label: game.i18n.localize("arm5e.generic.all"), fn: () => true },
+        ...types.map((t) => ({
+          label: game.i18n.localize(`arm5e.sheet.${t}`),
+          fn: (a) => a.type === t
+        }))
+      ];
+    }
+    return DocumentPicker.pick(game.actors, {
+      title: title ?? game.i18n.localize("arm5e.dialog.pickActors"),
+      filters,
+      singleSelect,
+      flavor,
+      ...rest
+    });
+  }
+
+  /**
+   * Pick one or more items from `game.items`.
+   * @param {object} [options]
+   * @param {Array<{label:string, fn:Function}>} [options.filters]
+   *   Pre-built filter list. If omitted a set of common item-type filters is generated
+   *   from the types actually present in the world.
+   * @param {string}  [options.title]         Dialog title
+   * @param {boolean} [options.singleSelect=false]
+   * @param {"Neutral"|"PC"|"NPC"|"Lab"|"covenant"|"codex"} [options.flavor="Neutral"]
+   * @returns {Promise<Item[]>}
+   */
+  static async pickItems({
+    filters,
+    title,
+    singleSelect = false,
+    flavor = "Neutral",
+    ...rest
+  } = {}) {
+    if (!filters) {
+      const types = [...new Set(game.items.map((i) => i.type))];
+      filters = [
+        { label: game.i18n.localize("arm5e.generic.all"), fn: () => true },
+        ...types.map((t) => ({
+          label: game.i18n.localize(`arm5e.sheet.${t}`),
+          fn: (i) => i.type === t
+        }))
+      ];
+    }
+    return DocumentPicker.pick(game.items, {
+      title: title ?? game.i18n.localize("arm5e.dialog.pickItems"),
+      filters,
+      singleSelect,
+      flavor,
+      ...rest
+    });
+  }
+
+  /* -------------------------------------------- */
 
   static async rollForDamage(tokens) {
     const actors = tokens

@@ -10,8 +10,14 @@
         id="scriptorium-writer">
 
         {{#if (eq writing.writer.id null)}}
-          <div class="drop-box drop-writer" data-drop="writer">
-            <label>{{localize "arm5e.scriptorium.msg.dropCharacter"}}</label>
+          <div class="flexrow">
+            <button class="dialog-button" data-action="selectWriter">
+              {{localize "arm5e.scriptorium.button.selectWriter"}}</button>
+            {{#if isGM}}
+              <div class="drop-box drop-writer flex0" data-drop="writer">
+                <label>{{localize "arm5e.scriptorium.msg.dropCharacter"}}</label>
+              </div>
+            {{/if}}
           </div>
         {{else}}
           <div class="scriptorium item-header resource flexrow" style="width: 100%; max-height: 32px;">
@@ -169,8 +175,14 @@
             </div>
           {{/unless}}
           {{#unless writing.book.id }}
-            <div class="drop-box append-book" data-drop="append-book">
-              <label>{{localize "arm5e.scriptorium.msg.appendTopic"}}</label>
+            <div class="flexrow">
+              <button class="dialog-button" data-action="selectWritingBook">
+                {{localize "arm5e.scriptorium.button.selectBookToAppend"}}</button>
+              {{#if isGM}}
+                <div class="drop-box append-book flex0" data-drop="append-book">
+                  <label>{{localize "arm5e.scriptorium.msg.appendTopic"}}</label>
+                </div>
+              {{/if}}
             </div>
           {{else}}
             <div class="padding12">
@@ -190,9 +202,9 @@
       </ul>
       <div class="scriptorium resource">
         <button class="arm5e flex02 create-writing-activity" data-action="createWritingActivity"
-          style="font-family: bookAntika" data-index="{{newTopicIndex}}" data-ability-id="{{writing.writer.ability}}"
+          data-index="{{newTopicIndex}}" data-ability-id="{{writing.writer.ability}}"
           data-category="{{writing.book.newTopic.category}}" data-spell-id="{{writing.writer.spell}}"
-          {{ui.writing.createPossible}}>{{localize "arm5e.scriptorium.button"}}</button>
+          {{ui.writing.createPossible}}>{{localize "arm5e.scriptorium.button.createActivity"}}</button>
       </div>
     </div>
 

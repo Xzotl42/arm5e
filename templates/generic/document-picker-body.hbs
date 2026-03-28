@@ -1,0 +1,56 @@
+<div class="doc-picker-body flexcol">
+  <div class="marginsides32">
+  {{! Filter select — only shown when filters were provided }}
+  {{#if hasFilters}}
+  <div class="flexrow backSection" style="padding: 4px 8px; align-items: center; gap: 6px;">
+    <label style="white-space: nowrap;"><i class="fas fa-filter"></i></label>
+    <select class="doc-picker-filter-select" style="flex: 1;">
+      {{#each filters}}
+      <option value="{{value}}" {{#if active}}selected{{/if}}>{{label}}</option>
+      {{/each}}
+    </select>
+  </div>
+  {{/if}}
+
+  {{! Column header row }}
+  <div class="backSection flexrow" style="font-size: 9pt; align-items: center; text-align: center; padding: 2px 8px;">
+    <label style="min-width: 44px;"></label>{{! checkbox + icon }}
+    <label style="flex: 1; text-align: left;">{{localize "arm5e.sheet.name"}}</label>
+    {{#each fields}}
+    <label class="label-light" style="min-width: 70px;">{{label}}</label>
+    {{/each}}
+  </div>
+
+  <div style="margin-top: 4px; margin-bottom: 2px;">
+    {{> "systems/arm5e/templates/generic/metalic-bar.html"}}
+  </div>
+
+  {{! Scrollable document list }}
+  <div class="doc-picker-list flexcol" style="min-height: 120px; max-height: 320px; overflow-y: auto;">
+    {{#each items}}
+    <label class="backSection flexrow clickable doc-picker-row {{#if selected}}doc-picker-row--selected{{/if}}"
+           data-action="toggleItem"
+             data-id="{{id}}" 
+             style="align-items: center; text-align: center; padding: 2px 8px; cursor: pointer;">
+           {{#unless ../singleSelect}}
+            <input type="checkbox"
+             name="picker-item"
+             {{checked selected}}
+             style="margin-right: 4px; flex-shrink: 0;" />
+             {{/unless}}
+      <div class="vignette" style="flex-shrink: 0; margin-right: 6px;">
+        <img src="{{img}}" title="{{name}}" style="width: 30px; height: 30px;" />
+      </div>
+      <span style="flex: 1; text-align: left;">{{name}}</span>
+      {{#each extraFields}}
+      <span class="label-light" style="min-width: 70px;">{{{value}}}</span>
+      {{/each}}
+    </label>
+    {{else}}
+    <div class="flexrow" style="padding: 8px; justify-content: center; font-style: italic; opacity: 0.7;">
+      {{localize "arm5e.dialog.noDocuments"}}
+    </div>
+    {{/each}}
+  </div>
+  </div>
+</div>

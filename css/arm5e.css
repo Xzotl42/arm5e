@@ -130,6 +130,7 @@
   --dialog-bg: url("../assets/dialog/Dialog_Background.webp");
   --dialog-bg-large: url("../assets/dialog/LargeDialog_Background.webp");
   --chat-bg: url("../assets/chat/background.webp");
+  --chatinput-bg: url("../assets/chat/input.webp");
 
   --arm5e-c-dark: #191813;
   --arm5e-c-faint: #c9c7b8;
@@ -229,6 +230,11 @@ label,
   flex-direction: column;
 }
 
+/* Reserve scrollbar gutter on actor sheets (AppV1) to prevent header image reflow feedback loop */
+.arm5e.sheet.actor .window-content {
+  scrollbar-gutter: stable;
+}
+
 /* Dialog-specific window-content with background images */
 .arm5e-confirm .window-content,
 .arm5e-prompt .window-content,
@@ -267,7 +273,8 @@ label,
   padding: 0;
   background-image: var(--dialog-bg-large);
   background-size: contain;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .arm5e-prompt.aura-config {
@@ -400,7 +407,7 @@ h3.dice-msg {
 }
 
 .system-arm5e .chat-input {
-  background-image: var(--chat-bg);
+  background-image: var(--chatinput-bg);
   background-size: 100%;
   color: var(--color-text-dark-primary);
 }
@@ -988,13 +995,15 @@ input[type="checkbox"].tiny-checkbox:checked::before {
 }
 
 /* Tooltip / templates */
+body #tooltip.doc-picker-tooltip,
+body .locked-tooltip.doc-picker-tooltip,
 body #tooltip.covenant-tooltip,
 body .locked-tooltip.covenant-tooltip {
   position: absolute;
   width: max-content;
   max-width: 320px;
-  padding: 6px 8px;
-  background: rgba(236, 222, 187, 0.9);
+  padding: 8px;
+  background: radial-gradient(ellipse, rgba(255, 255, 255, 0.8), rgba(181, 179, 164, 0.7));
   color: var(--arm5e-c-black);
   font-family: var(--font-book-bold);
   font-size: var(--font-size-12);
@@ -1009,11 +1018,15 @@ body .locked-tooltip.covenant-tooltip {
   transition: visibility 0s 500ms, opacity 500ms;
   text-align: left;
 }
+
 body #tooltip.covenant-tooltip *,
-body .locked-tooltip.covenant-tooltip * {
+body .locked-tooltip.covenant-tooltip *,
+body #tooltip.doc-picker-tooltip *,
+body .locked-tooltip.doc-picker-tooltip * {
   color: var(--arm5e-c-black);
 }
 body #tooltip.active.covenant-tooltip,
+body #tooltip.active.doc-picker-tooltip,
 body .locked-tooltip.active {
   visibility: visible;
   opacity: 1;
@@ -1066,6 +1079,7 @@ body .locked-tooltip.active {
 .arm5e .tabs .item {
   font-family: var(--font-header);
   font-size: 14pt;
+  justify-content: center;
 }
 .arm5eTabs,
 .arm5eSubTabs {
@@ -1186,6 +1200,37 @@ a.header-button.close {
   background-image: url("../assets/sanatorium/Background_Sanatorium.webp");
   background-repeat: repeat-y;
   background-size: 100%;
+}
+
+/* ============================================
+   DOCUMENT PICKER DIALOG
+   ============================================ */
+
+.arm5e.document-picker .window-content {
+  padding: 0;
+  overflow: hidden;
+}
+
+.arm5e.document-picker .doc-picker-body {
+  padding: 4px 0;
+}
+
+.arm5e.document-picker .doc-picker-list {
+  padding: 0 4px;
+}
+
+.arm5e.document-picker .doc-picker-row {
+  margin: 1px 0;
+  border-radius: 3px;
+  transition: background-color 0.1s;
+}
+
+.arm5e.document-picker .doc-picker-row:hover {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.arm5e.document-picker .doc-picker-row--selected {
+  background: rgba(100, 80, 20, 0.18);
 }
 
 .arm5e .sanatorium-title,
@@ -1544,6 +1589,7 @@ a.content-link i.fa-book-open {
 .arm5e-config button.dialog-button,
 .arm5e .astrolab.button,
 .arm5e .scriptorium.button,
+.arm5e.document-picker button.dialog-button,
 /* .arm5e.arm5e-config .window-content button.dialog-button, */
 .arm5e .aura-config button {
   font-family: var(--font-header);
@@ -1571,11 +1617,13 @@ a.content-link i.fa-book-open {
 .arm5e-roll button.dialog-button span,
 .arm5e-prompt button.dialog-button span,
 .arm5e-dialog button.dialog-button span,
-.arm5e-confirm button.dialog-button span {
+.arm5e-confirm button.dialog-button span,
+.arm5e.document-picker button.dialog-button span {
   text-align: center;
 }
 
-.arm5e-config button.dialog-button span {
+.arm5e-config button.dialog-button span,
+.arm5e.document-picker button.dialog-button span {
   color: var(--arm5e-c-beige);
 }
 
@@ -2402,10 +2450,22 @@ input[type="number"].design-level {
   display: flex;
 }
 
+/* Active effect config: keep window-content bounded so the active tab can scroll */
+.active-effect-config.arm5e.arm5eLargeDialog .window-content {
+  overflow: hidden;
+}
+
+/* The active tab fills remaining space and scrolls its content */
+.active-effect-config.arm5e.arm5eLargeDialog .window-content .tab.active {
+  flex: 1;
+  overflow-y: auto;
+  align-items: flex-start; /* flexrow centers by default — start from top instead */
+}
+
 .active-effect-config.arm5e.arm5eLargeDialog .tab.changes ol {
   display: flex;
+  flex-direction: column;
   padding-right: 0.5rem;
-  overflow-y: hidden;
   align-items: flex-start;
 }
 
@@ -2413,6 +2473,7 @@ li.effect-change {
   display: flex;
   flex-shrink: 0;
   width: 100%; /* force li to take full width of ol container */
+  gap: 3px;
 }
 
 .effect-change .type,
@@ -2848,7 +2909,8 @@ label.uppercase {
   background-position-y: bottom;
   */
   min-height: 36px;
-  margin-bottom: 12px !important; /* Override Foundry core margin */
+  overflow: hidden; /* Prevent sub-pixel height fluctuation on hover (scrollbar flicker fix) */
+  /* Override Foundry core margin */
 }
 
 .mainItem .arm5eTabs {
@@ -2916,6 +2978,12 @@ label.uppercase {
   /*text-decoration: underline;*/
   text-shadow: none;
   align-items: center;
+  gap: 5px;
+}
+
+.arm5e .tabs .item span,
+.arm5eTabs .item span {
+  flex: 0 0 auto;
 }
 
 .navItem-right-ball {
@@ -2924,6 +2992,7 @@ label.uppercase {
   top: 0px;
   left: -15px;
   text-decoration: none;
+  flex: 0 0 auto;
 }
 
 img.art-icon {
@@ -2949,6 +3018,7 @@ img.art-icon {
   top: 0px;
   right: -15px;
   text-decoration: none;
+  flex: 0 0 auto;
 }
 
 .navItem-left-ball img {
@@ -2962,11 +3032,14 @@ img.art-icon {
   width: 14px;
 }
 
-.posRelative div {
+/* Show/hide arrows around tabs */
+.arm5eSubTabs div,
+.arm5eTabs div {
   display: none;
 }
 
-.posRelative.active div {
+.arm5eTabs .active div,
+.arm5eSubTabs .active div {
   display: block;
 }
 
@@ -2982,6 +3055,7 @@ img.art-icon {
   margin: 7px 0;
   padding: 0;
   overflow-y: auto;
+  scrollbar-gutter: stable; /* Reserve scrollbar space to prevent layout shift */
   min-height: 216px;
 }
 
@@ -3313,7 +3387,7 @@ img.art-icon {
 
 body h3.covenant-tooltip {
   font-family: var(--font-book) Bold;
-  font-size: 18px;
+  font-size: 15px;
   color: var(--arm5e-c-black);
 }
 

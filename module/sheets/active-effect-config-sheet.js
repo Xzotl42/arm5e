@@ -15,7 +15,7 @@ export class ArM5eActiveEffectConfig extends foundry.applications.sheets.ActiveE
       contentClasses: ["standard-form"],
       icon: "fa-solid fa-person-rays"
     },
-    position: { width: 600, height: 650 },
+    position: { width: 600, height: 700 },
     form: {
       // handler: ArM5eActiveEffectConfig.handleSubmit,
       submitOnChange: true,
@@ -32,8 +32,8 @@ export class ArM5eActiveEffectConfig extends foundry.applications.sheets.ActiveE
   static TABS = {
     primary: {
       tabs: [
-        { id: "details", icon: "fa-solid fa-book" },
-        { id: "changes", icon: "fa-solid fa-gears" }
+        { id: "details", icon: "fa-solid fa-book", cssClass: "item flexrow" },
+        { id: "changes", icon: "fa-solid fa-gears", cssClass: "item flexrow" }
       ],
       initial: "details",
       labelPrefix: "EFFECT.TABS"
@@ -48,18 +48,17 @@ export class ArM5eActiveEffectConfig extends foundry.applications.sheets.ActiveE
       classes: ["marginsides32"]
     },
     tabs: {
-      // Foundry-provided generic template
-      template: "templates/generic/tab-navigation.hbs"
+      template: "systems/arm5e/templates/generic/parts/ars-tab-navigation.hbs"
     },
     details: {
       template: "systems/arm5e/templates/sheets/active-effect/details.hbs",
-      classes: ["marginsides32"]
+      classes: ["flexrow"]
     },
     // duration: { template: "systems/arm5e/templates/sheets/active-effect/duration.hbs" },
     changes: {
       template: "systems/arm5e/templates/sheets/active-effect/changes.hbs",
       scrollable: [".changes-list"],
-      classes: ["marginsides32"]
+      classes: ["flexrow"]
     },
     // footer: { template: "templates/generic/form-footer.hbs" }
     footer: { template: "systems/arm5e/templates/generic/parts/largeDialog-footer.hbs" }

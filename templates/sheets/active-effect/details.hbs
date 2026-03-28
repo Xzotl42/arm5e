@@ -1,8 +1,8 @@
 <section
-  class="tab scrollable {{ tab.cssClass }}"
+  class="tab scrollable {{ tab.cssClass }} marginsides32"
   data-group="{{ tab.group }}"
   data-tab="{{ tab.id }}"
-  style="min-height: 250px"
+  style="min-height: 250px; gap: 0px"
 >
   {{formGroup fields.tint value=source.tint rootId=rootId placeholder="#ffffff"}}
   {{formGroup fields.disabled value=source.disabled rootId=rootId}}

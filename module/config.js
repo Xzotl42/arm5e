@@ -50,6 +50,15 @@ ARM5E.fontfaces = {
   metamorphous: "Metamorphous"
 };
 
+ARM5E.FLAVORS = {
+  Neutral: "Neutral",
+  Codex: "codex",
+  Covenant: "covenant",
+  Laboratory: "Lab",
+  Player: "PC",
+  NPC: "NPC"
+};
+
 ARM5E.character.charTypes = {
   magus: {
     label: "arm5e.sheet.magus",
