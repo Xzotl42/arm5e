@@ -22,6 +22,7 @@ import Aura from "../helpers/aura.js";
 import { canBeEnchanted } from "../helpers/magic.js";
 import { ArM5eMagicSystem } from "./subsheets/magic-system.js";
 import { ArM5eItem } from "../item/item.js";
+import { VisExtractionActivity } from "../seasonal-activities/labActivity.js";
 
 /**
  * Extend the base Actor entity by defining a custom roll data structure which is ideal for the Simple system.
@@ -135,7 +136,11 @@ export class ArM5eActor extends Actor {
     // For characters
     this.system.bonuses.labActivities = {
       learnSpell: 0,
-      inventSpell: 0
+      inventSpell: 0,
+      longevityRitual: 0,
+      visExtraction: 0,
+      enchanting: 0,
+      itemInvestigation: 0
     };
 
     this.system.bonuses.arts = {

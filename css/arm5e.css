@@ -168,6 +168,9 @@
   --font-size-10: 10pt;
   --font-size-12: 12pt;
   --font-size-14: 14pt;
+  --font-size-16: 16pt;
+  --font-size-20: 20pt;
+  --font-size-32: 32pt;
   --z-index-tooltip: 9999;
 }
 
@@ -540,7 +543,7 @@ h3.dice-msg {
 
 .arm5e .sanatorium .progressbar-inner {
   height: 100%;
-  background-color: var(--accent-conflict);
+  background-color: var(--arm5e-c-conflict);
   background-size: 18px 18px;
   box-shadow: inset 0 2px 8px rgba(255, 255, 255, 0.5), inset -1px -1px 0 rgba(0, 0, 0, 0.2);
   border-radius: var(--radius-small);
@@ -666,37 +669,6 @@ input:disabled:hover {
   background-color: rgb(218, 216, 204);
 }
 
-/* Range styling grouped */
-.arm5e input[type="range"] {
-  -webkit-appearance: none;
-  appearance: none;
-  background: transparent;
-  cursor: pointer;
-}
-.arm5e input[type="range"]::-webkit-slider-runnable-track,
-.arm5e input[type="range"]::-moz-range-track {
-  background: rgba(194, 183, 154, 0.8);
-  height: 0.5rem;
-}
-.arm5e input[type="range"]::-webkit-slider-thumb,
-.arm5e input[type="range"]::-moz-range-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  border: none;
-  border-radius: var(--radius-lg);
-  outline: transparent;
-  height: 20px;
-  width: 20px;
-  background-color: transparent;
-}
-.arm5e input[type="range"]::-webkit-slider-thumb {
-  margin-top: -8px;
-  background-image: url("../assets/ballSilver.png");
-}
-.arm5e input[type="range"]::-moz-range-thumb {
-  background-image: url("../assets/ballBronze.png");
-}
-
 /* Checkbox unified */
 input[type="color"] {
   width: 32px;
@@ -730,17 +702,19 @@ input[type="checkbox"]::before {
   background-color: rgb(112, 15, 15);
   flex-shrink: 0;
 }
+/* ::after overrides Foundry core's :checked::after which renders an orange/amber square */
 input[type="checkbox"]::after {
   content: "";
   width: 20px;
   height: 20px;
-  /* padding: 1px; */
   clip-path: polygon(0 20%, 0 60%, 29% 100%, 100% 29%, 100% 1%, 35% 61%);
   transform: scale(0);
   background-color: rgb(112, 15, 15);
   color: var(--arm5e-c-black);
 }
-
+input[type="checkbox"]:checked::after {
+  transform: scale(0); /* keep Foundry's orange square invisible; ::before handles the checkmark */
+}
 input[type="checkbox"].crossed::before {
   clip-path: polygon(
     11% 6%,
@@ -984,7 +958,7 @@ input[type="checkbox"].tiny-checkbox:checked::before {
   min-width: 160px;
   padding: 6px 8px;
   background: rgba(188, 179, 155, 0.9);
-  font-family: var(--font-book) Bold;
+  font-family: var(--font-book-bold);
   font-size: var(--font-size-14);
   line-height: var(--font-size-16);
   color: rgb(0 0 0 / 90%);
@@ -1034,30 +1008,28 @@ body .locked-tooltip.active {
 }
 
 /* Keep component-specific backgrounds (reduced duplication) */
-.arm5e .mainPlayer {
-  background-image: url("../assets/PC/background.webp");
+.arm5e .mainPlayer,
+.arm5e .mainNPC,
+.arm5e .mainLaboratory,
+.arm5e .mainCodex,
+.arm5e .mainCovenant {
   background-repeat: repeat-y;
   background-size: contain;
+}
+.arm5e .mainPlayer {
+  background-image: url("../assets/PC/background.webp");
 }
 .arm5e .mainNPC {
   background-image: url("../assets/NPC/background.webp");
-  background-repeat: repeat-y;
-  background-size: contain;
 }
 .arm5e .mainLaboratory {
   background-image: url("../assets/Lab/background.webp");
-  background-repeat: repeat-y;
-  background-size: contain;
 }
 .arm5e .mainCodex {
   background-image: url("../assets/codex/background.webp");
-  background-repeat: repeat-y;
-  background-size: contain;
 }
 .arm5e .mainCovenant {
   background-image: url("../assets/covenant/background.webp");
-  background-repeat: repeat-y;
-  background-size: contain;
 }
 
 /* Component-specific exceptions retained where required by layout */
@@ -1081,12 +1053,7 @@ body .locked-tooltip.active {
   font-size: 14pt;
   justify-content: center;
 }
-.arm5eTabs,
-.arm5eSubTabs {
-  border: 0 !important; /* Override Foundry core tab border */
-  /* min-height: 36px; */
-  /* margin-bottom: 12px !important; */
-}
+/* .arm5eTabs and .arm5eSubTabs are fully defined below with complete properties */
 
 .arm5e nav.tabs {
   align-items: center;
@@ -1233,14 +1200,23 @@ a.header-button.close {
   background: rgba(100, 80, 20, 0.18);
 }
 
-.arm5e .sanatorium-title,
-.arm5e .medhistory-title {
+.arm5e .sanatorium-title {
   text-align: center;
   font-family: var(--font-header);
   font-size: 32pt;
   height: 35px;
+  border: none;
   margin-left: -64px;
-  color: var(--accent-conflict);
+  color: var(--arm5e-c-conflict);
+}
+.arm5e .medhistory-title {
+  text-align: center;
+  font-family: var(--font-header);
+  font-size: 24pt;
+  height: 35px;
+  border: none;
+  margin-left: -64px;
+  color: var(--arm5e-c-conflict);
 }
 
 /* small utility classes preserved */
@@ -1503,7 +1479,6 @@ a.content-link,
   word-break: break-all;
   text-decoration: underline;
   color: #6e98db;
-  border-bottom: 1px dotted blue;
   border: none;
   background-color: transparent;
   background-image: none;
@@ -1512,15 +1487,6 @@ a.content-link,
 
 .arm5e a.content-link.broken,
 .arm5e .journal-entry-page a.content-link.broken {
-  border-radius: var(--radius-xs);
-  white-space: nowrap;
-  word-break: break-all;
-  text-decoration: underline;
-  border-bottom: 1px dotted blue;
-  border: none;
-  background-color: transparent;
-  background-image: none;
-  padding: 0px;
   color: #f05959;
 }
 
@@ -1720,7 +1686,7 @@ h4.window-title {
 .arm5e .sanatorium .editor {
   overflow-y: auto;
   max-height: 300px;
-  font-family: "var(--font-book)";
+  font-family: var(--font-book);
 }
 
 .arm5e .wound .sheet-body .editor {
@@ -1734,7 +1700,6 @@ h4.window-title {
 }
 
 .arm5e.button.ui {
-  font-family: var(--font-header);
   padding: 5px;
 }
 
@@ -1768,7 +1733,7 @@ button.template-item {
 
 /* Removed duplicate chat-message styling; canonical definition above uses CSS variables */
 .system-arm5e .dice-msg {
-  font-family: bookAntika;
+  font-family: var(--font-book);
   border-bottom: 0px;
   text-align: center;
 }
@@ -1792,7 +1757,7 @@ p,
 .chat-message .message-header,
 .chat-message .message-content {
   user-select: text;
-  font-family: "var(--font-book)";
+  font-family: var(--font-book);
   font-size: var(--font-size-12);
 }
 
@@ -1859,7 +1824,7 @@ p,
   background-image: url("../assets/background.webp");
   background-repeat: repeat-y;
   background-size: 100%;
-  font-family: "var(--font-book-bold)";
+  font-family: var(--font-book-bold);
   padding: 32px;
 }
 
@@ -1867,7 +1832,7 @@ p,
   background-image: var(--dialog-bg);
   background-repeat: repeat-y;
   background-size: cover;
-  font-family: "var(--font-book-bold)";
+  font-family: var(--font-book-bold);
   font-size: 12pt;
   width: 100%;
   height: 100%;
@@ -1892,16 +1857,6 @@ p,
   padding: 5px;
   /* padding-top: 20px;
   padding-bottom: 0px; */
-}
-
-.calendar-sheet .schedule-years {
-  height: 424px;
-  overflow-y: scroll;
-}
-
-.calendar-sheet .calendar-years {
-  height: 300px;
-  overflow-y: scroll;
 }
 
 /* .calendar-season {
@@ -2002,62 +1957,12 @@ p,
   position: relative;
 }
 
-.arm5e .sanatorium-title {
-  text-align: center;
-  font-family: var(--font-header);
-  font-size: 32pt;
-  height: 35px;
-  border: none;
-  margin-left: -64px;
-  color: rgb(135 38 22 / 100%);
-}
-
 .item-summary {
-  font-family: "var(--font-book)";
+  font-family: var(--font-book);
   padding: 6px;
   border-bottom: solid;
   border-bottom-color: #bebcb8;
   border-bottom-width: 1px;
-}
-.arm5e .sanatorium .progressbar {
-  width: 400px;
-  height: 16px;
-  margin: 0 auto 10px auto;
-  padding: 0px;
-  background-image: url("../assets/SmallGoldenEngravedBar.png");
-  background-size: 400px 16px;
-  /* background: #cfcfcf; */
-  border-width: 1px;
-  border-style: solid;
-  border-color: #aaa #bbb #fff #bbb;
-  box-shadow: inset 0px 2px 3px #bbb;
-}
-
-.arm5e .sanatorium .progressbar,
-.arm5e .sanatorium .progressbar-inner {
-  border-radius: var(--radius-small);
-}
-.arm5e .sanatorium .progressbar-inner {
-  height: 100%;
-  background: #999 80%;
-  background-size: 18px 18px;
-  background-color: rgb(135 38 22 / 100%);
-  box-shadow: inset 0px 2px 8px rgba(255, 255, 255, 0.5), inset -1px -1px 0px rgba(0, 0, 0, 0.2);
-}
-
-.arm5e .sanatorium .progressbar-red .progressbar-inner {
-  background-color: #f67;
-  width: 30%;
-}
-
-.arm5e .medhistory-title {
-  text-align: center;
-  font-family: var(--font-header);
-  font-size: 24pt;
-  height: 35px;
-  border: none;
-  margin-left: -64px;
-  color: rgb(135 38 22 / 100%);
 }
 
 /* ============================================
@@ -2120,7 +2025,7 @@ p,
   background-repeat: repeat-y;
   background-size: cover;
   background-color: var(--arm5e-c-tan);
-  font-family: "var(--font-book-bold)";
+  font-family: var(--font-book-bold);
   width: 397px;
   height: auto;
 }
@@ -2158,11 +2063,11 @@ p,
   background-image: var(--dialog-bg-large);
   background-repeat: repeat-y;
   background-size: cover;
-  font-family: "var(--font-book-bold)";
+  font-family: var(--font-book-bold);
 }
 
 .arm5eActiveEffect .effect-options {
-  font-family: "var(--font-book-bold)";
+  font-family: var(--font-book-bold);
   padding-left: 48px;
   padding-right: 48px;
   height: auto;
@@ -2189,7 +2094,7 @@ p,
 }*/
 
 .arm5e-roll .roll-options {
-  font-family: "var(--font-book-bold)";
+  font-family: var(--font-book-bold);
   padding-left: 32px;
   padding-right: 32px;
   background-size: cover;
@@ -2267,33 +2172,6 @@ p,
   border-right: 1px solid #7a7971;
 } */
 
-.arm5e .sanatorium input[type="number"],
-.arm5e .sanatorium input[type="text"],
-.arm5e .calendar input[type="number"],
-.arm5e .calendar input[type="text"],
-.arm5e .astrolab input[type="text"],
-.arm5e .astrolab input[type="number"] {
-  font-family: "var(--font-book)";
-  font-weight: bold;
-  background: var(--arm5e-c-shadow);
-  height: 25px;
-  background-image: none;
-}
-
-.arm5e .scriptorium input[type="text"],
-.arm5e .scriptorium input[type="number"] {
-  font-family: "var(--font-book)";
-  font-weight: normal;
-  height: 13pt;
-  background-image: none;
-  max-width: 190px;
-}
-
-/* input[type="number"].select-on-focus {
-  max-width: 70px;
-  text-align: center;
-} */
-
 input[type="text"].slim,
 input[type="number"].slim {
   max-width: 50px;
@@ -2333,31 +2211,10 @@ input[type="number"].design-level {
   box-shadow: var(--shadow-card);
 }
 
-/* Redundant generic select block removed; handled by consolidated base block */
-.arm5e .scriptorium select {
-  font-family: "var(--font-book)";
-  max-width: 220px;
-}
-.arm5e .sanatorium select,
-.arm5e .astrolab select {
-  font-weight: bold;
-  background: var(--arm5e-c-shadow);
-  height: 25px;
-  font-family: "var(--font-book)";
-}
+/* Removed duplicate input/select and sheet-content blocks; canonical definitions above apply */
 
-.arm5e .sheet-content {
-  padding-left: 32px;
-  padding-right: 32px;
-  font-family: "var(--font-book-bold)";
-  font-size: 9pt;
-}
-.arm5e .editor-content {
-  font-family: "var(--font-book)";
-  /* height: fit-content; */
-}
+/* Preserve unique editor-container height rule */
 .arm5e .editor-container .editor-content {
-  /* font-family: "var(--font-book)"; */
   height: fit-content;
 }
 
@@ -2366,7 +2223,7 @@ input[type="number"].design-level {
 .arm5e .mainItem {
   background-repeat: repeat-y;
   background-size: contain;
-  font-family: "var(--font-book-bold)";
+  font-family: var(--font-book-bold);
 }
 
 .arm5e .mainItem .header-background {
@@ -2598,15 +2455,7 @@ img.tinyimg {
   padding: 10px;
 }
 
-fielgr .arm5e .sheet-header h2.covenantname input {
-  width: 100%;
-  margin: 0;
-  /* padding-top: 25px; */
-  line-height: 30px;
-  font-family: var(--font-header);
-  font-weight: 300;
-  /*letter-spacing: 1px;*/
-}
+/* fielgr selector was a typo (non-existent element) — rule removed */
 
 .arm5e .sheet-header h2.codexname {
   padding: 0px;
@@ -2624,7 +2473,7 @@ fielgr .arm5e .sheet-header h2.covenantname input {
 }
 
 .arm5e .diary-tabs {
-  font-family: "var(--font-book)";
+  font-family: var(--font-book);
   font-size: 10pt;
   text-align: center;
   /* background-image: url("../assets/player/bar.webp"); */
@@ -2686,12 +2535,13 @@ fielgr .arm5e .sheet-header h2.covenantname input {
   max-width: 30px;
 }
 
-.section-title {
+.section-title,
+.techLabel,
+.formLabel {
   font-family: var(--font-header);
   font-size: 14pt;
   font-weight: normal;
   align-items: center;
-  /* padding-top: 5px; */
 }
 
 /* Removed duplicate toggle/collapse animation blocks; consolidated canonical definitions above apply */
@@ -2929,18 +2779,12 @@ label.uppercase {
 }
 
 .techLabel {
-  font-family: var(--font-header);
-  font-size: 14pt;
-  font-weight: normal;
-  align-items: center;
+  /* See grouped rule above with .section-title and .formLabel */
   padding-top: 5px;
 }
 
 .formLabel {
-  font-family: var(--font-header);
-  font-size: 14pt;
-  font-weight: normal;
-  align-items: center;
+  /* inherits all base properties from grouped rule above */
 }
 .arm5eTabsPC {
   background-image: url("../assets/PC/bar.webp");
@@ -3306,10 +3150,7 @@ img.art-icon {
 /* Removed duplicate padding/margin utility classes; canonical definitions above apply */
 
 .arm5e .padding12x5 {
-  padding-left: 12px;
-  padding-right: 12px;
-  padding-top: 5px;
-  padding-left: 5px;
+  padding: 5px 12px;
 }
 
 .arm5e-roll .modifier,
@@ -3319,9 +3160,7 @@ img.art-icon {
   text-align: center;
 }
 
-.padding2 {
-  padding: 2px;
-}
+/* .padding2 duplicate removed; see utilities section above */
 
 .arm5e .marginbot12 {
   margin-bottom: 12px;
@@ -3386,7 +3225,7 @@ img.art-icon {
 /* Removed duplicate covenant-tooltip styling; consolidated canonical definition above applies */
 
 body h3.covenant-tooltip {
-  font-family: var(--font-book) Bold;
+  font-family: var(--font-book-bold);
   font-size: 15px;
   color: var(--arm5e-c-black);
 }

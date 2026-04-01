@@ -1,4 +1,4 @@
-## 3.0.0.7 Stentorius
+## 3.0.0.8 Stentorius
 
 ### Compatibility
 
@@ -37,6 +37,15 @@
 - New dialog to pick any kind of documents from a filtered list.
   - Available for macros
   - Replace the drag and drop zones for non-GM users
+- New active effects
+  - Vis extraction activity modifier
+  - Enchanting activity modifier
+  - Item investigation modifier
+  - Longevity Rituals modifier
+- It will be possible for players to disable creation mode by clicking on the icon
+- Updated translations:
+  - French by @Orneen
+  - Brazilian Portuguese by @Gapherd
 
 ### Bug fixes
 
@@ -60,6 +69,7 @@
   - Dropping an empty book no longer raises an error and close the Scriptorium
   - When the writer has no qualifying abilities, warnings were pushed to the reading tab so the Writing tab never showed an error.
   - Copying Ability summae takes now the proper time.
+  - Maximum level is not computed properly with Tractati in the Scriptorium
 
 ## 2.4.1.14, Radislav, Cognizant Wisdom BF1
 

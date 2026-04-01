@@ -227,16 +227,18 @@ export default class ArM5eActiveEffect extends ActiveEffect {
     );
 
     for (let e of filtered) {
+      const tmp = e.toObject();
       let idx = 0;
       let filteredChanges = [];
-      for (let ch of e.changes) {
-        if (e.flags.arm5e.subtype[idx] === subtype) {
+      for (let ch of tmp.changes) {
+        if (tmp.flags.arm5e.subtype[idx] === subtype) {
           log(false, ch);
           filteredChanges.push(ch);
         }
+        idx++;
       }
-      e.changes = filteredChanges;
-      res.push(e);
+      tmp.changes = filteredChanges;
+      res.push(tmp);
     }
 
     return res;
