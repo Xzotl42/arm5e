@@ -1,12 +1,12 @@
 {
   "TYPES": {
     "Actor": {
-      "TypeBeast": "Animal",
-      "TypeCovenant": "Alliance",
-      "TypeLaboratory": "Laboratoire",
-      "TypeMagiccodex": "Codex magique",
-      "TypeNpc": "PNJ",
-      "TypePlayer": "Personnage joueur"
+      "beast": "Animal",
+      "covenant": "Alliance",
+      "laboratory": "Laboratoire",
+      "magicCodex": "Codex magique",
+      "npc": "PNJ",
+      "player": "Personnage joueur"
     },
     "Item": {
       "Might": "Puisssance",
@@ -78,6 +78,8 @@
         "temporary": "Effets temporaires"
       },
       "subtypes": {
+        "agingMagi": "Vieillissement pour les mages",
+        "agingMundane": "Vieillissement pour les vulgaires",
         "attackRoll": "Jets d'attaque",
         "auraLevel": "Niveau de l'aura",
         "auraRealm": "Domaine de l'aura",
@@ -85,6 +87,7 @@
         "combatRoll": "Jets de combat",
         "consumables": "Fournitures",
         "defRoll": "Jet de défense",
+        "fatigueRolls": "Modificateur de jet de fatigue",
         "fatigueTotal": "Total de Fatigue",
         "formMagicRoll": "Jets de magie formulaïque",
         "inhabitantPoints": "Inhabitant points",
@@ -97,6 +100,7 @@
         "learnSpell": "Apprentissage de sort",
         "library": "Bibliothèque",
         "magicItems": "Objets magiques",
+        "magicResistance": "Resistance magique",
         "magicRoll": "Jets de magie",
         "money": "Argent",
         "none": "Aucun",
@@ -119,6 +123,7 @@
         "xpmod": "Bonus d'Xp"
       },
       "type": {
+        "covenantModifiers": "Modificateur de l'alliance",  
         "covenantBuildPoint": "Points de construction de l'alliance",
         "covenantInhabitants": "Les habitants de l'Alliance",
         "spellcasting": "Lancement de Sorts",
@@ -130,6 +135,7 @@
       },
       "types": {
         "AlternateArtBonus": "Bonus d'Arts alternatifs",
+        "AlternateArtXPBonus": "Bonus d'XP aux Arts alternatifs",
         "academicAbilitiesAffinity": "Affinité Compétences Académiques (xp)",
         "academicAbilitiesBonus": "Bonus aux Compétences Académiques",
         "academicAbilitiesXPBonus": "Bonus d'XP aux compétences Académiques",
@@ -144,6 +150,7 @@
         "characteristicBoost": "Augmentation de Caractéristique",
         "characteristics": "Caractéristiques",
         "fatigue": "Fatigue",
+        "formMagicResistance": "Résistance magique à la Forme",
         "formResistance": "Résistance naturelle",
         "generalAbilitiesAffinity": "Affinité Compétences Générales (xp)",
         "generalAbilitiesBonus": "Bonus aux Compétences Générales",
@@ -375,12 +382,22 @@
       }
     },
     "chat": {
-      "contestOfMagic": "Concours de Magie",
+      "contestOfMagic": "Confrontation magique",
+      "contestOfMagicWith": "Confrontation magique avec {name}",
+      "notifications": {
+        "notInitiator": "Non autorisé car vous n'êtes pas l'initiateur du jet. Demandez à l'initiateur du jet ou au Conteur."
+      },
+      "otherMagicResistance": "Autre résistance magique",
       "totalMagicResistance": "Total de Résistance Magique"
     },
     "combat": {
       "damage": {
         "ignored": "Jet de dés ignoré"
+      },
+	  "targets": {
+        "multiple": "Cibles multiples",
+        "none": "Pas de cible sélectionnée",
+        "single": "Une seule cible"
       }
     },
     "config": {
@@ -415,12 +432,24 @@
         "none": "Aucun salaire",
         "normal": "Salaire normal",
         "pension": "Pension"
+      },
+      "inhabitantsMod": {
+        "laborers": "Manoeuvriers magique",
+        "turbula": "Turbula magique",
+        "servants": "Servants magique",
+        "teamsters": "Transporteurs magique"
       }
     },
     "damage": {
+      "compute": "Calcul des dommages",
+      "damageflavor": "{amount} poitns de dommage à encaisser de {source}",
       "form": "Dommage de forme",
+      "ignoreArmor": "Ignore l'armure",
       "label": "Dommages",
-      "roll": "Jet de dommage"
+      "roll": "Jet de dommage",
+      "soakFlavor": "Encaissement de {amount} de dommage dont la source est {source}",
+      "source": "Source des dommages",
+      "sourcePlaceHolder": "Description de la source"
     },
     "dialog": {
       "botch": {
@@ -511,6 +540,7 @@
       "always": "Toujours",
       "base": "Base",
       "begins": "Débuts",
+      "cancelled": "Annuler",
       "clear": "Effacer",
       "config": "Configurer",
       "current": "Actuel",
@@ -529,6 +559,9 @@
       "minutes": "minutes",
       "minutesShort": "min.",
       "modifier": "Modificateur",
+      "modifiers": "Modificateurs",
+      "missed": "Raté",
+      "misc": "Divers",
       "multiplier": "Multiplicateur",
       "multipliers": "Multiplicateurs",
       "na": "N/A",
@@ -544,6 +577,7 @@
       "other": "Autre",
       "params": "Paramètres",
       "pending": "En attente",
+      "refresh": "Actualiser",
       "special": "Spécial",
       "standard": "Standard",
       "summary": "Résumé",
@@ -786,6 +820,7 @@
       "fatigueLost": "Perdre {num} niveau(x) de fatigue",
       "noConf": "Utilisation d'un point de confiance",
       "noWound": "Aucune blessure",
+      "soak": "Jet d'encaissement",	  
       "useConf": "Utiliser un Point de Confiance",
       "wound": {
         "dead": "Mort",
@@ -813,6 +848,7 @@
           }
         }
       },
+      "damagePending": "Un jet de dommages est en attente pour ce personnage. Vous devriez peut-être l'encaisser avant de lancer autre chose.",
       "dead": "Ce personnage est mort...",
       "doubleAbility": "Ce personnage a déjà cette compétence",
       "effectLinked": "Suppression impossible. Un effet est lié à cette capacité.",
@@ -1030,21 +1066,21 @@
         "logWoundBetter": "Amélioration de la blessure en {days} jours",
         "logWoundStable": "Blessure stabilisée",
         "logWoundWorse": "La blessure s'aggrave au bout de {days} jours",
+        "nextSeason": "Passage à {season} {year}.",
         "noWoundsForOverstrain": "Aucune blessure active pour un jet de surmenage.",
         "notOpen": "Ouvrez d'abord la fenêtre du Sanatorium, puis lancez le dé depuis ici.",
-        "nextSeason": "Passage à {season} {year}.",
         "overstrainNote": "Aggravée par surmenage en {season} {year}.",
         "overstrainStable": "La blessure tient — pas d'aggravation due au surmenage.",
         "overstrainWorsened": "{name} s'est aggravée en {type} à cause du surmenage !",
-        "sunriseRoll": "Lever du soleil",
-        "sunsetRoll": "Coucher du soleil",
         "patientDead": "Le patient est mort !",
         "patientDied": "Le patient est mourrant !",
         "patientHealthy": "Le patient est en bonne santé !",
-        "worstPenaltyNote": "Pénalité de blessure de {penalty} soutenue pendant {days} jours cette saison.",
+        "penaltyAdviceHeavy": "Le personnage peut parler, manger et se déplacer sur de courtes distances avec du temps et de l'aide. Les activités productives (y compris l'étude, le travail en laboratoire hermétique et les travaux artisanaux) sont impossibles.",
         "penaltyAdviceLight": "Le personnage peut voyager et étudier normalement, mais ne peut pas entreprendre d'activités épuisantes, notamment lancer des sorts qui coûtent de la Fatigue. Le travail en laboratoire hermétique et les travaux artisanaux peuvent être effectués normalement.",
         "penaltyAdviceMedium": "Le personnage peut marcher, à condition qu'on lui permette d'aller lentement et de se reposer fréquemment. Toutes les vitesses de déplacement longue distance sont réduites de moitié. Le personnage peut étudier, mais son Total d'Avancement est divisé par deux s'il est à ce niveau de pénalité pendant un mois ou plus de la saison. Le travail en laboratoire hermétique et les travaux artisanaux sont impossibles.",
-        "penaltyAdviceHeavy": "Le personnage peut parler, manger et se déplacer sur de courtes distances avec du temps et de l'aide. Les activités productives (y compris l'étude, le travail en laboratoire hermétique et les travaux artisanaux) sont impossibles."
+        "sunriseRoll": "Lever du soleil",
+        "sunsetRoll": "Coucher du soleil",
+        "worstPenaltyNote": "Pénalité de blessure de {penalty} soutenue pendant {days} jours cette saison."
       },
       "mundaneHelp": "Aide vulgaire",
       "recoveryBonus": "Bonus de récupération",
@@ -1083,6 +1119,7 @@
         "dropBookTopic": "Déposer un livre ici et choisissez un sujet.",
         "dropCharacter": "Faire glisser un personnage ici.",
         "dropLabText": "Déposez ici un sort connu ou un texte de laboratoire.",
+        "error": "Une erreur inattendue s'est produite dans le Scriptorium. Vérifiez la console du navigateur (F12) pour plus de détails.",
         "illiterate": "Le lecteur ne sait pas lire. (Artes Liberales 1+)",
         "invalidLevel": "Niveau invalide.",
         "invalidQuality": "Qualité invalide",
@@ -1102,8 +1139,7 @@
         "unconfirmedLang": "Merci de confirmer que le scribe parle toute les langues listées.",
         "unfamiliarTopic": "Sujet inconnu ({topic}), toute copie peut être corrompue et inutile (Confirmer avec le maître de jeu).",
         "unfamiliarTopic2": "Confirmer auprès du Maitre de jeu que le scribe est suffisamment compétent dans une compétence connexe.",
-        "whichItem": "Ne correspond à aucune {item} connu du lecteur. Choisissez-en un, le cas échéant.",
-        "error": "Une erreur inattendue s'est produite dans le Scriptorium. Vérifiez la console du navigateur (F12) pour plus de détails."
+        "whichItem": "Ne correspond à aucune {item} connu du lecteur. Choisissez-en un, le cas échéant."
       },
       "quickCopy": "Copie rapide",
       "reader": {
@@ -1160,6 +1196,8 @@
       "age": "Âge",
       "ageModifier": "Modificateur d'Âge",
       "aging": "Vieillissement",
+      "agingMagi": "Vieillissement pour les mages",
+      "agingMundane": "Vieillissement pour les vulgaires",	  
       "agingPts": "Points de Vieillissement",
       "agingStart": "Décalage du début du vieillissement",
       "apparentAge": "Âge apparent",
@@ -1216,16 +1254,20 @@
       "child": "Enfant",
       "com": "Com",
       "combat": {
+        "defend": "Défense",
         "flavor": {
           "attack": "{attacker} attaque {target} avec {weapon}.",
           "damage": "{attacker} essaye d'infliger des dégats.",
           "damageSource": "Source des dégats",
+          "damageWithTarget": "{attacker} tente d'infliger {amount} points de dommage à {target}.",
           "defense": "{defender} se défend contre {attacker} avec {weapon}.",
           "defenseNoAttacker": "{defender} défends avec {weapon}.",
           "noWeapon": "sans arme",
-          "soak": "{target} évite les dégats."
+          "soak": "{target} encaisse les dégats."
         },
-        "label": "Combat"
+        "label": "Combat",
+        "preparation": "Préparation au combat",
+        "wound": "Blessure de combat infligé par {attacker}"
       },
       "combatInstructions1": "Équipez des armes et armures pour voir le total",
       "combatInstructions2": "Si votre spécialité est avec le bouclier, marquez le sur le bouclier et non pas l'arme. Si vous n'avez pas le bouclier d'équippé, le bonus de spécialté ne s'applique pas.",
@@ -1298,8 +1340,10 @@
         "label": "Vitesse d'Incantation Rapide"
       },
       "fatigue": {
+        "add": "Ajoute un niveau de fatique (Shift+Clic pour fatigue à long terme).",
         "label": "Fatigue",
         "overflow": "Excès de fatigue",
+        "recover": "Enlève un niveau de fatique (Shift+Clic pour fatigue à long terme).",
         "roll": "Jet de fatigue"
       },
       "features": "Traits distinctifs",
@@ -1361,6 +1405,7 @@
       "initials": "Départ",
       "initiations": "Initiatique",
       "initiative": "Initiative",
+      "initiativeShort": "Init",
       "int": "Int",
       "intelligence": "Intelligence",
       "inventory": "Inventaire",
@@ -1457,6 +1502,7 @@
       "modifiersLifeMagi": "Mod. aux conditions de vie (Magi)",
       "modifiersLifeMundane": "Mod. aux conditions de vie (Vulgaires)",
       "money": "Argent",
+      "mounted": "Monté",
       "multipleCasting": {
         "label": "Lancement Multiple"
       },
@@ -1468,6 +1514,7 @@
       "narrator": "Conteur",
       "natRes": "Résistance naturelle",
       "nationality": "Ethnie/Nationalité",
+      "naturalweapon": "Arme naturelle",
       "naturalweapons": "Armes naturelles",
       "noMagicResistance": "Pas de résistance magique",
       "none": "Aucun",
@@ -1550,10 +1597,12 @@
       "salubrity": "Salubrité",
       "sanctum": "Sanctum",
       "saving": "Réductions",
+      "scene": "Scène",	  
       "score": "Score",
       "season": "Saison",
       "seasons": "Saisons",
-      "security": "**Sécurité**",
+      "secrets": "Secrets",
+      "security": "Sécurité",
       "servants": "Serviteurs",
       "setAbilities": "Créez des compétences pour votre personnage pour les valeurs ci-dessous. Celà permet le calcul correct. Si vous ne possédez pas la capacité, vous pouvez tout de même la créer avec une valeur de zéro",
       "sigil": "Sceau du Magicien",
@@ -1648,6 +1697,9 @@
       "standard": "Moyen",
       "state": {
         "label": "Statut"
+      },
+      "states": {
+        "confidencePrompt": "Dépense de Confiance en attente"
       },
       "story": "Histoire",
       "str": "For",

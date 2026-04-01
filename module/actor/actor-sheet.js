@@ -1599,6 +1599,18 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
     // migrate actor
     html.find(".migrate").click((event) => this.actor.migrate());
 
+    html.find(".remove-creationMode").click(async (event) => {
+      event.preventDefault();
+      let confirmed = await getConfirmation(
+        "",
+        game.i18n.localize("arm5e.sheet.msg.creationModeRemoval"),
+        ArM5eActorSheet.getFlavor(this.actor.type)
+      );
+      if (confirmed) {
+        await this.actor.update({ "system.states.creationMode": false });
+      }
+    });
+
     html.find(".plan-reading").click(async (ev) => this._readBook(ev));
 
     html.find(".indexkey-edit").change((event) => this._slugifyIndexKey(event));

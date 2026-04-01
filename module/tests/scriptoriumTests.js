@@ -575,6 +575,56 @@ export function registerScriptoriumTesting(quench) {
             assert.ok(false, err.message);
           }
         });
+
+        it("SC.1.17: Summa with level = 0 sets invalidLevel error", async function () {
+          this.timeout(300000);
+          try {
+            // checkReading guards: level < 1 triggers invalidLevel, regardless of NaN
+            const ctx = makeReadingContext({ type: "Summa", level: 0 });
+            app.checkReading(ctx, magus);
+            assert.equal(ctx.ui.reading.error, true, "level 0 Summa should set error");
+            assert.ok(ctx.ui.reading.warning.length > 0, "invalidLevel warning should be pushed");
+          } catch (err) {
+            console.error(`SC.1.17 error: ${err}`);
+            assert.ok(false, err.message);
+          }
+        });
+
+        it("SC.1.18: Summa with level = -1 sets invalidLevel error", async function () {
+          this.timeout(300000);
+          try {
+            // Negative level is also < 1 and must be rejected.
+            const ctx = makeReadingContext({ type: "Summa", level: -1 });
+            app.checkReading(ctx, magus);
+            assert.equal(ctx.ui.reading.error, true, "negative level Summa should set error");
+          } catch (err) {
+            console.error(`SC.1.18 error: ${err}`);
+            assert.ok(false, err.message);
+          }
+        });
+
+        it("SC.1.19: supernatural ability (secondSight), reader has no matching ability → missingSupernatural error", async function () {
+          this.timeout(300000);
+          try {
+            // secondSight has category supernaturalCat.
+            // makeReadingContext sets reader.ability = "" so lookup returns undefined → !ab = true.
+            const ctx = makeReadingContext({
+              category: "ability",
+              type: "Tractatus",
+              key: "secondSight",
+              option: ""
+            });
+            app.checkReading(ctx, magus);
+            assert.equal(
+              ctx.ui.reading.error,
+              true,
+              "missing supernatural ability should set error"
+            );
+          } catch (err) {
+            console.error(`SC.1.19 error: ${err}`);
+            assert.ok(false, err.message);
+          }
+        });
       });
 
       // ======================================================================
@@ -723,6 +773,25 @@ export function registerScriptoriumTesting(quench) {
             );
           } catch (err) {
             console.error(`SC.1b.9 error: ${err}`);
+            assert.ok(false, err.message);
+          }
+        });
+
+        it("SC.1b.10: illiterate writer with no language pushes two independent warnings", async function () {
+          this.timeout(300000);
+          try {
+            // Both the illiteracy check and the language check run unconditionally.
+            // Verify they accumulate rather than short-circuit on the first failure.
+            const ctx = makeWritingContext({}, { writing: { writer: { languages: [] } } });
+            app.checkWriting(ctx, illiterate);
+            assert.equal(ctx.ui.writing.error, true, "should error");
+            assert.isAtLeast(
+              ctx.ui.writing.warning.length,
+              2,
+              "illiterate + noLanguage should push at least 2 warnings"
+            );
+          } catch (err) {
+            console.error(`SC.1b.10 error: ${err}`);
             assert.ok(false, err.message);
           }
         });
@@ -907,6 +976,43 @@ export function registerScriptoriumTesting(quench) {
             );
           } catch (err) {
             console.error(`SC.1c.9 error: ${err}`);
+            assert.ok(false, err.message);
+          }
+        });
+
+        it("SC.1c.10: mastery topic, scribe with magicTheory ≥ 1 → no unfamiliarTopic warning", async function () {
+          this.timeout(300000);
+          try {
+            // Magus has magicTheory score ≥ 1 → mastery branch should produce no warning.
+            const ctx = makeCopyingContext({ category: "mastery", languageConfirmed: true });
+            app.checkCopying(ctx, magus);
+            assert.equal(
+              ctx.ui.copying.warning.length,
+              0,
+              "mastery topic with magicTheory should produce no warnings"
+            );
+            assert.equal(ctx.ui.copying.error, false, "no error expected");
+          } catch (err) {
+            console.error(`SC.1c.10 error: ${err}`);
+            assert.ok(false, err.message);
+          }
+        });
+
+        it("SC.1c.11: illiterate scribe + mastery topic pushes both illiteracy and unfamiliarTopic warnings", async function () {
+          this.timeout(300000);
+          try {
+            // illiterate has artesLib score 0 (illiteracy warning) and no magicTheory
+            // (unfamiliarTopic warning for mastery). Both checks run unconditionally.
+            const ctx = makeCopyingContext({ category: "mastery", languageConfirmed: true });
+            app.checkCopying(ctx, illiterate);
+            assert.equal(ctx.ui.copying.error, true, "should error");
+            assert.isAtLeast(
+              ctx.ui.copying.warning.length,
+              2,
+              "illiterate + unfamiliarTopic (mastery) should push at least 2 warnings"
+            );
+          } catch (err) {
+            console.error(`SC.1c.11 error: ${err}`);
             assert.ok(false, err.message);
           }
         });
@@ -1441,6 +1547,38 @@ export function registerScriptoriumTesting(quench) {
             delete magus.apps[scriptApp.options.uniqueId];
           } catch (err) {
             console.error(`SC.6.5 error: ${err}`);
+            assert.ok(false, err.message);
+          } finally {
+            if (book) await book.delete();
+          }
+        });
+
+        it("SC.6.6 (regression || → &&): ability Tractatus with level=5, reader score=5 → NOT flagged tooSkilled", async function () {
+          this.timeout(300000);
+          // Before the fix (_prepareReadingContext used ||), a Tractatus topic with a truthy
+          // `level` would set maxLevel = level.  With artesLib score 5 and maxLevel 5,
+          // the ability was filtered from `filteredAbilities` (5 < 5 = false) and the reader
+          // was incorrectly flagged as tooSkilled.  After the fix (&&), only Summa topics
+          // cap maxLevel, so a Tractatus reader at score 5 is no longer erroneously blocked.
+          let book;
+          try {
+            book = await createBook(
+              { category: "ability", type: "Tractatus", key: "artesLib", level: 5, quality: 8 },
+              "SC.6.6 Regression Book"
+            );
+            const scriptApp = new Scriptorium(new ScriptoriumObject(), {});
+            await scriptApp._setReadingBook(book);
+            await scriptApp._setReader(magus); // magus has artesLib score 5
+            const ctx = await scriptApp._prepareContext({});
+            await scriptApp._preparePartContext("reading", ctx);
+            assert.equal(
+              ctx.ui.reading.error,
+              false,
+              "Tractatus with level field must not trigger tooSkilled (|| → && regression)"
+            );
+            delete magus.apps[scriptApp.options.uniqueId];
+          } catch (err) {
+            console.error(`SC.6.6 error: ${err}`);
             assert.ok(false, err.message);
           } finally {
             if (book) await book.delete();

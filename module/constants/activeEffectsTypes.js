@@ -1586,6 +1586,30 @@ export const ACTIVE_EFFECTS_TYPES = {
         key: "system.bonuses.labActivities.inventSpell",
         mode: CONST.ACTIVE_EFFECT_MODES.ADD,
         default: 1
+      },
+      longevityRitual: {
+        mnemonic: "arm5e.lab.activity.longevityRitual",
+        key: "system.bonuses.labActivities.longevityRitual",
+        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        default: 1
+      },
+      visExtraction: {
+        mnemonic: "arm5e.lab.activity.visExtraction",
+        key: "system.bonuses.labActivities.visExtraction",
+        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        default: 1
+      },
+      enchanting: {
+        mnemonic: "arm5e.lab.activity.enchanting",
+        key: "system.bonuses.labActivities.enchanting",
+        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        default: 1
+      },
+      investigateItem: {
+        mnemonic: "arm5e.lab.activity.itemInvestigation",
+        key: "system.bonuses.labActivities.itemInvestigation",
+        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        default: 1
       }
     }
   },

@@ -109,6 +109,10 @@ export class LabActivity extends Activity {
     return "systems/arm5e/templates/lab-activities/noparams.html";
   }
 
+  ownerActivityModifier() {
+    return this.type;
+  }
+
   labActivitySpec(lab) {
     return { mod: 0, label: "" };
   }
@@ -248,7 +252,7 @@ export class LabActivity extends Activity {
     // Owner modifiers
     let effects = ArM5eActiveEffect.findAllActiveEffectsWithSubtypeFiltered(
       actor.effects,
-      this.type
+      this.ownerActivityModifier()
     );
 
     this.ownerActivityMod = 0;
@@ -812,6 +816,10 @@ export class MinorEnchantment extends LabActivity {
         "arm5e.lab.specialty.items"
       )} (${lab.system.specialty.items.bonus}) &#10`
     };
+  }
+
+  ownerActivityModifier() {
+    return "enchanting";
   }
 
   get activitySheet() {

@@ -500,7 +500,7 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
     // For convenience
     context.topicIndex = topicIndex;
     const currentTopic = context.reading.book.system.topics[topicIndex];
-    if (currentTopic.type === "Summa" || currentTopic.level) {
+    if (currentTopic.type === "Summa" && currentTopic.level) {
       maxLevel = currentTopic.level;
     }
     context.reading.book.currentTopic = currentTopic;
@@ -711,7 +711,7 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
     // WRITING section
     if (context.writing.writer?.id) {
       let maxLevel = 99;
-      if (newTopic.type === "Summa" || newTopic.level) {
+      if (newTopic.type === "Summa" && newTopic.level) {
         maxLevel = newTopic.level;
       }
       context.ui.canEditWriter = "readonly";
