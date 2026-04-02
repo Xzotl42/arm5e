@@ -59,7 +59,7 @@ export class ArsLayer extends InteractionLayer {
 }
 
 export function addArsButtons(buttons) {
-  if (CONFIG.ISV13) {
+  if (CONFIG.ISV13Plus) {
     buttons["ArsMagica"] = {
       name: "ArsMagica",
       title: "ArsMagica",

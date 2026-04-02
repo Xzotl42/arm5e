@@ -82,7 +82,7 @@ export class ScriptoriumObject {
             language: game.i18n.localize("arm5e.skill.commonCases.latin"),
             quality: 1,
             level: 1,
-            key: "",
+            key: "animalHandling",
             option: "",
             spellName: "",
             art: "",
@@ -113,7 +113,7 @@ export class ScriptoriumObject {
             language: game.i18n.localize("arm5e.skill.commonCases.latin"),
             quality: 1,
             level: 1,
-            key: "",
+            key: "animalHandling",
             option: "",
             name: "",
             spellName: "",
@@ -283,7 +283,7 @@ export class Scriptorium extends FormApplication {
 
     context.topicIndex = Number(topicIndex);
     const currentTopic = context.reading.book.system.topics[context.topicIndex];
-    if (currentTopic.type === "Summa" || currentTopic.level) {
+    if (currentTopic.type === "Summa" && currentTopic.level) {
       maxLevel = currentTopic.level;
     }
 
@@ -492,7 +492,7 @@ export class Scriptorium extends FormApplication {
     // WRITING section
     // /////////////
     if (context.writing.writer?.id) {
-      if (newTopic.type === "Summa" || newTopic.level) {
+      if (newTopic.type === "Summa" && newTopic.level) {
         maxLevel = newTopic.level;
       }
       context.ui.canEditWriter = "readonly";

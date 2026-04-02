@@ -100,7 +100,7 @@ Hooks.once("init", async function () {
     migrateCompendium
   };
 
-  CONFIG.ISV13 = game.release.generation == 13;
+  CONFIG.ISV13Plus = game.release.generation >= 13;
   // Add system metadata
   CONFIG.ARM5E = ARM5E;
   CONFIG.ARM5E.ItemDataModels = CONFIG.Item.dataModels;
@@ -129,7 +129,7 @@ Hooks.once("init", async function () {
   };
 
   // Adding ars layer
-  if (CONFIG.ISV13) {
+  if (CONFIG.ISV13Plus) {
     CONFIG.Canvas.layers.arsmagica = {
       layerClass: ArsLayer,
       group: "interface"
@@ -160,7 +160,7 @@ Hooks.once("init", async function () {
   CONFIG.Item.sidebarIcon = "icon-Icon_magic-chest";
   CONFIG.JournalEntry.sidebarIcon = "icon-Tool_Journals_sidebar";
 
-  if (CONFIG.ISV13) {
+  if (CONFIG.ISV13Plus) {
     customizePause();
   }
   CONFIG.ARM5E_DEFAULT_ICONS = ARM5E_DEFAULT_ICONS[game.settings.get("arm5e", "defaultIconStyle")];
@@ -686,7 +686,7 @@ function setDatamodels() {
  */
 function registerSheets() {
   try {
-    if (CONFIG.ISV13) {
+    if (CONFIG.ISV13Plus) {
       foundry.applications.apps.DocumentSheetConfig.unregisterSheet(
         Actor,
         "core",

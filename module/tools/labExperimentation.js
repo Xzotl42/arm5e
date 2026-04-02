@@ -166,7 +166,7 @@ export class LabExperimentation extends FormApplication {
         }
       } else {
         let tableRef;
-        if (CONFIG.ISV13) {
+        if (CONFIG.ISV13Plus) {
           tableRef = res.find((e) => e.type == "document");
         } else {
           tableRef = res.find((e) => e.type == "pack");

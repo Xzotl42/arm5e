@@ -1,3 +1,17 @@
+## 2.4.1.18, Radislav, Cognizant Wisdom BF4
+
+[IMPORTANT] Known limitation for V12, if text seems greyed out, go in the core settings and change the Preferred Color Scheme to "Light".
+
+### Compatibility
+
+- Verified for version 14
+
+### Features & changes
+
+### Bug fixes
+
+- Maximum level is not computed properly with Tractati in the Scriptorium
+
 ## 2.4.1.17, Radislav, Cognizant Wisdom BF3
 
 [IMPORTANT] Known limitation for V12, if text seems greyed out, go in the core settings and change the Preferred Color Scheme to "Light".
