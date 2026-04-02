@@ -340,5 +340,7 @@ export class LabSchema extends foundry.abstract.TypeDataModel {
     return updateData;
   }
 
-  //   static migrateData(data) {}
+  static migrateData(data) {
+    return data;
+  }
 }

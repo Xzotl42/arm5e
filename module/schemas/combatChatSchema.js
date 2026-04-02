@@ -16,7 +16,9 @@ export class CombatChatSchema extends RollChatSchema {
     };
   }
 
-  static migrateData(data) {}
+  static migrateData(data) {
+    return data;
+  }
 
   static getDefault(itemData) {}
 

@@ -34,7 +34,9 @@ export class BasicChatSchema extends foundry.abstract.TypeDataModel {
     };
   }
 
-  static migrateData(data) {}
+  static migrateData(data) {
+    return data;
+  }
 
   static getDefault(itemData) {}
 
