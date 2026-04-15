@@ -1,0 +1,257 @@
+<div class="mainNPC">
+  <div class="header-background">
+    <img src="systems/arm5e/assets/NPC/header150.png" />
+  </div>
+  <header class="sheet-header marginsides32">
+    <img
+      class="profile-img"
+      src="{{ actor.img }}"
+      data-edit="img"
+      title="{{ actor.name }}"
+      height="100"
+      width="100"
+    />
+    <div class="header-fields">
+      <h1 class="bigname">
+        <div class="flexrow">
+          <input
+            class="flex1"
+            name="name"
+            type="text"
+            value="{{ actor.name }}"
+            title="{{ actor.name }}"
+            placeholder="Name"
+          />
+          {{#if system.states.creationMode}}
+          <div class="flex0 padding10" style="width: 36px">
+            <a class="clickable" data-action="removeCreationMode">
+              <img
+                src="systems/arm5e/assets/icons/creation-mode.svg"
+                title="{{localize "arm5e.sheet.edition.creationMode"}}"
+                style="border: 0px; height: 18px; min-height: 30px; min-width: 30px"
+              />
+            </a>
+          </div>
+          {{/if}}
+          {{#if system.states.pendingCrisis}}
+          <div class="flex0 padding10" style="width: 24px">
+            <a
+              class="rollable"
+              data-action="roll"
+              data-roll="crisis"
+              data-year="{{ system.lastCrisis.year }}"
+              data-season="{{ system.lastCrisis.season }}"
+              title="{{localize "arm5e.aging.crisis.tooltip"}}"
+            >
+              <i class="ars-Icon_Aging_crisis"></i>
+            </a>
+          </div>
+          {{/if}}
+          {{#if system.states.confidencePrompt}}
+          <div class="flex0 padding10" style="width: 36px">
+            <a
+              class="clear-confidencePrompt"
+              data-action="clearConfidencePrompt"
+              title="{{localize "arm5e.sheet.states.confidencePrompt"}}"
+              style="font-size: 20pt"
+            >
+              <i class="fas fa-user-plus"></i>
+            </a>
+          </div>
+          {{/if}}
+          {{#if system.twilight.stage}}
+          <div class="flex01" style="padding: 5px">
+            <a
+              class="twilight-episode clickable"
+              data-action="twilightEpisode"
+              data-year="{{ datetime.year }}"
+              data-season="{{ datetime.season }}"
+              data-target="{{ system.twilight.strength }}"
+              title="{{ system.twilight.tooltip }}"
+              style="display: block; height: fit-content; width: fit-content"
+            >
+              <img
+                src="systems/arm5e/assets/icons/Icon_Warping.png"
+                style="width: 36px; height: 36px; border: none"
+              />
+            </a>
+            <div
+              class="twilight-icon"
+              style="
+                position: relative;
+                top: -38px;
+                left: 14px;
+                font-size: 15pt;
+                font-weight: bold;
+                pointer-events: none;
+              "
+            >
+              {{ system.twilight.stage }}
+            </div>
+          </div>
+          {{/if}}
+          {{#if devMode}}
+          <div class="flex0 padding10" style="width: 24px">
+            <a class="migrate" data-action="migrateActor" title="Migrate actor">
+              <i class="fas fa-arrow-up"></i>
+            </a>
+          </div>
+          {{/if}}
+        </div>
+      </h1>
+
+      <div class="flexrow">
+        <span class="flex0">
+          <label for="system.charType.value" class="">{{localize "arm5e.sheet.charType"}}</label>
+          <select class="charType" name="system.charType.value" data-type="String">
+            {{selectOptions config.npc.types selected=system.charType.value labelAttr="label" localize=true}}
+          </select>
+        </span>
+        {{#if (eq system.charType.value "entity")}}
+        <div class="flexrow marginsides6">
+          <div class="flexcol">
+            <label for="system.might.value" class="flex0 title">{{localize "arm5e.sheet.might"}}</label>
+            <div>
+              <input
+                type="number"
+                name="system.might.points"
+                value="{{ system.might.points }}"
+                data-dtype="Number"
+                style="width: 36px; text-align: center"
+                class="select-on-focus"
+              />
+              {{localize "arm5e.sheet.pointsShort"}} /
+              <input
+                type="number"
+                name="system.might.value"
+                value="{{ system.might.value }}"
+                data-dtype="Number"
+                style="width: 40px; text-align: center"
+                class="select-on-focus"
+              />
+            </div>
+          </div>
+          <div style="padding-top: 15px; padding-left: 5px">
+            <select class="change-realm" name="" data-type="String" data-realm="{{ system.realm }}">
+              {{selectOptions config.realmsExt selected=system.realm labelAttr="label" localize=true}}
+            </select>
+          </div>
+          <div style="padding-top: 15px">
+            <select name="system.might.form" data-type="String">
+              {{selectOptions config.magic.forms selected=system.might.form labelAttr="label"}}
+            </select>
+          </div>
+        </div>
+        {{else}}
+        <h2 class="covenantname flexrow">
+          <input
+            name="system.covenant.name"
+            class="covenant-link"
+            type="text"
+            value="{{ system.covenant.value }}"
+            data-dtype="String"
+            style="margin-left: 8px"
+          />
+        </h2>
+        <div style="padding-top: 10px; padding-left: 3px; max-width: 15px">
+          {{#if (eq system.covenant.linked true)}}
+          <a
+            class="flexrow0 actor-link"
+            data-action="openLinkedActor"
+            title="Linked to covenant"
+            data-actorid="{{ system.covenant.actorId }}"
+          >
+            <i class="fas fa-link fa-sm"></i>
+          </a>
+          {{else}}
+          <a class="flexrow0" title="Not linked to covenant">
+            <i class="fas fa-unlink fa-sm"></i>
+          </a>
+          {{/if}}
+        </div>
+        {{/if}}
+        {{#if (eq system.charType.value "magusNPC")}}
+        <span class="flexrow" style="padding-top: 4px">
+          <label
+            for="system.house.value"
+            class="bold flex0"
+            style="padding-left: 5px; padding-top: 4px; padding-right: 5px"
+          >{{localize "arm5e.sheet.house"}}</label>
+          <select name="system.house.value" data-type="String" style="width: 100%">
+            {{selectOptions config.character.houses selected=system.house.value labelAttr="label"}}
+          </select>
+        </span>
+        {{/if}}
+      </div>
+
+      <div class="grid grid-4col">
+        <div class="resource flex-group-center backSection">
+          <label for="system.age.value" class="smallTitle">{{localize "arm5e.sheet.age"}}</label>
+          <div class="resource-content flexrow flex-center flex-between margintop6">
+            <input
+              type="number"
+              name="system.age.value"
+              value="{{formatOptionalNumber system.age.value decimals=0}}"
+              data-dtype="Number"
+              {{ui.creationMode.edit}}
+              class="select-on-focus"
+            />
+            <span> ( </span>
+            <input
+              type="number"
+              name="system.apparent.value"
+              value="{{numberFormat system.apparent.value decimals=0}}"
+              data-dtype="Number"
+              class="select-on-focus"
+            />
+            <span> ) </span>
+          </div>
+        </div>
+        <div class="resource flex-group-center backSection">
+          <label for="system.vitals.siz.value" class="smallTitle">{{localize "arm5e.sheet.size"}}</label>
+          <div class="resource-content flexrow flex-center flex-between margintop6">
+            <input
+              type="number"
+              name="system.vitals.siz.value"
+              value="{{ system.vitals.siz.value }}"
+              data-dtype="Number"
+            />
+          </div>
+        </div>
+        <div class="resource flex-group-center backSection">
+          <label for="system.vitals.soa.value" class="smallTitle">{{localize "arm5e.sheet.soak"}}</label>
+          <div class="resource-content flexrow flex-center flex-between">
+            <input
+              type="number"
+              name="system.vitals.soa.value"
+              value="{{ system.vitals.soa.value }}"
+              data-dtype="Number"
+              readonly
+            />
+          </div>
+        </div>
+        <div class="resource flex-group-center backSection">
+          <label for="system.con.score" class="smallTitle">{{localize "arm5e.sheet.confidence"}}</label>
+          <div class="resource-content flexrow flex-center flex-between margintop6">
+            <input
+              type="number"
+              name="system.con.score"
+              value="{{ system.con.score }}"
+              data-dtype="Number"
+              style="flex: 0.6; margin-left: 8px; margin-right: 24px"
+            />
+            (<input
+              type="number"
+              name="system.con.points"
+              value="{{ system.con.points }}"
+              data-dtype="Number"
+              style="flex: 0.6"
+            />)
+          </div>
+        </div>
+      </div>
+
+      {{> "systems/arm5e/templates/actor/parts/actor-characteristics.html" charac=characList}}
+    </div>
+  </header>
+</div>

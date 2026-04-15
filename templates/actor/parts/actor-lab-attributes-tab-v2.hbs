@@ -1,0 +1,56 @@
+<div
+  class="tab {{ tab.cssClass }} attributes marginsides32"
+  data-group="primary"
+  data-tab="attributes"
+>
+  <div class="flexcol">
+    <div class="flexrow" style="min-height: 260px">
+      <div class="backSection" style="margin-right: 10px; margin-bottom: 5px">
+        <label
+          class="smallTitle padding4 flex01"
+          stype="max-height: 32px;"
+          >{{localize "arm5e.sheet.specialities"}}</label
+        >
+        {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+        {{> "systems/arm5e/templates/generic/ars-editor-V2.hbs"
+        content=system.specialties
+        target="system.specialties"
+        prefix=""
+        editable=editable
+        }}
+      </div>
+      <div class="backSection" style="margin-right: 10px; margin-bottom: 5px">
+        <label class="smallTitle padding4 flex01">{{localize "arm5e.sheet.personality"}}</label>
+        {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+        {{> "systems/arm5e/templates/generic/ars-editor-V2.hbs"
+        content=system.personalities
+        target="system.personalities"
+        prefix=""
+        editable=editable
+        }}
+      </div>
+    </div>
+    <div class="flexrow" style="min-height: 260px">
+      <div class="backSection" style="margin-right: 10px; margin-bottom: 5px">
+        <label class="smallTitle padding4 flex01">{{localize "arm5e.sheet.features"}}</label>
+        {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+        {{> "systems/arm5e/templates/generic/ars-editor-V2.hbs"
+        content=system.features
+        target="system.features"
+        prefix=""
+        editable=editable
+        }}
+      </div>
+      <div class="backSection" style="margin-right: 10px; margin-bottom: 5px">
+        <label class="smallTitle padding4 flex01">{{localize "arm5e.sheet.rooms"}}</label>
+        {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+        {{> "systems/arm5e/templates/generic/ars-editor-V2.hbs"
+        content=system.rooms
+        target="system.rooms"
+        prefix=""
+        editable=editable
+        }}
+      </div>
+    </div>
+  </div>
+</div>

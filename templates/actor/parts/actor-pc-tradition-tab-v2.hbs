@@ -1,0 +1,22 @@
+<div class="tab {{ tab.cssClass }} tradition" data-group="primary" data-tab="tradition">
+  <div class="flexcol">
+    {{> "systems/arm5e/templates/generic/parts/ars-tab-navigation.hbs" tabs=subtabs}}
+    {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+    <section class="tradition-body">
+      <div
+        class="tab{{#if subtabs.[tradition-subtab].active}} active{{/if}} item flexcol marginsides32"
+        data-group="tradition-secondary"
+        data-tab="tradition-subtab"
+      >
+        {{> "systems/arm5e/templates/actor/parts/actor-magicSystem.html" }}
+      </div>
+      <div
+        class="tab{{#if subtabs.[tradition-config].active}} active{{/if}} item flexcol marginsides32"
+        data-group="tradition-secondary"
+        data-tab="tradition-config"
+      >
+        {{> "systems/arm5e/templates/actor/parts/actor-magicSystem-cfg.html" }}
+      </div>
+    </section>
+  </div>
+</div>

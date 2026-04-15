@@ -237,7 +237,8 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
       template: "systems/arm5e/templates/generic/parts/scriptorium-header.hbs"
     },
     tabs: {
-      template: "systems/arm5e/templates/generic/parts/ars-tab-navigation.hbs"
+      template: "systems/arm5e/templates/generic/parts/ars-tab-navigation.hbs",
+      classes: ["greenBar", "marginsides32"]
     },
     reading: {
       template: "systems/arm5e/templates/generic/parts/scriptorium-reading.html",

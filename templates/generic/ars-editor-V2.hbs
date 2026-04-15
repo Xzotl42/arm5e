@@ -1,0 +1,18 @@
+<div class="prosemirror-section {{ sectionClass }} ">
+  {{#if editable}}
+  <div class="description-editor prosemirror-editor-box {{ editorClass }}">
+    <prose-mirror
+      name="{{ prefix }}{{ target }}"
+      button="true"
+      editable="{{ editable }}"
+      toggled="false"
+      value="{{ content }}"
+    >
+      {{{ content }}}
+    </prose-mirror>
+    {{else}}
+    {{{ content }}}
+    {{/if}}
+    {{!-- {{editor content target=target button=true engine="prosemirror" editable=editable}} --}}
+  </div>
+</div>

@@ -1,13 +1,15 @@
 <div class="flexcol flex0">
   <div class="padding4 flexrow flex-group-left">
-    <label class="section-handle  clickable" data-category="{{container}}" data-section="desc"
-      data-index="{{index}}">{{localize "arm5e.spell.description"}}</label>
+    <label class="section-handle  clickable" data-action="toggleSectionCollapse" data-category="{{container}}"
+      data-section="desc" data-index="{{index}}">{{localize "arm5e.spell.description"}}</label>
   </div>
   <div class="foldable-section-small {{lookup visibility 'desc' }}" id="{{container}}-desc{{index}}-{{docId}}">
     <div class="flex01" style="height: 200px;">
-      {{> "systems/arm5e/templates/generic/ars-editor.hbs"
+      {{log this}}
+      {{> "systems/arm5e/templates/generic/ars-editor-V2.hbs"
         content=spelldata.system.description
-        target=(concat prefix "system.description")
+        target="system.description"
+        prefix=prefix
         editable=true
       }}
     </div>
@@ -15,8 +17,8 @@
 </div>
 <div class="flexcol flex0" style="margin-top: 10px;">
   <div class="padding4 flexrow flex-group-left">
-    <label class="section-handle  clickable" data-category="{{container}}" data-section="attributes"
-      data-index="{{index}}">{{localize "arm5e.spell.attributes"}}</label>
+    <label class="section-handle  clickable" data-action="toggleSectionCollapse" data-category="{{container}}"
+      data-section="attributes" data-index="{{index}}">{{localize "arm5e.spell.attributes"}}</label>
   </div>
   <div class="foldable-section backSection {{lookup visibility 'attributes'}}"
     id="{{container}}-attributes{{index}}-{{docId}}">

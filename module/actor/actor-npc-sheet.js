@@ -82,7 +82,7 @@ export class ArM5eNPCActorSheet extends ArM5eActorSheet {
     await this.enrichCharacterEditors(context);
 
     // Prepare items.
-    this._prepareCharacterItems(context);
+    this._prepareActorItems(context);
 
     if (context.system.charType.value === "entity") {
       context.ui.qualities = { display: true };
@@ -101,8 +101,8 @@ export class ArM5eNPCActorSheet extends ArM5eActorSheet {
    *
    * @return {undefined}
    */
-  _prepareCharacterItems(sheetData) {
-    super._prepareCharacterItems(sheetData);
+  _prepareActorItems(sheetData) {
+    super._prepareActorItems(sheetData);
     //let actorData = sheetData.actor.data;
   }
 

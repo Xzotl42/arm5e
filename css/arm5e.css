@@ -570,7 +570,7 @@ h3.dice-msg {
 .arm5e-dialog select,
 .arm5e-roll select {
   width: calc(100% - 2px);
-  min-width: 20px;
+  min-width: 25px;
   height: 20px;
   background: rgba(0, 0, 0, 0.05);
   padding: 1px 3px;
@@ -1011,25 +1011,142 @@ body .locked-tooltip.active {
 .arm5e .mainPlayer,
 .arm5e .mainNPC,
 .arm5e .mainLaboratory,
-.arm5e .mainCodex,
+.arm5e .actor-magic-codex,
 .arm5e .mainCovenant {
   background-repeat: repeat-y;
-  background-size: contain;
+  background-size: 100% auto;
 }
-.arm5e .mainPlayer {
-  background-image: url("../assets/PC/background.webp");
+
+/* ============================================
+   LAB, COVENANT, PC, NPC, BEAST: shared invisible-then-hover scrollbar
+   ============================================ */
+
+.arm5e.sheet.actor.actor-laboratory .window-content,
+.arm5e.sheet.actor.actor-covenant .window-content,
+.arm5e.sheet.actor.actor-pc .window-content,
+.arm5e.sheet.actor.actor-npc .window-content,
+.arm5e.sheet.actor.actor-beast .window-content {
+  background-size: 100% auto;
+  background-repeat: repeat-y;
+  scrollbar-gutter: stable;
+  scrollbar-color: transparent transparent; /* Firefox: invisible by default */
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: scrollbar-color 0.3s;
 }
-.arm5e .mainNPC {
-  background-image: url("../assets/NPC/background.webp");
-}
-.arm5e .mainLaboratory {
+
+/* Per-sheet background images */
+.arm5e.sheet.actor.actor-laboratory .window-content {
   background-image: url("../assets/Lab/background.webp");
 }
-.arm5e .mainCodex {
-  background-image: url("../assets/codex/background.webp");
-}
-.arm5e .mainCovenant {
+.arm5e.sheet.actor.actor-covenant .window-content {
   background-image: url("../assets/covenant/background.webp");
+}
+.arm5e.sheet.actor.actor-pc .window-content {
+  background-image: url("../assets/PC/background.webp");
+}
+.arm5e.sheet.actor.actor-npc .window-content,
+.arm5e.sheet.actor.actor-beast .window-content {
+  background-image: url("../assets/NPC/background.webp");
+}
+
+/* Firefox: per-sheet thumb colour on hover */
+.arm5e.sheet.actor.actor-laboratory .window-content:hover {
+  scrollbar-color: rgba(10, 50, 15, 1) transparent;
+}
+.arm5e.sheet.actor.actor-covenant .window-content:hover {
+  scrollbar-color: rgba(80, 10, 10, 1) transparent;
+}
+.arm5e.sheet.actor.actor-pc .window-content:hover {
+  scrollbar-color: rgba(10, 20, 80, 1) transparent;
+}
+.arm5e.sheet.actor.actor-npc .window-content:hover,
+.arm5e.sheet.actor.actor-beast .window-content:hover {
+  scrollbar-color: rgba(90, 60, 5, 1) transparent;
+}
+
+/* Webkit (Chrome/Edge): shared invisible scrollbar */
+.arm5e.sheet.actor.actor-laboratory .window-content::-webkit-scrollbar,
+.arm5e.sheet.actor.actor-covenant .window-content::-webkit-scrollbar,
+.arm5e.sheet.actor.actor-pc .window-content::-webkit-scrollbar,
+.arm5e.sheet.actor.actor-npc .window-content::-webkit-scrollbar,
+.arm5e.sheet.actor.actor-beast .window-content::-webkit-scrollbar {
+  width: 25px;
+}
+.arm5e.sheet.actor.actor-laboratory .window-content::-webkit-scrollbar-track,
+.arm5e.sheet.actor.actor-covenant .window-content::-webkit-scrollbar-track,
+.arm5e.sheet.actor.actor-pc .window-content::-webkit-scrollbar-track,
+.arm5e.sheet.actor.actor-npc .window-content::-webkit-scrollbar-track,
+.arm5e.sheet.actor.actor-beast .window-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+.arm5e.sheet.actor.actor-laboratory .window-content::-webkit-scrollbar-thumb,
+.arm5e.sheet.actor.actor-covenant .window-content::-webkit-scrollbar-thumb,
+.arm5e.sheet.actor.actor-pc .window-content::-webkit-scrollbar-thumb,
+.arm5e.sheet.actor.actor-npc .window-content::-webkit-scrollbar-thumb,
+.arm5e.sheet.actor.actor-beast .window-content::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 4px;
+  transition: background 0.3s;
+}
+
+/* Webkit: per-sheet thumb colour on hover */
+.arm5e.sheet.actor.actor-laboratory .window-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(10, 50, 15, 1);
+}
+.arm5e.sheet.actor.actor-covenant .window-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(80, 10, 10, 1);
+}
+.arm5e.sheet.actor.actor-pc .window-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(10, 20, 80, 1);
+}
+.arm5e.sheet.actor.actor-npc .window-content::-webkit-scrollbar-thumb:hover,
+.arm5e.sheet.actor.actor-beast .window-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(90, 60, 5, 1);
+}
+
+/* Extend header/footer decorative images into the scrollbar gutter so they
+   span the full visual width of the window. */
+.arm5e.sheet.actor.actor-laboratory .window-content .header-background,
+.arm5e.sheet.actor.actor-laboratory .window-content .footer-background,
+.arm5e.sheet.actor.actor-covenant .window-content .header-background,
+.arm5e.sheet.actor.actor-covenant .window-content .footer-background,
+.arm5e.sheet.actor.actor-pc .window-content .header-background,
+.arm5e.sheet.actor.actor-pc .window-content .footer-background,
+.arm5e.sheet.actor.actor-npc .window-content .header-background,
+.arm5e.sheet.actor.actor-npc .window-content .footer-background,
+.arm5e.sheet.actor.actor-beast .window-content .header-background,
+.arm5e.sheet.actor.actor-beast .window-content .footer-background {
+  width: calc(100% + 10px);
+}
+
+/* In AppV2 the planning PART fills the full remaining window height, making
+   Foundry's flexrow align-items: center visually push the three columns to
+   the middle. Pin them to the top instead. */
+.actor-laboratory .workbench {
+  align-items: flex-start;
+  margin-top: 10px;
+}
+
+/* Tab parts grow to fill remaining space, pushing the footer to the bottom. */
+.arm5e.sheet.actor.actor-covenant .window-content > .tab,
+.arm5e.sheet.actor.actor-pc .window-content > .tab,
+.arm5e.sheet.actor.actor-npc .window-content > .tab,
+.arm5e.sheet.actor.actor-beast .window-content > .tab {
+  flex: 1 1 auto;
+}
+
+.arm5e.sheet.actor.actor-magic-codex .window-content {
+  background-image: url("../assets/codex/background.webp");
+  background-size: contain;
+  scrollbar-gutter: auto;
+  overflow-y: hidden;
+  overflow-x: hidden;
+  gap: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Component-specific exceptions retained where required by layout */
@@ -1045,6 +1162,7 @@ body .locked-tooltip.active {
 /* Tabs and bars */
 .arm5e .tabs {
   height: 32px;
+  gap: 0px;
   border-top: 1px solid #aaa;
   border-bottom: 1px solid #aaa;
 }
@@ -1052,6 +1170,7 @@ body .locked-tooltip.active {
   font-family: var(--font-header);
   font-size: 14pt;
   justify-content: center;
+  height: 25px;
 }
 /* .arm5eTabs and .arm5eSubTabs are fully defined below with complete properties */
 
@@ -1071,7 +1190,7 @@ nav.tabs [data-tab]:hover {
 .arm5eLargeDialog nav.sheet-tabs {
   margin-left: 32px;
   margin-right: 32px;
-  background-color: var(--arm5e-c-shadow);
+  /* background-color: var(--arm5e-c-shadow); */
 }
 
 h4.message-sender {
@@ -1472,6 +1591,23 @@ span.player-name {
   background: var(--parchment);
 }
 
+.prosemirror menu,
+prose-mirror menu {
+  background: var(--parchment);
+}
+
+.arm5e .prosemirror menu button,
+prose-mirror menu button {
+  font-size: 10pt;
+  padding: 2px;
+  margin: 0px;
+}
+
+.arm5e prose-mirror > button.icon {
+  font-size: 10pt;
+  margin: 5px;
+}
+
 a.content-link,
 .arm5e .journal-entry-page a.content-link {
   border-radius: var(--radius-xs);
@@ -1715,6 +1851,7 @@ button.template-item {
 .arm5e .item-control {
   padding-top: 4px;
   text-align: center;
+  font-size: 9pt;
 }
 
 .hideme {
@@ -2358,25 +2495,37 @@ li.effect-change {
   font-size: 18px;
 }
 
+/* Codex filter row: label + select must stay on one line.
+   Foundry's .flexrow > * { flex: 1 } forces flex-basis: 0% on every child,
+   including labels. Override with a higher-specificity scoped rule. */
+.arm5e .sheet-header-codex .codexname {
+  flex-wrap: nowrap;
+}
+.arm5e .sheet-header-codex .codexname > label {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
 .arm5e .codex-title {
   text-align: center;
   font-family: var(--font-header);
   font-size: 35px;
   height: 45px;
+  margin: 5px;
   color: #581845;
 }
 
 .arm5e .sheet-header .profile-img {
-  flex: 0 0 230px;
-  height: 236px;
+  flex: 0 0 150px;
+  height: 150px;
   margin-right: 10px;
   margin-bottom: 10px;
 }
 
 .arm5e .profile-img {
-  flex: 0 0 100px;
-  height: 100px;
-  width: 100px;
+  flex: 0 0 150px;
+  height: 150px;
+  width: 150px;
   margin-right: 5px;
   margin-bottom: 5px;
   object-fit: contain;
@@ -2704,6 +2853,7 @@ div[class*="foldable-section"] {
   box-sizing: border-box;
   overflow-y: auto;
   overflow-x: hidden;
+  margin-left: 5px;
 }
 .arm5e .sheet-body .editor.prosemirror,
 .arm5e .sheet-body .tab .editor.prosemirror {
@@ -2759,7 +2909,7 @@ label.uppercase {
   background-position-y: bottom;
   */
   min-height: 36px;
-  overflow: hidden; /* Prevent sub-pixel height fluctuation on hover (scrollbar flicker fix) */
+  overflow: visible;
   /* Override Foundry core margin */
 }
 
@@ -2783,9 +2933,7 @@ label.uppercase {
   padding-top: 5px;
 }
 
-.formLabel {
-  /* inherits all base properties from grouped rule above */
-}
+.blueBar,
 .arm5eTabsPC {
   background-image: url("../assets/PC/bar.webp");
   background-repeat: repeat-x;
@@ -2803,7 +2951,6 @@ label.uppercase {
   background-image: url("../assets/Lab/bar.webp");
   background-repeat: repeat-x;
   background-position-y: bottom;
-  min-height: 3px;
 }
 
 .arm5eTabsCOV {
@@ -2816,6 +2963,16 @@ label.uppercase {
   background-image: url("../assets/codex/bar.webp");
   background-repeat: repeat-x;
   background-position-y: bottom;
+}
+
+.arm5eTabs .item,
+.arm5eSubTabs .item {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
 }
 
 .arm5e .tabs .item.active {
@@ -2837,6 +2994,8 @@ label.uppercase {
   left: -15px;
   text-decoration: none;
   flex: 0 0 auto;
+  display: flex;
+  align-items: center;
 }
 
 img.art-icon {
@@ -2863,6 +3022,8 @@ img.art-icon {
   right: -15px;
   text-decoration: none;
   flex: 0 0 auto;
+  display: flex;
+  align-items: center;
 }
 
 .navItem-left-ball img {
@@ -2876,15 +3037,19 @@ img.art-icon {
   width: 14px;
 }
 
-/* Show/hide arrows around tabs */
-.arm5eSubTabs div,
-.arm5eTabs div {
+/* Show/hide only decorative side balls around active tabs. */
+.arm5eTabs .item .navItem-left-ball,
+.arm5eTabs .item .navItem-right-ball,
+.arm5eSubTabs .item .navItem-left-ball,
+.arm5eSubTabs .item .navItem-right-ball {
   display: none;
 }
 
-.arm5eTabs .active div,
-.arm5eSubTabs .active div {
-  display: block;
+.arm5eTabs .item.active .navItem-left-ball,
+.arm5eTabs .item.active .navItem-right-ball,
+.arm5eSubTabs .item.active .navItem-left-ball,
+.arm5eSubTabs .item.active .navItem-right-ball {
+  display: flex;
 }
 
 .arm5e .items-list {
@@ -3067,6 +3232,18 @@ img.art-icon {
 
 .arm5e .spell-list {
   margin: 0;
+  padding-left: 0;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Codex V2 tabs are flex containers; force list bodies to fill available width. */
+.arm5e .actor-magic-codex .tab.flexrow {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .arm5e .spell-list .item-controls {
@@ -3090,6 +3267,35 @@ img.art-icon {
 .arm5e .spell-desc {
   font-size: 10px;
   padding-left: 20px;
+}
+
+/* Codex V2: the tab <div> IS the [data-application-part] element (Foundry sets the attribute
+   directly on the template root). So target .window-content > .tab, not a wrapper. */
+.actor-magic-codex .window-content > .tab {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* When any actor sheet is narrowed, allow the tabs nav to wrap onto multiple rows.
+   !important beats Foundry core flex-flow: row nowrap set on nav.tabs and
+   body.game .app .tabs at varying specificities. */
+.arm5e.sheet.actor [data-application-part="tabs"] {
+  flex: 0 0 auto;
+}
+.arm5e.sheet.actor [data-application-part="tabs"] nav {
+  flex-wrap: wrap;
+  height: auto;
+}
+
+.actor-magic-codex .window-content > .tab > .spell-list {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .arm5e .link {
@@ -3120,6 +3326,7 @@ img.art-icon {
   border: 0px;
   border-radius: var(--radius-small);
   box-shadow: var(--shadow-card);
+  width: 100%;
 }
 
 .arm5e .smallBackSection.wide {
@@ -3183,6 +3390,20 @@ img.art-icon {
 .marginsides10 {
   margin-left: 10px;
   margin-right: 10px;
+}
+.marginsides16 {
+  margin-left: 16px;
+  margin-right: 16px;
+}
+
+.marginsides20 {
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.marginsides24 {
+  margin-left: 24px;
+  margin-right: 24px;
 }
 
 .marginsides32 {

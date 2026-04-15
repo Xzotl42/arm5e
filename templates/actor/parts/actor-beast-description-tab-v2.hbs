@@ -1,0 +1,23 @@
+<div class="tab {{ tab.cssClass }} description" data-group="primary" data-tab="description">
+  <div class="flexcol">
+    {{> "systems/arm5e/templates/generic/parts/ars-tab-navigation.hbs" tabs=subtabs}}
+    <section class="desc-body">
+      <div
+        class="tab{{#if subtabs.desc.active}} active{{/if}} item flexcol marginsides32"
+        data-group="desc-secondary"
+        data-tab="desc"
+      >
+        {{> "systems/arm5e/templates/actor/parts/actor-description-v2.hbs" }}
+      </div>
+      <div
+        class="tab{{#if subtabs.wounds.active}} active{{/if}} item flexcol marginsides32"
+        data-group="desc-secondary"
+        data-tab="wounds"
+      >
+        {{> "systems/arm5e/templates/actor/parts/actor-fatigue.html" }}
+        {{> "systems/arm5e/templates/actor/parts/actor-combat.html" }}
+        {{> "systems/arm5e/templates/actor/parts/actor-weapons.html" }}
+      </div>
+    </section>
+  </div>
+</div>

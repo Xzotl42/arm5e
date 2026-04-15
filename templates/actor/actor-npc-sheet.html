@@ -20,21 +20,22 @@
               </div>
             {{/if}}
             {{#if system.states.pendingCrisis}}
-              <div class="flex0 padding10" style="width:24px"><a class="rollable" data-roll="crisis"
+              <div class="flex0 padding10" style="width:24px"><a class="rollable" data-action="roll" data-roll="crisis"
                   data-year="{{system.lastCrisis.year}}" data-season="{{system.lastCrisis.season}}" title='{{localize "
                   arm5e.aging.crisis.tooltip"}}'><i class="ars-Icon_Aging_crisis"></i></a>
               </div>
             {{/if}}
             {{#if system.states.confidencePrompt}}
               <div class="flex0 padding10" style="width:36px"><a class="clear-confidencePrompt"
-                  title='{{localize "arm5e.sheet.states.confidencePrompt"}}' style="font-size: 20pt;"><i
-                    class="fas fa-user-plus"></i></a>
+                  data-action="clearConfidencePrompt" title='{{localize "arm5e.sheet.states.confidencePrompt"}}'
+                  style="font-size: 20pt;"><i class="fas fa-user-plus"></i></a>
               </div>
             {{/if}}
             {{#if system.twilight.stage}}
               <div class="flex01" style="padding: 5px;">
-                <a class="twilight-episode clickable" data-year="{{datetime.year}}" data-season="{{datetime.season}}"
-                  data-target="{{system.twilight.strength}}" title="{{system.twilight.tooltip}}" style="display: block;
+                <a class="twilight-episode clickable" data-action="twilightEpisode" data-year="{{datetime.year}}"
+                  data-season="{{datetime.season}}" data-target="{{system.twilight.strength}}"
+                  title="{{system.twilight.tooltip}}" style="display: block;
                 height: fit-content; width: fit-content;">
                   <img src="systems/arm5e/assets/icons/Icon_Warping.png"
                     style="width:36px;height:36px; border:none;"></i>
@@ -46,8 +47,8 @@
               </div>
             {{/if}}
             {{#if devMode}}
-              <div class="flex0 padding10" style="width:24px"><a class="migrate" title="Migrate actor"><i
-                    class="fas fa-arrow-up"></i></a></div>
+              <div class="flex0 padding10" style="width:24px"><a class="migrate" data-action="migrateActor"
+                  title="Migrate actor"><i class="fas fa-arrow-up"></i></a></div>
             {{/if}}
           </div>
         </h1>
@@ -88,8 +89,8 @@
             </h2>
             <div style="padding-top: 10px; padding-left: 3px; max-width:15px;">
               {{#if (eq system.covenant.linked true)}}
-                <a class="flexrow0 actor-link" title="Linked to covenant" data-actorid="{{system.covenant.actorId}}"><i
-                    class="fas fa-link fa-sm"></i></a>
+                <a class="flexrow0 actor-link" data-action="openLinkedActor" title="Linked to covenant"
+                  data-actorid="{{system.covenant.actorId}}"><i class="fas fa-link fa-sm"></i></a>
               {{else}}
                 <a class="flexrow0" title="Not linked to covenant"><i class="fas fa-unlink fa-sm"></i></a>
               {{/if}}
@@ -229,7 +230,7 @@
         </nav>
         <section class="desc-body">
           <div class="tab" data-group="desc-secondary" data-tab="desc">
-            {{> "systems/arm5e/templates/actor/parts/actor-description.html" }}
+            {{> "systems/arm5e/templates/actor/parts/actor-description-v2.hbs" }}
           </div>
           <div class="tab" data-group="desc-secondary" data-tab="wounds">
             {{> "systems/arm5e/templates/actor/parts/actor-fatigue.html" }}

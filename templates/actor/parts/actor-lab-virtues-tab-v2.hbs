@@ -1,0 +1,21 @@
+<div
+  class="tab {{ tab.cssClass }} virtues flexcol marginsides32"
+  data-group="primary"
+  data-tab="virtues"
+>
+  <div class="backSection margintop18" style="min-height: 150px">
+    <label
+      class="smallTitle padding12"
+      style="height: 32px"
+      >{{localize "arm5e.sheet.description"}}</label
+    >
+    {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+    {{> "systems/arm5e/templates/generic/ars-editor-V2.hbs"
+      content=enrichedDescription
+      target="system.description"
+      prefix=""
+      editable=editable
+    }}
+  </div>
+  {{> "systems/arm5e/templates/actor/parts/actor-virtuesFlaws.html" create=false bonusComp="laboratory-virtues" penaltyComp="laboratory-flaws" bonuses="arm5e.sheet.virtues" penalties="arm5e.sheet.flaws"}}
+</div>

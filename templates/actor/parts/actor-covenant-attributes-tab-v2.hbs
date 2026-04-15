@@ -1,0 +1,131 @@
+<div
+  class="tab {{ tab.cssClass }} attributes marginsides32"
+  data-group="primary"
+  data-tab="attributes"
+>
+  <div class="flex-group-left padding12 backSection">
+    <label class="smallTitle padding12 flex0">{{localize "arm5e.sheet.description"}}</label>
+    {{> "systems/arm5e/templates/generic/ars-editor-V2.hbs"
+    content=enrichedDescription
+    target="system.description"
+    prefix=""
+    editable=editable
+    }}
+  </div>
+  <ol class="items-list backSection margintop18">
+    <li class="item flexrow item-header">
+      <div class="item-image"></div>
+      <div class="item-name">{{localize "arm5e.sheet.reputation"}}</div>
+      <div class="item-controls">
+        <a
+          class="item-control item-create"
+          data-action="itemCreate"
+          title="Add reputations"
+          data-type="reputation"
+          ><i class="fas fa-plus"></i
+        ></a>
+      </div>
+    </li>
+    {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+    {{#each system.reputations as |item id|}}
+    <li
+      class="item item-value flexrow flex-center"
+      data-name="{{ item.name }}"
+      data-attribute="{{ id }}"
+      data-item-id="{{ item._id }}"
+    >
+      <div class="flexrow flex-center">
+        <span class="flexrow item-title width3">{{ item.name }}</span>
+        <span class="flexrow"
+          >{{localize "arm5e.sheet.type"}}:
+          {{localize (lookup (lookup ../config.reputations item.system.type) "label")}}
+        </span>
+        <span class="flexrow bold">{{localize "arm5e.sheet.score"}}: {{ item.system.score }} </span>
+      </div>
+      <div class="item-controls">
+        <a class="item-control item-edit" data-action="itemEdit" title="Edit reputation"
+          ><i class="ars-Icon_Edit"></i
+        ></a>
+        <a class="item-control item-delete" data-action="itemDelete" title="Delete reputation"
+          ><i class="ars-Icon_Delete_Hand_Gesture"></i
+        ></a>
+      </div>
+    </li>
+    {{/each}}
+  </ol>
+  <div class="backSection margintop18">
+    <div class="flexrow flex-group-center" style="border: 0px">
+      <ol style="width: 100%">
+        <li class="flexrow flex-group-left" style="border: 0px">
+          <label
+            for="system.buildPoint.{{ key }}.constructionPoints"
+            class="smallTitle flex08"
+            >{{localize "arm5e.sheet.constructionPoints" }}</label
+          >
+          <label
+            for="system.buildPoints.{{ key }}.value"
+            class="bold flex03"
+            >{{localize "arm5e.sheet.initials" }}</label
+          >
+          <label
+            for="system.buildPoints.{{ key }}.computed"
+            class="bold flex05"
+            >{{localize "arm5e.sheet.actuals" }}</label
+          >
+          <label
+            for="system.buildPoints.{{ key }}.notes"
+            class="bold width2"
+            >{{localize "arm5e.sheet.notes" }}</label
+          >
+        </li>
+        {{#each system.buildPoints as |data key|}}
+        <li class="flexrow flex-group-left" style="border: 0px" data-attribute="{{ key }}">
+          <span class="flex07">
+            {{#with (lookup @root.config.covenant.labels key)}}
+            <label
+              for="system.buildPoints.{{ key }}.buildPoints"
+              class="bold"
+              >{{localize label}}</label
+            >
+            {{/with}}
+          </span>
+          <span class="flex03" style="margin-right: 6px">
+            <input
+              type="text"
+              name="system.buildPoints.{{ key }}.value"
+              class="select-on-focus"
+              value="{{numberFormat data.value decimals=0 sign=true}}"
+              class="select-on-focus"
+              data-dtype="Number"
+            />
+          </span>
+          <span class="flex03" style="margin-right: 6px">
+            <input
+              type="text"
+              name="system.buildPoints.{{ key }}.computed"
+              value="{{numberFormat data.computed decimals=0 sign=true}}"
+              readonly
+              class="select-on-focus"
+              data-dtype="Number"
+            />
+          </span>
+          <span class="flex2">
+            <input
+              type="text"
+              name="system.buildPoints.{{ key }}.notes"
+              value="{{ data.notes }}"
+              data-dtype="String"
+            />
+          </span>
+        </li>
+        {{/each}}
+      </ol>
+    </div>
+  </div>
+
+  {{> "systems/arm5e/templates/actor/parts/actor-virtuesFlaws.html" create=true bonusComp="boons" penaltyComp="hooks" bonuses="arm5e.sheet.boons" penalties="arm5e.sheet.hooks"}}
+  {{#if metagame.view }}
+  {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+  {{> "systems/arm5e/templates/generic/source.html" }}
+  {{/if}}
+</div>

@@ -1,0 +1,178 @@
+<div
+  class="tab {{ tab.cssClass }} posessions marginsides32"
+  data-group="primary"
+  data-tab="posessions"
+>
+  {{!-- properties --}}
+  <ol class="items-list backSection">
+    <li class="item flexrow item-header">
+      <div class="item-image"></div>
+      <div class="item-name">{{localize "arm5e.sheet.properties"}}</div>
+      <div class="item-controls">
+        <a
+          class="item-control item-create"
+          data-action="itemCreate"
+          title="Add property"
+          data-type="possessionsCovenant"
+          ><i class="fas fa-plus"></i>{{localize "arm5e.sheet.action.Create"}}</a
+        >
+      </div>
+    </li>
+    {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+    {{#each system.possessions as |item id|}}
+    <li
+      class="item flexrow item-value flex-center"
+      data-name="{{ item.name }}"
+      data-attribute="{{ id }}"
+      data-item-id="{{ item._id }}"
+    >
+      <div class="flexrow flex-center">
+        <span class="flexrow item-title width15">{{ item.name }}</span>
+        <span></span>
+        <label
+          ><span class="bold">{{localize "arm5e.sheet.location"}}:</span> {{ item.system.location }}
+        </label>
+        <label
+          ><span class="bold">{{localize "arm5e.sheet.dimensions"}}:</span>
+          {{ item.system.dimensions }}
+        </label>
+        <label
+          ><span class="bold">{{localize "arm5e.sheet.inhabitants"}}:</span>
+          {{ item.system.inhabitants }}
+        </label>
+      </div>
+      <div class="item-controls">
+        <a class="item-control item-edit" data-action="itemEdit" title="Edit Property"
+          ><i class="ars-Icon_Edit"></i
+        ></a>
+        <a class="item-control item-delete" data-action="itemDelete" title="Delete Property"
+          ><i class="ars-Icon_Delete_Hand_Gesture"></i
+        ></a>
+      </div>
+    </li>
+    {{/each}}
+  </ol>
+  <ol class="items-list backSection margintop18">
+    <li class="item flexrow item-header">
+      <div class="item-image"></div>
+      <div class="item-name">Sanctums</div>
+      <div class="item-controls">
+        <a
+          class="item-control item-create"
+          data-action="itemCreate"
+          title="Add a sanctum"
+          data-type="labCovenant"
+          ><i class="fas fa-plus"></i>{{localize "arm5e.sheet.action.Create"}}</a
+        >
+      </div>
+    </li>
+    {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+    {{#each system.labs as |item id|}}
+    <li
+      class="item flexrow item-value flex-center"
+      data-name="{{ item.name }}"
+      data-attribute="{{ id }}"
+      data-item-id="{{ item._id }}"
+    >
+      <div class="item-image item-control item-edit" data-action="itemEdit">
+        <img src="{{ item.img }}" title="{{ item.name }}" />
+      </div>
+      <div class="flexrow flex-center">
+        <span class="flexrow item-title width15">{{ item.name }}</span>
+        <span class="bold">{{localize "arm5e.sheet.owner"}}: {{ item.system.owner }} </span>
+        <span class="bold">{{localize "arm5e.sheet.quality"}}: ({{ item.system.quality }}) </span>
+        <span class="bold"
+          >{{localize "arm5e.lab.upkeep"}}: ({{ item.system.points }}
+          {{localize "arm5e.sheet.points"}})
+        </span>
+      </div>
+      <div class="item-controls">
+        {{#if (eq item.system.linked true)}}
+        <a
+          class="item-control actor-link"
+          data-action="openLinkedActor"
+          title="Linked to sanctum"
+          data-actorid="{{ item.system.document._id }}"
+          ><i class="fas fa-link fa-sm"></i
+        ></a>
+        {{else}}
+        <a title="Not linked to sanctum"><i class="fas fa-unlink fa-sm"></i></a>
+        {{/if}}
+        <a class="item-control item-edit" data-action="itemEdit" title="Edit sanctum"
+          ><i class="ars-Icon_Edit"></i
+        ></a>
+        <a
+          class="item-control actor-link-delete"
+          data-action="removeLinkedItem"
+          title="Delete sanctum"
+          ><i class="ars-Icon_Delete_Hand_Gesture"></i
+        ></a>
+      </div>
+    </li>
+    {{/each}}
+  </ol>
+
+  {{> "systems/arm5e/templates/actor/parts/actor-weapons.html" }}
+  {{> "systems/arm5e/templates/actor/parts/actor-armor.html" }}
+
+  {{!-- vis sources --}}
+  <ol class="items-list backSection margintop18">
+    <li class="item flexrow item-header">
+      <div class="item-image"></div>
+      <div class="item-name">{{localize "arm5e.sheet.visSources"}}</div>
+      <div class="item-controls">
+        <a
+          class="item-control item-create"
+          data-action="itemCreate"
+          title="Add visSourcesCovenant"
+          data-type="visSourcesCovenant"
+          ><i class="fas fa-plus"></i>{{localize "arm5e.sheet.action.Create"}}</a
+        >
+      </div>
+    </li>
+    {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+    {{#each system.visSources as |item id|}}
+    <li
+      class="item item-value flexrow flex-center"
+      data-name="{{ item.name }}"
+      data-attribute="{{ id }}"
+      data-item-id="{{ item._id }}"
+    >
+      <div class="flexrow flex-center">
+        <span class="flexrow item-title width15">{{ item.name }}</span>
+        <span></span>
+        <span class="flexrow bold"
+          >{{localize "arm5e.sheet.art"}}:
+          {{#with (lookup @root.config.magic.arts item.system.art)~}} {{label~}} {{/with}}</span
+        >
+        <span class="flexrow bold">{{localize "arm5e.sheet.pawns"}}: {{ item.system.pawns }} </span>
+        <span class="flexrow bold"
+          >{{localize "arm5e.sheet.season"}}:
+          {{localize (lookup  (lookup @root.config.seasons item.system.season) "label")}}
+        </span>
+        <a
+          class="harvest clickable"
+          data-action="harvestItem"
+          title="{{localize 'arm5e.sheet.visHarvest'}}"
+          ><img
+            src="systems/arm5e/assets/icons/sickle.svg"
+            style="border: 0px; height: 18px; min-height: 30px; min-width: 30px"
+        /></a>
+      </div>
+      <div class="item-controls">
+        <a class="item-control item-edit" data-action="itemEdit" title="Edit visSourcesCovenant"
+          ><i class="ars-Icon_Edit"></i
+        ></a>
+        <a
+          class="item-control item-delete"
+          data-action="itemDelete"
+          title="Delete visSourcesCovenant"
+          ><i class="ars-Icon_Delete_Hand_Gesture"></i
+        ></a>
+      </div>
+    </li>
+    {{/each}}
+  </ol>
+  {{> "systems/arm5e/templates/actor/parts/actor-vis.html" }}
+  {{> "systems/arm5e/templates/actor/parts/actor-items.html" }}
+</div>

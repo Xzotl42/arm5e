@@ -1,7 +1,7 @@
 <div class="workbench flexrow" data-drop="workbench">
   <div class="flexcol flex02 ">
-    <img class="profile-img moreinfo" src="{{system.owner.document.img}}" data-id="{{system.owner.actorId}}"
-      title="{{system.owner.value}}" height="75" width="75" />
+    <img class="profile-img moreinfo" data-action="moreInfo" src="{{system.owner.document.img}}"
+      data-id="{{system.owner.actorId}}" title="{{system.owner.value}}" height="75" width="75" />
     {{>"systems/arm5e/templates/generic/parts/simpleFieldBacksection.hbs" label="arm5e.sheet.intelligence" 
         name="int" attributes="readonly" value=system.owner.document.system.characteristics.int.value type="number" dtype="Number"}}
     {{>"systems/arm5e/templates/generic/parts/simpleFieldBacksection.hbs" label="arm5e.skill.arcane.magicTheory" 
@@ -32,7 +32,7 @@
       <div class="flexrow flex01">
         <div class="flexcol" style="margin-top: 10px; margin-right: 10px;">
           <div class="padding4 flexrow flex-group-left">
-            <label class="section-handle  clickable" data-section="options"
+            <label class="section-handle  clickable" data-action="toggleSectionCollapse" data-section="options"
               data-category="planning">{{localize "arm5e.generic.options"}}</label>
           </div>
           <div class="foldable-section backSection {{@root.ui.sections.visibility.planning.options}}"
@@ -105,11 +105,11 @@
               </ul>
             </div>
             <div class="flex-group-right flexcol flex0">
-              <button class="arm5e flex0 schedule" {{edition.schedule}}
+              <button class="arm5e flex0 schedule" data-action="schedulePlanning" {{edition.schedule}}
                 style="font-family: bookAntiquaBold">{{localize "arm5e.lab.planning.button.schedule"}}</button>
-              <button class="arm5e flex0 refresh"
+              <button class="arm5e flex0 refresh" data-action="refreshPlanning"
                 style="font-family: bookAntiquaBold">{{localize "arm5e.lab.planning.button.refresh"}}</button>
-              <button class="arm5e flex0 reset-planning"
+              <button class="arm5e flex0 reset-planning" data-action="resetPlanning"
                 style="font-family: bookAntiquaBold">{{localize "arm5e.lab.planning.button.reset"}}</button>
             </div>
           </div>

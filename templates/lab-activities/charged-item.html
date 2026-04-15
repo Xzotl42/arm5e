@@ -7,7 +7,7 @@
       value="{{planning.data.receptacle.name}}" placeholder="Name" />
   </h1>
   <div class="padding4 flexrow flex-group-left">
-    <label class="section-handle clickable" data-category="planning"
+    <label class="section-handle clickable" data-action="toggleSectionCollapse" data-category="planning"
       data-section="effect">{{localize "arm5e.sheet.effect"}}</label>
   </div>
   <div class="foldable-section backSection {{lookup @root.ui.sections.visibility.planning 'effect'}}"
@@ -42,7 +42,7 @@
   </div>
   <div>
     <div class="padding4 flexrow flex-group-left">
-      <label class="section-handle clickable" data-category="planning"
+      <label class="section-handle clickable" data-action="toggleSectionCollapse" data-category="planning"
         data-section="receptacle">{{localize "arm5e.enchantment.receptacle.label"}}</label>
     </div>
     <div
@@ -54,15 +54,16 @@
         </select>
       </div>
       <div class="padding4 flexrow flex-group-left">
-        <label class="section-handle  clickable" data-category="planning"
+        <label class="section-handle  clickable" data-action="toggleSectionCollapse" data-category="planning"
           data-section="receptacle-desc">{{localize "arm5e.enchantment.receptacle.desc"}}</label>
       </div>
       <div class="foldable-section-small {{lookup @root.ui.sections.visibility.planning 'receptacle-desc' }}"
         id="planning-receptacle-desc{{index}}-{{@root.actor._id}}">
         <div class="flex01" style="height: 200px;">
-          {{> "systems/arm5e/templates/generic/ars-editor.hbs"
+          {{> "systems/arm5e/templates/generic/ars-editor-V2.hbs"
             content=planning.data.receptacle.system.description
-            target=(concat planning.namePrefix "receptacle.system.description")
+            target="receptacle.system.description"
+            prefix=planning.namePrefix
             editable=true
           }}
         </div>
@@ -70,7 +71,7 @@
       <!-- CAPACITY -->
 
       <div class="padding4 flexrow flex-group-left ">
-        <label class="section-handle clickable" data-category="planning"
+        <label class="section-handle clickable" data-action="toggleSectionCollapse" data-category="planning"
           data-section="capacity">{{localize "arm5e.enchantment.capacity.label"}}</label>
       </div>
       <div class="foldable-section backSection enchantment {{lookup @root.ui.sections.visibility.planning 'capacity'}}"
@@ -111,7 +112,8 @@
       <!-- SHAPES & MATERIALS -->
       <div>
         <div class="flexrow flex-group-left padding4">
-          <label class="section-handle clickable" data-category="planning" data-section="aspect">{{localize
+          <label class="section-handle clickable" data-action="toggleSectionCollapse" data-category="planning"
+            data-section="aspect">{{localize
         "arm5e.enchantment.aspects"}}</label>
         </div>
         <div class="foldable-section backSection enchantment {{lookup @root.ui.sections.visibility.planning 'aspect'}}"
@@ -151,7 +153,7 @@
     {{#if hasVisCost}}
       <div>
 
-        {{> "systems/arm5e/templates/item/parts/vis-costs.html" docId=@root.actor._id container="planning"
+        {{> "systems/arm5e/templates/lab-activities/vis-costs.html" docId=@root.actor._id container="planning"
           prefix=planning.namePrefix visibility=@root.ui.sections.visibility.planning}}
 
       </div>

@@ -817,7 +817,7 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
     context.effects = ArM5eActiveEffect.prepareActiveEffectCategories(
       Array.from(this.actor.allApplicableEffects())
     );
-    this._prepareCharacterItems(context);
+    this._prepareActorItems(context);
 
     if (context.system.features?.magicSystem) {
       if (!this.magicSystem) {
@@ -861,7 +861,7 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
    *
    * @return {undefined}
    */
-  _prepareCharacterItems(actorData) {
+  _prepareActorItems(actorData) {
     if (
       actorData.actor.type == "player" ||
       actorData.actor.type == "npc" ||

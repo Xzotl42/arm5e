@@ -17,10 +17,10 @@
     <div class="preps-controls flexcol">
       <div><br /></div>
       <div>
-        <a class="prep-create"
+        <a class="prep-create" data-action="prepCreate"
           title='{{localize "arm5e.hints.create" item=(localize "arm5e.sheet.combat.preparation")}}'>
           <i class="fas fa-plus"></i>{{localize "arm5e.sheet.action.Create"}}</a>
-        <a class="prep-delete"
+        <a class="prep-delete" data-action="prepDelete"
           title='{{localize "arm5e.hints.delete" item=(localize "arm5e.sheet.combat.preparation")}}'>
           <i class="ars-Icon_Delete_Hand_Gesture"></i></a>
       </div>
@@ -41,7 +41,8 @@
     <div class="flexrow flex-group-left">
       <div class="flexrow">
 
-        <button class="arm5e rollable" data-roll="init" data-name='{{localize "arm5e.sheet.initiative"}}'>
+        <button class="arm5e rollable" data-action="roll" data-roll="init"
+          data-name='{{localize "arm5e.sheet.initiative"}}'>
           <img src="systems/arm5e/assets/dice.png" class="flex0 dice-icon">
           {{localize "arm5e.sheet.initiative"}}</button>
       </div>
@@ -81,7 +82,8 @@
 
     <div class="flexrow flex-group-left">
       <div class="flexrow">
-        <button class="arm5e rollable" data-roll="attack" data-name='{{localize "arm5e.sheet.attack"}}'>
+        <button class="arm5e rollable" data-action="roll" data-roll="attack"
+          data-name='{{localize "arm5e.sheet.attack"}}'>
           <img src="systems/arm5e/assets/dice.png" class="flex0 dice-icon">
           {{localize "arm5e.sheet.attack"}}</button>
       </div>
@@ -120,7 +122,8 @@
 
     <div class="flexrow flex-group-left">
       <div class="flexrow">
-        <button class="arm5e rollable" data-roll="defense" data-name='{{localize "arm5e.sheet.defense"}}'>
+        <button class="arm5e rollable" data-action="roll" data-roll="defense"
+          data-name='{{localize "arm5e.sheet.defense"}}'>
           <img src="systems/arm5e/assets/dice.png" class="dice-icon">
           {{localize "arm5e.sheet.defense"}}</button>
       </div>
@@ -160,7 +163,7 @@
     <div class="flexrow flex-group-left">
       <div class="flexrow">
         <!-- <img src="systems/arm5e/assets/icons/Icon_Hammer.png" class="flex0" style="border: 0px; height: 20px"> -->
-        <button class="arm5e clickable damage pl-0" data-roll="combatDamage"><i
+        <button class="arm5e clickable damage pl-0" data-action="calculateDamage" data-roll="combatDamage"><i
             class="ars-Icon_Soak text-12pt"></i>{{localize "arm5e.damage.label"}}</button>
 
       </div>
@@ -196,10 +199,10 @@
 
     <div class="flexrow flex-group-left">
       <div class="flexrow">
-        <button class="arm5e clickable soak-damage pl-0" data-name='{{localize "arm5e.sheet.soak"}}'
-          data-option1="{{ system.characteristics.sta.value }}" data-txtoption1='{{ localize "arm5e.sheet.stamina" }}'
-          data-option2="{{  system.combat.prot }}" data-txtoption2='{{localize "arm5e.sheet.protection"}}'><i
-            class="ars-Icon_Soak text-12pt"></i>
+        <button class="arm5e clickable soak-damage pl-0" data-action="soakDamage"
+          data-name='{{localize "arm5e.sheet.soak"}}' data-option1="{{ system.characteristics.sta.value }}"
+          data-txtoption1='{{ localize "arm5e.sheet.stamina" }}' data-option2="{{  system.combat.prot }}"
+          data-txtoption2='{{localize "arm5e.sheet.protection"}}'><i class="ars-Icon_Soak text-12pt"></i>
           {{localize "arm5e.sheet.soak"}}</button>
 
       </div>

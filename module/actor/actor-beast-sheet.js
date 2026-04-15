@@ -49,7 +49,7 @@ export class ArM5eBeastActorSheet extends ArM5eActorSheet {
     context.config = CONFIG.ARM5E;
     await this.enrichCharacterEditors(context);
     // Prepare items.
-    this._prepareCharacterItems(context);
+    this._prepareActorItems(context);
     //}
 
     context.ui.qualities = { display: true };
@@ -65,8 +65,8 @@ export class ArM5eBeastActorSheet extends ArM5eActorSheet {
    *
    * @return {undefined}
    */
-  _prepareCharacterItems(sheetData) {
-    super._prepareCharacterItems(sheetData);
+  _prepareActorItems(sheetData) {
+    super._prepareActorItems(sheetData);
     //let actorData = sheetData.actor.data;
   }
 

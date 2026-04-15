@@ -1,0 +1,371 @@
+<div class="mainLaboratory">
+  <div class="header-background">
+    <img src="systems/arm5e/assets/Lab/header150.webp" />
+  </div>
+
+  <header class="sheet-header sheet-header-lab marginsides32">
+    <div class="flexcol" style="margin: 10px; padding-bottom: 10px">
+      <img
+        class="profile-img"
+        src="{{ actor.img }}"
+        data-edit="img"
+        title="{{ actor.name }}"
+        height="150"
+        width="150"
+      />
+      <div
+        class="backSection flexcol"
+        style="grid-row-gap: 0px; padding-top: 8px; padding-bottom: 8px"
+      >
+        <div class="flexrow flex-group-center">
+          <label class="bold">{{localize "arm5e.sheet.occupiedSize"}}</label>
+          <span class="flex02">{{numberFormat system.occupiedSize}}</span>
+        </div>
+        <div class="flexrow flex-group-center">
+          <label class="bold">{{localize "arm5e.sheet.freeVirtues"}}</label>
+          <span class="flex02">{{numberFormat system.freeVirtues}}</span>
+        </div>
+        <div class="flexrow flex-group-center">
+          <label class="bold">{{localize "arm5e.sheet.baseSafety"}}</label>
+          <span class="flex02">{{numberFormat system.baseSafety}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="header-fields">
+      <h1 class="bigname">
+        <input name="name" type="text" value="{{ actor.name }}" placeholder="Name" />
+      </h1>
+
+      <div class="flexrow flex-between" style="margin-top: 8px">
+        <span class="flexrow">
+          <label
+            for="system.owner.value"
+            class="bold"
+            style="padding-top: 4px; padding-left: 24px; flex: 0.4"
+            >{{localize "arm5e.sheet.owner"}}</label
+          >
+          <div>
+            <input
+              class="owner-link"
+              type="text"
+              value="{{ system.owner.value }}"
+              data-dtype="String"
+            />
+            {{#if system.owner.linked }}
+            <a
+              class="flexrow0 actor-link"
+              data-action="openLinkedActor"
+              title="Linked to magus"
+              data-actorid="{{ system.owner.actorId }}"
+              ><i class="fas fa-link fa-sm"></i
+            ></a>
+            {{else}}
+            <a class="flexrow0" title="Not linked to magus"><i class="fas fa-unlink fa-sm"></i></a>
+            {{/if}}
+          </div>
+        </span>
+        <span class="flexrow">
+          <label
+            for=" system.covenant.value"
+            class="bold"
+            style="padding-top: 4px; padding-left: 24px; flex: 0.4"
+            >{{localize "arm5e.sheet.covenant"}}</label
+          >
+          <div>
+            <input
+              class="covenant-link"
+              type="text"
+              value="{{ system.covenant.value }}"
+              data-dtype="String"
+            />
+            {{#if system.covenant.linked }}
+            <a
+              class="flexrow0 actor-link"
+              data-action="openLinkedActor"
+              title="Linked to covenant"
+              data-actorid="{{ system.covenant.actorId }}"
+              ><i class="fas fa-link fa-sm"></i
+            ></a>
+            {{else}}
+            <a class="flexrow0" title="Not linked to covenant"
+              ><i class="fas fa-unlink fa-sm"></i
+            ></a>
+            {{/if}}
+          </div>
+        </span>
+      </div>
+      <div class="flexrow flex-between" style="margin-top: 8px">
+        <span class="flexrow width4">
+          <label
+            for="system.location"
+            class="bold"
+            style="padding-top: 4px; padding-left: 24px; flex: 0.2"
+            >{{localize "arm5e.sheet.location"}}</label
+          >
+          <input
+            name="system.location"
+            type="text"
+            value="{{ system.location }}"
+            data-dtype="String"
+          />
+        </span>
+        <span class="flexrow" style="padding-top: 4px">
+          <label
+            for="system.points"
+            class="bold"
+            style="padding-top: 4px; padding-left: 24px; flex: 0.6"
+            >{{localize "arm5e.sheet.points"}}</label
+          >
+          <input
+            name="system.points"
+            type="text"
+            value="{{ system.points }}"
+            data-dtype="Number"
+            style="flex: 0.3"
+          />
+        </span>
+      </div>
+
+      <div
+        class="grid grid-2col backSection"
+        style="grid-row-gap: 0px; padding-top: 8px; padding-bottom: 8px"
+      >
+        <div class="flexrow flex-group-center">
+          <label class="bold">{{localize "arm5e.sheet.size"}}</label>
+          <input
+            type="text"
+            name="system.size.description"
+            value="{{ system.size.description }}"
+            data-dtype="String"
+          />
+          <input
+            class="flex04"
+            type="text"
+            name="system.size.value"
+            value="{{numberFormat system.size.value decimals=0 sign=true}}"
+            data-dtype="Number"
+          />
+          <span class="flex06"
+            >{{numberFormat system.size.bonus decimals=0 sign=true
+
+
+
+
+
+            }}&NonBreakingSpace;=&NonBreakingSpace;{{numberFormat
+              system.size.total
+              decimals=0
+            }}</span
+          >
+        </div>
+        <div class="flexrow flex-group-center">
+          <label class="bold">{{localize "arm5e.sheet.generalQuality"}}</label>
+          <input
+            type="text"
+            name="system.generalQuality.description"
+            value="{{ system.generalQuality.description }}"
+            data-dtype="String"
+          />
+          <input
+            class="flex04"
+            type="text"
+            name="system.generalQuality.value"
+            value="{{numberFormat system.generalQuality.value decimals=0 sign=true}}"
+            data-dtype="Number"
+          />
+          <span class="flex06"
+            >{{numberFormat system.generalQuality.bonus decimals=0 sign=true
+
+
+
+
+
+            }}&NonBreakingSpace;=&NonBreakingSpace;{{numberFormat
+              system.generalQuality.total
+              decimals=0
+            }}</span
+          >
+        </div>
+        <div class="flexrow flex-group-center">
+          <label class="bold">{{localize "arm5e.sheet.safety"}}</label>
+          <input
+            type="text"
+            name="system.safety.description"
+            value="{{ system.safety.description }}"
+            data-dtype="String"
+          />
+          <input
+            class="flex04"
+            type="text"
+            name="system.safety.value"
+            value="{{numberFormat system.safety.value decimals=0 sign=true}}"
+            data-dtype="Number"
+          />
+          <span class="flex06"
+            >{{numberFormat system.safety.bonus decimals=0 sign=true
+
+
+
+
+
+            }}&NonBreakingSpace;=&NonBreakingSpace;{{numberFormat
+              system.safety.total
+              decimals=0
+            }}</span
+          >
+        </div>
+        <div class="flexrow flex-group-center">
+          <label class="bold">{{localize "arm5e.sheet.health"}}</label>
+          <input
+            type="text"
+            name="system.health.description"
+            value="{{ system.health.description }}"
+            data-dtype="String"
+          />
+          <input
+            class="flex04"
+            type="text"
+            name="system.health.value"
+            value="{{numberFormat system.health.value decimals=0 sign=true}}"
+            data-dtype="Number"
+          />
+          <span class="flex06"
+            >{{numberFormat system.health.bonus decimals=0 sign=true
+
+
+
+
+
+            }}&NonBreakingSpace;=&NonBreakingSpace;{{numberFormat
+              system.health.total
+              decimals=0
+            }}</span
+          >
+        </div>
+        <div class="flexrow flex-group-center">
+          <label class="bold">{{localize "arm5e.sheet.refinement"}}</label>
+          <input
+            type="text"
+            name="system.refinement.description"
+            value="{{ system.refinement.description }}"
+            data-dtype="String"
+          />
+          <input
+            class="flex04"
+            type="text"
+            name="system.refinement.value"
+            value="{{numberFormat system.refinement.value decimals=0 sign=true}}"
+            data-dtype="Number"
+          />
+          <span class="flex06"
+            >{{numberFormat system.refinement.bonus decimals=0 sign=true
+
+
+
+
+
+            }}&NonBreakingSpace;=&NonBreakingSpace;{{numberFormat
+              system.refinement.total
+              decimals=0
+            }}</span
+          >
+        </div>
+        <div class="flexrow flex-group-center">
+          <label class="bold">{{localize "arm5e.sheet.upkeep"}}</label>
+          <input
+            type="text"
+            name="system.upkeep.description"
+            value="{{ system.upkeep.description }}"
+            data-dtype="String"
+          />
+          <input
+            class="flex04"
+            type="text"
+            name="system.upkeep.value"
+            value="{{numberFormat system.upkeep.value decimals=0 sign=true}}"
+            data-dtype="Number"
+          />
+          <span class="flex06"
+            >{{numberFormat system.upkeep.bonus decimals=0 sign=true
+
+
+
+
+
+            }}&NonBreakingSpace;=&NonBreakingSpace;{{numberFormat
+              system.upkeep.total
+              decimals=0
+            }}</span
+          >
+        </div>
+        <div class="flexrow flex-group-center">
+          <label class="bold">{{localize "arm5e.sheet.warping"}}</label>
+          <input
+            type="text"
+            name="system.warping.description"
+            value="{{ system.warping.description }}"
+            data-dtype="String"
+          />
+          <input
+            class="flex04"
+            type="text"
+            name="system.warping.value"
+            value="{{numberFormat system.warping.value decimals=0 sign=true}}"
+            data-dtype="Number"
+          />
+          <span class="flex06"
+            >{{numberFormat system.warping.bonus decimals=0 sign=true
+
+
+
+
+
+            }}&NonBreakingSpace;=&NonBreakingSpace;{{numberFormat
+              system.warping.total
+              decimals=0
+            }}</span
+          >
+        </div>
+        <div class="flexrow flex-group-center">
+          <label class="bold">{{localize "arm5e.sheet.aesthetics"}}</label>
+          <input
+            type="text"
+            name="system.aesthetics.description"
+            value="{{ system.aesthetics.description }}"
+            data-dtype="String"
+          />
+          <input
+            class="flex04"
+            type="text"
+            name="system.aesthetics.value"
+            value="{{numberFormat system.aesthetics.value decimals=0 sign=true}}"
+            data-dtype="Number"
+          />
+          {{#if (eq system.aesthetics.max 999)}}
+          <span class="flex06"
+            >{{numberFormat system.aesthetics.bonus decimals=0 sign=true
+
+
+
+
+
+            }}&NonBreakingSpace;=&NonBreakingSpace;{{numberFormat
+                system.aesthetics.total
+                decimals=0
+            }}</span
+          >
+          {{else}}
+          <span class="flex06"
+            >&NonBreakingSpace;max({{
+              system.aesthetics.max
+            }})&NonBreakingSpace;=&NonBreakingSpace;{{numberFormat
+                system.aesthetics.total
+                decimals=0
+            }}</span
+          >
+          {{/if}}
+        </div>
+      </div>
+    </div>
+  </header>
+</div>

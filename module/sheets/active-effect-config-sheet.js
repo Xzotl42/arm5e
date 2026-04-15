@@ -48,7 +48,8 @@ export class ArM5eActiveEffectConfig extends foundry.applications.sheets.ActiveE
       classes: ["marginsides32"]
     },
     tabs: {
-      template: "systems/arm5e/templates/generic/parts/ars-tab-navigation.hbs"
+      template: "systems/arm5e/templates/generic/parts/ars-tab-navigation.hbs",
+      classes: ["blueBar", "marginsides32"]
     },
     details: {
       template: "systems/arm5e/templates/sheets/active-effect/details.hbs",
