@@ -1,7 +1,9 @@
 <div class="tab {{ tab.cssClass }} laboratory" data-group="primary" data-tab="laboratory">
   <div class="flexcol">
     {{> "systems/arm5e/templates/generic/parts/ars-tab-navigation.hbs" tabs=subtabs}}
-    {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+    <div class="marginsides32">
+      {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+    </div>
     <section class="lab-body">
       <div
         class="tab{{#if subtabs.lab.active}} active{{/if}} item flexcol marginsides32"

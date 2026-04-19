@@ -10,9 +10,8 @@ export class ArM5eActorProfiles {
     return context;
   }
 
-  async addProfile(event) {
-    const dataset = getDataset(event);
-    const config = ARM5E.ActorProfiles[dataset.key];
+  async addProfile(target, addXp = false) {
+    const config = ARM5E.ActorProfiles[target.dataset.key];
 
     let itemsCreate = [];
     let itemsUpdate = [];
@@ -20,7 +19,7 @@ export class ArM5eActorProfiles {
       for (let ab of config.abilities) {
         let ability = this.actor.getAbility(ab.key, ab.option);
         if (ability) {
-          if (ab.inc && event.shiftKey) {
+          if (ab.inc && addXp) {
             itemsUpdate.push({ _id: ability._id, "system.xp": ability.system.xp + ab.inc });
           }
         } else {

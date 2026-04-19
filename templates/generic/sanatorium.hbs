@@ -16,13 +16,12 @@
   </div>
   <div class="sheet-body backSection marginsides32">
     {{!-- tyle="min-height: 367px"> --}}
-    <div class="flexcol" style="margin: 10px">
-      <div class="resource-content flexrow flex-between">
+    <div class="flexcol sanatorium-main-content">
+      <div class="resource-content flexrow flex-between sanatorium-top-fields">
         <div class="resource-content flexrow flex-center flex-between margintop6">
           <label
             for="dayOfSeason"
             class="smallTitle"
-            style="font-size: 14pt"
             >{{localize "arm5e.sanatorium.dayOfSeason"}}</label
           >
 
@@ -33,13 +32,11 @@
             value="{{ dayOfSeason }}"
             data-dtype="Number"
             class="sanatorium change-available-days select-on-focus"
-            style="font-size: 14pt"
           />
         </div>
         <div class="resource-content flexrow flex-center flex-between margintop6">
           <label
             class="smallTitle"
-            style="font-size: 14pt"
             >{{localize "arm5e.sheet.season"}}</label
           >
           <input
@@ -48,14 +45,12 @@
             value="{{ curSeasonLabel }}"
             data-dtype="String"
             class="sanatorium change-season"
-            style="font-size: 14pt"
           />
         </div>
         <div class="resource-content flexrow flex-center flex-between margintop6">
           <label
             for="curYear"
             class="smallTitle"
-            style="font-size: 14pt"
             >{{localize "arm5e.sheet.year"}}</label
           >
           <input
@@ -65,7 +60,6 @@
             value="{{ curYear }}"
             data-dtype="Number"
             class="sanatorium change-year select-on-focus"
-            style="font-size: 18pt"
           />
         </div>
       </div>

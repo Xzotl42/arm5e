@@ -408,6 +408,11 @@ export const migrateActorData = async function (actorDoc, actorItems) {
         };
       }
 
+      if (actor.system["dom-mag"] && actor.system["dom-mag"].value === undefined) {
+        updateData["system.domusMagnus"] = { value: actor.system["dom-mag"].value };
+        updateData["system.-=dom-mag"] = null;
+      }
+
       if (actor.system.pendingCrisis) {
         updateData["system.states.pendingCrisis"] = true;
       }

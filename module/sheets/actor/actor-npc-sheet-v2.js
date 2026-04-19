@@ -1,3 +1,4 @@
+import { log } from "../../tools/tools.js";
 import { Arm5eCharacterActorSheetV2 } from "./character-actor-sheet-v2.js";
 
 /**
@@ -87,7 +88,7 @@ export class ArM5eNPCActorSheetV2 extends Arm5eCharacterActorSheetV2 {
       template: "systems/arm5e/templates/actor/parts/actor-pc-abilities-tab-v2.hbs"
     },
     powers: {
-      template: "systems/arm5e/templates/actor/parts/actor-pc-powers-tab-v2.hbs"
+      template: "systems/arm5e/templates/actor/parts/actor-powers-tab-v2.hbs"
     },
     arts: {
       template: "systems/arm5e/templates/actor/parts/actor-pc-arts-tab-v2.hbs"
@@ -102,7 +103,7 @@ export class ArM5eNPCActorSheetV2 extends Arm5eCharacterActorSheetV2 {
       template: "systems/arm5e/templates/actor/parts/actor-pc-inventory-tab-v2.hbs"
     },
     diary: {
-      template: "systems/arm5e/templates/actor/parts/actor-pc-diary-tab-v2.hbs"
+      template: "systems/arm5e/templates/actor/parts/actor-diary-tab-v2.hbs"
     },
     effects: {
       template: "systems/arm5e/templates/actor/parts/actor-pc-effects-tab-v2.hbs"
@@ -130,6 +131,7 @@ export class ArM5eNPCActorSheetV2 extends Arm5eCharacterActorSheetV2 {
       delete parts.arts;
       delete parts.laboratory;
     }
+
     if (!this.actor.system.features?.magicSystem) delete parts.tradition;
     if (!game.user?.isGM) delete parts.config;
     return parts;
@@ -150,6 +152,8 @@ export class ArM5eNPCActorSheetV2 extends Arm5eCharacterActorSheetV2 {
       context.tabs.tradition.label = context.system.magicSystem?.name ?? "";
     }
     if (!game.user?.isGM) delete context.tabs.config;
+
+    log(false, "NPC-sheet getData", context);
     return context;
   }
 

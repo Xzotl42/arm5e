@@ -1,4 +1,4 @@
-## 3.0.0.8 Stentorius
+## 3.0.0.9 Stentorius
 
 ### Compatibility
 
@@ -73,6 +73,8 @@
   - Maximum level is not computed properly with Tractati in the Scriptorium
 - [Lab sheet]
   - Magic theory of the owner was used before being computed in some cases
+  - Form requisite was wrongly compared to the technique for lab total computation.
+- Dropping a lab on a character was not setting the lab's owner properly
 
 ## 2.4.1.14, Radislav, Cognizant Wisdom BF1
 

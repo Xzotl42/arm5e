@@ -1,6 +1,5 @@
 import { getDataset, log } from "../../tools/tools.js";
 import { ARM5E } from "../../config.js";
-import { ArM5eActorSheet } from "../../actor/actor-sheet.js";
 import { EnchantmentExtension, EnchantmentSchema } from "../../schemas/enchantmentSchema.js";
 import {
   GetEffectAttributesLabel,
@@ -13,6 +12,7 @@ import {
 } from "../../helpers/magic.js";
 import { getConfirmation } from "../../ui/dialogs.js";
 import { FLAVORS } from "../../constants/ui.js";
+import { ArM5eActorSheetV2 } from "../../sheets/actor/actor-sheet-v2.js";
 // import { ArM5eItemMagicSheet } from "../item-magic-sheet.js";
 /**
  */
@@ -326,7 +326,7 @@ export class ArM5eItemEnchantmentSheet {
           let confirm = await getConfirmation(
             game.i18n.localize("arm5e.sheet.enchantment"),
             question,
-            ArM5eActorSheet.getFlavor(this.item.actor?.type)
+            ArM5eActorSheetV2.getFlavor(this.item.actor?.type)
           );
           if (confirm) {
             updateData[`system.enchantments.charges`] = 1;
@@ -382,7 +382,7 @@ export class ArM5eItemEnchantmentSheet {
               let confirm = await getConfirmation(
                 game.i18n.localize("arm5e.sheet.enchantment"),
                 question,
-                ArM5eActorSheet.getFlavor(this.item.actor?.type)
+                ArM5eActorSheetV2.getFlavor(this.item.actor?.type)
               );
               if (confirm) {
                 for (let idx = 0; idx < enchant.effects.length; idx++) {
@@ -436,7 +436,7 @@ export class ArM5eItemEnchantmentSheet {
         let confirm = await getConfirmation(
           game.i18n.localize("arm5e.sheet.enchantment"),
           question,
-          ArM5eActorSheet.getFlavor(this.item.actor?.type)
+          ArM5eActorSheetV2.getFlavor(this.item.actor?.type)
         );
         if (confirm) {
           const updateData = {};
@@ -521,7 +521,7 @@ export class ArM5eItemEnchantmentSheet {
       let confirm = await getConfirmation(
         this.item.name,
         question,
-        ArM5eActorSheet.getFlavor(this.item.actor?.type)
+        ArM5eActorSheetV2.getFlavor(this.item.actor?.type)
       );
       if (confirm) {
         let capacities = this.sheet.item.system.enchantments.capacities;
@@ -547,7 +547,7 @@ export class ArM5eItemEnchantmentSheet {
       let confirm = await getConfirmation(
         this.item.name,
         question,
-        ArM5eActorSheet.getFlavor(this.item.actor?.type)
+        ArM5eActorSheetV2.getFlavor(this.item.actor?.type)
       );
       if (confirm) {
         const dataset = getDataset(e);
@@ -571,7 +571,7 @@ export class ArM5eItemEnchantmentSheet {
       let confirm = await getConfirmation(
         this.item.name,
         question,
-        ArM5eActorSheet.getFlavor(this.item.actor?.type)
+        ArM5eActorSheetV2.getFlavor(this.item.actor?.type)
       );
       if (confirm) {
         const dataset = getDataset(e);
@@ -626,7 +626,7 @@ export class ArM5eItemEnchantmentSheet {
       let confirm = await getConfirmation(
         this.item.name,
         question,
-        ArM5eActorSheet.getFlavor(this.item.actor?.type)
+        ArM5eActorSheetV2.getFlavor(this.item.actor?.type)
       );
       if (confirm) {
         let effects = this.sheet.item.system.enchantments.effects;

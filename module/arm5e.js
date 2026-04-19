@@ -1,12 +1,6 @@
 // Import Modules
 import { ARM5E, enrichAbilities, localizeAbilities, localizeCategories } from "./config.js";
 import { ArM5eActor } from "./actor/actor.js";
-import { ArM5ePCActorSheet as ArM5ePCActorSheetLegacy } from "./actor/actor-pc-sheet.js";
-import { ArM5eBeastActorSheet as ArM5eBeastActorSheetLegacy } from "./actor/actor-beast-sheet.js";
-import { ArM5eNPCActorSheet as ArM5eNPCActorSheetLegacy } from "./actor/actor-npc-sheet.js";
-import { ArM5eLaboratoryActorSheet as ArM5eLaboratoryActorSheetLegacy } from "./actor/actor-laboratory-sheet.js";
-import { ArM5eCovenantActorSheet as ArM5eCovenantActorSheetLegacy } from "./actor/actor-covenant-sheet.js";
-import { ArM5eMagicCodexSheet as ArM5eMagicCodexSheetLegacy } from "./actor/actor-magic-codex-sheet.js";
 import { ArM5ePCActorSheetV2 } from "./sheets/actor/actor-pc-sheet-v2.js";
 import { ArM5eBeastActorSheetV2 } from "./sheets/actor/actor-beast-sheet-v2.js";
 import { ArM5eNPCActorSheetV2 } from "./sheets/actor/actor-npc-sheet-v2.js";
@@ -84,9 +78,6 @@ import {
 } from "./schemas/combatChatSchema.js";
 import { MagicChatSchema } from "./schemas/magicChatSchema.js";
 import { DamageChatSchema } from "./schemas/damageChatSchema.js";
-
-// Migration toggle: keep legacy actor sheets as default until AppV2 sheets are feature-complete.
-const USE_V2_ACTOR_SHEETS = true;
 
 Hooks.once("i18nInit", async function () {
   CONFIG.ARM5E.LOCALIZED_ABILITIES = localizeAbilities();
@@ -563,7 +554,7 @@ function rollItemMacro(itemUuid, actorUuid, event = undefined) {
   } else if (item.type == "power") {
     actor.sheet._onUsePower(dataset);
   } else {
-    actor.sheet.roll(dataset);
+    actor.sheet.roll(null, { dataset: dataset });
   }
 }
 
@@ -673,23 +664,6 @@ function setDatamodels() {
  */
 function registerSheets() {
   try {
-    const ArM5ePCActorSheet = USE_V2_ACTOR_SHEETS ? ArM5ePCActorSheetV2 : ArM5ePCActorSheetLegacy;
-    const ArM5eNPCActorSheet = USE_V2_ACTOR_SHEETS
-      ? ArM5eNPCActorSheetV2
-      : ArM5eNPCActorSheetLegacy;
-    const ArM5eBeastActorSheet = USE_V2_ACTOR_SHEETS
-      ? ArM5eBeastActorSheetV2
-      : ArM5eBeastActorSheetLegacy;
-    const ArM5eLaboratoryActorSheet = USE_V2_ACTOR_SHEETS
-      ? ArM5eLaboratoryActorSheetV2
-      : ArM5eLaboratoryActorSheetLegacy;
-    const ArM5eCovenantActorSheet = USE_V2_ACTOR_SHEETS
-      ? ArM5eCovenantActorSheetV2
-      : ArM5eCovenantActorSheetLegacy;
-    const ArM5eMagicCodexSheet = USE_V2_ACTOR_SHEETS
-      ? ArM5eMagicCodexSheetV2
-      : ArM5eMagicCodexSheetLegacy;
-
     foundry.applications.apps.DocumentSheetConfig.unregisterSheet(
       Actor,
       "core",
@@ -700,7 +674,7 @@ function registerSheets() {
     foundry.applications.apps.DocumentSheetConfig.registerSheet(
       Actor,
       "arm5ePC",
-      ArM5ePCActorSheet,
+      ArM5ePCActorSheetV2,
       {
         types: ["player"],
         makeDefault: true,
@@ -710,7 +684,7 @@ function registerSheets() {
     foundry.applications.apps.DocumentSheetConfig.registerSheet(
       Actor,
       "arm5eNPC",
-      ArM5eNPCActorSheet,
+      ArM5eNPCActorSheetV2,
       {
         types: ["npc"],
         makeDefault: true,
@@ -720,7 +694,7 @@ function registerSheets() {
     foundry.applications.apps.DocumentSheetConfig.registerSheet(
       Actor,
       "arm5eBeast",
-      ArM5eBeastActorSheet,
+      ArM5eBeastActorSheetV2,
       {
         types: ["beast"],
         makeDefault: true,
@@ -731,7 +705,7 @@ function registerSheets() {
     foundry.applications.apps.DocumentSheetConfig.registerSheet(
       Actor,
       "arm5eLaboratory",
-      ArM5eLaboratoryActorSheet,
+      ArM5eLaboratoryActorSheetV2,
       {
         types: ["laboratory"],
         makeDefault: true,
@@ -741,7 +715,7 @@ function registerSheets() {
     foundry.applications.apps.DocumentSheetConfig.registerSheet(
       Actor,
       "arm5eCovenant",
-      ArM5eCovenantActorSheet,
+      ArM5eCovenantActorSheetV2,
       {
         types: ["covenant"],
         makeDefault: true,
@@ -752,7 +726,7 @@ function registerSheets() {
     foundry.applications.apps.DocumentSheetConfig.registerSheet(
       Actor,
       "arm5eMagicCodex",
-      ArM5eMagicCodexSheet,
+      ArM5eMagicCodexSheetV2,
       {
         types: ["magicCodex"],
         makeDefault: true,

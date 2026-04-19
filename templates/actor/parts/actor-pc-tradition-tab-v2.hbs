@@ -1,7 +1,9 @@
 <div class="tab {{ tab.cssClass }} tradition" data-group="primary" data-tab="tradition">
   <div class="flexcol">
     {{> "systems/arm5e/templates/generic/parts/ars-tab-navigation.hbs" tabs=subtabs}}
-    {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+    <div class="marginsides32">
+      {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+    </div>
     <section class="tradition-body">
       <div
         class="tab{{#if subtabs.[tradition-subtab].active}} active{{/if}} item flexcol marginsides32"

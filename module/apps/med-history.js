@@ -126,7 +126,7 @@ export class MedicalHistory extends foundry.applications.api.HandlebarsApplicati
       confirmed = await getConfirmation(
         game.i18n.localize("arm5e.sanatorium.msg.clearHistory"),
         question,
-        ArM5eActorSheet.getFlavor(this.object.patient.type)
+        ArM5eActorSheetV2.getFlavor(this.object.patient.type)
       );
     }
     if (confirmed) {

@@ -6,6 +6,7 @@ import {
   GetEnchantmentSelectOptions,
   GetFilteredMagicalAttributes,
   GetRawLabTotalLabel,
+  PickRequisites,
   computeLevel
 } from "../../helpers/magic.js";
 import {
@@ -196,7 +197,7 @@ export class ArM5eLaboratoryActorSheetV2 extends ArM5eActorSheetV2 {
     }
 
     context.edition = context.config.activities.lab[context.planning.type].edition;
-    context.planning.messages ??= [];
+    context.planning.messages = [];
     context.planning.display = context.config.activities.lab[context.planning.type].display;
     context.planning.namePrefix = "flags.arm5e.planning.data.";
 
@@ -480,6 +481,9 @@ export class ArM5eLaboratoryActorSheetV2 extends ArM5eActorSheetV2 {
   _onRender(context, options) {
     super._onRender(context, options);
 
+    this.element.querySelectorAll(".advanced-req").forEach((el) => {
+      el.addEventListener("click", this._onAdvancedReqClick.bind(this));
+    });
     this.element.querySelectorAll(".lab-activity").forEach((el) => {
       el.addEventListener("change", this._changeActivity.bind(this));
     });
@@ -501,6 +505,33 @@ export class ArM5eLaboratoryActorSheetV2 extends ArM5eActorSheetV2 {
     this.element.querySelectorAll(".effect-change").forEach((el) => {
       el.addEventListener("change", this._onEffectChange.bind(this));
     });
+  }
+
+  async _onAdvancedReqClick(event) {
+    event.preventDefault();
+
+    const planning = foundry.utils.deepClone(this.actor.getFlag(ARM5E.SYSTEM_ID, "planning") ?? {});
+    if (!planning?.data) return;
+
+    let updatePath = "system";
+    let spellData = planning.data.system;
+    if (["minorEnchantment", "chargedItem"].includes(planning.type)) {
+      spellData = planning.data?.enchantment?.system;
+      updatePath = "enchantment.system";
+    }
+    if (!spellData) return;
+
+    const update = await PickRequisites(
+      spellData,
+      "Lab",
+      planning.type === "learnSpell" ? "disabled" : "",
+      updatePath
+    );
+    if (!update) return;
+
+    planning.data = foundry.utils.mergeObject(planning.data, update);
+    await this._updatePlanning(planning);
+    this.render();
   }
 
   async _onTypeChange(event) {
@@ -590,7 +621,7 @@ export class ArM5eLaboratoryActorSheetV2 extends ArM5eActorSheetV2 {
 
   static async moreInfo(event, target) {
     event.preventDefault();
-    this._onClickMoreInfo(event);
+    this._onClickMoreInfo(target.dataset);
   }
 
   static async openLinkedActor(event, target) {
@@ -843,8 +874,8 @@ export class ArM5eLaboratoryActorSheetV2 extends ArM5eActorSheetV2 {
     this.render();
   }
 
-  _onClickMoreInfo(event) {
-    const actorId = event.currentTarget.dataset.id;
+  _onClickMoreInfo(dataset) {
+    const actorId = dataset.id;
     if (!actorId) return;
     game.actors.get(actorId)?.sheet?.render(true, { focus: true });
   }
@@ -940,16 +971,36 @@ export class ArM5eLaboratoryActorSheetV2 extends ArM5eActorSheetV2 {
 
     // Legacy behavior: external spell/effect/enchantment drops become laboratory texts.
     const isExternal = this.actor.uuid !== item.parent?.uuid;
-    if (isExternal && ["spell", "magicalEffect", "enchantment"].includes(item.type)) {
-      const data = effectToLabText(foundry.utils.deepClone(item.toObject()));
-      const created = await Item.implementation.create(data, {
-        parent: this.actor,
-        keepId: false
-      });
-      return created ?? null;
+    if (isExternal && this.needConversion(item.type)) {
+      return await this.actor.createEmbeddedDocuments("Item", [this.convert(item.toObject())]);
     }
-
     return super._onDropItem(event, item);
+  }
+
+  /**
+   * Returns true if this item type must be converted to a laboratoryText when dropped on a laboratory outside the workbench.
+   * @param {string} type
+   * @returns {boolean}
+   */
+  needConversion(type) {
+    switch (type) {
+      case "spell":
+      case "magicalEffect":
+      case "enchantment":
+        return true;
+      default:
+        return false;
+    }
+  }
+
+  /**
+   * Convert spell/magicalEffect/enchantment to laboratoryText for laboratory storage.
+   * @param {object} data - The item data to convert
+   * @returns {object} The converted item data
+   * @override
+   */
+  convert(data) {
+    return effectToLabText(data);
   }
 
   async _setOwner(character) {

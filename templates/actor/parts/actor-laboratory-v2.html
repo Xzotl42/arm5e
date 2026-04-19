@@ -22,15 +22,12 @@
 
 {{> "systems/arm5e/templates/actor/parts/actor-magic-attributes.html" show="laboratory" }}
 <div class="backSection margintop18">
-  <div class="characteristics grid grid-3col">
-
-  </div>
 
   <div class="characteristics flexrow">
     <div class="flexcol">
-      <div class="flex-group-left" style="border: 0px; height: 120px">
+      <div class="flex-group-left">
         <label>{{localize "arm5e.sheet.twilightScars"}}</label>
-        <div class="flexrow" style="height: auto; overflow-y: auto;max-height: 200px;">
+        <div class="flexrow">
           {{> "systems/arm5e/templates/generic/ars-editor-V2.hbs"
           content=enrichedTwilightScars
           target="system.laboratory.longevityRitual.twilightScars"

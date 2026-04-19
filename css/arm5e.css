@@ -199,6 +199,12 @@ label,
   font-family: var(--font-book-bold);
 }
 
+/* Utility layout */
+.nowrap {
+  display: flex;
+  flex-wrap: nowrap;
+}
+
 /* Utility backgrounds */
 .bg-parchment {
   background: var(--parchment);
@@ -601,6 +607,7 @@ h3.dice-msg {
 }
 
 .arm5e input[type="number"],
+.arm5e input[type="text"].numberformat,
 .arm5e-dialog input[type="number"],
 .arm5e-prompt input[type="number"],
 .arm5e-roll input[type="number"] {
@@ -956,6 +963,7 @@ input[type="checkbox"].tiny-checkbox:checked::before {
 
 .template-item-box {
   min-width: 160px;
+  box-sizing: border-box;
   padding: 6px 8px;
   background: rgba(188, 179, 155, 0.9);
   font-family: var(--font-book-bold);
@@ -1159,6 +1167,12 @@ body .locked-tooltip.active {
   font-family: var(--font-book);
 }
 
+.arm5e .prosemirror-readonly-content {
+  max-height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
 /* Tabs and bars */
 .arm5e .tabs {
   height: 32px;
@@ -1280,6 +1294,38 @@ a.header-button.close {
 .arm5e.sanatorium-sheet .window-content {
   background-image: url("../assets/sanatorium/Background_Sanatorium.webp");
   background-repeat: repeat-y;
+}
+
+.arm5e.sanatorium-sheet .sheet-body.backSection.marginsides32 {
+  box-sizing: border-box;
+  width: calc(100% - 64px);
+  max-width: calc(100% - 64px);
+  min-width: 0;
+}
+
+.arm5e.sanatorium-sheet .sanatorium-main-content {
+  margin: 10px;
+}
+
+.arm5e.sanatorium-sheet .sanatorium-top-fields {
+  flex-wrap: nowrap;
+  gap: 0 8px;
+}
+
+.arm5e.sanatorium-sheet
+  .sanatorium-top-fields
+  > .resource-content.flexrow.flex-center.flex-between {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.arm5e.sanatorium-sheet .sanatorium-top-fields .smallTitle,
+.arm5e.sanatorium-sheet .sanatorium-top-fields input {
+  font-size: 14pt;
+}
+
+.arm5e.sanatorium-sheet .sanatorium-top-fields .change-year {
+  font-size: 18pt;
 }
 
 .arm5e.med-history .window-content {
@@ -2574,6 +2620,10 @@ img.tinyimg {
   border-bottom: 0;
 }
 
+.arm5e .sheet-header h2 input {
+  font-size: 13pt;
+}
+
 .arm5e .sheet-header h1.spellname {
   height: 60px;
   padding: 0px;
@@ -2716,6 +2766,12 @@ div[class*="foldable-section"] {
   transition-timing-function: ease-in-out;
 }
 
+/* Item enchantments tab contains nested foldable sections (spell design + enchant attrs)
+ * that can exceed the generic cap; raise only while expanded and scoped to this tab. */
+.arm5e .tab[data-tab="enchantments"] div[class*="foldable-section"]:not(.hide) {
+  max-height: 12000px;
+}
+
 .enchantment,
 .enchantment-short,
 .planning-options,
@@ -2729,6 +2785,13 @@ div[class*="foldable-section"] {
   transition-property: opacity, max-height;
   transition-duration: 0.6s;
   transition-timing-function: ease-in-out;
+}
+
+/* Lab planning enchantment panes can exceed the generic cap and visually overlap
+ * following sections if max-height is too small during expanded state.
+ * Apply only while expanded so .hide collapse still works. */
+.arm5e .drop-enchant .enchantment:not(.hide) {
+  max-height: 12000px;
 }
 
 /* .planning-options.hide,
@@ -3000,8 +3063,8 @@ label.uppercase {
 
 img.art-icon {
   display: block;
-  height: 24px;
-  width: 24px;
+  height: 30px;
+  width: 30px;
 }
 
 .navItem-right-ball img {
@@ -3181,6 +3244,12 @@ img.art-icon {
 .arm5e .wound-field {
   max-width: 50px;
   min-width: 50px;
+}
+
+.arm5e .wound-label {
+  max-width: 50px;
+  min-width: 50px;
+  font-size: 9pt;
 }
 
 .arm5e .items-list .item img {
@@ -3461,12 +3530,14 @@ body h3.covenant-tooltip {
 #template-content {
   position: relative;
   margin-top: 12px;
+  padding-right: 18px;
+  box-sizing: border-box;
 }
 
 #top-right-icon {
   position: absolute;
   top: -15px;
-  right: -8px;
+  right: 2px;
 }
 
 .template-label {
@@ -3478,7 +3549,15 @@ body h3.covenant-tooltip {
 }
 
 select.template-select {
+  width: 100%;
+  min-width: 0;
   max-width: 140px;
+}
+
+#template-content select {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 select.textValue,

@@ -1,3 +1,4 @@
+import { log } from "../../tools/tools.js";
 import { Arm5eCharacterActorSheetV2 } from "./character-actor-sheet-v2.js";
 
 /**
@@ -87,13 +88,13 @@ export class ArM5ePCActorSheetV2 extends Arm5eCharacterActorSheetV2 {
       template: "systems/arm5e/templates/actor/parts/actor-pc-abilities-tab-v2.hbs"
     },
     powers: {
-      template: "systems/arm5e/templates/actor/parts/actor-pc-powers-tab-v2.hbs"
+      template: "systems/arm5e/templates/actor/parts/actor-powers-tab-v2.hbs"
     },
     arts: {
       template: "systems/arm5e/templates/actor/parts/actor-pc-arts-tab-v2.hbs"
     },
     laboratory: {
-      template: "systems/arm5e/templates/actor/parts/actor-pc-laboratory-tab-v2.hbs"
+      template: "systems/arm5e/templates/actor/parts/actor-laboratory-tab-v2.hbs"
     },
     tradition: {
       template: "systems/arm5e/templates/actor/parts/actor-pc-tradition-tab-v2.hbs"
@@ -150,6 +151,7 @@ export class ArM5ePCActorSheetV2 extends Arm5eCharacterActorSheetV2 {
       context.tabs.tradition.label = context.system.magicSystem?.name ?? "";
     }
     if (!game.user?.isGM) delete context.tabs.config;
+    log(false, "Prepared PC sheet context", context);
     return context;
   }
 

@@ -13,11 +13,13 @@ export function registerAbilityScoresTesting(quench) {
         before(async function () {
           actor = await Actor.create({ name: `Bob`, type: "player" });
           item = (
-            await actor.sheet._itemCreate({
-              name: "myAbility",
-              type: "ability",
-              key: "dowsing"
-            })
+            await actor.createEmbeddedDocuments("Item", [
+              {
+                name: "myAbility",
+                type: "ability",
+                system: { key: "dowsing" }
+              }
+            ])
           )[0];
         });
         describe("Add xps", function () {
@@ -110,11 +112,13 @@ export function registerAbilityScoresTesting(quench) {
         let item;
         before(async function () {
           actor = await Actor.create({ name: `Bob`, type: "player" });
-          item = await actor.sheet._itemCreate({
-            name: "myAbility",
-            type: "ability",
-            key: "dowsing"
-          });
+          item = await actor.createEmbeddedDocuments("Item", [
+            {
+              name: "myAbility",
+              type: "ability",
+              system: { key: "dowsing" }
+            }
+          ]);
 
           item = item[0];
           await actor.addActiveEffect(

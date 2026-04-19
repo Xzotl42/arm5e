@@ -310,7 +310,7 @@ export class QuickMagic extends foundry.applications.api.HandlebarsApplicationMi
   static async roll(event, target) {
     target.dataset.technique = this.object.technique;
     target.dataset.form = this.object.form;
-    await this.object.actor.sheet.roll(target.dataset);
+    await this.object.actor.sheet.roll(event, target);
   }
 
   async close(options = {}) {
@@ -608,7 +608,7 @@ export function computeRawCastingTotal(effect, owner, options = {}) {
       if (owner.system.arts.forms[key[0]].deficient) {
         deficientForm = true;
       }
-      form = Math.min(tech, owner.system.arts.forms[key[0]].finalScore);
+      form = Math.min(form, owner.system.arts.forms[key[0]].finalScore);
     });
     form = Math.min(owner.system.arts.forms[effectData.form.value].finalScore, form);
   } else {

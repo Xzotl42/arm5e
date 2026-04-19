@@ -10,12 +10,13 @@ import {
 } from "../../seasonal-activities/long-term-activities.js";
 import { Sanatorium } from "../../apps/sanatorium.js";
 import { MedicalHistory } from "../../apps/med-history.js";
-import { getConfirmation, numberInput, textInput } from "../../ui/dialogs.js";
+import { customDialogAsync, getConfirmation, numberInput, textInput } from "../../ui/dialogs.js";
 import { getRefCompendium } from "../../tools/compendia.js";
 import { getDataset, getWoundRanges, hermeticFilter, slugify } from "../../tools/tools.js";
-import { computeCombatStats } from "../../helpers/combat.js";
+import { combatDamage, computeCombatStats } from "../../helpers/combat.js";
 import { UI } from "../../constants/ui.js";
 import { TwilightEpisode } from "../../seasonal-activities/long-term-activities.js";
+import { ArM5eMagicSystem } from "../../actor/subsheets/magic-system.js";
 
 /**
  * Intermediate AppV2 class for character-like actor sheets.
@@ -385,7 +386,107 @@ export class Arm5eCharacterActorSheetV2 extends ArM5eActorSheetV2 {
       }
     }
 
+    // --- Custom magic system hook ---
+    if (context.system.features?.magicSystem) {
+      if (!this.magicSystem) {
+        this.magicSystem = new ArM5eMagicSystem(this);
+      }
+      await this.magicSystem._prepareContext(context);
+    }
+
+    await this.enrichCharacterEditors(context);
+
     return context;
+  }
+
+  async enrichCharacterEditors(context) {
+    const enrichOptions = {
+      secrets: this.document.isOwner,
+      rollData: context.rollData,
+      relativeTo: this.actor
+    };
+
+    if (this.actor.system.biography) {
+      context.enrichedBiography = await foundry.applications.ux.TextEditor.enrichHTML(
+        this.actor.system.biography,
+        enrichOptions
+      );
+    }
+    if (this.actor.system.secrets) {
+      context.enrichedSecrets = await foundry.applications.ux.TextEditor.enrichHTML(
+        this.actor.system.secrets,
+        enrichOptions
+      );
+    }
+    if (this.actor.system.sigil?.value) {
+      context.enrichedSigil = await foundry.applications.ux.TextEditor.enrichHTML(
+        this.actor.system.sigil.value,
+        enrichOptions
+      );
+    }
+    if (this.actor.system.warping?.effects) {
+      context.enrichedWarping = await foundry.applications.ux.TextEditor.enrichHTML(
+        this.actor.system.warping.effects,
+        enrichOptions
+      );
+    }
+    if (this.actor.system.decrepitude?.effects) {
+      context.enrichedDecrepitude = await foundry.applications.ux.TextEditor.enrichHTML(
+        this.actor.system.decrepitude.effects,
+        enrichOptions
+      );
+    }
+    if (this.actor.system.laboratory?.longevityRitual?.twilightScars) {
+      context.enrichedTwilightScars = await foundry.applications.ux.TextEditor.enrichHTML(
+        this.actor.system.laboratory.longevityRitual.twilightScars,
+        enrichOptions
+      );
+    }
+  }
+
+  /**
+   * Build and resolve the combat damage dialog.
+   * Kept for compatibility with computeDamage(), which calls actor.sheet._onCalculateDamage().
+   * @param {object} dataset
+   * @returns {Promise<object|null>}
+   */
+  async _onCalculateDamage(dataset) {
+    const data = {
+      ...dataset,
+      modifier: 0,
+      formDamage: "te",
+      selection: { forms: CONFIG.ARM5E.magic.forms }
+    };
+
+    this.actor.rollInfo.init(data, this.actor);
+    data.actor = this.actor;
+
+    const dialog = await foundry.applications.handlebars.renderTemplate(
+      "systems/arm5e/templates/generic/combat-damage.html",
+      data
+    );
+
+    return customDialogAsync({
+      owner: this,
+      window: { title: game.i18n.localize("arm5e.dialog.damageCalculator") },
+      content: dialog,
+      buttons: [
+        {
+          action: "apply",
+          label: game.i18n.localize("arm5e.generic.yes"),
+          icon: "<i class='fas fa-check'></i>",
+          callback: async (_event, _button, dlg) => {
+            return combatDamage(dlg.element, this.actor);
+          }
+        },
+        {
+          action: "no",
+          label: game.i18n.localize("arm5e.dialog.button.cancel"),
+          icon: "<i class='fas fa-ban'></i>",
+          callback: () => null
+        }
+      ]
+    });
   }
 
   // ── Drag & Drop ────────────────────────────────────────────────────────────
@@ -420,7 +521,7 @@ export class Arm5eCharacterActorSheetV2 extends ArM5eActorSheetV2 {
         await oldLab.sheet?._unbindActor?.(this.actor);
       }
       // Bind on the lab side.
-      await actor.sheet?._bindActor?.(this.actor);
+      await actor.sheet?.setOwner(this.actor);
     }
 
     // Bind on this character's side (set system.covenant.value / system.sanctum.value).
@@ -598,7 +699,7 @@ export class Arm5eCharacterActorSheetV2 extends ArM5eActorSheetV2 {
 
   static async actorProfile(event, target) {
     event.preventDefault();
-    await this.actorProfiles.addProfile(event);
+    await this.actorProfiles.addProfile(target, event.shiftKey);
     this.render();
   }
 
@@ -615,10 +716,18 @@ export class Arm5eCharacterActorSheetV2 extends ArM5eActorSheetV2 {
   static async rollAging(event, target) {
     event.preventDefault();
     if (event.shiftKey) {
-      await this._editAging(event);
+      await this._editAging(target);
       return;
     }
-    return this.constructor.roll.call(this, event, target);
+    // Set roll type if not already specified
+    if (!target.dataset.roll) {
+      target.dataset.roll = "aging";
+    }
+    const rollHandler = this?.roll ?? this?.constructor?.roll;
+    if (typeof rollHandler !== "function") {
+      throw new TypeError("roll handler is not available in rollAging");
+    }
+    return rollHandler.call(this, event, target);
   }
 
   static async recoveryStart(event, target) {
@@ -635,7 +744,7 @@ export class Arm5eCharacterActorSheetV2 extends ArM5eActorSheetV2 {
       const confirm = await getConfirmation(
         game.i18n.localize("arm5e.twilight.episode"),
         question,
-        this.actor.type
+        ArM5eActorSheetV2.getFlavor(this.actor.type)
       );
       if (confirm) await resetTwilight(this.actor);
       return;
@@ -657,7 +766,7 @@ export class Arm5eCharacterActorSheetV2 extends ArM5eActorSheetV2 {
           const confirm = await getConfirmation(
             game.i18n.localize("arm5e.twilight.episode"),
             question,
-            this.actor.type,
+            ArM5eActorSheetV2.getFlavor(this.actor.type),
             " ",
             null,
             "arm5e.twilight.embrace",
@@ -903,7 +1012,7 @@ export class Arm5eCharacterActorSheetV2 extends ArM5eActorSheetV2 {
       confirmed = await getConfirmation(
         name,
         game.i18n.localize("arm5e.dialog.delete-question"),
-        this.actor.type
+        ArM5eActorSheetV2.getFlavor(this.actor.type)
       );
     }
     if (!confirmed) return;
@@ -929,7 +1038,7 @@ export class Arm5eCharacterActorSheetV2 extends ArM5eActorSheetV2 {
     const confirmed = await getConfirmation(
       "",
       game.i18n.localize("arm5e.sheet.msg.creationModeRemoval"),
-      this.actor.type
+      ArM5eActorSheetV2.getFlavor(this.actor.type)
     );
     if (!confirmed) return;
     await this.actor.update({ "system.states.creationMode": false });
@@ -940,8 +1049,8 @@ export class Arm5eCharacterActorSheetV2 extends ArM5eActorSheetV2 {
     await this.actor.clearConfidencePrompt();
   }
 
-  async _editAging(event) {
-    const dataset = getDataset(event);
+  async _editAging(target) {
+    const dataset = target.dataset;
     const score = this.actor.system.characteristics[dataset.characteristic].value;
     const prompt = `${game.i18n.localize(
       CONFIG.ARM5E.character.characteristics[dataset.characteristic].label

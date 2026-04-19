@@ -93,7 +93,7 @@
             <input
               type="text"
               name="system.buildPoints.{{ key }}.value"
-              class="select-on-focus"
+              class="select-on-focus numberformat"
               value="{{numberFormat data.value decimals=0 sign=true}}"
               class="select-on-focus"
               data-dtype="Number"
@@ -105,7 +105,7 @@
               name="system.buildPoints.{{ key }}.computed"
               value="{{numberFormat data.computed decimals=0 sign=true}}"
               readonly
-              class="select-on-focus"
+              class="select-on-focus numberformat"
               data-dtype="Number"
             />
           </span>

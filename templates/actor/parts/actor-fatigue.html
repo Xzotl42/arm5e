@@ -72,8 +72,8 @@
     <ol>
       <li class="flexrow flex-group-left">
         <div style="min-width: 180px;"></div>
-        <div class="wound-field">{{localize config.character.wounds.labels.number}}</div>
-        <div class="wound-field">{{localize config.character.wounds.labels.penalty}}</div>
+        <div class="wound-label">{{localize config.character.wounds.labels.number}}</div>
+        <div class="wound-label">{{localize config.character.wounds.labels.penalty}}</div>
       </li>
       {{#each health as |level key|}}
 
@@ -84,7 +84,7 @@
                   class="fas fa-plus fa-lg"></i></a>
             </div>
             {{#with (lookup @root.config.character.wounds key)}}
-              <label for="{{label}}" class="flex05" title="{{wounds.range}}"
+              <label for="{{label}}" class="flex05 " title="{{wounds.range}}"
                 style="display: flex;align-items: center;">{{localize label}}</label>
             {{/with}}
             <div class="flexrow" style="width:230px">
@@ -95,7 +95,7 @@
             </div>
             <div class="flexrow flex-group-right" style="min-width: 150px;">
               <div>
-                <span>{{level.range}} </span>
+                <span class="wound-label">{{level.range}} </span>
               </div>
               <div class="wound-field">
                 <input type="text" name="" value="{{level.wounds.length}}" data-dtype="Number" class="select-on-focus"

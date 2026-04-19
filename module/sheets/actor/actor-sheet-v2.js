@@ -3,7 +3,7 @@ const { ActorSheetV2 } = foundry.applications.sheets;
 import { ARM5E } from "../../config.js";
 import { Arm5eChatMessage } from "../../helpers/chat-message.js";
 import { buildSoakDataset, combatDamage, computeDamage, setWounds } from "../../helpers/combat.js";
-import { usePower } from "../../helpers/magic.js";
+import { useMagicItem, usePower } from "../../helpers/magic.js";
 import ArM5eActiveEffect from "../../helpers/active-effects.js";
 import { ArM5eMagicSystem } from "../../actor/subsheets/magic-system.js";
 import { spellFormLabel, spellTechniqueLabel } from "../../helpers/magic.js";
@@ -19,7 +19,7 @@ import {
 } from "../../tools/tools.js";
 import { UI } from "../../constants/ui.js";
 import { customDialogAsync, getConfirmation } from "../../ui/dialogs.js";
-import { getRollDialog, getRollTypeProperties, ROLL_MODES } from "../../ui/roll-window.js";
+import { openRollDialog, getRollTypeProperties, ROLL_MODES } from "../../ui/roll-window.js";
 import {
   HERMETIC_FILTER,
   HERMETIC_TOPIC_FILTER,
@@ -57,6 +57,7 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
       calculateDamage: ArM5eActorSheetV2.calculateDamage,
       soakDamage: ArM5eActorSheetV2.soakDamage,
       powerUse: ArM5eActorSheetV2.powerUse,
+      enchantTrigger: ArM5eActorSheetV2.enchantTrigger,
       itemAdd: ArM5eActorSheetV2.itemAdd,
       itemCreate: ArM5eActorSheetV2.itemCreate,
       itemEdit: ArM5eActorSheetV2.itemEdit,
@@ -309,14 +310,6 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
 
     // --- Per-item UI decorations (virtues/flaws visibility, spell labels, magic hints…) ---
     this._prepareActorItems(context);
-
-    // --- Custom magic system hook ---
-    if (context.system.features?.magicSystem) {
-      if (!this.magicSystem) {
-        this.magicSystem = new ArM5eMagicSystem(this.actor);
-      }
-      this.magicSystem.getData(context);
-    }
 
     return context;
   }
@@ -644,7 +637,7 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
       confirmed = await getConfirmation(
         itemEl.dataset.name ?? "",
         game.i18n.localize("arm5e.dialog.delete-question"),
-        this.actor.type
+        ArM5eActorSheetV2.getFlavor(this.actor.type)
       );
     } else if (!confirmed) {
       confirmed = true;
@@ -666,7 +659,7 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
       confirmed = await getConfirmation(
         itemEl.dataset.name ?? "",
         game.i18n.localize("arm5e.dialog.delete-question"),
-        this.actor.type
+        ArM5eActorSheetV2.getFlavor(this.actor.type)
       );
     }
     if (!confirmed) return;
@@ -683,7 +676,7 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
   }
 
   static async roll(event, target) {
-    const dataset = getDataset(event);
+    const dataset = target.dataset;
     if (await this.isRollPossible(dataset)) {
       return this._roll(dataset);
     }
@@ -696,7 +689,7 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
   }
 
   static async soakDamage(event, target) {
-    const dataset = getDataset(event);
+    const dataset = getDataset(target);
     const msg = await this._onSoakDamage(dataset);
     if (msg == null) return;
     if (msg.system.impact.woundGravity) {
@@ -709,8 +702,26 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
   }
 
   static async powerUse(event, target) {
-    const dataset = getDataset(event);
-    await usePower(dataset, this.actor);
+    event.preventDefault();
+    await usePower(target.dataset, this.actor);
+  }
+
+  static async enchantTrigger(event, target) {
+    event.preventDefault();
+    const itemId = target.dataset.itemId;
+    if (!itemId) return;
+
+    const item = this.actor.items.get(itemId);
+    if (!item?.isOwned) return;
+
+    const dataset = {
+      ...target.dataset,
+      name: item.name,
+      roll: "item",
+      id: itemId,
+      physicalcondition: false
+    };
+    await useMagicItem(dataset, item);
   }
 
   async _onIndexKeyChange(event) {
@@ -751,6 +762,64 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
     summary.classList.add("item-summary");
     summary.innerHTML = summaryHtml;
     itemEl.insertAdjacentElement("afterend", summary);
+  }
+
+  /**
+   * Check if an item type requires conversion during creation.
+   * Child classes can override to add type-specific conversion logic.
+   * @param {string} type - The item type to check
+   * @returns {boolean} True if conversion is needed
+   * @protected
+   */
+  needConversion(type) {
+    return false;
+  }
+
+  /**
+   * Apply any needed conversions to item data during creation.
+   * Child classes can override to add type-specific conversion logic.
+   * @param {object} data - The item data to convert
+   * @returns {object} The converted item data
+   * @protected
+   */
+  convert(data) {
+    return data;
+  }
+
+  /**
+   * Apply conversion if needed for the given item data.
+   * @param {object} data - The item data
+   * @returns {object} The data, possibly converted
+   * @protected
+   */
+  convertIfNeeded(data) {
+    if (this.needConversion(data.type)) {
+      return this.convert(data);
+    }
+    return data;
+  }
+
+  /**
+   * Handle creating a new Owned Item with conversion support.
+   * @param {object} dataset - The item creation dataset
+   * @returns {Promise<Item[]>} The created items
+   * @protected
+   */
+  async _itemCreate(dataset) {
+    let data = this.convertIfNeeded(dataset);
+    const type = data.type;
+    let name = data.name ?? `New ${type.capitalize()}`;
+
+    const itemData = [
+      {
+        name,
+        type,
+        system: foundry.utils.duplicate(data)
+      }
+    ];
+    delete itemData[0].system["type"];
+
+    return this.actor.createEmbeddedDocuments("Item", itemData, {});
   }
 
   async _onSoakDamage(dataset) {
@@ -807,6 +876,7 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
     );
 
     return customDialogAsync({
+      owner: this,
       window: { title: game.i18n.localize("arm5e.dialog.woundCalculator") },
       content: html,
       buttons: [
@@ -909,12 +979,33 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
   async _roll(dataset) {
     this.actor.system.charmetadata = ARM5E.character.characteristics;
     this.actor.config = CONFIG.ARM5E;
-    return getRollDialog(this.actor, dataset);
+    const { dialog, result } = openRollDialog(this.actor, dataset);
+    this._pendingRollDialog = dialog;
+    try {
+      return await result;
+    } finally {
+      if (this._pendingRollDialog === dialog) {
+        this._pendingRollDialog = null;
+      }
+    }
+  }
+
+  /** @override */
+  _prepareSubmitData(event, form, formData) {
+    let prepared = super._prepareSubmitData(event, form, formData);
+    if (this.magicSystem) {
+      prepared = this.magicSystem._prepareSubmitData(prepared);
+    }
+    return prepared;
   }
 
   /** @override */
   _onRender(context, options) {
     super._onRender(context, options);
+
+    if (this.magicSystem) {
+      this.magicSystem._onRender(context, options);
+    }
 
     const filterBindings = [
       [".topic-filter", "topicFilter"],
@@ -957,5 +1048,23 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
     this.element.querySelectorAll(".item").forEach((el) => {
       el.addEventListener("contextmenu", (event) => void this._onItemContextMenu(event));
     });
+  }
+
+  static getFlavor(actorType) {
+    switch (actorType) {
+      case "player":
+        return "PC";
+      case "npc":
+      case "beast":
+        return "NPC";
+      case "covenant":
+        return "covenant";
+      case "laboratory":
+        return "Lab";
+      case "magicCodex":
+        return "codex";
+      default:
+        return "Neutral";
+    }
   }
 }

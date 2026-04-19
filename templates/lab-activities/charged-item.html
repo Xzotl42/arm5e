@@ -10,7 +10,7 @@
     <label class="section-handle clickable" data-action="toggleSectionCollapse" data-category="planning"
       data-section="effect">{{localize "arm5e.sheet.effect"}}</label>
   </div>
-  <div class="foldable-section backSection {{lookup @root.ui.sections.visibility.planning 'effect'}}"
+  <div class="foldable-section backSection enchantment {{lookup @root.ui.sections.visibility.planning 'effect'}}"
     id="planning-effect{{index}}-{{@root.actor._id}}">
     <div class="resource flexrow">
       <div class="item-image" data-index="{{idx}}" style="max-width: 32px"><img class="item-img"
@@ -36,7 +36,7 @@
 
     <div>
       {{> "systems/arm5e/templates/item/parts/enchantment-attributes.html" docId=@root.actor._id container="planning"
-      prefix=enchantPrefix enchantData=planning.data.enchantment 
+      prefix=enchantPrefix index=index enchantData=planning.data.enchantment 
       visibility=@root.ui.sections.visibility.planning charged=true}}
     </div>
   </div>

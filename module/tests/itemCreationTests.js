@@ -19,7 +19,9 @@ export function registerItemCreationTests(quench) {
               it(`Try adding ${t} to actor`, async function () {
                 if (actor.sheet.isItemDropAllowed({ type: t, system: { type: "dummy" } })) {
                   try {
-                    let item = await actor.sheet._itemCreate({ type: t, system: {} });
+                    let item = await actor.createEmbeddedDocuments("Item", [
+                      { name: `New ${t}`, type: t, system: {} }
+                    ]);
                     assert.ok(item.length == 1);
                     item[0].sheet.render(true);
                     await sleep(100);

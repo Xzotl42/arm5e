@@ -758,34 +758,38 @@ export function registerDiaryTesting(quench) {
             type: "player",
             system: magusData
           });
-          await magus.sheet._itemCreate({
-            name: "Penetration",
-            type: "ability",
-            ...penetrationSkill
-          });
-          await magus.sheet._itemCreate({
-            name: "Artes liberales",
-            type: "ability",
-            ...readingSkill
-          });
+          await magus.createEmbeddedDocuments("Item", [
+            {
+              name: "Penetration",
+              type: "ability",
+              system: { ...penetrationSkill }
+            },
+            {
+              name: "Artes liberales",
+              type: "ability",
+              system: { ...readingSkill }
+            },
+            {
+              name: "Athletics",
+              type: "ability",
+              system: { ...athleticsSkill }
+            },
+            {
+              name: "Magic Theory",
+              type: "ability",
+              system: { ...magicTheorySkill }
+            },
+            { name: "Gaelic", type: "ability", system: { ...languageSkill } }
+          ]);
 
-          await magus.sheet._itemCreate({
-            name: "Athletics",
-            type: "ability",
-            ...athleticsSkill
-          });
-          await magus.sheet._itemCreate({
-            name: "Magic Theory",
-            type: "ability",
-            ...magicTheorySkill
-          });
-          await magus.sheet._itemCreate({ name: "Gaelic", type: "ability", ...languageSkill });
           Sp1 = (
-            await magus.sheet._itemCreate({
-              name: "Standard spell",
-              type: "spell",
-              ...spellData1
-            })
+            await magus.createEmbeddedDocuments("Item", [
+              {
+                name: "Standard spell",
+                type: "spell",
+                system: { ...spellData1 }
+              }
+            ])
           )[0];
         });
         describe("Conflict test", function () {

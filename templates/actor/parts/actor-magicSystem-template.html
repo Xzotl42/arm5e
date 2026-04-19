@@ -4,26 +4,29 @@
       <div class="resource flexrow flex-group-left">
         <div class="resource flex01">
           <!-- {{log "Template: " this}} -->
-          <label for="{{namepath}}.name" class="">{{localize "Template name"}}</label>
+          <label for="{{namepath}}.name" class="">{{localize "arm5e.tradition.template.name"}}</label>
 
           <input type="text" class="template-name" name="{{namepath}}.name" data-dtype="String" value="{{name}}"
             style="min-width: 250px;" data-id="{{id}}">
 
         </div>
         <div class="resource flex04">
-          <label for="system.magicSystem.templates.{{id}}.targetLevel" class="">{{localize "Target type"}}</label>
+          <label for="system.magicSystem.templates.{{id}}.targetLevel"
+            class="">{{localize "arm5e.tradition.targetType"}}</label>
           <select name="system.magicSystem.templates.{{id}}.targetLevel" disabled>
             {{selectOptions selection.targetType selected=targetType}}
           </select>
         </div>
         <div class="resource flex05">
-          <label for="system.magicSystem.templates.{{id}}.rollType" class="">{{localize "Roll type"}}</label>
+          <label for="system.magicSystem.templates.{{id}}.rollType"
+            class="">{{localize "arm5e.tradition.template.rollType"}}</label>
           <select name="system.magicSystem.templates.{{id}}.rollType">
             {{selectOptions selection.rollType selected=rollType labelAttr="label" nameAttr="value" valueAttr="value" }}
           </select>
         </div>
         <div class="resource flexrow">
-          <label for="system.magicSystem.templates.{{id}}.useFatigue" class=" flex02">{{localize "Use fatigue"}}</label>
+          <label for="system.magicSystem.templates.{{id}}.useFatigue"
+            class=" flex02">{{localize "arm5e.tradition.template.useFatigue"}}</label>
           <input type="checkbox" name="system.magicSystem.templates.{{id}}.useFatigue" {{checked useFatigue}}>
         </div>
         <div class="resource flex0">
@@ -107,11 +110,14 @@
       </div>
       <div class="foldable-section backSection  {{lookup @root.ui.sections.visibility.hedge 'templateDesc'}}"
         id="hedge-templateDesc-{{id}}">
+        {{log "root: " @root}}
         <div class="editor">
-          {{> "systems/arm5e/templates/generic/ars-editor.hbs"
+          {{> "systems/arm5e/templates/generic/ars-editor-V2.hbs"
             content=description
-            target=(concat namepath ".description")
-            editable=editable
+            prefix=namepath
+            editorHeight="300px"
+          target=".description"
+          editable=@root.editable
           }}
         </div>
       </div>

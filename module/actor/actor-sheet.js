@@ -27,7 +27,7 @@ import {
   TOPIC_FILTER,
   updateUserCache
 } from "../constants/userdata.js";
-import { ROLL_MODES, getRollTypeProperties, getRollDialog } from "../ui/roll-window.js";
+import { ROLL_MODES, getRollTypeProperties, openRollDialog } from "../ui/roll-window.js";
 
 import {
   buildSoakDataset,
@@ -68,6 +68,7 @@ import {
   textInput
 } from "../ui/dialogs.js";
 import { Arm5eChatMessage } from "../helpers/chat-message.js";
+import { ArM5eActorSheetV2 } from "../sheets/actor/actor-sheet-v2.js";
 
 const renderTemplate = foundry.applications.handlebars.renderTemplate;
 const TextEditor = foundry.applications.ux.TextEditor;
@@ -823,7 +824,7 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
       if (!this.magicSystem) {
         this.magicSystem = new ArM5eMagicSystem(this.actor);
       }
-      this.magicSystem.getData(context);
+      this.magicSystem._prepareContext(context);
     }
 
     return context;
@@ -979,7 +980,7 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
         let confirm = await getConfirmation(
           game.i18n.localize("arm5e.twilight.episode"),
           question,
-          ArM5eActorSheet.getFlavor(this.actor.type)
+          ArM5eActorSheetV2.getFlavor(this.actor.type)
         );
 
         if (confirm) {
@@ -1004,7 +1005,7 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
             let confirm = await getConfirmation(
               game.i18n.localize("arm5e.twilight.episode"),
               question,
-              ArM5eActorSheet.getFlavor(this.actor.type),
+              ArM5eActorSheetV2.getFlavor(this.actor.type),
               " ",
               null,
               "arm5e.twilight.embrace",
@@ -1404,7 +1405,7 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
         confirmed = await getConfirmation(
           name,
           question,
-          ArM5eActorSheet.getFlavor(this.actor.type)
+          ArM5eActorSheetV2.getFlavor(this.actor.type)
         );
       }
 
@@ -1517,7 +1518,7 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
         confirmed = await getConfirmation(
           li[0].dataset.name,
           question,
-          ArM5eActorSheet.getFlavor(this.actor.type)
+          ArM5eActorSheetV2.getFlavor(this.actor.type)
         );
       }
 
@@ -1604,7 +1605,7 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
       let confirmed = await getConfirmation(
         "",
         game.i18n.localize("arm5e.sheet.msg.creationModeRemoval"),
-        ArM5eActorSheet.getFlavor(this.actor.type)
+        ArM5eActorSheetV2.getFlavor(this.actor.type)
       );
       if (confirmed) {
         await this.actor.update({ "system.states.creationMode": false });
@@ -1682,7 +1683,7 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
         confirmed = await getConfirmation(
           li[0].dataset.name,
           question,
-          ArM5eActorSheet.getFlavor(this.actor.type)
+          ArM5eActorSheetV2.getFlavor(this.actor.type)
         );
       }
     }
@@ -1928,6 +1929,7 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
     const html = await renderTemplate(template, dialogData);
 
     return await customDialogAsync({
+      owner: this,
       window: { title: game.i18n.localize("arm5e.dialog.woundCalculator") },
       content: html,
       buttons: [
@@ -1971,6 +1973,7 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
     const dialog = await renderTemplate(template, data);
 
     return await customDialogAsync({
+      owner: this,
       window: { title: game.i18n.localize("arm5e.dialog.damageCalculator") },
       content: dialog,
       buttons: [
@@ -2093,8 +2096,16 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
     this.actor.system.charmetadata = ARM5E.character.characteristics;
     this.actor.config = CONFIG.ARM5E;
 
-    const message = await getRollDialog(this.actor, dataset);
-    return message;
+    const { dialog, result } = openRollDialog(this.actor, dataset);
+    this._pendingRollDialog = dialog;
+    try {
+      const message = await result;
+      return message;
+    } finally {
+      if (this._pendingRollDialog === dialog) {
+        this._pendingRollDialog = null;
+      }
+    }
   }
 
   async quickCombat(name) {
@@ -2155,23 +2166,23 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
     }
   }
 
-  static getFlavor(actorType) {
-    switch (actorType) {
-      case "player":
-        return "PC";
-      case "npc":
-      case "beast":
-        return "NPC";
-      case "covenant":
-        return "covenant";
-      case "laboratory":
-        return "Lab";
-      case "magicCodex":
-        return "codex";
-      default:
-        return "Neutral";
-    }
-  }
+  // static getFlavor(actorType) {
+  //   switch (actorType) {
+  //     case "player":
+  //       return "PC";
+  //     case "npc":
+  //     case "beast":
+  //       return "NPC";
+  //     case "covenant":
+  //       return "covenant";
+  //     case "laboratory":
+  //       return "Lab";
+  //     case "magicCodex":
+  //       return "codex";
+  //     default:
+  //       return "Neutral";
+  //   }
+  // }
 
   async _handleTransfer(item) {
     const html = await TextEditor.enrichHTML(
@@ -2192,7 +2203,7 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
         game.i18n.format("arm5e.dialog.confirmTransfer-question", {
           name: item.name
         }),
-        ArM5eActorSheet.getFlavor(this.actor.type),
+        ArM5eActorSheetV2.getFlavor(this.actor.type),
         game.i18n.localize("arm5e.dialog.confirmTransfer-info")
       );
     } else {

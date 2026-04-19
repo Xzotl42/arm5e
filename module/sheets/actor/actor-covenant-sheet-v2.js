@@ -293,11 +293,21 @@ export class ArM5eCovenantActorSheetV2 extends ArM5eActorSheetV2 {
     }
   }
 
+  /**
+   * Convert spell/magicalEffect/enchantment to laboratoryText for covenant storage.
+   * @param {object} data - The item data to convert
+   * @returns {object} The converted item data
+   * @override
+   */
+  convert(data) {
+    return effectToLabText(data);
+  }
+
   /** @override */
   async _onDropItem(event, item) {
     const itemData = item?.toObject?.() ?? item;
     if (this.needConversion(itemData.type)) {
-      return await this.actor.createEmbeddedDocuments("Item", [effectToLabText(itemData)]);
+      return await this.actor.createEmbeddedDocuments("Item", [this.convert(itemData)]);
     }
     return super._onDropItem(event, item);
   }
@@ -314,9 +324,7 @@ export class ArM5eCovenantActorSheetV2 extends ArM5eActorSheetV2 {
       nonConvertible.map((e) => e.toObject())
     );
     for (const item of folder.contents.filter((e) => this.needConversion(e.type))) {
-      res.push(
-        await this.actor.createEmbeddedDocuments("Item", [effectToLabText(item.toObject())])
-      );
+      res.push(await this.actor.createEmbeddedDocuments("Item", [this.convert(item.toObject())]));
     }
     return res;
   }

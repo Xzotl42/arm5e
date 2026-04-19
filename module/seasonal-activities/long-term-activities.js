@@ -3,7 +3,6 @@ import { ArM5eActor } from "../actor/actor.js";
 import { InvestigationRoll } from "../apps/investigationRoll.js";
 import { getAbilityFromCompendium } from "../tools/compendia.js";
 import { ArsRoll } from "../helpers/roll.js";
-import { DiaryEntrySchema } from "../schemas/diarySchema.js";
 import {
   AgingActivity,
   BookActivity,
@@ -130,7 +129,7 @@ export async function agingRoll(item) {
     season: item.system.dates[0].season,
     moredata: { diaryId: item._id }
   };
-  await item.actor.sheet.roll(input);
+  await item.actor.sheet.roll(null, { dataset: input });
 }
 
 export async function agingCrisis(actor, roll, message) {
@@ -321,11 +320,11 @@ export async function twilightUnderstandingRoll(item) {
     moredata: { diaryId: item._id },
     botchNumber: item.actor.system.twilight.pointsGained + 1
   };
-  await item.actor.sheet.roll(input);
+  await item.actor.sheet._roll(input);
 }
 
 export async function twilightRoll(actor, data) {
-  await actor.sheet.roll(data);
+  await actor.sheet._roll(data);
 }
 
 export async function applyTwilightStrength(actor, roll, message) {

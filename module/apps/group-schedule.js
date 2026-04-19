@@ -216,7 +216,7 @@ export class GroupSchedule extends HandlebarsApplicationMixin(ApplicationV2) {
       type: target.dataset.type,
       dates: [{ season: target.dataset.season, year: target.dataset.year }]
     };
-    await actor.sheet._onItemCreate(data);
+    await actor.sheet._itemCreate(data);
     this.render();
   }
 

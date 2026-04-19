@@ -139,9 +139,11 @@ export class ArsApps {
 
     // roll using the first actor, then duplicate
 
-    const message = await actors[0].sheet.roll({
-      roll: "damage",
-      mode: ROLL_PROPERTIES.DAMAGE.MODE + ROLL_MODES.NO_CHAT
+    const message = await actors[0].sheet.roll(null, {
+      dataset: {
+        roll: "damage",
+        mode: ROLL_PROPERTIES.DAMAGE.MODE + ROLL_MODES.NO_CHAT
+      }
     });
     const promises = [];
     for (let a of actors) {

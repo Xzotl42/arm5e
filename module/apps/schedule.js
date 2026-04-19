@@ -244,7 +244,7 @@ export class Schedule extends HandlebarsApplicationMixin(ApplicationV2) {
       type: target.dataset.type,
       dates: [{ season: target.dataset.season, year: target.dataset.year }]
     };
-    await this.actor.sheet._onItemCreate(data);
+    await this.actor.sheet._itemCreate(data);
     this.render();
   }
 
