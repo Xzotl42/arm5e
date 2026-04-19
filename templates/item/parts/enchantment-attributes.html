@@ -1,9 +1,9 @@
 <div class="flexcol">
   <div class="flexrow flex-group-left">
-    <label class="section-handle  clickable " data-category="{{container}}" data-section="enchant-attributes"
-      data-index="{{index}}">{{localize "arm5e.enchantment.attributes"}}</label>
+    <label class="section-handle  clickable " data-action="toggleSectionCollapse" data-category="{{container}}"
+      data-section="enchant-attributes" data-index="{{index}}">{{localize "arm5e.enchantment.attributes"}}</label>
   </div>
-  <div class="foldable-section backSection {{lookup visibility 'enchant-attributes'}}"
+  <div class="foldable-section backSection enchantment {{lookup visibility 'enchant-attributes'}}"
     id="{{container}}-enchant-attributes{{index}}-{{docId}}">
     <div class="flexrow ressource">
       {{#unless charged}}

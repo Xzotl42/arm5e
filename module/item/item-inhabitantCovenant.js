@@ -1,6 +1,5 @@
 import { getDataset, log } from "../tools/tools.js";
 import { ArM5eItemSheet } from "./item-sheet.js";
-import { ArM5eActorSheet } from "../actor/actor-sheet.js";
 import { spellFormLabel, spellTechniqueLabel } from "../helpers/magic.js";
 import { BookSchema } from "../schemas/bookSchema.js";
 /**

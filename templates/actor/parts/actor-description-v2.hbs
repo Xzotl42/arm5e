@@ -1,0 +1,506 @@
+{{#if (eq system.charType.value "magus")}}
+<div class="flexrow flexcol">
+  <div class="flexcol grid grid-2col">
+    <div>
+      <div class="flex-group-left backSection padding12" style="margin-bottom: 22px">
+        <label class="bold">{{localize "arm5e.sheet.playername"}} </label>
+        <span class="width2"
+          ><input
+            type="text"
+            name="system.playername"
+            value="{{ system.playername }}"
+            data-dtype="String"
+        /></span>
+      </div>
+      <div class="flex-group-left backSection padding12">
+        <div class="flexrow marginbot6">
+          <label for="system.house.value" class="bold">{{localize "arm5e.sheet.house"}}</label>
+          <span class="width2"
+            ><select name="system.house.value" data-dtype="String" style="width: 100%">
+              {{selectOptions config.character.houses selected=system.house.value labelAttr="label" }}
+            </select></span
+          >
+        </div>
+        <div class="flexrow marginbot6">
+          <label
+            for="system.domusMagnus.label"
+            class="bold"
+            >{{localize "arm5e.sheet.domusMagnus"}}</label
+          >
+          <span class="width2"
+            ><input
+              type="text"
+              name="system.domusMagnus.value"
+              value="{{ system.domusMagnus.value }}"
+              data-dtype="String"
+          /></span>
+        </div>
+        <div class="flexrow marginbot6">
+          <label for="system.primus.value" class="bold">{{localize "arm5e.sheet.primus"}}</label>
+          <span class="width2"
+            ><input
+              type="text"
+              name="system.primus.value"
+              value="{{ system.primus.value }}"
+              data-dtype="String"
+          /></span>
+        </div>
+        <div class="flexrow marginbot6">
+          <label for="system.parens.value" class="bold">{{localize "arm5e.sheet.parens"}}</label>
+          <span class="width2"
+            ><input
+              type="text"
+              name="system.parens.value"
+              value="{{ system.parens.value }}"
+              data-dtype="String"
+          /></span>
+        </div>
+        <div class="flexrow marginbot6">
+          <label
+            for="system.apprenticeship.value"
+            class="bold"
+            >{{localize "arm5e.sheet.apprenticeship"}}</label
+          >
+          <span class="width2"
+            ><input
+              type="text"
+              name="system.apprenticeship.value"
+              value="{{ system.apprenticeship.value }}"
+              data-dtype="String"
+          /></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex-group-left backSection padding12">
+      <label for="system.sigil" class="smallTitle">{{localize "arm5e.sheet.sigil"}}</label>
+      {{> "systems/arm5e/templates/generic/ars-editor-V2.hbs"
+          content=enrichedSigil
+          target="system.sigil.value"
+          prefix=""
+          sectionClass=""
+          editorClass=""
+          editable=editable
+      }}
+    </div>
+  </div>
+</div>
+{{/if}}
+
+<div class="flexcol grid grid-2col margintop18">
+  <div class="flexcol">
+    <div class="flex-group-left padding12 backSection">
+      <label class="smallTitle">{{localize "arm5e.sheet.biography"}}</label>
+      {{> "systems/arm5e/templates/generic/ars-editor-V2.hbs"
+        content=enrichedBiography
+        target="system.biography"
+        prefix=""
+        sectionClass=""
+        editorClass=""
+        editable=editable
+      }}
+    </div>
+    {{#if (or isGM isOwner)}}
+    <div class="flex-group-left padding12 backSection">
+      <label class="smallTitle">{{localize "arm5e.sheet.secrets"}}</label>
+      {{> "systems/arm5e/templates/generic/ars-editor-V2.hbs"
+          content=enrichedSecrets
+          target="system.secrets"
+          prefix=""
+          sectionClass=""
+          editorClass=""
+          editable=editable
+      }}
+    </div>
+    {{/if}}
+
+    {{#if system.isCharacter}}
+    <div class="flex-group-left padding12 backSection">
+      {{#unless system.states.pendingCrisis }}
+      <a
+        class="schedule-aging clickable"
+        data-action="scheduleAging"
+        title="Aging roll"
+        data-year="{{ datetime.year }}"
+        data-season="{{ datetime.season }}"
+        style="font-size: 16pt"
+      >
+        <i class="ars-Icon_Aging2"></i>
+      </a>
+      {{/unless}}
+      <label class="smallTitle padding12">
+        {{localize "arm5e.sheet.aging"}} & {{localize "arm5e.sheet.decrepitude"}}
+      </label>
+      <div class="flexrow marginbot6 margintop6">
+        <label
+          for="system.decrepitude.finalScore"
+          class="bold"
+          >{{localize "arm5e.sheet.score"}}</label
+        >
+        <span class="marginbot6" style="margin-right: 24px"
+          ><input
+            type="text"
+            name="system.decrepitude.finalScore"
+            value="{{ system.decrepitude.finalScore }}"
+            data-dtype="Number"
+            class="numberformat"
+            readonly
+        /></span>
+        <label
+          for="system.decrepitude.points"
+          class="bold flex06"
+          >{{localize "arm5e.sheet.points"}}</label
+        >
+        <span class="marginbot6 nowrap">
+          <input
+            type="text"
+            name="system.decrepitude.points"
+            value="{{ system.decrepitude.points }}"
+            data-dtype="Number"
+            class="numberformat"
+            style="width: 50px"
+          />&nbsp;/&nbsp;({{ system.decrepitude.experienceNextLevel }})
+        </span>
+      </div>
+
+      <div class="flexrow">
+        <label
+          for="system.decrepitude.effects"
+          class="bold"
+          >{{localize "arm5e.sheet.effects"}}</label
+        >
+      </div>
+      {{> "systems/arm5e/templates/generic/ars-editor-V2.hbs"
+          content=enrichedDecrepitude
+          target="system.decrepitude.effects"
+          prefix=""
+          sectionClass="marginbot6"
+          editorClass=""
+          editable=editable
+      }}
+      <div class="flexrow">
+        <div class="flexrow flex-group-center">
+          <label
+            for="system.laboratory.longevityRitual.labTotal"
+            >{{localize "arm5e.sheet.labTotal"}}</label
+          >
+          <input
+            type="number"
+            name="system.laboratory.longevityRitual.labTotal"
+            value="{{ system.laboratory.longevityRitual.labTotal }}"
+            data-dtype="Number"
+          />
+        </div>
+        <div class="flexrow flex-group-center">
+          <label
+            for="system.bonuses.traits.aging"
+            >{{localize "arm5e.sheet.longevityModifier"}}</label
+          >
+          <input
+            type="number"
+            readonly
+            name="system.bonuses.traits.aging"
+            value="{{ system.bonuses.traits.aging }}"
+            data-dtype="Number"
+          />
+        </div>
+      </div>
+    </div>
+    {{/if}}
+  </div>
+  <div>
+    {{#if (eq actor.type "player")}}
+    <div class="flex-group-left padding12 backSection">
+      {{#each system.vitals as |vitals key|}}
+      <div class="flexrow marginbot6">
+        {{#if (eq key "siz")}}
+        <span
+          class="flex01 rollable"
+          data-action="roll"
+          style="margin-right: 12px"
+          class="numberformat"
+          data-roll="option"
+          data-name="{{localize vitals.label}}"
+          data-option1="{{ vitals.value }}"
+          data-txtoption1="{{ vitals.label }}"
+        >
+          <img src="systems/arm5e/assets/dice.png" style="border: 0px; height: 18px" />
+        </span>
+        {{/if}}
+        <label for="system.vitals.{{ key }}.label" class="bold">{{ vitals.label }}</label>
+        <span>
+          <input
+            type="text"
+            name="system.vitals.{{ key }}.value"
+            value="{{numberFormat vitals.value decimals=0 sign=true}}"
+            data-dtype="Number"
+            class="numberformat"
+            readonly
+          />
+        </span>
+      </div>
+      {{/each}}
+    </div>
+    {{/if}}
+
+    <div class="flexcol flex-group-left padding12 backSection margintop18">
+      <ol style="width: 100%">
+        <li class="item flexrow item-header">
+          <label
+            class="smallTitle"
+            style="width: 100%"
+            >{{localize "arm5e.sheet.personality"}}</label
+          >
+          <a
+            class="item-control item-create"
+            data-action="itemCreate"
+            title="{{localize 'arm5e.hints.create' item=(localize 'arm5e.sheet.personality')}}"
+            data-type="personalityTrait"
+            ><i class="fas fa-plus" style="margin-bottom: 12px; text-align: right"></i
+          ></a>
+        </li>
+        {{#each system.personalities as |pers key|}}
+        <li
+          class="flexrow item flex-group-left"
+          data-attribute="{{ key }}"
+          data-item-id="{{ pers._id }}"
+        >
+          <div
+            class="flex02 rollable"
+            data-action="roll"
+            style="margin-right: 12px"
+            data-roll="option"
+            data-physicalcondition="false"
+            data-name="{{ pers.name }}"
+            data-option1="{{ pers.system.score }}"
+            data-txtoption1="{{ pers.name }}"
+          >
+            <img src="systems/arm5e/assets/dice.png" style="border: 0px; height: 18px" />
+          </div>
+          <div class="flexrow">
+            <div class="flexrow item-control item-edit" data-action="itemEdit">
+              <input
+                type="text"
+                name="system.personalities.{{ key }}.name"
+                value="{{ pers.name }}"
+                data-dtype="String"
+                readonly
+                class="clickable"
+              />
+            </div>
+          </div>
+          <div class="flexrow" style="padding-top: 3px; padding-left: 5px">
+            <input
+              type="text"
+              name="system.personalities.{{ key }}.score"
+              value="{{numberFormat pers.system.score decimals=0 sign=true}}"
+              data-dtype="Number"
+              style="max-width: 60px"
+              class="numberformat"
+              readonly
+            />
+          </div>
+        </li>
+        {{/each}}
+      </ol>
+    </div>
+
+    <div class="flex-group-left padding12 backSection margintop18">
+      <div class="flexrow marginbot6">
+        <label
+          for="system.description.{{ key }}.label"
+          class="bold"
+          >{{localize "arm5e.sheet.yearBorn"}}</label
+        >
+        <span
+          ><input
+            type="number"
+            name="system.description.born.value"
+            value="{{numberFormat system.description.born.value decimals=0 }}"
+            {{ui.storyMode.edit}}
+            data-dtype="Number"
+            class="select-on-focus wide"
+        /></span>
+      </div>
+      {{#each system.description as |description key|}}
+      <div class="flexrow marginbot6">
+        {{#with (lookup @root.config.character.description key)}}
+        <label for="system.description.{{ key }}.label" class="bold">{{localize label}}</label>
+        {{#if number}}
+        <span
+          ><input
+            type="number"
+            name="system.description.{{ key }}.value"
+            value="{{ description.value }}"
+            data-dtype="Number"
+            class="select-on-focus wide"
+        /></span>
+        {{else}}
+        <span
+          ><input
+            type="text"
+            name="system.description.{{ key }}.value"
+            value="{{ description.value }}"
+            data-dtype="String"
+        /></span>
+        {{/if}}
+        {{/with}}
+      </div>
+      {{/each}}
+    </div>
+
+    <div class="flexcol flex-group-left padding12 backSection margintop18">
+      <ol style="width: 100%">
+        <li class="item flexrow item-header">
+          <label
+            class="smallTitle"
+            style="width: 100%"
+            >{{localize "arm5e.sheet.reputation"}}</label
+          >
+          <a
+            class="item-control item-create"
+            data-action="itemCreate"
+            title="{{localize 'arm5e.hints.create' item=(localize 'arm5e.sheet.reputation')}}"
+            data-type="reputation"
+            ><i class="fas fa-plus" style="margin-bottom: 12px; text-align: right"></i
+          ></a>
+        </li>
+        {{#each system.reputations as |rep key|}}
+        <li
+          class="flexrow item flex-group-left"
+          data-attribute="{{ key }}"
+          data-item-id="{{ rep._id }}"
+        >
+          <span
+            class="flex02 rollable"
+            data-action="roll"
+            style="min-width: 18px; margin-right: 12px"
+            data-name="{{ rep.name }}"
+            data-roll="option"
+            data-physicalcondition="false"
+            data-option1="{{ rep.system.score }}"
+            data-txtoption1="{{ rep.name }}"
+          >
+            <img src="systems/arm5e/assets/dice.png" style="border: 0px; height: 18px" />
+          </span>
+          <span class="flexrow">
+            <div class="flexrow item-control item-edit" data-action="itemEdit">
+              <input
+                type="text"
+                name="system.reputations.{{ key }}.name"
+                value="{{ rep.name }}"
+                data-dtype="String"
+                readonly
+                class="clickable"
+                style="width: fit-content"
+              />
+            </div>
+          </span>
+          <div class="flexrow">
+            <label class="padding4" style="text-align: center">
+              {{localize (lookup (lookup @root.config.reputations rep.system.type) 'label')}}
+            </label>
+          </div>
+          <div class="flexrow">
+            <input
+              type="text"
+              name="system.reputation.{{ key }}.system.score"
+              value="{{numberFormat rep.system.score decimals=0 sign=true}}"
+              data-dtype="Number"
+              style="max-width: 65px"
+              readonly
+            />
+          </div>
+        </li>
+        {{/each}}
+      </ol>
+    </div>
+
+    {{#if system.isCharacter}}
+    <!-- <div class="flexcol grid grid-2col"> -->
+    <div class="flex-group-left padding12 backSection">
+      <div class="flexrow marginbot6 margintop6">
+        {{#if system.isMagus}}
+        <div class="flex01">
+          <a
+            class="twilight-episode clickable"
+            data-action="twilightEpisode"
+            title="{{ system.twilight.tooltip }}"
+            data-year="{{ datetime.year }}"
+            data-season="{{ datetime.season }}"
+            style="font-size: 16pt"
+          >
+            <img
+              class="twilight-icon"
+              src="systems/arm5e/assets/icons/Icon_Warping.png"
+              style="width: 25px; border: none"
+            />
+            {{#if system.twilight.stage}}
+            <div
+              class="twilight-icon"
+              style="
+                position: relative;
+                top: -30px;
+                left: 9px;
+                font-size: 12pt;
+                font-weight: bold;
+                pointer-events: none;
+              "
+            >
+              {{ system.twilight.stage }}
+            </div>
+            {{/if}}
+          </a>
+        </div>
+        {{/if}}
+        <label class="smallTitle">
+          {{localize "arm5e.sheet.warping"}}
+        </label>
+      </div>
+      <div class="flexrow marginbot6 margintop6">
+        <label for="system.warping.finalScore" class="bold">{{localize "arm5e.sheet.score"}}</label>
+        <span class="marginbot6" style="margin-right: 24px"
+          ><input
+            type="number"
+            name="system.warping.finalScore"
+            value="{{ system.warping.finalScore }}"
+            data-dtype="Number"
+        /></span>
+        <div class="nowrap">
+          <label
+            for="system.warping.points"
+            class="bold flex06"
+            >{{localize "arm5e.sheet.points"}}</label
+          >
+          <span class="marginbot6 nowrap">
+            <input
+              type="number"
+              name="system.warping.points"
+              value="{{ system.warping.points }}"
+              data-dtype="Number"
+              style="width: 50px"
+            />&nbsp;/&nbsp;({{ system.warping.experienceNextLevel }})
+          </span>
+        </div>
+      </div>
+
+      <div class="flexrow">
+        <label for="system.warping.effects" class="bold">{{localize "arm5e.sheet.effects"}}</label>
+      </div>
+      {{> "systems/arm5e/templates/generic/ars-editor-V2.hbs"
+          content=enrichedWarping
+          target="system.warping.effects"
+          prefix=""
+          sectionClass=""
+          editorClass=""
+          editable=editable
+      }}
+    </div>
+    {{/if}}
+  </div>
+</div>
+
+{{#if metagame.view }}
+{{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+{{> "systems/arm5e/templates/generic/source.html" }}
+{{/if}}

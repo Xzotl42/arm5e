@@ -4,7 +4,7 @@
     <div class="item-image"></div>
     <div class="item-name">{{localize "arm5e.sheet.calendar"}}</div>
     <div class="item-controls">
-      <a class="item-control item-create" title="Add calendarCovenant" data-type="calendarCovenant"><i
+      <a class="item-control item-create" data-action="itemCreate" title="Add calendarCovenant" data-type="calendarCovenant"><i
           class="fas fa-plus"></i>{{localize "arm5e.sheet.action.Create"}}</a>
     </div>
   </li>
@@ -18,8 +18,8 @@
         <span class="flexrow bold">{{localize "arm5e.sheet.season"}}: {{item.system.season}} </span>
       </div>
       <div class="item-controls">
-        <a class="item-control item-edit" title="Edit calendarCovenant"><i class="ars-Icon_Edit"></i></a>
-        <a class="item-control item-delete" title="Delete calendarCovenant"><i
+        <a class="item-control item-edit" data-action="itemEdit" title="Edit calendarCovenant"><i class="ars-Icon_Edit"></i></a>
+        <a class="item-control item-delete" data-action="itemDelete" title="Delete calendarCovenant"><i
             class="ars-Icon_Delete_Hand_Gesture"></i></a>
       </div>
     </li>

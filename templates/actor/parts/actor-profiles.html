@@ -10,7 +10,8 @@
     <div class="characteristics grid grid-3col">
         {{#each config.ActorProfiles as |prof key|}}
             <div class="flexrow flex-group-center">
-                <button class="arm5e actor-profile" data-key="{{key}}">{{localize prof.label}}</button>
+                <button class="arm5e actor-profile" data-action="actorProfile"
+                    data-key="{{key}}">{{localize prof.label}}</button>
             </div>
         {{/each}}
     </div>

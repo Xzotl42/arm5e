@@ -1,4 +1,4 @@
-<div class="flexrow">
+<div class="flexrow" style="width: 100%">
   {{#if (eq actor.type "player")}}
     <div class="flexcol" style="max-width: 200px;">
       <div class="flex-group-left backSection padding12">
@@ -14,7 +14,8 @@
   {{/if}}
   {{#if system.isCharacter}}
     <div class="resource">
-      <a class="character-schedule flex0" style="width:50px"><i class="ars-icon-Tool_AstrolabBig"></i></a>
+      <a class="character-schedule flex0" data-action="characterSchedule" style="width:50px"><i
+          class="ars-icon-Tool_AstrolabBig"></i></a>
     </div>
   {{/if}}
 </div>
@@ -24,11 +25,11 @@
     <div class="item-image"></div>
     <div class="item-name">{{localize "arm5e.sheet.diary"}}</div>
     <div class="item-controls">
-      <a class="item-control toggleHidden" title="Filter" data-category="events" data-list="diaryEvents"><i
-          class="fas fa-sort" data-hidden="diaryEvents" {{{ui.diaryFilter}}}>
+      <a class="item-control toggleHidden" data-action="toggleHidden" title="Filter" data-category="events"
+        data-list="diaryEvents"><i class="fas fa-sort" data-hidden="diaryEvents" {{{ui.diaryFilter}}}>
         </i>{{localize "arm5e.sheet.action.Filter"}}
       </a>
-      <a class="item-control item-create" title="Add diary" data-type="diaryEntry"><i
+      <a class="item-control item-create" data-action="itemCreate" title="Add diary" data-type="diaryEntry"><i
           class="fas fa-plus"></i>{{localize "arm5e.sheet.action.Create"}}</a>
     </div>
   </li>
@@ -39,15 +40,16 @@
       {{#each entries}}
         <li class="item item-value flexrow flex-center" data-name="{{name}}" data-attribute="{{id}}"
           data-item-id="{{_id}}">
-          <div class="item-image item-control item-edit"><img src="{{img}}" title="{{name}}" /></div>
+          <div class="item-image item-control item-edit" data-action="itemEdit"><img src="{{img}}" title="{{name}}" />
+          </div>
           <div class="flexrow flex-center">
             <span class="flexrow item-title">{{../../year}} ({{#with (lookup @root.config.seasons
               season)~}}{{localize label~}} {{/with}}) {{date}}</span>
-            <div class="clickable item-edit" {{{ui.diary}}}>{{name}}
+            <div class="clickable item-edit" data-action="itemEdit" {{{ui.diary}}}>{{name}}
               ({{type}})</div>
             <div class="flex0 item-controls">
-              <a class="item-control item-delete-confirm" title="Delete diary"><i class="ars-Icon_Delete_Hand_Gesture"
-                  style="font-size:small"></i></a>
+              <a class="item-control item-delete-confirm" data-action="itemDeleteConfirm" title="Delete diary"><i
+                  class="ars-Icon_Delete_Hand_Gesture" style="font-size:small"></i></a>
             </div>
           </div>
 

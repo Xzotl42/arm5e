@@ -1,0 +1,92 @@
+<div class="mainCovenant">
+  <div class="header-background">
+    <img src="systems/arm5e/assets/covenant/header150.webp" />
+  </div>
+
+  <header class="sheet-header marginsides32">
+    <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" height="100" width="100" />
+    <div class="header-fields">
+      <h1 class="bigname"><input name="name" type="text" value="{{actor.name}}" placeholder="Name" /></h1>
+
+      <div class="flexrow flex-between">
+        <span class="flexrow">
+          <label for="system.saga" class="covenant-label">{{localize "arm5e.sheet.saga"}}</label>
+          <input name="system.saga" type="text" value="{{system.saga}}" data-dtype="String"
+            class="covenant-input-lg" />
+        </span>
+        <span class="flexrow">
+          <label for="system.tribunal" class="covenant-label">{{localize "arm5e.sheet.tribunal"}}</label>
+          <input name="system.tribunal" type="text" value="{{system.tribunal}}" data-dtype="String"
+            class="covenant-input-lg" />
+        </span>
+      </div>
+      <div class="flexrow flex-between">
+        <span class="flexrow pt-4">
+          <label for="system.narrator" class="covenant-label">{{localize "arm5e.sheet.narrator"}}</label>
+          <input name="system.narrator" type="text" value="{{system.narrator}}" data-dtype="String"
+            class="covenant-input-md" />
+        </span>
+        <span class="flexrow">
+          <label for="system.sagaType" class="covenant-label">{{localize "arm5e.sheet.sagaType"}}</label>
+          <input name="system.sagaType" type="text" value="{{system.sagaType}}" data-dtype="String"
+            class="covenant-input-lg" />
+        </span>
+      </div>
+      <div class="flexrow flex-between">
+        <span class="flexrow pt-4">
+          <label for="system.foundationYear" class="covenant-label">{{localize "arm5e.sheet.foundationYear"}}</label>
+          <input class="flex08 covenant-input-sm" name="system.foundationYear" type="number"
+            value="{{system.foundationYear}}" data-dtype="Number" />
+        </span>
+        <span class="flexrow pt-4">
+          <label for="system.datetime.year" class="covenant-label">{{localize "arm5e.sheet.currentYear"}}</label>
+          <input class="flex08 covenant-input-sm" name="year" type="number" value="{{datetime.year}}" readonly
+            data-dtype="Number" />
+        </span>
+      </div>
+      <div class="flexrow flex-between">
+        <span class="flexrow pt-4">
+          <label for="system.aegisCovenant" class="covenant-label">{{localize "arm5e.sheet.aegisCovenant"}}</label>
+          <input name="system.aegisCovenant" type="number" value="{{system.aegisCovenant}}" data-dtype="Number"
+            class="covenant-input-sm" />
+        </span>
+        <span class="flexrow pt-4">
+          <label for="system.aegisPenetration"
+            class="covenant-label">{{localize "arm5e.sheet.aegisPenetration"}}</label>
+          <input class="flex04 select-on-focus covenant-input-sm" name="system.aegisPenetration" type="number"
+            value="{{system.aegisPenetration}}" data-dtype="Number" />
+        </span>
+      </div>
+
+      <div class="flexrow flex-between">
+        <span class="flexrow pt-4">
+          <label for="system.modifiersLife.magi"
+            class="covenant-label">{{localize "arm5e.sheet.modifiersLifeMagi"}}</label>
+          <input class="flex04 select-on-focus" name="system.modifiersLife.magi" type="text"
+            value="{{system.modifiersLife.magi}}" data-dtype="Number" />
+        </span>
+        <span class="flexrow pt-4">
+          <label for="system.modifiersLife.mundane"
+            class="covenant-label">{{localize "arm5e.sheet.modifiersLifeMundane"}}</label>
+          <input class="flex04 select-on-focus" name="system.modifiersLife.mundane" type="text"
+            value="{{system.modifiersLife.mundane}}" data-dtype="Number" />
+        </span>
+      </div>
+
+      <div class="flexrow flex-between">
+        <span class="flexrow pt-4">
+          <label for="system.scene.id" class="flex0 covenant-label">{{localize "arm5e.sheet.scene"}}</label>
+          <select name="system.scene.id" data-type="String" {{#unless (isGM)}}disabled{{/unless}}>
+            {{selectOptions scenes selected=system.scene.id labelAttr="name" nameAttr="id" valueAttr="id" blank=""}}
+          </select>
+        </span>
+        <span class="flexrow pt-4">
+          <label for="system.season" class="flex0 covenant-label">{{localize "arm5e.sheet.season"}}</label>
+          <select name="system.season" class="select-season" data-type="String">
+            {{selectOptions config.seasons selected=system.season labelAttr="label" localize=true}}
+          </select>
+        </span>
+      </div>
+    </div>
+  </header>
+</div>

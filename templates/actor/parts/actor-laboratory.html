@@ -10,7 +10,8 @@
       <input type="text" class="sanctum-link flex01" value="{{system.sanctum.value }}" data-dtype="String"
         style="max-width: 200px;" />
       {{#if system.sanctum.linked}}
-        <a class="item-control actor-link flex0" title="Linked to sanctum" data-actorid="{{system.sanctum.actorId}}">
+        <a class="item-control actor-link flex0" data-action="openLinkedActor" title="Linked to sanctum"
+          data-actorid="{{system.sanctum.actorId}}">
           <i class="fas fa-link fa-sm"></i></a>
       {{else}}
         <a title="Not linked to sanctum" class="flex0"><i class="fas fa-unlink fa-sm"></i></a>

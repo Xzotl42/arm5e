@@ -8,10 +8,10 @@ import {
 import { ArM5eItem } from "./item.js";
 import { ActivitySchedule } from "../apps/activity-schedule.js";
 import { DiaryEntrySchema } from "../schemas/diarySchema.js";
-import { ArM5eActorSheet } from "../actor/actor-sheet.js";
 import { getAbilityFromCompendium } from "../tools/compendia.js";
 import { spellFormLabel, spellTechniqueLabel } from "../helpers/magic.js";
 import { getConfirmation } from "../ui/dialogs.js";
+import { ArM5eActorSheetV2 } from "../sheets/actor/actor-sheet-v2.js";
 
 /**
  * Extend the basic ItemSheet with some very simple modifications
@@ -1543,7 +1543,7 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
       let confirm = await getConfirmation(
         this.item.name,
         question,
-        ArM5eActorSheet.getFlavor(this.item.actor?.type)
+        ArM5eActorSheetV2.getFlavor(this.item.actor?.type)
       );
       if (!confirm) {
         return;
@@ -1744,7 +1744,7 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
         let confirmed = await getConfirmation(
           game.i18n.localize("arm5e.aging.rollback.title"),
           game.i18n.localize("arm5e.aging.rollback.confirm"),
-          ArM5eActorSheet.getFlavor(this.item.actor?.type)
+          ArM5eActorSheetV2.getFlavor(this.item.actor?.type)
         );
         if (!confirmed) {
           await Promise.all(promises);

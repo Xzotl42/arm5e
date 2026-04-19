@@ -2,7 +2,7 @@
   <!-- ENCHANTMENTS -->
   <div class="padding4">
     <div class="padding4 flexrow flex-group-left">
-      <label class="section-handle clickable" data-category="enchantExt"
+      <label class="section-handle clickable" data-action="toggleSectionCollapse" data-category="enchantExt"
         data-section="enchant">{{localize "arm5e.sheet.item.enchantments"}} -
         {{ system.enchantments.visibleEnchant}}
       </label>
@@ -75,7 +75,7 @@
     <div>
       <div class="padding4">
         <div class="padding4 flexrow flex-group-left">
-          <label class="section-handle clickable" data-category="enchantExt"
+          <label class="section-handle clickable" data-action="toggleSectionCollapse" data-category="enchantExt"
             data-section="info">{{localize "arm5e.generic.info"}}</label>
         </div>
       </div>
@@ -132,7 +132,7 @@
     <div>
       <div class="padding4">
         <div class="padding4 flexrow flex-group-left">
-          <label class="section-handle clickable" data-category="enchantExt"
+          <label class="section-handle clickable" data-action="toggleSectionCollapse" data-category="enchantExt"
             data-section="capacity">{{localize "arm5e.enchantment.capacity.label"}} -
             {{ system.enchantments.visibleCapacities}}</label>
           <div class="flex0 padding2">
@@ -221,7 +221,8 @@
     <!-- SHAPES & MATERIALS -->
     <div class="padding4">
       <div class="padding4 flexrow flex-group-left">
-        <label class="section-handle clickable" data-category="enchantExt" data-section="aspect">{{localize
+        <label class="section-handle clickable" data-action="toggleSectionCollapse" data-category="enchantExt"
+          data-section="aspect">{{localize
         "arm5e.enchantment.aspects"}} - {{ system.enchantments.aspects.length}}</label>
 
         <div class="padding2 flex0">

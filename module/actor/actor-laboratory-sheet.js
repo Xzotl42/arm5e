@@ -162,7 +162,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
       //   context.planning.type = "inventSpell";
       // }
     } else {
-      this._prepareCharacterItems(context);
+      this._prepareActorItems(context);
       const defaultType = "none";
       const defaultActivity = new NoLabActivity(this.actor.uuid, defaultType);
       const defaultData = await defaultActivity.getDefaultData();
@@ -406,7 +406,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
     context.planning.duration = result.duration;
 
     // Prepare items.
-    this._prepareCharacterItems(context);
+    this._prepareActorItems(context);
 
     log(false, "lab-sheet getData", context);
     return context;
@@ -907,8 +907,8 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
    * @param sheetData
    * @returns {undefined}
    */
-  _prepareCharacterItems(sheetData) {
-    super._prepareCharacterItems(sheetData);
+  _prepareActorItems(sheetData) {
+    super._prepareActorItems(sheetData);
   }
 
   isItemDropAllowed(itemData) {

@@ -40,7 +40,7 @@ export function registerVisTesting(quench) {
 
         it("Extraction Nominal", async function () {
           await lab.sheet._resetPlanning("visExtraction");
-          await lab.sheet.getData();
+          await lab.sheet._prepareContext({});
           entry = await lab.sheet._schedule();
           let sheet = entry.sheet;
           // const activity = new VisExtractionActivity(lab, magus);
@@ -80,7 +80,7 @@ export function registerVisTesting(quench) {
       describe("Vis extraction nominal", function () {
         it("Vis study", async function () {
           await lab.sheet._resetPlanning("visStudy");
-          await lab.sheet.getData();
+          await lab.sheet._prepareContext({});
           entry = await lab.sheet._schedule();
           let sheet = entry.sheet;
           // const activity = new VisExtractionActivity(lab, magus);

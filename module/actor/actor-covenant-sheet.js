@@ -343,7 +343,7 @@ export class ArM5eCovenantActorSheet extends ArM5eActorSheet {
         confirmed = await getConfirmation(
           li[0].dataset.name,
           question,
-          ArM5eActorSheet.getFlavor(this.actor.type)
+          ArM5eActorSheetV2.getFlavor(this.actor.type)
         );
       }
       if (confirmed) {

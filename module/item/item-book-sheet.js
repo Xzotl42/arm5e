@@ -1,11 +1,12 @@
 import { getDataset, log } from "../tools/tools.js";
 import { ArM5eItemSheet } from "./item-sheet.js";
-import { ArM5eActorSheet } from "../actor/actor-sheet.js";
 import { spellFormLabel, spellTechniqueLabel } from "../helpers/magic.js";
+import { getTopicDescription } from "../helpers/book-topic.js";
 import { BookSchema } from "../schemas/bookSchema.js";
 import { ArM5eItem } from "./item.js";
 import { getConfirmation } from "../ui/dialogs.js";
 import { FLAVORS } from "../constants/ui.js";
+import { ArM5eActorSheetV2 } from "../sheets/actor/actor-sheet-v2.js";
 /**
  * Extend the basic ItemSheet with some very simple modifications
  * @extends {ItemSheet}
@@ -194,7 +195,7 @@ export class ArM5eBookSheet extends ArM5eItemSheet {
     let confirm = true;
     let flavor = FLAVORS.NEUTRAL;
     if (this.item.isOwned) {
-      flavor = ArM5eActorSheet.getFlavor(this.item.actor.type);
+      flavor = ArM5eActorSheetV2.getFlavor(this.item.actor.type);
     }
     if (event.shiftKey) {
       confirm = true;
@@ -372,55 +373,4 @@ export class ArM5eBookSheet extends ArM5eItemSheet {
     // return await this.object.update(expanded);
   }
 }
-export function getTopicDescription(topic) {
-  let desc;
-  switch (topic.category) {
-    case "ability":
-      if (topic.name) {
-        desc = topic.name;
-      } else {
-        const ab = CONFIG.ARM5E.ALL_ABILITIES[topic.key];
-        if (ab) {
-          desc = game.i18n.format(ab.mnemonic, { option: topic.option });
-        } else {
-          desc = `"${game.i18n.localize("arm5e.generic.unknown")} ${game.i18n.localize(
-            "arm5e.sheet.bookTopic"
-          )}"`;
-        }
-      }
-
-      break;
-    case "art":
-      desc = game.i18n.format("arm5e.scriptorium.msg.diaryTopic.art", {
-        art: CONFIG.ARM5E.magic.arts[topic.art].label
-      });
-      break;
-    case "mastery":
-      desc = game.i18n.format("arm5e.scriptorium.msg.diaryTopic.spell", {
-        spell: topic.spellName
-      });
-      break;
-    case "labText":
-      if (topic.labtextTitle === "") {
-        return game.i18.localize("arm5e.generic.nothing");
-      } else {
-        switch (topic.labtext.type) {
-          case "spell":
-            desc = game.i18n.format("arm5e.book.labText.spell", {
-              spell: topic.labtextTitle
-            });
-            break;
-          case "enchantment":
-            desc = game.i18n.format("arm5e.book.labText.enchantment", {
-              enchantment: topic.labtextTitle
-            });
-            break;
-          case "raw":
-            desc = topic.labtextTitle;
-            break;
-        }
-      }
-      break;
-  }
-  return desc;
-}
+export { getTopicDescription };

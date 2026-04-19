@@ -93,7 +93,7 @@ export class QuickCombat extends foundry.applications.api.HandlebarsApplicationM
   // }
 
   static async roll(event, target) {
-    await this.object.actor.sheet.roll(target.dataset);
+    await this.object.actor.sheet.roll(event, target);
   }
 
   static async soakDamage(event, target) {

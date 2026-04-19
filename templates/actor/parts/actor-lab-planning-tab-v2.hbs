@@ -1,0 +1,9 @@
+<div class="tab {{ tab.cssClass }} planning marginsides32" data-group="primary" data-tab="planning">
+  {{#if (ne system.owner.linked true)}}
+  <div style="min-height: 300px">
+    <label class="bold">{{localize "arm5e.lab.planning.msg.noOwner"}}</label>
+  </div>
+  {{else}}
+  {{> "systems/arm5e/templates/actor/parts/actor-lab-workbench.html"}}
+  {{/if}}
+</div>

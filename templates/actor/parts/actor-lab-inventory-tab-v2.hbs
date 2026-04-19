@@ -1,0 +1,104 @@
+<div class="tab {{ tab.cssClass }} inventory" data-group="primary" data-tab="inventory">
+  <div class="flexcol">
+    {{> "systems/arm5e/templates/generic/parts/ars-tab-navigation.hbs" tabs=subtabs}}
+    <section class="inventory-body">
+      <div
+        class="tab{{#if subtabs.inventory.active}} active{{/if}} item flexcol marginsides32"
+        data-group="inventory-secondary"
+        data-tab="inventory"
+        style="align-items: flex-start; gap: 5px"
+      >
+        <ol class="items-list backSection margintop18">
+          <li class="item flexrow item-header">
+            <div class="item-image"></div>
+            <div class="item-name">{{localize "arm5e.sheet.rawVis"}}</div>
+            <div class="item-controls">
+              <a
+                class="item-control item-create"
+                data-action="itemCreate"
+                title="Create vis"
+                data-type="vis"
+                ><i class="fas fa-plus"></i
+              ></a>
+            </div>
+          </li>
+          {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+          {{#each system.rawVis as |item id|}}
+          <li
+            class="item item-value flexrow"
+            data-name="{{ item.name }}"
+            data-item-id="{{ item._id }}"
+          >
+            <div class="item-image item-control item-edit" data-action="itemEdit">
+              <img src="{{ item.img }}" title="{{ item.name }}" />
+            </div>
+            <h4 class="item-title">{{ item.name }}</h4>
+            <span></span>
+            <span class="flexrow bold"
+              >{{localize "arm5e.sheet.art"}}:
+              {{#with (lookup @root.config.magic.arts item.system.art)~}}{{label~}}
+              {{/with}}
+            </span>
+            <span class="flexrow bold"
+              >{{localize "arm5e.sheet.pawns"}}: {{ item.system.quantity }}
+            </span>
+            <div class="item-controls">
+              <a class="item-control item-edit" data-action="itemEdit" title="Edit vis"
+                ><i class="ars-Icon_Edit"></i
+              ></a>
+              <a class="item-control item-delete" data-action="itemDelete" title="Delete vis"
+                ><i class="ars-Icon_Delete_Hand_Gesture"></i
+              ></a>
+            </div>
+          </li>
+          {{/each}}
+        </ol>
+
+        <ol class="items-list backSection margintop18">
+          <li class="item flexrow item-header">
+            <div class="item-image"></div>
+            <div class="item-name">{{localize "arm5e.sheet.items"}}</div>
+            <div class="item-controls">
+              <a
+                class="item-control item-create"
+                data-action="itemCreate"
+                title="Create item"
+                data-type="item"
+                ><i class="fas fa-plus"></i
+              ></a>
+            </div>
+          </li>
+          {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+          {{#each system.items as |item id|}}
+          <li
+            class="item item-value flexrow"
+            data-name="{{ item.name }}"
+            data-item-id="{{ item._id }}"
+          >
+            <div class="item-image item-control item-edit" data-action="itemEdit">
+              <img src="{{ item.img }}" title="{{ item.name }}" />
+            </div>
+            <h4 class="item-title">{{ item.name }}</h4>
+            <div class="item-controls">
+              <a class="item-control item-edit" data-action="itemEdit" title="Edit item"
+                ><i class="ars-Icon_Edit"></i
+              ></a>
+              <a class="item-control item-delete" data-action="itemDelete" title="Delete item"
+                ><i class="ars-Icon_Delete_Hand_Gesture"></i
+              ></a>
+            </div>
+          </li>
+          {{/each}}
+        </ol>
+      </div>
+      <div
+        class="tab{{#if subtabs.library.active}} active{{/if}} item flexcol marginsides32"
+        data-group="inventory-secondary"
+        data-tab="library"
+        style="align-items: flex-start; gap: 5px"
+      >
+        {{> "systems/arm5e/templates/actor/parts/actor-library.html"}}
+      </div>
+    </section>
+  </div>
+</div>

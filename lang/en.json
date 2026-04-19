@@ -2096,6 +2096,16 @@
       "minYear": "Minimum year",
       "troupeSchedule": "Troupe schedule"
     },
+    "tradition": {
+      "label": "Tradition",
+      "targetType": "Target type",
+      "template": {
+        "name": "Template name",
+        "targetType": "Target type",
+        "rollType": "Roll type",
+        "useFatigue": "Use fatigue"
+      }
+    },
     "twilight": {
       "avoid": "Avoid",
       "chat": {

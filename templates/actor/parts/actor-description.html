@@ -80,8 +80,8 @@
     {{#if system.isCharacter}}
       <div class="flex-group-left padding12 backSection">
         {{#unless system.states.pendingCrisis }}
-          <a class="schedule-aging clickable" title="Aging roll" data-year="{{datetime.year}}"
-            data-season="{{datetime.season}}" style="font-size: 16pt;">
+          <a class="schedule-aging clickable" data-action="scheduleAging" title="Aging roll"
+            data-year="{{datetime.year}}" data-season="{{datetime.season}}" style="font-size: 16pt;">
             <i class="ars-Icon_Aging2"></i>
           </a>
         {{/unless}}
@@ -132,7 +132,7 @@
           <div class="flexrow marginbot6">
 
             {{#if (eq key "siz")}}
-              <span class="flex01 rollable" style="margin-right: 12px" data-roll="option"
+              <span class="flex01 rollable" data-action="roll" style="margin-right: 12px" data-roll="option"
                 data-name="{{localize vitals.label}}" data-option1="{{ vitals.value }}"
                 data-txtoption1="{{ vitals.label }}">
                 <img src="systems/arm5e/assets/dice.png" style="border: 0px; height: 18px" />
@@ -152,18 +152,19 @@
       <ol style="width: 100%">
         <li class="item flexrow item-header"><label class="smallTitle"
             style="width: 100%">{{localize "arm5e.sheet.personality"}}</label>
-          <a class="item-control item-create"
+          <a class="item-control item-create" data-action="itemCreate"
             title='{{localize "arm5e.hints.create" item=(localize "arm5e.sheet.personality")}}'
             data-type="personalityTrait"><i class="fas fa-plus" style="margin-bottom: 12px; text-align: right;"></i></a>
         </li>
         {{#each system.personalities as |pers key|}}
           <li class="flexrow item flex-group-left" data-attribute="{{key}}" data-item-id="{{pers._id}}">
-            <div class="flex02 rollable" style="margin-right: 12px" data-roll="option" data-physicalcondition="false"
-              data-name="{{pers.name}}" data-option1="{{ pers.system.score }}" data-txtoption1="{{ pers.name }}">
+            <div class="flex02 rollable" data-action="roll" style="margin-right: 12px" data-roll="option"
+              data-physicalcondition="false" data-name="{{pers.name}}" data-option1="{{ pers.system.score }}"
+              data-txtoption1="{{ pers.name }}">
               <img src="systems/arm5e/assets/dice.png" style="border: 0px; height: 18px" />
             </div>
             <div class="flexrow  ">
-              <div class="flexrow item-control item-edit">
+              <div class="flexrow item-control item-edit" data-action="itemEdit">
                 <input type="text" name="system.personalities.{{key}}.name" value="{{pers.name}}" data-dtype="String"
                   readonly class="clickable" />
               </div>
@@ -206,19 +207,19 @@
       <ol style="width: 100%">
         <li class="item flexrow item-header"><label class="smallTitle"
             style="width: 100%">{{localize "arm5e.sheet.reputation"}}</label>
-          <a class="item-control item-create"
+          <a class="item-control item-create" data-action="itemCreate"
             title='{{localize "arm5e.hints.create" item=(localize "arm5e.sheet.reputation")}}' data-type="reputation"><i
               class="fas fa-plus" style="margin-bottom: 12px; text-align: right;"></i></a>
         </li>
         {{#each system.reputations as |rep key|}}
           <li class="flexrow item flex-group-left" data-attribute="{{key}}" data-item-id="{{rep._id}}">
-            <span class="flex02 rollable" style="min-width: 18px; margin-right: 12px" data-name="{{ rep.name }}"
-              data-roll="option" data-physicalcondition="false" data-option1="{{ rep.system.score }}"
-              data-txtoption1="{{ rep.name }}">
+            <span class="flex02 rollable" data-action="roll" style="min-width: 18px; margin-right: 12px"
+              data-name="{{ rep.name }}" data-roll="option" data-physicalcondition="false"
+              data-option1="{{ rep.system.score }}" data-txtoption1="{{ rep.name }}">
               <img src="systems/arm5e/assets/dice.png" style="border: 0px; height: 18px" />
             </span>
             <span class="flexrow">
-              <div class="flexrow item-control item-edit">
+              <div class="flexrow item-control item-edit" data-action="itemEdit">
                 <input type="text" name="system.reputations.{{key}}.name" value="{{rep.name}}" data-dtype="String"
                   readonly class="clickable" style="width: fit-content;" />
               </div>
@@ -244,8 +245,8 @@
         <div class="flexrow marginbot6 margintop6">
           {{#if system.isMagus}}
             <div class="flex01">
-              <a class="twilight-episode clickable" title="{{system.twilight.tooltip}}" data-year="{{datetime.year}}"
-                data-season="{{datetime.season}}" style="font-size: 16pt; ">
+              <a class="twilight-episode clickable" data-action="twilightEpisode" title="{{system.twilight.tooltip}}"
+                data-year="{{datetime.year}}" data-season="{{datetime.season}}" style="font-size: 16pt; ">
                 <img class="twilight-icon" src="systems/arm5e/assets/icons/Icon_Warping.png"
                   style="width:25px; border:none; "></i>
                 {{#if system.twilight.stage}}

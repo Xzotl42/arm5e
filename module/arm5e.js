@@ -1,12 +1,12 @@
 // Import Modules
 import { ARM5E, enrichAbilities, localizeAbilities, localizeCategories } from "./config.js";
 import { ArM5eActor } from "./actor/actor.js";
-import { ArM5ePCActorSheet } from "./actor/actor-pc-sheet.js";
-import { ArM5eBeastActorSheet } from "./actor/actor-beast-sheet.js";
-import { ArM5eNPCActorSheet } from "./actor/actor-npc-sheet.js";
-import { ArM5eLaboratoryActorSheet } from "./actor/actor-laboratory-sheet.js";
-import { ArM5eCovenantActorSheet } from "./actor/actor-covenant-sheet.js";
-import { ArM5eMagicCodexSheet } from "./actor/actor-magic-codex-sheet.js";
+import { ArM5ePCActorSheetV2 } from "./sheets/actor/actor-pc-sheet-v2.js";
+import { ArM5eBeastActorSheetV2 } from "./sheets/actor/actor-beast-sheet-v2.js";
+import { ArM5eNPCActorSheetV2 } from "./sheets/actor/actor-npc-sheet-v2.js";
+import { ArM5eLaboratoryActorSheetV2 } from "./sheets/actor/actor-laboratory-sheet-v2.js";
+import { ArM5eCovenantActorSheetV2 } from "./sheets/actor/actor-covenant-sheet-v2.js";
+import { ArM5eMagicCodexSheetV2 } from "./sheets/actor/actor-magic-codex-sheet-v2.js";
 import { ArM5eItem } from "./item/item.js";
 import { ArM5eItemSheet, ArM5eItemSheetNoDesc } from "./item/item-sheet.js";
 import { ArM5eItemMagicSheet } from "./item/item-magic-sheet.js";
@@ -554,7 +554,7 @@ function rollItemMacro(itemUuid, actorUuid, event = undefined) {
   } else if (item.type == "power") {
     actor.sheet._onUsePower(dataset);
   } else {
-    actor.sheet.roll(dataset);
+    actor.sheet.roll(null, { dataset: dataset });
   }
 }
 
@@ -674,7 +674,7 @@ function registerSheets() {
     foundry.applications.apps.DocumentSheetConfig.registerSheet(
       Actor,
       "arm5ePC",
-      ArM5ePCActorSheet,
+      ArM5ePCActorSheetV2,
       {
         types: ["player"],
         makeDefault: true,
@@ -684,7 +684,7 @@ function registerSheets() {
     foundry.applications.apps.DocumentSheetConfig.registerSheet(
       Actor,
       "arm5eNPC",
-      ArM5eNPCActorSheet,
+      ArM5eNPCActorSheetV2,
       {
         types: ["npc"],
         makeDefault: true,
@@ -694,7 +694,7 @@ function registerSheets() {
     foundry.applications.apps.DocumentSheetConfig.registerSheet(
       Actor,
       "arm5eBeast",
-      ArM5eBeastActorSheet,
+      ArM5eBeastActorSheetV2,
       {
         types: ["beast"],
         makeDefault: true,
@@ -705,7 +705,7 @@ function registerSheets() {
     foundry.applications.apps.DocumentSheetConfig.registerSheet(
       Actor,
       "arm5eLaboratory",
-      ArM5eLaboratoryActorSheet,
+      ArM5eLaboratoryActorSheetV2,
       {
         types: ["laboratory"],
         makeDefault: true,
@@ -715,7 +715,7 @@ function registerSheets() {
     foundry.applications.apps.DocumentSheetConfig.registerSheet(
       Actor,
       "arm5eCovenant",
-      ArM5eCovenantActorSheet,
+      ArM5eCovenantActorSheetV2,
       {
         types: ["covenant"],
         makeDefault: true,
@@ -726,7 +726,7 @@ function registerSheets() {
     foundry.applications.apps.DocumentSheetConfig.registerSheet(
       Actor,
       "arm5eMagicCodex",
-      ArM5eMagicCodexSheet,
+      ArM5eMagicCodexSheetV2,
       {
         types: ["magicCodex"],
         makeDefault: true,

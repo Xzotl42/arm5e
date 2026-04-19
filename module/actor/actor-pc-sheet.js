@@ -80,14 +80,14 @@ export class ArM5ePCActorSheet extends ArM5eActorSheet {
     await this.enrichCharacterEditors(context);
 
     // Prepare items.
-    this._prepareCharacterItems(context);
+    this._prepareActorItems(context);
 
     log(false, "Player-sheet getData", context);
     return context;
   }
 
-  _prepareCharacterItems(actorData) {
-    super._prepareCharacterItems(actorData);
+  _prepareActorItems(actorData) {
+    super._prepareActorItems(actorData);
   }
 
   isItemDropAllowed(itemData) {

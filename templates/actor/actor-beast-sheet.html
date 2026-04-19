@@ -17,20 +17,20 @@
               </div>
             {{/if}}
             {{#if system.states.pendingCrisis}}
-              <div class="flex0 padding10" style="width:24px"><a class="rollable" data-roll="crisis"
+              <div class="flex0 padding10" style="width:24px"><a class="rollable" data-action="roll" data-roll="crisis"
                   data-year="{{system.lastCrisis.year}}" data-season="{{system.lastCrisis.season}}" title='{{localize "
                   arm5e.aging.crisis.tooltip"}}'><i class="ars-Icon_Aging_crisis"></i></a>
               </div>
             {{/if}}
             {{#if system.states.confidencePrompt}}
               <div class="flex0 padding10" style="width:36px"><a class="clear-confidencePrompt"
-                  title='{{localize "arm5e.sheet.states.confidencePrompt"}}' style="font-size: 20pt;"><i
-                    class="fas fa-user-plus"></i></a>
+                  data-action="clearConfidencePrompt" title='{{localize "arm5e.sheet.states.confidencePrompt"}}'
+                  style="font-size: 20pt;"><i class="fas fa-user-plus"></i></a>
               </div>
             {{/if}}
             {{#if devMode}}
-              <div class="flex0 padding10" style="width:24px"><a class="migrate" title="Migrate actor"><i
-                    class="fas fa-arrow-up"></i></a></div>
+              <div class="flex0 padding10" style="width:24px"><a class="migrate" data-action="migrateActor"
+                  title="Migrate actor"><i class="fas fa-arrow-up"></i></a></div>
             {{/if}}
           </div>
         </h1>
@@ -119,7 +119,7 @@
         </nav>
         <section class="desc-body">
           <div class="tab" data-group="desc-secondary" data-tab="desc">
-            {{> "systems/arm5e/templates/actor/parts/actor-description.html" }}
+            {{> "systems/arm5e/templates/actor/parts/actor-description-v2.hbs" }}
           </div>
           <div class="tab" data-group="desc-secondary" data-tab="wounds">
             {{> "systems/arm5e/templates/actor/parts/actor-fatigue.html" }}

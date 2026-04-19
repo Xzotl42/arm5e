@@ -639,6 +639,21 @@ export class RollWindow extends HandlebarsApplicationMixin(ApplicationV2) {
   }
 
   /**
+   * Override close to ensure resolver is called.
+   * When a RollWindow is closed without going through an action handler
+   * (e.g., via force: true, or test cleanup), the promise must still resolve.
+   * @override
+   */
+  close(options = {}) {
+    // If resolver hasn't been called yet (no action was taken), call it now.
+    if (this.resolver) {
+      this.resolver(null);
+      this.resolver = null;
+    }
+    return super.close(options);
+  }
+
+  /**
    * Extract form data from dialog elements and update actor.rollInfo
    * @static
    * @param {HTMLElement} html - The form element
@@ -1051,9 +1066,9 @@ export class UseMagicItemWindow extends NoRollWindow {
  * Create and display a roll dialog
  * @param {Actor} actor - The actor performing the roll
  * @param {Object} [dataset] - Optional dataset to initialize rollInfo with
- * @returns {Promise} Promise that resolves when the dialog is closed
+ * @returns {{ dialog: RollWindow, result: Promise }}
  */
-export async function getRollDialog(actor, dataset = null) {
+export function openRollDialog(actor, dataset = null) {
   // Initialize rollInfo if dataset is provided
   if (dataset) {
     actor.rollInfo.init(dataset, actor);
@@ -1062,12 +1077,23 @@ export async function getRollDialog(actor, dataset = null) {
   let options = {
     window: { title: actor.rollInfo.title ? actor.rollInfo.title : actor.rollInfo.properties.TITLE }
   };
-  return await new Promise((resolve) => {
-    // RollWindow generates buttons automatically from actor.rollInfo
-    const dialog = new RollWindow(actor, options);
+  // RollWindow generates buttons automatically from actor.rollInfo
+  const dialog = new RollWindow(actor, options);
+  const result = new Promise((resolve) => {
     dialog.resolver = resolve;
     dialog.render(true);
   });
+  return { dialog, result };
+}
+
+/**
+ * Create and display a roll dialog
+ * @param {Actor} actor - The actor performing the roll
+ * @param {Object} [dataset] - Optional dataset to initialize rollInfo with
+ * @returns {Promise} Promise that resolves when the dialog is closed
+ */
+export async function getRollDialog(actor, dataset = null) {
+  return await openRollDialog(actor, dataset).result;
 }
 
 async function combatAttack(attacker, roll, message) {

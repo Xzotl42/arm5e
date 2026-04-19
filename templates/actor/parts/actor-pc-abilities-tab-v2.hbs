@@ -1,0 +1,24 @@
+<div class="tab {{ tab.cssClass }} abilities" data-group="primary" data-tab="abilities">
+  <div class="flexcol">
+    {{> "systems/arm5e/templates/generic/parts/ars-tab-navigation.hbs" tabs=subtabs}}
+    <section class="abilities-body">
+      <div
+        class="tab{{#if subtabs.abilities.active}} active{{/if}} item flexcol marginsides32"
+        data-group="abilities-secondary"
+        data-tab="abilities"
+      >
+        {{> "systems/arm5e/templates/actor/parts/actor-abilities.html" }}
+      </div>
+      <div
+        class="tab{{#if subtabs.vandf.active}} active{{/if}} item flexcol marginsides32"
+        data-group="abilities-secondary"
+        data-tab="vandf"
+      >
+        {{> "systems/arm5e/templates/actor/parts/actor-virtuesFlaws.html"
+          create=false bonusComp="virtues" penaltyComp="flaws"
+          bonuses="arm5e.sheet.virtues" penalties="arm5e.sheet.flaws"
+        }}
+      </div>
+    </section>
+  </div>
+</div>

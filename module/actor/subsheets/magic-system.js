@@ -1,10 +1,11 @@
+import { ArM5eActorSheetV2 } from "../../sheets/actor/actor-sheet-v2.js";
 import { getAbilityStats, getDataset, log, slugify } from "../../tools/tools.js";
 import { getConfirmation } from "../../ui/dialogs.js";
-import { ArM5eActorSheet } from "../actor-sheet.js";
 
 export class ArM5eMagicSystem {
-  constructor(actor) {
-    this.actor = actor;
+  constructor(sheet) {
+    this.sheet = sheet;
+    this.actor = sheet.actor;
   }
 
   //
@@ -135,7 +136,7 @@ export class ArM5eMagicSystem {
     );
   }
 
-  async getData(context) {
+  async _prepareContext(context) {
     const templates = context.system.magicSystem.templates;
     context.ui.sections.visibility.hedge = {};
     context.isMagus = this.actor.isMagus();
@@ -269,44 +270,64 @@ export class ArM5eMagicSystem {
     return true;
   }
 
-  activateListeners(html) {
-    html.find(".template-control").click(this.onManageTemplate.bind(this));
-    html.find(".template-item").click(this.onManageTemplateComponents.bind(this));
-    html.find(".template-option").change(this._onOptionChange.bind(this));
-    html.find(".item-ability-key").change(this.onAbilityChange.bind(this));
-    html.find(".supernatural-create").click(this._onItemCreate.bind(this));
+  _onRender(_context, _options) {
+    const root = this.sheet.element;
+    if (!root) return;
 
-    html.find(".template-section-handle").click(async (ev) => {
-      const dataset = getDataset(ev);
-      ev.stopImmediatePropagation();
-      log(false, `DEBUG section: ${dataset.section}, category: ${dataset.category}`);
-      let index = dataset.index ?? "";
-      let usercache = JSON.parse(sessionStorage.getItem(`usercache-${game.user.id}`));
-      let scope = usercache[this.actor._id].sections.visibility[dataset.category];
-      let classes = document.getElementById(
-        `${dataset.category}-${dataset.section}${index}-${dataset.templateId}`
-      ).classList;
-      if (scope) {
-        if (classes.contains("hide")) {
-          if (index !== "") {
-            log(false, `DEBUG reveal ${dataset.section} at index ${index}`);
-            scope[index][dataset.section] = "";
+    root.querySelectorAll(".template-control").forEach((el) => {
+      el.addEventListener("click", (event) => this._onManageTemplate(event));
+    });
+
+    root.querySelectorAll(".template-item").forEach((el) => {
+      el.addEventListener("click", (event) => this._onManageTemplateComponents(event));
+    });
+
+    root.querySelectorAll(".template-option").forEach((el) => {
+      el.addEventListener("change", (event) => this._onOptionChange(event));
+    });
+
+    root.querySelectorAll(".item-ability-key").forEach((el) => {
+      el.addEventListener("change", (event) => this._onAbilityChange(event));
+    });
+
+    root.querySelectorAll(".supernatural-create").forEach((el) => {
+      el.addEventListener("click", (event) => this._onItemCreate(event));
+    });
+
+    root.querySelectorAll(".template-section-handle").forEach((el) => {
+      el.addEventListener("click", async (ev) => {
+        const dataset = getDataset(ev);
+        ev.stopImmediatePropagation();
+        log(false, `DEBUG section: ${dataset.section}, category: ${dataset.category}`);
+        let index = dataset.index ?? "";
+        let usercache = JSON.parse(sessionStorage.getItem(`usercache-${game.user.id}`));
+        let scope = usercache[this.actor.id].sections.visibility[dataset.category];
+        let classes = this.sheet.element.querySelector(
+          `#${dataset.category}-${dataset.section}${index}-${dataset.templateId}`
+        )?.classList;
+        if (!classes) return;
+        if (scope) {
+          if (classes.contains("hide")) {
+            if (index !== "") {
+              log(false, `DEBUG reveal ${dataset.section} at index ${index}`);
+              scope[index][dataset.section] = "";
+            } else {
+              log(false, `DEBUG reveal ${dataset.section}`);
+              scope[dataset.section] = "";
+            }
           } else {
-            log(false, `DEBUG reveal ${dataset.section}`);
-            scope[dataset.section] = "";
+            if (index !== "") {
+              log(false, `DEBUG hide ${dataset.section} at index ${index}`);
+              scope[index][dataset.section] = "hide";
+            } else {
+              log(false, `DEBUG hide ${dataset.section}`);
+              scope[dataset.section] = "hide";
+            }
           }
-        } else {
-          if (index !== "") {
-            log(false, `DEBUG hide ${dataset.section} at index ${index}`);
-            scope[index][dataset.section] = "hide";
-          } else {
-            log(false, `DEBUG hide ${dataset.section}`);
-            scope[dataset.section] = "hide";
-          }
+          sessionStorage.setItem(`usercache-${game.user.id}`, JSON.stringify(usercache));
         }
-        sessionStorage.setItem(`usercache-${game.user.id}`, JSON.stringify(usercache));
-      }
-      classes.toggle("hide");
+        classes.toggle("hide");
+      });
     });
   }
 
@@ -322,13 +343,13 @@ export class ArM5eMagicSystem {
     const components = this.actor.system.magicSystem.templates[dataset.id].components;
     components[dataset.index].key = dataset.key;
     components[dataset.index].option = newOption;
-    await this.actor.sheet.submit({
+    await this.sheet.submit({
       preventClose: true,
       updateData: {
         [`system.magicSystem.templates.${dataset.id}.components`]: components
       }
     });
-    this.render();
+    this.sheet.render();
   }
 
   // Supernatural effect creation
@@ -403,10 +424,10 @@ export class ArM5eMagicSystem {
 
     // Dataset.other = template.other[0].key ?? {};
 
-    await this.actor.sheet._onItemCreate(dataset);
+    await this.sheet._itemCreate(dataset);
   }
 
-  async onAbilityChange(event) {
+  async _onAbilityChange(event) {
     const dataset = getDataset(event);
     const extendedKey = event.target.value;
     const components = this.actor.system.magicSystem.templates[dataset.id].components;
@@ -445,16 +466,16 @@ export class ArM5eMagicSystem {
     // await this.actor.update({
     //   [`system.magicSystem.templates.${dataset.id}.components`]: components
     // });
-    await this.actor.sheet.submit({
+    await this.sheet.submit({
       preventClose: true,
       updateData: {
         [`system.magicSystem.templates.${dataset.id}.components`]: components
       }
     });
-    this.render();
+    this.sheet.render();
   }
 
-  async onManageTemplate(event) {
+  async _onManageTemplate(event) {
     const dataset = getDataset(event);
     const magicSystem = this.actor.system.magicSystem;
     switch (dataset.action) {
@@ -480,7 +501,7 @@ export class ArM5eMagicSystem {
         confirmed = await getConfirmation(
           dataset.name,
           question,
-          ArM5eActorSheet.getFlavor(this.actor.type)
+          ArM5eActorSheetV2.getFlavor(this.actor.type)
         );
         // }
         if (confirmed) {
@@ -492,7 +513,7 @@ export class ArM5eMagicSystem {
     }
   }
 
-  async onManageTemplateComponents(event) {
+  async _onManageTemplateComponents(event) {
     const dataset = getDataset(event);
     let templates = this.actor.system.magicSystem.templates;
     let components = templates[dataset.id].components;
@@ -547,7 +568,7 @@ export class ArM5eMagicSystem {
           confirmed = await getConfirmation(
             "Component",
             question,
-            ArM5eActorSheet.getFlavor(this.actor.type)
+            ArM5eActorSheetV2.getFlavor(this.actor.type)
           );
         }
         if (confirmed) {
@@ -562,8 +583,10 @@ export class ArM5eMagicSystem {
     }
   }
 
-  async _updateObject(event, formData) {
-    const expanded = foundry.utils.expandObject(formData);
+  _prepareSubmitData(formData) {
+    const expanded = formData.system
+      ? foundry.utils.deepClone(formData)
+      : foundry.utils.expandObject(formData);
     const source = this.actor.toObject();
 
     const templates = expanded.system.magicSystem.templates;

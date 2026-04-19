@@ -1,0 +1,128 @@
+<div class="mainNPC">
+  <div class="header-background">
+    <img src="systems/arm5e/assets/NPC/header150.png" />
+  </div>
+  <header class="sheet-header marginsides32">
+    <img
+      class="profile-img"
+      src="{{ actor.img }}"
+      data-edit="img"
+      title="{{ actor.name }}"
+      height="100"
+      width="100"
+    />
+    <div class="header-fields">
+      <h1 class="bigname">
+        <div class="flexrow">
+          <input
+            class="flex1"
+            name="name"
+            type="text"
+            value="{{ actor.name }}"
+            title="{{ actor.name }}"
+            placeholder="Name"
+          />
+          {{#if system.states.creationMode}}
+          <div class="flex0 padding10" style="width: 36px">
+            <a class="clickable" data-action="removeCreationMode">
+              <img
+                src="systems/arm5e/assets/icons/creation-mode.svg"
+                title="{{localize "arm5e.sheet.edition.creationMode"}}"
+                style="border: 0px; height: 18px; min-height: 30px; min-width: 30px"
+              />
+            </a>
+          </div>
+          {{/if}}
+          {{#if system.states.pendingCrisis}}
+          <div class="flex0 padding10" style="width: 24px">
+            <a
+              class="rollable"
+              data-action="roll"
+              data-roll="crisis"
+              data-year="{{ system.lastCrisis.year }}"
+              data-season="{{ system.lastCrisis.season }}"
+              title="{{localize "arm5e.aging.crisis.tooltip"}}"
+            >
+              <i class="ars-Icon_Aging_crisis"></i>
+            </a>
+          </div>
+          {{/if}}
+          {{#if system.states.confidencePrompt}}
+          <div class="flex0 padding10" style="width: 36px">
+            <a
+              class="clear-confidencePrompt"
+              data-action="clearConfidencePrompt"
+              title="{{localize "arm5e.sheet.states.confidencePrompt"}}"
+              style="font-size: 20pt"
+            >
+              <i class="fas fa-user-plus"></i>
+            </a>
+          </div>
+          {{/if}}
+          {{#if devMode}}
+          <div class="flex0 padding10" style="width: 24px; font-size: 18pt">
+            <a class="migrate" data-action="migrateActor" title="Migrate actor">
+              <i class="fas fa-arrow-up"></i>
+            </a>
+          </div>
+          {{/if}}
+        </div>
+      </h1>
+
+      <div class="grid grid-4col">
+        <div class="resource flex-group-center backSection">
+          <label for="system.age.value" class="smallTitle marginbot6">{{localize "arm5e.sheet.age"}}</label>
+          <div class="resource-content flexrow flex-center flex-between margintop6">
+            <input
+              type="text"
+              name="system.age.value"
+              value="{{ system.age.value }}"
+              {{ui.creationMode.edit}}
+              data-dtype="Number"
+              style="flex: 0.6; margin-left: 8px; margin-right: 24px"
+              class="select-on-focus slim"
+            />
+          </div>
+        </div>
+        <div class="resource flex-group-center backSection">
+          <label for="datetime.year" class="smallTitle">{{localize "arm5e.sheet.year"}}</label>
+          <div class="resource-content flexrow flex-center flex-between margintop6">
+            <input type="number" value="{{ datetime.year }}" readonly data-dtype="Number" />
+          </div>
+        </div>
+        <div class="resource flex-group-center backSection">
+          <label for="system.con.score" class="smallTitle">{{localize "arm5e.sheet.confidence"}}</label>
+          <div class="resource-content flexrow flex-center flex-between margintop6">
+            <input
+              type="number"
+              name="system.con.score"
+              value="{{ system.con.score }}"
+              data-dtype="Number"
+              style="flex: 0.6; margin-left: 8px; margin-right: 24px"
+            />
+            (<input
+              type="number"
+              name="system.con.points"
+              value="{{ system.con.points }}"
+              data-dtype="Number"
+              style="flex: 0.6"
+            />)
+          </div>
+        </div>
+        <div class="resource flex-group-center backSection">
+          <label for="system.vitals.siz.value" class="smallTitle">{{localize "arm5e.sheet.size"}}</label>
+          <div class="resource-content flexrow flex-center flex-between margintop6">
+            <input
+              type="number"
+              name="system.vitals.siz.value"
+              value="{{ system.vitals.siz.value }}"
+              data-dtype="Number"
+            />
+          </div>
+        </div>
+      </div>
+
+      {{> "systems/arm5e/templates/actor/parts/actor-characteristics.html" charac=characList}}
+    </div>
+  </header>
+</div>

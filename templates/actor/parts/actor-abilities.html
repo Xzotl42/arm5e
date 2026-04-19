@@ -10,26 +10,28 @@
     <div class="item-controls">
       <a class="item-control" title="Sort" data-list="abilities"><i class="fas fa-sort">
         </i>{{localize "arm5e.sheet.action.Filter"}} </a>
-      <a class="item-control item-add" title='{{localize "arm5e.hints.add" item=(localize "arm5e.sheet.ability")}}'
-        data-compendium="abilities"><i class="fas fa-plus"></i>{{localize "arm5e.sheet.action.Add"}}</a>
+      <a class="item-control item-add" data-action="itemAdd"
+        title='{{localize "arm5e.hints.add" item=(localize "arm5e.sheet.ability")}}' data-compendium="abilities"><i
+          class="fas fa-plus"></i>{{localize "arm5e.sheet.action.Add"}}</a>
     </div>
   </li>
   {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
   {{#each sortedAbilities as |abilitySet id|}}
     {{#if abilitySet.abilities}}
-      <li class="ability-category item flexrow item-header" data-category="{{id}}">
+      <li class="ability-category item flexrow item-header" data-action="toggleAbilityCategory" data-category="{{id}}">
         <label style="font-size:12pt; border-bottom: 1px solid #4a4a48;">{{localize abilitySet.label }}</label>
       </li>
       <div id="{{id}}" class="toggle-collapse {{lookup ../ui.lists.visibility.abilities id}}">
         {{#each abilitySet.abilities as |item id|}}
           <li class="item item-value flexrow flex-center macro-ready" data-name="{{item.name}}" data-attribute="{{id}}"
             data-item-id="{{item._id}}">
-            <div class="item-image item-control item-edit">
+            <div class="item-image item-control item-edit" data-action="itemEdit">
               <img src="{{item.img}}" width="45" height="45" title="{{item.name}}" />
             </div>
             <div class="flexrow flex-center">
-              <span class="flexrow item-title rollable width4" data-roll="ability" data-ability="{{item._id}}"
-                data-defaultcharacteristic="{{item.system.defaultChaAb}}" name="item.name">{{item.name}} (
+              <span class="flexrow item-title rollable width4" data-action="roll" data-roll="ability"
+                data-ability="{{item._id}}" data-defaultcharacteristic="{{item.system.defaultChaAb}}"
+                name="item.name">{{item.name}} (
                 {{item.system.speciality}} )</span>
               <div class="item-attribute"><label class="marginRight8">{{localize "arm5e.sheet.score"}}</label><input
                   type="text" name="item.{{id}}.finalScore" value="{{item.system.finalScore}}" readonly
@@ -38,8 +40,10 @@
               <span>
                 {{#if @root.system.states.creationMode}}
                   <div class="flex02" style="padding-top:4px; padding-left: 10px;">
-                    <a class="item-control increase-score flex0" title="Increase score"><i class="fas fa-plus"></i></a>
-                    <a class="item-control decrease-score flex0" title="Decrease score"><i class="fas fa-minus"></i></a>
+                    <a class="item-control increase-score flex0" data-action="increaseScore" title="Increase score"><i
+                        class="fas fa-plus"></i></a>
+                    <a class="item-control decrease-score flex0" data-action="decreaseScore" title="Decrease score"><i
+                        class="fas fa-minus"></i></a>
                   </div>
                 {{/if}}
               </span>
@@ -50,10 +54,10 @@
               </div>
             </div>
             <div class="item-controls">
-              <a class="item-control item-edit"
+              <a class="item-control item-edit" data-action="itemEdit"
                 title='{{localize "arm5e.hints.edit" item=(localize "arm5e.sheet.ability")}}'><i
                   class="ars-Icon_Edit"></i></a>
-              <a class="item-control item-delete"
+              <a class="item-control item-delete" data-action="itemDelete"
                 title='{{localize "arm5e.hints.delete" item=(localize "arm5e.sheet.ability")}}'><i
                   class="ars-Icon_Delete_Hand_Gesture"></i></a>
             </div>

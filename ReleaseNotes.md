@@ -1,4 +1,4 @@
-## 3.0.0.8 Stentorius
+## 3.0.0.9 Stentorius
 
 ### Compatibility
 
@@ -11,6 +11,7 @@
 - All Form Applications are now ApplicationV2
 - All dialogs are now DialogV2
 - All roll dialogs are now ApplicationV2
+- All Actor sheets migrated to ActorSheetV2
 
 ### Features & changes
 
@@ -65,11 +66,15 @@
   - For simplicity, half days have been removed from the recovery period. Two rolls per day will be done for incapacitating wounds
   - A dead patient will stop recovery immediately instead of trying to heal remaining wounds until the end of the season.
   - Fixed a case where a wound was never healed and the diary entry was empty.
-- [Scriptoirum]
+- [Scriptorium]
   - Dropping an empty book no longer raises an error and close the Scriptorium
   - When the writer has no qualifying abilities, warnings were pushed to the reading tab so the Writing tab never showed an error.
   - Copying Ability summae takes now the proper time.
   - Maximum level is not computed properly with Tractati in the Scriptorium
+- [Lab sheet]
+  - Magic theory of the owner was used before being computed in some cases
+  - Form requisite was wrongly compared to the technique for lab total computation.
+- Dropping a lab on a character was not setting the lab's owner properly
 
 ## 2.4.1.17, Radislav, Cognizant Wisdom BF3
 

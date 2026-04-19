@@ -1,5 +1,6 @@
 <div class="padding4 flexrow flex-group-left">
-  <label class="section-handle clickable" data-category="planning" data-section="vis-cost">
+  <label class="section-handle clickable" data-action="toggleSectionCollapse" data-category="planning"
+    data-section="vis-cost">
     {{localize "arm5e.lab.visCosts.label" amount=planning.data.visCost.amount
      tech=planning.data.visCost.techniqueLabel form=planning.data.visCost.formLabel }}</label>
 </div>
@@ -7,7 +8,7 @@
   class="foldable-section backSection enchantment padding4 {{lookup @root.ui.sections.visibility.planning 'vis-cost'}}"
   id="planning-vis-cost-{{@root.actor._id}}">
   <div class="padding4 flexrow flex-group-left">
-    <label class="section-handle  clickable" data-category="planning"
+    <label class="section-handle  clickable" data-action="toggleSectionCollapse" data-category="planning"
       data-section="magus-vis">{{localize "arm5e.lab.visCosts.magusStock"}}</label>
   </div>
   <div
@@ -28,7 +29,7 @@
     {{/each}}
   </div>
   <div class="padding4 flexrow flex-group-left">
-    <label class="section-handle  clickable" data-category="planning"
+    <label class="section-handle  clickable" data-action="toggleSectionCollapse" data-category="planning"
       data-section="lab-vis">{{localize "arm5e.lab.visCosts.labStock"}}</label>
   </div>
 

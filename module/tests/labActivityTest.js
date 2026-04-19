@@ -24,7 +24,7 @@ export function registerLabActivityTesting(quench) {
         lab = await getLab("The Lair of Tiberius");
         lab.sheet.render(true);
         // link magus and lab
-        await magus.sheet._onDropActor(null, { uuid: lab.uuid });
+        await magus.sheet._onDropActor(null, lab);
         ArsLayer.clearAura(true);
       });
 
@@ -46,16 +46,16 @@ export function registerLabActivityTesting(quench) {
 
       describe("Lab totals Spells", function () {
         this.timeout(300000); // 300 seconds for easier debugging
-
         for (let tech of Object.keys(ARM5E.magic.techniques)) {
           for (let form of Object.keys(ARM5E.magic.forms)) {
             it(`Lab total ${tech} ${form}`, async function () {
               try {
                 await lab.sheet._resetPlanning("inventSpell");
-                const labData = lab.getFlag("arm5e", "planning");
+                const labData = foundry.utils.deepClone(lab.getFlag("arm5e", "planning"));
                 labData.data.system.technique.value = tech;
                 labData.data.system.form.value = form;
-                const data = await lab.sheet.getData();
+                await lab.setFlag("arm5e", "planning", labData);
+                const data = await lab.sheet._prepareContext({});
                 log(false, `${tech} ${form} : ${data.planning.labTotal.score}`);
                 assert.equal(
                   data.planning.labTotal.score,

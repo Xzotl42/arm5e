@@ -3,8 +3,8 @@ import { FLAVORS } from "../constants/ui.js";
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 const { DragDrop } = foundry.applications.ux;
 import ArM5eActiveEffect from "../helpers/active-effects.js";
+import { getTopicDescription } from "../helpers/book-topic.js";
 import { computeLevel, spellFormLabel, spellTechniqueLabel } from "../helpers/magic.js";
-import { getTopicDescription } from "../item/item-book-sheet.js";
 import { effectToLabText } from "../item/item-converter.js";
 import { ArM5eItem } from "../item/item.js";
 import { BookSchema } from "../schemas/bookSchema.js";
@@ -237,7 +237,8 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
       template: "systems/arm5e/templates/generic/parts/scriptorium-header.hbs"
     },
     tabs: {
-      template: "systems/arm5e/templates/generic/parts/ars-tab-navigation.hbs"
+      template: "systems/arm5e/templates/generic/parts/ars-tab-navigation.hbs",
+      classes: ["greenBar", "marginsides32"]
     },
     reading: {
       template: "systems/arm5e/templates/generic/parts/scriptorium-reading.html",

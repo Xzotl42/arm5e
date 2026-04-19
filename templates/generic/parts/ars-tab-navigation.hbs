@@ -1,10 +1,9 @@
-<div >
+<div style="margin-top:10px">
     <nav class="arm5eTabs sheet-tabs tabs {{#if verticalTabs}} vertical{{/if}} tabArrow flexrow"
-     aria-roledescription="{{localize "SHEETS.FormNavLabel"}}">
+     aria-roledescription="{{localize "SHEETS.FormNavLabel"}}" style="margin-bottom:5px">
     {{#each tabs as |tab|}}
-    {{log tab}}
         <a data-action="tab" data-group="{{tab.group}}" data-tab="{{tab.id}}"
-            {{#if tab.cssClass}}class="{{tab.cssClass}}"{{/if}}
+            {{#if tab.cssClass}}class="marginsides20 {{tab.cssClass}}"{{/if}}
             {{#if tab.tooltip}}data-tooltip="{{tab.tooltip}}"{{/if}}>
             <div class="navItem-left-ball"><img src="systems/arm5e/assets/bLeft.png" /></div>
             {{#if tab.icon}}<div class="flex0"><i class="{{tab.icon}}" inert></i></div>{{/if}}
@@ -14,7 +13,4 @@
     {{/each}}
 
     </nav>
-    <div class="marginsides32">
-        {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
-    </div>
 </div>

@@ -1,7 +1,7 @@
 <div class="characteristics grid grid-3col backSection margintop18">
   <div class="flexrow flex-group-center">
-    <label for="system.laboratory.fastCastingSpeed.value" class="item-title width3 rollable" data-roll="option"
-      data-id="{{item._id}}" data-name='{{localize "arm5e.sheet.fastCastingSpeed.label"}}'
+    <label for="system.laboratory.fastCastingSpeed.value" class="item-title width3 rollable" data-action="roll"
+      data-roll="option" data-id="{{item._id}}" data-name='{{localize "arm5e.sheet.fastCastingSpeed.label"}}'
       data-option1="{{ system.characteristics.qik.value }}" data-txtoption1='{{ localize "arm5e.sheet.quickness" }}'
       data-option2="{{ system.laboratory.abilitiesSelected.finesse.value }}"
       data-txtoption2='{{ localize "arm5e.skill.arcane.finesse" }}'>{{localize "arm5e.sheet.fastCastingSpeed.label"}}
@@ -18,8 +18,8 @@
   </div>
 
   <div class="flexrow flex-group-center">
-    <label for="system.laboratory.targeting.value" class="item-title width3 rollable" data-roll="general"
-      data-id="{{item._id}}" data-name='{{localize "arm5e.sheet.targeting.label"}}'
+    <label for="system.laboratory.targeting.value" class="item-title width3 rollable" data-action="roll"
+      data-roll="general" data-id="{{item._id}}" data-name='{{localize "arm5e.sheet.targeting.label"}}'
       data-option1="{{ system.characteristics.per.value }}" data-txtoption1='{{ localize "arm5e.sheet.perception" }}'
       data-option2="{{ system.laboratory.abilitiesSelected.finesse.value }}"
       data-txtoption2='{{ localize "arm5e.skill.arcane.finesse" }}'>{{localize "arm5e.sheet.targeting.label"}}</label>

@@ -24,6 +24,12 @@ import { registerQuickAppsIntegrationTesting } from "./quickAppsTests.js";
 import { registerLabExperimentationTesting } from "./labExperimentationTests.js";
 import { registerSanatoriumTesting } from "./sanatoriumTests.js";
 import { registerScriptoriumTesting } from "./scriptoriumTests.js";
+import {
+  registerPCSheetTests,
+  registerNPCSheetTests,
+  registerBeastSheetTests,
+  registerCovenantSheetTests
+} from "./actorSheetTests.js";
 
 export function registerTestSuites(quench) {
   registerDEBUGTest(quench);
@@ -44,6 +50,10 @@ export function registerTestSuites(quench) {
   registerMagicRollTesting(quench);
   registerSheetDisplayTests(quench);
   registerItemCreationTests(quench);
+  registerPCSheetTests(quench);
+  registerNPCSheetTests(quench);
+  registerBeastSheetTests(quench);
+  registerCovenantSheetTests(quench);
   registerAdventuringTesting(quench);
   registerApprenticeshipTesting(quench);
   registerTrainingTesting(quench);

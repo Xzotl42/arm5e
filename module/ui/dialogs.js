@@ -256,10 +256,24 @@ export async function customDialogAsync(payload) {
   return await new Promise((resolve) => {
     let settled = false;
     let pending = null;
+    const owner = payload.owner ?? null;
+    if (owner) {
+      delete payload.owner;
+    }
+
     const finish = (value) => {
       if (!settled) {
         settled = true;
         resolve(value);
+      }
+    };
+
+    const cleanupOwnerDialog = (dialog) => {
+      if (owner?._pendingDialogs) {
+        owner._pendingDialogs.delete(dialog);
+        if (!owner._pendingDialogs.size) {
+          owner._pendingDialogs = null;
+        }
       }
     };
     if (!payload.classes) {
@@ -310,9 +324,29 @@ export async function customDialogAsync(payload) {
       } else {
         finish(null);
       }
+
+      cleanupOwnerDialog(dialog);
     };
 
     const dialog = new foundry.applications.api.DialogV2(payload);
+
+    // Ensure force-closing by external code always settles this promise.
+    // DialogV2 close paths are not guaranteed to trigger submit callbacks.
+    const originalClose = dialog.close.bind(dialog);
+    dialog.close = async (...args) => {
+      if (pending) {
+        pending.then((msg) => finish(msg)).catch(() => finish(null));
+      } else {
+        finish(null);
+      }
+      cleanupOwnerDialog(dialog);
+      return originalClose(...args);
+    };
+
+    if (owner) {
+      owner._pendingDialogs ??= new Set();
+      owner._pendingDialogs.add(dialog);
+    }
 
     // Attach render event listener if render callback is provided
     if (payload.render instanceof Function) {

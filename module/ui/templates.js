@@ -20,7 +20,7 @@ export const ArM5ePreloadHandlebarsTemplates = async function () {
     "systems/arm5e/templates/actor/parts/actor-castingTotals.html",
     "systems/arm5e/templates/actor/parts/actor-voice-and-gestures.hbs",
     "systems/arm5e/templates/actor/parts/actor-diary.html",
-    "systems/arm5e/templates/actor/parts/actor-powers.html",
+    // "systems/arm5e/templates/actor/parts/actor-powers.html",
 
     "systems/arm5e/templates/actor/parts/actor-profiles.html",
     "systems/arm5e/templates/actor/parts/actor-magic-attributes.html",
@@ -37,13 +37,8 @@ export const ArM5ePreloadHandlebarsTemplates = async function () {
     "systems/arm5e/templates/actor/parts/actor-vis.html",
 
     "systems/arm5e/templates/actor/parts/actor-attributesLaboratory.html",
-    "systems/arm5e/templates/actor/parts/actor-inventoryLaboratory.html",
     "systems/arm5e/templates/actor/parts/actor-lab-workbench.html",
 
-    "systems/arm5e/templates/actor/parts/actor-covenantAttributes.html",
-    "systems/arm5e/templates/actor/parts/actor-covenantHabitants.html",
-    "systems/arm5e/templates/actor/parts/actor-covenantPosessions.html",
-    "systems/arm5e/templates/actor/parts/actor-covenantEconomics.html",
     "systems/arm5e/templates/actor/parts/actor-library.html",
     "systems/arm5e/templates/actor/parts/actor-covenantCalendar.html",
     "systems/arm5e/templates/actor/parts/hermeticFilter.hbs",
@@ -130,7 +125,7 @@ export const ArM5ePreloadHandlebarsTemplates = async function () {
     "systems/arm5e/templates/lab-activities/spell.html",
     "systems/arm5e/templates/lab-activities/minor-enchantment.html",
     "systems/arm5e/templates/lab-activities/charged-item.html",
-    "systems/arm5e/templates/item/parts/vis-costs.html",
+    "systems/arm5e/templates/lab-activities/vis-costs.html",
     "systems/arm5e/templates/lab-activities/investigation.html",
     "systems/arm5e/templates/lab-activities/longevity-ritual.html",
     // Rolls partials
@@ -156,6 +151,9 @@ export const ArM5ePreloadHandlebarsTemplates = async function () {
     "systems/arm5e/templates/generic/metalic-bar.html",
     "systems/arm5e/templates/generic/parts/simpleFieldBacksection.hbs",
     "systems/arm5e/templates/generic/ars-editor.hbs",
+    "systems/arm5e/templates/generic/ars-editor-V2.hbs",
+    "systems/arm5e/templates/actor/parts/actor-description-v2.hbs",
+    "systems/arm5e/templates/actor/parts/actor-laboratory-v2.html",
     "systems/arm5e/templates/generic/quick-combat.html",
     "systems/arm5e/templates/generic/quick-magic.html",
     "systems/arm5e/templates/generic/quick-vitals.html",

@@ -1,0 +1,28 @@
+<div class="prosemirror-section {{ sectionClass }} ">
+  {{!-- {{log "prefix: " prefix}} --}} {{!-- {{log "target: " target}} --}}
+  {{!-- {{log "editable: " editable}} --}}
+  {{#if editable}}
+  <div
+    class="description-editor prosemirror-editor-box {{ editorClass }}"
+    {{#if editorHeight}}style="height: {{editorHeight}};"{{/if}}
+  >
+    <prose-mirror
+      name="{{ prefix }}{{ target }}"
+      button="true"
+      editable="{{ editable }}"
+      toggled="false"
+      value="{{ content }}"
+    >
+      {{{ content }}}
+    </prose-mirror>
+  </div>
+  {{else}}
+  <div
+    class="description-editor prosemirror-editor-box prosemirror-readonly-content {{ editorClass }}"
+    {{#if editorHeight}}style="height: {{editorHeight}};"{{/if}}
+  >
+    {{{ content }}}
+  </div>
+  {{/if}}
+  {{!-- {{editor content target=target button=true engine="prosemirror" editable=editable}} --}}
+</div>
