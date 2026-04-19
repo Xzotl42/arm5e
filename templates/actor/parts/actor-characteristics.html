@@ -7,7 +7,7 @@
     {{#each charac as | key|}}
       <div class="characteristic flexrow flex-group-center">
         {{#with (lookup ../config.character.characteristics key)}}
-          <label for="system.characteristics.{{key}}.value" class="uppercase rollable-aging" data-action="rollAging"
+          <label for="system.characteristics.{{key}}.value" class="uppercase rollable" data-action="rollOrAgingPts"
             data-roll="char" data-characteristic="{{key}}">{{localize short}}</label>
         {{/with}}
         {{#with (lookup ../system.characteristics key)}}
