@@ -1,4 +1,4 @@
-## 3.0.0.9 Stentorius
+## 3.0.0.10 Stentorius
 
 ### Compatibility
 

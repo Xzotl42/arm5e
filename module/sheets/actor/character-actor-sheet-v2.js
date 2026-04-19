@@ -35,7 +35,7 @@ export class Arm5eCharacterActorSheetV2 extends ArM5eActorSheetV2 {
     actions: {
       actorProfile: Arm5eCharacterActorSheetV2.actorProfile,
       characterSchedule: Arm5eCharacterActorSheetV2.characterSchedule,
-      rollAging: Arm5eCharacterActorSheetV2.rollAging,
+      rollOrAgingPts: Arm5eCharacterActorSheetV2.rollOrAgingPts,
       recoveryStart: Arm5eCharacterActorSheetV2.recoveryStart,
       twilightEpisode: Arm5eCharacterActorSheetV2.twilightEpisode,
       scheduleAging: Arm5eCharacterActorSheetV2.scheduleAging,
@@ -713,7 +713,7 @@ export class Arm5eCharacterActorSheetV2 extends ArM5eActorSheetV2 {
     await schedule.render(true);
   }
 
-  static async rollAging(event, target) {
+  static async rollOrAgingPts(event, target) {
     event.preventDefault();
     if (event.shiftKey) {
       await this._editAging(target);
@@ -721,11 +721,12 @@ export class Arm5eCharacterActorSheetV2 extends ArM5eActorSheetV2 {
     }
     // Set roll type if not already specified
     if (!target.dataset.roll) {
-      target.dataset.roll = "aging";
+      target.dataset.roll = "char";
     }
+
     const rollHandler = this?.roll ?? this?.constructor?.roll;
     if (typeof rollHandler !== "function") {
-      throw new TypeError("roll handler is not available in rollAging");
+      throw new TypeError("roll handler is not available");
     }
     return rollHandler.call(this, event, target);
   }
