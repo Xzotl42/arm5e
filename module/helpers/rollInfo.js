@@ -401,8 +401,25 @@ export class ArM5eRollInfo {
         );
         break;
       case ROLL_PROPERTIES.AGING.VAL:
-        this.environment.year = parseInt(dataset.year);
-        this.environment.season = dataset.season;
+        if (actorSystemData.states?.creationMode) {
+          // get the first year without any aging roll starting at 35 (+ modifiers)
+          //           const agingStart = 35 + actorSystemData.bonuses.traits.agingStart;
+          //           const currentAge = actorSystemData.system.age.value;
+          //           if (agingStart > currentAge) {
+          // this.environment.year = parseInt(dataset.year);
+          //           this.environment.season = dataset.season;
+          //           }
+          //           else {
+          //             for (let y = agingStart; y < ; y++) {
+
+          //             }
+          //           }
+          this.environment.year = parseInt(dataset.year);
+          this.environment.season = dataset.season;
+        } else {
+          this.environment.year = parseInt(dataset.year);
+          this.environment.season = dataset.season;
+        }
         this.environment.seasonLabel = ARM5E.seasons[dataset.season].label;
         this.label = `${game.i18n.localize("arm5e.aging.roll.label")} ${game.i18n.localize(
           ARM5E.seasons[dataset.season].label

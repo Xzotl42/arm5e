@@ -150,7 +150,7 @@ export class ArM5eActiveEffectConfig extends foundry.applications.sheets.ActiveE
         }
         subType.computedKey = tmp;
 
-        subType.modeStr = "arm5e.activeEffect.mode_" + subType.mode;
+        subType.modeStr = `arm5e.activeEffect.mode_${subType.mode}`;
 
         subTypes.push(subType);
         if (k == context.selectedSubtypes[idx]) {
@@ -302,6 +302,7 @@ export class ArM5eActiveEffectConfig extends foundry.applications.sheets.ActiveE
     await this.document.update(updateFlags);
     this.render();
   }
+
   async _setSubtype(value, index) {
     let arrayTypes = this.document.getFlag("arm5e", "type");
     let arraySubtypes = this.document.getFlag("arm5e", "subtype");
@@ -357,7 +358,7 @@ export class ArM5eActiveEffectConfig extends foundry.applications.sheets.ActiveE
     let arraySubtypes = this.document.getFlag("arm5e", "subtype");
     const subtype = arraySubtypes[index];
     let arrayOptions = this.document.getFlag("arm5e", "option");
-    var chosenOption = arrayOptions[index];
+    let chosenOption = arrayOptions[index];
     let dialogData = {
       fieldName: "arm5e.sheet.skill.abilityOption",
       placeholder: "arm5e.dialog.hint.abilityOption",

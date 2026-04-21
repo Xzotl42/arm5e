@@ -3,10 +3,13 @@ const { ActorSheetV2 } = foundry.applications.sheets;
 import { ARM5E } from "../../config.js";
 import { Arm5eChatMessage } from "../../helpers/chat-message.js";
 import { buildSoakDataset, combatDamage, computeDamage, setWounds } from "../../helpers/combat.js";
-import { useMagicItem, usePower } from "../../helpers/magic.js";
 import ArM5eActiveEffect from "../../helpers/active-effects.js";
-import { ArM5eMagicSystem } from "../../actor/subsheets/magic-system.js";
-import { spellFormLabel, spellTechniqueLabel } from "../../helpers/magic.js";
+import {
+  useMagicItem,
+  usePower,
+  spellFormLabel,
+  spellTechniqueLabel
+} from "../../helpers/magic.js";
 import {
   getDataset,
   getLastCombatMessageOfType,
@@ -65,7 +68,11 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
       itemClone: ArM5eActorSheetV2.itemClone,
       itemDelete: ArM5eActorSheetV2.itemDelete,
       itemDeleteConfirm: ArM5eActorSheetV2.itemDeleteConfirm,
-      openLinkedActor: ArM5eActorSheetV2.openLinkedActor
+      openLinkedActor: ArM5eActorSheetV2.openLinkedActor,
+      effectCreate: ArM5eActorSheetV2.effectCreate,
+      effectEdit: ArM5eActorSheetV2.effectEdit,
+      effectDelete: ArM5eActorSheetV2.effectDelete,
+      effectToggle: ArM5eActorSheetV2.effectToggle
     }
   };
 
@@ -107,8 +114,8 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
     context.actor = this.actor;
     context.system = this.actor?.system;
     context.flags = this.actor?.flags;
-    context.selection = {}; // placeholder for child-sheet selection dropdowns
-    context.ui = this.getUserCache(); // per-user UI state (filters, visibility, etc.)
+    context.selection = {}; // Placeholder for child-sheet selection dropdowns
+    context.ui = this.getUserCache(); // Per-user UI state (filters, visibility, etc.)
     context.rollData = this.actor?.getRollData?.() ?? {};
     context.config = CONFIG.ARM5E;
     context.isGM = game.user.isGM;
@@ -580,6 +587,54 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
     classes.toggle("hide");
   }
 
+  static async effectCreate(event, target) {
+    event.preventDefault();
+    const li = target.closest("li");
+    const effectType = li?.dataset?.effectType;
+    const data = {
+      origin: this.actor.uuid,
+      "duration.turns": effectType === "temporary" ? 999 : undefined,
+      disabled: effectType === "inactive",
+      tint: "#000000",
+      changes: [],
+      flags: {
+        arm5e: {
+          type: [],
+          subtype: [],
+          option: []
+        }
+      },
+      name: game.i18n.localize("arm5e.activeEffect.new"),
+      img: "icons/svg/aura.svg"
+    };
+    return await this.actor.createEmbeddedDocuments("ActiveEffect", [data]);
+  }
+
+  static async effectEdit(event, target) {
+    event.preventDefault();
+    const li = target.closest("li");
+    const effect = await fromUuid(li?.dataset?.effectId);
+    if (!effect) return;
+    effect.sheet.setFilter(li.dataset.filter);
+    return effect.sheet.render(true);
+  }
+
+  static async effectDelete(event, target) {
+    event.preventDefault();
+    const li = target.closest("li");
+    const effect = await fromUuid(li?.dataset?.effectId);
+    if (!effect) return;
+    return effect.delete();
+  }
+
+  static async effectToggle(event, target) {
+    event.preventDefault();
+    const li = target.closest("li");
+    const effect = await fromUuid(li?.dataset?.effectId);
+    if (!effect) return;
+    return effect.update({ disabled: !effect.disabled });
+  }
+
   static async itemAdd(event, target) {
     event.preventDefault();
     const collection = await getRefCompendium(target.dataset.compendium);
@@ -767,7 +822,7 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
   /**
    * Check if an item type requires conversion during creation.
    * Child classes can override to add type-specific conversion logic.
-   * @param {string} type - The item type to check
+   * @param {string} type The item type to check
    * @returns {boolean} True if conversion is needed
    * @protected
    */
@@ -778,7 +833,7 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
   /**
    * Apply any needed conversions to item data during creation.
    * Child classes can override to add type-specific conversion logic.
-   * @param {object} data - The item data to convert
+   * @param {object} data The item data to convert
    * @returns {object} The converted item data
    * @protected
    */
@@ -788,7 +843,7 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
 
   /**
    * Apply conversion if needed for the given item data.
-   * @param {object} data - The item data
+   * @param {object} data The item data
    * @returns {object} The data, possibly converted
    * @protected
    */
@@ -801,7 +856,7 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
 
   /**
    * Handle creating a new Owned Item with conversion support.
-   * @param {object} dataset - The item creation dataset
+   * @param {object} dataset The item creation dataset
    * @returns {Promise<Item[]>} The created items
    * @protected
    */
@@ -817,7 +872,7 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
         system: foundry.utils.duplicate(data)
       }
     ];
-    delete itemData[0].system["type"];
+    delete itemData[0].system.type;
 
     return this.actor.createEmbeddedDocuments("Item", itemData, {});
   }
@@ -996,6 +1051,12 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
     if (this.magicSystem) {
       prepared = this.magicSystem._prepareSubmitData(prepared);
     }
+    // Prevent submitting overridden values (mirrors V1 ActorSheet._getSubmitData)
+    const overrides = foundry.utils.flattenObject(this.actor.overrides ?? {});
+    const flattened = foundry.utils.flattenObject(prepared);
+    for (const k of Object.keys(overrides)) delete flattened[k];
+    prepared = foundry.utils.expandObject(flattened);
+
     return prepared;
   }
 

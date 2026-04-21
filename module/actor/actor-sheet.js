@@ -113,7 +113,7 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
     return this.isEditable;
   }
 
-  //@overloaded : added await to _onDropX calls AppV2 to remove
+  // @overloaded : added await to _onDropX calls AppV2 to remove
   async _onDrop(event) {
     const data = TextEditor.getDragEventData(event);
     const actor = this.actor;
@@ -354,7 +354,7 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
       //  Filter
       // masteries
       let masteriesFilters = context.ui.filters.bookTopics.masteriesTopics;
-      log(false, "Masteries filter: " + JSON.stringify(masteriesFilters));
+      log(false, `Masteries filter: ${JSON.stringify(masteriesFilters)}`);
       context.system.filteredMasteriesTopics = hermeticTopicFilter(
         masteriesFilters,
         context.system.masteryTopics
@@ -539,15 +539,15 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
         context.spellCastingDividers = [
           {
             key: "1",
-            label: game.i18n.localize("arm5e.messages.die.divideBy") + "1"
+            label: `${game.i18n.localize("arm5e.messages.die.divideBy")}1`
           },
           {
             key: "2",
-            label: game.i18n.localize("arm5e.messages.die.divideBy") + "2"
+            label: `${game.i18n.localize("arm5e.messages.die.divideBy")}2`
           },
           {
             key: "5",
-            label: game.i18n.localize("arm5e.messages.die.divideBy") + "5"
+            label: `${game.i18n.localize("arm5e.messages.die.divideBy")}5`
           }
         ];
         // labTotals
@@ -687,8 +687,8 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
       for (let [key, charac] of Object.entries(context.system.characteristics)) {
         let shadowWidth = 2 * charac.aging;
         charac.ui = {
-          style: 'style="box-shadow: 0 0 ' + shadowWidth + 'px black"',
-          title: `${charac.aging} ` + game.i18n.localize("arm5e.sheet.agingPts")
+          style: `style="box-shadow: 0 0 ${shadowWidth}px black"`,
+          title: `${charac.aging} ${game.i18n.localize("arm5e.sheet.agingPts")}`
         };
         // log(false, `${key} has ${charac.aging} points`);
       }
@@ -709,7 +709,7 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
       //  Filter
       // activities
       let diaryFilters = context.ui.filters.events.diaryEvents;
-      log(false, "Events filter: " + JSON.stringify(diaryFilters));
+      log(false, `Events filter: ${JSON.stringify(diaryFilters)}`);
       let diaryCopy = context.system.diaryEntries.map((e) => {
         return e.toObject();
       });
@@ -860,7 +860,7 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
    *
    * @param {Object} actorData The actor to prepare.
    *
-   * @return {undefined}
+   * @returns {undefined}
    */
   _prepareActorItems(actorData) {
     if (
@@ -996,7 +996,6 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
             await twilightRoll(this.actor, input);
           } else {
             ui.notifications.info(game.i18n.localize("arm5e.twilight.notification.GMOnly"));
-            return;
           }
           break;
         case TWILIGHT_STAGES.PENDING_CONTROL:
@@ -1032,7 +1031,6 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
             ui.notifications.info(game.i18n.localize("arm5e.twilight.notification.GMOnly"), {
               permanent: false
             });
-            return;
           }
           break;
         case TWILIGHT_STAGES.PENDING_UNDERSTANDING:
@@ -1111,14 +1109,12 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
             log(false, `DEBUG reveal ${dataset.section}`);
             scope[dataset.section] = "";
           }
+        } else if (index !== "") {
+          log(false, `DEBUG hide ${dataset.section} at index ${index}`);
+          scope[index][dataset.section] = "hide";
         } else {
-          if (index !== "") {
-            log(false, `DEBUG hide ${dataset.section} at index ${index}`);
-            scope[index][dataset.section] = "hide";
-          } else {
-            log(false, `DEBUG hide ${dataset.section}`);
-            scope[dataset.section] = "hide";
-          }
+          log(false, `DEBUG hide ${dataset.section}`);
+          scope[dataset.section] = "hide";
         }
         sessionStorage.setItem(`usercache-${game.user.id}`, JSON.stringify(usercache));
       }
@@ -1145,7 +1141,7 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
       } else {
         updateData["system.covenant.actorId"] = null;
       }
-      updateData["_id"] = this.actor._id;
+      updateData._id = this.actor._id;
       updateArray.push(updateData);
       await Actor.updateDocuments(updateArray);
     });
@@ -1168,7 +1164,7 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
       } else {
         updateData["system.sanctum.actorId"] = null;
       }
-      updateData["_id"] = this.actor._id;
+      updateData._id = this.actor._id;
       updateArray.push(updateData);
       await Actor.updateDocuments(updateArray);
     });
@@ -1677,15 +1673,13 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
     let confirmed = false;
     if (ev.shiftKey) {
       confirmed = true;
-    } else {
-      if (game.settings.get("arm5e", "confirmDelete")) {
-        const question = game.i18n.localize("arm5e.dialog.delete-question");
-        confirmed = await getConfirmation(
-          li[0].dataset.name,
-          question,
-          ArM5eActorSheetV2.getFlavor(this.actor.type)
-        );
-      }
+    } else if (game.settings.get("arm5e", "confirmDelete")) {
+      const question = game.i18n.localize("arm5e.dialog.delete-question");
+      confirmed = await getConfirmation(
+        li[0].dataset.name,
+        question,
+        ArM5eActorSheetV2.getFlavor(this.actor.type)
+      );
     }
     if (confirmed) {
       itemId = itemId instanceof Array ? itemId : [itemId];
@@ -1697,7 +1691,10 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
   async _editAging(event) {
     log(false, "Edit aging");
     const dataset = getDataset(event);
-    const score = this.actor.system.characteristics[dataset.characteristic].value;
+    const characteristic = this.actor.system.characteristics[dataset.characteristic];
+    const score = Number.isFinite(characteristic.base)
+      ? characteristic.base
+      : Number(characteristic.value) || 0;
 
     // TODO numberInput with validation
     const prompt = `${game.i18n.localize(
@@ -1716,8 +1713,7 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
     const updateData = {};
     if (newValue > Math.abs(score)) {
       newValue = 0;
-      updateData[`system.characteristics.${dataset.characteristic}.value`] =
-        this.actor.system.characteristics[dataset.characteristic].value - 1;
+      updateData[`system.characteristics.${dataset.characteristic}.base`] = score - 1;
       ui.notifications.info(
         game.i18n.format("arm5e.aging.manualEdit", {
           name: this.actor.name,
@@ -1780,7 +1776,6 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
       return await _onItemCreate(event);
     }
     new Compendium({ collection }).render(true);
-    return;
   }
 
   convertIfNeeded(data) {
@@ -1830,7 +1825,7 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
       }
     ];
     // Remove the type from the dataset since it's in the itemData.type prop.
-    delete itemData[0].system["type"];
+    delete itemData[0].system.type;
 
     // default fields for some Item types
     // if (CONFIG.ARM5E.ItemDataModels[type]?.getDefault) {
@@ -2016,13 +2011,11 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
       } else if (this.actor.system.states.confidencePrompt) {
         await this.actor.update({ "system.states.confidencePrompt": false });
       }
-    } else {
-      if (this.actor.system.states.confidencePrompt) {
-        ui.notifications.info(game.i18n.localize("arm5e.notification.confidencePromptPending"), {
-          permanent: true
-        });
-        return false;
-      }
+    } else if (this.actor.system.states.confidencePrompt) {
+      ui.notifications.info(game.i18n.localize("arm5e.notification.confidencePromptPending"), {
+        permanent: true
+      });
+      return false;
     }
 
     if (this.actor.system.wounds.dead.length > 0) {
@@ -2085,6 +2078,7 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
 
     return true;
   }
+
   /**
    * Handle clickable rolls.
    * @param {Event} event   The originating click event
@@ -2148,7 +2142,6 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
       event.dataTransfer.setData("text/plain", JSON.stringify(dragData));
     } else if (!event.target.classList.contains("topic")) {
       super._onDragStart(event);
-      return;
     } else {
       let dragData;
       const li = event.currentTarget;
@@ -2195,7 +2188,7 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
     let quantity = item.system.getQuantity();
 
     let confirmed = false;
-    var chosenAmount = 1;
+    let chosenAmount = 1;
     if (quantity == 0) return false;
     if (quantity == 1) {
       confirmed = await getConfirmation(
@@ -2232,11 +2225,11 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
         res = await this.actor.createEmbeddedDocuments("Item", [newItemData]);
         let deleted = await originActor.deleteEmbeddedDocuments("Item", [item._id]);
       } else {
-        newItemData.system["quantity"] = chosenAmount;
+        newItemData.system.quantity = chosenAmount;
         res = await this.actor.createEmbeddedDocuments("Item", [newItemData]);
         let itemUpdate = {
           _id: item._id,
-          system: { ["quantity"]: quantity - chosenAmount }
+          system: { quantity: quantity - chosenAmount }
         };
         // item.system[quantity.name] = quantity.qty - chosenAmount;
         modified = await originActor.updateEmbeddedDocuments("Item", [itemUpdate]);
@@ -2264,13 +2257,11 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
             }
           }
         }
-      } else {
-        if (info.type === "Item" && item.system.getQuantity) {
-          if (this.isItemDropAllowed(item)) {
-            let quantity = item.system.getQuantity();
-            if (quantity != 0) {
-              await item.createResourceTrackingDiaryEntry(null, this.actor, quantity);
-            }
+      } else if (info.type === "Item" && item.system.getQuantity) {
+        if (this.isItemDropAllowed(item)) {
+          let quantity = item.system.getQuantity();
+          if (quantity != 0) {
+            await item.createResourceTrackingDiaryEntry(null, this.actor, quantity);
           }
         }
       }
@@ -2290,7 +2281,7 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
    * Handle the final creation of dropped Item data on the Actor.
    * This method is factored out to allow downstream classes the opportunity to override item creation behavior.
    * @param {object[]|object} itemData     The item data requested for creation
-   * @return {Promise<Item[]>}
+   * @returns {Promise<Item[]>}
    * @private
    */
   async _onDropItemCreate(itemData) {
@@ -2307,7 +2298,7 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
    * Handle dropping of an actor reference or item data onto an Actor Sheet
    * @param {DragEvent} event     The concluding DragEvent which contains drop data
    * @param {Object} data         The data transfer extracted from the event
-   * @return {Promise<Object>}    A data object which describes the result of the drop
+   * @returns {Promise<Object>}    A data object which describes the result of the drop
    * @private
    * @override
    */

@@ -100,13 +100,12 @@ As mentioned above, to trigger a migration:
 
 ## General
 
-### I have got this warning when I create a new world: "You don't have a Actor of type 'magicCodex' in your world, some functionality will be disabled/not working, you can import the one in the Magi compendium".
-
-Nothing to worry about, this is normal. You just have to follow instructions and import it from the Magi Compendium or create it from scratch. It will disappear on next reload.
-
 ## I cannot edit the characteristic of a character.
 
-It is probable you have an active effect giving a modifier to this characteristic. Workaround: In the "Effects" tab, suspend the effect in question for the time being in order to edit the characteristic.
+There are two possible reasons for that:
+
+- You are not in creation mode, ask a GM to put you back to it.
+- In creation mode, you have an active effect giving a modifier to this characteristic. Workaround: In the "Effects" tab, suspend the effect in question for the time being in order to edit the characteristic.
 
 ## Abilities
 
