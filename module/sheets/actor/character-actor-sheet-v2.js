@@ -6,7 +6,8 @@ import {
   createTwilightDiaryEntry,
   resetTwilight,
   TWILIGHT_STAGES,
-  twilightRoll
+  twilightRoll,
+  TwilightEpisode
 } from "../../seasonal-activities/long-term-activities.js";
 import { Sanatorium } from "../../apps/sanatorium.js";
 import { MedicalHistory } from "../../apps/med-history.js";
@@ -15,7 +16,6 @@ import { getRefCompendium } from "../../tools/compendia.js";
 import { getDataset, getWoundRanges, hermeticFilter, slugify } from "../../tools/tools.js";
 import { combatDamage, computeCombatStats } from "../../helpers/combat.js";
 import { UI } from "../../constants/ui.js";
-import { TwilightEpisode } from "../../seasonal-activities/long-term-activities.js";
 import { ArM5eMagicSystem } from "../../actor/subsheets/magic-system.js";
 
 /**
@@ -149,7 +149,7 @@ export class Arm5eCharacterActorSheetV2 extends ArM5eActorSheetV2 {
 
         context.artsIcons = game.settings.get("arm5e", "artsIcons");
 
-        // casting total modifiers
+        // Casting total modifiers
         if (context.system.castingtotal === undefined) {
           context.system.castingtotal = {};
         }
@@ -166,7 +166,7 @@ export class Arm5eCharacterActorSheetV2 extends ArM5eActorSheetV2 {
           context.system.castingtotal.divider = 1;
         }
 
-        // lab total modifiers
+        // Lab total modifiers
         if (context.system.sanctum.linked) {
           const lab = context.system.sanctum.document;
           context.system.labTotal.quality = parseInt(lab.system.generalQuality.total);
@@ -175,7 +175,7 @@ export class Arm5eCharacterActorSheetV2 extends ArM5eActorSheetV2 {
             lab.system.aura.computeMaxAuraModifier(this.actor.system.realms) + lab.system.auraBonus;
         }
 
-        // hermetic filters
+        // Hermetic filters
         let spellsFilters = context.ui.filters.hermetic.spells;
         context.system.filteredSpells = hermeticFilter(spellsFilters, context.system.spells);
         if (spellsFilters.expanded) {
@@ -209,7 +209,7 @@ export class Arm5eCharacterActorSheetV2 extends ArM5eActorSheetV2 {
           context.ui.magicEffectFilter = UI.STYLES.FILTER_ACTIVE;
         }
 
-        // magic arts
+        // Magic arts
         for (let [key, technique] of Object.entries(context.system.arts.techniques)) {
           if (technique.deficient) {
             technique.ui = {
@@ -239,11 +239,11 @@ export class Arm5eCharacterActorSheetV2 extends ArM5eActorSheetV2 {
         // castingTotals
         context.system.castingTotals = {};
         context.spellCastingDividers = [
-          { key: "1", label: game.i18n.localize("arm5e.messages.die.divideBy") + "1" },
-          { key: "2", label: game.i18n.localize("arm5e.messages.die.divideBy") + "2" },
-          { key: "5", label: game.i18n.localize("arm5e.messages.die.divideBy") + "5" }
+          { key: "1", label: `${game.i18n.localize("arm5e.messages.die.divideBy")}1` },
+          { key: "2", label: `${game.i18n.localize("arm5e.messages.die.divideBy")}2` },
+          { key: "5", label: `${game.i18n.localize("arm5e.messages.die.divideBy")}5` }
         ];
-        // labTotals
+        // LabTotals
         context.system.labTotals = {};
         context.system.labTotal = context.system.labTotal ?? {};
         for (let [key, form] of Object.entries(context.system.arts.forms)) {
@@ -369,8 +369,8 @@ export class Arm5eCharacterActorSheetV2 extends ArM5eActorSheetV2 {
       for (let [key, charac] of Object.entries(context.system.characteristics)) {
         const shadowWidth = 2 * charac.aging;
         charac.ui = {
-          style: 'style="box-shadow: 0 0 ' + shadowWidth + 'px black"',
-          title: `${charac.aging} ` + game.i18n.localize("arm5e.sheet.agingPts")
+          style: `style="box-shadow: 0 0 ${shadowWidth}px black"`,
+          title: `${charac.aging} ${game.i18n.localize("arm5e.sheet.agingPts")}`
         };
       }
 
@@ -386,7 +386,7 @@ export class Arm5eCharacterActorSheetV2 extends ArM5eActorSheetV2 {
       }
     }
 
-    // --- Custom magic system hook ---
+    // --- custom magic system hook ---
     if (context.system.features?.magicSystem) {
       if (!this.magicSystem) {
         this.magicSystem = new ArM5eMagicSystem(this);
@@ -609,10 +609,10 @@ export class Arm5eCharacterActorSheetV2 extends ArM5eActorSheetV2 {
       el.addEventListener("change", (event) => this._onEquipmentChange(event));
     });
     this.element.querySelectorAll(".covenant-link").forEach((el) => {
-      el.addEventListener("change", (event) => void this._onCovenantLinkChange(event));
+      el.addEventListener("change", (event) => this._onCovenantLinkChange(event));
     });
     this.element.querySelectorAll(".sanctum-link").forEach((el) => {
-      el.addEventListener("change", (event) => void this._onSanctumLinkChange(event));
+      el.addEventListener("change", (event) => this._onSanctumLinkChange(event));
     });
   }
 

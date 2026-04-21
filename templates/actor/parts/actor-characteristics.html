@@ -11,7 +11,8 @@
             data-roll="char" data-characteristic="{{key}}">{{localize short}}</label>
         {{/with}}
         {{#with (lookup ../system.characteristics key)}}
-          <input type="text" name="system.characteristics.{{key}}.value" class="select-on-focus agingPoints"
+          <input type="text" name="system.characteristics.{{key}}.value" {{#unless
+            @root.system.states.creationMode}}readonly{{/unless}} class="select-on-focus agingPoints"
             value="{{numberFormat value decimals=0 sign=true}}" data-dtype="Number" {{{characteristic.ui.style}}}
             title="{{ui.title}}" />
         {{/with}}
