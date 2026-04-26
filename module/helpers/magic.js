@@ -137,6 +137,7 @@ export function GetEnchantmentSelectOptions(context) {
  * @param spelldata
  * @param flavor
  * @param editable
+ * @param updatePath
  */
 export async function PickRequisites(spelldata, flavor, editable, updatePath = "system") {
   spelldata.config = {
@@ -181,6 +182,7 @@ export async function PickRequisites(spelldata, flavor, editable, updatePath = "
 /**
  *
  * @param selector
+ * @param updatePath
  */
 function _setRequisites(selector, updatePath) {
   let itemUpdate = {};
@@ -385,6 +387,10 @@ export function addSpellMagnitude(base, num) {
   }
 }
 
+/**
+ *
+ * @param requisites
+ */
 export function getRequisitesLabel(requisites) {
   let result = "";
   if (requisites.length == 0) {
@@ -392,7 +398,7 @@ export function getRequisitesLabel(requisites) {
   }
   result += "(";
   requisites.forEach((key) => {
-    result += CONFIG.ARM5E.magic.arts[key[0]].short + " ";
+    result += `${CONFIG.ARM5E.magic.arts[key[0]].short} `;
   });
   // remove last whitespace
   result = result.substring(0, result.length - 1);
@@ -457,9 +463,15 @@ export function GetEffectAttributesLabel(item) {
   return label;
 }
 
+/**
+ *
+ * @param technique
+ * @param form
+ * @param level
+ */
 export function GetRawLabTotalLabel(technique, form, level = null) {
-  let res = CONFIG.ARM5E.magic.techniques[technique]["short"];
-  res += ` ${CONFIG.ARM5E.magic.forms[form]["short"]}`;
+  let res = CONFIG.ARM5E.magic.techniques[technique].short;
+  res += ` ${CONFIG.ARM5E.magic.forms[form].short}`;
   if (level) res += ` - ${level}`;
   return res;
 }
@@ -489,8 +501,9 @@ export function canBeEnchanted(item) {
  *
  * @param system
  * @param type
+ * @param general
  */
-export function computeLevel(system, type) {
+export function computeLevel(system, type, general = true) {
   if (!system) return;
   let effectLevel = system.baseLevel;
 
@@ -560,7 +573,7 @@ export function computeLevel(system, type) {
     }
     system.ritual = shouldBeRitual;
   }
-  if (system.general) {
+  if (general && system.general) {
     effectLevel += system.levelOffset ?? 0;
   }
   return effectLevel;
@@ -647,6 +660,13 @@ function noFatigue(actor) {
   }
 }
 
+/**
+ *
+ * @param actor
+ * @param castingTotal
+ * @param difficulty
+ * @param ritual
+ */
 function fatigueCost(actor, castingTotal, difficulty, ritual = false) {
   const res = { use: 0, partial: 0, fail: 0 };
   const delta = castingTotal - difficulty;
@@ -661,6 +681,14 @@ function fatigueCost(actor, castingTotal, difficulty, ritual = false) {
   return res;
 }
 
+/**
+ *
+ * @param res
+ * @param delta
+ * @param difficulty
+ * @param castingTotal
+ * @param actor
+ */
 function calculateRitualFatigueCost(res, delta, difficulty, castingTotal, actor) {
   const ritualFatigueCancelled = actor.system.bonuses.arts.ritualFatigueCancelled;
 
@@ -690,6 +718,12 @@ function calculateRitualFatigueCost(res, delta, difficulty, castingTotal, actor)
   }
 }
 
+/**
+ *
+ * @param res
+ * @param delta
+ * @param actor
+ */
 function calculateSpellFatigueCost(res, delta, actor) {
   const fatigueThreshold = actor.system.bonuses.arts.spellFatigueThreshold;
 
@@ -763,7 +797,7 @@ async function castSupernaturalEffect(actorCaster, roll, message) {
   const messageUpdate = {};
   const updateData = {};
   messageUpdate["system.roll.difficulty"] = levelOfSpell;
-  messageUpdate["type"] = "magic";
+  messageUpdate.type = "magic";
   if (roll.botches > 0) {
     const updateData = {};
     if (roll.botches >= actorCaster.system.bonuses.arts.warpingThreshold) {
@@ -792,10 +826,11 @@ async function castSupernaturalEffect(actorCaster, roll, message) {
  *
  * @param actorCaster
  * @param roll
+ * @param form
  * @param message
  */
 async function handleTargetsOfMagic(actorCaster, form, message) {
-  const targetedTokens = game.user.targets; //getActorsFromTargetedTokens(actorCaster);
+  const targetedTokens = game.user.targets; // getActorsFromTargetedTokens(actorCaster);
   if (!targetedTokens) {
     return false;
   }
@@ -839,7 +874,6 @@ async function useMagicItem(dataset, item) {
   }
   item.actor.rollInfo.init(dataset, item.actor);
   new UseMagicItemWindow(item.actor, { window: { title: dataset.name } }).render(true);
-  return;
 }
 
 /**
@@ -860,7 +894,6 @@ async function usePower(dataset, actor) {
   actor.config = { magic: CONFIG.ARM5E.magic };
   const options = { window: { title: dataset.name } };
   new UsePowerRollWindow(actor, options).render(true);
-  return;
 }
 
 export {

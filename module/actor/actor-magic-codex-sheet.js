@@ -37,6 +37,7 @@ export class ArM5eMagicCodexSheet extends ArM5eActorSheet {
 
   getUserCache() {
     let usercache = JSON.parse(sessionStorage.getItem(`usercache-${game.user.id}`));
+    if (usercache === null) usercache = {};
     if (usercache[this.actor.id] == undefined) {
       usercache[this.actor.id] = {
         filters: {
@@ -150,10 +151,11 @@ export class ArM5eMagicCodexSheet extends ArM5eActorSheet {
    *
    * @param {Object} sheetData The actor to prepare.
    *
-   * @return {undefined}
+   * @param codexData
+   * @returns {undefined}
    */
   _prepareCodexItems(codexData) {
-    //let actorData = sheetData.actor.data;
+    // let actorData = sheetData.actor.data;
     // log(false, "_prepareCodexItems");
     for (const item of codexData.system.baseEffects) {
       item.system.artsLabel = `${spellTechniqueLabel(item.system, true)} ${spellFormLabel(
@@ -256,7 +258,7 @@ export class ArM5eMagicCodexSheet extends ArM5eActorSheet {
       }
     ];
     // Remove the type from the dataset since it's in the itemData.type prop.
-    delete itemData[0].system["type"];
+    delete itemData[0].system.type;
 
     // Finally, create the item!
     // console.log("Add item");
@@ -418,7 +420,7 @@ export class ArM5eMagicCodexSheet extends ArM5eActorSheet {
    * Handle dropping of an item reference or item data onto an Actor Sheet
    * @param {DragEvent} event     The concluding DragEvent which contains drop data
    * @param {Object} data         The data transfer extracted from the event
-   * @return {Promise<Object>}    A data object which describes the result of the drop
+   * @returns {Promise<Object>}    A data object which describes the result of the drop
    * @private
    * @override
    */

@@ -141,6 +141,7 @@ export class ArM5eItemSheet extends foundry.appv1.sheets.ItemSheet {
 
   getUserCache() {
     let usercache = JSON.parse(sessionStorage.getItem(`usercache-${game.user.id}`));
+    if (usercache === null) usercache = {};
     if (usercache[this.item.id] == undefined) {
       usercache[this.item.id] = {
         sections: { visibility: { common: {}, book: {} } }
@@ -207,8 +208,8 @@ export class ArM5eItemSheet extends foundry.appv1.sheets.ItemSheet {
         id: "",
         name: "N/A"
       });
-      //console.log("item-sheet get data weapon")
-      //console.log(data)
+      // console.log("item-sheet get data weapon")
+      // console.log(data)
     } else if (
       itemData.type == "ability" ||
       itemData.type == "diaryEntry" ||
@@ -389,14 +390,12 @@ export class ArM5eItemSheet extends foundry.appv1.sheets.ItemSheet {
             log(false, `DEBUG reveal ${dataset.section}`);
             scope[dataset.section] = "";
           }
+        } else if (index) {
+          log(false, `DEBUG hide ${dataset.section} at index ${index}`);
+          scope[index][dataset.section] = "hide";
         } else {
-          if (index) {
-            log(false, `DEBUG hide ${dataset.section} at index ${index}`);
-            scope[index][dataset.section] = "hide";
-          } else {
-            log(false, `DEBUG hide ${dataset.section}`);
-            scope[dataset.section] = "hide";
-          }
+          log(false, `DEBUG hide ${dataset.section}`);
+          scope[dataset.section] = "hide";
         }
         sessionStorage.setItem(`usercache-${game.user.id}`, JSON.stringify(usercache));
       }
@@ -586,6 +585,7 @@ export class ArM5eItemSheet extends foundry.appv1.sheets.ItemSheet {
     );
     return false;
   }
+
   async _onNameChange(item, event) {
     if (event.currentTarget.value === "") return;
 
@@ -603,6 +603,7 @@ export class ArM5eItemSheet extends foundry.appv1.sheets.ItemSheet {
       );
     }
   }
+
   async _cleanUpOption(item, event) {
     event.preventDefault();
 
@@ -644,6 +645,7 @@ export class ArM5eItemSheetNoDesc extends ArM5eItemSheet {
       tabs: []
     });
   }
+
   /** @override */
   async getData() {
     return await super.getData();

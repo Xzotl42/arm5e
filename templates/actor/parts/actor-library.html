@@ -2,7 +2,8 @@
   <li class="item flexrow item-header ">
     <div class="item-image"></div>
     <div class="section-title book-topic" data-action="toggleBookTopic" data-topic="topic-arts">
-      {{localize "arm5e.sheet.topics.arts"}}</div>
+      {{localize "arm5e.sheet.topics.arts"}}
+    </div>
     <div class="item-controls">
       <a class="item-control toggleHidden" data-action="toggleHidden" title="Filter" data-category="bookTopics"
         data-hidden="artsTopics" data-list="artsTopics" {{{ui.artsTopicsFilter}}}><i
@@ -16,9 +17,10 @@
       topics=config.magic.arts }}
   <div id="topic-arts" class="topic toggle-collapse">
     {{#each system.filteredArtsTopics as |item id|}}
-      <li class="item item-value flexrow" data-name="{{item.book}}" data-index="{{item.index}}"
+      <li class="item draggable item-value flexrow" data-name="{{item.book}}" data-index="{{item.index}}"
         data-item-id="{{item.id}}">
-        <div class="item-image item-control item-edit" data-action="itemEdit"><img src="{{item.img}}" title="{{item.name}}" /></div>
+        <div class="item-image item-control item-edit" data-action="itemEdit"><img src="{{item.img}}"
+            title="{{item.name}}" /></div>
         <div class="flexrow flex-center">
           <span class="flexrow item-title width15">{{item.book}}</span>
           <span class="flexrow bold">{{localize "arm5e.sheet.type"}}:{{item.type~}} </span>
@@ -32,10 +34,12 @@
         item.art)~}}{{label~}} {{/with}}</span>
         </div>
         <div class="item-controls">
-          <a class="plan-reading" data-action="planReading" title='{{localize "arm5e.hints.read" item=(localize "arm5e.sheet.book")}}'
-            data-index="{{item.index}}"><i class="ars-Icon_Readspell"></i></a>
+          <a class="plan-reading" data-action="planReading"
+            title='{{localize "arm5e.hints.read" item=(localize "arm5e.sheet.book")}}' data-index="{{item.index}}"><i
+              class="ars-Icon_Readspell"></i></a>
           <a class="item-control book-edit" data-action="bookEdit" title="Edit book"><i class="ars-Icon_Edit"></i></a>
-          <a class="item-control item-delete" data-action="itemDelete" title="Delete book"><i class="ars-Icon_Delete_Hand_Gesture"></i></a>
+          <a class="item-control item-delete" data-action="itemDelete" title="Delete book"><i
+              class="ars-Icon_Delete_Hand_Gesture"></i></a>
         </div>
       </li>
     {{/each}}
@@ -45,7 +49,8 @@
   <li class="item flexrow item-header">
     <div class="item-image"></div>
     <div class="section-title book-topic" data-action="toggleBookTopic" data-topic="topic-abilities">
-      {{localize "arm5e.sheet.topics.abilities"}}</div>
+      {{localize "arm5e.sheet.topics.abilities"}}
+    </div>
     <div class="item-controls">
       <a class="item-control toggleHidden" data-action="toggleHidden" title="Filter" data-category="bookTopics"
         data-hidden="abilitiesTopics" data-list="abilitiesTopics" {{{ui.abilitiesTopicsFilter}}}><i class="fas fa-sort">
@@ -60,9 +65,10 @@
   <div id="topic-abilities" class="topic toggle-collapse">
     {{#each system.filteredMundaneTopics as |item id|}}
 
-      <li class="item item-value flexrow flex-center topic" data-name="{{item.book}}" data-index="{{item.index}}"
-        data-item-id="{{item.id}}">
-        <div class="item-image item-control item-edit" data-action="itemEdit"><img src="{{item.img}}" title="{{item.name}}" /></div>
+      <li class="item draggable item-value flexrow flex-center topic" data-name="{{item.book}}"
+        data-index="{{item.index}}" data-item-id="{{item.id}}">
+        <div class="item-image item-control item-edit" data-action="itemEdit"><img src="{{item.img}}"
+            title="{{item.name}}" /></div>
         <div class="flexrow flex-center">
           <span class="flexrow item-title width15">{{item.book}}</span>
 
@@ -85,11 +91,13 @@
         </div>
         <div class="item-controls">
           {{#if @root.system.isCharacter}}
-            <a class="plan-reading" data-action="planReading" title='{{localize "arm5e.hints.read" item=(localize "arm5e.sheet.book")}}'
-              data-index="{{item.index}}"><i class="ars-Icon_Readspell"></i></a>
+            <a class="plan-reading" data-action="planReading"
+              title='{{localize "arm5e.hints.read" item=(localize "arm5e.sheet.book")}}' data-index="{{item.index}}"><i
+                class="ars-Icon_Readspell"></i></a>
           {{/if}}
           <a class="item-control book-edit" data-action="bookEdit" title="Edit book"><i class="ars-Icon_Edit"></i></a>
-          <a class="item-control item-delete" data-action="itemDelete" title="Delete book"><i class="ars-Icon_Delete_Hand_Gesture"></i></a>
+          <a class="item-control item-delete" data-action="itemDelete" title="Delete book"><i
+              class="ars-Icon_Delete_Hand_Gesture"></i></a>
         </div>
       </li>
     {{/each}}
@@ -99,7 +107,8 @@
   <li class="item flexrow item-header">
     <div class="item-image"></div>
     <div class="section-title book-topic" data-action="toggleBookTopic" data-topic="topic-masteries">
-      {{localize "arm5e.sheet.topics.masteries"}}</div>
+      {{localize "arm5e.sheet.topics.masteries"}}
+    </div>
     <div class="item-controls">
       <a class="item-control toggleHidden" data-action="toggleHidden" title="Filter" data-category="bookTopics"
         data-hidden="masteriesTopics" data-list="masteriesTopics" {{{ui.masteriesTopicsFilter}}}><i
@@ -113,9 +122,10 @@
   <div id="topic-masteries" class="topic toggle-collapse">
     {{#each system.filteredMasteriesTopics as |item id|}}
 
-      <li class="item item-value flexrow flex-center topic" data-name="{{item.book}}" data-index="{{item.index}}"
-        data-item-id="{{item.id}}">
-        <div class="item-image item-control item-edit" data-action="itemEdit"><img src="{{item.img}}" title="{{item.name}}" /></div>
+      <li class="item draggable item-value flexrow flex-center topic" data-name="{{item.book}}"
+        data-index="{{item.index}}" data-item-id="{{item.id}}">
+        <div class="item-image item-control item-edit" data-action="itemEdit"><img src="{{item.img}}"
+            title="{{item.name}}" /></div>
         <div class="flexrow flex-center">
           <span class="flexrow item-title width15">{{item.book}}</span>
 
@@ -130,11 +140,13 @@
         </div>
         <div class="item-controls">
           {{#if @root.system.isCharacter}}
-            <a class="plan-reading" data-action="planReading" title='{{localize "arm5e.hints.read" item=(localize "arm5e.sheet.book")}}'
-              data-index="{{item.index}}"><i class="ars-Icon_Readspell"></i></a>
+            <a class="plan-reading" data-action="planReading"
+              title='{{localize "arm5e.hints.read" item=(localize "arm5e.sheet.book")}}' data-index="{{item.index}}"><i
+                class="ars-Icon_Readspell"></i></a>
           {{/if}}
           <a class="item-control book-edit" data-action="bookEdit" title="Edit book"><i class="ars-Icon_Edit"></i></a>
-          <a class="item-control item-delete" data-action="itemDelete" title="Delete book"><i class="ars-Icon_Delete_Hand_Gesture"></i></a>
+          <a class="item-control item-delete" data-action="itemDelete" title="Delete book"><i
+              class="ars-Icon_Delete_Hand_Gesture"></i></a>
         </div>
       </li>
     {{/each}}
@@ -146,14 +158,15 @@
   <li class="item flexrow item-header">
     <div class="item-image"></div>
     <div class="section-title book-topic" data-action="toggleBookTopic" data-topic="topic-labtext">
-      {{localize "arm5e.sheet.laboratoryTexts"}}</div>
+      {{localize "arm5e.sheet.laboratoryTexts"}}
+    </div>
     <div class="item-controls">
       <a class="item-control toggleHidden" data-action="toggleHidden" title="Filter" data-category="hermetic"
         data-list="laboratoryTexts"><i class="fas fa-sort" data-hidden="laboratoryTexts" {{{ui.labTextFilter}}}>
         </i>{{localize "arm5e.sheet.action.Filter"}}
       </a>
-      <a class="item-control item-create" data-action="itemCreate" title="Add laboratoryText" data-type="laboratoryText"><i
-          class="fas fa-plus"></i>{{localize "arm5e.sheet.action.Create"}}</a>
+      <a class="item-control item-create" data-action="itemCreate" title="Add laboratoryText"
+        data-type="laboratoryText"><i class="fas fa-plus"></i>{{localize "arm5e.sheet.action.Create"}}</a>
     </div>
   </li>
   {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
@@ -161,9 +174,10 @@
   <div id="topic-labtext" class="topic toggle-collapse">
     {{#each system.filteredLaboratoryTexts as |item id|}}
 
-      <li class="item item-value flexrow flex-center topic" data-name="{{item.name}}" data-index="{{item.index}}"
-        data-item-id="{{item.id}}">
-        <div class="item-image item-control item-edit" data-action="itemEdit"><img src="{{item.img}}" title="{{item.name}}" /></div>
+      <li class="item draggable item-value flexrow flex-center topic" data-name="{{item.name}}"
+        data-index="{{item.index}}" data-item-id="{{item.id}}">
+        <div class="item-image item-control item-edit" data-action="itemEdit"><img src="{{item.img}}"
+            title="{{item.name}}" /></div>
         <div class="flexrow flex-center">
           <span class="flexrow item-title width15">
             {{localize (lookup @root.config.lab.labTextType item.system.type)~}} : {{item.name}} ( {{#with
@@ -175,10 +189,12 @@
         </div>
         <div class="item-controls">
           {{#if @root.system.isCharacter}}
-            <a class="study-labtext" data-action="studyLabtext" title='{{localize "arm5e.hints.read" item=(localize "arm5e.sheet.book")}}'
-              data-index="{{item.index}}"><i class="ars-Icon_Readspell"></i></a>
+            <a class="study-labtext" data-action="studyLabtext"
+              title='{{localize "arm5e.hints.read" item=(localize "arm5e.sheet.book")}}' data-index="{{item.index}}"><i
+                class="ars-Icon_Readspell"></i></a>
           {{/if}}
-          <a class="item-control item-edit" data-action="itemEdit" title="Edit laboratoryText"><i class="ars-Icon_Edit"></i></a>
+          <a class="item-control item-edit" data-action="itemEdit" title="Edit laboratoryText"><i
+              class="ars-Icon_Edit"></i></a>
           <a class="item-control item-delete" data-action="itemDelete" title="Delete laboratoryText"><i
               class="ars-Icon_Delete_Hand_Gesture"></i></a>
         </div>
@@ -202,8 +218,9 @@
   <div id="topic-physicalbooks" class="topic toggle-collapse">
     {{#each system.physicalBooks as |item id|}}
 
-      <li class="item item-value flexrow flex-center" data-item-id="{{item.id}}">
-        <div class="item-image item-control item-edit" data-action="itemEdit"><img src="{{item.img}}" title="{{item.name}}" /></div>
+      <li class="item draggable item-value flexrow flex-center" data-item-id="{{item.id}}">
+        <div class="item-image item-control item-edit" data-action="itemEdit"><img src="{{item.img}}"
+            title="{{item.name}}" /></div>
         <div class="flexrow flex-center">
           <span class="flexrow item-title width15">{{item.name}}</span>
 
@@ -214,11 +231,13 @@
         </div>
         <div class="item-controls">
           {{#if (and @root.system.isCharacter item.system.topics.length)}}
-            <a class="plan-reading" data-action="planReading" title='{{localize "arm5e.hints.read" item=(localize "arm5e.sheet.book")}}'
-              data-index="0"><i class="ars-Icon_Readspell"></i></a>
+            <a class="plan-reading" data-action="planReading"
+              title='{{localize "arm5e.hints.read" item=(localize "arm5e.sheet.book")}}' data-index="0"><i
+                class="ars-Icon_Readspell"></i></a>
           {{/if}}
           <a class="item-control book-edit" data-action="bookEdit" title="Edit book"><i class="ars-Icon_Edit"></i></a>
-          <a class="item-control item-delete" data-action="itemDelete" title="Delete book"><i class="ars-Icon_Delete_Hand_Gesture"></i></a>
+          <a class="item-control item-delete" data-action="itemDelete" title="Delete book"><i
+              class="ars-Icon_Delete_Hand_Gesture"></i></a>
         </div>
       </li>
     {{/each}}

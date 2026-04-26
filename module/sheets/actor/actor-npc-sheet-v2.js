@@ -94,7 +94,7 @@ export class ArM5eNPCActorSheetV2 extends Arm5eCharacterActorSheetV2 {
       template: "systems/arm5e/templates/actor/parts/actor-pc-arts-tab-v2.hbs"
     },
     laboratory: {
-      template: "systems/arm5e/templates/actor/parts/actor-npc-laboratory-tab-v2.hbs"
+      template: "systems/arm5e/templates/actor/parts/actor-laboratory-tab-v2.hbs"
     },
     tradition: {
       template: "systems/arm5e/templates/actor/parts/actor-pc-tradition-tab-v2.hbs"
