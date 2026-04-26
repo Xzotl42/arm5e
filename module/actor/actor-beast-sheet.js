@@ -33,6 +33,7 @@ export class ArM5eBeastActorSheet extends ArM5eActorSheet {
       ]
     });
   }
+
   /** @override */
   get template() {
     if (this.actor.testUserPermission(game.user, CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER)) {
@@ -50,7 +51,7 @@ export class ArM5eBeastActorSheet extends ArM5eActorSheet {
     await this.enrichCharacterEditors(context);
     // Prepare items.
     this._prepareActorItems(context);
-    //}
+    // }
 
     context.ui.qualities = { display: true };
     log(false, "Beast-sheet getData", context);
@@ -63,11 +64,12 @@ export class ArM5eBeastActorSheet extends ArM5eActorSheet {
    *
    * @param {Object} actorData The actor to prepare.
    *
-   * @return {undefined}
+   * @param sheetData
+   * @returns {undefined}
    */
   _prepareActorItems(sheetData) {
     super._prepareActorItems(sheetData);
-    //let actorData = sheetData.actor.data;
+    // let actorData = sheetData.actor.data;
   }
 
   isItemDropAllowed(itemData) {
@@ -115,7 +117,7 @@ export class ArM5eBeastActorSheet extends ArM5eActorSheet {
     const info = getUuidInfo(data.uuid);
     const item = await fromUuid(data.uuid);
     const type = item.type;
-    if (type == "ability") {
+    if (type === "ability") {
       if (this.actor.hasSkill(item.system.key)) {
         ui.notifications.warn(
           `${game.i18n.localize("arm5e.notification.doubleAbility")} : ${item.name}`
@@ -125,7 +127,7 @@ export class ArM5eBeastActorSheet extends ArM5eActorSheet {
     const res = await super._onDropItem(event, data);
     // not dropped in the same actor
     if (this.actor.uuid !== item.parent?.uuid) {
-      if (res && res.length == 1) {
+      if (res && res.length === 1) {
         res[0].sheet.render(true);
       }
     }

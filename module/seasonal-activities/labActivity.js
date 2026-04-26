@@ -18,9 +18,9 @@ import { EnchantmentExtension } from "../schemas/enchantmentSchema.js";
 import { log } from "../tools/tools.js";
 import { Activity } from "./activity.js";
 
-///////////////////////
+// /////////////////////
 // LAB ACTIVITY
-////////////////////////
+// //////////////////////
 
 export class LabActivity extends Activity {
   constructor(labUuid, actorUuid, type) {
@@ -197,11 +197,11 @@ export class LabActivity extends Activity {
     labTot.label += ")&#10";
 
     for (let [key, mod] of Object.entries(this.modifiers)) {
-      if (key == "magicThSpecApply") continue;
+      if (key === "magicThSpecApply") continue;
 
       if (["philosophy", "aspects"].includes(key)) continue;
       total += mod;
-      if (mod != 0) {
+      if (mod !== 0) {
         labTot.label += `+ ${game.i18n.localize(`arm5e.lab.bonus.${key}`)} (${mod}) &#10`;
       }
     }
@@ -225,7 +225,7 @@ export class LabActivity extends Activity {
     // Lab specialties
     let labSpec = lab.system.specialty[data.system.technique.value].bonus;
     this.labSpecTotal = labSpec;
-    if (labSpec != 0) {
+    if (labSpec !== 0) {
       total += labSpec;
       labTot.label += `+ ${game.i18n.localize("arm5e.sheet.speciality")} ${
         CONFIG.ARM5E.magic.arts[data.system.technique.value].short
@@ -233,7 +233,7 @@ export class LabActivity extends Activity {
     }
     labSpec = lab.system.specialty[data.system.form.value].bonus;
     this.labSpecTotal += labSpec;
-    if (labSpec != 0) {
+    if (labSpec !== 0) {
       total += labSpec;
       labTot.label += `+ ${game.i18n.localize("arm5e.sheet.speciality")} ${
         CONFIG.ARM5E.magic.arts[data.system.form.value].short
@@ -243,7 +243,7 @@ export class LabActivity extends Activity {
     // Activities specialties
     labSpec = this.labActivitySpec(lab);
 
-    if (labSpec.mod != 0) {
+    if (labSpec.mod !== 0) {
       this.labSpecTotal += labSpec.mod;
       total += labSpec.mod;
       labTot.label += labSpec.label;
@@ -280,7 +280,7 @@ export class LabActivity extends Activity {
       });
     }
     let coeff = CONFIG.ARM5E.activities.distractions[options.distractions ?? "none"].coeff;
-    if (coeff != 1) {
+    if (coeff !== 1) {
       labTot.label += `* ${coeff.toFixed(2)} (${game.i18n.localize(
         "arm5e.lab.distraction.label"
       )})&#10`;
@@ -290,9 +290,9 @@ export class LabActivity extends Activity {
   }
 }
 
-///////////////////////
+// /////////////////////
 // NO ACTIVITY
-////////////////////////
+// //////////////////////
 
 // Blank activity for labs without owner
 export class NoLabActivity extends LabActivity {
@@ -303,9 +303,9 @@ export class NoLabActivity extends LabActivity {
   }
 }
 
-///////////////////////
+// /////////////////////
 // SPELL LEARNING/INVENTING
-////////////////////////
+// //////////////////////
 
 export class SpellActivity extends LabActivity {
   constructor(labUuid, actorUuid, type) {
@@ -351,7 +351,7 @@ export class SpellActivity extends LabActivity {
   }
 
   validation(input) {
-    if ("inventSpell" == this.type) {
+    if ("inventSpell" === this.type) {
       return this._validateInvention(input);
     } else {
       return this._validateSpellLearning(input);
@@ -414,9 +414,9 @@ export class SpellActivity extends LabActivity {
   }
 }
 
-///////////////////////
+// /////////////////////
 // LONGEVITY RITUAL
-////////////////////////
+// //////////////////////
 
 export class LongevityRitualActivity extends LabActivity {
   constructor(lab, actor) {
@@ -426,6 +426,7 @@ export class LongevityRitualActivity extends LabActivity {
   get hasVisCost() {
     return true;
   }
+
   // true if using more vis is a valid option
   get moreVisPossible() {
     return true;
@@ -450,6 +451,7 @@ export class LongevityRitualActivity extends LabActivity {
   get activitySheet() {
     return "systems/arm5e/templates/lab-activities/longevity-ritual.html";
   }
+
   async getDefaultData() {
     const effect = new ArM5eItem(
       {
@@ -467,6 +469,7 @@ export class LongevityRitualActivity extends LabActivity {
       }
     };
   }
+
   async prepareData(context) {
     if (context.planning.data.subject.self) {
       context.ui.subjectName = "readonly";
@@ -627,9 +630,9 @@ export class LongevityRitualActivity extends LabActivity {
   async application() {}
 }
 
-///////////////////////
+// /////////////////////
 // VIS EXTRACTION
-////////////////////////
+// //////////////////////
 
 export class VisExtractionActivity extends LabActivity {
   constructor(lab, actor) {
@@ -693,7 +696,7 @@ export class VisExtractionActivity extends LabActivity {
     let msg = game.i18n.format("arm5e.lab.planning.msg.visExtracted", {
       num: Math.ceil(input.labTotal.score / 10)
     });
-    if (input.modifiers.aura == 0) {
+    if (input.modifiers.aura === 0) {
       msg = game.i18n.localize("arm5e.lab.planning.msg.visExtracted3");
       isValid = false;
     }
@@ -708,9 +711,9 @@ export class VisExtractionActivity extends LabActivity {
   async application() {}
 }
 
-///////////////////////
+// /////////////////////
 // MINOR ENCHANTMENT
-////////////////////////
+// //////////////////////
 
 export class MinorEnchantment extends LabActivity {
   constructor(lab, actor) {
@@ -829,12 +832,13 @@ export class MinorEnchantment extends LabActivity {
   /**
    * Enrich context with specific data for the lab activity
    * @param {any} planning
+   * @param context
    * @returns {any}
    */
   async prepareData(context) {
     const planning = context.planning;
     const receptacleEnchants = planning.data.receptacle.system.enchantments;
-    if (receptacleEnchants.aspects.length == 0) {
+    if (receptacleEnchants.aspects.length === 0) {
       log(false, "DEBUG prepareData: WARNING ASPECTS length = 0");
       const first = Object.keys(planning.data.ASPECTS)[0];
       const firstEffect = Object.keys(planning.data.ASPECTS[first].effects)[0];

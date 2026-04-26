@@ -8,8 +8,8 @@ const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 export class Schedule extends HandlebarsApplicationMixin(ApplicationV2) {
   /**
    * Constructor expects options with document field containing the actor.
-   * @param {Object} options - ApplicationV2 options
-   * @param {Actor} options.document - The actor document
+   * @param {Object} options ApplicationV2 options
+   * @param {Actor} options.document The actor document
    */
   constructor(options) {
     super(options);
@@ -19,7 +19,7 @@ export class Schedule extends HandlebarsApplicationMixin(ApplicationV2) {
   }
 
   async close(options = {}) {
-    if (this.actor?.apps?.[this.options.uniqueId] != undefined) {
+    if (this.actor?.apps?.[this.options.uniqueId] !== undefined) {
       delete this.actor.apps[this.options.uniqueId];
     }
     return super.close(options);
@@ -61,12 +61,12 @@ export class Schedule extends HandlebarsApplicationMixin(ApplicationV2) {
 
   /**
    * Pure helper: build schedule for a single year with season conflict detection.
-   * @param {number} year - Year to build
-   * @param {Array} actorSchedule - Array of scheduled entries for this year
-   * @param {number} curYear - Current game year
-   * @param {string} curSeason - Current game season
-   * @param {number} born - Birth year of actor
-   * @param {number} agingStart - Aging start bonus threshold
+   * @param {number} year Year to build
+   * @param {Array} actorSchedule Array of scheduled entries for this year
+   * @param {number} curYear Current game year
+   * @param {string} curSeason Current game season
+   * @param {number} born Birth year of actor
+   * @param {number} agingStart Aging start bonus threshold
    * @returns {Object} Year object with seasons, conflicts, and aging markers
    */
   #buildScheduleYear(year, actorSchedule, curYear, curSeason, born, agingStart) {
@@ -102,13 +102,13 @@ export class Schedule extends HandlebarsApplicationMixin(ApplicationV2) {
       }
     };
 
-    let thisYearSchedule = actorSchedule.filter((e) => e.year == year);
+    let thisYearSchedule = actorSchedule.filter((e) => e.year === year);
 
     for (let s of Object.keys(ARM5E.seasons)) {
       // Mark future seasons
       if (
         year > curYear ||
-        (year == curYear && CONFIG.SEASON_ORDER[curSeason] < CONFIG.SEASON_ORDER[s])
+        (year === curYear && CONFIG.SEASON_ORDER[curSeason] < CONFIG.SEASON_ORDER[s])
       ) {
         yearData.seasons[s].future = true;
       }
@@ -131,10 +131,10 @@ export class Schedule extends HandlebarsApplicationMixin(ApplicationV2) {
       if (
         agingStart + born <= year &&
         s === "winter" &&
-        (thisYearSchedule.length == 0 ||
-          thisYearSchedule[0]?.seasons[s].filter((s) => s.type === "aging").length == 0)
+        (thisYearSchedule.length === 0 ||
+          thisYearSchedule[0]?.seasons[s].filter((s) => s.type === "aging").length === 0)
       ) {
-        if (yearData.seasons[s].others.length == 0) {
+        if (yearData.seasons[s].others.length === 0) {
           yearData.seasons[s].others.push({
             id: 0,
             name: "Aging roll needed",
@@ -150,6 +150,10 @@ export class Schedule extends HandlebarsApplicationMixin(ApplicationV2) {
 
   /**
    * Pure helper: apply final styling to a single season event.
+   * @param event
+   * @param hasOthers
+   * @param conflict
+   * @param isFuture
    */
   #styleSeasonEvent(event, hasOthers, conflict, isFuture) {
     event.edition = true;
@@ -172,7 +176,7 @@ export class Schedule extends HandlebarsApplicationMixin(ApplicationV2) {
 
     data.title = this.actor.name;
 
-    if (this.displayYear == null) {
+    if (this.displayYear === null) {
       this.displayYear = data.curYear;
     }
 
@@ -258,6 +262,7 @@ export class Schedule extends HandlebarsApplicationMixin(ApplicationV2) {
     this.displayYear = newYear;
     this.render();
   }
+
   async _setYear(event) {
     event.preventDefault();
     let newYear = Number(event.currentTarget.value);

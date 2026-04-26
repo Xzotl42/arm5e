@@ -39,8 +39,8 @@ export class AbilitySchema extends foundry.abstract.TypeDataModel {
     this.remainingXp = this.xp + this.xpBonus;
 
     if (
-      this.parent.actor.system.bonuses.skills[computedKey] != undefined &&
-      this.parent.actor.system.bonuses.skills[computedKey].bonus != 0
+      this.parent.actor.system.bonuses.skills[computedKey] !== undefined &&
+      this.parent.actor.system.bonuses.skills[computedKey].bonus !== 0
     ) {
       this.finalScore = Math.max(
         this.upgrade,
@@ -54,14 +54,10 @@ export class AbilitySchema extends foundry.abstract.TypeDataModel {
   static getIcon(item, newValue = null) {
     if (["altTechnique", "altForm"].includes(item.system.category)) {
       return "icons/magic/defensive/barrier-shield-dome-blue-purple.webp";
+    } else if (newValue !== null) {
+      return ABILITIES_DEFAULT_ICONS.MONO[newValue] ?? CONFIG.ARM5E_DEFAULT_ICONS.ability;
     } else {
-      if (newValue != null) {
-        return ABILITIES_DEFAULT_ICONS.MONO[newValue] ?? CONFIG.ARM5E_DEFAULT_ICONS["ability"];
-      } else {
-        return (
-          ABILITIES_DEFAULT_ICONS.MONO[item.system.key] ?? CONFIG.ARM5E_DEFAULT_ICONS["ability"]
-        );
-      }
+      return ABILITIES_DEFAULT_ICONS.MONO[item.system.key] ?? CONFIG.ARM5E_DEFAULT_ICONS.ability;
     }
   }
 
@@ -72,7 +68,7 @@ export class AbilitySchema extends foundry.abstract.TypeDataModel {
   static getDefault(itemData) {
     let res = itemData;
     if (itemData.system) {
-      if (itemData.system.key == undefined) {
+      if (itemData.system.key === undefined) {
         res.system.key = "awareness";
       }
     } else {
@@ -82,7 +78,7 @@ export class AbilitySchema extends foundry.abstract.TypeDataModel {
   }
 
   getComputedKey() {
-    return this.option != "" ? `${this.key}_${this.option}` : this.key;
+    return this.option !== "" ? `${this.key}_${this.option}` : this.key;
   }
 
   isAlternateArt() {
@@ -92,7 +88,7 @@ export class AbilitySchema extends foundry.abstract.TypeDataModel {
   async increaseScore() {
     let xpMod = 0;
     if (this.parent.isOwned) {
-      let key = this.option == "" ? this.key : this.key + "_" + this.option;
+      let key = this.option === "" ? this.key : `${this.key}_${this.option}`;
       xpMod = this.parent.parent.system.bonuses.skills[key].xpMod;
     }
     let oldXp = this.xp;
@@ -117,7 +113,7 @@ export class AbilitySchema extends foundry.abstract.TypeDataModel {
   async decreaseScore() {
     let xpMod = 0;
     if (this.parent.isOwned) {
-      let key = this.option == "" ? this.key : this.key + "_" + this.option;
+      let key = this.option === "" ? this.key : `${this.key}_${this.option}`;
       xpMod = this.parent.parent.system.bonuses.skills[key].xpMod;
     }
     let futureXp = Math.round(
@@ -131,7 +127,7 @@ export class AbilitySchema extends foundry.abstract.TypeDataModel {
           this.xpCoeff
       );
     }
-    if (newXp != this.xp) {
+    if (newXp !== this.xp) {
       await this.parent.update(
         {
           system: {
@@ -157,7 +153,7 @@ export class AbilitySchema extends foundry.abstract.TypeDataModel {
   static migrate(itemData) {
     // log(false, "Migrate ability " + itemData.name);
     const updateData = {};
-    if (itemData.system.experienceNextLevel != undefined) {
+    if (itemData.system.experienceNextLevel !== undefined) {
       // if the experience is equal or bigger than the xp for this score, use it as total xp
       let exp = ((itemData.system.score * (itemData.system.score + 1)) / 2) * 5;
       if (itemData.system.experience >= exp) {
@@ -183,7 +179,10 @@ export class AbilitySchema extends foundry.abstract.TypeDataModel {
     if (itemData.system.affinity) updateData["system.-=affinity"] = null;
 
     // no key assigned to the ability, try to find one
-    if (CONFIG.ARM5E.ALL_ABILITIES[itemData.system.key] == undefined || itemData.system.key == "") {
+    if (
+      CONFIG.ARM5E.ALL_ABILITIES[itemData.system.key] === undefined ||
+      itemData.system.key === ""
+    ) {
       // log(true, `Trying to find key for ability ${itemData.name}`);
       let name = itemData.name.toLowerCase();
       // handle those pesky '*' at the end of restricted abilities
@@ -194,31 +193,33 @@ export class AbilitySchema extends foundry.abstract.TypeDataModel {
       if (itemData.system.key === "civilCanonLaw") {
         updateData["system.key"] = "law";
         updateData["system.option"] = "CivilAndCanon";
-      } else if (itemData.system.key == "commonLaw") {
+      } else if (itemData.system.key === "commonLaw") {
         updateData["system.key"] = "law";
         updateData["system.option"] = "Common";
       }
       // if there is not already a key, try to guess it
       else if (itemData.system.key === "" || itemData.system.key === undefined) {
         // Special common cases
-        if (game.i18n.localize("arm5e.skill.commonCases.native").toLowerCase() == name) {
+        if (game.i18n.localize("arm5e.skill.commonCases.native").toLowerCase() === name) {
           updateData["system.key"] = "livingLanguage";
           updateData["system.option"] = "nativeTongue";
           log(false, `Found key livingLanguage for ability  ${itemData.name}`);
-        } else if (game.i18n.localize("arm5e.skill.commonCases.areaLore").toLowerCase() == name) {
+        } else if (game.i18n.localize("arm5e.skill.commonCases.areaLore").toLowerCase() === name) {
           updateData["system.key"] = "areaLore";
           log(false, `Found key areaLore for ability  ${itemData.name}`);
-        } else if (game.i18n.localize("arm5e.skill.commonCases.latin").toLowerCase() == name) {
+        } else if (game.i18n.localize("arm5e.skill.commonCases.latin").toLowerCase() === name) {
           updateData["system.key"] = "deadLanguage";
           updateData["system.option"] = "Latin";
           log(false, `Found key latin for ability  ${itemData.name}`);
-        } else if (game.i18n.localize("arm5e.skill.commonCases.hermesLore").toLowerCase() == name) {
+        } else if (
+          game.i18n.localize("arm5e.skill.commonCases.hermesLore").toLowerCase() === name
+        ) {
           updateData["system.key"] = "organizationLore";
           updateData["system.option"] = "OrderOfHermes";
           log(false, `Found key hermesLore for ability  ${itemData.name}`);
         } else {
           for (const [key, value] of Object.entries(CONFIG.ARM5E.ALL_ABILITIES)) {
-            if (game.i18n.localize(value.mnemonic).toLowerCase() == name) {
+            if (game.i18n.localize(value.mnemonic).toLowerCase() === name) {
               updateData["system.key"] = key;
               log(false, `Found key ${key} for ability  ${itemData.name}`);
               break;
@@ -226,15 +227,15 @@ export class AbilitySchema extends foundry.abstract.TypeDataModel {
           }
         }
       }
-      if (updateData["system.key"] == undefined) {
+      if (updateData["system.key"] === undefined) {
         log(true, `Unable to find a key for ability  ${itemData.name} defaulting to awareness`);
         updateData["system.key"] = "awareness";
       }
     }
-    if (itemData.system.option != undefined && itemData.system.option != "") {
+    if (itemData.system.option !== undefined && itemData.system.option !== "") {
       // keep only alphanum chars
       let regex = /[^a-zA-Z0-9-]/gi;
-      if (itemData.system.option.match(regex) != null)
+      if (itemData.system.option.match(regex) !== null)
         updateData["system.option"] = itemData.system.option.replace(regex, "");
     } else {
       // generic ability without any ability option
@@ -246,7 +247,7 @@ export class AbilitySchema extends foundry.abstract.TypeDataModel {
       }
     }
 
-    if (itemData.system.description == null) {
+    if (itemData.system.description === null) {
       updateData["system.description"] = "";
     }
 

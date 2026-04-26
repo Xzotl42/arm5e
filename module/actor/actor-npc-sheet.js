@@ -99,11 +99,12 @@ export class ArM5eNPCActorSheet extends ArM5eActorSheet {
    *
    * @param {Object} actorData The actor to prepare.
    *
-   * @return {undefined}
+   * @param sheetData
+   * @returns {undefined}
    */
   _prepareActorItems(sheetData) {
     super._prepareActorItems(sheetData);
-    //let actorData = sheetData.actor.data;
+    // let actorData = sheetData.actor.data;
   }
 
   isItemDropAllowed(itemData) {
@@ -160,10 +161,10 @@ export class ArM5eNPCActorSheet extends ArM5eActorSheet {
       let chosenRealm = html.find(".change-realm")[0].value;
       let currentRealm = getDataset(event).realm;
       let updateData = {};
-      if (chosenRealm != "mundane") {
+      if (chosenRealm !== "mundane") {
         updateData[`system.realms.${chosenRealm}.aligned`] = true;
       }
-      if (currentRealm != "mundane") {
+      if (currentRealm !== "mundane") {
         updateData[`system.realms.${currentRealm}.aligned`] = false;
       }
       updateData["system.realm"] = chosenRealm;
@@ -176,7 +177,7 @@ export class ArM5eNPCActorSheet extends ArM5eActorSheet {
   async _onDropItem(event, data) {
     const info = getUuidInfo(data.uuid);
     const item = await fromUuid(data.uuid);
-    if (item.type == "ability") {
+    if (item.type === "ability") {
       if (this.actor.hasSkill(item.system.key)) {
         ui.notifications.warn(
           `${game.i18n.localize("arm5e.notification.doubleAbility")} : ${item.name}`
@@ -188,7 +189,7 @@ export class ArM5eNPCActorSheet extends ArM5eActorSheet {
 
     // not dropped in the same actor
     if (this.actor.uuid !== item.parent?.uuid) {
-      if (res && res.length == 1) {
+      if (res && res.length === 1) {
         res[0].sheet.render(true);
       }
     }

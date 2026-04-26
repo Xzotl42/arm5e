@@ -82,7 +82,7 @@
         "no-loop-func": "warn",
         "no-misleading-character-class": "warn",
         "no-mixed-operators": "off",
-        "no-multi-str": "warn",
+        "no-multi-str": "off",
         "no-multiple-empty-lines": "off",
         "no-new-func": "warn",
         "no-new-object": "warn",
@@ -200,7 +200,7 @@
         "jsdoc/check-examples": "off",
         "jsdoc/check-indentation": "off",
         "jsdoc/check-line-alignment": "off",
-        "jsdoc/check-param-names": "warn",
+        "jsdoc/check-param-names": "off",
         "jsdoc/check-property-names": "warn",
         "jsdoc/check-syntax": "off",
         "jsdoc/check-tag-names": [
@@ -221,7 +221,7 @@
         "jsdoc/no-defaults": "off",
         "jsdoc/no-types": "off",
         "jsdoc/no-undefined-types": "off",
-        "jsdoc/require-description": "warn",
+        "jsdoc/require-description": "off",
         "jsdoc/require-description-complete-sentence": "off",
         "jsdoc/require-example": "off",
         "jsdoc/require-file-overview": "off",
@@ -229,11 +229,11 @@
             "warn",
             "never"
         ],
-        "jsdoc/require-jsdoc": "warn",
-        "jsdoc/require-param": "warn",
+        "jsdoc/require-jsdoc": "off",
+        "jsdoc/require-param": "off",
         "jsdoc/require-param-description": "off",
         "jsdoc/require-param-name": "warn",
-        "jsdoc/require-param-type": "warn",
+        "jsdoc/require-param-type": "off",
         "jsdoc/require-property": "warn",
         "jsdoc/require-property-description": "off",
         "jsdoc/require-property-name": "warn",
@@ -264,6 +264,6 @@
         "prettier"
     ],
     "ignorePatterns": [
-        "foundry/**/*"
+        "foundry/**"
     ]
 }

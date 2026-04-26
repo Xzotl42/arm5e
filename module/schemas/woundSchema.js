@@ -132,7 +132,7 @@ export class WoundSchema extends foundry.abstract.TypeDataModel {
   /**
    * Foundry hook: transform raw stored data before the schema applies defaults.
    * Currently a pass-through; kept for future backwards-compatibility shims.
-   * @param {Object} data - Raw item data from the database
+   * @param {Object} data Raw item data from the database
    * @returns {Object} The (possibly transformed) data
    */
   static migrateData(data) {
@@ -149,7 +149,7 @@ export class WoundSchema extends foundry.abstract.TypeDataModel {
    * - `lastTreatedDate` — derived from the legacy offset formula for wounds
    *   that pre-date the field; set to null for untreated wounds.
    *
-   * @param {Object} data - Full item data (including `data.system`)
+   * @param {Object} data Full item data (including `data.system`)
    * @returns {Object} Flat update object; empty object means no migration needed
    */
   static migrate(data) {
@@ -160,7 +160,7 @@ export class WoundSchema extends foundry.abstract.TypeDataModel {
         ARM5E.recovery.daysInSeason[data.system.inflictedDate?.season] ?? 91;
     }
     // Backfill lastTreatedDate for existing wounds that pre-date the field.
-    // If recoveryTime == 0 the wound has never been treated — leave null.
+    // If recoveryTime === 0 the wound has never been treated — leave null.
     // Otherwise derive the last treatment season from the offset formula that
     // canBeTreatedThisSeason previously used so existing wounds keep working.
     if (data.system.lastTreatedDate === undefined) {
@@ -185,14 +185,14 @@ export class WoundSchema extends foundry.abstract.TypeDataModel {
    * Return itemData with sensible defaults applied for a freshly-created wound.
    * Sets `gravity` to "light" and `inflictedDate` to the current in-game date
    * when those fields are absent.
-   * @param {Object} itemData - Partial item data to populate
+   * @param {Object} itemData Partial item data to populate
    * @returns {Object} itemData with defaults merged in
    */
   static getDefault(itemData) {
     let currentDate = game.settings.get("arm5e", "currentDate");
     let res = itemData;
     if (itemData.system) {
-      if (itemData.system.gravity == undefined) {
+      if (itemData.system.gravity === undefined) {
         res.system.gravity = "light";
         res.system.inflictedDate = { year: Number(currentDate.year), season: currentDate.season };
       }
@@ -209,13 +209,13 @@ export class WoundSchema extends foundry.abstract.TypeDataModel {
 
   /**
    * Return the icon path for a wound's current (or prospective) gravity.
-   * @param {Item}   item      - The wound item
-   * @param {string} [newValue] - If provided, return the icon for this gravity key
+   * @param {Item}   item      The wound item
+   * @param {string} [newValue] If provided, return the icon for this gravity key
    *                              instead of the item's current gravity.
    * @returns {string} Icon path string
    */
   static getIcon(item, newValue = null) {
-    if (newValue != null) {
+    if (newValue !== null) {
       return ARM5E.recovery.wounds[newValue].icon;
     } else {
       return ARM5E.recovery.wounds[item.system.gravity].icon;
@@ -234,8 +234,8 @@ export class WoundSchema extends foundry.abstract.TypeDataModel {
    * 4. Legacy fallback: derive the next roll season from the offset formula
    *    (inflictedDate + accumulated recoveryTime days) and compare.
    *
-   * @param {string} season - Season key of the proposed treatment (e.g. "spring")
-   * @param {number} year   - Year of the proposed treatment
+   * @param {string} season Season key of the proposed treatment (e.g. "spring")
+   * @param {number} year   Year of the proposed treatment
    * @returns {boolean} True if the wound can be rolled for this season
    */
   canBeTreatedThisSeason(season, year) {
@@ -243,35 +243,35 @@ export class WoundSchema extends foundry.abstract.TypeDataModel {
     // Wound was inflicted in the future — cannot treat yet
     if (seasonsDelta(currentDate, this.inflictedDate) > 0) return false;
     // Fresh wound: never treated and no recovery time accumulated yet
-    if (this.recoveryTime == 0) {
+    if (this.recoveryTime === 0) {
       return true;
     }
 
     if (year < this.inflictedDate.year) return false;
 
     // If lastTreatedDate is recorded, use it directly for a clean season comparison
-    if (this.lastTreatedDate != null) {
+    if (this.lastTreatedDate !== null) {
       const delta = seasonsDelta(this.lastTreatedDate, { season: season, year: year });
-      // delta == 0  → same season as last treatment → allowed
+      // delta === 0  → same season as last treatment → allowed
       // delta  < 0  → would treat again before the next eligible season → not allowed
       // delta  > 0  → future season relative to last treatment → not yet eligible
       // Only allow if next eligible season matches the given season/year:
       // next eligible = season after lastTreatedDate shifted by interval seasons
       let woundConfig =
-        CONFIG.ARM5E.recovery.wounds[this.gravity] ?? CONFIG.ARM5E.recovery.wounds["light"];
+        CONFIG.ARM5E.recovery.wounds[this.gravity] ?? CONFIG.ARM5E.recovery.wounds.light;
       // Use the longest season (maxDaysInSeason) so an interval that fits in the
       // shortest season is never over-counted into two seasons.
       let intervalSeasons = Math.ceil(woundConfig.interval / CONFIG.ARM5E.recovery.maxDaysInSeason);
       let nextEligible = getShiftedDate(this.lastTreatedDate, intervalSeasons);
       const eligibleDelta = seasonsDelta(nextEligible, { season: season, year: year });
-      return eligibleDelta == 0;
+      return eligibleDelta === 0;
     }
 
     // Legacy fallback: compute next roll season from inflictedDate + accumulated recoveryTime
     // if recovery time is not 0, wound has already been treated or started mid-season
     if (
-      season == this.inflictedDate.season &&
-      year == this.inflictedDate.year &&
+      season === this.inflictedDate.season &&
+      year === this.inflictedDate.year &&
       this.nextRoll > (CONFIG.ARM5E.recovery.daysInSeason[this.inflictedDate?.season] ?? 91)
     ) {
       return false;
@@ -281,7 +281,7 @@ export class WoundSchema extends foundry.abstract.TypeDataModel {
     let nextRollDate = getShiftedDate(this.inflictedDate, offset);
 
     const delta = seasonsDelta(nextRollDate, { season: season, year: year });
-    if (delta == 0) return true;
+    if (delta === 0) return true;
 
     return false;
   }

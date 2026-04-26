@@ -216,6 +216,7 @@ export class CovenantSchema extends foundry.abstract.TypeDataModel {
       })
     };
   }
+
   static migrateData(data) {
     return data;
   }
@@ -232,13 +233,13 @@ export class CovenantSchema extends foundry.abstract.TypeDataModel {
 
     let descriptionUpdate = "";
 
-    if (typeof data.system.aegisCovenant != "number" || isNaN(data.system.aegisCovenant)) {
+    if (typeof data.system.aegisCovenant !== "number" || isNaN(data.system.aegisCovenant)) {
       const newValue = convertToNumber(data.system.aegisCovenant, 0);
       descriptionUpdate += `<li>Covenant aegis is now stricly a number, previous value (${data.system.aegisCovenant}) => new value (${newValue})</li>`;
       update["system.aegisCovenant"] = newValue;
     }
 
-    if (typeof data.system.levelsRegio != "number" || isNaN(data.system.levelsRegio)) {
+    if (typeof data.system.levelsRegio !== "number" || isNaN(data.system.levelsRegio)) {
       const newValue = convertToNumber(data.system.levelsRegio, 0);
       descriptionUpdate += `<li>Covenant regio levels is now stricly a number, previous value (${data.system.levelsRegio}) => new value (${newValue})</li>`;
       update["system.levelsRegio"] = newValue;
@@ -388,11 +389,9 @@ export class CovenantSchema extends foundry.abstract.TypeDataModel {
 
     if (descriptionUpdate !== "") {
       descriptionUpdate =
-        "<h2>Migration comments</h2> The following fields are now computed and readonly. The original value is listed below" +
-        "<ol>" +
-        descriptionUpdate +
-        "</ol>";
-      update["system.description"] = data.system.description + "<br/>" + descriptionUpdate;
+        `<h2>Migration comments</h2> The following fields are now computed and readonly. The original value is listed below` +
+        `<ol>${descriptionUpdate}</ol>`;
+      update["system.description"] = `${data.system.description}<br/>${descriptionUpdate}`;
     }
 
     return update;
@@ -551,14 +550,14 @@ export class CovenantSchema extends foundry.abstract.TypeDataModel {
                 this.masteryTopics.push(topic);
                 break;
               case "labText":
-                if (topic.labtext == null) {
+                if (topic.labtext === null) {
                   topic.system = { type: "" };
                 } else {
                   topic.system = topic.labtext;
                   labTextPts += item.system.buildPoints(topic);
                 }
 
-                if (topic.labtext != null) {
+                if (topic.labtext !== null) {
                   topic.name = `${topic.book}: ${topic.labtextTitle}`;
                 }
                 this.laboratoryTexts.push(topic);
@@ -870,7 +869,7 @@ export class CovenantSchema extends foundry.abstract.TypeDataModel {
 
     for (let spe of this.inhabitants.specialists) {
       if (spe.system.category === "specialists") {
-        if (spe.system.specialistType == "other" && spe.system.fieldOfWork != "none") {
+        if (spe.system.specialistType === "other" && spe.system.fieldOfWork !== "none") {
           let craft = slugify(spe.system.job, false);
           let saves = spe.system.craftSavings;
           if (!craftSavings[spe.system.fieldOfWork].crafts[craft]) {
@@ -880,7 +879,7 @@ export class CovenantSchema extends foundry.abstract.TypeDataModel {
           }
           craftSavings[spe.system.fieldOfWork].total += saves;
         }
-      } else if (spe.system.category === "craftsmen" && spe.system.fieldOfWork != "none") {
+      } else if (spe.system.category === "craftsmen" && spe.system.fieldOfWork !== "none") {
         let craft = slugify(spe.system.job, false);
         let saves = spe.system.craftSavings;
         if (!craftSavings[spe.system.fieldOfWork].crafts[craft]) {
@@ -931,12 +930,12 @@ export class CovenantSchema extends foundry.abstract.TypeDataModel {
       for (let [craft, save] of Object.entries(craftSavings[category].crafts)) {
         const increment = Math.min(save.val, save.max ? save.max : craftSavings[category].max);
         this.yearlyExpenses[category].craftSavings += increment;
-        if (save.type == "spec") {
+        if (save.type === "spec") {
           this.yearlySavings.specialists.amount += increment;
         } else if (save.type === "craft") {
           this.yearlySavings.craftsmen.amount += increment;
         }
-        if (craft == magicLocalized) {
+        if (craft === magicLocalized) {
           this.yearlySavings.magicItems.amount += increment;
         }
         this.yearlyExpenses[category].savingsDetails += `<li class='label-light'>${

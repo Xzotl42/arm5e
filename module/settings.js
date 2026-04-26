@@ -320,7 +320,7 @@ export async function migrateSettings() {
   try {
     const ARM5E = CONFIG.ARM5E;
     let sourcebookFilter = game.settings.get(ARM5E.SYSTEM_ID, "sourcebookFilter");
-    if (sourcebookFilter?.custom?.display == undefined) {
+    if (sourcebookFilter?.custom?.display === undefined) {
       await game.settings.set(ARM5E.SYSTEM_ID, "sourcebookFilter", {
         custom: ARM5E.generic.sourcesTypes.custom,
         ArM5: ARM5E.generic.sourcesTypes.ArM5,
@@ -336,7 +336,7 @@ export async function migrateSettings() {
         currentDate = { year: 1220, season: "spring", date: "", month: 2, day: 20 };
         toUpdate = true;
       } else {
-        if (currentDate.year == undefined) {
+        if (currentDate.year === undefined) {
           currentDate.year = 1220;
           toUpdate = true;
         }

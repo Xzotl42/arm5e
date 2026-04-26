@@ -799,7 +799,7 @@ export class ArM5eLaboratoryActorSheetV2 extends ArM5eActorSheetV2 {
     entryData[0].system.dates = dates;
 
     const achievement = await activity.activityAchievements(planning);
-    if (achievement != null) {
+    if (achievement !== null) {
       entryData[0].system.achievements.push(...achievement);
     }
 

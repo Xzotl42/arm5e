@@ -6,6 +6,7 @@ export class ArM5eActorProfiles {
   constructor(actor) {
     this.actor = actor;
   }
+
   async getData(context) {
     return context;
   }
@@ -24,7 +25,7 @@ export class ArM5eActorProfiles {
           }
         } else {
           ability = await getAbilityFromCompendium(ab.key, ab.option);
-          if (ability == null) {
+          if (ability === null) {
             console.error("Wrong actor config");
             return;
           }
@@ -41,7 +42,7 @@ export class ArM5eActorProfiles {
           continue;
         }
         let virtue = await getItemFromCompendium("virtues", v.index);
-        if (virtue == null) {
+        if (virtue === null) {
           console.error("Wrong actor config");
           return;
         }
@@ -55,7 +56,7 @@ export class ArM5eActorProfiles {
           continue;
         }
         let flaw = await getItemFromCompendium("flaws", f.index);
-        if (flaw == null) {
+        if (flaw === null) {
           console.error("Wrong actor config");
           return;
         }
@@ -80,7 +81,7 @@ export class ArM5eActorProfiles {
       }
     }
     // TODO: one update
-    await this.actor.createEmbeddedDocuments("Item", itemsCreate); //, { temporary: true });
+    await this.actor.createEmbeddedDocuments("Item", itemsCreate); // , { temporary: true });
     await this.actor.updateEmbeddedDocuments("Item", itemsUpdate, {});
     await this.actor.update(actorUpdate);
   }

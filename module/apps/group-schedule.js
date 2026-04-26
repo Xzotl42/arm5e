@@ -8,7 +8,7 @@ const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 export class GroupSchedule extends HandlebarsApplicationMixin(ApplicationV2) {
   /**
    * Constructor initializes with default state.
-   * @param {Object} options - ApplicationV2 options (typically empty)
+   * @param {Object} options ApplicationV2 options (typically empty)
    */
   constructor(options = {}) {
     super(options);
@@ -56,7 +56,7 @@ export class GroupSchedule extends HandlebarsApplicationMixin(ApplicationV2) {
 
   /**
    * Pure helper: filter actors by troupe type.
-   * @param {string} filter - Filter key (all, players, magi, companions, grogs, npcs)
+   * @param {string} filter Filter key (all, players, magi, companions, grogs, npcs)
    * @returns {Array} Filtered array of actors
    */
   #filterActorsByTroupe(filter) {
@@ -70,17 +70,17 @@ export class GroupSchedule extends HandlebarsApplicationMixin(ApplicationV2) {
         break;
       case "magi":
         actors = game.actors.filter(
-          (e) => e.type === "player" && e.system.charType.value == "magus"
+          (e) => e.type === "player" && e.system.charType.value === "magus"
         );
         break;
       case "companions":
         actors = game.actors.filter(
-          (e) => e.type === "player" && e.system.charType.value == "companion"
+          (e) => e.type === "player" && e.system.charType.value === "companion"
         );
         break;
       case "grogs":
         actors = game.actors.filter(
-          (e) => e.type === "player" && e.system.charType.value == "grog"
+          (e) => e.type === "player" && e.system.charType.value === "grog"
         );
         break;
       case "npcs":
@@ -92,8 +92,8 @@ export class GroupSchedule extends HandlebarsApplicationMixin(ApplicationV2) {
 
   /**
    * Pure helper: build season aggregation for a single actor and year.
-   * @param {Object} actor - Actor document
-   * @param {number} year - Display year
+   * @param {Object} actor Actor document
+   * @param {number} year Display year
    * @returns {Object} Actor year object with aggregated activities per season
    */
   #buildActorYearRow(actor, year) {
@@ -138,6 +138,9 @@ export class GroupSchedule extends HandlebarsApplicationMixin(ApplicationV2) {
 
   /**
    * Pure helper: apply styling to season event (busy/conflict/none).
+   * @param event
+   * @param hasActivities
+   * @param busy
    */
   #styleActorSeason(event, hasActivities, busy) {
     event.edition = false;
@@ -154,7 +157,7 @@ export class GroupSchedule extends HandlebarsApplicationMixin(ApplicationV2) {
     data.selectedActors = [];
     data.title = this.title;
     data.troupeFilters = ARM5E.activities.troupeFilters;
-    if (this.displayYear == null) {
+    if (this.displayYear === null) {
       this.displayYear = data.curYear;
     }
 
@@ -230,6 +233,7 @@ export class GroupSchedule extends HandlebarsApplicationMixin(ApplicationV2) {
     this.displayYear = newYear;
     this.render();
   }
+
   async _setYear(event) {
     event.preventDefault();
     let newYear = Number(event.currentTarget.value);

@@ -24,7 +24,8 @@ export class ArM5eItemEnchantmentSheet {
 
   getUserCache() {
     let usercache = JSON.parse(sessionStorage.getItem(`usercache-${game.user.id}`));
-    if (usercache[this.item.id] == undefined) {
+    if (usercache === null) usercache = {};
+    if (usercache[this.item.id] === undefined) {
       usercache[this.item.id] = {
         sections: {
           visibility: {
@@ -90,10 +91,10 @@ export class ArM5eItemEnchantmentSheet {
     await GetFilteredMagicalAttributes(context.selection);
 
     if (enchants.capacities.length > 1) {
-      enchants.states["charged"].selection = "disabled";
-      enchants.states["lesser"].selection = "disabled";
+      enchants.states.charged.selection = "disabled";
+      enchants.states.lesser.selection = "disabled";
       enchants.charged = false;
-    } else if (enchants.capacities.length == 1) {
+    } else if (enchants.capacities.length === 1) {
       // prevent deleting the last capacity
       enchants.noDelete = true;
     }
@@ -112,11 +113,11 @@ export class ArM5eItemEnchantmentSheet {
         ARM5E.lab.enchantment.sizeMultiplier[capa.sizeMultiplier].mult;
 
       capa.visiblePreparation =
-        enchants.state != "lesser" &&
+        enchants.state !== "lesser" &&
         (enchants.attunementVisible || enchants.visibleEnchant > 1 || context.isGM);
-      if (capa.prepared || enchants.state == "lesser") {
+      if (capa.prepared || enchants.state === "lesser") {
         enchants.prepared = true;
-        if (enchants.capacityMode == "sum") {
+        if (enchants.capacityMode === "sum") {
           enchants.totalCapa += capa.total;
         } else if (capa.total > enchants.totalCapa) {
           // Max mode
@@ -130,8 +131,8 @@ export class ArM5eItemEnchantmentSheet {
     enchants.ASPECTS = await GetFilteredAspects();
 
     if (enchants.aspects.length > 1) {
-      enchants.states["charged"].selection = "disabled";
-      enchants.states["lesser"].selection = "disabled";
+      enchants.states.charged.selection = "disabled";
+      enchants.states.lesser.selection = "disabled";
     }
 
     enchants.attuned = false;
@@ -143,18 +144,18 @@ export class ArM5eItemEnchantmentSheet {
         enchants.attuned = true;
         enchants.charged = false;
         enchants.minor = false;
-        enchants.states["charged"].selection = "disabled";
-        enchants.states["lesser"].selection = "disabled";
-        enchants.states["prepared"].selection = "disabled";
-        enchants.states["major"].selection = "disabled";
+        enchants.states.charged.selection = "disabled";
+        enchants.states.lesser.selection = "disabled";
+        enchants.states.prepared.selection = "disabled";
+        enchants.states.major.selection = "disabled";
       }
     }
     enchants.usedCapa = 0;
 
     if (enchants.effects.length > 1) {
-      enchants.states["charged"].selection = "disabled";
-      enchants.states["lesser"].selection = "disabled";
-      enchants.states["prepared"].selection = "disabled";
+      enchants.states.charged.selection = "disabled";
+      enchants.states.lesser.selection = "disabled";
+      enchants.states.prepared.selection = "disabled";
       enchants.expiryAllowed = false;
       // enchants.prepared = true;
     }
@@ -178,7 +179,7 @@ export class ArM5eItemEnchantmentSheet {
         e.visible = true;
         enchants.visibleEnchant++;
         const capaIdx = enchants.capacities.findIndex((c) => {
-          return e.receptacleId == c.id;
+          return e.receptacleId === c.id;
         });
         if (capaIdx >= 0) {
           enchants.capacities[capaIdx].used += Math.ceil(e.system.level / 10);
@@ -197,7 +198,7 @@ export class ArM5eItemEnchantmentSheet {
       enchants.invalidMsg.push("arm5e.enchantment.msg.capacityOverflow");
     }
     enchants.visibleType = context.isGM;
-    if (enchants.visibleEnchant == 1 && enchants.charged) {
+    if (enchants.visibleEnchant === 1 && enchants.charged) {
       enchants.visibleType = true;
     } else if (enchants.visibleEnchant > 1 && enchants.state !== "talisman") {
       enchants.visibleType = true;
@@ -270,11 +271,9 @@ export class ArM5eItemEnchantmentSheet {
       if (enchants.aspects.length >= 1) {
         enchants.addAspect = false;
       }
-    } else {
-      if (!enchants.prepared) {
-        enchants.invalidItem = true;
-        enchants.invalidMsg.push("arm5e.enchantment.msg.noCapacityPrepared");
-      }
+    } else if (!enchants.prepared) {
+      enchants.invalidItem = true;
+      enchants.invalidMsg.push("arm5e.enchantment.msg.noCapacityPrepared");
     }
   }
 
@@ -340,7 +339,6 @@ export class ArM5eItemEnchantmentSheet {
             case "talisman": {
               enchant.capacities[0].prepared = true;
               updateData["system.enchantments.capacities"] = enchant.capacities;
-              break;
               break;
             }
             case "prepared":
@@ -426,7 +424,7 @@ export class ArM5eItemEnchantmentSheet {
     });
 
     html.find(".appraise").click(async () => {
-      if (this.item.system.enchantments == null || this.item.system.state === "inert") {
+      if (this.item.system.enchantments === null || this.item.system.state === "inert") {
         const updateData = {};
         updateData["system.state"] = "appraised";
         updateData["system.enchantments"] = new EnchantmentExtension();
@@ -511,7 +509,7 @@ export class ArM5eItemEnchantmentSheet {
 
       if (
         this.sheet.item.system.enchantments.effects.find((e) => {
-          return e.receptacleId == dataset.id;
+          return e.receptacleId === dataset.id;
         })
       ) {
         ui.notifications.info(game.i18n.localize("arm5e.notification.effectLinked"));
@@ -632,7 +630,7 @@ export class ArM5eItemEnchantmentSheet {
         let effects = this.sheet.item.system.enchantments.effects;
         effects.splice(index, 1);
         const updateData = { "system.enchantments.effects": effects };
-        if (effects.length == 0) {
+        if (effects.length === 0) {
           updateData["system.state"] = "appraised";
         }
         await this.sheet.item.update(updateData);
@@ -646,7 +644,7 @@ export class ArM5eItemEnchantmentSheet {
       const dataset = getDataset(e);
       let receptacleId = e.currentTarget.selectedOptions[0].value;
       let effects = this.sheet.item.system.enchantments.effects;
-      effects[dataset.index]["receptacleId"] = receptacleId;
+      effects[dataset.index].receptacleId = receptacleId;
       const updateData = { "system.enchantments.effects": effects };
       await this.sheet.item.update(updateData);
     });

@@ -339,7 +339,7 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
   async _onDrop(event) {
     try {
       const dropData = foundry.applications.ux.TextEditor.getDragEventData(event);
-      if (dropData.type == "Item") {
+      if (dropData.type === "Item") {
         // If (this.item.system.activity === "teaching" || this.item.system.activity === "training") {
 
         if (event.currentTarget.dataset.drop === "book") {
@@ -354,7 +354,7 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
           }
         } else if (event.currentTarget.dataset.drop === "add-labtext") {
           const text = await Item.implementation.fromDropData(dropData);
-          if (text.type == "laboratoryText") {
+          if (text.type === "laboratoryText") {
             await this._addLabText(text);
           }
         } else if (event.currentTarget.dataset.drop === "copy-book") {
@@ -365,7 +365,7 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
             await this._addLabTextToCopy(book);
           }
         }
-      } else if (dropData.type == "Actor") {
+      } else if (dropData.type === "Actor") {
         if (event.currentTarget.dataset.drop === "reader") {
           const reader = await Actor.implementation.fromDropData(dropData);
           if (reader.type === "player" || reader.type === "npc") {
@@ -515,7 +515,7 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
     if (context.reading.reader?.id) {
       context.ui.canEditReader = "readonly";
       context.ui.disabledReader = "disabled";
-      if (currentTopic.category == "mastery") {
+      if (currentTopic.category === "mastery") {
         context.ui.reading.disableType = "disabled";
       }
       let reader = game.actors.get(context.reading.reader.id);
@@ -555,7 +555,7 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
           );
           for (let a of reader.system.abilities) {
             let found = availableAbilities.findIndex(
-              (e) => e.system.key == a.system.key && e.system.option == a.system.option
+              (e) => e.system.key === a.system.key && e.system.option === a.system.option
             );
             const computedKey = a.system.getComputedKey();
             if (found >= 0) {
@@ -606,7 +606,7 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
 
           if (ability) {
             // Is the reader low skilled enough?
-            if (filteredAbilities.find((a) => a._id == ability._id)) {
+            if (filteredAbilities.find((a) => a._id === ability._id)) {
               context.reading.reader.ability = ability._id;
               context.reading.reader.abilities = [ability];
             } else {
@@ -618,7 +618,7 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
             }
           } else {
             // Check if the ability is not found because of the option field
-            filteredAbilities = filteredAbilities.filter((a) => a.system.key == currentTopic.key);
+            filteredAbilities = filteredAbilities.filter((a) => a.system.key === currentTopic.key);
             if (filteredAbilities.length > 0) {
               if (filteredAbilities.length > 1) {
                 context.ui.reading.warning.push(
@@ -730,7 +730,7 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
           context.writing.writer.writingBonus
         );
       }
-      if (newTopic.category == "mastery") {
+      if (newTopic.category === "mastery") {
         context.ui.writing.disableType = "disabled";
       }
       context.writing.writer.name = writer.name;
@@ -909,7 +909,7 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
               context.writing.writer.spell = context.writing.writer.filteredSpells[0].id;
             }
             let spell = context.writing.writer.filteredSpells.find(
-              (e) => e.id == context.writing.writer.spell
+              (e) => e.id === context.writing.writer.spell
             );
             context.writing.book.system.topics[context.newTopicIndex].maxLevel = Math.round(
               spell.mastery / 2
@@ -986,7 +986,7 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
     if (context.copying.scribe?.id) {
       context.ui.canEditScribe = "readonly";
       context.ui.disabledScribe = "disabled";
-      // If (copyTopic.category == "mastery") {
+      // If (copyTopic.category === "mastery") {
       context.ui.copying.disableType = "disabled";
       // }
       let scribe = game.actors.get(context.copying.scribe.id);
@@ -1428,7 +1428,7 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
         label: "Table of Contents",
         fn: (doc) => {
           let toc =
-            doc.type == "book"
+            doc.type === "book"
               ? BookSchema.getTableOfContentsSynthetic(doc.system, false)
               : doc.system.toString();
 
@@ -1640,7 +1640,7 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
     const books = structuredClone(objectData.copying.books);
 
     let activityName = game.i18n.localize("arm5e.scriptorium.copying.activity");
-    if (books.length == 1) {
+    if (books.length === 1) {
       activityName += `: "${books[0].name}"`;
     }
 
@@ -1813,12 +1813,12 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
     topic.art = writerData.art;
     topic.author = writer.name;
     topic.language = writer.items.get(writerData.language).name;
-    if (topic.category == "mastery" && writerData.spell) {
+    if (topic.category === "mastery" && writerData.spell) {
       const spell = writer.items.get(writerData.spell);
       topic.spellName = spell.name;
       topic.spellTech = spell.system.technique.value;
       topic.spellForm = spell.system.form.value;
-    } else if (topic.category == "ability") {
+    } else if (topic.category === "ability") {
       const ability = writer.items.get(writerData.ability);
       topic.name = ability.name;
     }
@@ -1936,9 +1936,9 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
     let maxLevel = 0;
     switch (topic.category) {
       case "ability":
-        if (topic.type == "Summa") {
+        if (topic.type === "Summa") {
           objectData.ui = {};
-          if (dataset.abilityId.length == 16) {
+          if (dataset.abilityId.length === 16) {
             let ab = reader.system.abilities.find((a) => {
               return a._id === dataset.abilityId;
             });
@@ -1957,7 +1957,7 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
           }),
           key: topic.key,
           option: topic.option,
-          secondaryId: dataset.abilityId.length != 16,
+          secondaryId: dataset.abilityId.length !== 16,
           maxLevel: maxLevel,
           xp: entryData[0].system.cappedGain
             ? quality
@@ -1966,7 +1966,7 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
         log(false, entryData[0].system.progress.abilities[0]);
         break;
       case "art":
-        if (topic.type == "Summa") {
+        if (topic.type === "Summa") {
           let art = reader.getArtStats(topic.art);
           objectData.ui = {};
           entryData[0].system.cappedGain = topic.cappedGain; // This.checkArtOverload(objectData, reader, art);
@@ -2102,7 +2102,7 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
       ui.notifications.info(game.i18n.localize("arm5e.scriptorium.msg.bookNoAccess"));
       return;
     }
-    if (book.system.topics.length == 0) {
+    if (book.system.topics.length === 0) {
       ui.notifications.info(game.i18n.localize("arm5e.scriptorium.msg.emptyBook"));
       return;
     }
@@ -2159,7 +2159,7 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
     let topicType;
     if (books.length) {
       topicType = books[0].system.topics[0].type;
-      const matchingTopics = structuredClone(bookData.topics.filter((e) => e.type == topicType));
+      const matchingTopics = structuredClone(bookData.topics.filter((e) => e.type === topicType));
       if (matchingTopics.length) {
         bookData.topicIndex = 0;
         bookData.topics = matchingTopics;
@@ -2181,8 +2181,8 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
       }
       topicType = topic.type;
 
-      const matchingTopics = structuredClone(bookData.topics.filter((e) => e.type == topicType));
-      bookData.topicIndex = matchingTopics.findIndex((e) => compareTopics(e, topic) == 0);
+      const matchingTopics = structuredClone(bookData.topics.filter((e) => e.type === topicType));
+      bookData.topicIndex = matchingTopics.findIndex((e) => compareTopics(e, topic) === 0);
       bookData.topics = matchingTopics;
     }
 
@@ -2200,7 +2200,7 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
    */
   async _addLabText(text) {
     const writer = game.actors.get(this.object.writing.writer.id);
-    if (!text.system.draft || text.system.author != writer.name) {
+    if (!text.system.draft || text.system.author !== writer.name) {
       ui.notifications.info(game.i18n.localize("arm5e.scriptorium.msg.translationOnly"));
       return;
     }
@@ -2434,12 +2434,12 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
     const topic = context.writing.book.system.topics[context.newTopicIndex];
     // Is the character able to  read?
     let writingSkill = writer.getAbilityStats("artesLib");
-    if (writingSkill.score == 0) {
+    if (writingSkill.score === 0) {
       context.ui.writing.warning.push(game.i18n.localize("arm5e.scriptorium.msg.illiterate"));
       context.ui.writing.error = true;
     }
     // Know any language at proper level?
-    if (context.writing.writer.languages.length == 0) {
+    if (context.writing.writer.languages.length === 0) {
       context.ui.writing.warning.push(game.i18n.localize("arm5e.scriptorium.msg.noLanguage"));
       context.ui.writing.error = true;
     }
@@ -2449,12 +2449,12 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
         if (topic.type === "Tractatus") {
           const tractati = this.getWrittenTractati(writer);
           const tnum = tractati.filter((e) => {
-            return e.topic.key == topic.key && e.topic.option == topic.option;
+            return e.topic.key === topic.key && e.topic.option === topic.option;
           }).length;
           if (tnum) {
             const writerScore = writer.getAbilityStats(topic.key, topic.option);
 
-            if (Math.ceil(writerScore.score / 2) == tnum) {
+            if (Math.ceil(writerScore.score / 2) === tnum) {
               context.ui.writing.warning.push(
                 game.i18n.localize("arm5e.scriptorium.msg.tooManyTractati")
               );
@@ -2468,12 +2468,12 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
           const tractati = this.getWrittenTractati(writer);
 
           const tnum = tractati.filter((e) => {
-            return e.topic.art == topic.art;
+            return e.topic.art === topic.art;
           }).length;
           if (tnum) {
             const writerScore = writer.getArtStats(topic.art);
 
-            if (Math.ceil(writerScore.score / 5) == tnum) {
+            if (Math.ceil(writerScore.score / 5) === tnum) {
               context.ui.writing.warning.push(
                 game.i18n.localize("arm5e.scriptorium.msg.tooManyTractati")
               );
@@ -2486,15 +2486,15 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
         const tractati = this.getWrittenTractati(writer);
         const tnum = tractati.filter((e) => {
           return (
-            e.topic.spellName == topic.spellName &&
-            e.topic.spellTech == topic.spellTech &&
-            e.topic.spellForm == topic.spellForm
+            e.topic.spellName === topic.spellName &&
+            e.topic.spellTech === topic.spellTech &&
+            e.topic.spellForm === topic.spellForm
           );
         }).length;
         if (tnum) {
           const writerScore = writer.getSpellMasteryStats(context.writing.writer.spell);
 
-          if (Math.ceil(writerScore.score / 2) == tnum) {
+          if (Math.ceil(writerScore.score / 2) === tnum) {
             context.ui.writing.warning.push(
               game.i18n.localize("arm5e.scriptorium.msg.tooManyTractati")
             );
@@ -2524,11 +2524,11 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
   checkCopying(context, scribe) {
     // Is the character able to  read?
     let readingSkill = scribe.getAbilityStats("artesLib");
-    if (readingSkill.score == 0) {
+    if (readingSkill.score === 0) {
       context.ui.copying.warning.push(game.i18n.localize("arm5e.scriptorium.msg.illiterate"));
       context.ui.copying.error = true;
     }
-    if (context.copying.scribe.languages.length == 0) {
+    if (context.copying.scribe.languages.length === 0) {
       context.ui.copying.warning.push(game.i18n.localize("arm5e.scriptorium.msg.noLanguage"));
       context.ui.copying.error = true;
     }
@@ -2541,7 +2541,7 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
       switch (currentTopic.category) {
         case "ability": {
           const checkCategory = CONFIG.ARM5E.LOCALIZED_ABILITIES_ENRICHED.find(
-            (e) => e.system.key == currentTopic.key
+            (e) => e.system.key === currentTopic.key
           );
 
           const restrictedCat = ["supernaturalCat", "mystery"].includes(
@@ -2597,12 +2597,12 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
     const currentTopic = context.reading.book.system.topics[context.topicIndex];
     // Is the character able to  read?
     let readingSkill = reader.getAbilityStats("artesLib");
-    if (readingSkill.score == 0) {
+    if (readingSkill.score === 0) {
       context.ui.reading.warning.push(game.i18n.localize("arm5e.scriptorium.msg.illiterate"));
       context.ui.reading.error = true;
     }
     // Know any language at proper level?
-    if (context.reading.reader.languages.length == 0) {
+    if (context.reading.reader.languages.length === 0) {
       context.ui.reading.warning.push(game.i18n.localize("arm5e.scriptorium.msg.noLanguage"));
       // BUG-FIX: was `context.error = true`; should target the reading UI sub-tree.
       context.ui.reading.error = true;
@@ -2619,7 +2619,7 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
       context.ui.reading.error = true;
     }
 
-    if (reader.name == currentTopic.author) {
+    if (reader.name === currentTopic.author) {
       context.ui.reading.warning.push(game.i18n.localize("arm5e.scriptorium.msg.readerIsAuthor"));
       context.ui.reading.error = true;
     }
@@ -2627,7 +2627,7 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
     switch (currentTopic.category) {
       case "ability": {
         const checkCategory = CONFIG.ARM5E.LOCALIZED_ABILITIES_ENRICHED.find(
-          (e) => e.system.key == currentTopic.key
+          (e) => e.system.key === currentTopic.key
         );
         const supernatural =
           checkCategory.system.category === "supernaturalCat" ||
@@ -2635,7 +2635,7 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
         let ab = reader.system.abilities.find((a) => {
           return a._id === context.reading.reader.ability;
         });
-        if (supernatural && (!ab || ab.system.derivedScore == 0)) {
+        if (supernatural && (!ab || ab.system.derivedScore === 0)) {
           context.ui.reading.warning.push(
             game.i18n.localize("arm5e.scriptorium.msg.missingSupernatural")
           );
@@ -2651,9 +2651,9 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
           const tractati = this.getReadTractati(reader);
           const t = tractati.find((e) => {
             return (
-              e.topic.key == currentTopic.key &&
-              e.topic.option == currentTopic.option &&
-              e.topic.quality == currentTopic.quality
+              e.topic.key === currentTopic.key &&
+              e.topic.option === currentTopic.option &&
+              e.topic.quality === currentTopic.quality
             );
           });
           if (t) {
@@ -2681,7 +2681,7 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
           const tractati = this.getReadTractati(reader);
 
           const t = tractati.find((e) => {
-            return e.topic.art == currentTopic.art && e.topic.quality == currentTopic.quality;
+            return e.topic.art === currentTopic.art && e.topic.quality === currentTopic.quality;
           });
           if (t) {
             context.ui.reading.warning.push(
@@ -2699,10 +2699,10 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
         const tractati = this.getReadTractati(reader);
         const t = tractati.find((e) => {
           return (
-            e.topic.spellName == currentTopic.spellName &&
-            e.topic.spellTech == currentTopic.spellTech &&
-            e.topic.spellForm == currentTopic.spellForm &&
-            e.topic.quality == currentTopic.quality
+            e.topic.spellName === currentTopic.spellName &&
+            e.topic.spellTech === currentTopic.spellTech &&
+            e.topic.spellForm === currentTopic.spellForm &&
+            e.topic.quality === currentTopic.quality
           );
         });
         if (t) {
@@ -2735,7 +2735,7 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
       let newSource = maxXp - artStat.xp;
       currentTopic.theoriticalQuality = currentTopic.quality;
       currentTopic.quality = newSource > 0 ? newSource : 0;
-      if (currentTopic.quality == 0) {
+      if (currentTopic.quality === 0) {
         context.ui.reading.error = true;
       }
       if (context.ui?.reading?.warning) {
@@ -2767,7 +2767,7 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
       let newSource = maxXp - ability.system.xp;
       currentTopic.theoriticalQuality = currentTopic.quality;
       currentTopic.quality = newSource > 0 ? newSource : 0;
-      if (currentTopic.quality == 0) {
+      if (currentTopic.quality === 0) {
         context.ui.reading.error = true;
       }
       if (context.ui?.reading?.warning) {
@@ -2784,7 +2784,7 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
 
   /**
    * Return the list of Tractati already read by `actor` (from their diary entries).
-   * Only entries with `flags == 8` and a `Tractatus` topic type are included.
+   * Only entries with `flags === 8` and a `Tractatus` topic type are included.
    * @param {ArM5eActor} actor
    * @returns {{ title: string, topic: object }[]}
    */
@@ -2793,7 +2793,7 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
 
     const tractati = reading.filter((e) => {
       return e.system.externalIds.find((d) => {
-        return d.flags == 8 && d.data.topic?.type == "Tractatus";
+        return d.flags === 8 && d.data.topic?.type === "Tractatus";
       });
     });
     // ExternalId is an array!
@@ -2816,7 +2816,7 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
 
     const tractati = writing.filter((e) => {
       return e.system.externalIds.find((d) => {
-        return d.flags == 8 && d.data.topic?.type == "Tractatus";
+        return d.flags === 8 && d.data.topic?.type === "Tractatus";
       });
     });
     // ExternalId is an array!

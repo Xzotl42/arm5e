@@ -1,5 +1,9 @@
 import { sleep } from "../tools/tools.js";
 
+/**
+ *
+ * @param quench
+ */
 export function registerItemCreationTests(quench) {
   quench.registerBatch(
     "Ars-ActorSheet",
@@ -22,7 +26,7 @@ export function registerItemCreationTests(quench) {
                     let item = await actor.createEmbeddedDocuments("Item", [
                       { name: `New ${t}`, type: t, system: {} }
                     ]);
-                    assert.ok(item.length == 1);
+                    assert.ok(item.length === 1);
                     item[0].sheet.render(true);
                     await sleep(100);
                     await item[0].sheet.close();

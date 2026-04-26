@@ -45,14 +45,14 @@ export class CompendiaRefConfig extends HandlebarsApplicationMixin(ApplicationV2
       .filter((e) => {
         return (
           e.active &&
-          Array.from(e.relationships.systems).some((e) => e.id == CONFIG.ARM5E.SYSTEM_ID)
+          Array.from(e.relationships.systems).some((e) => e.id === CONFIG.ARM5E.SYSTEM_ID)
         );
       })
       .map((e) => {
         return { label: e.title, id: e.id };
       });
     // if the module was disabled, reset to arm5e-compendia
-    if (context.arsModules.find((e) => e.id === context.referenceModule) == undefined) {
+    if (context.arsModules.find((e) => e.id === context.referenceModule) === undefined) {
       await game.settings.set(CONFIG.ARM5E.SYSTEM_ID, "compendiaRef", "arm5e-compendia");
       context.referenceModule = "arm5e-compendia";
     }

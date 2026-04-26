@@ -100,7 +100,7 @@ export class ArM5eMagicCodexSheetV2 extends ArM5eActorSheetV2 {
 
   getUserCache() {
     let usercache = JSON.parse(sessionStorage.getItem(`usercache-${game.user.id}`));
-    if (usercache[this.actor.id] == undefined) {
+    if (usercache[this.actor.id] === undefined) {
       usercache[this.actor.id] = {
         filters: {
           hermetic: {

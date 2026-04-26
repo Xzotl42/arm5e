@@ -28,7 +28,7 @@ export class InvestigationRoll extends foundry.applications.api.HandlebarsApplic
     if (data.system.enchantments.state === "talisman") {
       data.effects.push({
         name: game.i18n.localize("arm5e.enchantment.attuned"),
-        img: CONFIG.ARM5E_DEFAULT_ICONS["enchantment"],
+        img: CONFIG.ARM5E_DEFAULT_ICONS.enchantment,
         level: 20,
         details: "Cr Vi 20",
         visible: data.system.enchantments.attunementVisible
@@ -144,9 +144,9 @@ export class InvestigationRoll extends foundry.applications.api.HandlebarsApplic
     // });
     const effects = structuredClone(magicItem.system.enchantments.effects);
     const itemData = {};
-    if (magicItem.system.enchantments.state == "talisman") {
+    if (magicItem.system.enchantments.state === "talisman") {
       const idx = this.object.effects.findIndex((e) => {
-        return e.name == game.i18n.localize("arm5e.enchantment.attuned") && e.level == 20;
+        return e.name === game.i18n.localize("arm5e.enchantment.attuned") && e.level === 20;
       });
       if (this.object.effects[idx].discovered) {
         itemData["system.enchantments.attunementVisible"] = true;
@@ -201,12 +201,12 @@ export class InvestigationRoll extends foundry.applications.api.HandlebarsApplic
       total: res._total,
       labTotal: labTotal
     })}`;
-    if (hiddenEffects.length == 0) {
+    if (hiddenEffects.length === 0) {
       desc += `<br/>${game.i18n.localize(
         "arm5e.lab.planning.investigation.nothingFound"
       )}</li></ul>`;
       failed = true;
-    } else if (res._total == 0) {
+    } else if (res._total === 0) {
       desc += `<br/>${game.i18n.format("arm5e.lab.planning.investigation.botched", {
         botches: res.botches
       })}</li>`;

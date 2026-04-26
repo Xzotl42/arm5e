@@ -33,7 +33,7 @@ export class ArM5eMagicSystem {
       }
     }
     actor.system.supernaturalEffectsTemplates = {
-      ["orphans"]: []
+      orphans: []
     };
     for (let [key, template] of Object.entries(actor.system.magicSystem.templates)) {
       actor.system.supernaturalEffectsTemplates[key] = [];
@@ -193,7 +193,7 @@ export class ArM5eMagicSystem {
             // custom abilities of the actor
             this.actor.system.abilities.reduce((t, v) => {
               if (CONFIG.ARM5E.LOCALIZED_ABILITIES[v.system.key].option) {
-                if (item.key != v.system.key || item.option != v.system.option) {
+                if (item.key !== v.system.key || item.option !== v.system.option) {
                   t.push({
                     ...CONFIG.ARM5E.LOCALIZED_ABILITIES[v.system.key],
                     key: v.system.key,
@@ -315,14 +315,12 @@ export class ArM5eMagicSystem {
               log(false, `DEBUG reveal ${dataset.section}`);
               scope[dataset.section] = "";
             }
+          } else if (index !== "") {
+            log(false, `DEBUG hide ${dataset.section} at index ${index}`);
+            scope[index][dataset.section] = "hide";
           } else {
-            if (index !== "") {
-              log(false, `DEBUG hide ${dataset.section} at index ${index}`);
-              scope[index][dataset.section] = "hide";
-            } else {
-              log(false, `DEBUG hide ${dataset.section}`);
-              scope[dataset.section] = "hide";
-            }
+            log(false, `DEBUG hide ${dataset.section}`);
+            scope[dataset.section] = "hide";
           }
           sessionStorage.setItem(`usercache-${game.user.id}`, JSON.stringify(usercache));
         }
@@ -524,7 +522,7 @@ export class ArM5eMagicSystem {
             components.push({ type: "char", characteristic: "sta" });
             break;
           case "ability":
-            const ab = CONFIG.ARM5E.LOCALIZED_ABILITIES["animalHandling"];
+            const ab = CONFIG.ARM5E.LOCALIZED_ABILITIES.animalHandling;
             components.push({
               type: "ability",
               art: dataset.art,

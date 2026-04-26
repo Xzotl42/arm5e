@@ -57,12 +57,12 @@ export class VisSchema extends foundry.abstract.TypeDataModel {
     };
     if (itemData.system.art.value !== undefined) {
       updateData["system.art"] = itemData.system.art.value;
-    } else if (itemData.system.art == "") {
+    } else if (itemData.system.art === "") {
       updateData["system.art"] = "cr";
     }
     // get ride of form of vis field
     if (
-      itemData.system.form != undefined &&
+      itemData.system.form !== undefined &&
       itemData.system.form !== "Physical form of the raw vis." &&
       itemData.system.form !== ""
     ) {
@@ -269,7 +269,7 @@ export class VisSourceSchema extends foundry.abstract.TypeDataModel {
     const covenantVis = this.parent.actor.system.vis;
 
     const existingReserve = covenantVis.filter((e) => {
-      return e.system.art == this.art && e.name == this.visLabel;
+      return e.system.art === this.art && e.name === this.visLabel;
     });
     let resource;
     if (existingReserve.length) {
@@ -283,7 +283,7 @@ export class VisSourceSchema extends foundry.abstract.TypeDataModel {
       this.parent.actor.sheet.render(false);
     } else {
       let desc;
-      if (this.form == "") {
+      if (this.form === "") {
         desc = game.i18n.format("arm5e.sheet.visDesc", {
           covenant: this.parent.actor.name,
           name: this.parent.name
@@ -292,7 +292,7 @@ export class VisSourceSchema extends foundry.abstract.TypeDataModel {
         desc = this.form;
       }
       let name;
-      if (this.visLabel == "") {
+      if (this.visLabel === "") {
         name = this.parent.name;
       } else {
         name = this.visLabel;
@@ -315,7 +315,7 @@ export class VisSourceSchema extends foundry.abstract.TypeDataModel {
       this.parent.actor,
       this.pawns
     );
-    //TODO check the year harvested
+    // TODO check the year harvested
   }
 
   static migrateData(data) {

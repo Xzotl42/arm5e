@@ -69,9 +69,9 @@ export class ArsRoll extends Roll {
     if (!this._evaluated) return "";
 
     if (this.botchCheck) {
-      if (this.botches == 0) {
+      if (this.botches === 0) {
         return `${super.total}`;
-      } else if (this.botches == 1) {
+      } else if (this.botches === 1) {
         return game.i18n.localize("arm5e.messages.die.botch");
       } else {
         return game.i18n.format("arm5e.messages.die.botches", { num: this.botches });
@@ -108,7 +108,7 @@ export class ArsRoll extends Roll {
     if (this.botches > 0) {
       return 0;
     }
-    if (this.dice.length != 1) {
+    if (this.dice.length !== 1) {
       log(false, "ERROR: wrong number of dice");
       return 0;
     }

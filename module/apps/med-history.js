@@ -20,7 +20,7 @@ export class MedicalHistory extends foundry.applications.api.HandlebarsApplicati
   }
 
   async close(options = {}) {
-    if (this.object?.patient?.apps?.[this.options.uniqueId] != undefined) {
+    if (this.object?.patient?.apps?.[this.options.uniqueId] !== undefined) {
       delete this.object.patient.apps[this.options.uniqueId];
     }
     return super.close(options);
@@ -73,7 +73,7 @@ export class MedicalHistory extends foundry.applications.api.HandlebarsApplicati
 
   async _prepareContext() {
     const context = foundry.utils.deepClone(this.object);
-    let scars = context.patient.system.wounds["healthy"] ?? [].sort(compareDates);
+    let scars = context.patient.system.wounds.healthy ?? [].sort(compareDates);
     context.scars = scars.map((e) => {
       return {
         id: e._id,
@@ -131,7 +131,7 @@ export class MedicalHistory extends foundry.applications.api.HandlebarsApplicati
     }
     if (confirmed) {
       const items = this.object.patient.items
-        .filter((e) => e.type == "wound" && e.system.gravity == "healthy")
+        .filter((e) => e.type === "wound" && e.system.gravity === "healthy")
         .map((e) => e._id);
       const cnt = await this.object.patient.deleteEmbeddedDocuments("Item", items);
     }

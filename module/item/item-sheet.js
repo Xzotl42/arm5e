@@ -65,12 +65,12 @@ export class ArM5eItemSheet extends foundry.appv1.sheets.ItemSheet {
 
   async _onDrop(event) {
     const dropData = TextEditor.getDragEventData(event);
-    if (dropData.type == "Item") {
+    if (dropData.type === "Item") {
       if (this.enchantPossible) {
         const enchant = await Item.implementation.fromDropData(dropData);
         if (["enchantment", "spell", "magicalEffect"].includes(enchant.type)) {
           log(false, "Enchant dropped");
-          // if (this.item.system.enchantments == null) {
+          // if (this.item.system.enchantments === null) {
           //   const updateData = {};
           //   updateData["system.state"] = "appraised";
           //   updateData["system.enchantments"] = new EnchantmentExtension();
@@ -80,7 +80,7 @@ export class ArM5eItemSheet extends foundry.appv1.sheets.ItemSheet {
         }
       }
     }
-    // else if (dropData.type == "Actor" && event.currentTarget.dataset.drop === "reader") {
+    // else if (dropData.type === "Actor" && event.currentTarget.dataset.drop === "reader") {
     //   const reader = await Actor.implementation.fromDropData(dropData);
     //   if (reader.type === "player" || reader.type === "npc") {
     //     await this._setReader(reader);
@@ -142,13 +142,13 @@ export class ArM5eItemSheet extends foundry.appv1.sheets.ItemSheet {
   getUserCache() {
     let usercache = JSON.parse(sessionStorage.getItem(`usercache-${game.user.id}`));
     if (usercache === null) usercache = {};
-    if (usercache[this.item.id] == undefined) {
+    if (usercache[this.item.id] === undefined) {
       usercache[this.item.id] = {
         sections: { visibility: { common: {}, book: {} } }
       };
 
       sessionStorage.setItem(`usercache-${game.user.id}`, JSON.stringify(usercache));
-    } else if (usercache[this.item.id].sections == undefined) {
+    } else if (usercache[this.item.id].sections === undefined) {
       usercache[this.item.id].sections = { visibility: { common: {}, book: {} } };
       sessionStorage.setItem(`usercache-${game.user.id}`, JSON.stringify(usercache));
     }
@@ -169,7 +169,7 @@ export class ArM5eItemSheet extends foundry.appv1.sheets.ItemSheet {
     // Add the item's data to context.system for easier access, as well as flags.
     context.system = itemData.system;
 
-    if (this.enchantPossible && context.system.enchantments != null) {
+    if (this.enchantPossible && context.system.enchantments !== null) {
       await this.enchantSheet.getData(context);
     } else {
       context.stateEdit = "disabled";
@@ -200,7 +200,7 @@ export class ArM5eItemSheet extends foundry.appv1.sheets.ItemSheet {
     context.flags = itemData.flags;
     // context.ui.flavor = FLAVORS.NEUTRAL;
     context.config = CONFIG.ARM5E;
-    if (itemData.type == "weapon" && this.item.isOwned && this.item.actor.isCharacter()) {
+    if (itemData.type === "weapon" && this.item.isOwned && this.item.actor.isCharacter()) {
       context.system.abilities = this.actor.system.abilities.map((v) => {
         return { id: v._id, name: `${v.name} (${v.system.speciality}) - ${v.system.finalScore}` };
       });
@@ -211,11 +211,11 @@ export class ArM5eItemSheet extends foundry.appv1.sheets.ItemSheet {
       // console.log("item-sheet get data weapon")
       // console.log(data)
     } else if (
-      itemData.type == "ability" ||
-      itemData.type == "diaryEntry" ||
-      itemData.type == "book"
+      itemData.type === "ability" ||
+      itemData.type === "diaryEntry" ||
+      itemData.type === "book"
     ) {
-      if (itemData.type == "ability") {
+      if (itemData.type === "ability") {
         if (["altTechnique", "altForm"].includes(itemData.system.category)) {
           itemData.system.altArt = true;
         }
@@ -301,7 +301,7 @@ export class ArM5eItemSheet extends foundry.appv1.sheets.ItemSheet {
       }
     }
 
-    if (itemData.type == "labCovenant") {
+    if (itemData.type === "labCovenant") {
       if (itemData.system.linked) {
         context.canEdit = "readonly";
         context.canSelect = "disabled";
@@ -357,7 +357,7 @@ export class ArM5eItemSheet extends foundry.appv1.sheets.ItemSheet {
 
   async _updateObject(event, formData) {
     if (this.item.system.enchantments) {
-      if (this.enchantPossible && this.item.system.enchantments != null) {
+      if (this.enchantPossible && this.item.system.enchantments !== null) {
         formData = await this.enchantSheet._updateObject(event, formData);
       }
     }
@@ -471,7 +471,7 @@ export class ArM5eItemSheet extends foundry.appv1.sheets.ItemSheet {
     html.find(".rollable").click(async (event) => {
       const dataset = getDataset(event);
 
-      await this.object.actor.sheet.roll(event, { dataset: dataset });
+      await this.object.actor.sheet.roll(dataset);
     });
 
     html.find(".create-labtext").click(async (event) => {
@@ -607,7 +607,7 @@ export class ArM5eItemSheet extends foundry.appv1.sheets.ItemSheet {
   async _cleanUpOption(item, event) {
     event.preventDefault();
 
-    if (event.currentTarget.value == "") {
+    if (event.currentTarget.value === "") {
       event.currentTarget.value = item.system.option;
       return;
     } else {

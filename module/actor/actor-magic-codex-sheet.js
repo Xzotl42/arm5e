@@ -38,7 +38,7 @@ export class ArM5eMagicCodexSheet extends ArM5eActorSheet {
   getUserCache() {
     let usercache = JSON.parse(sessionStorage.getItem(`usercache-${game.user.id}`));
     if (usercache === null) usercache = {};
-    if (usercache[this.actor.id] == undefined) {
+    if (usercache[this.actor.id] === undefined) {
       usercache[this.actor.id] = {
         filters: {
           hermetic: {
@@ -238,8 +238,8 @@ export class ArM5eMagicCodexSheet extends ArM5eActorSheet {
     event.preventDefault();
     const header = event.currentTarget;
     // Get the type of item to create.
-    const tech = header.dataset.technique == "" ? "cr" : header.dataset.technique;
-    const form = header.dataset.form == "" ? "an" : header.dataset.form;
+    const tech = header.dataset.technique === "" ? "cr" : header.dataset.technique;
+    const form = header.dataset.form === "" ? "an" : header.dataset.form;
     // Initialize a default name.
     const name = `New Base Effect`;
     // Prepare the item object.
@@ -326,7 +326,7 @@ export class ArM5eMagicCodexSheet extends ArM5eActorSheet {
     const item = await fromUuid(uuid);
     const dataset = item.system;
     let newItemData;
-    if (item.type == "baseEffect") {
+    if (item.type === "baseEffect") {
       // Initialize a default name.
       let name = `_New "${item.name}" effect`;
       let type = "magicalEffect";
@@ -351,7 +351,7 @@ export class ArM5eMagicCodexSheet extends ArM5eActorSheet {
           }
         }
       ];
-    } else if (item.type == "magicalEffect") {
+    } else if (item.type === "magicalEffect") {
       //
       let itemType = "spell";
       if (alt === true) {
@@ -407,8 +407,8 @@ export class ArM5eMagicCodexSheet extends ArM5eActorSheet {
       case "book":
         if (item.topicIdx) {
           let topic = item.system.topics[item.topicIdx];
-          if (topic.category == "labText") {
-            return topic.labtext.type != "raw";
+          if (topic.category === "labText") {
+            return topic.labtext.type !== "raw";
           }
         }
       default:
@@ -429,16 +429,16 @@ export class ArM5eMagicCodexSheet extends ArM5eActorSheet {
     const item = await fromUuid(data.uuid);
     const type = item.type;
     // transform input into labText
-    if (type == "laboratoryText") {
+    if (type === "laboratoryText") {
       log(false, "Valid drop");
       // create a spell or enchantment data:
-      if (item.system.type != "raw") {
+      if (item.system.type !== "raw") {
         return await super._onDropItemCreate(labTextToEffect(item.toObject()));
       }
-    } else if (type == "book") {
+    } else if (type === "book") {
       if (data.topicIdx) {
         const topic = item.system.topics[data.topicIdx];
-        if (topic.category == "labText") {
+        if (topic.category === "labText") {
           return await super._onDropItemCreate(
             labTextToEffect({
               name: topic.labtextTitle,
@@ -450,7 +450,7 @@ export class ArM5eMagicCodexSheet extends ArM5eActorSheet {
       }
     }
     const res = await super._onDropItem(event, data);
-    if (res.length == 1) {
+    if (res.length === 1) {
       res[0].sheet.render(true);
     }
     return res;

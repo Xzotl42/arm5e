@@ -47,7 +47,7 @@ export class MagicSystemSchema extends foundry.abstract.TypeDataModel {
   }
 
   static getIcon(item, newValue = null) {
-    if (newValue != null) {
+    if (newValue !== null) {
       return `systems/arm5e/assets/magic/${newValue}.png`;
     } else {
       let init = "an";

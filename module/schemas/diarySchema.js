@@ -138,7 +138,7 @@ export class DiaryEntrySchema extends foundry.abstract.TypeDataModel {
           // 2 : update a schedule
           // 4 : update id
           // 8 : just data
-          //16 : update document
+          // 16 : update document
           flags: new fields.NumberField({
             required: false,
             nullable: false,
@@ -303,7 +303,7 @@ export class DiaryEntrySchema extends foundry.abstract.TypeDataModel {
   prepareData() {
     if (!this.done) {
       for (let a of this.progress.abilities) {
-        if (a.key == "") {
+        if (a.key === "") {
           let ability = this.parent.actor.items.get(a.id);
           if (ability) {
             a.key = ability.system.key;
@@ -363,9 +363,9 @@ export class DiaryEntrySchema extends foundry.abstract.TypeDataModel {
     // Date of the first unapplied ability in the past
     return this.dates.filter(
       (e) =>
-        e.applied == false &&
+        e.applied === false &&
         (e.year <= currentDate.year ||
-          (e.year == currentDate.year &&
+          (e.year === currentDate.year &&
             CONFIG.SEASON_ORDER[e.season] <= CONFIG.SEASON_ORDER[currentDate.season]))
     );
   }
@@ -379,9 +379,9 @@ export class DiaryEntrySchema extends foundry.abstract.TypeDataModel {
     // Date of the first unapplied ability in the past
     const pastDates = this.dates.filter(
       (e) =>
-        e.applied == false &&
+        e.applied === false &&
         (e.year <= currentDate.year ||
-          (e.year == currentDate.year &&
+          (e.year === currentDate.year &&
             CONFIG.SEASON_ORDER[e.season] <= CONFIG.SEASON_ORDER[currentDate.season]))
     );
     if (pastDates.length) {
@@ -390,13 +390,13 @@ export class DiaryEntrySchema extends foundry.abstract.TypeDataModel {
       // For each diary entry of the actor
       for (let entry of Object.values(actor.system.diaryEntries)) {
         // the entry is not the current entry
-        if (entry._id != this.parent._id) {
+        if (entry._id !== this.parent._id) {
           if (entry.system.done || ["lab", "none"].includes(entry.system.activity)) {
             continue;
           }
           if (
             entry.system.dates[entry.system.dates.length - 1].year < year ||
-            (entry.system.dates[entry.system.dates.length - 1] == year &&
+            (entry.system.dates[entry.system.dates.length - 1] === year &&
               CONFIG.SEASON_ORDER[entry.system.dates[entry.system.dates.length - 1].season] <
                 CONFIG.SEASON_ORDER[season])
           ) {
@@ -409,7 +409,7 @@ export class DiaryEntrySchema extends foundry.abstract.TypeDataModel {
   }
 
   prepareDerivedData() {
-    if (this.optionKey == undefined) {
+    if (this.optionKey === undefined) {
       this.optionKey = "standard";
     }
     this.nbApplied = 0;
@@ -437,12 +437,12 @@ export class DiaryEntrySchema extends foundry.abstract.TypeDataModel {
       // if (itemData.system.season) {
       //   currentDate.season = itemData.system.season;
       // }
-      if (itemData.system.dates == undefined || foundry.utils.isEmpty(itemData.system.dates)) {
+      if (itemData.system.dates === undefined || foundry.utils.isEmpty(itemData.system.dates)) {
         res.system.dates = [
           { year: currentDate.year, season: currentDate.season, date: "", applied: false }
         ];
       }
-      if (itemData.system.done == null) {
+      if (itemData.system.done === null) {
         itemData.system.done = false;
       }
     } else {
@@ -460,7 +460,10 @@ export class DiaryEntrySchema extends foundry.abstract.TypeDataModel {
     if (itemData.system.description === null || itemData.system.description === undefined) {
       updateData["system.description"] = "";
     }
-    if (itemData.system.sourceQuality == undefined || Number.isNaN(itemData.system.sourceQuality)) {
+    if (
+      itemData.system.sourceQuality === undefined ||
+      Number.isNaN(itemData.system.sourceQuality)
+    ) {
       updateData["system.sourceQuality"] = 0;
     }
     if (itemData.system.activity === "") {
@@ -471,7 +474,7 @@ export class DiaryEntrySchema extends foundry.abstract.TypeDataModel {
       updateData["system.externalIds"] = [];
     }
 
-    if (itemData.system.optionKey == undefined) {
+    if (itemData.system.optionKey === undefined) {
       updateData["system.optionKey"] = "standard";
     }
     if (itemData.system.teacher === undefined) {
@@ -484,7 +487,7 @@ export class DiaryEntrySchema extends foundry.abstract.TypeDataModel {
         applySpec: false,
         score: 0
       };
-    } else if (itemData.system.teacher.score == null) {
+    } else if (itemData.system.teacher.score === null) {
       updateData["system.teacher.score"] = 0;
     }
 
@@ -522,9 +525,10 @@ export class DiaryEntrySchema extends foundry.abstract.TypeDataModel {
         } else {
           updateData["system.done"] = false;
         }
-      } else if (itemData.system.done === null || typeof itemData.system.done == "number") {
+      } else if (itemData.system.done === null || typeof itemData.system.done === "number") {
         updateData["system.done"] =
-          itemData.system.dates.filter((d) => d.applied == true).length == itemData.system.duration;
+          itemData.system.dates.filter((d) => d.applied === true).length ===
+          itemData.system.duration;
       }
 
       updateData["system.-=applied"] = null;
@@ -540,7 +544,7 @@ export class DiaryEntrySchema extends foundry.abstract.TypeDataModel {
         }
       ];
     } else if (itemData.system.dates instanceof Array) {
-      if (itemData.system.dates.length == 0) {
+      if (itemData.system.dates.length === 0) {
         updateData["system.dates"] = [
           {
             year: Number(currentDate.year),
@@ -554,7 +558,7 @@ export class DiaryEntrySchema extends foundry.abstract.TypeDataModel {
         let newDates = itemData.system.dates;
         let update = false;
         for (let d of newDates) {
-          if (d.year == null || Number.isNaN(d.year)) {
+          if (d.year === null || Number.isNaN(d.year)) {
             d.year = Number(currentDate.year);
             update = true;
           } else if (typeof d.year === "string") {
@@ -588,11 +592,11 @@ export class DiaryEntrySchema extends foundry.abstract.TypeDataModel {
     }
 
     if (
-      (typeof itemData.system.done == "number" || itemData.system.done === null) &&
+      (typeof itemData.system.done === "number" || itemData.system.done === null) &&
       itemData.system.dates
     ) {
       updateData["system.done"] =
-        itemData.system.dates.filter((d) => d.applied == true).length == itemData.system.duration;
+        itemData.system.dates.filter((d) => d.applied === true).length === itemData.system.duration;
     }
 
     // if (itemData.system.applied !== undefined) {
@@ -609,7 +613,7 @@ export class DiaryEntrySchema extends foundry.abstract.TypeDataModel {
     // }
 
     // Fixing Array problems
-    if (itemData.system.progress == undefined || foundry.utils.isEmpty(itemData.system.progress)) {
+    if (itemData.system.progress === undefined || foundry.utils.isEmpty(itemData.system.progress)) {
       updateData["system.progress"] = { abilities: [], spells: [], arts: [], newSpells: [] };
     } else {
       const prog = foundry.utils.duplicate(itemData.system.progress);
@@ -628,7 +632,7 @@ export class DiaryEntrySchema extends foundry.abstract.TypeDataModel {
           updateNeeded = true;
         }
 
-        if (typeof a.teacherScore != "number") {
+        if (typeof a.teacherScore !== "number") {
           a.teacherScore = convertToNumber(a.teacherScore, 2);
           updateNeeded = true;
         }
@@ -646,7 +650,7 @@ export class DiaryEntrySchema extends foundry.abstract.TypeDataModel {
           a.key = "cr";
           updateNeeded = true;
         }
-        if (typeof a.teacherScore != "number") {
+        if (typeof a.teacherScore !== "number") {
           a.teacherScore = convertToNumber(a.teacherScore, 5);
           updateNeeded = true;
         }
@@ -685,11 +689,12 @@ export class DiaryEntrySchema extends foundry.abstract.TypeDataModel {
         updateNeeded = false;
       }
     }
-    log(false, "Diary migration: " + JSON.stringify(updateData));
+    log(false, `Diary migration: ${JSON.stringify(updateData)}`);
     return updateData;
   }
+
   static getIcon(item, newValue = null) {
-    if (newValue == null) {
+    if (newValue === null) {
       return (
         CONFIG.ACTIVITIES_DEFAULT_ICONS[item.system.activity] ??
         CONFIG.ACTIVITIES_DEFAULT_ICONS.none
@@ -698,6 +703,7 @@ export class DiaryEntrySchema extends foundry.abstract.TypeDataModel {
       return CONFIG.ACTIVITIES_DEFAULT_ICONS[newValue] ?? CONFIG.ACTIVITIES_DEFAULT_ICONS.none;
     }
   }
+
   // input: list of activities of a season
   static hasConflict(activities, current = undefined) {
     if (current) {
@@ -717,7 +723,7 @@ export class DiaryEntrySchema extends foundry.abstract.TypeDataModel {
           // do not conflict with itself but with other types that conflict
           if (
             activities.filter(
-              (e) => e.type != a.type && !ARM5E.activities.conflictExclusion.includes(e.type)
+              (e) => e.type !== a.type && !ARM5E.activities.conflictExclusion.includes(e.type)
             ).length > 1
           ) {
             return true;
@@ -726,16 +732,13 @@ export class DiaryEntrySchema extends foundry.abstract.TypeDataModel {
       } else {
         // no duplicate
         if (ARM5E.activities.conflictExclusion.includes(a.type)) {
-          if (activities.filter((e) => e.type == a.type).length > 1) {
+          if (activities.filter((e) => e.type === a.type).length > 1) {
             return true;
           }
-        } else {
-          if (
-            activities.filter((e) => !ARM5E.activities.conflictExclusion.includes(e.type)).length >
-            1
-          ) {
-            return true;
-          }
+        } else if (
+          activities.filter((e) => !ARM5E.activities.conflictExclusion.includes(e.type)).length > 1
+        ) {
+          return true;
         }
       }
     }
@@ -751,11 +754,11 @@ export class DiaryEntrySchema extends foundry.abstract.TypeDataModel {
     // For each diary entry of the actor
     for (let entry of Object.values(actor.system.diaryEntries)) {
       // the entry is not the current entry
-      if (entry._id != this.parent._id) {
+      if (entry._id !== this.parent._id) {
         // if the type is the same and doesn't allow duplicates, check if dates overlap
         if (this.activity === entry.system.activity && !duplicateAllowed) {
           for (let date of entry.system.dates) {
-            if (this.dates.some((e) => e.year == date.year && e.season === date.season)) {
+            if (this.dates.some((e) => e.year === date.year && e.season === date.season)) {
               return true;
             }
           }
@@ -767,7 +770,7 @@ export class DiaryEntrySchema extends foundry.abstract.TypeDataModel {
 
         if (conflicting && !ARM5E.activities.conflictExclusion.includes(entry.system.activity)) {
           for (let date of entry.system.dates) {
-            if (this.dates.some((e) => e.year == date.year && e.season === date.season)) {
+            if (this.dates.some((e) => e.year === date.year && e.season === date.season)) {
               return true;
             }
           }

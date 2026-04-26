@@ -30,10 +30,6 @@ import { ArM5eItem } from "../item/item.js";
  * @extends {ArM5eActorSheet}
  */
 export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
-  constructor(object, options) {
-    super(object, options);
-  }
-
   /** @override */
   get template() {
     if (this.actor.testUserPermission(game.user, CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER)) {
@@ -242,7 +238,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
     // TODO fix covenant date
     if (context.planning.date === undefined) {
       context.planning.date = game.settings.get("arm5e", "currentDate");
-    } else if (context.planning.date.year == null) {
+    } else if (context.planning.date.year === null) {
       context.planning.date.year = game.settings.get("arm5e", "currentDate").year;
     }
 
@@ -689,7 +685,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
     const entryData = [activity.getDiaryEntryData(planning)];
 
     let achievement = await activity.activityAchievements(planning);
-    if (achievement != null) {
+    if (achievement !== null) {
       entryData[0].system.achievements.push(...achievement);
     }
 
@@ -721,7 +717,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
     if (item.type === "book") {
       let topicIdx = Number(data.topicIdx);
       const topic = item.system.topics[topicIdx];
-      if (topic.category == "labText") {
+      if (topic.category === "labText") {
         item = new ArM5eItem(
           { name: topic.name, type: "laboratoryText", system: topic.system.toObject() },
           { temporary: true }
@@ -854,6 +850,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
           return true;
         }
         case "item": {
+          // TODO
         }
         default: {
           return await super._onDropItem(event, data);
@@ -863,7 +860,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
       event.stopImmediatePropagation();
       if (
         Object.keys(ARM5E.lab.enchantment.enchantableTypes).includes(item.type) &&
-        item.system.state == "enchanted"
+        item.system.state === "enchanted"
       ) {
         planning.data.receptacle = {
           uuid: item.uuid
@@ -884,7 +881,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
       const type = item.type;
 
       // transform input into labText
-      if (type == "spell" || type == "magicalEffect" || type == "enchantment") {
+      if (type === "spell" || type === "magicalEffect" || type === "enchantment") {
         log(false, "Valid drop");
         // create a labText data:
         return await super._onDropItemCreate(effectToLabText(item.toObject()));
@@ -902,8 +899,6 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
 
   /**
    * Organize and classify Items for Character sheets.
-   *
-   * @param {Object} actorData The actor to prepare.
    *
    * @param sheetData
    * @returns {undefined}
@@ -1012,7 +1007,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
   async _bindActor(actor) {
     if (!["covenant", "player", "npc", "beast"].includes(actor.type)) return [];
     let updateData = { _id: this.actor._id };
-    if (actor.type == "covenant") {
+    if (actor.type === "covenant") {
       updateData["system.covenant.value"] = actor.name;
       updateData["system.covenant.actorId"] = actor._id;
     } else if (["player", "npc", "beast"].includes(actor.type)) {
@@ -1027,7 +1022,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
   async _unbindActor(actor) {
     if (!["covenant", "player", "npc", "beast"].includes(actor.type)) return [];
     let updateData = { _id: this.actor._id };
-    if (actor.type == "covenant") {
+    if (actor.type === "covenant") {
       updateData["system.covenant.value"] = "";
       updateData["system.covenant.actorId"] = null;
     } else if (["player", "npc", "beast"].includes(actor.type)) {

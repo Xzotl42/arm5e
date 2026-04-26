@@ -103,7 +103,7 @@ export class ArM5eCovenantActorSheetV2 extends ArM5eActorSheetV2 {
       };
 
       sessionStorage.setItem(`usercache-${game.user.id}`, JSON.stringify(usercache));
-    } else if (usercache[this.actor.id].lists?.visibility == undefined) {
+    } else if (usercache[this.actor.id].lists?.visibility === undefined) {
       usercache[this.actor.id].lists = { visibility: { inhabitants: {} } };
       sessionStorage.setItem(`usercache-${game.user.id}`, JSON.stringify(usercache));
     }

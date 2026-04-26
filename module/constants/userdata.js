@@ -33,12 +33,20 @@ const TIME_FILTER = {
   expanded: false
 };
 
+/**
+ *
+ * @param actorId
+ * @param category
+ * @param list
+ * @param key
+ * @param value
+ */
 function updateUserCache(actorId, category, list, key, value) {
   let usercache = JSON.parse(sessionStorage.getItem(`usercache-${game.user.id}`));
 
-  if (usercache[actorId].filters[category] == undefined) {
+  if (usercache[actorId].filters[category] === undefined) {
     usercache[actorId].filters[category] = { [list]: { [key]: value } };
-  } else if (usercache[actorId].filters[category][list] == undefined) {
+  } else if (usercache[actorId].filters[category][list] === undefined) {
     usercache[actorId].filters[category][list] = { [key]: value };
   } else {
     usercache[actorId].filters[category][list][key] = value;
@@ -47,6 +55,9 @@ function updateUserCache(actorId, category, list, key, value) {
   sessionStorage.setItem(`usercache-${game.user.id}`, JSON.stringify(usercache));
 }
 
+/**
+ *
+ */
 function clearUserCache() {
   sessionStorage.removeItem(`usercache-${game.user.id}`);
   ui.notifications.info("User cache has been reset.");

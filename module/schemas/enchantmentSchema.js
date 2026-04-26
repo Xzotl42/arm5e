@@ -92,7 +92,7 @@ export class EnchantmentExtension extends foundry.abstract.DataModel {
           }),
           img: new fields.FilePathField({
             categories: ["IMAGE"],
-            initial: (data) => CONFIG.ARM5E_DEFAULT_ICONS["enchantment"]
+            initial: (data) => CONFIG.ARM5E_DEFAULT_ICONS.enchantment
           }),
           system: new fields.EmbeddedDataField(EnchantmentSchema, {}),
           receptacleId: new fields.StringField({
@@ -133,7 +133,7 @@ export class EnchantmentExtension extends foundry.abstract.DataModel {
     const updateData = {};
     const capacities = itemData.system.enchantments.capacities;
     for (let c of capacities) {
-      if (c.id == "" || c.id.length == 1) {
+      if (c.id === "" || c.id.length === 1) {
         c.id = foundry.utils.randomID();
       }
     }
@@ -142,8 +142,8 @@ export class EnchantmentExtension extends foundry.abstract.DataModel {
     // explanation: recovering from the mess made for magic Items migration
     if (
       itemData.system.enchantments.originalCharges > 1 &&
-      itemData.system.state == "enchanted" &&
-      (effects.length ? effects[0].receptacleId == "" : false)
+      itemData.system.state === "enchanted" &&
+      (effects.length ? effects[0].receptacleId === "" : false)
     ) {
       updateData["system.state"] = "enchanted";
       updateData["system.enchantments.state"] = "charged";
@@ -165,7 +165,7 @@ export class EnchantmentExtension extends foundry.abstract.DataModel {
   }
 
   // static migrateData(data) {
-  //   if (data.state == "charged") {
+  //   if (data.state === "charged") {
   //     data.state = "enchanted";
   //   }
 
@@ -214,6 +214,7 @@ export class EnchantmentEffectSchema extends MagicalEffectSchema {
       hidden: boolOption()
     };
   }
+
   static migrate(itemData) {
     return {};
   }

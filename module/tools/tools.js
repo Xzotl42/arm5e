@@ -31,6 +31,9 @@ export function debug(str) {
   log(false, `DEBUG: ${str}`);
 }
 
+/**
+ *
+ */
 export function isDebugging() {
   try {
     return game.modules.get("_dev-mode")?.api?.getPackageDebugValue(ARM5E.SYSTEM_ID) || false;
@@ -118,6 +121,7 @@ export async function getDocumentFromCompendium(pack, id) {
 /**
  *
  * @param str
+ * @param lowercaseOnly
  */
 export function slugify(str, lowercaseOnly = true) {
   if (lowercaseOnly) {
@@ -163,6 +167,11 @@ export function compareBaseEffects(e1, e2) {
   }
 }
 
+/**
+ *
+ * @param key
+ * @param option
+ */
 export function getAbilityStats(key, option) {
   const ability = CONFIG.ARM5E.LOCALIZED_ABILITIES[key];
 
@@ -516,9 +525,14 @@ export function compareLabTexts(e1, e2) {
   }
 }
 
+/**
+ *
+ * @param type
+ * @param filter
+ */
 export function getLastCombatMessageOfType(type, filter) {
   return game.messages.contents.findLast((msg) => {
-    return msg.type == type && (filter ? filter(msg) : true);
+    return msg.type === type && (filter ? filter(msg) : true);
   });
 }
 /**
@@ -564,24 +578,28 @@ export function getDataset(obj) {
 function getWoundType(size) {
   if (size <= -4) {
     return {
-      1: 1, //"light",
-      2: 2, //"medium",
-      3: 3, //"heavy",
-      4: 4, //"incap",
-      5: 5 //"dead"
+      1: 1, // "light",
+      2: 2, // "medium",
+      3: 3, // "heavy",
+      4: 4, // "incap",
+      5: 5 // "dead"
     };
   }
   let increment = size + 5;
-  const result = { 1: 1 }; //"light"
+  const result = { 1: 1 }; // "light"
 
   result[1 + increment] = 2; // "medium";
-  result[1 + 2 * increment] = 3; //"heavy";
-  result[1 + 3 * increment] = 4; //"incap";
-  result[1 + 4 * increment] = 5; //"dead";
+  result[1 + 2 * increment] = 3; // "heavy";
+  result[1 + 3 * increment] = 4; // "incap";
+  result[1 + 4 * increment] = 5; // "dead";
 
   return result;
 }
 
+/**
+ *
+ * @param size
+ */
 export function getWoundRanges(size) {
   if (size <= -4) {
     return ["(1-1)", "(2-2)", "(3-3)", "(4-4)", "(5-5)"];
@@ -834,7 +852,9 @@ export function putInFoldableLink(label, content, startHidden = true) {
  *
  * @param label
  * @param content
+ * @param details
  * @param startHidden
+ * @param classes
  */
 export function putInFoldableLinkWithAnimation(
   content,

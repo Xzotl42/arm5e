@@ -11,10 +11,10 @@ export class ActivitySchedule extends HandlebarsApplicationMixin(ApplicationV2) 
   /**
    * Constructor expects options with nested document containing actor and activity.
    * Activity is required and must not be null.
-   * @param {Object} options - ApplicationV2 options
-   * @param {Object} options.document - Container object
-   * @param {Actor} options.document.actor - The actor document (required)
-   * @param {Item} options.document.activity - The activity item (diary entry, required)
+   * @param {Object} options ApplicationV2 options
+   * @param {Object} options.document Container object
+   * @param {Actor} options.document.actor The actor document (required)
+   * @param {Item} options.document.activity The activity item (diary entry, required)
    */
   constructor(options) {
     super(options);
@@ -27,6 +27,7 @@ export class ActivitySchedule extends HandlebarsApplicationMixin(ApplicationV2) 
       this.render(true);
     });
   }
+
   async close(options = {}) {
     Hooks.off("arm5e-date-change", this.timeHook);
     return super.close(options);
@@ -55,6 +56,9 @@ export class ActivitySchedule extends HandlebarsApplicationMixin(ApplicationV2) 
   /**
    * Static wrapper that routes form submission to instance method.
    * This allows tests to invoke the submit logic directly via instance method.
+   * @param event
+   * @param form
+   * @param formData
    */
   static async #onSubmitHandler(event, form, formData) {
     return this._onSubmitSchedule.call(this, event, form, formData);
@@ -81,6 +85,10 @@ export class ActivitySchedule extends HandlebarsApplicationMixin(ApplicationV2) 
   /**
    * Pure helper: check if selected season would conflict with existing activities.
    * Returns conflict state and enforceability based on activity type rules.
+   * @param selectedSeason
+   * @param thisYearSchedule
+   * @param activity
+   * @param enforceSchedule
    */
   #checkSeasonConflict(selectedSeason, thisYearSchedule, activity, enforceSchedule) {
     if (!selectedSeason || thisYearSchedule.length === 0) {
@@ -111,6 +119,13 @@ export class ActivitySchedule extends HandlebarsApplicationMixin(ApplicationV2) 
   /**
    * Pure helper: build a single year's season grid with selection/conflict state.
    * Accounts for selected dates, other activities, and enforcement rules.
+   * @param year
+   * @param actorSchedule
+   * @param currentActivity
+   * @param selectedDates
+   * @param curYear
+   * @param curSeason
+   * @param enforceSchedule
    */
   #buildActivityYear(
     year,
@@ -210,6 +225,16 @@ export class ActivitySchedule extends HandlebarsApplicationMixin(ApplicationV2) 
 
   /**
    * Pure helper: apply final style/editability state to season event.
+   * @param event
+   * @param isSelected
+   * @param others
+   * @param conflict
+   * @param isFuture
+   * @param isToday
+   * @param enforceSchedule
+   * @param actType
+   * @param selectedCount
+   * @param duration
    */
   #applySeasonStyling(
     event,
@@ -397,6 +422,9 @@ export class ActivitySchedule extends HandlebarsApplicationMixin(ApplicationV2) 
    * 1. Updates dependent activities with new schedule
    * 2. Updates this activity's schedule
    * 3. Syncs local state
+   * @param event
+   * @param form
+   * @param formData
    */
   async _onSubmitSchedule(event, form, formData) {
     // Update dependent items with this activity's new schedule
@@ -429,17 +457,18 @@ export class ActivitySchedule extends HandlebarsApplicationMixin(ApplicationV2) 
       this.dates = formData.object.dates;
     }
   }
+
   async _selectSeason(event) {
     event.preventDefault();
     let dataset = event.target.dataset;
     // log(false, `Select season ${dataset.season} ${dataset.year} ${event.target.value}`);
     // Create a copy of the dates array to avoid mutating the original
     let newDates = [...this.dates];
-    let wasChecked = dataset.selected === "true" ? true : false;
+    let wasChecked = dataset.selected === "true";
     if (wasChecked) {
       // it was checked, so remove this season
       this.dates = newDates.filter((e) => {
-        return !(e.year == Number(dataset.year) && e.season === dataset.season);
+        return !(e.year === Number(dataset.year) && e.season === dataset.season);
       });
     } else {
       // it was unchecked, so add this season
@@ -464,6 +493,7 @@ export class ActivitySchedule extends HandlebarsApplicationMixin(ApplicationV2) 
     this.displayYear = newYear;
     this.render();
   }
+
   async _setYear(event) {
     event.preventDefault();
     let newYear = Number(event.currentTarget.value);

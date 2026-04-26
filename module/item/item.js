@@ -45,21 +45,21 @@ export class ArM5eItem extends Item {
 
     // Get the Item's data
     const system = this.system;
-    if (this.isOwned && this.actor.system == undefined) {
+    if (this.isOwned && this.actor.system === undefined) {
       // this is a call from constructor, it will be called again with actor data initialied
       log(false, `Owned Item : ${this.id} : ${this.name}, actor.data= ${this.actor.system}`);
       return;
     }
     const owner = this.actor ? this.actor : {};
     if (this.isOwned) {
-      if (this.type == "weapon" && this.actor != null) {
+      if (this.type === "weapon" && this.actor !== null) {
         let abilitiesSelect = {};
 
         const temp = {
           id: "",
           name: "N/A"
         };
-        abilitiesSelect["a0"] = temp;
+        abilitiesSelect.a0 = temp;
         if (this.actor.isCharacter()) {
           this.system.canEquip = true;
         }
@@ -70,23 +70,23 @@ export class ArM5eItem extends Item {
               id: i.id,
               name: i.name
             };
-            //abilitiesSelect.push(temp);
-            abilitiesSelect["a" + key] = temp;
+            // abilitiesSelect.push(temp);
+            abilitiesSelect[`a${key}`] = temp;
           }
         }
 
         system.abilities = abilitiesSelect;
-      } else if (this.type == "armor" && this.actor != null) {
+      } else if (this.type === "armor" && this.actor !== null) {
         if (this.actor.isCharacter()) {
           this.system.canEquip = true;
         }
       }
     }
     // compute reputation score
-    if (this.type == "reputation") {
+    if (this.type === "reputation") {
       this.system.score = ArM5eActor.getAbilityScoreFromXp(this.system.xp);
     }
-    if (this.type == "personalityTrait") {
+    if (this.type === "personalityTrait") {
       this.system.score = PersonalityTraitSchema.getScore(this.system.xp);
     }
     if (this._needLevelComputation()) {
@@ -98,14 +98,14 @@ export class ArM5eItem extends Item {
       system.castingTotal = 0;
     }
 
-    if (this.type == "labCovenant") {
+    if (this.type === "labCovenant") {
       let pts = this.system.upkeepCost;
       this.system.points = pts * CONFIG.ARM5E.lab.usage[system.usage].coeff;
-    } else if (this.type == "magicItem") {
+    } else if (this.type === "magicItem") {
       this.system.maxLevel = 10 * this.system.materialBase * this.system.sizeMultiplier;
     }
 
-    if (this.type == "inhabitant") {
+    if (this.type === "inhabitant") {
       this.system.points = ARM5E.covenant.inhabitants[this.system.category].points;
     }
 
@@ -114,18 +114,18 @@ export class ArM5eItem extends Item {
   }
 
   prepareDerivedData() {
-    if (this.isOwned && this.actor == undefined) {
+    if (this.isOwned && this.actor === undefined) {
       // this is a call from constructor, it will be called again with actor data initialied
       log(false, `Owned Item : ${this.id} : ${this.name}, actor.data= ${this.actor.system}`);
       return;
     }
     // add category to ability
 
-    if (this.type == "ability") {
+    if (this.type === "ability") {
       this.system.category = CONFIG.ARM5E.ALL_ABILITIES[this.system.key]?.category ?? "general";
-    } else if (this.type == "wound") {
+    } else if (this.type === "wound") {
       this.system.title = `${this.name}`;
-      if (this.system.recoveryTime == 0) {
+      if (this.system.recoveryTime === 0) {
         this.system.title += ` (${game.i18n.localize("arm5e.sheet.wound.fresh")})`;
         this.system.ui = { style: 'style="box-shadow: 3px 3px 3px rgb(135 38 22 / 100%);"' };
       }
@@ -134,12 +134,12 @@ export class ArM5eItem extends Item {
 
   _needLevelComputation() {
     let enforceEnchantmentLevel =
-      this.type == "laboratoryText" &&
-      (this.system.type == "spell" || this.system.type == "enchantment");
+      this.type === "laboratoryText" &&
+      (this.system.type === "spell" || this.system.type === "enchantment");
     return (
-      this.type == "magicalEffect" ||
-      this.type == "enchantment" ||
-      this.type == "spell" ||
+      this.type === "magicalEffect" ||
+      this.type === "enchantment" ||
+      this.type === "spell" ||
       enforceEnchantmentLevel
     );
   }
@@ -228,10 +228,10 @@ export class ArM5eItem extends Item {
 
   isAnEffect() {
     return (
-      this.type == "spell" ||
-      this.type == "magicalEffect" ||
-      this.type == "enchantment" ||
-      this.type == "labText"
+      this.type === "spell" ||
+      this.type === "magicalEffect" ||
+      this.type === "enchantment" ||
+      this.type === "labText"
     );
   }
 
@@ -447,7 +447,7 @@ export class ArM5eItem extends Item {
         {
           name: entryName,
           type: "diaryEntry",
-          img: CONFIG.ACTIVITIES_DEFAULT_ICONS["resourceOutput"],
+          img: CONFIG.ACTIVITIES_DEFAULT_ICONS.resourceOutput,
           system: {
             description: description,
             done: true,
@@ -501,7 +501,7 @@ export class ArM5eItem extends Item {
         {
           name: entryName,
           type: "diaryEntry",
-          img: CONFIG.ACTIVITIES_DEFAULT_ICONS["resourceInput"],
+          img: CONFIG.ACTIVITIES_DEFAULT_ICONS.resourceInput,
           system: {
             description: description,
             done: true,

@@ -281,12 +281,13 @@ export class RollWindow extends HandlebarsApplicationMixin(ApplicationV2) {
   }
 
   data = {};
+
   buttons = {};
 
   /**
    * Generate dialog buttons based on rollInfo properties
    * @private
-   * @param {Object} actor - The actor with rollInfo data
+   * @param {Object} actor The actor with rollInfo data
    * @returns {Array} Array of button objects
    */
   _generateDialogButtons(actor) {
@@ -487,6 +488,8 @@ export class RollWindow extends HandlebarsApplicationMixin(ApplicationV2) {
 
   /**
    * Prepare context that is specific to only a single rendered part.
+   * @param partId
+   * @param context
    **/
   async _preparePartContext(partId, context) {
     switch (partId) {
@@ -542,6 +545,8 @@ export class RollWindow extends HandlebarsApplicationMixin(ApplicationV2) {
 
   /**
    * Handle changes to an input element within the form.
+   * @param formConfig
+   * @param event
    * @protected
    */
   _onChangeForm(formConfig, event) {
@@ -578,6 +583,7 @@ export class RollWindow extends HandlebarsApplicationMixin(ApplicationV2) {
     if (this.resolver) this.resolver(res);
     this.close();
   }
+
   static async simpleRoll(event, target) {
     event.preventDefault();
     RollWindow.getFormData(this.element, this.data);
@@ -656,8 +662,8 @@ export class RollWindow extends HandlebarsApplicationMixin(ApplicationV2) {
   /**
    * Extract form data from dialog elements and update actor.rollInfo
    * @static
-   * @param {HTMLElement} html - The form element
-   * @param {Object} actor - The actor to update
+   * @param {HTMLElement} html The form element
+   * @param {Object} actor The actor to update
    * @returns {Object} The updated actor
    */
   static getFormData(html, actor) {
@@ -667,7 +673,7 @@ export class RollWindow extends HandlebarsApplicationMixin(ApplicationV2) {
     }
     find = html.querySelector(".SelectedAbility");
     if (find) {
-      if (find.value == "None") {
+      if (find.value === "None") {
         const dataset = {
           name: actor.rollInfo.name,
           roll: "char",
@@ -771,7 +777,7 @@ export class RollWindow extends HandlebarsApplicationMixin(ApplicationV2) {
       [ROLL_PROPERTIES.SPONT.VAL, ROLL_PROPERTIES.MAGIC.VAL, ROLL_PROPERTIES.SPELL.VAL].includes(
         actor.rollInfo.type
       ) ||
-      actor.rollInfo.type == "power"
+      actor.rollInfo.type === "power"
     ) {
       find = html.querySelector(".penSpeciality");
       if (find) {
@@ -851,9 +857,9 @@ export class RollWindow extends HandlebarsApplicationMixin(ApplicationV2) {
   }
 }
 
-//////////////////////
+// ////////////////////
 // NO ROLL WINDOW CLASS
-//////////////////////
+// ////////////////////
 
 export class NoRollWindow extends HandlebarsApplicationMixin(ApplicationV2) {
   constructor(data, buttons, options) {
@@ -867,6 +873,7 @@ export class NoRollWindow extends HandlebarsApplicationMixin(ApplicationV2) {
   }
 
   data = {};
+
   buttons = {};
 
   static DEFAULT_OPTIONS = {
@@ -912,6 +919,8 @@ export class NoRollWindow extends HandlebarsApplicationMixin(ApplicationV2) {
 
   /**
    * Prepare context that is specific to only a single rendered part.
+   * @param partId
+   * @param context
    **/
   async _preparePartContext(partId, context) {
     switch (partId) {
@@ -938,6 +947,8 @@ export class NoRollWindow extends HandlebarsApplicationMixin(ApplicationV2) {
 
   /**
    * Handle changes to an input element within the form.
+   * @param formConfig
+   * @param event
    * @protected
    */
   _onChangeForm(formConfig, event) {
@@ -951,9 +962,9 @@ export class NoRollWindow extends HandlebarsApplicationMixin(ApplicationV2) {
   }
 }
 
-//////////////////////////////////////
+// ////////////////////////////////////
 // NO ROLL WINDOW FOR POWER USE
-//////////////////////////////////////
+// ////////////////////////////////////
 
 export class UsePowerRollWindow extends NoRollWindow {
   constructor(data, options) {
@@ -963,6 +974,7 @@ export class UsePowerRollWindow extends NoRollWindow {
     ];
     super(data, buttons, options);
   }
+
   static PARTS = {
     header: super.PARTS.header,
     body: {
@@ -1010,9 +1022,9 @@ export class UsePowerRollWindow extends NoRollWindow {
   }
 }
 
-//////////////////////////////////////
+// ////////////////////////////////////
 // NO ROLL WINDOW FOR MAGIC ITEM USE
-//////////////////////////////////////
+// ////////////////////////////////////
 
 export class UseMagicItemWindow extends NoRollWindow {
   constructor(data, options) {
@@ -1022,6 +1034,7 @@ export class UseMagicItemWindow extends NoRollWindow {
     ];
     super(data, buttons, options);
   }
+
   static PARTS = {
     header: super.PARTS.header,
     body: { template: "systems/arm5e/templates/roll/magic-itemUse.hbs" },
@@ -1064,8 +1077,8 @@ export class UseMagicItemWindow extends NoRollWindow {
 
 /**
  * Create and display a roll dialog
- * @param {Actor} actor - The actor performing the roll
- * @param {Object} [dataset] - Optional dataset to initialize rollInfo with
+ * @param {Actor} actor The actor performing the roll
+ * @param {Object} [dataset] Optional dataset to initialize rollInfo with
  * @returns {{ dialog: RollWindow, result: Promise }}
  */
 export function openRollDialog(actor, dataset = null) {
@@ -1088,14 +1101,20 @@ export function openRollDialog(actor, dataset = null) {
 
 /**
  * Create and display a roll dialog
- * @param {Actor} actor - The actor performing the roll
- * @param {Object} [dataset] - Optional dataset to initialize rollInfo with
+ * @param {Actor} actor The actor performing the roll
+ * @param {Object} [dataset] Optional dataset to initialize rollInfo with
  * @returns {Promise} Promise that resolves when the dialog is closed
  */
 export async function getRollDialog(actor, dataset = null) {
   return await openRollDialog(actor, dataset).result;
 }
 
+/**
+ *
+ * @param attacker
+ * @param roll
+ * @param message
+ */
 async function combatAttack(attacker, roll, message) {
   await applyImpact(attacker, roll, message);
 }
@@ -1110,6 +1129,12 @@ async function combatDefense(defender, roll, message) {
   await applyImpact(defender, roll, message);
 }
 
+/**
+ *
+ * @param actor
+ * @param roll
+ * @param message
+ */
 export async function _applyImpact(actor, roll, message) {
   const updateData = {};
   const messageUpdate = {};
@@ -1193,6 +1218,12 @@ export async function _applyImpact(actor, roll, message) {
   return updateData;
 }
 
+/**
+ *
+ * @param actor
+ * @param roll
+ * @param message
+ */
 async function applyImpact(actor, roll, message) {
   const updateData = await _applyImpact(actor, roll, message);
   await actor.update(updateData);

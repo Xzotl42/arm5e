@@ -8,6 +8,10 @@ import { applyStandardMagusEffects } from "./testHelpers.js";
 
 // import { Quench } from "../quench.js";
 
+/**
+ *
+ * @param quench
+ */
 export function registerVisTesting(quench) {
   quench.registerBatch(
     "Ars-Vis",
@@ -63,8 +67,8 @@ export function registerVisTesting(quench) {
 
           expect(magus.items.has(visId));
           let visItem = magus.items.get(visId);
-          expect(visItem.system.quantity == 2);
-          expect(visItem.system.art == "vi");
+          expect(visItem.system.quantity === 2);
+          expect(visItem.system.art === "vi");
           await sheet._onProgressRollback(undefined, false);
 
           expect(!magus.items.has(visId));
@@ -103,8 +107,8 @@ export function registerVisTesting(quench) {
 
           expect(magus.items.has(visId));
           let visItem = magus.items.get(visId);
-          expect(visItem.system.quantity == 2);
-          expect(visItem.system.art == "vi");
+          expect(visItem.system.quantity === 2);
+          expect(visItem.system.art === "vi");
           await sheet._onProgressRollback(undefined, false);
 
           expect(!magus.items.has(visId));

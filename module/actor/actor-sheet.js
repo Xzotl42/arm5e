@@ -227,11 +227,11 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
       };
 
       sessionStorage.setItem(`usercache-${game.user.id}`, JSON.stringify(usercache));
-    } else if (usercache[this.actor.id].sections?.visibility == undefined) {
+    } else if (usercache[this.actor.id].sections?.visibility === undefined) {
       usercache[this.actor.id].sections = { visibility: { common: {} } };
       sessionStorage.setItem(`usercache-${game.user.id}`, JSON.stringify(usercache));
     }
-    if (usercache[this.actor.id].lists?.visibility == undefined) {
+    if (usercache[this.actor.id].lists?.visibility === undefined) {
       usercache[this.actor.id].lists = { visibility: { abilities: {} } };
       sessionStorage.setItem(`usercache-${game.user.id}`, JSON.stringify(usercache));
     }
@@ -302,7 +302,7 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
 
     actorData.system.effectCreation = game.user.isTrusted;
 
-    if (this.actor.type != "magicCodex") {
+    if (this.actor.type !== "magicCodex") {
       // topic filters
       // 1. Filter
       // Arts
@@ -321,10 +321,10 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
         context.ui.artsFilterVisibility = "hidden";
       }
       if (
-        artsFilters.topic != "" ||
-        artsFilters.typeFilter != "" ||
-        (artsFilters.levelFilter != 0 && artsFilters.levelFilter != null) ||
-        (artsFilters.qualityFilter != 0 && artsFilters.qualityFilter != null)
+        artsFilters.topic !== "" ||
+        artsFilters.typeFilter !== "" ||
+        (artsFilters.levelFilter !== 0 && artsFilters.levelFilter !== null) ||
+        (artsFilters.qualityFilter !== 0 && artsFilters.qualityFilter !== null)
       ) {
         context.ui.artsTopicsFilter = UI.STYLES.FILTER_ACTIVE;
       }
@@ -344,10 +344,10 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
         context.ui.abilitiesFilterVisibility = "hidden";
       }
       if (
-        abilitiesFilters.topic != "" ||
-        abilitiesFilters.typeFilter != "" ||
-        (abilitiesFilters.levelFilter != 0 && abilitiesFilters.levelFilter != null) ||
-        (abilitiesFilters.qualityFilter != 0 && abilitiesFilters.qualityFilter != null)
+        abilitiesFilters.topic !== "" ||
+        abilitiesFilters.typeFilter !== "" ||
+        (abilitiesFilters.levelFilter !== 0 && abilitiesFilters.levelFilter !== null) ||
+        (abilitiesFilters.qualityFilter !== 0 && abilitiesFilters.qualityFilter !== null)
       ) {
         context.ui.abilitiesTopicsFilter = UI.STYLES.FILTER_ACTIVE;
       }
@@ -366,9 +366,9 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
         context.ui.masteriesFilterVisibility = "hidden";
       }
       if (
-        masteriesFilters.formFilter != "" ||
-        masteriesFilters.techniqueFilter != "" ||
-        (masteriesFilters.levelFilter != 0 && masteriesFilters.levelFilter != null)
+        masteriesFilters.formFilter !== "" ||
+        masteriesFilters.techniqueFilter !== "" ||
+        (masteriesFilters.levelFilter !== 0 && masteriesFilters.levelFilter !== null)
       ) {
         context.ui.masteriesTopicsFilter = UI.STYLES.FILTER_ACTIVE;
       }
@@ -377,8 +377,8 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
     context.system.isCharacter = this.actor.isCharacter();
     if (context.system.isCharacter) {
       if (context.system.charType?.value === "entity") {
-        let cnt = Object.entries(context.system.realms).filter((e) => e[1].aligned == true);
-        let value = Object.entries(context.system.realms).find((e) => e[1].aligned == true);
+        let cnt = Object.entries(context.system.realms).filter((e) => e[1].aligned === true);
+        let value = Object.entries(context.system.realms).find((e) => e[1].aligned === true);
         if (cnt.length > 1) {
           ui.notifications.warn(
             game.i18n.localize("arm5e.notification.entityWithMultipleRealmAlignments")
@@ -410,8 +410,8 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
       // }
 
       if (
-        context.system?.charType?.value == "magusNPC" ||
-        context.system?.charType?.value == "magus"
+        context.system?.charType?.value === "magusNPC" ||
+        context.system?.charType?.value === "magus"
       ) {
         context.selection.voiceStances = Object.fromEntries(
           Object.entries(context.system.stances.voice).map(([k, v]) => {
@@ -447,11 +447,11 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
         if (context.system.castingtotal.aura === undefined) {
           context.system.castingtotal.aura = 0;
         }
-        if (context.system.castingtotal.applyFocus == undefined) {
+        if (context.system.castingtotal.applyFocus === undefined) {
           context.system.castingtotal.applyFocus = false;
         }
 
-        if (context.system.castingtotal.divider == undefined) {
+        if (context.system.castingtotal.divider === undefined) {
           context.system.castingtotal.divider = 1;
         }
 
@@ -477,9 +477,9 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
           context.ui.spellsFilterVisibility = "hidden";
         }
         if (
-          spellsFilters.formFilter != "" ||
-          spellsFilters.techniqueFilter != "" ||
-          (spellsFilters.levelFilter != 0 && spellsFilters.levelFilter != null)
+          spellsFilters.formFilter !== "" ||
+          spellsFilters.techniqueFilter !== "" ||
+          (spellsFilters.levelFilter !== 0 && spellsFilters.levelFilter !== null)
         ) {
           context.ui.spellFilter = UI.STYLES.FILTER_ACTIVE;
         }
@@ -496,9 +496,9 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
           context.ui.magicEffectFilterVisibility = "hidden";
         }
         if (
-          magicEffectFilters.formFilter != "" ||
-          magicEffectFilters.techniqueFilter != "" ||
-          (magicEffectFilters.levelFilter != 0 && magicEffectFilters.levelFilter != null)
+          magicEffectFilters.formFilter !== "" ||
+          magicEffectFilters.techniqueFilter !== "" ||
+          (magicEffectFilters.levelFilter !== 0 && magicEffectFilters.levelFilter !== null)
         ) {
           context.ui.magicEffectFilter = UI.STYLES.FILTER_ACTIVE;
         }
@@ -513,14 +513,14 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
               style: UI.STYLES.DEFICIENT_ART,
               title: game.i18n.localize("arm5e.activeEffect.types.arts.deficiency")
             };
-          } else if (!technique.bonus && technique.xpCoeff == 1.0) {
+          } else if (!technique.bonus && technique.xpCoeff === 1.0) {
             technique.ui = { style: UI.STYLES.STANDARD_ART };
-          } else if (!technique.bonus && technique.xpCoeff != 1.0) {
+          } else if (!technique.bonus && technique.xpCoeff !== 1.0) {
             technique.ui = {
               style: UI.STYLES.AFINITY_ART,
               title: game.i18n.localize("arm5e.activeEffect.types.arts.affinity")
             };
-          } else if (technique.bonus && technique.xpCoeff == 1.0) {
+          } else if (technique.bonus && technique.xpCoeff === 1.0) {
             technique.ui = {
               style: UI.STYLES.PUISSANT_ART,
               title: ""
@@ -560,14 +560,14 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
               style: UI.STYLES.DEFICIENT_ART,
               title: game.i18n.localize("arm5e.activeEffect.types.arts.deficiency")
             };
-          } else if (!form.bonus && form.xpCoeff == 1.0) {
+          } else if (!form.bonus && form.xpCoeff === 1.0) {
             form.ui = { style: UI.STYLES.STANDARD_ART };
-          } else if (!form.bonus && form.xpCoeff != 1.0) {
+          } else if (!form.bonus && form.xpCoeff !== 1.0) {
             form.ui = {
               style: UI.STYLES.AFINITY_ART,
               title: game.i18n.localize("arm5e.activeEffect.types.arts.affinity")
             };
-          } else if (form.bonus && form.xpCoeff == 1.0) {
+          } else if (form.bonus && form.xpCoeff === 1.0) {
             form.ui = {
               style: UI.STYLES.PUISSANT_ART,
               title: ""
@@ -667,19 +667,19 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
         }
         context.sortedAbilities[ab.system.category].abilities.push(ab);
 
-        if (ab.system.derivedScore == ab.system.finalScore && ab.system.xpCoeff == 1.0) {
+        if (ab.system.derivedScore === ab.system.finalScore && ab.system.xpCoeff === 1.0) {
           // ui related stuff
           ab.ui = { style: "" };
-        } else if (ab.system.derivedScore == ab.system.finalScore && ab.system.xpCoeff != 1.0) {
+        } else if (ab.system.derivedScore === ab.system.finalScore && ab.system.xpCoeff !== 1.0) {
           ab.ui = { style: UI.STYLES.AFFINITY_ABILITY, title: "Affinity, " };
-        } else if (ab.system.derivedScore != ab.system.finalScore && ab.system.xpCoeff == 1.0) {
+        } else if (ab.system.derivedScore !== ab.system.finalScore && ab.system.xpCoeff === 1.0) {
           ab.ui = { style: UI.STYLES.PUISSANT_ABILITY, title: "" };
         } else {
           ab.ui = { style: UI.STYLES.COMBO_ABILITY, title: "Affinity, " };
         }
       }
       // let flag = this.actor.getFlag("arm5e", "sorting", "abilities");
-      // if (flag && flag["abilities"] == true) {
+      // if (flag && flag["abilities"] === true) {
       //   context.sortedAbilities = Object.entries(context.sortedAbilities).sort((a, b) => {
       //     return a[1].label.localeCompare(b[1].label);
       //   });
@@ -721,9 +721,9 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
         context.ui.diaryFilterVisibility = "hidden";
       }
       if (
-        diaryFilters.typeFilter != "" ||
-        (diaryFilters.minYearFilter != 0 && diaryFilters.minYearFilter != null) ||
-        (diaryFilters.maxYearFilter != 0 && diaryFilters.maxYearFilter != null)
+        diaryFilters.typeFilter !== "" ||
+        (diaryFilters.minYearFilter !== 0 && diaryFilters.minYearFilter !== null) ||
+        (diaryFilters.maxYearFilter !== 0 && diaryFilters.maxYearFilter !== null)
       ) {
         context.ui.diaryFilter = UI.STYLES.FILTER_ACTIVE;
       }
@@ -733,7 +733,7 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
         let step = 1;
         for (let date of entry.system.dates) {
           let activity = {};
-          if (entry.system.done || entry.system.activity == "none") {
+          if (entry.system.done || entry.system.activity === "none") {
             activity.ui = { diary: 'style="font-style: normal;"' };
           } else {
             activity.ui = { diary: 'style="font-style: italic; color: grey"' };
@@ -778,10 +778,10 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
     }
 
     if (
-      actorData.type == "player" ||
-      actorData.type == "npc" ||
-      actorData.type == "laboratory" ||
-      actorData.type == "covenant"
+      actorData.type === "player" ||
+      actorData.type === "npc" ||
+      actorData.type === "laboratory" ||
+      actorData.type === "covenant"
     ) {
       // hermetic filters
       // 1. Filter
@@ -800,9 +800,9 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
         context.ui.labtTextFilterVisibility = "hidden";
       }
       if (
-        labtTextFilters.formFilter != "" ||
-        labtTextFilters.techniqueFilter != "" ||
-        (labtTextFilters.levelFilter != 0 && labtTextFilters.levelFilter != null)
+        labtTextFilters.formFilter !== "" ||
+        labtTextFilters.techniqueFilter !== "" ||
+        (labtTextFilters.levelFilter !== 0 && labtTextFilters.levelFilter !== null)
       ) {
         context.ui.labTextFilter = UI.STYLES.FILTER_ACTIVE;
       }
@@ -865,11 +865,11 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
    */
   _prepareActorItems(actorData) {
     if (
-      actorData.actor.type == "player" ||
-      actorData.actor.type == "npc" ||
-      actorData.actor.type == "laboratory" ||
-      actorData.actor.type == "covenant" ||
-      actorData.actor.type == "beast"
+      actorData.actor.type === "player" ||
+      actorData.actor.type === "npc" ||
+      actorData.actor.type === "laboratory" ||
+      actorData.actor.type === "covenant" ||
+      actorData.actor.type === "beast"
     ) {
       for (let virtue of actorData.system.virtues) {
         if (virtue.effects.size > 0) {
@@ -914,7 +914,7 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
       }
     }
 
-    if (actorData.actor.type == "player" || actorData.actor.type == "npc") {
+    if (actorData.actor.type === "player" || actorData.actor.type === "npc") {
       for (let spell of actorData.system.spells) {
         spell.TechReq = spellTechniqueLabel(spell.system);
         spell.FormReq = spellFormLabel(spell.system);
@@ -1351,7 +1351,7 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
       const prep = { ids: [] };
       const itemList = [];
       for (let weapon of this.actor.system.weapons) {
-        if (weapon.system.equipped == true) {
+        if (weapon.system.equipped === true) {
           prep.name = prep.name ? prep.name : weapon.name;
           itemList.push(weapon.name);
           prep.ids.push(weapon._id);
@@ -1359,7 +1359,7 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
       }
 
       for (let armor of this.actor.system.armor) {
-        if (armor.system.equipped == true) {
+        if (armor.system.equipped === true) {
           itemList.push(armor.name);
           prep.name = prep.name ? prep.name : armor.name;
           prep.ids.push(armor._id);
@@ -1527,7 +1527,11 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
     });
 
     html.find(".rest").click((ev) => {
-      if (this.actor.type === "player" || this.actor.type === "npc" || this.actor.type == "beast") {
+      if (
+        this.actor.type === "player" ||
+        this.actor.type === "npc" ||
+        this.actor.type === "beast"
+      ) {
         let longTerm = false;
         if (ev.shiftKey) {
           longTerm = true;
@@ -1547,7 +1551,7 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
 
     html.find(".soak-damage").click(async (event) => {
       const msg = await this._onSoakDamage(getDataset(event));
-      if (msg == null) return;
+      if (msg === null) return;
       if (msg.system.impact.woundGravity) {
         await this.actor.changeWound(
           1,
@@ -1745,7 +1749,7 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
   }
 
   async _deccreaseArt(type, art) {
-    if (this.actor.system.arts[type][art].derivedScore != 0) {
+    if (this.actor.system.arts[type][art].derivedScore !== 0) {
       let oldXp = this.actor.system.arts[type][art].xp;
       let newXp = Math.round(
         ((this.actor.system.arts[type][art].derivedScore - 1) *
@@ -2026,7 +2030,7 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
       return false;
     }
 
-    if (this.actor.system.states.pendingDamage && dataset.roll != "soak") {
+    if (this.actor.system.states.pendingDamage && dataset.roll !== "soak") {
       ui.notifications.warn(game.i18n.localize("arm5e.notification.damagePending"), {
         permanent: true
       });
@@ -2038,8 +2042,8 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
       rollProperties.MODE = parseInt(dataset.mode);
     }
 
-    if ((rollProperties.MODE & ROLL_MODES.UNCONSCIOUS) == 0) {
-      // if (dataset.roll != "char" && dataset.roll != "aging" && dataset.roll != "crisis") {
+    if ((rollProperties.MODE & ROLL_MODES.UNCONSCIOUS) === 0) {
+      // if (dataset.roll !== "char" && dataset.roll !== "aging" && dataset.roll !== "crisis") {
       if (this.actor.system.states.pendingCrisis) {
         ui.notifications.info(game.i18n.localize("arm5e.notification.pendingCrisis"), {
           permanent: true
@@ -2054,7 +2058,7 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
         return false;
       }
 
-      if (this.actor.system.fatigueCurrent == this.actor.system.fatigueMaxLevel) {
+      if (this.actor.system.fatigueCurrent === this.actor.system.fatigueMaxLevel) {
         ui.notifications.info(game.i18n.localize("arm5e.notification.unconscious"), {
           permanent: true
         });
@@ -2190,8 +2194,8 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
 
     let confirmed = false;
     let chosenAmount = 1;
-    if (quantity == 0) return false;
-    if (quantity == 1) {
+    if (quantity === 0) return false;
+    if (quantity === 1) {
       confirmed = await getConfirmation(
         item.name,
         game.i18n.format("arm5e.dialog.confirmTransfer-question", {
@@ -2222,7 +2226,7 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
       let res = [];
       let modified = [];
       let newItemData = item.toObject();
-      if (chosenAmount == quantity) {
+      if (chosenAmount === quantity) {
         res = await this.actor.createEmbeddedDocuments("Item", [newItemData]);
         let deleted = await originActor.deleteEmbeddedDocuments("Item", [item._id]);
       } else {
@@ -2261,14 +2265,14 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
       } else if (info.type === "Item" && item.system.getQuantity) {
         if (this.isItemDropAllowed(item)) {
           let quantity = item.system.getQuantity();
-          if (quantity != 0) {
+          if (quantity !== 0) {
             await item.createResourceTrackingDiaryEntry(null, this.actor, quantity);
           }
         }
       }
     }
     // // transform input into labText
-    // if (type == "spell" || type == "magicalEffect" || type == "enchantment") {
+    // if (type === "spell" || type === "magicalEffect" || type === "enchantment") {
     //   log(false, "Valid drop");
     //   // create a labText data:
     //   return await super._onDropItemCreate(effectToLabText(foundry.utils.deepClone(item)));
@@ -2337,10 +2341,10 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
   _bindActor(actor) {
     if (!["covenant", "laboratory"].includes(actor.type)) return [];
     let updateData = { _id: this.actor._id };
-    if (actor.type == "covenant") {
+    if (actor.type === "covenant") {
       updateData["system.covenant.value"] = actor.name;
       updateData["system.covenant.actorId"] = actor._id;
-    } else if (actor.type == "laboratory") {
+    } else if (actor.type === "laboratory") {
       updateData["system.sanctum.value"] = actor.name;
       updateData["system.sanctum.actorId"] = actor._id;
     }
@@ -2350,10 +2354,10 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
   _unbindActor(actor) {
     if (!["covenant", "laboratory"].includes(actor.type)) return [];
     let updateData = { _id: this.actor._id };
-    if (actor.type == "covenant") {
+    if (actor.type === "covenant") {
       updateData["system.covenant.value"] = "";
       updateData["system.covenant.actorId"] = null;
-    } else if (actor.type == "laboratory") {
+    } else if (actor.type === "laboratory") {
       updateData["system.sanctum.value"] = "";
       updateData["system.sanctum.actorId"] = null;
     }

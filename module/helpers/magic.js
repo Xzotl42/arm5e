@@ -56,15 +56,10 @@ export async function GetFilteredMagicalAttributes(data) {
         return val.source in filterBooks;
       })
       .map(([k, v]) => {
-        {
-          if (v.impact != undefined) {
-            return [
-              k,
-              { label: `${game.i18n.localize(v.label)}  (${v.impact})`, source: v.source }
-            ];
-          } else {
-            return [k, { label: `${game.i18n.localize(v.label)}`, disabled: true }];
-          }
+        if (v.impact !== undefined) {
+          return [k, { label: `${game.i18n.localize(v.label)}  (${v.impact})`, source: v.source }];
+        } else {
+          return [k, { label: `${game.i18n.localize(v.label)}`, disabled: true }];
         }
       })
   );
@@ -75,15 +70,10 @@ export async function GetFilteredMagicalAttributes(data) {
         return val.source in filterBooks;
       })
       .map(([k, v]) => {
-        {
-          if (v.impact != undefined) {
-            return [
-              k,
-              { label: `${game.i18n.localize(v.label)}  (${v.impact})`, source: v.source }
-            ];
-          } else {
-            return [k, { label: `${game.i18n.localize(v.label)}`, disabled: true }];
-          }
+        if (v.impact !== undefined) {
+          return [k, { label: `${game.i18n.localize(v.label)}  (${v.impact})`, source: v.source }];
+        } else {
+          return [k, { label: `${game.i18n.localize(v.label)}`, disabled: true }];
         }
       })
   );
@@ -94,15 +84,10 @@ export async function GetFilteredMagicalAttributes(data) {
         return val.source in filterBooks;
       })
       .map(([k, v]) => {
-        {
-          if (v.impact != undefined) {
-            return [
-              k,
-              { label: `${game.i18n.localize(v.label)}  (${v.impact})`, source: v.source }
-            ];
-          } else {
-            return [k, { label: `${game.i18n.localize(v.label)}`, disabled: true }];
-          }
+        if (v.impact !== undefined) {
+          return [k, { label: `${game.i18n.localize(v.label)}  (${v.impact})`, source: v.source }];
+        } else {
+          return [k, { label: `${game.i18n.localize(v.label)}`, disabled: true }];
         }
       })
   );
@@ -310,9 +295,10 @@ export class QuickMagic extends foundry.applications.api.HandlebarsApplicationMi
   }
 
   static async roll(event, target) {
-    target.dataset.technique = this.object.technique;
-    target.dataset.form = this.object.form;
-    await this.object.actor.sheet.roll(event, target);
+    const dataset = target.dataset;
+    dataset.technique = this.object.technique;
+    dataset.form = this.object.form;
+    await this.object.actor.sheet.roll(dataset);
   }
 
   async close(options = {}) {
@@ -393,7 +379,7 @@ export function addSpellMagnitude(base, num) {
  */
 export function getRequisitesLabel(requisites) {
   let result = "";
-  if (requisites.length == 0) {
+  if (requisites.length === 0) {
     return result;
   }
   result += "(";
@@ -586,7 +572,7 @@ export function computeLevel(system, type, general = true) {
  * @param options
  */
 export function computeRawCastingTotal(effect, owner, options = {}) {
-  if (owner.type != "player" && owner.type != "npc") {
+  if (owner.type !== "player" && owner.type !== "npc") {
     return 0;
   }
   let effectData = effect.system;
@@ -765,7 +751,7 @@ async function castSpell(actorCaster, roll, message) {
     updateData["system.warping.points"] = actorCaster.system.warping.points + roll.botches;
     // await actorCaster.update(updateData);
   }
-  if (actorCaster.rollInfo.type == "spell") {
+  if (actorCaster.rollInfo.type === "spell") {
     const res = fatigueCost(
       actorCaster,
       totalOfSpell,
@@ -825,7 +811,6 @@ async function castSupernaturalEffect(actorCaster, roll, message) {
 /**
  *
  * @param actorCaster
- * @param roll
  * @param form
  * @param message
  */
@@ -868,7 +853,7 @@ function magicalAttributesHelper(attributes, options) {
  * @param item
  */
 async function useMagicItem(dataset, item) {
-  if (item.system.enchantments.charges == 0) {
+  if (item.system.enchantments.charges === 0) {
     ui.notifications.warn(game.i18n.localize("arm5e.notification.noChargesLeft"));
     return;
   }

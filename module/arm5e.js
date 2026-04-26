@@ -140,7 +140,7 @@ Hooks.once("init", async function () {
   CONFIG.Dice.terms[StressDieInternal.DENOMINATION] = StressDieInternal;
   CONFIG.Dice.terms[AlternateStressDie.DENOMINATION] = AlternateStressDie;
   CONFIG.Dice.rolls[0] = ArsRoll;
-  //CONFIG.Dice.rolls.push(ArsRoll);
+  // CONFIG.Dice.rolls.push(ArsRoll);
 
   // UI customization
   CONFIG.Item.sidebarIcon = "ars-Icon_magic-chest";
@@ -171,7 +171,7 @@ Hooks.once("init", async function () {
   Hooks.callAll("arm5e-config-done", CONFIG);
 
   CONFIG.ARM5E.activities.conflictExclusion = Object.entries(CONFIG.ARM5E.activities.generic)
-    .filter((e) => e[1].scheduling.conflict == false)
+    .filter((e) => e[1].scheduling.conflict === false)
     .map((e) => e[0]);
   CONFIG.ARM5E.activities.duplicateAllowed = Object.entries(CONFIG.ARM5E.activities.generic)
     .filter((e) => e[1].scheduling.duplicate)
@@ -206,7 +206,7 @@ Hooks.once("init", async function () {
   Handlebars.registerHelper("concat", function () {
     let outStr = "";
     for (let arg in arguments) {
-      if (typeof arguments[arg] != "object") {
+      if (typeof arguments[arg] !== "object") {
         outStr += arguments[arg];
       }
     }
@@ -231,7 +231,7 @@ Hooks.once("init", async function () {
     const originalValue = value;
     const dec = options.hash.decimals ?? 0;
     const sign = options.hash.sign || false;
-    if (value == null) return new Handlebars.SafeString("");
+    if (value === null) return new Handlebars.SafeString("");
     if (typeof value === "string") value = parseFloat(value);
     if (Number.isNaN(value)) {
       console.warn("An invalid value was passed to formatOptionalNumber:", {
@@ -259,7 +259,7 @@ Hooks.once("ready", async function () {
 
   await migrateSettings();
   // Check that the arm5e-compendia module is at least the minimum version
-  const req = game.system.relationships.requires.find((e) => e.id == CONFIG.ARM5E.REF_MODULE_ID);
+  const req = game.system.relationships.requires.find((e) => e.id === CONFIG.ARM5E.REF_MODULE_ID);
   if (req) {
     const minVersion = req.compatibility.minimum;
     const currentVersion = game.modules.get("arm5e-compendia").version;
@@ -470,10 +470,10 @@ async function createArM5eMacro(data, slot) {
  * @param data
  */
 async function onDropActorSheetData(actor, sheet, data) {
-  if (data.type == "Folder") {
+  if (data.type === "Folder") {
     return true;
   }
-  if (data.type == "Item") {
+  if (data.type === "Item") {
     let item = await fromUuid(data.uuid);
 
     // For book topics
@@ -486,7 +486,7 @@ async function onDropActorSheetData(actor, sheet, data) {
       log(true, `Prevented invalid item drop ${item.name} on actor ${actor.name}`);
       return false;
     }
-  } else if (data.type == "Actor") {
+  } else if (data.type === "Actor") {
     let droppedActor = await fromUuid(data.uuid);
 
     if (sheet.isActorDropAllowed(droppedActor.type)) {
@@ -503,16 +503,15 @@ async function onDropActorSheetData(actor, sheet, data) {
 /**
  * Create a Macro from an Item drop.
  * Get an existing item macro if one exists, otherwise create a new one.
- * @param {string} itemName
  * @param itemUuid
- * @param actorId
- * @returns {Promise}
+ * @param actorUuid
+ * @param event
  */
 function rollItemMacro(itemUuid, actorUuid, event = undefined) {
   let item = null;
   let actor = null;
 
-  if (actorUuid.length == 16) {
+  if (actorUuid.length === 16) {
     actor = game.actors.get(actorUuid);
     ui.notifications.warn(
       `This is a legacy macro. Please recreate it as it may not work anymore in future versions.`
@@ -522,10 +521,10 @@ function rollItemMacro(itemUuid, actorUuid, event = undefined) {
   }
 
   if (!actor) {
-    return ui.notifications.warn(`No Actor with Id ${actorId} exists in the world`);
+    return ui.notifications.warn(`No Actor with Id ${actorUuid} exists in the world`);
   }
 
-  if (itemUuid.length == 16) {
+  if (itemUuid.length === 16) {
     item = actor.items.get(itemUuid);
     ui.notifications.warn(
       `This is a legacy macro. Please recreate it as it may not work anymore in future versions.`
@@ -551,10 +550,10 @@ function rollItemMacro(itemUuid, actorUuid, event = undefined) {
   const dataset = prepareDatasetByTypeOfItem(item);
   if (foundry.utils.isEmpty(dataset)) {
     item.sheet.render(true);
-  } else if (item.type == "power") {
+  } else if (item.type === "power") {
     actor.sheet._onUsePower(dataset);
   } else {
-    actor.sheet.roll(null, { dataset: dataset });
+    actor.sheet.roll(dataset);
   }
 }
 

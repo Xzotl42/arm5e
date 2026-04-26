@@ -84,7 +84,7 @@ export class ArM5eActiveEffectConfig extends foundry.applications.sheets.ActiveE
     if (this.filter) {
       context.types = Object.fromEntries(
         Object.entries(ACTIVE_EFFECTS_TYPES).filter(
-          ([k, v]) => v.category == this.filter || v.category === "none"
+          ([k, v]) => v.category === this.filter || v.category === "none"
         )
       );
     } else {
@@ -102,11 +102,11 @@ export class ArM5eActiveEffectConfig extends foundry.applications.sheets.ActiveE
     context.origin = context.document.sourceName;
     // first effect created, add null effect type and subtype (still needed?)
     context.selectedTypes = this.document.getFlag("arm5e", "type");
-    if (context.document.changes.length > 0 && context.selectedTypes == null) {
+    if (context.document.changes.length > 0 && context.selectedTypes === null) {
       context.selectedTypes = ["none"];
     }
     context.selectedSubtypes = this.document.getFlag("arm5e", "subtype");
-    if (context.document.changes.length > 0 && context.selectedSubtypes == null) {
+    if (context.document.changes.length > 0 && context.selectedSubtypes === null) {
       context.selectedSubtypes = ["none"];
     }
 
@@ -126,17 +126,17 @@ export class ArM5eActiveEffectConfig extends foundry.applications.sheets.ActiveE
         let tmp = subType.key;
         // option key replacement only done for abilities for now.
         if (context.types[context.selectedTypes[idx]].category === "abilities") {
-          if (context.options[idx] != null) {
+          if (context.options[idx] !== null) {
             tmp = tmp.replace("#OPTION#", context.options[idx]);
           }
         }
-        if (typeof v.default == "boolean") {
+        if (typeof v.default === "boolean") {
           subType.isBool = true;
         } else {
           subType.isBool = false;
         }
 
-        if (typeof v.default == "string") {
+        if (typeof v.default === "string") {
           subType.isString = true;
         } else {
           subType.isString = false;
@@ -153,7 +153,7 @@ export class ArM5eActiveEffectConfig extends foundry.applications.sheets.ActiveE
         subType.modeStr = `arm5e.activeEffect.mode_${subType.mode}`;
 
         subTypes.push(subType);
-        if (k == context.selectedSubtypes[idx]) {
+        if (k === context.selectedSubtypes[idx]) {
           context.currentProperties.push(subType);
         }
       }
@@ -255,11 +255,11 @@ export class ArM5eActiveEffectConfig extends foundry.applications.sheets.ActiveE
     let arrayOptions = this.document.getFlag("arm5e", "option");
     const effect = ACTIVE_EFFECTS_TYPES[arrayTypes[index]].subtypes[arraySubtypes[index]];
     let newKey = effect.key;
-    if (arrayOptions[index] != null) {
+    if (arrayOptions[index] !== null) {
       newKey = newKey.replace("#OPTION#", arrayOptions[index]);
     }
 
-    if (typeof effect.default == "boolean") {
+    if (typeof effect.default === "boolean") {
       value = true;
     }
     const changesData = this.document.changes;
@@ -311,7 +311,7 @@ export class ArM5eActiveEffectConfig extends foundry.applications.sheets.ActiveE
     arrayOptions[index] =
       ACTIVE_EFFECTS_TYPES[arrayTypes[index]].subtypes[arraySubtypes[index]].option || null;
     let computedKey = ACTIVE_EFFECTS_TYPES[arrayTypes[index]].subtypes[value].key;
-    if (arrayOptions[index] != null) {
+    if (arrayOptions[index] !== null) {
       computedKey = computedKey.replace("#OPTION#", arrayOptions[index]);
     }
     const changesData = this.document.changes;
