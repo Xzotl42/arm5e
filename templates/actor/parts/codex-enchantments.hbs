@@ -7,7 +7,7 @@
 {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
 {{#each system.filteredEnchantments as |enchantment id|}}
 <li
-  class="item spell-value flexrow flex-center codex"
+  class="item draggable spell-value flexrow flex-center codex"
   data-name="{{ enchantment.name }}"
   data-item-id="{{ enchantment.id }}"
   data-item-type="{{ enchantment.type }}"
@@ -24,7 +24,8 @@
   </div>
   <div class="item-controls">
     <a
-      class="item-control item-edit" data-action="itemEdit"
+      class="item-control item-edit"
+      data-action="itemEdit"
       title="{{localize 'arm5e.hints.edit' item=(localize 'TYPES.Item.enchantment')}}"
       ><i class="ars-Icon_Edit"></i
     ></a>

@@ -200,7 +200,8 @@ export class ArM5eActorSheet extends foundry.appv1.sheets.ActorSheet {
 
   getUserCache() {
     let usercache = JSON.parse(sessionStorage.getItem(`usercache-${game.user.id}`));
-    if (usercache[this.actor.id] == undefined) {
+    if (usercache === null) usercache = {};
+    if (usercache[this.actor.id] === undefined) {
       usercache[this.actor.id] = {
         filters: {
           hermetic: {

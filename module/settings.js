@@ -2,6 +2,9 @@ import { log } from "./tools/tools.js";
 import { CompendiaRefConfig } from "./apps/compendiaRefConfig.js";
 import { SourcebookFilterConfig } from "./apps/sourcebookFilterConfig.js";
 
+/**
+ *
+ */
 export function registerSettings() {
   const ARM5E = CONFIG.ARM5E;
   /**
@@ -294,7 +297,7 @@ export function registerSettings() {
   game.settings.register(ARM5E.SYSTEM_ID, "currency", {
     name: "Currency's name",
     hint: "Name of the local currency",
-    default: "Silver coins", //game.i18n.localize("arm5e.config.currency.name"), // no idea why it doesn't work
+    default: "Silver coins", // game.i18n.localize("arm5e.config.currency.name"), // no idea why it doesn't work
     type: String,
     scope: "world",
     config: true
@@ -310,36 +313,43 @@ export function registerSettings() {
   });
 }
 
+/**
+ *
+ */
 export async function migrateSettings() {
-  const ARM5E = CONFIG.ARM5E;
-  let sourcebookFilter = game.settings.get(ARM5E.SYSTEM_ID, "sourcebookFilter");
-  if (sourcebookFilter["custom"].display == undefined) {
-    await game.settings.set(ARM5E.SYSTEM_ID, "sourcebookFilter", {
-      custom: ARM5E.generic.sourcesTypes.custom,
-      ArM5: ARM5E.generic.sourcesTypes.ArM5,
-      ArM5Def: ARM5E.generic.sourcesTypes.ArM5Def
-    });
-  }
-  // ensure that the time setting is setting properly
+  try {
+    const ARM5E = CONFIG.ARM5E;
+    let sourcebookFilter = game.settings.get(ARM5E.SYSTEM_ID, "sourcebookFilter");
+    if (sourcebookFilter?.custom?.display == undefined) {
+      await game.settings.set(ARM5E.SYSTEM_ID, "sourcebookFilter", {
+        custom: ARM5E.generic.sourcesTypes.custom,
+        ArM5: ARM5E.generic.sourcesTypes.ArM5,
+        ArM5Def: ARM5E.generic.sourcesTypes.ArM5Def
+      });
+    }
+    // ensure that the time setting is setting properly
 
-  if (!game.modules.get("foundryvtt-simple-calendar")?.active) {
-    let currentDate = game.settings.get("arm5e", "currentDate");
-    let toUpdate = false;
-    if (currentDate === undefined) {
-      currentDate = { year: 1220, season: "spring", date: "", month: 2, day: 20 };
-      toUpdate = true;
-    } else {
-      if (currentDate.year == undefined) {
-        currentDate.year = 1220;
+    if (!game.modules.get("foundryvtt-simple-calendar")?.active) {
+      let currentDate = game.settings.get("arm5e", "currentDate");
+      let toUpdate = false;
+      if (currentDate === undefined) {
+        currentDate = { year: 1220, season: "spring", date: "", month: 2, day: 20 };
         toUpdate = true;
+      } else {
+        if (currentDate.year == undefined) {
+          currentDate.year = 1220;
+          toUpdate = true;
+        }
+        if (!Object.keys(CONFIG.ARM5E.seasons).includes(currentDate.season)) {
+          currentDate.season = "spring";
+          toUpdate = true;
+        }
       }
-      if (!Object.keys(CONFIG.ARM5E.seasons).includes(currentDate.season)) {
-        currentDate.season = "spring";
-        toUpdate = true;
+      if (toUpdate) {
+        await game.settings.set("arm5e", "currentDate", currentDate);
       }
     }
-    if (toUpdate) {
-      await game.settings.set("arm5e", "currentDate", currentDate);
-    }
+  } catch (err) {
+    log(true, "Error migrating settings", err);
   }
 }

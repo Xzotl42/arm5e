@@ -114,6 +114,7 @@ export class ArM5eLaboratoryActorSheetV2 extends ArM5eActorSheetV2 {
 
   getUserCache() {
     let usercache = JSON.parse(sessionStorage.getItem(`usercache-${game.user.id}`));
+    if (usercache === null) usercache = {};
     if (usercache[this.actor.id] === undefined) {
       usercache[this.actor.id] = {
         filters: {
@@ -995,7 +996,7 @@ export class ArM5eLaboratoryActorSheetV2 extends ArM5eActorSheetV2 {
 
   /**
    * Convert spell/magicalEffect/enchantment to laboratoryText for laboratory storage.
-   * @param {object} data - The item data to convert
+   * @param {object} data The item data to convert
    * @returns {object} The converted item data
    * @override
    */

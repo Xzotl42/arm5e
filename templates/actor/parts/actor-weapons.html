@@ -12,14 +12,16 @@
             <a class="item-control item-create" data-action="itemCreate"
                 title='{{localize "arm5e.hints.create" item=(localize "TYPES.Item.weapon")}}' data-type="weapon"><i
                     class="fas fa-plus"></i>{{localize "arm5e.sheet.action.Create"}}</a>
-            <a class="item-control item-add" data-action="itemAdd" title=' {{localize "arm5e.hints.add" item=(localize "TYPES.Item.weapon")}}'
+            <a class="item-control item-add" data-action="itemAdd"
+                title=' {{localize "arm5e.hints.add" item=(localize "TYPES.Item.weapon")}}'
                 data-compendium="equipment"><i class="fas fa-plus"></i>{{localize "arm5e.sheet.action.Add"}}</a>
         </div>
     </li>
     {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
     {{#each system.weapons as |item id|}}
-        <li class="item item-value flexrow macro-ready" data-name="{{item.name}}" data-item-id="{{item._id}}">
-            <div class="item-image item-control item-edit" data-action="itemEdit"><img src="{{item.img}}" title="{{item.name}}" /></div>
+        <li class="item draggable item-value flexrow macro-ready" data-name="{{item.name}}" data-item-id="{{item._id}}">
+            <div class="item-image item-control item-edit" data-action="itemEdit"><img src="{{item.img}}"
+                    title="{{item.name}}" /></div>
             <div class="flex0">{{{magicHint}}}</div>
             <div class="flexrow flex-center">
                 <span class="flexrow item-title">{{item.name}}</span>

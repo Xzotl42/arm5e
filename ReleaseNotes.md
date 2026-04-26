@@ -1,4 +1,4 @@
-## 3.0.0.11 Stentorius
+## 3.0.0.12 Stentorius
 
 ### Compatibility
 
@@ -47,6 +47,7 @@
 - Updated translations:
   - French by @Orneen
   - Brazilian Portuguese by @Gapherd
+- Characteristics are readonly when not in creation mode.
 
 ### Bug fixes
 
@@ -75,6 +76,7 @@
   - Magic theory of the owner was used before being computed in some cases
   - Form requisite was wrongly compared to the technique for lab total computation.
 - Dropping a lab on a character was not setting the lab's owner properly
+- Added some robustness on settings migration and user cache in case of corruption.
 
 ## 2.4.1.14, Radislav, Cognizant Wisdom BF1
 

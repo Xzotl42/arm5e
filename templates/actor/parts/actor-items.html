@@ -10,8 +10,9 @@
     </li>
     {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
     {{#each system.items as |item id|}}
-        <li class="item item-value flexrow" data-name="{{item.name}}" data-item-id="{{item.id}}">
-            <div class="item-image item-control item-edit" data-action="itemEdit"><img src="{{item.img}}" title="{{item.name}}" /></div>
+        <li class="item draggable item-value flexrow" data-name="{{item.name}}" data-item-id="{{item.id}}">
+            <div class="item-image item-control item-edit" data-action="itemEdit"><img src="{{item.img}}"
+                    title="{{item.name}}" /></div>
             <div class="flex0">{{{magicHint}}}</div>
             <h4 class="item-title">{{item.name}} - {{localize "arm5e.sheet.quantity"}} : {{item.system.quantity}}
             </h4>

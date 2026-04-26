@@ -7,7 +7,7 @@
 {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
 {{#each system.filteredMagicEffects as |effect id|}}
 <li
-  class="item spell-value flexrow flex-center codex"
+  class="item draggable spell-value flexrow flex-center codex"
   data-name="{{ effect.name }}"
   data-item-id="{{ effect.id }}"
   data-item-type="{{ effect.type }}"
@@ -34,7 +34,8 @@
       ><i class="fa-xl fas fa-gavel"></i
     ></a>
     <a
-      class="item-control item-edit" data-action="itemEdit"
+      class="item-control item-edit"
+      data-action="itemEdit"
       title="{{localize 'arm5e.hints.edit' item=(localize 'TYPES.Item.magicalEffect')}}"
       ><i class="ars-Icon_Edit"></i
     ></a>

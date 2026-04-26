@@ -169,8 +169,8 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
   #dragDrop;
 
   /**
-   * @param {ScriptoriumObject} data  - Mutable state object for this session.
-   * @param {object}            options - ApplicationV2 options.
+   * @param {ScriptoriumObject} data  Mutable state object for this session.
+   * @param {object}            options ApplicationV2 options.
    */
   constructor(data, options = {}) {
     super(options);
@@ -334,6 +334,7 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
    *   "add-labtext" → lab-text for translating
    *   "copy-book"   → book / lab-text for copying queue
    *   "reader" / "writer" / "scribe" → set the respective actor
+   * @param event
    */
   async _onDrop(event) {
     try {
@@ -409,7 +410,7 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
           }
         }
       };
-    } else if (usercache.scriptorium == undefined) {
+    } else if (usercache.scriptorium === undefined) {
       usercache.scriptorium = {
         sections: {
           visibility: {
@@ -426,7 +427,7 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
   /**
    * Merge an object of dot-notation update paths into `this.object` and re-render.
    * Mirrors the pattern used by Foundry's own document update helpers.
-   * @param {object} updateData - Flat dot-notation keys (e.g. `"reading.reader.id": null`).
+   * @param {object} updateData Flat dot-notation keys (e.g. `"reading.reader.id": null`).
    */
   async _updateData(updateData) {
     const expanded = foundry.utils.expandObject(updateData);
@@ -488,7 +489,7 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
    * validates reader abilities / languages, determines whether the reader
    * is skilled enough (or too skilled) for the current topic, and sets
    * `context.ui.reading` warning / error / createPossible flags.
-   * @param {object} context - Shared context object (mutated in-place).
+   * @param {object} context Shared context object (mutated in-place).
    */
   _prepareReadingContext(context) {
     if (context.reading.book.uuid !== null) {
@@ -666,10 +667,8 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
               })
             );
             context.ui.reading.error = true;
-          } else {
-            if (!context.reading.reader.spell) {
-              context.reading.reader.spell = context.reading.reader.spells[0].id;
-            }
+          } else if (!context.reading.reader.spell) {
+            context.reading.reader.spell = context.reading.reader.spells[0].id;
           }
           break;
         }
@@ -698,7 +697,7 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
    * Enrich `context` with writing-tab data:
    * computes writing score, quality, duration, available abilities/arts/spells,
    * and sets `context.ui.writing` warning / error / createPossible flags.
-   * @param {object} context - Shared context object (mutated in-place).
+   * @param {object} context Shared context object (mutated in-place).
    */
   _prepareWritingContext(context) {
     if (context.writing.book.uuid !== null) {
@@ -962,7 +961,7 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
    * Enrich `context` with copying-tab data:
    * computes scribe writing speed, copy duration, final qualities, and sets
    * `context.ui.copying` warning / error / createPossible flags.
-   * @param {object} context - Shared context object (mutated in-place).
+   * @param {object} context Shared context object (mutated in-place).
    */
   _prepareCopyingContext(context) {
     if (context.copying.books.length) {
@@ -1529,7 +1528,7 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
    * Build and open a `diaryEntry` Item for a lab-text translating session.
    * One topic per lab-text is appended to the book's topic list; the template
    * topic (at `dataset.index`) is removed from the book before saving.
-   * @param {DOMStringMap} dataset - Button dataset containing the topic index.
+   * @param {DOMStringMap} dataset Button dataset containing the topic index.
    */
   async _createTranslatingDiaryEntry(dataset) {
     const objectData = foundry.utils.expandObject(this.object);
@@ -1797,7 +1796,7 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
    * Build and open a `diaryEntry` Item for a book-writing season.
    * Resolves the topic details (language, art/ability/spell) from the writer state,
    * then builds an achievement that will be applied once the diary entry is confirmed.
-   * @param {DOMStringMap} dataset - Button dataset containing the topic index.
+   * @param {DOMStringMap} dataset Button dataset containing the topic index.
    */
   async _createWritingDiaryEntry(dataset) {
     const objectData = foundry.utils.expandObject(this.object);
@@ -1884,7 +1883,7 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
    * Build and open a `diaryEntry` Item for a book-reading season.
    * Populates the appropriate progress section (abilities / arts / spells) and
    * applies XP capping when the reader is near the topic level cap.
-   * @param {DOMStringMap} dataset - Button dataset with abilityId / spellId.
+   * @param {DOMStringMap} dataset Button dataset with abilityId / spellId.
    */
   async _createReadingDiaryEntry(dataset) {
     const objectData = foundry.utils.expandObject(this.object);
@@ -2096,7 +2095,7 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
   /**
    * Set the book that the reader will study.
    * Reads and respects the `arm5e.currentBookTopic` flag if set.
-   * @param {ArM5eItem} book - A book-type item.
+   * @param {ArM5eItem} book A book-type item.
    */
   async _setReadingBook(book) {
     if (!book.testUserPermission(game.user, CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER)) {
@@ -2119,7 +2118,7 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
    * Append the current new-topic template from the writing state onto `book`'s
    * topic list, then set `book` as the target for the writing activity.
    * Only books owned by a single actor are allowed (to guarantee write access later).
-   * @param {ArM5eItem} book - A book-type item owned by an actor.
+   * @param {ArM5eItem} book A book-type item owned by an actor.
    */
   async _setWritingBook(book) {
     if (!book.isOwned) {
@@ -2142,8 +2141,8 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
    * When books are already queued, only topics matching the first book's type are kept.
    * When the dropped topic is a labText category it is rerouted to `_addLabTextToCopy`.
    * Cannot mix lab-texts and books in the same copying session.
-   * @param {ArM5eItem} bookToAdd   - A book-type item.
-   * @param {number}   [topicIndex] - Override topic index from the drag payload.
+   * @param {ArM5eItem} bookToAdd   A book-type item.
+   * @param {number}   [topicIndex] Override topic index from the drag payload.
    */
   async _addBookToCopy(bookToAdd, topicIndex) {
     if (!bookToAdd.testUserPermission(game.user, CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER)) {
@@ -2197,7 +2196,7 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
   /**
    * Add a draft lab-text to the writing queue (translating mode).
    * Only the writer's own draft lab-texts can be queued here.
-   * @param {ArM5eItem} text - The laboratoryText item dropped.
+   * @param {ArM5eItem} text The laboratoryText item dropped.
    */
   async _addLabText(text) {
     const writer = game.actors.get(this.object.writing.writer.id);
@@ -2220,6 +2219,7 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
    * Add a lab-text to the copying queue.
    * Only accepts finalized texts (draft === false) - drafts belong to the translating workflow.
    * Cannot be mixed with regular books in the same copying session.
+   * @param text
    */
   async _addLabTextToCopy(text) {
     if (this.object.copying.books.length) {
@@ -2325,6 +2325,9 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
    * Static submit handler invoked by Foundry's ApplicationV2 form machinery.
    * Merges the submitted form fields back into `this.object` while carefully
    * preserving array-indexed topics (which `mergeObject` would otherwise overwrite).
+   * @param event
+   * @param form
+   * @param formData
    */
   static async #onSubmitHandler(event, form, formData) {
     try {
@@ -2370,6 +2373,7 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
    * Handle the `<select>` that changes the topic category (ability/art/mastery/labText)
    * for the current book topic in reading or writing.
    * Resets the topic fields to safe defaults for the newly selected category.
+   * @param event
    */
   async _changeBookTopic(event) {
     event.preventDefault();
@@ -2422,8 +2426,8 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
   /**
    * Validate the writing context and push warnings/errors into `context.ui.writing`.
    * Checks literacy, language availability, and Tractatus limits per topic category.
-   * @param {object}   context - Prepared context (mutated in-place).
-   * @param {ArM5eActor} writer - The writing actor document.
+   * @param {object}   context Prepared context (mutated in-place).
+   * @param {ArM5eActor} writer The writing actor document.
    */
   checkWriting(context, writer) {
     const bookData = context.writing.book;
@@ -2514,8 +2518,8 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
   /**
    * Validate the copying context and push warnings/errors into `context.ui.copying`.
    * Checks literacy, language availability, and topic-category familiarity.
-   * @param {object}   context - Prepared context (mutated in-place).
-   * @param {ArM5eActor} scribe - The copying actor document.
+   * @param {object}   context Prepared context (mutated in-place).
+   * @param {ArM5eActor} scribe The copying actor document.
    */
   checkCopying(context, scribe) {
     // Is the character able to  read?
@@ -2585,8 +2589,8 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
   /**
    * Validate the reading context and push warnings/errors into `context.ui.reading`.
    * Checks literacy, language, level/quality validity, author match, and Tractatus history.
-   * @param {object}   context - Prepared context (mutated in-place).
-   * @param {ArM5eActor} reader - The reading actor document.
+   * @param {object}   context Prepared context (mutated in-place).
+   * @param {ArM5eActor} reader The reading actor document.
    */
   checkReading(context, reader) {
     const bookData = context.reading.book;
@@ -2716,9 +2720,9 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
    * If so, clamp `currentTopic.quality` to the remaining XP budget and return `true`.
    * Modifies `currentTopic.theoriticalQuality` (note: typo preserved for data compatibility)
    * with the original un-capped value for display.
-   * @param {object}    context - Prepared reading context.
-   * @param {ArM5eActor} reader  - The reader actor.
-   * @param {object}    artStat - Art stats object from `reader.getArtStats()`.
+   * @param {object}    context Prepared reading context.
+   * @param {ArM5eActor} reader  The reader actor.
+   * @param {object}    artStat Art stats object from `reader.getArtStats()`.
    * @returns {boolean} `true` if XP was capped, `false` otherwise.
    */
   checkArtOverload(context, reader, artStat) {
@@ -2749,9 +2753,9 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
   /**
    * Check whether reading this Summa would exceed the ability XP cap.
    * Mirrors {@link checkArtOverload} but uses ability XP thresholds.
-   * @param {object}    context  - Prepared reading context.
-   * @param {ArM5eActor} reader   - The reader actor.
-   * @param {object}    ability  - The ability item document (`reader.system.abilities` entry).
+   * @param {object}    context  Prepared reading context.
+   * @param {ArM5eActor} reader   The reader actor.
+   * @param {object}    ability  The ability item document (`reader.system.abilities` entry).
    * @returns {boolean} `true` if XP was capped, `false` otherwise.
    */
   checkAbilityOverload(context, reader, ability) {

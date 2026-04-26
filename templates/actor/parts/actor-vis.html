@@ -10,7 +10,7 @@
     </li>
     {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
     {{#each system.vis as |item id|}}
-        <li class="item item-value flexrow" data-name="{{item.name}}" data-item-id="{{item._id}}">
+        <li class="item draggable item-value flexrow" data-name="{{item.name}}" data-item-id="{{item._id}}">
             <div class="item-image item-control item-edit" data-action="itemEdit"><img src="{{item.img}}"
                     title="{{item.name}}" /></div>
             <div class="flexrow flex-center">

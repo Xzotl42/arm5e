@@ -72,6 +72,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
 
   getUserCache() {
     let usercache = JSON.parse(sessionStorage.getItem(`usercache-${game.user.id}`));
+    if (usercache === null) usercache = {};
     if (usercache[this.actor.id] === undefined) {
       usercache[this.actor.id] = {
         filters: {
@@ -528,7 +529,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
       } else {
         updateData["system.owner.actorId"] = null;
       }
-      updateData["_id"] = this.actor._id;
+      updateData._id = this.actor._id;
       updateArray.push(updateData);
       await Actor.updateDocuments(updateArray);
     });
@@ -990,7 +991,7 @@ export class ArM5eLaboratoryActorSheet extends ArM5eActorSheet {
    * Handle dropping of an actor reference or item data onto an Actor Sheet
    * @param {DragEvent} event     The concluding DragEvent which contains drop data
    * @param {Object} data         The data transfer extracted from the event
-   * @return {Promise<Object>}    A data object which describes the result of the drop
+   * @returns {Promise<Object>}    A data object which describes the result of the drop
    * @private
    * @override
    */

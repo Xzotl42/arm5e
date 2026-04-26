@@ -7,7 +7,7 @@
 {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
 {{#each system.filteredSpells as |spell id|}}
 <li
-  class="item spell-value flexrow codex"
+  class="item draggable spell-value flexrow codex"
   data-name="{{ spell.name }}"
   data-item-id="{{ spell._id }}"
   data-uuid="{{ spell.uuid }}"
