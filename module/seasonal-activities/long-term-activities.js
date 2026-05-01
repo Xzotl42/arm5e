@@ -1304,6 +1304,14 @@ export function validWriting(context, actor, item) {}
  * @param actor
  * @param item
  */
+export function validCopying(context, actor, item) {}
+
+/**
+ *
+ * @param context
+ * @param actor
+ * @param item
+ */
 export function validVisStudy(context, actor, item) {
   context.system.totalXp = { abilities: 0, arts: 0, masteries: 0, spellLevels: 0 };
   // const progressArt = item.system.progress.arts[0];

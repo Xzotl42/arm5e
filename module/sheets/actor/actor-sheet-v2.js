@@ -100,7 +100,7 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
 
   /** @override */
   _configureRenderParts(options) {
-    if (!this._canViewFullSheet()) {
+    if (this.document.limited) {
       const limitedParts = this.constructor.LIMITED_PARTS ?? {};
       if (Object.keys(limitedParts).length) return foundry.utils.deepClone(limitedParts);
     }
@@ -648,8 +648,6 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
     if (!effect) return;
     return effect.update({ disabled: !effect.disabled });
   }
-
-  f;
 
   static async itemAdd(event, target) {
     event.preventDefault();

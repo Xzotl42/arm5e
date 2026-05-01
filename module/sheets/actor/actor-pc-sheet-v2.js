@@ -119,9 +119,24 @@ export class ArM5ePCActorSheetV2 extends Arm5eCharacterActorSheetV2 {
   /** @override */
   static LIMITED_PARTS = {
     content: {
-      template: "systems/arm5e/templates/actor/actor-limited-sheet.html"
+      template: "systems/arm5e/templates/actor/actor-limited-sheet.html",
+      classes: ["limited-sheet", "flexcol"]
+    },
+    footer: {
+      template: "systems/arm5e/templates/actor/parts/actor-pc-footer-v2.hbs"
     }
   };
+
+  _configureRenderOptions(options) {
+    // This fills in `options.parts` with an array of ALL part keys by default
+    // So we need to call `super` first
+    super._configureRenderOptions(options);
+
+    if (this.document.limited) {
+      options.parts = Object.keys(ArM5ePCActorSheetV2.LIMITED_PARTS);
+      options.position = { width: 600, height: 700 };
+    }
+  }
 
   /** @override */
   _configureRenderParts(options) {

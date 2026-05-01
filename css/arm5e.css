@@ -244,6 +244,17 @@ label,
   scrollbar-gutter: stable;
 }
 
+/* Limited sheet: content grows with window; window scrolls only when below min-height; footer stays pinned */
+.arm5e.sheet.actor .window-content [data-application-part="content"].limited-sheet {
+  flex: 1 1 auto;
+}
+
+.arm5e.sheet.actor .window-content [data-application-part="footer"] {
+  position: sticky;
+  bottom: 0;
+  flex-shrink: 0;
+}
+
 /* Dialog-specific window-content with background images */
 .arm5e-confirm .window-content,
 .arm5e-prompt .window-content,
@@ -2766,6 +2777,22 @@ div[class*="foldable-section"] {
   transition-timing-function: ease-in-out;
 }
 
+/* Biography/secrets sections embed large ProseMirror content.
+ * Use ease-out and clip overflow to avoid a brief perceived 0-height stall on expand. */
+.arm5e .biography-section-handle + .foldable-section-medium,
+.arm5e .secrets-section-handle + .foldable-section-medium {
+  overflow: hidden;
+  transition-timing-function: ease-out;
+  transition-duration: 0.6s;
+  min-height: 210px;
+}
+
+/* For these sections, fully collapse in .hide and reopen from a known floor height. */
+.arm5e .biography-section-handle + .foldable-section-medium.hide,
+.arm5e .secrets-section-handle + .foldable-section-medium.hide {
+  min-height: 210px;
+}
+
 /* Item enchantments tab contains nested foldable sections (spell design + enchant attrs)
  * that can exceed the generic cap; raise only while expanded and scoped to this tab. */
 .arm5e .tab[data-tab="enchantments"] div[class*="foldable-section"]:not(.hide) {
@@ -2814,6 +2841,14 @@ div[class*="foldable-section"] {
   opacity: 0.3;
   overflow: hidden;
 }
+
+.foldable-section-medium.hide {
+  max-height: 0px;
+  min-height: 210px;
+  opacity: 1;
+  overflow: hidden;
+}
+
 .foldable-section.hide,
 .enchantment.hide {
   max-height: 0px;
@@ -2894,6 +2929,12 @@ div[class*="foldable-section"] {
 .arm5e .prosemirror-editor-box {
   height: 210px;
   width: 100%;
+  flex: 1 1 auto;
+}
+
+.arm5e .extendable .prosemirror-editor-box {
+  height: auto;
+  min-height: 200px;
   flex: 1 1 auto;
 }
 

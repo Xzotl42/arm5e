@@ -420,6 +420,25 @@ Hooks.on("simple-calendar-date-time-change", async (data) => {
     Hooks.callAll("arm5e-date-change", newDatetime);
   }
 });
+
+// Hooks.on("diceSoNiceMessagePreProcess", (messageId, interception) => {
+//   if (!game.dice3d) return;
+//   const message = game.messages.get(messageId);
+//   if (!message) return;
+//   if (message.rolls.length >= 1) {
+//     interception.willTrigger3DRoll = false;
+//   }
+// });
+
+// TODO: remove when V14 only and use the above
+Hooks.on("diceSoNiceMessageProcessed", (messageId, interception) => {
+  if (!game.dice3d) return;
+  const message = game.messages.get(messageId);
+  if (!message) return;
+  if (message.rolls.length >= 1) {
+    interception.willTrigger3DRoll = false;
+  }
+});
 /* -------------------------------------------- */
 /*  Hotbar Macros                               */
 /* -------------------------------------------- */
@@ -596,15 +615,6 @@ Hooks.on("applyActiveEffect", (actor, change, current, delta, changes) => {
 });
 
 Hooks.on("getSceneControlButtons", (buttons) => addArsButtons(buttons));
-
-// V12 only
-Hooks.on("renderPause", function () {
-  if ($("#pause").attr("class") !== "paused") return;
-  const path = "systems/arm5e/assets/clockwork.svg";
-  const opacity = 0.6;
-  $("#pause.paused img").attr("src", path);
-  $("#pause.paused img").css({ opacity: opacity, "--fa-animation-duration": "20s" });
-});
 
 /**
  *

@@ -13,7 +13,8 @@ import {
   visStudy,
   investigate,
   validWriting,
-  twilightUnderstandingRoll
+  twilightUnderstandingRoll,
+  validCopying
 } from "./seasonal-activities/long-term-activities.js";
 
 export const ARM5E = {};
@@ -2542,7 +2543,7 @@ ARM5E.activities.generic = {
     source: { default: 0, readonly: true },
     maxXp: 0,
     bonusOptions: null,
-    // validation: validWriting,
+    validation: validWriting,
     secondaryFilter: null,
     scheduling: {
       duplicate: false,
@@ -2564,7 +2565,7 @@ ARM5E.activities.generic = {
     source: { default: 0, readonly: true },
     maxXp: 0,
     bonusOptions: null,
-    // validation: validWriting,
+    validation: validCopying,
     secondaryFilter: null,
     scheduling: {
       duplicate: false,
@@ -2690,6 +2691,7 @@ ARM5E.activities.generic = {
     maxXp: 0,
     bonusOptions: null,
     secondaryFilter: null,
+    validation: null,
     roll: { label: "arm5e.twilight.episode", action: twilightUnderstandingRoll },
     scheduling: {
       duplicate: true,

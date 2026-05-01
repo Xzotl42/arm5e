@@ -2,7 +2,7 @@
   <div class="header-background">
     <img src="systems/arm5e/assets/NPC/header150.png" />
   </div>
-  <form class="sheet-content flexcol limited-sheet" autocomplete="off">
+  <div class="sheet-content flexcol limited-sheet" autocomplete="off">
     {{!-- Sheet Header --}}
     <header>
       <div class="flexrow">
@@ -19,8 +19,9 @@
         </div>
       </div>
     </header>
-    <section class="sheet-body" style="min-height: 349px;">
-      <div class="flex-group-left padding12 backSection" style="min-height: 349px;">
+    <section class="sheet-body" style="min-height: 300px; flex-grow: 1; display: flex; flex-direction: column;">
+      <div class="flex-group-left padding12 backSection extendable"
+        style="flex-grow: 1; display: flex; flex-direction: column;">
         <label class="smallTitle">{{localize "arm5e.sheet.biography"}}</label>
         {{> "systems/arm5e/templates/generic/ars-editor-V2.hbs"
           content=enrichedBiography
@@ -30,8 +31,5 @@
         }}
       </div>
     </section>
-  </form>
-  <div class="footer-background">
-    <img src="systems/arm5e/assets/NPC/footer.png" />
   </div>
 </div>

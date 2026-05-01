@@ -86,11 +86,19 @@
   </div>
 </div>
 {{/if}}
-
 <div class="flexcol grid grid-2col margintop18">
   <div class="flexcol">
-    <div class="flex-group-left padding12 backSection">
-      <label class="smallTitle">{{localize "arm5e.sheet.biography"}}</label>
+    <label
+      class="smallTitle biography-section-handle clickable margintop6"
+      data-action="toggleSectionCollapse"
+      data-category="common"
+      data-section="biography"
+      >{{localize "arm5e.sheet.biography"}}</label
+    >
+    <div
+      class="foldable-section-medium flex-group-left padding12 backSection"
+      id="common-biography-{{ actor._id }}"
+    >
       {{> "systems/arm5e/templates/generic/ars-editor-V2.hbs"
         content=enrichedBiography
         target="system.biography"
@@ -98,11 +106,21 @@
         sectionClass=""
         editorClass=""
         editable=editable
+        editorHeight="500px"
       }}
     </div>
     {{#if (or isGM isOwner)}}
-    <div class="flex-group-left padding12 backSection">
-      <label class="smallTitle">{{localize "arm5e.sheet.secrets"}}</label>
+    <label
+      class="smallTitle secrets-section-handle clickable margintop6"
+      data-action="toggleSectionCollapse"
+      data-category="common"
+      data-section="secrets"
+      >{{localize "arm5e.sheet.secrets"}}</label
+    >
+    <div
+      class="foldable-section-medium flex-group-left padding12 backSection"
+      id="common-secrets-{{ actor._id }}"
+    >
       {{> "systems/arm5e/templates/generic/ars-editor-V2.hbs"
           content=enrichedSecrets
           target="system.secrets"

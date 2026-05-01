@@ -1,4 +1,4 @@
-## 3.0.0.12 Stentorius
+## 3.0.0.13 Stentorius
 
 ### Compatibility
 
@@ -48,6 +48,7 @@
   - French by @Orneen
   - Brazilian Portuguese by @Gapherd
 - Characteristics are readonly when not in creation mode.
+- Smaller and more compact limited actor sheets
 
 ### Bug fixes
 
@@ -77,6 +78,7 @@
   - Form requisite was wrongly compared to the technique for lab total computation.
 - Dropping a lab on a character was not setting the lab's owner properly
 - Added some robustness on settings migration and user cache in case of corruption.
+- [dice-so-nice] smart messages with multiple rolls (eg: damage rolls) won't display the rolling of dice twice for subsequent rolls after the first
 
 ## 2.4.1.14, Radislav, Cognizant Wisdom BF1
 

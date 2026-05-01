@@ -723,12 +723,13 @@ export class Arm5eCharacterActorSheetV2 extends ArM5eActorSheetV2 {
     if (!target.dataset.roll) {
       target.dataset.roll = "char";
     }
+    return await this.roll(target.dataset);
 
-    const rollHandler = this?.roll ?? this?.constructor?.roll;
-    if (typeof rollHandler !== "function") {
-      throw new TypeError("roll handler is not available");
-    }
-    return rollHandler.call(this, event, target);
+    // const rollHandler = this?.roll ?? this?.constructor?.roll;
+    // if (typeof rollHandler !== "function") {
+    //   throw new TypeError("roll handler is not available");
+    // }
+    // return rollHandler.call(this, event, target);
   }
 
   static async recoveryStart(event, target) {

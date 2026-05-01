@@ -147,7 +147,9 @@ export class Arm5eChatMessage extends ChatMessage {
     // if (!this.isRoll) return html;
 
     const flavor = html.querySelector(".flavor-text");
-    flavor.append(this.addActionButtons(html));
+    if (flavor) {
+      flavor.append(this.addActionButtons(html));
+    }
 
     // format any additional rolls
     if (this.system.formatTargets) {
@@ -161,7 +163,7 @@ export class Arm5eChatMessage extends ChatMessage {
     const originatorOrGM = this.originatorOrGM;
 
     if (!originatorOrGM) {
-      html.querySelector(".clickable").remove();
+      html.querySelector(".clickable")?.remove();
     }
 
     return html;
