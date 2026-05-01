@@ -67,7 +67,7 @@ export class ArM5eItemMagicSheet extends ArM5eItemSheet {
           break;
         }
         GetEnchantmentSelectOptions(context);
-        context.canBeRead = context.isOwned && this.actor.type != "covenant";
+        context.canBeRead = context.isOwned && this.actor.type !== "covenant";
       case "spell":
       case "enchantment":
 

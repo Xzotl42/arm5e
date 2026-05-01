@@ -105,8 +105,8 @@ export class Arm5eCharacterActorSheetV2 extends ArM5eActorSheetV2 {
     context.system.isCharacter = this.actor.isCharacter();
     if (context.system.isCharacter) {
       if (context.system.charType?.value === "entity") {
-        const cnt = Object.entries(context.system.realms).filter((e) => e[1].aligned == true);
-        const value = Object.entries(context.system.realms).find((e) => e[1].aligned == true);
+        const cnt = Object.entries(context.system.realms).filter((e) => e[1].aligned === true);
+        const value = Object.entries(context.system.realms).find((e) => e[1].aligned === true);
         if (cnt.length > 1) {
           ui.notifications.warn(
             game.i18n.localize("arm5e.notification.entityWithMultipleRealmAlignments")
@@ -133,8 +133,8 @@ export class Arm5eCharacterActorSheetV2 extends ArM5eActorSheetV2 {
       context.system.isMagus = this.actor.isMagus();
 
       if (
-        context.system?.charType?.value == "magusNPC" ||
-        context.system?.charType?.value == "magus"
+        context.system?.charType?.value === "magusNPC" ||
+        context.system?.charType?.value === "magus"
       ) {
         context.selection.voiceStances = Object.fromEntries(
           Object.entries(context.system.stances.voice).map(([k, v]) => {
@@ -159,10 +159,10 @@ export class Arm5eCharacterActorSheetV2 extends ArM5eActorSheetV2 {
         if (context.system.castingtotal.aura === undefined) {
           context.system.castingtotal.aura = 0;
         }
-        if (context.system.castingtotal.applyFocus == undefined) {
+        if (context.system.castingtotal.applyFocus === undefined) {
           context.system.castingtotal.applyFocus = false;
         }
-        if (context.system.castingtotal.divider == undefined) {
+        if (context.system.castingtotal.divider === undefined) {
           context.system.castingtotal.divider = 1;
         }
 
@@ -184,9 +184,9 @@ export class Arm5eCharacterActorSheetV2 extends ArM5eActorSheetV2 {
           context.ui.spellsFilterVisibility = "hidden";
         }
         if (
-          spellsFilters.formFilter != "" ||
-          spellsFilters.techniqueFilter != "" ||
-          (spellsFilters.levelFilter != 0 && spellsFilters.levelFilter != null)
+          spellsFilters.formFilter !== "" ||
+          spellsFilters.techniqueFilter !== "" ||
+          (spellsFilters.levelFilter !== 0 && spellsFilters.levelFilter !== null)
         ) {
           context.ui.spellFilter = UI.STYLES.FILTER_ACTIVE;
         }
@@ -202,9 +202,9 @@ export class Arm5eCharacterActorSheetV2 extends ArM5eActorSheetV2 {
           context.ui.magicEffectFilterVisibility = "hidden";
         }
         if (
-          magicEffectFilters.formFilter != "" ||
-          magicEffectFilters.techniqueFilter != "" ||
-          (magicEffectFilters.levelFilter != 0 && magicEffectFilters.levelFilter != null)
+          magicEffectFilters.formFilter !== "" ||
+          magicEffectFilters.techniqueFilter !== "" ||
+          (magicEffectFilters.levelFilter !== 0 && magicEffectFilters.levelFilter !== null)
         ) {
           context.ui.magicEffectFilter = UI.STYLES.FILTER_ACTIVE;
         }
@@ -216,14 +216,14 @@ export class Arm5eCharacterActorSheetV2 extends ArM5eActorSheetV2 {
               style: UI.STYLES.DEFICIENT_ART,
               title: game.i18n.localize("arm5e.activeEffect.types.arts.deficiency")
             };
-          } else if (!technique.bonus && technique.xpCoeff == 1.0) {
+          } else if (!technique.bonus && technique.xpCoeff === 1.0) {
             technique.ui = { style: UI.STYLES.STANDARD_ART };
-          } else if (!technique.bonus && technique.xpCoeff != 1.0) {
+          } else if (!technique.bonus && technique.xpCoeff !== 1.0) {
             technique.ui = {
               style: UI.STYLES.AFINITY_ART,
               title: game.i18n.localize("arm5e.activeEffect.types.arts.affinity")
             };
-          } else if (technique.bonus && technique.xpCoeff == 1.0) {
+          } else if (technique.bonus && technique.xpCoeff === 1.0) {
             technique.ui = {
               style: UI.STYLES.PUISSANT_ART,
               title: ""
@@ -252,14 +252,14 @@ export class Arm5eCharacterActorSheetV2 extends ArM5eActorSheetV2 {
               style: UI.STYLES.DEFICIENT_ART,
               title: game.i18n.localize("arm5e.activeEffect.types.arts.deficiency")
             };
-          } else if (!form.bonus && form.xpCoeff == 1.0) {
+          } else if (!form.bonus && form.xpCoeff === 1.0) {
             form.ui = { style: UI.STYLES.STANDARD_ART };
-          } else if (!form.bonus && form.xpCoeff != 1.0) {
+          } else if (!form.bonus && form.xpCoeff !== 1.0) {
             form.ui = {
               style: UI.STYLES.AFINITY_ART,
               title: game.i18n.localize("arm5e.activeEffect.types.arts.affinity")
             };
-          } else if (form.bonus && form.xpCoeff == 1.0) {
+          } else if (form.bonus && form.xpCoeff === 1.0) {
             form.ui = {
               style: UI.STYLES.PUISSANT_ART,
               title: ""
@@ -355,11 +355,11 @@ export class Arm5eCharacterActorSheetV2 extends ArM5eActorSheetV2 {
         }
         context.sortedAbilities[ab.system.category].abilities.push(ab);
 
-        if (ab.system.derivedScore == ab.system.finalScore && ab.system.xpCoeff == 1.0) {
+        if (ab.system.derivedScore === ab.system.finalScore && ab.system.xpCoeff === 1.0) {
           ab.ui = { style: "" };
-        } else if (ab.system.derivedScore == ab.system.finalScore && ab.system.xpCoeff != 1.0) {
+        } else if (ab.system.derivedScore === ab.system.finalScore && ab.system.xpCoeff !== 1.0) {
           ab.ui = { style: UI.STYLES.AFFINITY_ABILITY, title: "Affinity, " };
-        } else if (ab.system.derivedScore != ab.system.finalScore && ab.system.xpCoeff == 1.0) {
+        } else if (ab.system.derivedScore !== ab.system.finalScore && ab.system.xpCoeff === 1.0) {
           ab.ui = { style: UI.STYLES.PUISSANT_ABILITY, title: "" };
         } else {
           ab.ui = { style: UI.STYLES.COMBO_ABILITY, title: "Affinity, " };
@@ -723,12 +723,13 @@ export class Arm5eCharacterActorSheetV2 extends ArM5eActorSheetV2 {
     if (!target.dataset.roll) {
       target.dataset.roll = "char";
     }
+    return await this.roll(target.dataset);
 
-    const rollHandler = this?.roll ?? this?.constructor?.roll;
-    if (typeof rollHandler !== "function") {
-      throw new TypeError("roll handler is not available");
-    }
-    return rollHandler.call(this, event, target);
+    // const rollHandler = this?.roll ?? this?.constructor?.roll;
+    // if (typeof rollHandler !== "function") {
+    //   throw new TypeError("roll handler is not available");
+    // }
+    // return rollHandler.call(this, event, target);
   }
 
   static async recoveryStart(event, target) {

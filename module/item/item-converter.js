@@ -10,45 +10,53 @@ import { log } from "../tools/tools.js";
 //     return target;
 // }
 
-/*
+/**
  * Convert effect into a lab text
  * @param {object} data   The data object to be converted
- * @return {Promise<Object|null>}
+ * @returns {Promise<Object|null>}
+ */
+/**
+ *
+ * @param spellData
  */
 export function effectToLabText(spellData) {
   if (
-    spellData.type != "spell" &&
-    spellData.type != "magicalEffect" &&
-    spellData.type != "enchantment"
+    spellData.type !== "spell" &&
+    spellData.type !== "magicalEffect" &&
+    spellData.type !== "enchantment"
   ) {
     return null;
   }
   log(false, "effectToLabText");
   log(false, spellData.name);
-  spellData.img = CONFIG.ARM5E_DEFAULT_ICONS["laboratoryText"];
-  if (spellData.type == "spell") {
+  spellData.img = CONFIG.ARM5E_DEFAULT_ICONS.laboratoryText;
+  if (spellData.type === "spell") {
     spellData.system.type = "spell";
     delete spellData.system.mastery;
     delete spellData.system.exp;
     delete spellData.system.bonus;
     delete spellData.system.bonusDesc;
     delete spellData.system.applyFocus;
-  } else if (spellData.type == "magicalEffect") {
+  } else if (spellData.type === "magicalEffect") {
     spellData.system.type = "spell";
-  } else if (spellData.type == "enchantment") {
+  } else if (spellData.type === "enchantment") {
     spellData.system.type = "enchantment";
   }
   spellData.type = "laboratoryText";
   return spellData;
 }
 
-/*
+/**
  * Convert effect into a lab text
  * @param {object} data   The data object to be converted
- * @return {Promise<Object|null>}
+ * @returns {Promise<Object|null>}
+ */
+/**
+ *
+ * @param labTextData
  */
 export function labTextToEffect(labTextData) {
-  if (labTextData.type != "laboratoryText") {
+  if (labTextData.type !== "laboratoryText") {
     return null;
   }
   log(false, "labTextToEffect");
@@ -68,11 +76,11 @@ export function labTextToEffect(labTextData) {
     return {
       name: labTextData.name,
       type: "spell",
-      img: CONFIG.ARM5E_DEFAULT_ICONS["spell"],
+      img: CONFIG.ARM5E_DEFAULT_ICONS.spell,
       system: labTextData.system
     };
   } else if (labTextData.system.type === "enchantment") {
-    labTextData.img = CONFIG.ARM5E_DEFAULT_ICONS["enchantment"];
+    labTextData.img = CONFIG.ARM5E_DEFAULT_ICONS.enchantment;
     labTextData.type = "enchantment";
     delete labTextData.system.type;
     delete labTextData.system.author;
@@ -86,6 +94,10 @@ export function labTextToEffect(labTextData) {
   return labTextData;
 }
 
+/**
+ *
+ * @param itemData
+ */
 export function resetOwnerFields(itemData) {
   switch (itemData.type) {
     case "spell":

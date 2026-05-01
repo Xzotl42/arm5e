@@ -5,6 +5,10 @@ import { ARM5E } from "../config.js";
 import { simpleDie, stressDie } from "../helpers/dice.js";
 import { applyStandardMagusEffects } from "./testHelpers.js";
 
+/**
+ *
+ * @param quench
+ */
 export function registerLabActivityTesting(quench) {
   quench.registerBatch(
     "Ars-LabActivity",
@@ -13,7 +17,7 @@ export function registerLabActivityTesting(quench) {
       let magus;
       let lab;
       const ACTIVITIES = Object.fromEntries(
-        Object.entries(ARM5E.activities.lab).filter((e) => e[1].enabled == "")
+        Object.entries(ARM5E.activities.lab).filter((e) => e[1].enabled === "")
       );
 
       before(async function () {

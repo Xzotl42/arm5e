@@ -153,7 +153,7 @@ export class LabSchema extends foundry.abstract.TypeDataModel {
               break;
             case "labText":
               topic.system = topic.labtext;
-              if (topic.labtext != null) {
+              if (topic.labtext !== null) {
                 topic.name = `${topic.book}: ${topic.labtextTitle}`;
               }
               this.laboratoryTexts.push(topic);
@@ -227,18 +227,18 @@ export class LabSchema extends foundry.abstract.TypeDataModel {
     let res = 50;
     if (this.parent?.system.virtues) {
       for (let virtue of this.parent.system.virtues) {
-        if (virtue.system.impact.value == "minor") {
+        if (virtue.system.impact.value === "minor") {
           res += 10;
-        } else if (virtue.system.impact.value == "major") {
+        } else if (virtue.system.impact.value === "major") {
           res += 20;
         }
       }
     }
     if (this.parent?.system.flaws) {
       for (let flaw of this.parent.system.flaws) {
-        if (flaw.system.impact.value == "minor") {
+        if (flaw.system.impact.value === "minor") {
           res -= 10;
-        } else if (flaw.system.impact.value == "major") {
+        } else if (flaw.system.impact.value === "major") {
           res -= 20;
         }
       }
@@ -268,10 +268,10 @@ export class LabSchema extends foundry.abstract.TypeDataModel {
 
     if (
       data.system.covenant?.value &&
-      (data.system.covenant.actorId == null || data.system.covenant.actorId === "")
+      (data.system.covenant.actorId === null || data.system.covenant.actorId === "")
     ) {
       let cov = game.actors.filter(
-        (a) => a.type == "covenant" && a.name == data.system.covenant.value
+        (a) => a.type === "covenant" && a.name === data.system.covenant.value
       );
       if (cov.length > 0) {
         updateData["system.covenant.actorId"] = cov[0]._id;
@@ -280,10 +280,10 @@ export class LabSchema extends foundry.abstract.TypeDataModel {
 
     if (
       data.system.owner?.value &&
-      (data.system.owner.actorId == null || data.system.owner.actorId === "")
+      (data.system.owner.actorId === null || data.system.owner.actorId === "")
     ) {
       let cov = game.actors.filter(
-        (a) => ["player", "npc"].includes(a.type) && a.name == data.system.owner.value
+        (a) => ["player", "npc"].includes(a.type) && a.name === data.system.owner.value
       );
       if (cov.length > 0) {
         updateData["system.owner.actorId"] = cov[0]._id;

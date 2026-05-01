@@ -2,6 +2,16 @@ import { PickRequisites } from "../helpers/magic.js";
 import { ArM5eItem } from "../item/item.js";
 import { getDataset } from "../tools/tools.js";
 const renderTemplate = foundry.applications.handlebars.renderTemplate;
+/**
+ *
+ * @param title
+ * @param question
+ * @param flavor
+ * @param info1
+ * @param info2
+ * @param yesLabel
+ * @param noLabel
+ */
 export async function getConfirmation(
   title,
   question,
@@ -47,6 +57,13 @@ export async function getConfirmation(
   return proceed;
 }
 
+/**
+ *
+ * @param list
+ * @param flavor
+ * @param title
+ * @param label
+ */
 export async function selectItemDialog(
   list,
   flavor = "Neutral",
@@ -91,6 +108,17 @@ export async function selectItemDialog(
   });
 }
 
+/**
+ *
+ * @param title
+ * @param prompt
+ * @param placeholder
+ * @param value
+ * @param help
+ * @param classes
+ * @param validator
+ * @param listeners
+ */
 export async function textInput(
   title,
   prompt,
@@ -142,6 +170,18 @@ export async function textInput(
   });
 }
 
+/**
+ *
+ * @param title
+ * @param prompt
+ * @param placeholder
+ * @param value
+ * @param help
+ * @param classes
+ * @param validator
+ * @param constraints
+ * @param listeners
+ */
 export async function numberInput(
   title,
   prompt,
@@ -208,6 +248,10 @@ export async function numberInput(
   });
 }
 
+/**
+ *
+ * @param payload
+ */
 export async function customDialog(payload) {
   return await new Promise((resolve) => {
     if (!payload.close) {
@@ -252,6 +296,10 @@ export async function customDialog(payload) {
 
 // A generic dialog that supports async button callbacks and prevent multiple clicks
 
+/**
+ *
+ * @param payload
+ */
 export async function customDialogAsync(payload) {
   return await new Promise((resolve) => {
     let settled = false;
@@ -357,10 +405,15 @@ export async function customDialogAsync(payload) {
   });
 }
 
-/////////////////////////
+// ///////////////////////
 // Listeners
-////////////////////////
+// //////////////////////
 
+/**
+ *
+ * @param context
+ * @param html
+ */
 export function addAbilityListenersDialog(context, html) {
   html.querySelector(".SelectedAbility")?.addEventListener("change", (ev) => {
     ev.preventDefault();
@@ -375,11 +428,17 @@ export function addAbilityListenersDialog(context, html) {
       const ability = actor.items.get(val);
       context.rollInfo.ability.speciality = ability.system.speciality;
     }
-    specialty.innerHTML =
-      game.i18n.localize("arm5e.sheet.speciality") + ` (${context.rollInfo.ability.speciality})`;
+    specialty.innerHTML = `${game.i18n.localize("arm5e.sheet.speciality")} (${
+      context.rollInfo.ability.speciality
+    })`;
   });
 }
 
+/**
+ *
+ * @param context
+ * @param html
+ */
 export function addPowersListenersDialog(context, html) {
   // Power specific
   html.querySelector(".power-cost")?.addEventListener("change", async (event) => {
@@ -397,6 +456,11 @@ export function addPowersListenersDialog(context, html) {
   });
 }
 
+/**
+ *
+ * @param context
+ * @param html
+ */
 export function addMagicListenersDialog(context, html) {
   // Magic specific
   html.querySelector(".advanced-req-roll")?.addEventListener("click", async (e) => {
@@ -406,10 +470,10 @@ export function addMagicListenersDialog(context, html) {
     let newSpellData = {
       technique: { value: actor.rollInfo.magic.technique.value },
       form: { value: actor.rollInfo.magic.form.value },
-      ["technique-req"]: actor.rollInfo.magic["technique-req"],
-      ["form-req"]: actor.rollInfo.magic["form-req"]
+      "technique-req": actor.rollInfo.magic["technique-req"],
+      "form-req": actor.rollInfo.magic["form-req"]
     };
-    if (dataset.type == "spont") {
+    if (dataset.type === "spont") {
       newSpell = new ArM5eItem({
         name: "SpontSpell",
         type: "magicalEffect",
@@ -450,6 +514,11 @@ export function addMagicListenersDialog(context, html) {
   });
 }
 
+/**
+ *
+ * @param context
+ * @param html
+ */
 export function addSoakListenersDialog(context, html) {
   html.querySelector(".SelectedFormDamage")?.addEventListener("change", async (event) => {
     const dataset = getDataset(event);
@@ -483,6 +552,11 @@ export function addSoakListenersDialog(context, html) {
   });
 }
 
+/**
+ *
+ * @param context
+ * @param html
+ */
 export function addCombatListenersDialog(context, html) {
   html.querySelector(".refresh-targets")?.addEventListener("click", (event) => {
     const dataset = getDataset(event);

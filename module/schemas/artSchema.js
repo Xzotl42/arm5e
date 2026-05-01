@@ -68,7 +68,7 @@ export class ArtSchema extends foundry.abstract.TypeDataModel {
           this.xpCoeff
       );
     }
-    if (newXp != this.xp) {
+    if (newXp !== this.xp) {
       await this.parent.update(
         {
           system: {

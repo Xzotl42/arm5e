@@ -53,7 +53,7 @@ export class ArM5eRollInfo {
       this.physicalCondition = false;
     }
     // Possible to override physicalCondition with dataset
-    if (dataset.physicalcondition != undefined) {
+    if (dataset.physicalcondition !== undefined) {
       this.physicalCondition = dataset.physicalcondition;
     }
 
@@ -75,7 +75,6 @@ export class ArM5eRollInfo {
       this.overload = actorSystemData.combat.overload;
     }
 
-    this.dialogListeners;
     this.selection = {};
     this.visibility = {};
     this.addSelectObjects();
@@ -297,7 +296,7 @@ export class ArM5eRollInfo {
 
           this.magic["technique-req"] = spell.system["technique-req"];
           this.magic["form-req"] = spell.system["form-req"];
-          if (dataset.applyfocus != undefined) {
+          if (dataset.applyfocus !== undefined) {
             this.magic.focus = dataset.applyfocus;
           } else {
             this.magic.focus = spell.system.applyFocus;
@@ -486,7 +485,7 @@ export class ArM5eRollInfo {
     }
 
     // starting here, dataset can override type specific parameter.
-    if (dataset.divide != undefined) {
+    if (dataset.divide !== undefined) {
       this.magic.divide = dataset.divide;
     }
 
@@ -513,7 +512,7 @@ export class ArM5eRollInfo {
     const total = Math.round(roll._total);
     log(false, `rollFailed  : Roll total : ${total}`);
     switch (this.type) {
-      //open rolls, no failure
+      // open rolls, no failure
       case ROLL_PROPERTIES.INIT.VAL:
       case ROLL_PROPERTIES.ATTACK.VAL:
       case ROLL_PROPERTIES.DEFENSE.VAL:
@@ -635,7 +634,7 @@ export class ArM5eRollInfo {
   getOptionalBonuses(type) {
     if (["magic", "spont"].includes(type)) {
       type = "spontMagic";
-    } else if ("spell" == type) {
+    } else if ("spell" === type) {
       type = "formulaicMagic";
     }
     const activeEffects = this._actor.appliedEffects;
@@ -685,7 +684,7 @@ export class ArM5eRollInfo {
   }
 
   hasGenericField(idx) {
-    return this.generic.txtOption[idx - 1] != "";
+    return this.generic.txtOption[idx - 1] !== "";
   }
 
   getGenericFieldLabel(idx) {
@@ -909,9 +908,9 @@ export class ArM5eRollInfo {
 
   getAuraModifier() {
     const superNatAbility =
-      this.type == "ability" &&
-      this.ability.category == "supernaturalCat" &&
-      this.ability.realm != "mundane";
+      this.type === "ability" &&
+      this.ability.category === "supernaturalCat" &&
+      this.ability.realm !== "mundane";
     const noRollWithAura = ["power", "item"].includes(this.type);
     const auraApply =
       superNatAbility || noRollWithAura || this.properties.MODIFIERS & ROLL_MODIFIERS.AURA;
@@ -921,14 +920,12 @@ export class ArM5eRollInfo {
         this.environment.aura.computeAuraModifierFor(
           CONFIG.ARM5E.realmsExt[this.ability.realm].index
         );
+      } else if (superNatAbility) {
+        this.environment.aura.computeAuraModifierFor(
+          CONFIG.ARM5E.realmsExt[this.ability.realm].index
+        );
       } else {
-        if (superNatAbility) {
-          this.environment.aura.computeAuraModifierFor(
-            CONFIG.ARM5E.realmsExt[this.ability.realm].index
-          );
-        } else {
-          this.environment.aura.computeMaxAuraModifier(this._actor.system.realms);
-        }
+        this.environment.aura.computeMaxAuraModifier(this._actor.system.realms);
       }
     }
   }
@@ -949,8 +946,8 @@ export class ArM5eRollInfo {
         activeEffect.changes
           .filter((c, idx) => {
             return (
-              c.mode == CONST.ACTIVE_EFFECT_MODES.ADD &&
-              activeEffect.getFlag("arm5e", "type")[idx] == "spellcasting"
+              c.mode === CONST.ACTIVE_EFFECT_MODES.ADD &&
+              activeEffect.getFlag("arm5e", "type")[idx] === "spellcasting"
             );
           })
           .forEach((item) => {

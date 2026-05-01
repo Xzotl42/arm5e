@@ -35,14 +35,14 @@ export class DamageChatSchema extends RollChatSchema {
     const rollInfo = actor.rollInfo;
     const updateData = {};
 
-    if (rollInfo.type == "damage") {
+    if (rollInfo.type === "damage") {
       updateData["system.damage"] = {
         modifier: rollInfo.modifier,
         source: rollInfo.damage.source,
         form: rollInfo.damage.form,
         ignoreArmor: rollInfo.damage.ignoreArmor
       };
-    } else if (rollInfo.type == "soak") {
+    } else if (rollInfo.type === "soak") {
       updateData["system.damage"] = {
         source: rollInfo.damage.source,
         modifier: rollInfo.modifier,
@@ -63,12 +63,12 @@ export class DamageChatSchema extends RollChatSchema {
 
   get body() {
     let flavorText = "";
-    if (this.roll.type == "damage") {
+    if (this.roll.type === "damage") {
       flavorText = `<p>${game.i18n.format("arm5e.damage.damageflavor", {
         amount: this.parent.rollTotal(0),
         source: this.damage.source
       })}`;
-      if (this.damage.form != "") {
+      if (this.damage.form !== "") {
         flavorText += `<br/>${game.i18n.format("arm5e.damage.form")} : ${
           CONFIG.ARM5E.magic.forms[this.damage.form].label
         }`;
@@ -78,7 +78,7 @@ export class DamageChatSchema extends RollChatSchema {
       }
       flavorText += `</p>`;
       flavorText += this.originalFlavor;
-      // } else if (this.roll.type == "soak") {
+      // } else if (this.roll.type === "soak") {
       //   flavorText = `<p>${game.i18n.format("arm5e.damage.soakFlavor", {
       //     amount: this.roll.difficulty - this.parent.rollTotal(0),
       //     source: this.damage.source
@@ -96,7 +96,7 @@ export class DamageChatSchema extends RollChatSchema {
     let ii = 0;
     const contentDiv = html.querySelector(".message-content");
     for (let diceRoll of contentDiv.getElementsByClassName("dice-roll")) {
-      if (ii == 0) {
+      if (ii === 0) {
         // first is attack roll
         ii++;
         continue;
@@ -120,8 +120,9 @@ export class DamageChatSchema extends RollChatSchema {
         this.impact.woundGravity !== 0
           ? game.i18n.format("arm5e.messages.woundResult", {
               typeWound: game.i18n.localize(
-                "arm5e.messages.wound." +
+                `arm5e.messages.wound.${
                   CONFIG.ARM5E.recovery.rankMapping[this.impact.woundGravity]
+                }`
               )
             })
           : game.i18n.localize("arm5e.messages.noWound");
@@ -199,7 +200,7 @@ export class DamageChatSchema extends RollChatSchema {
         message.system.roll.type = "damage";
         delete message.system.roll.details;
         messageData["system.roll"] = message.system.roll;
-        messageData["roll"] = message.rolls[0].toJSON(); // soak roll only
+        messageData.roll = message.rolls[0].toJSON(); // soak roll only
 
         const actorData = { "system.states.pendingDamage": false };
 
@@ -239,9 +240,9 @@ export class DamageChatSchema extends RollChatSchema {
 
   async cancelDamageRoll(actor) {
     const promises = [];
-    let newFlavor =
-      this.originalFlavor +
-      `<p style="text-align:center;"><b>${game.i18n.localize("arm5e.generic.cancelled")}</b></p>`;
+    let newFlavor = `${this.originalFlavor}<p style="text-align:center;"><b>${game.i18n.localize(
+      "arm5e.generic.cancelled"
+    )}</b></p>`;
     promises.push(
       this.parent.update({ "system.impact.applied": true, "system.originalFlavor": newFlavor })
     );

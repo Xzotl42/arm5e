@@ -139,7 +139,8 @@ async function invokeActionWithDialogCleanup(sheet, fn, event, el) {
 
   // Some actions await modal confirmation dialogs. Close any extra windows
   // while the action is still pending so the returned promise can resolve.
-  while (!settled && Date.now() < deadline) {
+  while (Date.now() < deadline) {
+    if (settled) break;
     await sleep(pollMs);
     await closeExtraWindows(sheet);
   }
@@ -280,6 +281,7 @@ function registerActorSheetSuite(quench, { batchId, displayName, tabs, actions, 
 
       let actor;
       let sheet;
+      const suiteState = { sheet: null };
 
       // Minimal fake event that satisfies most action guards.
       const event = makeEvent({ stopPropagation: () => {} });
@@ -288,6 +290,7 @@ function registerActorSheetSuite(quench, { batchId, displayName, tabs, actions, 
         this.timeout(60000);
         actor = await createActor();
         sheet = actor.sheet;
+        suiteState.sheet = sheet;
         sheet.render(true);
         await sleep(500); // allow initial PARTS render to complete
       });
@@ -303,6 +306,7 @@ function registerActorSheetSuite(quench, { batchId, displayName, tabs, actions, 
         } catch {
           /* ignore */
         }
+        suiteState.sheet = null;
       });
 
       afterEach(async function () {
@@ -319,9 +323,10 @@ function registerActorSheetSuite(quench, { batchId, displayName, tabs, actions, 
           // ── Primary tab ──────────────────────────────────────────────────
           it(`Tab: ${tab.id}`, async function () {
             try {
+              const currentSheet = suiteState.sheet;
               // Some tabs are conditional (powers, config, arts, …). Check that
               // the nav link element exists before trying to activate it.
-              const navLink = sheet.element?.querySelector(
+              const navLink = currentSheet?.element?.querySelector(
                 `[data-group="primary"][data-tab="${tab.id}"]`
               );
               if (!navLink) {
@@ -329,10 +334,10 @@ function registerActorSheetSuite(quench, { batchId, displayName, tabs, actions, 
                 return;
               }
 
-              await goTab(sheet, tab.id, "primary");
+              await goTab(currentSheet, tab.id, "primary");
 
               // After activation, the link should carry the "active" class.
-              const activeLink = sheet.element?.querySelector(
+              const activeLink = currentSheet?.element?.querySelector(
                 `[data-group="primary"][data-tab="${tab.id}"].active`
               );
               assert.ok(activeLink, `${tab.id} tab link is active after navigation`);
@@ -347,8 +352,9 @@ function registerActorSheetSuite(quench, { batchId, displayName, tabs, actions, 
             for (const subId of tab.subtabs.ids) {
               it(`Subtab: ${tab.id} › ${subId}`, async function () {
                 try {
+                  const currentSheet = suiteState.sheet;
                   // Guard: parent primary tab must be rendered.
-                  const navLink = sheet.element?.querySelector(
+                  const navLink = currentSheet?.element?.querySelector(
                     `[data-group="primary"][data-tab="${tab.id}"]`
                   );
                   if (!navLink) {
@@ -357,11 +363,11 @@ function registerActorSheetSuite(quench, { batchId, displayName, tabs, actions, 
                   }
 
                   // Navigate to primary tab first, then subtab.
-                  await goTab(sheet, tab.id, "primary");
-                  await goTab(sheet, subId, tab.subtabs.group);
+                  await goTab(currentSheet, tab.id, "primary");
+                  await goTab(currentSheet, subId, tab.subtabs.group);
 
                   // The subtab nav link must be active.
-                  const activeSubLink = sheet.element?.querySelector(
+                  const activeSubLink = currentSheet?.element?.querySelector(
                     `[data-group="${tab.subtabs.group}"][data-tab="${subId}"].active`
                   );
                   assert.ok(
@@ -386,9 +392,10 @@ function registerActorSheetSuite(quench, { batchId, displayName, tabs, actions, 
         for (const actionName of actions) {
           it(`Action: ${actionName}`, async function () {
             try {
+              const currentSheet = suiteState.sheet;
               // Look up the handler from the merged options at runtime (sheet is
               // defined here since before() has already run).
-              const fn = sheet?.options?.actions?.[actionName];
+              const fn = currentSheet?.options?.actions?.[actionName];
               if (typeof fn !== "function") {
                 assert.ok(true, `${actionName} not registered on this sheet — skipped`);
                 return;
@@ -397,7 +404,7 @@ function registerActorSheetSuite(quench, { batchId, displayName, tabs, actions, 
               // Find a real DOM element carrying this data-action attribute.
               // Using a live DOM element means target.closest() works correctly
               // and target.dataset already has any context values set by the template.
-              const el = findAction(sheet, actionName);
+              const el = findAction(currentSheet, actionName);
               if (!el) {
                 assert.ok(
                   true,
@@ -406,7 +413,7 @@ function registerActorSheetSuite(quench, { batchId, displayName, tabs, actions, 
                 return;
               }
 
-              await invokeActionWithDialogCleanup(sheet, fn, event, el);
+              await invokeActionWithDialogCleanup(currentSheet, fn, event, el);
               assert.ok(true, `${actionName} completed without throwing`);
             } catch (err) {
               console.error(`[Sheet action test] ${actionName}:`, err);

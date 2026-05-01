@@ -7,6 +7,10 @@ import { addProgressItem, applyStandardMagusEffects, makeDiaryTemplate } from ".
 
 // import { Quench } from "../quench.js";
 
+/**
+ *
+ * @param quench
+ */
 export function registerExposureTesting(quench) {
   quench.registerBatch(
     "Ars-Exposure",
@@ -65,7 +69,7 @@ export function registerExposureTesting(quench) {
           progressItemCol[0].xp = entry.system.sourceQuality + result.system.sourceModifier;
           await entry.update({ "system.progress.abilities": progressItemCol });
           // expect(entry.system.applyPossible).to.equal("");
-          if (entry.system.applyError != "") {
+          if (entry.system.applyError !== "") {
             console.warn(entry.system.applyError);
           }
 
@@ -115,7 +119,7 @@ export function registerExposureTesting(quench) {
           expect(result.system.applyError).to.equal("arm5e.activity.msg.wrongSingleItemXp");
           progressItemCol[0].xp = entry.system.sourceQuality + result.system.sourceModifier;
           await entry.update({ "system.progress.spells": progressItemCol });
-          // if (entry.system.applyError != "") {
+          // if (entry.system.applyError !== "") {
           //   console.warn(entry.system.applyError);
           // }
 
@@ -161,7 +165,7 @@ export function registerExposureTesting(quench) {
 
           arts[0].xp = entry.system.sourceQuality + result.system.sourceModifier;
           await entry.update({ "system.progress.arts": arts });
-          // if (entry.system.applyError != "") {
+          // if (entry.system.applyError !== "") {
           //   console.warn(entry.system.applyError);
           // }
 

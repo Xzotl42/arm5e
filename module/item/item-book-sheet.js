@@ -32,7 +32,7 @@ export class ArM5eBookSheet extends ArM5eItemSheet {
     const dropData = foundry.applications.ux.getDragEventData(event);
 
     let index = Number(getDataset(event).index);
-    if (dropData.type == "Item")
+    if (dropData.type === "Item")
       if (getDataset(event).drop === "labtext") {
         const labtext = await Item.implementation.fromDropData(dropData);
         switch (labtext.type) {
@@ -71,10 +71,10 @@ export class ArM5eBookSheet extends ArM5eItemSheet {
     let idx = 0;
     context.topicsUi = [];
     for (let topic of Object.values(context.system.topics)) {
-      if (topic.category == "mastery" || topic.category == "labText") {
+      if (topic.category === "mastery" || topic.category === "labText") {
         context.topicsUi[idx] = { bookTypeEdit: "disabled" };
       }
-      if (topic.category == "labText" && topic.labtextTitle != "") {
+      if (topic.category === "labText" && topic.labtextTitle !== "") {
         topic.labtext.summary = game.i18n.localize(
           context.config.lab.labTextType[topic.labtext.type]
         );
@@ -312,7 +312,7 @@ export class ArM5eBookSheet extends ArM5eItemSheet {
   get tableOfContents() {
     let res = `<h3>${game.i18n.localize("arm5e.book.tableContents")}</h3><ol>`;
     for (const topic of this.item.system.topics) {
-      if (topic.category == "labText") {
+      if (topic.category === "labText") {
         res += `<li>${game.i18n.localize("arm5e.book.labText.intro")} `;
       } else {
         switch (topic.type) {
@@ -360,9 +360,9 @@ export class ArM5eBookSheet extends ArM5eItemSheet {
       expanded.system.topics = source.system.topics;
 
       // manage readonly fields
-      if (expanded.system.topics[index].category == "mastery") {
+      if (expanded.system.topics[index].category === "mastery") {
         expanded.system.topics[index].type = "Tractatus";
-      } else if (expanded.system.topics[index].category == "labText") {
+      } else if (expanded.system.topics[index].category === "labText") {
         expanded.system.topics[index].labtextTitle = source.system.topics[index].labtextTitle;
         expanded.system.topics[index].labtext = source.system.topics[index].labtext;
       }

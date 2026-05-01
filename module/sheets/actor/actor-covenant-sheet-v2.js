@@ -74,9 +74,24 @@ export class ArM5eCovenantActorSheetV2 extends ArM5eActorSheetV2 {
   /** @override */
   static LIMITED_PARTS = {
     content: {
-      template: "systems/arm5e/templates/actor/covenant-limited-sheet.html"
+      template: "systems/arm5e/templates/actor/covenant-limited-sheet.html",
+      classes: ["limited-sheet", "flexcol"]
+    },
+    footer: {
+      template: "systems/arm5e/templates/actor/parts/actor-covenant-footer-v2.hbs"
     }
   };
+
+  _configureRenderOptions(options) {
+    // This fills in `options.parts` with an array of ALL part keys by default
+    // So we need to call `super` first
+    super._configureRenderOptions(options);
+
+    if (this.document.limited) {
+      options.parts = Object.keys(ArM5eCovenantActorSheetV2.LIMITED_PARTS);
+      options.position = { width: 600, height: 700 };
+    }
+  }
 
   getUserCache() {
     let usercache = JSON.parse(sessionStorage.getItem(`usercache-${game.user.id}`));
@@ -103,7 +118,7 @@ export class ArM5eCovenantActorSheetV2 extends ArM5eActorSheetV2 {
       };
 
       sessionStorage.setItem(`usercache-${game.user.id}`, JSON.stringify(usercache));
-    } else if (usercache[this.actor.id].lists?.visibility == undefined) {
+    } else if (usercache[this.actor.id].lists?.visibility === undefined) {
       usercache[this.actor.id].lists = { visibility: { inhabitants: {} } };
       sessionStorage.setItem(`usercache-${game.user.id}`, JSON.stringify(usercache));
     }

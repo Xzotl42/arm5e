@@ -108,9 +108,24 @@ export class ArM5eLaboratoryActorSheetV2 extends ArM5eActorSheetV2 {
   /** @override */
   static LIMITED_PARTS = {
     content: {
-      template: "systems/arm5e/templates/actor/lab-limited-sheet.html"
+      template: "systems/arm5e/templates/actor/lab-limited-sheet.html",
+      classes: ["limited-sheet", "flexcol"]
+    },
+    footer: {
+      template: "systems/arm5e/templates/actor/parts/actor-lab-footer-v2.hbs"
     }
   };
+
+  _configureRenderOptions(options) {
+    // This fills in `options.parts` with an array of ALL part keys by default
+    // So we need to call `super` first
+    super._configureRenderOptions(options);
+
+    if (this.document.limited) {
+      options.parts = Object.keys(ArM5eLaboratoryActorSheetV2.LIMITED_PARTS);
+      options.position = { width: 600, height: 700 };
+    }
+  }
 
   getUserCache() {
     let usercache = JSON.parse(sessionStorage.getItem(`usercache-${game.user.id}`));
@@ -799,7 +814,7 @@ export class ArM5eLaboratoryActorSheetV2 extends ArM5eActorSheetV2 {
     entryData[0].system.dates = dates;
 
     const achievement = await activity.activityAchievements(planning);
-    if (achievement != null) {
+    if (achievement !== null) {
       entryData[0].system.achievements.push(...achievement);
     }
 

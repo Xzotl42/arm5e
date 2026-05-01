@@ -8,6 +8,12 @@ import { getWoundStr } from "../config.js";
 //   actor.rollInfo.ability.score *= 2;
 // }
 
+/**
+ *
+ * @param actor
+ * @param mode
+ * @param callback
+ */
 export async function exertSelf(actor, mode, callback) {
   log(false, "Exert self in combat");
 
@@ -18,6 +24,10 @@ export async function exertSelf(actor, mode, callback) {
   await actor.loseFatigueLevel(1);
 }
 
+/**
+ *
+ * @param actor
+ */
 export function computeCombatStats(actor) {
   return {
     init:
@@ -93,12 +103,13 @@ export class QuickCombat extends foundry.applications.api.HandlebarsApplicationM
   // }
 
   static async roll(event, target) {
-    await this.object.actor.sheet.roll(event, target);
+    const dataset = target.dataset;
+    await this.object.actor.sheet.roll(dataset);
   }
 
   static async soakDamage(event, target) {
     const msg = await this.object.actor.sheet._onSoakDamage(target.dataset);
-    if (msg == null) return;
+    if (msg === null) return;
     if (msg.system.impact.woundGravity) {
       await this.object.actor.changeWound(
         1,
@@ -113,13 +124,17 @@ export class QuickCombat extends foundry.applications.api.HandlebarsApplicationM
   }
 
   async close(options = {}) {
-    if (this.object?.actor?.apps?.[this.options.uniqueId] != undefined) {
+    if (this.object?.actor?.apps?.[this.options.uniqueId] !== undefined) {
       delete this.object.actor.apps[this.options.uniqueId];
     }
     return super.close(options);
   }
 }
 
+/**
+ *
+ * @param actor
+ */
 export async function computeDamage(actor) {
   const lastAttackMessage = getLastCombatMessageOfType("combatAttack");
   const lastDefenseMessage = getLastCombatMessageOfType("combatDefense");
@@ -139,6 +154,11 @@ export async function computeDamage(actor) {
   await actor.sheet._onCalculateDamage({ advantage, roll: "combatDamage" });
 }
 
+/**
+ *
+ * @param tokenName
+ * @param actor
+ */
 export async function quickCombat(tokenName, actor) {
   if (!actor.isCharacter()) return;
 
@@ -229,13 +249,18 @@ export class QuickVitals extends foundry.applications.api.HandlebarsApplicationM
   }
 
   async close(options = {}) {
-    if (this.object?.actor?.apps?.[this.options.uniqueId] != undefined) {
+    if (this.object?.actor?.apps?.[this.options.uniqueId] !== undefined) {
       delete this.object.actor.apps[this.options.uniqueId];
     }
     return super.close(options);
   }
 }
 
+/**
+ *
+ * @param tokenName
+ * @param actor
+ */
 export async function quickVitals(tokenName, actor) {
   if (!actor.isCharacter()) return;
 
@@ -249,6 +274,11 @@ export async function quickVitals(tokenName, actor) {
   const res = await vitals.render(true);
 }
 
+/**
+ *
+ * @param selector
+ * @param actor
+ */
 export async function combatDamage(selector, actor) {
   const modifier = parseInt(selector.querySelector('input[name="modifier"]').value);
   let damage = modifier;
@@ -291,6 +321,11 @@ export async function combatDamage(selector, actor) {
   return Arm5eChatMessage.create(message.toObject());
 }
 
+/**
+ *
+ * @param selector
+ * @param actor
+ */
 export function buildSoakDataset(selector, actor) {
   const dataset = {};
 
@@ -315,6 +350,11 @@ export function buildSoakDataset(selector, actor) {
   return dataset;
 }
 
+/**
+ *
+ * @param soakData
+ * @param actor
+ */
 export async function setWounds(soakData, actor) {
   const woundInfo = getMessageDamageDetails(soakData, actor);
   const roll = await createRoll(`${soakData.damageToApply}`, 1, 1, {
@@ -355,6 +395,11 @@ export async function setWounds(soakData, actor) {
   // Arm5eChatMessage.create(message.toObject());
 }
 
+/**
+ *
+ * @param soakData
+ * @param actor
+ */
 function getMessageDamageDetails(soakData, actor) {
   const size = actor?.system?.vitals?.siz?.value || 0;
   const typeOfWound = calculateWound(soakData.damageToApply, size);
@@ -402,7 +447,7 @@ function getMessageDamageDetails(soakData, actor) {
       typeOfWound !== 0
         ? game.i18n.format("arm5e.messages.woundResult", {
             typeWound: game.i18n.localize(
-              "arm5e.messages.wound." + CONFIG.ARM5E.recovery.rankMapping[typeOfWound]
+              `arm5e.messages.wound.${CONFIG.ARM5E.recovery.rankMapping[typeOfWound]}`
             )
           })
         : game.i18n.localize("arm5e.messages.noWound"),
@@ -410,8 +455,14 @@ function getMessageDamageDetails(soakData, actor) {
   };
 }
 
+/**
+ *
+ * @param actor
+ * @param roll
+ * @param message
+ */
 export async function damageRoll(actor, roll, message) {
-  const targetedTokens = game.user.targets; //getActorsFromTargetedTokens(actorCaster);
+  const targetedTokens = game.user.targets; // getActorsFromTargetedTokens(actorCaster);
   if (!targetedTokens) {
     return;
   }
@@ -427,6 +478,12 @@ export async function damageRoll(actor, roll, message) {
   await actor.update({ "system.states.pendingDamage": true });
 }
 
+/**
+ *
+ * @param actor
+ * @param roll
+ * @param message
+ */
 export async function soakRoll(actor, roll, message) {
   const rollInfo = actor.rollInfo;
 

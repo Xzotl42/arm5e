@@ -5,6 +5,10 @@ import { Schedule } from "../apps/schedule.js";
 import { GroupSchedule } from "../apps/group-schedule.js";
 import { ActivitySchedule } from "../apps/activity-schedule.js";
 
+/**
+ *
+ * @param quench
+ */
 export function registerScheduleIntegrationTesting(quench) {
   quench.registerBatch(
     "Ars-ScheduleApps",
@@ -215,7 +219,7 @@ export function registerScheduleIntegrationTesting(quench) {
             }
           });
           const context = await as._prepareContext();
-          // 1 selected != 3 duration, should be disabled
+          // 1 selected !== 3 duration, should be disabled
           assert.equal(context.updatePossible, "disabled", "should be disabled on mismatch");
           await as.close();
         });

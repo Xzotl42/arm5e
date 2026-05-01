@@ -89,7 +89,7 @@ export class BookSchema extends foundry.abstract.TypeDataModel {
         }),
         {
           required: false,
-          initial: [] //{ category: "art", art: "cr", type: "Summa", quality: 1, level: 1 }]
+          initial: [] // { category: "art", art: "cr", type: "Summa", quality: 1, level: 1 }]
         }
       ),
       state: ItemState(),
@@ -118,16 +118,16 @@ export class BookSchema extends foundry.abstract.TypeDataModel {
       case "mastery":
         return topic.quality;
       case "ability":
-        if (topic.type == "Summa") {
+        if (topic.type === "Summa") {
           return 3 * topic.level + topic.quality;
-        } else if (topic.type == "Tractatus") {
+        } else if (topic.type === "Tractatus") {
           return topic.quality;
         }
         break;
       case "art":
-        if (topic.type == "Summa") {
+        if (topic.type === "Summa") {
           return topic.level + topic.quality;
-        } else if (topic.type == "Tractatus") {
+        } else if (topic.type === "Tractatus") {
           return topic.quality;
         }
         break;
@@ -157,7 +157,7 @@ export class BookSchema extends foundry.abstract.TypeDataModel {
     let currentDate = game.settings.get("arm5e", "currentDate");
     if (itemData.system) {
       // res.system.year = Number(currentDate.year);
-      if (itemData.system.topics == undefined) {
+      if (itemData.system.topics === undefined) {
         res.system.topics = [
           // {
           //   category: "art",
@@ -220,7 +220,7 @@ export class BookSchema extends foundry.abstract.TypeDataModel {
           break;
       }
 
-      if (topic.category == "labText") {
+      if (topic.category === "labText") {
         let type = game.i18n.localize("arm5e.generic.other");
         switch (topic.labtext.type) {
           case "spell":
@@ -254,7 +254,7 @@ export class BookSchema extends foundry.abstract.TypeDataModel {
 
   async readBook(item, dataset) {
     const topic = this.topics[dataset.index];
-    if (topic.category == "labText") {
+    if (topic.category === "labText") {
       return;
     }
 
@@ -276,9 +276,10 @@ export class BookSchema extends foundry.abstract.TypeDataModel {
       item.actor.apps[scriptorium.appId] = scriptorium;
     }
   }
+
   async copyBook(item, dataset) {
     const topic = this.topics[dataset.index];
-    if (topic.category == "labText") {
+    if (topic.category === "labText") {
       return;
     }
 
@@ -317,9 +318,9 @@ export class BookSchema extends foundry.abstract.TypeDataModel {
       // topic.spellTech = t.spellTech
       // topic.spellForm = t.spellForm
 
-      if (itemData.system.topic.type == "summa") {
+      if (itemData.system.topic.type === "summa") {
         topic.type = "Summa";
-      } else if (itemData.system.topic.type == "tract") {
+      } else if (itemData.system.topic.type === "tract") {
         topic.type = "Tractatus";
       }
 
@@ -346,15 +347,15 @@ export class BookSchema extends foundry.abstract.TypeDataModel {
       let idx = 0;
       for (let t of itemData.system.topics) {
         if (t.type === undefined || t.type === "") {
-          if (t.category == "labText") {
+          if (t.category === "labText") {
             topics[idx].type = null;
           } else {
             topics[idx].type = "Summa";
           }
         } else if (t.type?.value !== undefined) {
-          if (t.type.value == "summa") {
+          if (t.type.value === "summa") {
             topics[idx].type = "Summa";
-          } else if (t.type.value == "tract") {
+          } else if (t.type.value === "tract") {
             topics[idx].type = "Tractatus";
           } else {
             topics[idx].type = data.type.value;
@@ -396,7 +397,7 @@ export class BookSchema extends foundry.abstract.TypeDataModel {
       }
     }
 
-    // if (itemData.system.year == null || itemData.system.year == undefined) {
+    // if (itemData.system.year === null || itemData.system.year === undefined) {
     //   updateData["system.year"] = 1220;
     // } else if (typeof itemData.system.year === "string") {
     //   if (!Number.isNumeric(itemData.system.year)) {
@@ -414,7 +415,7 @@ export class BookSchema extends foundry.abstract.TypeDataModel {
     //   }
     // }
 
-    if (itemData.system.description == null) {
+    if (itemData.system.description === null) {
       updateData["system.description"] = "";
     }
     updateData["system.topic"] = null;

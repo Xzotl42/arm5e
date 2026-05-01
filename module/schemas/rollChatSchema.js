@@ -136,7 +136,7 @@ export class RollChatSchema extends BasicChatSchema {
   }
 
   get confidenceModifier() {
-    return (this.confidence.used * 3) / this.roll?.divider ?? 1;
+    return (this.confidence.used * 3) / (this.roll?.divider ?? 1);
   }
 
   getFlavor() {
@@ -191,7 +191,7 @@ export class RollChatSchema extends BasicChatSchema {
       (this.rollMode === CONST.DICE_ROLL_MODES.PUBLIC &&
         type === "player" &&
         ["ALL", "PLAYERS"].includes(showRolls)) ||
-      "ALL" == showRolls
+      "ALL" === showRolls
     );
   }
 
@@ -201,7 +201,8 @@ export class RollChatSchema extends BasicChatSchema {
       game.users.get(game.userId).isGM ||
       actor?.isOwner ||
       (this.rollMode === CONST.DICE_ROLL_MODES.PUBLIC &&
-        ((type === "player" && ["ALL", "PLAYERS"].includes(showFormulas)) || "ALL" == showFormulas))
+        ((type === "player" && ["ALL", "PLAYERS"].includes(showFormulas)) ||
+          "ALL" === showFormulas))
     );
   }
 
@@ -253,7 +254,7 @@ export class RollChatSchema extends BasicChatSchema {
           if (this.roll.secondaryScore) {
             let newValue = Math.round(this.roll.secondaryScore + rollRes - this.roll.difficulty);
 
-            item.innerText = Math.round(rollRes) + ` ( ${(newValue < 0 ? "" : "+") + newValue} ) `;
+            item.innerText = `${Math.round(rollRes)} ( ${(newValue < 0 ? "" : "+") + newValue} ) `;
           } else {
             item.innerText = Math.round(rollRes);
           }
@@ -268,7 +269,7 @@ export class RollChatSchema extends BasicChatSchema {
     return (
       !this.impact.applied &&
       this.confidence.allowed &&
-      this.roll.botches == 0 &&
+      this.roll.botches === 0 &&
       (this.confidence.used ?? 0) < this.confidence.score
     );
   }
@@ -335,6 +336,7 @@ export class RollChatSchema extends BasicChatSchema {
     log(false, "fatigueCost", res);
     return res;
   }
+
   async skipConfidenceUse() {
     if (this.parent.actor) {
       const res = this._skipConfidenceUse();
@@ -471,8 +473,8 @@ export class RollChatSchema extends BasicChatSchema {
       let res = null;
       // actor used its last confidence point or reached its maximum amount to spend.
       if (
-        usedConf == this.parent.actor.system.con.score ||
-        this.parent.actor.system.con.points == 1
+        usedConf === this.parent.actor.system.con.score ||
+        this.parent.actor.system.con.points === 1
       ) {
         let fatigueToApply = 0;
         if (this.failedRoll()) {
@@ -539,13 +541,15 @@ export class RollChatSchema extends BasicChatSchema {
       this.parent.rollTotal(0) + this.confidenceModifier - this.roll.difficulty < 0
     );
   }
+
   getFailedMessage() {
     const showDataOfNPC = game.settings.get("arm5e", "showNPCMagicDetails") === "SHOW_ALL";
     let messageFlavor = "";
 
     if (showDataOfNPC || this.parent.originatorOrGM) {
-      const title =
-        '<h2 class="ars-chat-title">' + game.i18n.localize("arm5e.sheet.rollFailed") + "</h2>";
+      const title = `<h2 class="ars-chat-title">${game.i18n.localize(
+        "arm5e.sheet.rollFailed"
+      )}</h2>`;
 
       let flavorForGM = `${title}`;
       messageFlavor = flavorForGM;
@@ -577,12 +581,18 @@ export class RollChatSchema extends BasicChatSchema {
     return impactMessage;
   }
 
-  enrichMessageData(actor) {
-    // this.parent.updateSource({
-    // });
-  }
 }
 
+/**
+ *
+ * @param msg
+ * @param actor
+ * @param icon
+ * @param btnLabel
+ * @param title
+ * @param className
+ * @param onClick
+ */
 export function createChatButton(msg, actor, icon, btnLabel, title, className, onClick) {
   const btn = document.createElement("button");
   btn.classList.add("chat-button");

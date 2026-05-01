@@ -57,7 +57,7 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
       toggleBookTopic: ArM5eActorSheetV2.toggleBookTopic,
       toggleAbilityCategory: ArM5eActorSheetV2.toggleAbilityCategory,
       toggleSectionCollapse: ArM5eActorSheetV2.toggleSectionCollapse,
-      roll: ArM5eActorSheetV2.roll,
+      roll: ArM5eActorSheetV2.onRoll,
       calculateDamage: ArM5eActorSheetV2.calculateDamage,
       soakDamage: ArM5eActorSheetV2.soakDamage,
       powerUse: ArM5eActorSheetV2.powerUse,
@@ -100,7 +100,7 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
 
   /** @override */
   _configureRenderParts(options) {
-    if (!this._canViewFullSheet()) {
+    if (this.document.limited) {
       const limitedParts = this.constructor.LIMITED_PARTS ?? {};
       if (Object.keys(limitedParts).length) return foundry.utils.deepClone(limitedParts);
     }
@@ -136,7 +136,7 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
     );
 
     // --- Book topic filters (not applicable to the magic codex) ---
-    if (this.actor.type != "magicCodex") {
+    if (this.actor.type !== "magicCodex") {
       // Arts topics filter
       let artsFilters = context.ui.filters.bookTopics.artsTopics;
       context.system.filteredArtsTopics = topicFilter(
@@ -150,10 +150,10 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
         context.ui.artsFilterVisibility = "hidden";
       }
       if (
-        artsFilters.topic != "" ||
-        artsFilters.typeFilter != "" ||
-        (artsFilters.levelFilter != 0 && artsFilters.levelFilter != null) ||
-        (artsFilters.qualityFilter != 0 && artsFilters.qualityFilter != null)
+        artsFilters.topic !== "" ||
+        artsFilters.typeFilter !== "" ||
+        (artsFilters.levelFilter !== 0 && artsFilters.levelFilter !== null) ||
+        (artsFilters.qualityFilter !== 0 && artsFilters.qualityFilter !== null)
       ) {
         context.ui.artsTopicsFilter = UI.STYLES.FILTER_ACTIVE;
       }
@@ -171,10 +171,10 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
         context.ui.abilitiesFilterVisibility = "hidden";
       }
       if (
-        abilitiesFilters.topic != "" ||
-        abilitiesFilters.typeFilter != "" ||
-        (abilitiesFilters.levelFilter != 0 && abilitiesFilters.levelFilter != null) ||
-        (abilitiesFilters.qualityFilter != 0 && abilitiesFilters.qualityFilter != null)
+        abilitiesFilters.topic !== "" ||
+        abilitiesFilters.typeFilter !== "" ||
+        (abilitiesFilters.levelFilter !== 0 && abilitiesFilters.levelFilter !== null) ||
+        (abilitiesFilters.qualityFilter !== 0 && abilitiesFilters.qualityFilter !== null)
       ) {
         context.ui.abilitiesTopicsFilter = UI.STYLES.FILTER_ACTIVE;
       }
@@ -191,9 +191,9 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
         context.ui.masteriesFilterVisibility = "hidden";
       }
       if (
-        masteriesFilters.formFilter != "" ||
-        masteriesFilters.techniqueFilter != "" ||
-        (masteriesFilters.levelFilter != 0 && masteriesFilters.levelFilter != null)
+        masteriesFilters.formFilter !== "" ||
+        masteriesFilters.techniqueFilter !== "" ||
+        (masteriesFilters.levelFilter !== 0 && masteriesFilters.levelFilter !== null)
       ) {
         context.ui.masteriesTopicsFilter = UI.STYLES.FILTER_ACTIVE;
       }
@@ -223,9 +223,9 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
         context.ui.diaryFilterVisibility = "hidden";
       }
       if (
-        diaryFilters.typeFilter != "" ||
-        (diaryFilters.minYearFilter != 0 && diaryFilters.minYearFilter != null) ||
-        (diaryFilters.maxYearFilter != 0 && diaryFilters.maxYearFilter != null)
+        diaryFilters.typeFilter !== "" ||
+        (diaryFilters.minYearFilter !== 0 && diaryFilters.minYearFilter !== null) ||
+        (diaryFilters.maxYearFilter !== 0 && diaryFilters.maxYearFilter !== null)
       ) {
         context.ui.diaryFilter = UI.STYLES.FILTER_ACTIVE;
       }
@@ -236,7 +236,7 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
         let step = 1;
         for (let date of entry.system.dates) {
           let activity = {};
-          if (entry.system.done || entry.system.activity == "none") {
+          if (entry.system.done || entry.system.activity === "none") {
             activity.ui = { diary: 'style="font-style: normal;"' };
           } else {
             activity.ui = { diary: 'style="font-style: italic; color: grey"' };
@@ -280,10 +280,10 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
 
     // --- Laboratory texts filter (player, npc, laboratory, covenant) ---
     if (
-      this.actor.type == "player" ||
-      this.actor.type == "npc" ||
-      this.actor.type == "laboratory" ||
-      this.actor.type == "covenant"
+      this.actor.type === "player" ||
+      this.actor.type === "npc" ||
+      this.actor.type === "laboratory" ||
+      this.actor.type === "covenant"
     ) {
       let labtTextFilters = context.ui.filters.hermetic.laboratoryTexts;
       context.system.filteredLaboratoryTexts = hermeticFilter(
@@ -296,9 +296,9 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
         context.ui.labtTextFilterVisibility = "hidden";
       }
       if (
-        labtTextFilters.formFilter != "" ||
-        labtTextFilters.techniqueFilter != "" ||
-        (labtTextFilters.levelFilter != 0 && labtTextFilters.levelFilter != null)
+        labtTextFilters.formFilter !== "" ||
+        labtTextFilters.techniqueFilter !== "" ||
+        (labtTextFilters.levelFilter !== 0 && labtTextFilters.levelFilter !== null)
       ) {
         context.ui.labTextFilter = UI.STYLES.FILTER_ACTIVE;
       }
@@ -332,11 +332,11 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
     // --- Virtues, flaws, qualities, inferiorities, masteries ---
     // Applies to all actor types that carry these item lists.
     if (
-      actorData.actor.type == "player" ||
-      actorData.actor.type == "npc" ||
-      actorData.actor.type == "laboratory" ||
-      actorData.actor.type == "covenant" ||
-      actorData.actor.type == "beast"
+      actorData.actor.type === "player" ||
+      actorData.actor.type === "npc" ||
+      actorData.actor.type === "laboratory" ||
+      actorData.actor.type === "covenant" ||
+      actorData.actor.type === "beast"
     ) {
       // Italic style when the item has active effects attached; visibility gated on hidden flag
       for (let virtue of actorData.system.virtues) {
@@ -385,7 +385,7 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
 
     // --- Spells and magical effects (player / npc only) ---
     // Compute display labels for technique/form requirements and mastery hint icon.
-    if (actorData.actor.type == "player" || actorData.actor.type == "npc") {
+    if (actorData.actor.type === "player" || actorData.actor.type === "npc") {
       for (let spell of actorData.system.spells) {
         spell.TechReq = spellTechniqueLabel(spell.system);
         spell.FormReq = spellFormLabel(spell.system);
@@ -744,10 +744,14 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
     game.actors.get(actorId)?.sheet?.render(true, { focus: true });
   }
 
-  static async roll(event, target) {
+  static async onRoll(event, target) {
     const dataset = target.dataset;
+    return await this.roll(dataset);
+  }
+
+  async roll(dataset) {
     if (await this.isRollPossible(dataset)) {
-      return this._roll(dataset);
+      return await this._roll(dataset);
     }
     return null;
   }
@@ -760,7 +764,7 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
   static async soakDamage(event, target) {
     const dataset = getDataset(target);
     const msg = await this._onSoakDamage(dataset);
-    if (msg == null) return;
+    if (msg === null) return;
     if (msg.system.impact.woundGravity) {
       await this.actor.changeWound(
         1,
@@ -1131,7 +1135,7 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
     });
 
     this.element.querySelectorAll(".item").forEach((el) => {
-      el.addEventListener("contextmenu", (event) => void this._onItemContextMenu(event));
+      el.addEventListener("contextmenu", (event) => this._onItemContextMenu(event));
     });
   }
 

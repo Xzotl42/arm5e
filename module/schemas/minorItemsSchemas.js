@@ -45,36 +45,34 @@ export class VirtueFlawSchema extends foundry.abstract.TypeDataModel {
   }
 
   get pointCost() {
-    if (this.impact == "Special") {
+    if (this.impact === "Special") {
       return 0;
     }
     return CONFIG.ARM5E.impacts[this.impact].cost;
   }
 
   static getIcon(item, newValue = null) {
-    if (newValue != null) {
-      if (item.type == "virtue") {
-        let type = newValue == "general" ? "generalVirtue" : newValue;
-        return VIRTUESFLAWS_DEFAULT_ICONS.MONO[type] ?? CONFIG.ARM5E_DEFAULT_ICONS["virtue"];
+    if (newValue !== null) {
+      if (item.type === "virtue") {
+        let type = newValue === "general" ? "generalVirtue" : newValue;
+        return VIRTUESFLAWS_DEFAULT_ICONS.MONO[type] ?? CONFIG.ARM5E_DEFAULT_ICONS.virtue;
       } else {
-        let type = newValue == "general" ? "generalFlaw" : newValue;
-        return VIRTUESFLAWS_DEFAULT_ICONS.MONO[type] ?? CONFIG.ARM5E_DEFAULT_ICONS["flaw"];
+        let type = newValue === "general" ? "generalFlaw" : newValue;
+        return VIRTUESFLAWS_DEFAULT_ICONS.MONO[type] ?? CONFIG.ARM5E_DEFAULT_ICONS.flaw;
       }
+    } else if (item.type === "virtue") {
+      let type = item.system.type === "general" ? "generalVirtue" : item.system.type;
+      return VIRTUESFLAWS_DEFAULT_ICONS.MONO[type] ?? CONFIG.ARM5E_DEFAULT_ICONS.virtue;
     } else {
-      if (item.type == "virtue") {
-        let type = item.system.type == "general" ? "generalVirtue" : item.system.type;
-        return VIRTUESFLAWS_DEFAULT_ICONS.MONO[type] ?? CONFIG.ARM5E_DEFAULT_ICONS["virtue"];
-      } else {
-        let type = item.system.type == "general" ? "generalFlaw" : item.system.type;
-        return VIRTUESFLAWS_DEFAULT_ICONS.MONO[type] ?? CONFIG.ARM5E_DEFAULT_ICONS["flaw"];
-      }
+      let type = item.system.type === "general" ? "generalFlaw" : item.system.type;
+      return VIRTUESFLAWS_DEFAULT_ICONS.MONO[type] ?? CONFIG.ARM5E_DEFAULT_ICONS.flaw;
     }
   }
 
   static getDefault(itemData) {
     let res = itemData;
     if (itemData.system) {
-      if (itemData.system.type == undefined) {
+      if (itemData.system.type === undefined) {
         res.system.type = "general";
       }
     } else {
@@ -84,7 +82,7 @@ export class VirtueFlawSchema extends foundry.abstract.TypeDataModel {
   }
 
   static migrateData(data) {
-    // if (data.description == null) {
+    // if (data.description === null) {
     //   data.description = "";
     // }
     if (data.type?.value) {
@@ -108,7 +106,7 @@ export class VirtueFlawSchema extends foundry.abstract.TypeDataModel {
       updateData["system.type"] = itemData.system.type.value;
     }
 
-    if (itemData.system.description == null) {
+    if (itemData.system.description === null) {
       updateData["system.description"] = "";
     }
 
@@ -159,36 +157,34 @@ export class QualityInferioritySchema extends foundry.abstract.TypeDataModel {
   }
 
   // get pointCost() {
-  //   if (this.impact == "Special") {
+  //   if (this.impact === "Special") {
   //     return 0;
   //   }
   //   return CONFIG.ARM5E.impacts[this.impact].cost;
   // }
 
   static getIcon(item, newValue = null) {
-    if (newValue != null) {
-      if (item.type == "quality") {
-        let type = newValue == "mundane" ? "generalVirtue" : newValue;
-        return VIRTUESFLAWS_DEFAULT_ICONS.MONO[type] ?? CONFIG.ARM5E_DEFAULT_ICONS["virtue"];
+    if (newValue !== null) {
+      if (item.type === "quality") {
+        let type = newValue === "mundane" ? "generalVirtue" : newValue;
+        return VIRTUESFLAWS_DEFAULT_ICONS.MONO[type] ?? CONFIG.ARM5E_DEFAULT_ICONS.virtue;
       } else {
-        let type = newValue == "mundane" ? "generalFlaw" : newValue;
-        return VIRTUESFLAWS_DEFAULT_ICONS.MONO[type] ?? CONFIG.ARM5E_DEFAULT_ICONS["flaw"];
+        let type = newValue === "mundane" ? "generalFlaw" : newValue;
+        return VIRTUESFLAWS_DEFAULT_ICONS.MONO[type] ?? CONFIG.ARM5E_DEFAULT_ICONS.flaw;
       }
+    } else if (item.type === "quality") {
+      let type = item.system.type === "mundane" ? "generalVirtue" : item.system.type;
+      return VIRTUESFLAWS_DEFAULT_ICONS.MONO[type] ?? CONFIG.ARM5E_DEFAULT_ICONS.virtue;
     } else {
-      if (item.type == "quality") {
-        let type = item.system.type == "mundane" ? "generalVirtue" : item.system.type;
-        return VIRTUESFLAWS_DEFAULT_ICONS.MONO[type] ?? CONFIG.ARM5E_DEFAULT_ICONS["virtue"];
-      } else {
-        let type = item.system.type == "mundane" ? "generalFlaw" : item.system.type;
-        return VIRTUESFLAWS_DEFAULT_ICONS.MONO[type] ?? CONFIG.ARM5E_DEFAULT_ICONS["flaw"];
-      }
+      let type = item.system.type === "mundane" ? "generalFlaw" : item.system.type;
+      return VIRTUESFLAWS_DEFAULT_ICONS.MONO[type] ?? CONFIG.ARM5E_DEFAULT_ICONS.flaw;
     }
   }
 
   static getDefault(itemData) {
     let res = itemData;
     if (itemData.system) {
-      if (itemData.system.type == undefined) {
+      if (itemData.system.type === undefined) {
         res.system.type = "mundane";
       }
     } else {
@@ -236,6 +232,7 @@ export class ItemSchema extends foundry.abstract.TypeDataModel {
       })
     };
   }
+
   static migrate(itemData) {
     const updateData = {};
     if (itemData.system.quantity === null || !Number.isInteger(itemData.system.quantity)) {
@@ -245,7 +242,7 @@ export class ItemSchema extends foundry.abstract.TypeDataModel {
       updateData["system.weight"] = 0;
     }
 
-    if (itemData.system.enchantments != null) {
+    if (itemData.system.enchantments !== null) {
       const updateExt = EnchantmentExtension.migrate(itemData);
       foundry.utils.mergeObject(updateData, updateExt);
     }
@@ -299,7 +296,7 @@ export class ReputationSchema extends foundry.abstract.TypeDataModel {
   }
 
   async decreaseScore() {
-    if (this.score != 0) {
+    if (this.score !== 0) {
       let oldXp = this.xp;
       let newXp = Math.round(((this.score - 1) * this.score * 5) / 2);
       await this.parent.update(
@@ -317,7 +314,7 @@ export class ReputationSchema extends foundry.abstract.TypeDataModel {
 
   static migrateData(data) {
     // console.log(`MigrateData Reputation: ${JSON.stringify(data)}`);
-    if (data.points != undefined) {
+    if (data.points !== undefined) {
       data.xp = (5 * (data.points * (data.points + 1))) / 2;
       delete data.points;
     }
@@ -412,7 +409,7 @@ export class PersonalityTraitSchema extends foundry.abstract.TypeDataModel {
   }
 
   static migrateData(data) {
-    if (data.points != undefined) {
+    if (data.points !== undefined) {
       if (data.points < 0) {
         data.xp = -(5 * (data.points * (data.points + 1))) / 2;
       } else {
@@ -508,9 +505,9 @@ export class SanctumSchema extends foundry.abstract.TypeDataModel {
 
   static migrate(data) {
     const updateData = {};
-    if (data.name != "" && (data.system.sanctumId == null || data.system.sanctumId === "")) {
+    if (data.name !== "" && (data.system.sanctumId === null || data.system.sanctumId === "")) {
       let sanctum = game.actors.filter(
-        (a) => ["laboratory"].includes(a.type) && a.name == data.name
+        (a) => ["laboratory"].includes(a.type) && a.name === data.name
       );
       if (sanctum.length > 0) {
         updateData["system.sanctumId"] = sanctum[0]._id;

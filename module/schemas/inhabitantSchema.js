@@ -129,7 +129,7 @@ export class InhabitantSchema extends foundry.abstract.TypeDataModel {
   }
 
   static getIcon(item, newValue = null) {
-    if (newValue != null) {
+    if (newValue !== null) {
       return CONFIG.INHABITANTS_DEFAULT_ICONS[newValue];
     } else {
       return CONFIG.INHABITANTS_DEFAULT_ICONS[item.system.category];
@@ -146,7 +146,7 @@ export class InhabitantSchema extends foundry.abstract.TypeDataModel {
   }
 
   get baseLoyalty() {
-    if (this.category == "magi") {
+    if (this.category === "magi") {
       return CONFIG.ARM5E.covenant.gift[this.giftType ?? "normal"].loyalty;
     } else {
       return 0;
@@ -154,8 +154,8 @@ export class InhabitantSchema extends foundry.abstract.TypeDataModel {
   }
 
   get buildPoints() {
-    if (this.category == "specialists") {
-      if (this.specialistType == "teacher") {
+    if (this.category === "specialists") {
+      if (this.specialistType === "teacher") {
         return (this.specialistChar ?? 0) + (this.score ?? 0) + (this.teacherScore ?? 0);
       } else {
         return this.score ?? 0;
@@ -165,7 +165,7 @@ export class InhabitantSchema extends foundry.abstract.TypeDataModel {
   }
 
   get loyaltyGain() {
-    if (this.category == "specialists") {
+    if (this.category === "specialists") {
       switch (this.specialistType) {
         case "steward":
         case "chamberlain":
@@ -253,7 +253,7 @@ export class InhabitantSchema extends foundry.abstract.TypeDataModel {
       case "craftsmen":
         return Math.floor(1 + this.score / 2);
       case "specialists":
-        if (this.specialistType == "other") {
+        if (this.specialistType === "other") {
           return this.score;
         }
         return 0;
@@ -267,9 +267,9 @@ export class InhabitantSchema extends foundry.abstract.TypeDataModel {
   static migrate(data) {
     const updateData = {};
 
-    if (data.name != "" && (data.system.actorId == null || data.system.actorId === "")) {
+    if (data.name !== "" && (data.system.actorId === null || data.system.actorId === "")) {
       let inhabitant = game.actors.filter(
-        (a) => ["player", "npc", "beast"].includes(a.type) && a.name == data.name
+        (a) => ["player", "npc", "beast"].includes(a.type) && a.name === data.name
       );
       if (inhabitant.length > 0) {
         updateData["system.actorId"] = inhabitant[0]._id;
@@ -290,44 +290,44 @@ export class InhabitantSchema extends foundry.abstract.TypeDataModel {
         case "habitantMagi":
           updateData["system.category"] = "magi";
           if (data.name === "") {
-            updateData["name"] = "Magus name";
+            updateData.name = "Magus name";
           }
           updateData["system.extradata.giftType"] = data.giftType;
           break;
         case "habitantCompanion":
           updateData["system.category"] = "companions";
           if (data.name === "") {
-            updateData["name"] = "Companion name";
+            updateData.name = "Companion name";
           }
           break;
         case "habitantSpecialists":
           updateData["system.category"] = "specialists";
           if (data.name === "") {
-            updateData["name"] = "Specialist name";
+            updateData.name = "Specialist name";
           }
           break;
         case "habitantHabitants":
           updateData["system.category"] = "servants";
           if (data.name === "") {
-            updateData["name"] = "Grog name";
+            updateData.name = "Grog name";
           }
           break;
         case "habitantHorses":
           updateData["system.category"] = "horses";
           if (data.name === "") {
-            updateData["name"] = "Horse name";
+            updateData.name = "Horse name";
           }
           break;
         case "habitantLivestock":
           updateData["system.category"] = "livestock";
           if (data.name === "") {
-            updateData["name"] = "LivestockBreed";
+            updateData.name = "LivestockBreed";
           }
           break;
         default:
           updateData["system.category"] = "servants";
           if (data.name === "") {
-            updateData["name"] = "A grog";
+            updateData.name = "A grog";
           }
       }
     }
@@ -339,16 +339,16 @@ export class InhabitantSchema extends foundry.abstract.TypeDataModel {
     if (data.system.category === "grogs") {
       updateData["system.category"] = "turbula";
     }
-    if (typeof data.system.loyalty != "number") {
+    if (typeof data.system.loyalty !== "number") {
       updateData["system.loyalty"] = convertToNumber(data.system.loyalty, 0);
     }
-    if (typeof data.system.score != "number") {
+    if (typeof data.system.score !== "number") {
       updateData["system.score"] = convertToNumber(data.system.score, 0);
     }
-    if (typeof data.system.quantity != "number") {
+    if (typeof data.system.quantity !== "number") {
       updateData["system.quantity"] = convertToNumber(data.system.quantity, 0);
     }
-    if (typeof data.system.yearBorn != "number") {
+    if (typeof data.system.yearBorn !== "number") {
       updateData["system.yearBorn"] = convertToNumber(data.system.yearBorn, 1200);
     }
 

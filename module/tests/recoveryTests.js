@@ -26,6 +26,10 @@ const DEFAULT_ROLL = (sanatorium) => {
   };
 };
 
+/**
+ *
+ * @param quench
+ */
 export function registerRecoveryTesting(quench) {
   quench.registerBatch(
     "Ars-Recovery",
@@ -60,7 +64,7 @@ export function registerRecoveryTesting(quench) {
         for (const [woundName, woundCfg] of Object.entries(CONFIG.ARM5E.recovery.wounds)) {
           let count = 1;
           log(false, `XZRecovery ${woundName}`);
-          if (woundName == "dead") continue;
+          if (woundName === "dead") continue;
           gravity = woundName;
           log(false, `XZRecovery2 ${gravity}`);
           it(`Recovery ${gravity} : season ${count}`, async function () {
@@ -73,7 +77,7 @@ export function registerRecoveryTesting(quench) {
                 await sleep(50);
                 event.dataset = DEFAULT_ROLL(sanatorium);
 
-                while (sData.wounds.dead == undefined && sData.activeWounds > 0) {
+                while (sData.wounds.dead === undefined && sData.activeWounds > 0) {
                   await sanatorium._recoveryRoll(event);
                   await sleep(50);
                 }

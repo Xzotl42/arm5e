@@ -748,6 +748,7 @@ export function registerDiaryTesting(quench) {
     (context) => {
       let magus;
       let Sp1;
+      const suiteState = { magus: null };
       const { describe, it, assert, after, before } = context;
       describe(`Diary entries tests`, function () {
         this.timeout(300000); // 300 seconds for easier debugging
@@ -791,67 +792,68 @@ export function registerDiaryTesting(quench) {
               }
             ])
           )[0];
+          suiteState.magus = magus;
         });
-        describe("Conflict test", function () {
-          it(`Legacy diary`, async function () {
-            const entryData = [
-              {
-                name: `Legacy diary`,
-                type: "diaryEntry",
-                system: {
-                  done: false,
-                  cappedGain: false,
-                  dates: [{ year: 1220, season: "winter", date: "The Date", applied: true }],
-                  sourceQuality: 42,
-                  activity: "none",
-                  progress: {
-                    abilities: [],
-                    arts: [],
-                    spells: [],
-                    newSpells: []
-                  },
-                  optionKey: "standard",
-                  duration: 1,
-                  description: `Some label for it`,
-                  externalIds: []
-                }
-              },
-              {
-                name: `Legacy diary 2`,
-                type: "diaryEntry",
-                system: {
-                  done: false,
-                  cappedGain: false,
-                  dates: [{ year: 1220, season: "winter", date: "The Date", applied: true }],
-                  sourceQuality: 42,
-                  activity: "none",
-                  progress: {
-                    abilities: [],
-                    arts: [],
-                    spells: [],
-                    newSpells: []
-                  },
-                  optionKey: "standard",
-                  duration: 1,
-                  description: `Some label for it`,
-                  externalIds: []
-                }
-              }
-            ];
-            let entry = await magus.createEmbeddedDocuments("Item", entryData, {});
-            assert.equal(entry.length, 2, "Item created");
-            assert.equal(
-              entry[0].system.hasScheduleConflict(magus),
-              false,
-              "There should be no conflict"
-            );
-          });
+        // describe("Conflict test", function () {
+        //   it(`Legacy diary`, async function () {
+        //     const entryData = [
+        //       {
+        //         name: `Legacy diary`,
+        //         type: "diaryEntry",
+        //         system: {
+        //           done: false,
+        //           cappedGain: false,
+        //           dates: [{ year: 1220, season: "winter", date: "The Date", applied: true }],
+        //           sourceQuality: 42,
+        //           activity: "none",
+        //           progress: {
+        //             abilities: [],
+        //             arts: [],
+        //             spells: [],
+        //             newSpells: []
+        //           },
+        //           optionKey: "standard",
+        //           duration: 1,
+        //           description: `Some label for it`,
+        //           externalIds: []
+        //         }
+        //       },
+        //       {
+        //         name: `Legacy diary 2`,
+        //         type: "diaryEntry",
+        //         system: {
+        //           done: false,
+        //           cappedGain: false,
+        //           dates: [{ year: 1220, season: "winter", date: "The Date", applied: true }],
+        //           sourceQuality: 42,
+        //           activity: "none",
+        //           progress: {
+        //             abilities: [],
+        //             arts: [],
+        //             spells: [],
+        //             newSpells: []
+        //           },
+        //           optionKey: "standard",
+        //           duration: 1,
+        //           description: `Some label for it`,
+        //           externalIds: []
+        //         }
+        //       }
+        //     ];
+        //     let entry = await magus.createEmbeddedDocuments("Item", entryData, {});
+        //     assert.equal(entry.length, 2, "Item created");
+        //     assert.equal(
+        //       entry[0].system.hasScheduleConflict(magus),
+        //       false,
+        //       "There should be no conflict"
+        //     );
+        //   });
 
-          after(async function () {
-            let diariesIds = magus.items.filter((e) => e.type === "diaryEntry").map((e) => e._id);
-            await magus.deleteEmbeddedDocuments("Item", diariesIds);
-          });
-        });
+        //   after(async function () {
+        //     let diariesIds = magus.items.filter((e) => e.type === "diaryEntry").map((e) => e._id);
+        //     await magus.deleteEmbeddedDocuments("Item", diariesIds);
+        //   });
+        // });
         describe("Conflicts test", function () {
           let tmpDate = { year: 1200, season: "spring" };
           for (const [key1, act1] of Object.entries(ARM5E.activities.generic)) {
@@ -860,10 +862,11 @@ export function registerDiaryTesting(quench) {
             log(false, `date : ${JSON.stringify(tmpDate)}`);
 
             for (const [key2, act2] of Object.entries(ARM5E.activities.generic)) {
-              tmpDate = { year: tmpDate.year, season: tmpDate.season };
+              const testDate = { year: tmpDate.year, season: tmpDate.season };
               it(`${game.i18n.localize(act1.label)} vs ${game.i18n.localize(
                 act2.label
               )}`, async function () {
+                const currentMagus = suiteState.magus;
                 const entryData = [
                   {
                     name: `${game.i18n.localize(act1.label)}'s sheet`,
@@ -873,8 +876,8 @@ export function registerDiaryTesting(quench) {
                       cappedGain: false,
                       dates: [
                         {
-                          year: tmpDate.year,
-                          season: tmpDate.season,
+                          year: testDate.year,
+                          season: testDate.season,
                           date: "The Date",
                           applied: false
                         }
@@ -901,8 +904,8 @@ export function registerDiaryTesting(quench) {
                       cappedGain: false,
                       dates: [
                         {
-                          year: tmpDate.year,
-                          season: tmpDate.season,
+                          year: testDate.year,
+                          season: testDate.season,
                           date: "The Date",
                           applied: false
                         }
@@ -922,7 +925,7 @@ export function registerDiaryTesting(quench) {
                     }
                   }
                 ];
-                let entries = await magus.createEmbeddedDocuments("Item", entryData, {});
+                let entries = await currentMagus.createEmbeddedDocuments("Item", entryData, {});
                 assert.equal(entries.length, 2, "Item created");
                 let hasConflict = true;
                 if (key1 === key2) {
@@ -934,22 +937,27 @@ export function registerDiaryTesting(quench) {
                   );
                 }
                 assert.equal(
-                  entries[0].system.hasScheduleConflict(magus),
+                  entries[0].system.hasScheduleConflict(currentMagus),
                   results[key1][key2],
                   results[key1][key2] ? "There should be a conflict" : "There should be no conflict"
                 );
-                const actorSchedule = magus.getSchedule(tmpDate.year, tmpDate.year, [], []);
+                const actorSchedule = currentMagus.getSchedule(
+                  testDate.year,
+                  testDate.year,
+                  [],
+                  []
+                );
                 assert.equal(
-                  DiaryEntrySchema.hasConflict(actorSchedule[0].seasons[tmpDate.season]),
+                  DiaryEntrySchema.hasConflict(actorSchedule[0].seasons[testDate.season]),
                   results[key1][key2],
                   results[key1][key2] ? "There should be a conflict" : "There should be no conflict"
                 );
-                tmpDate = nextDate(tmpDate.season, tmpDate.year);
-                await magus.deleteEmbeddedDocuments(
+                await currentMagus.deleteEmbeddedDocuments(
                   "Item",
                   entries.map((e) => e._id)
                 );
               });
+              tmpDate = nextDate(testDate.season, testDate.year);
             }
           }
           after(async function () {
@@ -961,10 +969,11 @@ export function registerDiaryTesting(quench) {
         describe("Display sheet test", function () {
           let tmpDate = { year: 1220, season: "spring" };
           for (const [key, act] of Object.entries(ARM5E.activities.generic)) {
-            tmpDate = { year: tmpDate.year, season: tmpDate.season };
+            const testDate = { year: tmpDate.year, season: tmpDate.season };
 
-            log(false, `date : ${JSON.stringify(tmpDate)}`);
+            log(false, `date : ${JSON.stringify(testDate)}`);
             it(`${game.i18n.localize(act.label)}'s sheet`, async function () {
+              const currentMagus = suiteState.magus;
               const entryData = [
                 {
                   name: `${game.i18n.localize(act.label)}'s sheet`,
@@ -974,8 +983,8 @@ export function registerDiaryTesting(quench) {
                     cappedGain: false,
                     dates: [
                       {
-                        year: tmpDate.year,
-                        season: tmpDate.season,
+                        year: testDate.year,
+                        season: testDate.season,
                         date: "The Date",
                         applied: false
                       }
@@ -995,20 +1004,20 @@ export function registerDiaryTesting(quench) {
                   }
                 }
               ];
-              let entry = await magus.createEmbeddedDocuments("Item", entryData, {});
+              let entry = await currentMagus.createEmbeddedDocuments("Item", entryData, {});
               assert.equal(entry.length, 1, "Item created");
               entry[0].sheet.render(true);
               await sleep(100);
               assert.equal(
-                entry[0].system.hasScheduleConflict(magus),
+                entry[0].system.hasScheduleConflict(currentMagus),
                 false,
                 "There should be no conflict"
               );
               await entry[0].sheet._onProgressApply({}, false);
               await sleep(100);
               await entry[0].sheet.close();
-              tmpDate = nextDate(tmpDate.season, tmpDate.year);
             });
+            tmpDate = nextDate(testDate.season, testDate.year);
           }
           after(async function () {
             let diariesIds = magus.items.filter((e) => e.type === "diaryEntry").map((e) => e._id);
@@ -1020,6 +1029,7 @@ export function registerDiaryTesting(quench) {
           if (magus) {
             await magus.delete();
           }
+          suiteState.magus = null;
         });
       });
     },

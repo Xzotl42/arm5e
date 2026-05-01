@@ -162,13 +162,11 @@ export class SupernaturalEffectSchema extends SpellSchema {
           } else {
             ability = ArM5eMagicSystem.getAltTechnique(owner, this.verb.option);
           }
+        } else if (item.type === "ability") {
+          ability = owner.getAbility(item.key, item.option);
         } else {
-          if (item.type === "ability") {
-            ability = owner.getAbility(item.key, item.option);
-          } else {
-            ability = ArM5eMagicSystem.getAltTechnique(owner, item.option);
-            this.verb.specApply = false;
-          }
+          ability = ArM5eMagicSystem.getAltTechnique(owner, item.option);
+          this.verb.specApply = false;
         }
         if (
           ability &&
@@ -215,13 +213,11 @@ export class SupernaturalEffectSchema extends SpellSchema {
           } else {
             ability = ArM5eMagicSystem.getAltForm(owner, this.noun.option);
           }
+        } else if (item.type === "ability") {
+          ability = owner.getAbility(item.key, item.option);
         } else {
-          if (item.type === "ability") {
-            ability = owner.getAbility(item.key, item.option);
-          } else {
-            ability = ArM5eMagicSystem.getAltForm(owner, item.option);
-            this.noun.specApply = false;
-          }
+          ability = ArM5eMagicSystem.getAltForm(owner, item.option);
+          this.noun.specApply = false;
         }
         if (
           ability &&
@@ -287,7 +283,7 @@ export class SupernaturalEffectSchema extends SpellSchema {
         this.bonusAbility.score = ability.system.finalScore;
         this.other.total += ability.system.finalScore;
         this.bonusAbility.valid = true;
-      } else if (this.bonusAbility.key == undefined) {
+      } else if (this.bonusAbility.key === undefined) {
         this.bonusAbility.key = template.bonusAbility.key;
         this.bonusAbility.option = template.bonusAbility.option;
         this.bonusAbility.label = template.bonusAbility.label;
@@ -321,14 +317,14 @@ export class SupernaturalEffectSchema extends SpellSchema {
     if (template.char.length) {
       const char = template.char[0].characteristic;
       charValue += owner.system.characteristics[char].value;
-      res.hint += `${game.i18n.localize("arm5e.sheet." + char)} (${charValue}) &#10`;
+      res.hint += `${game.i18n.localize(`arm5e.sheet.${char}`)} (${charValue}) &#10`;
     }
-    if (this.verb.score != undefined) {
+    if (this.verb.score !== undefined) {
       this.verb.finalScore = this.verb.specApply ? this.verb.score + 1 : this.verb.score;
       res.hint += `${this.verb.label} (${this.verb.finalScore})&#10`;
     }
 
-    if (this.noun.score != undefined) {
+    if (this.noun.score !== undefined) {
       this.noun.finalScore = this.noun.specApply ? this.noun.score + 1 : this.noun.score;
       res.hint += `${this.noun.label} (${this.noun.finalScore})&#10`;
     }
@@ -345,7 +341,7 @@ export class SupernaturalEffectSchema extends SpellSchema {
   }
 
   static getIcon(item, newValue = null) {
-    if (newValue != null) {
+    if (newValue !== null) {
       return `systems/arm5e/assets/magic/${newValue}.png`;
     } else {
       let init = "an";

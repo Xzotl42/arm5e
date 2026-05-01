@@ -4,6 +4,10 @@ import { ArsLayer } from "../ui/ars-layer.js";
 import { Sanatorium } from "../apps/sanatorium.js";
 import { makeEvent } from "./testHelpers.js";
 
+/**
+ *
+ * @param quench
+ */
 export function registerSanatoriumTesting(quench) {
   quench.registerBatch(
     "Ars-Sanatorium",
@@ -24,28 +28,28 @@ export function registerSanatoriumTesting(quench) {
       /**
        * Build a minimal plain-object wound stub for _processWoundRoll unit tests.
        * Does NOT create a real Foundry item — suitable for pure logic tests only.
+       * @param type
+       * @param overrides
        */
       function woundStub(type, overrides = {}) {
         const autoName = (t) =>
           `${game.i18n.localize(CONFIG.ARM5E.recovery.wounds[t].label)} ${game.i18n.localize(
             "arm5e.sheet.wound.label"
           )}`;
-        return Object.assign(
-          {
-            name: autoName(type),
-            originalGravity: type,
-            description: "",
-            recoveryTime: 0,
-            daysFirstSeason: 0,
-            bonus: 0,
-            trend: 0,
-            nextRoll: 0,
-            locked: false,
-            img: "",
-            style: ""
-          },
-          overrides
-        );
+        return {
+          name: autoName(type),
+          originalGravity: type,
+          description: "",
+          recoveryTime: 0,
+          daysFirstSeason: 0,
+          bonus: 0,
+          trend: 0,
+          nextRoll: 0,
+          locked: false,
+          img: "",
+          style: "",
+          ...overrides
+        };
       }
 
       /** Build an empty newWounds accumulator matching _recoveryRoll's shape. */
@@ -57,6 +61,7 @@ export function registerSanatoriumTesting(quench) {
        * Inflict a wound of the given gravity on magus by calling changeWound,
        * then backdate it 10 years so the Sanatorium will treat it this session.
        * Returns the created wound item.
+       * @param gravity
        */
       async function inflictWound(gravity) {
         const wounds = await magus.changeWound(1, gravity);
@@ -127,8 +132,8 @@ export function registerSanatoriumTesting(quench) {
             await inflictWound("light");
             await inflictWound("heavy");
             const san = makeSan();
-            assert.equal(san.object.wounds["light"]?.length, 1, "one light wound");
-            assert.equal(san.object.wounds["heavy"]?.length, 1, "one heavy wound");
+            assert.equal(san.object.wounds.light?.length, 1, "one light wound");
+            assert.equal(san.object.wounds.heavy?.length, 1, "one heavy wound");
             san.close();
           } catch (err) {
             console.error(`Error: ${err}`);
@@ -254,7 +259,7 @@ export function registerSanatoriumTesting(quench) {
 
         it("improvement: trend=-1, bonus reset to 0, style=improved", function () {
           try {
-            const medCfg = CONFIG.ARM5E.recovery.wounds["medium"];
+            const medCfg = CONFIG.ARM5E.recovery.wounds.medium;
             const wound = woundStub("medium", { bonus: 6, trend: 0 });
             const newWounds = blankNewWounds();
             san._processWoundRoll(
@@ -277,7 +282,7 @@ export function registerSanatoriumTesting(quench) {
 
         it("stable: bonus += 3, trend stays 0", function () {
           try {
-            const medCfg = CONFIG.ARM5E.recovery.wounds["medium"];
+            const medCfg = CONFIG.ARM5E.recovery.wounds.medium;
             const wound = woundStub("medium", { bonus: 3, trend: 0 });
             const newWounds = blankNewWounds();
             san._processWoundRoll(
@@ -299,7 +304,7 @@ export function registerSanatoriumTesting(quench) {
 
         it("worsening: trend=1, bonus=0, style=worsened", function () {
           try {
-            const medCfg = CONFIG.ARM5E.recovery.wounds["medium"];
+            const medCfg = CONFIG.ARM5E.recovery.wounds.medium;
             const wound = woundStub("medium", { bonus: 6, trend: 0 });
             const newWounds = blankNewWounds();
             san._processWoundRoll(
@@ -346,7 +351,7 @@ export function registerSanatoriumTesting(quench) {
           try {
             san.object.availableDays = 92;
             san.object.nextRecoveryPeriod = 20;
-            const medCfg = CONFIG.ARM5E.recovery.wounds["medium"];
+            const medCfg = CONFIG.ARM5E.recovery.wounds.medium;
             const wound = woundStub("medium", { recoveryTime: 0 });
             const newWounds = blankNewWounds();
             san._processWoundRoll(
@@ -366,7 +371,7 @@ export function registerSanatoriumTesting(quench) {
 
         it("recoveryTime: accumulates by wCfg.interval on each roll", function () {
           try {
-            const medCfg = CONFIG.ARM5E.recovery.wounds["medium"];
+            const medCfg = CONFIG.ARM5E.recovery.wounds.medium;
             san.object.nextRecoveryPeriod = 0;
             const wound = woundStub("medium", { recoveryTime: medCfg.interval });
             const newWounds = blankNewWounds();
@@ -391,7 +396,7 @@ export function registerSanatoriumTesting(quench) {
 
         it("stable bonus carry-over: two consecutive stable rolls accumulate bonus correctly", function () {
           try {
-            const medCfg = CONFIG.ARM5E.recovery.wounds["medium"];
+            const medCfg = CONFIG.ARM5E.recovery.wounds.medium;
             const wound = woundStub("medium", { bonus: 0, trend: 0 });
             // First stable roll: bonus 0 → 3
             san._processWoundRoll(
@@ -432,7 +437,7 @@ export function registerSanatoriumTesting(quench) {
             // commitRank = lightCfg.rank − 1 = 0 = "healthy".
             const wound = woundStub("medium", { bonus: 0, trend: -1 });
             const newWounds = blankNewWounds();
-            const lightCfg = CONFIG.ARM5E.recovery.wounds["light"];
+            const lightCfg = CONFIG.ARM5E.recovery.wounds.light;
             san._processWoundRoll(
               wound,
               "medium",
@@ -457,7 +462,7 @@ export function registerSanatoriumTesting(quench) {
             // commitRank = heavyCfg.rank + 1 = 4 = "incap".
             const wound = woundStub("medium", { bonus: 0, trend: 1 });
             const newWounds = blankNewWounds();
-            const heavyCfg = CONFIG.ARM5E.recovery.wounds["heavy"];
+            const heavyCfg = CONFIG.ARM5E.recovery.wounds.heavy;
             san._processWoundRoll(
               wound,
               "medium",
@@ -490,10 +495,10 @@ export function registerSanatoriumTesting(quench) {
           try {
             await inflictWound("light");
             const san = makeSan();
-            san.object.wounds["light"][0].nextRoll = 50;
+            san.object.wounds.light[0].nextRoll = 50;
             await san._recoveryRoll(fakeEvent);
             assert.equal(
-              san.object.wounds["light"][0].nextRoll,
+              san.object.wounds.light[0].nextRoll,
               50,
               "nextRoll unchanged for waiting wound"
             );
@@ -513,15 +518,11 @@ export function registerSanatoriumTesting(quench) {
           try {
             await inflictWound("light");
             const san = makeSan();
-            san.object.wounds["light"][0].locked = true;
-            const origNextRoll = san.object.wounds["light"][0].nextRoll;
+            san.object.wounds.light[0].locked = true;
+            const origNextRoll = san.object.wounds.light[0].nextRoll;
             await san._recoveryRoll(fakeEvent);
-            assert.equal(san.object.wounds["light"][0].locked, true, "wound still locked");
-            assert.equal(
-              san.object.wounds["light"][0].nextRoll,
-              origNextRoll,
-              "nextRoll unchanged"
-            );
+            assert.equal(san.object.wounds.light[0].locked, true, "wound still locked");
+            assert.equal(san.object.wounds.light[0].nextRoll, origNextRoll, "nextRoll unchanged");
             san.close();
           } catch (err) {
             console.error(`Error: ${err}`);
@@ -534,10 +535,10 @@ export function registerSanatoriumTesting(quench) {
             await inflictWound("light");
             const san = makeSan();
             // trend=-1 on rank-1 wound → rankMapping[0] = "healthy" → no die, instant heal
-            san.object.wounds["light"][0].trend = -1;
+            san.object.wounds.light[0].trend = -1;
             await san._recoveryRoll(fakeEvent);
-            assert.equal((san.object.wounds["healthy"] ?? []).length, 1, "wound moved to healthy");
-            assert.equal((san.object.wounds["light"] ?? []).length, 0, "light bucket is empty");
+            assert.equal((san.object.wounds.healthy ?? []).length, 1, "wound moved to healthy");
+            assert.equal((san.object.wounds.light ?? []).length, 0, "light bucket is empty");
             san.close();
           } catch (err) {
             console.error(`Error: ${err}`);
@@ -565,12 +566,12 @@ export function registerSanatoriumTesting(quench) {
             await inflictWound("light");
             const san = makeSan();
             // Force incap to improve at sunrise (resolved) so incapacited=true is set
-            san.object.wounds["incap"][0].bonus = 200;
-            const lightNextBefore = san.object.wounds["light"][0].nextRoll;
+            san.object.wounds.incap[0].bonus = 200;
+            const lightNextBefore = san.object.wounds.light[0].nextRoll;
             await san._recoveryRoll(fakeEvent);
-            const incapInterval = CONFIG.ARM5E.recovery.wounds["incap"].interval;
+            const incapInterval = CONFIG.ARM5E.recovery.wounds.incap.interval;
             assert.equal(
-              san.object.wounds["light"][0].nextRoll,
+              san.object.wounds.light[0].nextRoll,
               lightNextBefore + incapInterval,
               "light wound nextRoll delayed by incap interval"
             );
@@ -599,7 +600,7 @@ export function registerSanatoriumTesting(quench) {
             await inflictWound("incap");
             const san = makeSan();
             // Huge bonus guarantees total >> improvement threshold at sunrise → resolved immediately
-            san.object.wounds["incap"][0].bonus = 200;
+            san.object.wounds.incap[0].bonus = 200;
             await san._recoveryRoll(fakeEvent);
             const logText = san.object.log;
             const sunriseLabel = game.i18n.localize("arm5e.sanatorium.msg.sunriseRoll");
@@ -610,10 +611,10 @@ export function registerSanatoriumTesting(quench) {
               "log does NOT contain Sunset label (resolved = true, sunset skipped)"
             );
             // First step: wound stays in incap with trend=-1
-            const incapWound = (san.object.wounds["incap"] ?? [])[0];
+            const incapWound = (san.object.wounds.incap ?? [])[0];
             assert.ok(incapWound, "wound still in incap bucket after first improvement step");
             assert.equal(incapWound.trend, -1, "trend = -1 (pending second-step Heavy-grade roll)");
-            assert.equal((san.object.wounds["heavy"] ?? []).length, 0, "heavy bucket still empty");
+            assert.equal((san.object.wounds.heavy ?? []).length, 0, "heavy bucket still empty");
             san.close();
           } catch (err) {
             console.error(`Error: ${err}`);
@@ -629,16 +630,16 @@ export function registerSanatoriumTesting(quench) {
             await inflictWound("incap");
             const san = makeSan();
             // Simulate post-first-improvement state: trend already -1
-            san.object.wounds["incap"][0].trend = -1;
-            san.object.wounds["incap"][0].bonus = 200;
+            san.object.wounds.incap[0].trend = -1;
+            san.object.wounds.incap[0].bonus = 200;
             await san._recoveryRoll(fakeEvent);
             assert.equal(
-              (san.object.wounds["medium"] ?? []).length,
+              (san.object.wounds.medium ?? []).length,
               1,
               "wound resolved to medium via Heavy-grade improvement"
             );
             assert.equal(
-              (san.object.wounds["incap"] ?? []).length,
+              (san.object.wounds.incap ?? []).length,
               0,
               "incap bucket empty after second step"
             );
@@ -660,22 +661,22 @@ export function registerSanatoriumTesting(quench) {
             await inflictWound("medium");
             const san = makeSan();
             // Put incap in trendingBetter state
-            san.object.wounds["incap"][0].trend = -1;
-            san.object.wounds["incap"][0].bonus = 200;
-            const lightNextBefore = san.object.wounds["light"][0].nextRoll;
-            const medNextBefore = san.object.wounds["medium"][0].nextRoll;
+            san.object.wounds.incap[0].trend = -1;
+            san.object.wounds.incap[0].bonus = 200;
+            const lightNextBefore = san.object.wounds.light[0].nextRoll;
+            const medNextBefore = san.object.wounds.medium[0].nextRoll;
             await san._recoveryRoll(fakeEvent);
-            const incapInterval = CONFIG.ARM5E.recovery.wounds["incap"].interval;
+            const incapInterval = CONFIG.ARM5E.recovery.wounds.incap.interval;
             // Light wound must NOT have been delayed by the incap interval
             assert.notEqual(
-              san.object.wounds["light"]?.[0]?.nextRoll,
+              san.object.wounds.light?.[0]?.nextRoll,
               lightNextBefore + incapInterval,
               "light wound was NOT delayed by incap interval (trendingBetter does not block)"
             );
             // Medium wound must also have rolled (recoveryTime > 0) or at least not been
             // delayed: it should have been processed normally
             assert.notEqual(
-              san.object.wounds["medium"]?.[0]?.nextRoll,
+              san.object.wounds.medium?.[0]?.nextRoll,
               medNextBefore + incapInterval,
               "medium wound was NOT delayed by incap interval"
             );
@@ -693,14 +694,14 @@ export function registerSanatoriumTesting(quench) {
           try {
             await inflictWound("incap");
             const san = makeSan();
-            san.object.wounds["incap"][0].trend = -1;
-            san.object.wounds["incap"][0].bonus = -200; // force heavy roll to worsen
-            const preNextRoll = san.object.wounds["incap"][0].nextRoll;
+            san.object.wounds.incap[0].trend = -1;
+            san.object.wounds.incap[0].bonus = -200; // force heavy roll to worsen
+            const preNextRoll = san.object.wounds.incap[0].nextRoll;
             await san._recoveryRoll(fakeEvent);
             // Wound should have regressed back to incap
-            const incapAfter = san.object.wounds["incap"] ?? [];
+            const incapAfter = san.object.wounds.incap ?? [];
             assert.equal(incapAfter.length, 1, "wound back in incap bucket after worsening");
-            const heavyInterval = CONFIG.ARM5E.recovery.wounds["heavy"].interval;
+            const heavyInterval = CONFIG.ARM5E.recovery.wounds.heavy.interval;
             assert.equal(
               incapAfter[0].nextRoll,
               preNextRoll + heavyInterval,
@@ -718,10 +719,10 @@ export function registerSanatoriumTesting(quench) {
             await inflictWound("incap");
             const san = makeSan();
             // Extreme negative bonus → sta + bonus + die total will be ≤ 0
-            san.object.wounds["incap"][0].bonus = -200;
+            san.object.wounds.incap[0].bonus = -200;
             await san._recoveryRoll(fakeEvent);
-            assert.equal((san.object.wounds["dead"] ?? []).length, 1, "wound moved to dead");
-            assert.equal(san.object.wounds["dead"][0].locked, true, "dead wound locked");
+            assert.equal((san.object.wounds.dead ?? []).length, 1, "wound moved to dead");
+            assert.equal(san.object.wounds.dead[0].locked, true, "dead wound locked");
             san.close();
           } catch (err) {
             console.error(`Error: ${err}`);
@@ -736,11 +737,11 @@ export function registerSanatoriumTesting(quench) {
           try {
             await inflictWound("incap");
             const san = makeSan();
-            san.object.wounds["incap"][0].bonus = 200; // improve → stays incap with trend=-1
-            const incapInterval = CONFIG.ARM5E.recovery.wounds["incap"].interval;
+            san.object.wounds.incap[0].bonus = 200; // improve → stays incap with trend=-1
+            const incapInterval = CONFIG.ARM5E.recovery.wounds.incap.interval;
             await san._recoveryRoll(fakeEvent);
             // Wound still in incap bucket after first step
-            const w = (san.object.wounds["incap"] ?? [])[0];
+            const w = (san.object.wounds.incap ?? [])[0];
             assert.ok(w, "wound still in incap after first step");
             assert.equal(w.recoveryTime, incapInterval, "recoveryTime = incap interval (1 day)");
             assert.equal(w.trend, -1, "trend = -1 (second step pending)");
@@ -757,11 +758,11 @@ export function registerSanatoriumTesting(quench) {
           try {
             await inflictWound("incap");
             const san = makeSan();
-            san.object.wounds["incap"][0].bonus = 200;
+            san.object.wounds.incap[0].bonus = 200;
             const preRoll = san.object.nextRecoveryPeriod;
             await san._recoveryRoll(fakeEvent);
             // Wound is still in incap with trend=-1 after first step
-            const w = (san.object.wounds["incap"] ?? [])[0];
+            const w = (san.object.wounds.incap ?? [])[0];
             assert.ok(w, "wound still in incap after first step");
             assert.equal(
               w.daysFirstSeason,
@@ -782,12 +783,12 @@ export function registerSanatoriumTesting(quench) {
             await inflictWound("incap");
             const san = makeSan();
             // Place wound so that nextRoll + incapCfg.interval (1) exceeds availableDays
-            san.object.wounds["incap"][0].nextRoll = san.object.availableDays;
+            san.object.wounds.incap[0].nextRoll = san.object.availableDays;
             san.object.nextRecoveryPeriod = san.object.availableDays;
-            san.object.wounds["incap"][0].bonus = 200; // improvement → stays incap with trend=-1
+            san.object.wounds.incap[0].bonus = 200; // improvement → stays incap with trend=-1
             await san._recoveryRoll(fakeEvent);
             // Wound remains in incap but should be locked (nextRoll overflows into next season)
-            const w = (san.object.wounds["incap"] ?? [])[0];
+            const w = (san.object.wounds.incap ?? [])[0];
             assert.ok(w, "wound still in incap bucket");
             assert.equal(w.locked, true, "wound locked for next season");
             san.close();
@@ -804,15 +805,15 @@ export function registerSanatoriumTesting(quench) {
             await inflictWound("incap");
             await inflictWound("incap");
             const san = makeSan();
-            assert.equal(san.object.wounds["incap"].length, 2, "two incap wounds present");
-            san.object.wounds["incap"][0].bonus = 200;
-            san.object.wounds["incap"][1].bonus = 200;
+            assert.equal(san.object.wounds.incap.length, 2, "two incap wounds present");
+            san.object.wounds.incap[0].bonus = 200;
+            san.object.wounds.incap[1].bonus = 200;
             await san._recoveryRoll(fakeEvent);
-            const incapAfter = san.object.wounds["incap"] ?? [];
+            const incapAfter = san.object.wounds.incap ?? [];
             assert.equal(incapAfter.length, 2, "both wounds still in incap after first step");
             assert.equal(incapAfter[0].trend, -1, "wound 0 trend = -1");
             assert.equal(incapAfter[1].trend, -1, "wound 1 trend = -1");
-            assert.equal((san.object.wounds["heavy"] ?? []).length, 0, "heavy bucket still empty");
+            assert.equal((san.object.wounds.heavy ?? []).length, 0, "heavy bucket still empty");
             san.close();
           } catch (err) {
             console.error(`Error: ${err}`);
@@ -827,11 +828,11 @@ export function registerSanatoriumTesting(quench) {
           try {
             await inflictWound("incap");
             const san = makeSan();
-            san.object.wounds["incap"][0].trend = 1; // already worsening
-            san.object.wounds["incap"][0].bonus = -200; // force low total → death
+            san.object.wounds.incap[0].trend = 1; // already worsening
+            san.object.wounds.incap[0].bonus = -200; // force low total → death
             await san._recoveryRoll(fakeEvent);
             assert.equal(
-              (san.object.wounds["incap"] ?? []).length,
+              (san.object.wounds.incap ?? []).length,
               0,
               "wound is no longer incap (dead or resolved)"
             );
@@ -850,9 +851,9 @@ export function registerSanatoriumTesting(quench) {
             await inflictWound("incap");
             const san = makeSan();
             const startBonus = 0;
-            san.object.wounds["incap"][0].bonus = startBonus;
+            san.object.wounds.incap[0].bonus = startBonus;
             await san._recoveryRoll(fakeEvent);
-            const stillIncap = (san.object.wounds["incap"] ?? [])[0];
+            const stillIncap = (san.object.wounds.incap ?? [])[0];
             if (stillIncap && stillIncap.trend === -1) {
               // Two-step improvement: wound stays incap with trend=-1 and bonus reset to 0.
               // This is a valid improvement outcome — no decrement expected here.
@@ -890,10 +891,10 @@ export function registerSanatoriumTesting(quench) {
             const lightWound = await inflictWound("light");
             await inflictWound("heavy");
             const san = makeSan();
-            const heavyNextBefore = san.object.wounds["heavy"][0].nextRoll;
+            const heavyNextBefore = san.object.wounds.heavy[0].nextRoll;
             await san._recoveryRollSingle(lightWound._id ?? lightWound.id);
             assert.equal(
-              san.object.wounds["heavy"][0].nextRoll,
+              san.object.wounds.heavy[0].nextRoll,
               heavyNextBefore,
               "heavy wound nextRoll unchanged"
             );
@@ -909,10 +910,10 @@ export function registerSanatoriumTesting(quench) {
             const heavyWound = await inflictWound("heavy");
             await inflictWound("incap");
             const san = makeSan();
-            const incapNextBefore = san.object.wounds["incap"][0].nextRoll;
+            const incapNextBefore = san.object.wounds.incap[0].nextRoll;
             await san._recoveryRollSingle(heavyWound._id ?? heavyWound.id);
             assert.equal(
-              san.object.wounds["incap"][0].nextRoll,
+              san.object.wounds.incap[0].nextRoll,
               incapNextBefore,
               "incap wound nextRoll unchanged"
             );
@@ -928,15 +929,15 @@ export function registerSanatoriumTesting(quench) {
             const medWound1 = await inflictWound("medium");
             await inflictWound("medium");
             const san = makeSan();
-            assert.equal(san.object.wounds["medium"].length, 2, "two medium wounds");
+            assert.equal(san.object.wounds.medium.length, 2, "two medium wounds");
             // Both medium wounds should roll when one is targeted
             await san._recoveryRollSingle(medWound1._id ?? medWound1.id);
             // After roll, both wounds should have been processed (recoveryTime incremented)
             const allMedAndOther = [
-              ...(san.object.wounds["medium"] ?? []),
-              ...(san.object.wounds["light"] ?? []),
-              ...(san.object.wounds["heavy"] ?? []),
-              ...(san.object.wounds["healthy"] ?? [])
+              ...(san.object.wounds.medium ?? []),
+              ...(san.object.wounds.light ?? []),
+              ...(san.object.wounds.heavy ?? []),
+              ...(san.object.wounds.healthy ?? [])
             ];
             const rolledCount = allMedAndOther.filter((w) => w.recoveryTime > 0).length;
             assert.equal(rolledCount, 2, "both medium wounds have been rolled (recoveryTime > 0)");
@@ -982,23 +983,23 @@ export function registerSanatoriumTesting(quench) {
             const incapWound = await inflictWound("incap");
             await inflictWound("medium");
             const san = makeSan();
-            san.object.wounds["incap"][0].bonus = 200; // force improvement → known outcome (heavy)
-            const medNextBefore = san.object.wounds["medium"][0].nextRoll;
+            san.object.wounds.incap[0].bonus = 200; // force improvement → known outcome (heavy)
+            const medNextBefore = san.object.wounds.medium[0].nextRoll;
             await san._recoveryRollSingle(incapWound._id ?? incapWound.id);
-            const incapInterval = CONFIG.ARM5E.recovery.wounds["incap"].interval;
+            const incapInterval = CONFIG.ARM5E.recovery.wounds.incap.interval;
             // Medium wound must be delayed, not rolled
             assert.equal(
-              san.object.wounds["medium"][0].nextRoll,
+              san.object.wounds.medium[0].nextRoll,
               medNextBefore + incapInterval,
               "medium wound delayed by incap interval"
             );
             assert.equal(
-              san.object.wounds["medium"][0].recoveryTime,
+              san.object.wounds.medium[0].recoveryTime,
               0,
               "medium wound not yet rolled (recoveryTime still 0)"
             );
             // The incap wound was processed (stays incap with trend=-1 after first improvement step)
-            const rolledIncap = san.object.wounds["incap"] ?? [];
+            const rolledIncap = san.object.wounds.incap ?? [];
             assert.ok(
               rolledIncap.length >= 1 && rolledIncap[0].trend === -1,
               "incap wound rolled: still in incap bucket with trend=-1 (first step of two-step improvement)"
@@ -1027,25 +1028,25 @@ export function registerSanatoriumTesting(quench) {
               true,
               "individualRollDone true after first roll"
             );
-            const lightRank = CONFIG.ARM5E.recovery.wounds["light"].rank;
+            const lightRank = CONFIG.ARM5E.recovery.wounds.light.rank;
             assert.equal(
               san.object.individualRollMaxRank,
               lightRank,
               "individualRollMaxRank = light rank"
             );
             // Capture medium wound state before the second roll
-            const medRecoveryBefore = san.object.wounds["medium"][0].recoveryTime;
-            const medNextBefore = san.object.wounds["medium"][0].nextRoll;
+            const medRecoveryBefore = san.object.wounds.medium[0].recoveryTime;
+            const medNextBefore = san.object.wounds.medium[0].nextRoll;
             // Second click: simulating the Roll button via the static action handler
             await Sanatorium.recoveryRoll.call(san, fakeEvent, null);
             // Medium wound must still be excluded — nextRoll and recoveryTime unchanged
             assert.equal(
-              san.object.wounds["medium"][0].recoveryTime,
+              san.object.wounds.medium[0].recoveryTime,
               medRecoveryBefore,
               "medium wound recoveryTime unchanged on second roll (rank ceiling enforced)"
             );
             assert.equal(
-              san.object.wounds["medium"][0].nextRoll,
+              san.object.wounds.medium[0].nextRoll,
               medNextBefore,
               "medium wound nextRoll unchanged on second roll (rank ceiling enforced)"
             );
@@ -1064,11 +1065,11 @@ export function registerSanatoriumTesting(quench) {
             const wound = await inflictWound("medium");
             const san = makeSan();
             // Force improvement on this roll → wound ends with trend=-1 in medium bucket
-            san.object.wounds["medium"][0].bonus = 200;
+            san.object.wounds.medium[0].bonus = 200;
             await san._recoveryRollSingle(wound._id ?? wound.id);
             // Sanity: wound should still be in medium with trend=-1 after first step
             assert.ok(
-              (san.object.wounds["medium"] ?? []).some((w) => w.trend === -1),
+              (san.object.wounds.medium ?? []).some((w) => w.trend === -1),
               "wound in medium bucket with trend=-1 before diary commit"
             );
             // End the recovery session — auto-commit must kick in
@@ -1093,10 +1094,10 @@ export function registerSanatoriumTesting(quench) {
           try {
             const wound = await inflictWound("incap");
             const san = makeSan();
-            san.object.wounds["incap"][0].bonus = 200; // force first-step improvement
+            san.object.wounds.incap[0].bonus = 200; // force first-step improvement
             await san._recoveryRollSingle(wound._id ?? wound.id);
             assert.ok(
-              (san.object.wounds["incap"] ?? []).some((w) => w.trend === -1),
+              (san.object.wounds.incap ?? []).some((w) => w.trend === -1),
               "incap wound has trend=-1 before diary commit"
             );
             await san._createDiaryEntry(fakeEvent);
@@ -1121,12 +1122,12 @@ export function registerSanatoriumTesting(quench) {
             const wound = await inflictWound("medium");
             const san = makeSan();
             // Force improvement via standard _recoveryRoll (not _recoveryRollSingle)
-            san.object.wounds["medium"][0].bonus = 200;
+            san.object.wounds.medium[0].bonus = 200;
             await san._recoveryRoll(fakeEvent);
             // individualRollDone must remain false for a standard roll
             assert.equal(san.object.individualRollDone, false, "not a single-wound session");
             // If outcome was trend=-1, ending the session must NOT auto-advance the wound
-            const sessionWound = (san.object.wounds["medium"] ?? [])[0];
+            const sessionWound = (san.object.wounds.medium ?? [])[0];
             if (sessionWound && sessionWound.trend === -1) {
               await san._createDiaryEntry(fakeEvent);
               const liveItem = magus.items.get(wound._id ?? wound.id);
@@ -1179,11 +1180,11 @@ export function registerSanatoriumTesting(quench) {
           try {
             await inflictWound("light");
             const medWound = await inflictWound("medium");
-            const lightWoundsBefore = (magus.system.wounds["light"] ?? []).length;
+            const lightWoundsBefore = (magus.system.wounds.light ?? []).length;
             await Sanatorium._overstrainedRoll(magus);
             // Light wound count must be unchanged — only medium (or heavier) is targeted
             assert.equal(
-              (magus.system.wounds["light"] ?? []).length,
+              (magus.system.wounds.light ?? []).length,
               lightWoundsBefore,
               "light wound untouched"
             );
@@ -1207,7 +1208,7 @@ export function registerSanatoriumTesting(quench) {
             await Sanatorium._overstrainedRoll(magus);
             const gravityAfter = magus.items.get(wound.id).system.gravity;
             // For a medium wound: valid outcomes are "medium" (stable) or "heavy" (worsened)
-            const medRank = CONFIG.ARM5E.recovery.wounds["medium"].rank;
+            const medRank = CONFIG.ARM5E.recovery.wounds.medium.rank;
             const afterRank = CONFIG.ARM5E.recovery.wounds[gravityAfter]?.rank ?? 0;
             assert.ok(
               afterRank === medRank || afterRank === medRank + 1,
@@ -1251,18 +1252,14 @@ export function registerSanatoriumTesting(quench) {
           try {
             await inflictWound("light");
             const san = makeSan();
-            const lightCfg = CONFIG.ARM5E.recovery.wounds["light"];
+            const lightCfg = CONFIG.ARM5E.recovery.wounds.light;
             // Place wound near end-of-season so nextRoll + interval > availableDays
             const placedAt = san.object.availableDays - 1;
-            san.object.wounds["light"][0].nextRoll = placedAt;
+            san.object.wounds.light[0].nextRoll = placedAt;
             san.object.nextRecoveryPeriod = placedAt;
             await san._recoveryRoll(fakeEvent);
             // After roll: nextRoll = placedAt + interval > availableDays → locked
-            assert.equal(
-              san.object.wounds["light"][0].locked,
-              true,
-              "wound locked for next season"
-            );
+            assert.equal(san.object.wounds.light[0].locked, true, "wound locked for next season");
             san.close();
           } catch (err) {
             console.error(`Error: ${err}`);
@@ -1274,7 +1271,7 @@ export function registerSanatoriumTesting(quench) {
           try {
             await inflictWound("light");
             const san = makeSan();
-            san.object.wounds["light"][0].trend = -1; // heals automatically → locked
+            san.object.wounds.light[0].trend = -1; // heals automatically → locked
             await san._recoveryRoll(fakeEvent);
             assert.equal(san.object.hasWounds, false, "no more wounds due this season");
             san.close();
@@ -1290,7 +1287,7 @@ export function registerSanatoriumTesting(quench) {
             await inflictWound("light");
             const san = makeSan();
             // Give the second wound a future nextRoll so it is not processed now
-            san.object.wounds["light"][1].nextRoll = 50;
+            san.object.wounds.light[1].nextRoll = 50;
             await san._recoveryRoll(fakeEvent);
             assert.equal(san.object.hasWounds, true, "second wound still pending");
             san.close();
@@ -1331,12 +1328,12 @@ export function registerSanatoriumTesting(quench) {
           try {
             await inflictWound("medium");
             const san = makeSan();
-            const medCfg = CONFIG.ARM5E.recovery.wounds["medium"];
+            const medCfg = CONFIG.ARM5E.recovery.wounds.medium;
             const startPeriod = san.object.nextRecoveryPeriod;
             await san._recoveryRoll(fakeEvent);
             const elapsed = san.object.nextRecoveryPeriod - startPeriod;
             const totalDays = Object.values(san.object.penaltyDays).reduce((sum, d) => sum + d, 0);
-            assert.equal(totalDays, elapsed, "total penaltyDays == elapsed period");
+            assert.equal(totalDays, elapsed, "total penaltyDays === elapsed period");
             san.close();
           } catch (err) {
             console.error(`Error: ${err}`);

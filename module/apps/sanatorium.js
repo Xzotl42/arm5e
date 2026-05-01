@@ -54,8 +54,8 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
 ) {
   /**
    * Initialize the Sanatorium application.
-   * @param {Actor} patient - The actor recovering from wounds
-   * @param {Object} options - Optional configuration for the application
+   * @param {Actor} patient The actor recovering from wounds
+   * @param {Object} options Optional configuration for the application
    */
   constructor(patient, options = {}) {
     super(options);
@@ -78,11 +78,11 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
 
   /**
    * Close the application and deregister it from the patient actor's app map.
-   * @param {Object} [options] - Options forwarded to ApplicationV2#close
+   * @param {Object} [options] Options forwarded to ApplicationV2#close
    * @returns {Promise<void>}
    */
   async close(options = {}) {
-    if (this.patient.apps?.[this.options.uniqueId] != undefined) {
+    if (this.patient.apps?.[this.options.uniqueId] !== undefined) {
       delete this.patient.apps[this.options.uniqueId];
     }
     if (this._onDateChange) {
@@ -94,7 +94,7 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
 
   /**
    * Factory method to create and display a Sanatorium instance for an actor.
-   * @param {Actor} actor - The character to create a recovery session for
+   * @param {Actor} actor The character to create a recovery session for
    * @returns {Promise<void>}
    */
   static async createDialog(actor) {
@@ -145,9 +145,9 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
   /**
    * Handle form submissions - updates the internal state when form data changes.
    * @private
-   * @param {Event} event - The submission event
-   * @param {HTMLFormElement} form - The form element
-   * @param {FormData} formData - The form data
+   * @param {Event} event The submission event
+   * @param {HTMLFormElement} form The form element
+   * @param {FormData} formData The form data
    */
   static async #onSubmitHandler(event, form, formData) {
     const expanded = foundry.utils.expandObject(formData.object);
@@ -282,7 +282,7 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
     }
 
     // Check terminal states and update UI accordingly
-    if (context.wounds["dead"] && context.wounds["dead"].length > 0) {
+    if (context.wounds.dead && context.wounds.dead.length > 0) {
       // Patient is dead - no recovery, diary only
       context.log += await TextEditor.enrichHTML(
         `<br/><p><b>${game.i18n.localize("arm5e.sanatorium.msg.patientDead")}</b></p>`,
@@ -293,8 +293,8 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
     } else if (
       // Patient is fully healthy - no active wounds
       Object.entries(context.wounds).filter(
-        (e) => CONFIG.ARM5E.recovery.wounds[e[0]].rank > 0 && e[1] != []
-      ).length == 0
+        (e) => CONFIG.ARM5E.recovery.wounds[e[0]].rank > 0 && e[1] !== []
+      ).length === 0
     ) {
       context.canRoll = "disabled";
       context.canOverstrain = "disabled";
@@ -307,10 +307,10 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
 
     // Handle states where there are no wounds to treat this season
     if (!context.hasWounds) {
-      if (context.daysLeft == 0) {
+      if (context.daysLeft === 0) {
         // Season finished - enable diary
         context.diary = "";
-      } else if (context.nextRecoveryPeriod == 0) {
+      } else if (context.nextRecoveryPeriod === 0) {
         // No rolls made yet - log initial "all done" hint
         context.log += await TextEditor.enrichHTML(
           `<br/><p><b>${game.i18n.localize("arm5e.sanatorium.msg.logDone")}</b></p>`,
@@ -330,8 +330,8 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
   /**
    * Attach event listeners after DOM rendering.
    * @private
-   * @param {Object} context - Rendering context
-   * @param {Object} options - Render options
+   * @param {Object} context Rendering context
+   * @param {Object} options Render options
    */
   _onRender(context, options) {
     // Auto-select text in input fields when focused (for easy modification)
@@ -354,8 +354,8 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
    * ApplicationV2 action: roll one recovery period for all due wounds.
    * Sets `rollMode` to `"standard"` for the duration so the template can disable
    * the Fast Recovery button while a roll is in progress.
-   * @param {Event}       event  - The triggering click event
-   * @param {HTMLElement} target - The button element
+   * @param {Event}       event  The triggering click event
+   * @param {HTMLElement} target The button element
    */
   static async recoveryRoll(event, target) {
     if (this._pendingSingleWoundId) {
@@ -383,8 +383,8 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
    * ApplicationV2 action: auto-roll all remaining recovery periods for this season.
    * Sets `rollMode` to `"fast"` for the duration, which disables the button in the
    * template to prevent re-entrant calls.
-   * @param {Event}       event  - The triggering click event
-   * @param {HTMLElement} target - The button element
+   * @param {Event}       event  The triggering click event
+   * @param {HTMLElement} target The button element
    */
   static async fastRecovery(event, target) {
     this.object.rollMode = "fast";
@@ -394,8 +394,8 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
 
   /**
    * ApplicationV2 action: commit the session log to a diary entry.
-   * @param {Event}       event  - The triggering click event
-   * @param {HTMLElement} target - The button element
+   * @param {Event}       event  The triggering click event
+   * @param {HTMLElement} target The button element
    */
   static async createDiaryEntry(event, target) {
     await this._createDiaryEntry(event);
@@ -405,8 +405,8 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
    * ApplicationV2 action: run an overstrain check on the patient.
    * Delegates to the static `_overstrainedRoll` which finds the worst wound
    * and degrades it on a failed Stamina roll.
-   * @param {Event}       event  - The triggering click event
-   * @param {HTMLElement} target - The button element
+   * @param {Event}       event  The triggering click event
+   * @param {HTMLElement} target The button element
    */
   static async overstrainRoll(event, target) {
     await Sanatorium._overstrainedRoll(this.patient);
@@ -418,7 +418,7 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
    * until no wounds remain to treat this season, then prompts for a diary entry.
    * @async
    * @private
-   * @param {Event} event - The triggering event
+   * @param {Event} event The triggering event
    */
   async _fastRecovery(event) {
     // Prevent double-clicks from queuing a second run
@@ -449,14 +449,14 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
    * All other wounds are carried over unchanged for this period.
    * Used by the wound item sheet "Roll recovery" button.
    * @async
-   * @param {string} woundId - The `_id` of the wound item to roll for
+   * @param {string} woundId The `_id` of the wound item to roll for
    * @returns {Promise<void>}
    */
   async _recoveryRollSingle(woundId) {
     // ── Guard: incap wounds must be treated first ─────────────────────────────
     // Read directly from the actor's live data so session-state staleness (locked
     // flags set by previous rolls, wrong curSeason, etc.) cannot hide an incap wound.
-    const liveIncapWounds = this.patient.system.wounds["incap"] ?? [];
+    const liveIncapWounds = this.patient.system.wounds.incap ?? [];
     const hasUntreatedIncap = liveIncapWounds.some((w) =>
       w.system.canBeTreatedThisSeason(this.object.curSeason, this.object.curYear)
     );
@@ -514,9 +514,9 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
   /**
    * Rename an auto-generated wound when its gravity changes.
    * Custom names (i.e. names the user has edited) are preserved.
-   * @param {Object} wound      - The mutable wound data clone
-   * @param {string} oldType    - The wound type before this roll (e.g. "heavy")
-   * @param {string} newType    - The wound type after this roll (e.g. "medium")
+   * @param {Object} wound      The mutable wound data clone
+   * @param {string} oldType    The wound type before this roll (e.g. "heavy")
+   * @param {string} newType    The wound type after this roll (e.g. "medium")
    */
   _updateWoundName(wound, oldType, newType) {
     const autoName = (type) =>
@@ -531,8 +531,8 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
   /**
    * Append a "Day N" `<h4>…<ul>` header to logState.description if not already added.
    * Sets logState.logDayAdded = true so subsequent calls are no-ops within the same roll.
-   * @param {Object} logState - Shared mutable log state for the current _recoveryRoll invocation
-   * @param {number} dayNumber - The 1-based day number for the header (nextRecoveryPeriod + 1)
+   * @param {Object} logState Shared mutable log state for the current _recoveryRoll invocation
+   * @param {number} dayNumber The 1-based day number for the header (nextRecoveryPeriod + 1)
    */
   _openLogDaySection(logState, dayNumber) {
     if (!logState.logDayAdded) {
@@ -561,13 +561,13 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
    * Mutates `wound` in place (style, bonus, trend, img, name, timing fields) and
    * appends to `logState.description`.
    *
-   * @param {Object}  wound       - Mutable wound data clone
-   * @param {string}  type        - Current wound gravity key (e.g. `"heavy"`)
-   * @param {string}  newType     - Effective gravity key for this roll (after applying `trend`;
+   * @param {Object}  wound       Mutable wound data clone
+   * @param {string}  type        Current wound gravity key (e.g. `"heavy"`)
+   * @param {string}  newType     Effective gravity key for this roll (after applying `trend`;
    *                                may equal `type`, or be `"healthy"` for an improving wound)
-   * @param {number}  rollTotal   - Resolved total of the recovery stress die
-   * @param {Object}  logState    - Shared mutable log state `{ description: string, logDayAdded: boolean }`
-   * @param {Object}  newWounds   - Accumulator `{ [gravityKey]: woundDataClone[] }` to push into
+   * @param {number}  rollTotal   Resolved total of the recovery stress die
+   * @param {Object}  logState    Shared mutable log state `{ description: string, logDayAdded: boolean }`
+   * @param {Object}  newWounds   Accumulator `{ [gravityKey]: woundDataClone[] }` to push into
    * @returns {boolean} Always `true`; wound has been pushed — caller must not push again
    */
   _processWoundRoll(wound, type, newType, rollTotal, logState, newWounds) {
@@ -577,13 +577,13 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
       // Wound is fully healed – terminal state
       wound.locked = true;
       logState.description += `${game.i18n.localize(
-        "arm5e.sheet." + wound.originalGravity
+        `arm5e.sheet.${wound.originalGravity}`
       )} ${game.i18n.format("arm5e.sanatorium.msg.logHealed", { days: wound.recoveryTime })}<br/>`;
       wound.img = wCfg.icon;
       this._updateWoundName(wound, type, newType);
       wound.healedDate = { year: this.object.curYear, season: this.object.curSeason };
       wound.nextRoll = 0;
-      wound.description += logState.description + "</ul>";
+      wound.description += `${logState.description}</ul>`;
       newWounds[newType].push(wound);
       return true;
     }
@@ -591,7 +591,7 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
     // Build the per-wound log line
     logState.description +=
       `<li>${game.i18n.format("arm5e.sanatorium.msg.logWound", {
-        type: game.i18n.localize("arm5e.sheet." + newType)
+        type: game.i18n.localize(`arm5e.sheet.${newType}`)
       })}` +
       `<br/>${game.i18n.format("arm5e.sanatorium.msg.logRoll", {
         total: rollTotal,
@@ -661,7 +661,7 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
       this._updateWoundName(wound, type, commitType);
       wound.healedDate = { year: this.object.curYear, season: this.object.curSeason };
       wound.nextRoll = 0;
-      wound.description += logState.description + "</ul>";
+      wound.description += `${logState.description}</ul>`;
       newWounds[commitType].push(wound);
       return true;
     }
@@ -677,7 +677,7 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
     wound.nextRoll = wound.nextRoll + wCfg.interval;
     log(false, `Next roll: ${wound.nextRoll}`);
 
-    wound.description += logState.description + "</ul>";
+    wound.description += `${logState.description}</ul>`;
     newWounds[commitType].push(wound);
     return true;
   }
@@ -689,7 +689,7 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
    * Called when a character performs strenuous activity while wounded.
    * @static
    * @async
-   * @param {Actor} actor - The actor performing the overstrained activity
+   * @param {Actor} actor The actor performing the overstrained activity
    * @returns {Promise<void>}
    */
   static async _overstrainedRoll(actor) {
@@ -699,7 +699,7 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
     let worstRank = -1;
     for (const [type, woundList] of Object.entries(wounds)) {
       const rank = CONFIG.ARM5E.recovery.wounds[type]?.rank ?? -1;
-      if (rank <= 0 || rank >= CONFIG.ARM5E.recovery.wounds["dead"].rank) continue;
+      if (rank <= 0 || rank >= CONFIG.ARM5E.recovery.wounds.dead.rank) continue;
       for (const wound of woundList) {
         if (rank > worstRank) {
           worstRank = rank;
@@ -761,7 +761,7 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
    * Updates wounds with recovery notes and creates an activity log entry.
    * @async
    * @private
-   * @param {Event} event - The click event from diary button
+   * @param {Event} event The click event from diary button
    */
   async _createDiaryEntry(event) {
     event.preventDefault();
@@ -943,7 +943,7 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
    *
    * @async
    * @private
-   * @param {Event} event - The click event from recovery roll button
+   * @param {Event} event The click event from recovery roll button
    */
   async _recoveryRoll(event) {
     event.preventDefault();
@@ -992,14 +992,14 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
     // ── PROCESS INCAPACITATING WOUNDS (group roll) ────────────────────────────
     // All incap wounds share ONE stress die per recovery period.
     // A roll ≤ 0 kills the patient outright; ≥ improvement threshold → all trend to heavy.
-    if (this.object.wounds["incap"] && this.object.wounds["incap"].length > 0) {
+    if (this.object.wounds.incap && this.object.wounds.incap.length > 0) {
       // Separate wounds that are due for a roll from those that are waiting
       const dueIncap = [];
       const waitingIncap = [];
-      const incapRank = CONFIG.ARM5E.recovery.wounds["incap"]?.rank ?? 0;
+      const incapRank = CONFIG.ARM5E.recovery.wounds.incap?.rank ?? 0;
       const incapExcluded =
         this._singleRollMaxRank !== undefined && incapRank > this._singleRollMaxRank;
-      for (let incap of this.object.wounds["incap"]) {
+      for (let incap of this.object.wounds.incap) {
         if (incap.nextRoll > this.object.nextRecoveryPeriod || incap.locked || incapExcluded) {
           log(
             false,
@@ -1025,7 +1025,7 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
       }
 
       // Push waiting wounds unchanged
-      for (let w of waitingIncap) newWounds["incap"].push(w);
+      for (let w of waitingIncap) newWounds.incap.push(w);
 
       // ── Roll TWICE per day (sunrise and sunset) for all due incap wounds ────
       // Per ArM5 rules each day has two checks: at sunrise and at sunset.
@@ -1035,7 +1035,7 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
       // instead of undergoing the incap sunrise/sunset treatment again.
       if (dueIncap.length > 0) {
         this._openLogDaySection(logState, this.object.nextRecoveryPeriod + 1);
-        const incapCfg = CONFIG.ARM5E.recovery.wounds["incap"];
+        const incapCfg = CONFIG.ARM5E.recovery.wounds.incap;
 
         // ── Trending-better incap wounds: one Heavy-grade roll ─────────────────────
         // These wounds previously rolled above the improvement threshold while incap.
@@ -1052,7 +1052,7 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
         }
 
         for (const wound of trendingBetter) {
-          const heavyCfg = CONFIG.ARM5E.recovery.wounds["heavy"];
+          const heavyCfg = CONFIG.ARM5E.recovery.wounds.heavy;
           let newWound = foundry.utils.deepClone(wound);
 
           dataset.option5 = wound.bonus;
@@ -1122,7 +1122,7 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
               log(false, `New Period: ${tmpPeriod}`);
             }
           }
-          newWound.description += logState.description + "</ul>";
+          newWound.description += `${logState.description}</ul>`;
           newWounds[tbCommitType].push(newWound);
         }
 
@@ -1249,7 +1249,7 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
               log(false, `New Period: ${tmpPeriod}`);
             }
           }
-          newWound.description += logState.description + "</ul>";
+          newWound.description += `${logState.description}</ul>`;
           newWounds[state.newType].push(newWound);
         }
         recoverylog += logState.description;
@@ -1306,7 +1306,7 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
             continue;
           } else if (incapacited) {
             // Incap wound was treated this period → delay other wounds by the incap interval
-            wound.nextRoll += CONFIG.ARM5E.recovery.wounds["incap"].interval;
+            wound.nextRoll += CONFIG.ARM5E.recovery.wounds.incap.interval;
             this.object.hasWounds = true; // There ARE wounds to treat; they are just delayed
             tmpPeriod = tmpPeriod < wound.nextRoll ? tmpPeriod : wound.nextRoll;
             newWounds[type].push(wound);
@@ -1327,7 +1327,7 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
           // For healing outcome we don't need a die roll
           if (newType === "healthy") {
             logState.description += `${game.i18n.localize(
-              "arm5e.sheet." + wound.originalGravity
+              `arm5e.sheet.${wound.originalGravity}`
             )} ${game.i18n.format("arm5e.sanatorium.msg.logHealed", {
               days: newWound.recoveryTime
             })}<br/>`;
@@ -1336,7 +1336,7 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
             this._updateWoundName(newWound, type, newType);
             newWound.healedDate = { year: this.object.curYear, season: this.object.curSeason };
             newWound.nextRoll = 0;
-            newWound.description += logState.description + "</ul>";
+            newWound.description += `${logState.description}</ul>`;
             recoverylog += logState.description;
             logState.description = "";
             newWounds[newType].push(newWound);
@@ -1352,7 +1352,7 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
           // Build per-wound log line header
           logState.description +=
             `<li>${game.i18n.format("arm5e.sanatorium.msg.logWound", {
-              type: game.i18n.localize("arm5e.sheet." + newType)
+              type: game.i18n.localize(`arm5e.sheet.${newType}`)
             })}` +
             `<br/>${game.i18n.format("arm5e.sanatorium.msg.logRoll", {
               total: roll.total,
@@ -1423,7 +1423,7 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
             if (newWound.recoveryTime === 0)
               newWound.daysFirstSeason = this.object.availableDays - preRollPeriod;
             newWound.recoveryTime += wCfg.interval;
-            newWound.description += logState.description + "</ul>";
+            newWound.description += `${logState.description}</ul>`;
             recoverylog += logState.description;
             logState.description = "";
             newWounds[commitTypeInline].push(newWound);
@@ -1457,7 +1457,7 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
             tmpPeriod = tmpPeriod < newWound.nextRoll ? tmpPeriod : newWound.nextRoll;
             log(false, `New Period: ${tmpPeriod}`);
           }
-          newWound.description += logState.description + "</ul>";
+          newWound.description += `${logState.description}</ul>`;
           recoverylog += logState.description;
           logState.description = "";
           newWounds[commitTypeInline].push(newWound);
@@ -1536,7 +1536,7 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
 
     // Find the latest season affected by existing wounds
     for (let [type, wounds] of Object.entries(this.patient.system.wounds)) {
-      if (type == "healthy") continue; // Skip healed wounds
+      if (type === "healthy") continue; // Skip healed wounds
       if (wounds.length > 0) {
         for (let wound of wounds) {
           let woundInflicted = wound.system.inflictedDate;
@@ -1568,7 +1568,7 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
     // Extract and organize wounds for UI display
     let minNextRoll = 1000; // Track earliest next roll opportunity
     for (let [type, wounds] of Object.entries(this.patient.system.wounds)) {
-      if (type == "healthy") continue; // Skip healed wounds
+      if (type === "healthy") continue; // Skip healed wounds
       if (wounds.length > 0) {
         this.object.wounds[type] = [];
         for (let wound of wounds) {
@@ -1598,7 +1598,7 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
     }
 
     // Set next recovery period based on wound data
-    if (minNextRoll != 1000) {
+    if (minNextRoll !== 1000) {
       this.object.nextRecoveryPeriod = minNextRoll;
     }
   }

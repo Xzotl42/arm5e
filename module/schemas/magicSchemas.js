@@ -78,6 +78,7 @@ export class MagicalEffectSchema extends AbstractMagicEntity {
       applyFocus: boolOption(false, true)
     };
   }
+
   computeCastingTotal() {
     this.castingTotal = this._computeCastingTotal(this.parent.actor, { char: "sta" });
   }
@@ -110,7 +111,7 @@ export class MagicalEffectSchema extends AbstractMagicEntity {
         tech = Math.min(tech, actorSystemData.arts.techniques[key[0]].finalScore);
       });
       tech = Math.min(actorSystemData.arts.techniques[this.technique.value].finalScore, tech);
-      label += " " + getRequisitesLabel(techReq);
+      label += ` ${getRequisitesLabel(techReq)}`;
     } else {
       tech = actorSystemData.arts.techniques[this.technique.value].finalScore;
     }
@@ -135,7 +136,7 @@ export class MagicalEffectSchema extends AbstractMagicEntity {
         form = Math.min(form, actorSystemData.arts.forms[key[0]].finalScore);
       });
       form = Math.min(actorSystemData.arts.forms[this.form.value].finalScore, form);
-      label += " " + getRequisitesLabel(formReq);
+      label += ` ${getRequisitesLabel(formReq)}`;
     } else {
       form = actorSystemData.arts.forms[this.form.value].finalScore;
     }
@@ -144,7 +145,7 @@ export class MagicalEffectSchema extends AbstractMagicEntity {
   }
 
   _computeCastingTotal(owner, options = {}) {
-    if (owner.type != "player" && owner.type != "npc") {
+    if (owner.type !== "player" && owner.type !== "npc") {
       return 0;
     }
     let res = owner.system.characteristics[options.char].value;
@@ -350,9 +351,9 @@ export class SpellSchema extends MagicalEffectSchema {
   }
 }
 
-//////////
+// ////////
 // LEGACY migrations functions
-/////////
+// ///////
 
 export const migrateMagicalItem = (itemData) => {
   const updateData = {};
@@ -371,12 +372,12 @@ export const migrateMagicalItem = (itemData) => {
     });
   }
 
-  if (itemData.system.baseEffectDescription == null) {
+  if (itemData.system.baseEffectDescription === null) {
     updateData["system.baseEffectDescription"] = "";
   }
 
   if (itemData.type !== "baseEffect") {
-    if (itemData.type == "laboratoryText") {
+    if (itemData.type === "laboratoryText") {
       // Fixing season key
       if (!Object.keys(CONFIG.ARM5E.seasons).includes(itemData.system.season)) {
         if (Object.keys(CONFIG.ARM5E.seasons).includes(itemData.system.season.toLowerCase())) {
@@ -387,7 +388,7 @@ export const migrateMagicalItem = (itemData) => {
       }
     }
     if (itemData.type !== "magicalEffect") {
-      if (itemData.system.ritual == undefined) {
+      if (itemData.system.ritual === undefined) {
         updateData["system.ritual"] = false;
       } else if (typeof itemData.system.ritual !== "boolean") {
         if (itemData.system.ritual === "true") {
@@ -485,7 +486,7 @@ export const migrateMagicalItem = (itemData) => {
   }
 
   // Temporary : removal of authorship in spell, it will only be present in lab texts
-  if (itemData.type == "spell") {
+  if (itemData.type === "spell") {
     if (itemData.system.author) {
       updateData["system.-=author"] = null;
     }
@@ -514,7 +515,7 @@ export const migrateMagicalItem = (itemData) => {
       updateData["system.-=exp"] = null;
     }
   }
-  if (itemData.system.description == null) {
+  if (itemData.system.description === null) {
     updateData["system.description"] = "";
   }
 

@@ -88,7 +88,7 @@ export class LabTextSchema extends AbstractMagicEntity {
     // Console.log(`Migrate book: ${JSON.stringify(itemData)}`);
     const updateData = migrateMagicalItem(itemData);
 
-    if (itemData.system.year == null) {
+    if (itemData.system.year === null) {
       updateData["system.year"] = 1220;
     }
     if (typeof itemData.system.complexity !== "number") {

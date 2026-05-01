@@ -158,9 +158,9 @@ export class LabExperimentation extends HandlebarsApplicationMixin(ApplicationV2
     await this.render(true);
   }
 
-  ///////////////////////
+  // /////////////////////
   // LAB EXPERIMENTATION
-  ////////////////////////
+  // //////////////////////
 
   async _rollForExperimentation(risk, aura, discovery = false) {
     const rollFormula = `${Math.abs(risk) + aura}ds + ${risk}`;
@@ -173,7 +173,7 @@ export class LabExperimentation extends HandlebarsApplicationMixin(ApplicationV2
     const diceRoll = roll.total;
     let rtCompendium = game.packs.get("arm5e-compendia.rolltables");
     let docs = await rtCompendium.getDocuments();
-    let rt = docs.find((e) => e.name == "Experimentation.main");
+    let rt = docs.find((e) => e.name === "Experimentation.main");
     let reportBody = `${this._rollOnTableDesc("main", roll)}<ul>`;
 
     let flavor = this._rollOnTableDesc("main", roll, false);
@@ -190,7 +190,7 @@ export class LabExperimentation extends HandlebarsApplicationMixin(ApplicationV2
       // let res = await rt.getResultsForRoll(10);
       let res = await rt.getResultsForRoll(diceRoll);
       log(false, res);
-      if (res.length == 1) {
+      if (res.length === 1) {
         reportBody += this._getTableResult("extraordinaryResults", res[0].description);
         flavor += this._getTableResult("extraordinaryResults", res[0].description, true);
         await roll.toMessage({ flavor: flavor });
@@ -199,9 +199,9 @@ export class LabExperimentation extends HandlebarsApplicationMixin(ApplicationV2
           reportBody += await this._rollForExperimentation(risk, aura, discovery);
         }
       } else {
-        let tableRef = res.find((e) => e.type == "document");
+        let tableRef = res.find((e) => e.type === "document");
         const subRt = docs.find((e) => tableRef.documentUuid === e.uuid);
-        const subTitle = res.find((e) => e.type == "text").description;
+        const subTitle = res.find((e) => e.type === "text").description;
         reportBody += this._getTableResult("extraordinaryResults", subTitle);
         flavor += this._getTableResult("extraordinaryResults", subTitle, true);
         await roll.toMessage({ flavor: flavor });
@@ -234,7 +234,7 @@ export class LabExperimentation extends HandlebarsApplicationMixin(ApplicationV2
           reportBody += this._rollOnTableDesc(subTitle, subRoll);
           flavor = this._rollOnTableDesc(subTitle, subRoll, false);
 
-          if (subTitle === "discovery" && subRes[0].description == "rollTwice") {
+          if (subTitle === "discovery" && subRes[0].description === "rollTwice") {
             reportBody += `<i>${this._getTableResult(subTitle, subRes[0].description)}</i>`;
             flavor += `<i>${this._getTableResult(subTitle, subRes[0].description)}</i>`;
             await subRoll.toMessage({ flavor: flavor });
@@ -246,7 +246,7 @@ export class LabExperimentation extends HandlebarsApplicationMixin(ApplicationV2
               );
               await discoveryRoll.evaluate();
               let discoveryRes = await subRt.getResultsForRoll(discoveryRoll.total);
-              while (discoveryRes[0].description == "rollTwice") {
+              while (discoveryRes[0].description === "rollTwice") {
                 log(false, "RollTwice only once, reroll");
                 discoveryRoll = new ArsRoll(
                   subFormula,

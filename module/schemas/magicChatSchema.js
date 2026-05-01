@@ -61,9 +61,9 @@ export class MagicChatSchema extends RollChatSchema {
     super.enrichMessageData(actor);
 
     let realm = "magic";
-    if (actor.rollInfo.type == "power") {
+    if (actor.rollInfo.type === "power") {
       realm = actor.rollInfo.power.realm;
-    } else if (actor.rollInfo.type == "supernatural") {
+    } else if (actor.rollInfo.type === "supernatural") {
       realm = actor.rollInfo.ability.realm;
     }
     this.magic = {
@@ -170,7 +170,7 @@ export class MagicChatSchema extends RollChatSchema {
         }
 
         const aura =
-          target.magicResistance.aura == 0
+          target.magicResistance.aura === 0
             ? ""
             : ` + ${game.i18n.localize("arm5e.sheet.aura")}: (${target.magicResistance.aura})`;
 
@@ -225,17 +225,15 @@ export class MagicChatSchema extends RollChatSchema {
             target: target.name
           })}`;
         }
+      } else if (showDetails || (this.magic.caster.hasPlayerOwner && target.hasPlayerOwner)) {
+        flavorTarget = `${game.i18n.format("arm5e.sheet.magicResistanceOverSpell", {
+          target: target.name,
+          total: total
+        })}`;
       } else {
-        if (showDetails || (this.magic.caster.hasPlayerOwner && target.hasPlayerOwner)) {
-          flavorTarget = `${game.i18n.format("arm5e.sheet.magicResistanceOverSpell", {
-            target: target.name,
-            total: total
-          })}`;
-        } else {
-          flavorTarget = `${game.i18n.format("arm5e.sheet.magicResistanceOverSpellWithNoTotal", {
-            target: target.name
-          })}`;
-        }
+        flavorTarget = `${game.i18n.format("arm5e.sheet.magicResistanceOverSpellWithNoTotal", {
+          target: target.name
+        })}`;
       }
 
       const finalFlavor = `${flavorTotalSpell}${flavorTotalPenetration}${flavorTotalMagicResistance}`;
@@ -262,7 +260,7 @@ export class MagicChatSchema extends RollChatSchema {
   fatigueCost(actor) {
     let res = { use: 0, partial: 0, fail: 0 };
 
-    if (this.roll.type == "spell") {
+    if (this.roll.type === "spell") {
       res = fatigueCost(
         actor,
         this.parent.rollTotal(0) + this.confidenceModifier,
@@ -273,8 +271,9 @@ export class MagicChatSchema extends RollChatSchema {
     log(false, "fatigueCost", res);
     return res;
   }
+
   failedCasting() {
-    if (this.roll.type == "spell")
+    if (this.roll.type === "spell")
       return this.parent.rollTotal(0) + this.confidenceModifier - this.roll.difficulty < -10;
     else return this.parent.rollTotal(0) + this.confidenceModifier - this.roll.difficulty < 0;
   }
@@ -286,8 +285,9 @@ export class MagicChatSchema extends RollChatSchema {
     if (showDataOfNPC || this.parent.originatorOrGM) {
       const levelOfSpell = this.roll.difficulty;
       const totalOfSpell = this.parent.rollTotal(0) + this.confidenceModifier;
-      const title =
-        '<h2 class="ars-chat-title">' + game.i18n.localize("arm5e.sheet.spellFailed") + "</h2>";
+      const title = `<h2 class="ars-chat-title">${game.i18n.localize(
+        "arm5e.sheet.spellFailed"
+      )}</h2>`;
       const messageTotalOfSpell = `${game.i18n.localize(
         "arm5e.sheet.spellTotal"
       )} (${totalOfSpell})`;
@@ -296,7 +296,7 @@ export class MagicChatSchema extends RollChatSchema {
       )} (${levelOfSpell})`;
       const castingTotal = `= ${totalOfSpell - levelOfSpell}`;
       let extendedMsg = ` ${messageTotalOfSpell} ${messageLevelOfSpell} ${castingTotal}`;
-      let flavorForGM = `${title}` + messageFlavor + extendedMsg;
+      let flavorForGM = `${title}${messageFlavor}${extendedMsg}`;
       messageFlavor = flavorForGM;
     }
     return messageFlavor;

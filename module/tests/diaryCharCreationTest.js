@@ -8,6 +8,10 @@ import { addProgressItem, applyStandardMagusEffects, makeDiaryTemplate } from ".
 
 // import { Quench } from "../quench.js";
 
+/**
+ *
+ * @param quench
+ */
 export function registerApprenticeshipTesting(quench) {
   quench.registerBatch(
     "Ars-Apprenticeship",
@@ -65,7 +69,7 @@ export function registerApprenticeshipTesting(quench) {
           progressItemCol[0].xp = entry.system.sourceQuality + result.system.sourceModifier;
           await entry.update({ "system.progress.abilities": progressItemCol });
           // expect(entry.system.applyPossible).to.equal("");
-          // if (entry.system.applyError != "") {
+          // if (entry.system.applyError !== "") {
           //   console.warn(entry.system.applyError);
           // }
 
@@ -113,7 +117,7 @@ export function registerApprenticeshipTesting(quench) {
           expect(result.system.applyError).to.equal("arm5e.activity.msg.wrongTotalXp");
           progressItemCol[0].xp = entry.system.sourceQuality + result.system.sourceModifier;
           await entry.update({ "system.progress.spells": progressItemCol });
-          // if (entry.system.applyError != "") {
+          // if (entry.system.applyError !== "") {
           //   console.warn(entry.system.applyError);
           // }
 
@@ -157,7 +161,7 @@ export function registerApprenticeshipTesting(quench) {
 
           arts[0].xp = entry.system.sourceQuality + result.system.sourceModifier;
           await entry.update({ "system.progress.arts": arts });
-          // if (entry.system.applyError != "") {
+          // if (entry.system.applyError !== "") {
           //   console.warn(entry.system.applyError);
           // }
 
@@ -256,7 +260,7 @@ export function registerApprenticeshipTesting(quench) {
 
           // check that spell has been added
           let check = magus.items.getName("SpellXYZ");
-          if (check == undefined) assert.ok(false);
+          if (check === undefined) assert.ok(false);
           expect(check.system.xp).to.equal(0);
           expect(check.system.bonus).to.equal(0);
 

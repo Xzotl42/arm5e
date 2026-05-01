@@ -2,6 +2,10 @@ import { ARM5E } from "../config.js";
 import { log } from "./tools.js";
 
 // get the corresponding collection from the reference module, based on configuration.
+/**
+ *
+ * @param collectionName
+ */
 export async function getRefCompendium(collectionName) {
   const moduleRef = game.settings.get(ARM5E.SYSTEM_ID, "compendiaRef");
   let collection = game.packs.get(`${moduleRef}.${collectionName}`);
@@ -25,7 +29,7 @@ export async function getAbilityFromCompendium(key, option = "") {
 
   let res = await getAbilityInternal(ref, key, option);
   if (!res) {
-    if (game.settings.get(ARM5E.SYSTEM_ID, "notifyMissingRef") == "true") {
+    if (game.settings.get(ARM5E.SYSTEM_ID, "notifyMissingRef") === "true") {
       ui.notifications.info(`Unknown ability key (${key}) in ${ref} compendium`);
     }
     res = await getAbilityInternal(ARM5E.REF_MODULE_ID, key, option);
@@ -42,12 +46,12 @@ export async function getAbilityFromCompendium(key, option = "") {
 async function getAbilityInternal(moduleRef, key, option = "") {
   let abilitiesPack = game.packs.get(`${moduleRef}.abilities`);
 
-  if (abilitiesPack == undefined) return undefined;
+  if (abilitiesPack === undefined) return undefined;
 
   if (!abilitiesPack.indexFields.has("system.key")) {
     await abilitiesPack.getIndex({ fields: ["system.key", "system.option"] });
   }
-  let res = abilitiesPack.index.find((i) => i.system.key == key && i.system.option == option);
+  let res = abilitiesPack.index.find((i) => i.system.key === key && i.system.option === option);
   if (res) {
     let genericAb = await fromUuid(res.uuid);
     return genericAb.toObject();
@@ -55,7 +59,9 @@ async function getAbilityInternal(moduleRef, key, option = "") {
     // Try to get without specified the option:
     let optionDefault = game.i18n.localize(CONFIG.ARM5E.ALL_ABILITIES[key].optionDefault);
 
-    res = abilitiesPack.index.find((i) => i.system.key == key && i.system.option == optionDefault);
+    res = abilitiesPack.index.find(
+      (i) => i.system.key === key && i.system.option === optionDefault
+    );
     if (res) {
       let genericAb = await fromUuid(res.uuid);
       // Update the option
@@ -77,7 +83,7 @@ export async function getItemFromCompendium(compendium, indexkey) {
 
   let res = await getItemInternal(ref, compendium, indexkey);
   if (!res) {
-    if (game.settings.get(ARM5E.SYSTEM_ID, "notifyMissingRef") == "true") {
+    if (game.settings.get(ARM5E.SYSTEM_ID, "notifyMissingRef") === "true") {
       ui.notifications.info(`Unknown item key (${indexkey}) in ${ref} compendium`);
     }
     res = await getItemInternal(ARM5E.REF_MODULE_ID, indexkey);
@@ -94,12 +100,12 @@ export async function getItemFromCompendium(compendium, indexkey) {
 async function getItemInternal(moduleRef, compendium, indexkey) {
   let pack = game.packs.get(`${moduleRef}.${compendium}`);
 
-  if (pack == undefined) return undefined;
+  if (pack === undefined) return undefined;
 
   if (!pack.indexFields.has("system.indexKey")) {
     await pack.getIndex({ fields: ["system.indexKey"] });
   }
-  let res = pack.index.find((i) => i.system.indexKey == indexkey);
+  let res = pack.index.find((i) => i.system.indexKey === indexkey);
   if (res) {
     return await fromUuid(res.uuid);
   }

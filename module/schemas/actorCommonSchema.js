@@ -50,16 +50,16 @@ export class CodexSchema extends foundry.abstract.TypeDataModel {
     this.spells = [];
     this.enchantments = [];
     for (let [key, item] of this.parent.items.entries()) {
-      if (item.type == "baseEffect") {
+      if (item.type === "baseEffect") {
         this.baseEffects.push(item);
       }
-      if (item.type == "magicalEffect") {
+      if (item.type === "magicalEffect") {
         this.magicEffects.push(item);
       }
-      if (item.type == "spell") {
+      if (item.type === "spell") {
         this.spells.push(item);
       }
-      if (item.type == "enchantment") {
+      if (item.type === "enchantment") {
         this.enchantments.push(item);
       }
     }
@@ -67,14 +67,14 @@ export class CodexSchema extends foundry.abstract.TypeDataModel {
     if (this.withCompendia) {
       let spellsCompendium = game.packs.get("arm5e-compendia.spells");
       for (let s of spellsCompendium.index) {
-        if (s.type == "spell") this.spells.push(s);
-        else if (s.type == "magicalEffect") {
+        if (s.type === "spell") this.spells.push(s);
+        else if (s.type === "magicalEffect") {
           this.magicalEffects.push(s);
-        } else if (s.type == "baseEffect") {
+        } else if (s.type === "baseEffect") {
           this.baseEffects.push(s);
-        } else if (s.type == "enchantment") {
+        } else if (s.type === "enchantment") {
           this.enchantments.push(s);
-        } else if (s.type == "power") {
+        } else if (s.type === "power") {
           // Ignore powers for codex
           continue;
         } else {

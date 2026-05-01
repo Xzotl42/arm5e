@@ -13,7 +13,8 @@ import {
   visStudy,
   investigate,
   validWriting,
-  twilightUnderstandingRoll
+  twilightUnderstandingRoll,
+  validCopying
 } from "./seasonal-activities/long-term-activities.js";
 
 export const ARM5E = {};
@@ -903,6 +904,9 @@ ARM5E.ALL_ABILITIES = {
   ...ARM5E.ALT_FORM_ABILITIES
 };
 
+/**
+ *
+ */
 export function localizeAbilities() {
   const res = {
     general: {
@@ -998,6 +1002,10 @@ export function enrichAbilities(translatedList) {
   return res;
 }
 
+/**
+ *
+ * @param abilityList
+ */
 function translateAndSort(abilityList) {
   for (let [key, value] of Object.entries(abilityList)) {
     let translation;
@@ -1017,6 +1025,9 @@ function translateAndSort(abilityList) {
   });
   return Object.fromEntries(tmp);
 }
+/**
+ *
+ */
 export function localizeCategories() {
   let result = {};
   for (let [key, value] of Object.entries(ARM5E.ABILITIES_CATEGORIES)) {
@@ -1278,7 +1289,6 @@ ARM5E.realmsExt = {
   },
   ...ARM5E.realms
 };
-1;
 
 ARM5E.impacts = {
   free: {
@@ -2533,7 +2543,7 @@ ARM5E.activities.generic = {
     source: { default: 0, readonly: true },
     maxXp: 0,
     bonusOptions: null,
-    // validation: validWriting,
+    validation: validWriting,
     secondaryFilter: null,
     scheduling: {
       duplicate: false,
@@ -2555,7 +2565,7 @@ ARM5E.activities.generic = {
     source: { default: 0, readonly: true },
     maxXp: 0,
     bonusOptions: null,
-    // validation: validWriting,
+    validation: validCopying,
     secondaryFilter: null,
     scheduling: {
       duplicate: false,
@@ -2681,6 +2691,7 @@ ARM5E.activities.generic = {
     maxXp: 0,
     bonusOptions: null,
     secondaryFilter: null,
+    validation: null,
     roll: { label: "arm5e.twilight.episode", action: twilightUnderstandingRoll },
     scheduling: {
       duplicate: true,
@@ -3353,6 +3364,10 @@ ARM5E.recovery = {
   rollMode: 40 // no chat message, no confidence
 };
 
+/**
+ *
+ * @param gravity
+ */
 export function getWoundStr(gravity = 0) {
   if (gravity > 5 && gravity < 0) return "";
   return game.i18n.localize(ARM5E.recovery.wounds[ARM5E.recovery.rankMapping[gravity]].label);

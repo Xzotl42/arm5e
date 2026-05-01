@@ -51,7 +51,7 @@ export default class Aura {
    * Takes an alignment number of a power and computes how the current aura will modify
    * that power being used. e.g. how much a faerie power is penalized in a divine aura
    *
-   * @param {Number} alignment Number representing alignment of power being used
+   * @param {number} alignment Number representing alignment of power being used
    * @returns
    */
   computeAuraModifierFor(alignment) {
@@ -79,7 +79,7 @@ export default class Aura {
       }
     }
 
-    if (res == -9999) this.modifier = 0;
+    if (res === -9999) this.modifier = 0;
     else this.modifier = res;
     log(false, `Max aura mod : ${this.modifier}`);
     return this.modifier;
@@ -106,7 +106,7 @@ export default class Aura {
    * Auras can have multiple realms, this retrieves the value of some realm in the aura,
    * including the night modifier if it is present
    *
-   * @param {String} realm Realm string, such as "magic" or "divine"
+   * @param {string} realm Realm string, such as "magic" or "divine"
    * @returns
    */
   auraValueFor(realm) {
@@ -115,13 +115,13 @@ export default class Aura {
 
   /**
    *
-   * @param {String} realm Realm to calculate night modifier for, optional, if not provided use dominant realm
+   * @param {string} realm Realm to calculate night modifier for, optional, if not provided use dominant realm
    * @returns
    */
   _nightModifier(realm) {
     realm = realm || this.dominantRealm;
 
-    if (this.scene?.environment.darknessLevel == 1) {
+    if (this.scene?.environment.darknessLevel === 1) {
       // Probably not the most accurate check
       return this.nightModifier[realm] || 0;
     } else return 0;
@@ -161,7 +161,7 @@ export default class Aura {
   // Utility function for tests, it works incrementaly
 
   async set(realm, value, nightMod = 0) {
-    if (value < 0 || !CONFIG.ARM5E.lookupRealm.includes(realm) || realm == "mundane") {
+    if (value < 0 || !CONFIG.ARM5E.lookupRealm.includes(realm) || realm === "mundane") {
       return;
     }
     if (!this.scene) {

@@ -8,6 +8,10 @@ import { getItemFromCompendium } from "./tools/compendia.js";
 
 const DEPRECATED_ITEMS = ["speciality", "distinctive", "sanctumRoom", "personality"];
 const DEPRECATED_ACTORS = ["scriptorium"];
+/**
+ *
+ * @param originalVersion
+ */
 export async function migration(originalVersion) {
   try {
     ui.notifications.info(
@@ -23,7 +27,7 @@ export async function migration(originalVersion) {
     const actorsUpdates = [];
     for (let a of game.actors.contents) {
       try {
-        if (a.type == "magus") {
+        if (a.type === "magus") {
           a.type = "player";
         }
         if (DEPRECATED_ACTORS.includes(a.type)) {
@@ -61,7 +65,7 @@ export async function migration(originalVersion) {
     for (const invalidId of invalidActorIds) {
       try {
         const rawData = foundry.utils.deepClone(
-          game.actors._source.find((d) => d._id == invalidId)
+          game.actors._source.find((d) => d._id === invalidId)
         );
 
         console.log(`Migrating invalid Actor document: ${rawData.name}`);
@@ -125,7 +129,9 @@ export async function migration(originalVersion) {
     const invalidItemsUpdates = [];
     for (const invalidId of invalidItemIds) {
       try {
-        const rawData = foundry.utils.deepClone(game.items._source.find((d) => d._id == invalidId));
+        const rawData = foundry.utils.deepClone(
+          game.items._source.find((d) => d._id === invalidId)
+        );
         console.log(`Migrating invalid item document: ${rawData.name}`);
         let invalidItem = game.items.getInvalid(invalidId);
         const updateData = await migrateItemData(invalidItem);
@@ -194,7 +200,7 @@ export async function migration(originalVersion) {
 /**
  * Apply migration rules to all Entities within a single Compendium pack
  * @param pack
- * @return {Promise}
+ * @returns {Promise}
  */
 export const migrateCompendium = async function (pack) {
   const documentName = pack.documentName;
@@ -308,7 +314,7 @@ const isEffectObsolete = function (effect) {
     }
     return false;
   } catch {
-    error(true, "PB with EFFECT: " + JSON.stringify(effect.flags.arm5e));
+    error(true, `PB with EFFECT: ${JSON.stringify(effect.flags.arm5e)}`);
     return true;
   }
 };
@@ -316,8 +322,9 @@ const isEffectObsolete = function (effect) {
 /**
  * Migrate a single Actor entity to incorporate latest data model changes
  * Return an Object of updateData to be applied
- * @param {object} actor    The actor data object to update
- * @return {Object}         The updateData to apply
+ * @param actorDoc
+ * @param actorItems
+ * @returns {Object}         The updateData to apply
  */
 export const migrateActorData = async function (actorDoc, actorItems) {
   let actor = {};
@@ -350,12 +357,12 @@ export const migrateActorData = async function (actorDoc, actorItems) {
     }
 
     // token with barely anything to migrate
-    if (actor.system == undefined) {
+    if (actor.system === undefined) {
       return updateData;
     }
 
-    if (actor.type == "covenant") {
-      if (actor.system.currentYear != undefined) {
+    if (actor.type === "covenant") {
+      if (actor.system.currentYear !== undefined) {
         updateData["system.-=currentYear"] = null;
       }
     }
@@ -363,10 +370,10 @@ export const migrateActorData = async function (actorDoc, actorItems) {
     // external links
     if (
       actor.system.covenant?.value &&
-      (actor.system.covenant?.actorId == null || actor.system.covenant?.actorId == "")
+      (actor.system.covenant?.actorId === null || actor.system.covenant?.actorId === "")
     ) {
       let cov = game.actors.filter(
-        (a) => a.type == "covenant" && a.name == actor.system.covenant.value
+        (a) => a.type === "covenant" && a.name === actor.system.covenant.value
       );
       if (cov.length > 0) {
         updateData["system.covenant.actorId"] = cov[0]._id;
@@ -374,10 +381,10 @@ export const migrateActorData = async function (actorDoc, actorItems) {
     }
     if (
       actor.system.sanctum?.value &&
-      (actor.system.sanctum?.actorId == null || actor.system.sanctum?.actorId == "")
+      (actor.system.sanctum?.actorId === null || actor.system.sanctum?.actorId === "")
     ) {
       let lab = game.actors.filter(
-        (a) => a.type == "laboratory" && a.name == actor.system.sanctum.value
+        (a) => a.type === "laboratory" && a.name === actor.system.sanctum.value
       );
       if (lab.length > 0) {
         updateData["system.sanctum.actorId"] = lab[0]._id;
@@ -386,10 +393,10 @@ export const migrateActorData = async function (actorDoc, actorItems) {
 
     if (
       actor.system.owner?.value &&
-      (actor.system.owner?.actorId == null || actor.system.owner?.actorId == "")
+      (actor.system.owner?.actorId === null || actor.system.owner?.actorId === "")
     ) {
       let owner = game.actors.filter(
-        (a) => ["player", "npc"].includes(a.type) && a.name == actor.system.owner.value
+        (a) => ["player", "npc"].includes(a.type) && a.name === actor.system.owner.value
       );
       if (owner.length > 0) {
         updateData["system.owner.actorId"] = owner[0]._id;
@@ -416,7 +423,7 @@ export const migrateActorData = async function (actorDoc, actorItems) {
       if (actor.system.pendingCrisis) {
         updateData["system.states.pendingCrisis"] = true;
       }
-      if (actor.system.creationMode != undefined) {
+      if (actor.system.creationMode !== undefined) {
         updateData["system.states.creationMode"] = actor.system.creationMode;
       }
 
@@ -459,33 +466,33 @@ export const migrateActorData = async function (actorDoc, actorItems) {
       }
 
       // for beasts
-      if (actor.system.description == undefined) {
+      if (actor.system.description === undefined) {
         updateData["system.description"] = { born: { value: 1200 } };
       }
 
       // remove redundant data
-      if (actor.system.houses != undefined) {
+      if (actor.system.houses !== undefined) {
         updateData["system.-=houses"] = null;
       }
 
-      if (actor.system.year?.value != undefined) {
+      if (actor.system.year?.value !== undefined) {
         updateData["system.-=year"] = null;
       }
-      if (actor.system.datetime != undefined) {
+      if (actor.system.datetime !== undefined) {
         updateData["system.-=datetime"] = null;
       }
 
-      if (actor.system.season?.value != undefined) {
+      if (actor.system.season?.value !== undefined) {
         updateData["system.-=season"] = null;
       }
 
       if (actor.system.stances === undefined) {
         updateData["system.stances"] = { voiceStance: "firm", gesturesStance: "bold" };
       } else {
-        if (actor.system.stances.voiceStance == undefined) {
+        if (actor.system.stances.voiceStance === undefined) {
           updateData["system.stances.voiceStance"] = "firm";
         }
-        if (actor.system.stances.gesturesStance == undefined) {
+        if (actor.system.stances.gesturesStance === undefined) {
           updateData["system.stances.gesturesStance"] = "bold";
         }
       }
@@ -509,7 +516,7 @@ export const migrateActorData = async function (actorDoc, actorItems) {
                 break;
             }
             updatedTemplates = true;
-          } else if (template.rollType == undefined) {
+          } else if (template.rollType === undefined) {
             template.rollType = 64;
             updatedTemplates = true;
           }
@@ -520,14 +527,14 @@ export const migrateActorData = async function (actorDoc, actorItems) {
       }
       // if (actor.system.)
 
-      // if (actor.system?.roll != undefined) {
+      // if (actor.system?.roll !== undefined) {
       //   updateData["system.-=roll"] = null;
       // }
-      // if (actor.system.decrepitude == undefined) {
+      // if (actor.system.decrepitude === undefined) {
       //   updateData["system.decrepitude"] = {};
       // }
 
-      // if (actor.system.warping == undefined) {
+      // if (actor.system.warping === undefined) {
       //   updateData["system.warping"] = {};
       // }
 
@@ -541,7 +548,7 @@ export const migrateActorData = async function (actorDoc, actorItems) {
       if (actor.system.cha) updateData["system.-=cha"] = null;
       if (actor.system.com) updateData["system.-=com"] = null;
 
-      if (actor.system.pendingXP != undefined && actor.system.pendingXP > 0) {
+      if (actor.system.pendingXP !== undefined && actor.system.pendingXP > 0) {
         ChatMessage.create({
           content:
             "<b>MIGRATION NOTIFICATION</b><br/>" +
@@ -554,8 +561,8 @@ export const migrateActorData = async function (actorDoc, actorItems) {
       let sendMsg = false;
       let syntheticWoundsMsg = `<b>MIGRATION NOTIFICATION</b><br/>The character ${actorDoc.name}'s token was unable to migrate his/her wounds.<ul>`;
       for (let wtype of Object.keys(CONFIG.ARM5E.recovery.wounds)) {
-        if (wtype == "healthy") continue;
-        if (actor.system.wounds && actor.system.wounds[wtype]?.number != undefined) {
+        if (wtype === "healthy") continue;
+        if (actor.system.wounds && actor.system.wounds[wtype]?.number !== undefined) {
           // if (actor.synthetic) {
           //   syntheticWoundsMsg += `<li>${actor.system.wounds[wtype]?.number.value} ${wtype} wounds</li>`;
           //   sendMsg = true;
@@ -625,7 +632,7 @@ export const migrateActorData = async function (actorDoc, actorItems) {
       if (actor.system.reputation) {
         if (actorDoc instanceof ArM5eActor) {
           for (let rep of Object.values(actor.system.reputation)) {
-            if (rep.label === "" || rep.label === null || rep.label == undefined) continue;
+            if (rep.label === "" || rep.label === null || rep.label === undefined) continue;
 
             let reputationData = {
               name: rep.label,
@@ -640,16 +647,14 @@ export const migrateActorData = async function (actorDoc, actorItems) {
             await actorDoc.createEmbeddedDocuments("Item", [reputationData]);
           }
           updateData["system.-=reputation"] = null;
+        } else if (actor.synthetic) {
+          updateData["system.-=reputation"] = null;
         } else {
-          if (actor.synthetic) {
-            updateData["system.-=reputation"] = null;
-          } else {
-            ChatMessage.create({
-              content:
-                "<b>MIGRATION NOTIFICATION</b><br/>" +
-                `The character ${actor.name} was unable to migrate his/her reputations. Triggering a new migration will fix it (See FAQ)`
-            });
-          }
+          ChatMessage.create({
+            content:
+              "<b>MIGRATION NOTIFICATION</b><br/>" +
+              `The character ${actor.name} was unable to migrate his/her reputations. Triggering a new migration will fix it (See FAQ)`
+          });
         }
       }
 
@@ -672,34 +677,30 @@ export const migrateActorData = async function (actorDoc, actorItems) {
             await actorDoc.createEmbeddedDocuments("Item", [persData]);
           }
           updateData["system.-=personality"] = null;
+        } else if (actor.synthetic) {
+          updateData["system.-=personality"] = null;
         } else {
-          if (actor.synthetic) {
-            updateData["system.-=personality"] = null;
-          } else {
-            ChatMessage.create({
-              content:
-                "<b>MIGRATION NOTIFICATION</b><br/>" +
-                `The character ${actor.name} was unable to migrate his/her personality traits. Triggering a new migration will fix it (See FAQ)`
-            });
-          }
+          ChatMessage.create({
+            content:
+              "<b>MIGRATION NOTIFICATION</b><br/>" +
+              `The character ${actor.name} was unable to migrate his/her personality traits. Triggering a new migration will fix it (See FAQ)`
+          });
         }
       }
-    } else {
-      if (actor.system.roll) {
-        updateData["system.-=roll"] = null;
-      }
+    } else if (actor.system.roll) {
+      updateData["system.-=roll"] = null;
     }
 
     if (actor.system.combatPreps === undefined) {
       const ids = [];
       for (let weapon of actor.system.weapons ?? []) {
-        if (weapon.system.equipped == true) {
+        if (weapon.system.equipped === true) {
           ids.push(weapon.id);
         }
       }
 
       for (let armor of actor.system.armor ?? []) {
-        if (armor.system.equipped == true) {
+        if (armor.system.equipped === true) {
           ids.push(armor.id);
         }
       }
@@ -710,7 +711,7 @@ export const migrateActorData = async function (actorDoc, actorItems) {
       };
     }
 
-    if (actor.type == "player" || actor.type == "npc") {
+    if (actor.type === "player" || actor.type === "npc") {
       let realms = {
         magic: { aligned: false },
         faeric: { aligned: false },
@@ -722,7 +723,7 @@ export const migrateActorData = async function (actorDoc, actorItems) {
         realmsUpdate = true;
       }
       if (actor.system.charType.value !== "entity") {
-        if (actor.system.decrepitude?.score != undefined) {
+        if (actor.system.decrepitude?.score !== undefined) {
           let exp = (actor.system.decrepitude.score * (actor.system.decrepitude.score + 1) * 5) / 2;
           if (actor.system.decrepitude.points >= 5 * (actor.system.decrepitude.score + 1)) {
             // if the experience is bigger than the needed for next level, ignore it
@@ -734,7 +735,7 @@ export const migrateActorData = async function (actorDoc, actorItems) {
           updateData["system.decrepitude.-=score"] = null;
         }
 
-        if (actor.system.warping?.score != undefined) {
+        if (actor.system.warping?.score !== undefined) {
           let exp =
             (Number(actor.system.warping.score) * (Number(actor.system.warping.score) + 1) * 5) / 2;
           if (actor.system.warping.points >= 5 * (Number(actor.system.warping.score) + 1)) {
@@ -749,12 +750,12 @@ export const migrateActorData = async function (actorDoc, actorItems) {
       } else {
         // entity
         // migrate might type to realms Alignment
-        if (actor.system?.might?.realm != undefined) {
+        if (actor.system?.might?.realm !== undefined) {
           realmsUpdate = true;
           realms[actor.system.might.realm].aligned = true;
           updateData["system.might.-=realm"] = null;
           updateData["system.might.-=type"] = null;
-        } else if (actor.system?.might?.type != undefined) {
+        } else if (actor.system?.might?.type !== undefined) {
           realmsUpdate = true;
           realms[actor.system.might.type].aligned = true;
           updateData["system.might.-=realm"] = null;
@@ -762,18 +763,16 @@ export const migrateActorData = async function (actorDoc, actorItems) {
         }
       }
 
-      if (actor.system?.realmAlignment != undefined) {
+      if (actor.system?.realmAlignment !== undefined) {
         realmsUpdate = true;
         if (Number.isNaN(actor.system.realmAlignment)) {
-          if (ARM5E.lookupRealm.indexOf(actor.system.realmAlignment) != -1) {
+          if (ARM5E.lookupRealm.indexOf(actor.system.realmAlignment) !== -1) {
             realms[actor.system.realmAlignment].aligned = true;
           }
-        } else {
-          if (actor.system.realmAlignment > 0) {
-            realms[ARM5E.lookupRealm[actor.system.realmAlignment]].aligned = true;
-          } else if (["magus", "magusNPC"].includes(actor.system.charType.value)) {
-            realms["magic"].aligned = true;
-          }
+        } else if (actor.system.realmAlignment > 0) {
+          realms[ARM5E.lookupRealm[actor.system.realmAlignment]].aligned = true;
+        } else if (["magus", "magusNPC"].includes(actor.system.charType.value)) {
+          realms.magic.aligned = true;
         }
         updateData["system.-=realmAlignment"] = null;
       }
@@ -802,60 +801,60 @@ export const migrateActorData = async function (actorDoc, actorItems) {
         //
         // migrate arts xp
         //
-        if (actor.system?.arts?.techniques != undefined) {
+        if (actor.system?.arts?.techniques !== undefined) {
           for (const [key, technique] of Object.entries(actor.system.arts.techniques)) {
-            if (technique.experienceNextLevel != undefined) {
+            if (technique.experienceNextLevel !== undefined) {
               // if the experience is equal or bigger than the xp for this score, use it as total xp
               let exp = (technique.score * (technique.score + 1)) / 2;
               if (technique.experience >= exp) {
-                updateData["system.arts.techniques." + key + ".xp"] = technique.experience;
+                updateData[`system.arts.techniques.${key}.xp`] = technique.experience;
               } else if (technique.experience >= technique.score + 1) {
                 // if the experience is bigger than the neeeded for next level, ignore it
-                updateData["system.arts.techniques." + key + ".xp"] = exp;
+                updateData[`system.arts.techniques.${key}.xp`] = exp;
               } else {
                 // compute normally
-                updateData["system.arts.techniques." + key + ".xp"] = exp + technique.experience;
+                updateData[`system.arts.techniques.${key}.xp`] = exp + technique.experience;
               }
 
               updateData["system.-=experience"] = null;
               updateData["system.-=score"] = null;
-              updateData["system.arts.techniques." + key + ".-=experienceNextLevel"] = null;
+              updateData[`system.arts.techniques.${key}.-=experienceNextLevel`] = null;
             }
           }
         }
-        if (actor.system?.arts?.forms != undefined) {
+        if (actor.system?.arts?.forms !== undefined) {
           for (const [key, form] of Object.entries(actor.system.arts.forms)) {
-            if (form.experienceNextLevel != undefined) {
+            if (form.experienceNextLevel !== undefined) {
               // if the experience is equal or bigger than the xp for this score, use it as total xp
               let exp = (form.score * (form.score + 1)) / 2;
               if (form.experience >= exp) {
-                updateData["system.arts.forms." + key + ".xp"] = form.experience;
+                updateData[`system.arts.forms.${key}.xp`] = form.experience;
               } else if (form.experience >= form.score + 1) {
                 // if the experience is bigger than the neeeded for next level, ignore it
-                updateData["system.arts.forms." + key + ".xp"] = exp;
+                updateData[`system.arts.forms.${key}.xp`] = exp;
               } else {
                 // compute normally
-                updateData["system.arts.forms." + key + ".xp"] = exp + form.experience;
+                updateData[`system.arts.forms.${key}.xp`] = exp + form.experience;
               }
 
-              updateData["system.forms." + key + ".-=experience"] = null;
-              updateData["system.forms." + key + "-=score"] = null;
-              updateData["system.arts.forms." + key + ".-=experienceNextLevel"] = null;
+              updateData[`system.forms.${key}.-=experience`] = null;
+              updateData[`system.forms.${key}-=score`] = null;
+              updateData[`system.arts.forms.${key}.-=experienceNextLevel`] = null;
             }
           }
         }
       }
-      if (realmsUpdate == true) {
+      if (realmsUpdate === true) {
         updateData["system.realms"] = realms;
       }
     }
   }
   if (
-    actor.type == "player" ||
-    actor.type == "npc" ||
-    actor.type == "beast" ||
-    actor.type == "laboratory" ||
-    actor.type == "covenant"
+    actor.type === "player" ||
+    actor.type === "npc" ||
+    actor.type === "beast" ||
+    actor.type === "laboratory" ||
+    actor.type === "covenant"
   ) {
     let applied;
     if (actorDoc instanceof ArM5eActor) {
@@ -868,7 +867,7 @@ export const migrateActorData = async function (actorDoc, actorItems) {
       let toDelete = [];
       for (let e of applied) {
         // if effect comes from an item, no need to migrate it.
-        if (e.transfer == true) {
+        if (e.transfer === true) {
           continue;
         } else {
           // Effect is a remnant of V10 coming from an item
@@ -924,18 +923,18 @@ export const migrateActorData = async function (actorDoc, actorItems) {
       }
     }
   }
-  if (actor.type == "player" || actor.type == "npc" || actor.type == "beast") {
+  if (actor.type === "player" || actor.type === "npc" || actor.type === "beast") {
     let currentFatigue = 0;
     if (actor.system.fatigue) {
       for (const [key, fat] of Object.entries(actor.system.fatigue)) {
-        if (fat.level != undefined) {
+        if (fat.level !== undefined) {
           if (fat.level.value) {
             currentFatigue++;
           }
           updateData[`system.fatigue.${key}.-=level`] = null;
         }
       }
-      if (currentFatigue > 0 && actor.system.fatigueCurrent == 0) {
+      if (currentFatigue > 0 && actor.system.fatigueCurrent === 0) {
         updateData["system.fatigueCurrent"] = currentFatigue;
       }
       if (!actor.system.fatigueLongTerm) {
@@ -944,7 +943,7 @@ export const migrateActorData = async function (actorDoc, actorItems) {
     }
 
     if (!actor.system.twilight && actor.type !== "beast") {
-      updateData["twilight"] = {
+      updateData.twilight = {
         stage: TWILIGHT_STAGES.NONE,
         pointsGained: 0,
         strength: 0,
@@ -960,7 +959,7 @@ export const migrateActorData = async function (actorDoc, actorItems) {
   // Migrate Owned Items
   if (!actorDoc.items) return updateData;
   let items = [];
-  if (actorItems.length !== 0 || actorItems.size != 0) {
+  if (actorItems.length !== 0 || actorItems.size !== 0) {
     for (let i of actorDoc.items) {
       // Migrate the Owned Item
       try {
@@ -990,7 +989,7 @@ export const migrateActorData = async function (actorDoc, actorItems) {
     for (let invalidItemId of invalidItemIds) {
       try {
         const rawData = foundry.utils.deepClone(
-          actorDoc.items._source.find((d) => d._id == invalidItemId)
+          actorDoc.items._source.find((d) => d._id === invalidItemId)
         );
         let invalidItem = actorDoc.items.getInvalid(invalidItemId);
         const itemUpdate = await migrateItemData(invalidItem);
@@ -1021,21 +1020,21 @@ export const migrateActiveEffectData = async function (effectData) {
   // update flags
 
   // Update from 1.3.1
-  if (effectData.flags.type != undefined) {
+  if (effectData.flags.type !== undefined) {
     effectUpdate["flags.arm5e.type"] = [effectData.flags.type];
     effectUpdate["flags.-=type"] = null;
   }
-  if (effectData.flags.subtype != undefined) {
+  if (effectData.flags.subtype !== undefined) {
     effectUpdate["flags.arm5e.subtype"] = [effectData.flags.subtype];
     effectUpdate["flags.-=subtype"] = null;
   }
-  if (effectData.flags.value != undefined) {
+  if (effectData.flags.value !== undefined) {
     effectUpdate["flags.arm5e.value"] = [effectData.flags.value];
     effectUpdate["flags.-=value"] = null;
   }
 
   // Fix mess active effect V1
-  if (effectData.flags?.arm5e?.type != undefined) {
+  if (effectData.flags?.arm5e?.type !== undefined) {
     if (!(effectData.flags.arm5e.type instanceof Array)) {
       if (effectData.flags.arm5e.type === "spellCasting") {
         effectData.flags.arm5e.type = ["spellcasting"];
@@ -1045,7 +1044,7 @@ export const migrateActiveEffectData = async function (effectData) {
       let idx = 0;
       for (const name of effectData.flags.arm5e.type.values()) {
         if (name === "spellCasting") {
-          effectUpdate["flags.arm5e.type." + idx] = "spellcasting";
+          effectUpdate[`flags.arm5e.type.${idx}`] = "spellcasting";
         }
         idx++;
       }
@@ -1053,13 +1052,13 @@ export const migrateActiveEffectData = async function (effectData) {
   }
 
   if (
-    effectData.flags?.arm5e?.subtype != undefined &&
+    effectData.flags?.arm5e?.subtype !== undefined &&
     !(effectData.flags.arm5e.subtype instanceof Array)
   ) {
     effectUpdate["flags.arm5e.subtype"] = [effectData.flags.arm5e.subtype];
   }
 
-  if (effectData.flags?.arm5e?.option == undefined) {
+  if (effectData.flags?.arm5e?.option === undefined) {
     let optionArray = Array(effectData.changes.length).fill(null);
     effectUpdate["flags.arm5e.option"] = optionArray;
   } else {
@@ -1097,8 +1096,8 @@ export const migrateActiveEffectData = async function (effectData) {
           break;
         case "system.bonuses.activities.writing":
           // fix "writting" typo
-          if (types[idx] == "writting") {
-            types[idx] == "writing";
+          if (types[idx] === "writting") {
+            types[idx] = "writing";
             needUpdate = true;
           }
           break;
@@ -1120,7 +1119,7 @@ export const migrateActiveEffectData = async function (effectData) {
           break;
         case "system.bonuses.arts.magicResistance":
           // move magic resistance from spellcasting type
-          if (types[idx] == "spellcasting") {
+          if (types[idx] === "spellcasting") {
             types[idx] = "formMagicResistance";
             needUpdate = true;
           }
@@ -1173,7 +1172,7 @@ export const migrateActiveEffectData = async function (effectData) {
           needUpdate = true;
           continue;
         default:
-          if (types[idx] == "spellcasting" && subtypes[idx] === "aura") {
+          if (types[idx] === "spellcasting" && subtypes[idx] === "aura") {
             // delete those old effects
 
             types.splice(idx, 1);
@@ -1191,7 +1190,7 @@ export const migrateActiveEffectData = async function (effectData) {
       effectUpdate["flags.arm5e.option"] = options;
       effectUpdate["flags.arm5e.subtype"] = subtypes;
       effectUpdate["flags.arm5e.type"] = types;
-      effectUpdate["changes"] = changes;
+      effectUpdate.changes = changes;
     }
   }
 
@@ -1219,13 +1218,13 @@ export const migrateItemData = async function (item) {
         "habitantLivestock"
       ].includes(itemData.type)
     ) {
-      updateData["type"] = "inhabitant";
+      updateData.type = "inhabitant";
       if (
-        itemData.name != "" &&
-        (itemData.system.actorId == null || itemData.system.actorId === "")
+        itemData.name !== "" &&
+        (itemData.system.actorId === null || itemData.system.actorId === "")
       ) {
         let inhabitant = game.actors.filter(
-          (a) => ["player", "npc", "beast"].includes(a.type) && a.name == itemData.name
+          (a) => ["player", "npc", "beast"].includes(a.type) && a.name === itemData.name
         );
         if (inhabitant.length > 0) {
           updateData["system.actorId"] = inhabitant[0]._id;
@@ -1235,60 +1234,60 @@ export const migrateItemData = async function (item) {
         case "habitantMagi":
           updateData["system.category"] = "magi";
           if (itemData.name === "") {
-            updateData["name"] = "Magus name";
+            updateData.name = "Magus name";
           }
           updateData["system.extradata.giftType"] = itemData.giftType;
           break;
         case "habitantCompanion":
           updateData["system.category"] = "companions";
           if (itemData.name === "") {
-            updateData["name"] = "Companion name";
+            updateData.name = "Companion name";
           }
           break;
         case "habitantSpecialists":
           updateData["system.category"] = "specialists";
           if (itemData.name === "") {
-            updateData["name"] = "Specialist name";
+            updateData.name = "Specialist name";
           }
           break;
         case "habitantHabitants":
           updateData["system.category"] = "servants";
           if (itemData.name === "") {
-            updateData["name"] = "Grog name";
+            updateData.name = "Grog name";
           }
           break;
         case "habitantHorses":
           updateData["system.category"] = "horses";
           if (itemData.name === "") {
-            updateData["name"] = "Horse name";
+            updateData.name = "Horse name";
           }
           break;
         case "habitantLivestock":
           updateData["system.category"] = "livestock";
           if (itemData.name === "") {
-            updateData["name"] = "LivestockBreed";
+            updateData.name = "LivestockBreed";
           }
           break;
         default:
           updateData["system.category"] = "servants";
           if (itemData.name === "") {
-            updateData["name"] = "A grog";
+            updateData.name = "A grog";
           }
       }
-      if (typeof itemData.system.loyalty != "number") {
+      if (typeof itemData.system.loyalty !== "number") {
         updateData["system.loyalty"] = convertToNumber(itemData.system.loyalty, 0);
       }
-      if (typeof itemData.system.score != "number") {
+      if (typeof itemData.system.score !== "number") {
         updateData["system.score"] = convertToNumber(itemData.system.score, 0);
       }
-      if (typeof itemData.system.quantity != "number") {
+      if (typeof itemData.system.quantity !== "number") {
         updateData["system.quantity"] = convertToNumber(itemData.system.quantity, 0);
       }
-      if (typeof itemData.system.yearBorn != "number") {
+      if (typeof itemData.system.yearBorn !== "number") {
         updateData["system.yearBorn"] = convertToNumber(itemData.system.yearBorn, 1200);
       }
 
-      if (typeof itemData.system.points != "number") {
+      if (typeof itemData.system.points !== "number") {
         updateData["system.points"] = convertToNumber(
           itemData.system.points,
           ARM5E.covenant.inhabitants[updateData["system.category"]].points
@@ -1297,7 +1296,7 @@ export const migrateItemData = async function (item) {
     } else if (itemData.type === "magicItem") {
       // transform magicItems into Items with enchantment
       let description = "<b>Migrated from legacy magic Item</b><br/>";
-      updateData["type"] = "item";
+      updateData.type = "item";
       updateData["system.quantity"] = 1;
 
       updateData["system.carried"] = true;
@@ -1320,7 +1319,7 @@ export const migrateItemData = async function (item) {
 
       // ensure that spell parameters are valid before computing the level:
       const effectName =
-        itemData.system.effects == ""
+        itemData.system.effects === ""
           ? game.i18n.localize("arm5e.sheet.effect")
           : itemData.system.effects;
       itemData.system.duration.value = _guessDuration(effectName, itemData.system.duration.value);
@@ -1329,7 +1328,7 @@ export const migrateItemData = async function (item) {
 
       const level = computeLevel(itemData.system, "spell");
       const delta = itemData.system.level - level;
-      if (delta != 0) {
+      if (delta !== 0) {
         description += `Computed level (${level}) doesn't match original item level (${itemData.system.level}), please review.<br/>`;
       }
 
@@ -1362,7 +1361,7 @@ export const migrateItemData = async function (item) {
       updateData["system.enchantments"] = ench;
       updateData["system.description"] = `${description}<br/>${itemData.system.description}`;
     } else if (_isMagicalItem(itemData)) {
-      if (itemData.type != "baseEffect") {
+      if (itemData.type !== "baseEffect") {
         if (
           itemData.system.duration.value === undefined ||
           CONFIG.ARM5E.magic.durations[itemData.system.duration.value] === undefined
@@ -1373,7 +1372,7 @@ export const migrateItemData = async function (item) {
             itemData.system.duration
           );
         }
-        if (itemData.type == "laboratoryText") {
+        if (itemData.type === "laboratoryText") {
           // fixing season key
           if (!Object.keys(CONFIG.ARM5E.seasons).includes(itemData.system.season)) {
             if (Object.keys(CONFIG.ARM5E.seasons).includes(itemData.system.season.toLowerCase())) {
@@ -1406,40 +1405,40 @@ export const migrateItemData = async function (item) {
         updateData["system.form.value"] = "an";
       }
       // remove redundant data
-      if (itemData.system.techniques != undefined) {
+      if (itemData.system.techniques !== undefined) {
         updateData["system.-=techniques"] = null;
       }
-      if (itemData.system.forms != undefined) {
+      if (itemData.system.forms !== undefined) {
         updateData["system.-=forms"] = null;
       }
-      if (itemData.system["technique-requisites"] != undefined) {
+      if (itemData.system["technique-requisites"] !== undefined) {
         updateData["system.-=technique-requisites"] = null;
       }
-      if (itemData.system["form-requisites"] != undefined) {
+      if (itemData.system["form-requisites"] !== undefined) {
         updateData["system.-=form-requisites"] = null;
       }
-      if (itemData.system["technique-requisite"] != undefined) {
+      if (itemData.system["technique-requisite"] !== undefined) {
         if (
-          itemData.system["technique-requisite"].value != "n-a" &&
-          itemData.system["technique-requisite"].value != ""
+          itemData.system["technique-requisite"].value !== "n-a" &&
+          itemData.system["technique-requisite"].value !== ""
         ) {
-          updateData["system.technique-req." + itemData.system["technique-requisite"].value] = true;
+          updateData[`system.technique-req.${itemData.system["technique-requisite"].value}`] = true;
         }
         updateData["system.-=technique-requisite"] = null;
       }
 
-      if (itemData.system["form-requisite"] != undefined) {
+      if (itemData.system["form-requisite"] !== undefined) {
         if (
-          itemData.system["form-requisite"].value != "n-a" &&
-          itemData.system["form-requisite"].value != ""
+          itemData.system["form-requisite"].value !== "n-a" &&
+          itemData.system["form-requisite"].value !== ""
         ) {
-          updateData["system.form-req." + itemData.system["form-requisite"].value] = true;
+          updateData[`system.form-req.${itemData.system["form-requisite"].value}`] = true;
         }
         updateData["system.-=form-requisite"] = null;
       }
 
       // temporary : removal of authorship in spell, it will only be present in lab texts
-      if (itemData.type == "spell") {
+      if (itemData.type === "spell") {
         if (itemData.system.author) {
           updateData["system.-=author"] = null;
         }
@@ -1470,16 +1469,16 @@ export const migrateItemData = async function (item) {
       }
     }
     // Fix type of Item
-    if (itemData.type == "visSourcesCovenant" || itemData.type == "visStockCovenant") {
+    if (itemData.type === "visSourcesCovenant" || itemData.type === "visStockCovenant") {
       // V10 datamodel cleanup (2.0.0)
       if (itemData.system.art.value !== undefined) {
         updateData["system.art"] = itemData.system.art.value;
       }
 
       // get ride of form of vis field
-      if (itemData.type == "vis") {
+      if (itemData.type === "vis") {
         if (
-          itemData.system.form != undefined &&
+          itemData.system.form !== undefined &&
           itemData.system.form !== "Physical form of the raw vis." &&
           itemData.system.form !== ""
         ) {
@@ -1487,26 +1486,26 @@ export const migrateItemData = async function (item) {
           updateData["system.-=form"] = null;
         }
       }
-    } else if (itemData.type == "mundaneBook") {
-      updateData["type"] = "book";
-      updateData["name"] = itemData.name;
-      if (itemData.system.ability != undefined) {
+    } else if (itemData.type === "mundaneBook") {
+      updateData.type = "book";
+      updateData.name = itemData.name;
+      if (itemData.system.ability !== undefined) {
         // the field ability is no longer used,
         // appending the value to the description.
-        updateData["system.description"] =
-          itemData.system.description +
-          `<p>MIGRATION: value of ability field: ${itemData.system.ability}</p>`;
+        updateData[
+          "system.description"
+        ] = `${itemData.system.description}<p>MIGRATION: value of ability field: ${itemData.system.ability}</p>`;
         // updateData["system.-=ability"] = null;
       }
       if (itemData.system.types) {
         updateData["system.-=types"] = null;
       }
-    } else if (itemData.type == "might") {
-      updateData["type"] = "power";
+    } else if (itemData.type === "might") {
+      updateData.type = "power";
     }
 
-    if (itemData.type == "mightFamiliar") {
-      updateData["type"] = "powerFamiliar";
+    if (itemData.type === "mightFamiliar") {
+      updateData.type = "powerFamiliar";
     }
   }
   // either an array or an embedded collection
@@ -1552,6 +1551,10 @@ export const migrateItemData = async function (item) {
   return updateData;
 };
 
+/**
+ *
+ * @param itemData
+ */
 function _isMagicalItem(itemData) {
   switch (itemData.type) {
     case "spell":
@@ -1570,7 +1573,7 @@ function _isMagicalItem(itemData) {
 /**
  * Scrub an Actor's system data, removing all keys which are not explicitly defined in the system template
  * @param {Object} actor    The data object for an Actor
- * @return {Object}             The scrubbed Actor data
+ * @returns {Object}             The scrubbed Actor data
  */
 function cleanActorData(actor) {
   // Scrub system data
@@ -1584,7 +1587,7 @@ function cleanActorData(actor) {
 /**
  * Scrub an Item's system data, removing all keys which are not explicitly defined in the system template
  * @param {Object} item    The data object for an Item
- * @return {Object}             The scrubbed Item data
+ * @returns {Object}             The scrubbed Item data
  */
 function cleanItemData(item) {
   // Scrub system data
@@ -1598,6 +1601,11 @@ function cleanItemData(item) {
 // TODO remove once all magic Items are switched to V10 datamodel
 
 // Unfortunaltly, since the range was a free input field, it has to be guessed
+/**
+ *
+ * @param name
+ * @param value
+ */
 function _guessRange(name, value) {
   if (value && value !== "") {
     switch (value.toLowerCase()) {
@@ -1637,14 +1645,19 @@ function _guessRange(name, value) {
   ChatMessage.create({
     content:
       "<b>MIGRATION NOTIFICATION</b><br/>" +
-      `Warning: Unable to guess range \"${value}\" of ${name}, you will have to set it back manually. ` +
+      `Warning: Unable to guess range "${value}" of ${name}, you will have to set it back manually. ` +
       `It has been reset to ${game.i18n.localize("arm5e.spell.ranges.personal")}</b>`
   });
-  console.warn(`Range \"${value}\" of spell ${name} could not be guessed`);
+  console.warn(`Range "${value}" of spell ${name} could not be guessed`);
   return "personal";
 }
 
 // Unfortunaltly, since the target was a free input field, it has to be guessed
+/**
+ *
+ * @param name
+ * @param value
+ */
 function _guessTarget(name, value) {
   if (value && value !== "") {
     switch (value.toLowerCase().trim()) {
@@ -1710,14 +1723,19 @@ function _guessTarget(name, value) {
   ChatMessage.create({
     content:
       "<b>MIGRATION NOTIFICATION</b><br/>" +
-      `Warning: Unable to guess target \"${value}\" of ${name}, you will have to set it back manually. ` +
+      `Warning: Unable to guess target "${value}" of ${name}, you will have to set it back manually. ` +
       `It has been reset to ${game.i18n.localize("arm5e.spell.targets.ind")}</b>`
   });
-  console.warn(`Target \"${value}\" of spell ${name} could not be guessed`);
+  console.warn(`Target "${value}" of spell ${name} could not be guessed`);
   return "ind";
 }
 
 // Unfortunaltely, since the duration was a free input field, it has to be guessed
+/**
+ *
+ * @param name
+ * @param value
+ */
 function _guessDuration(name, value) {
   if (value && value !== "") {
     switch (value.toLowerCase().trim()) {
@@ -1771,9 +1789,9 @@ function _guessDuration(name, value) {
   ChatMessage.create({
     content:
       "<b>MIGRATION NOTIFICATION</b><br/>" +
-      `Warning: Unable to guess duration \"${value}\" of ${name}, you will have to set it back manually. ` +
+      `Warning: Unable to guess duration "${value}" of ${name}, you will have to set it back manually. ` +
       `It has been reset to ${game.i18n.localize("arm5e.spell.durations.moment")}</b>`
   });
-  console.warn(`Duration \"${value}\" of spell ${name} could not be guessed`);
+  console.warn(`Duration "${value}" of spell ${name} could not be guessed`);
   return "moment";
 }

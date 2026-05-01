@@ -8,6 +8,10 @@ import { addProgressItem, applyStandardMagusEffects, makeDiaryTemplate } from ".
 
 // import { Quench } from "../quench.js";
 
+/**
+ *
+ * @param quench
+ */
 export function registerAdventuringTesting(quench) {
   quench.registerBatch(
     "Ars-adventuring",
@@ -133,7 +137,7 @@ export function registerAdventuringTesting(quench) {
 
           expect(abilities[0].system.xp).to.equal(oldXps[0] + 3);
           abilities[1] = magus.getAbility("areaLore", "Geneva");
-          expect(abilities[1] != undefined);
+          expect(abilities[1] !== undefined);
           expect(abilities[1].system.xp).to.equal(oldXps[1] + 2);
 
           await sheet._onProgressRollback(undefined, false);
@@ -179,7 +183,7 @@ export function registerAdventuringTesting(quench) {
           expect(result.system.applyError).to.equal("arm5e.activity.msg.wrongSingleItemXp");
           progressItemCol[0].xp = entry.system.sourceQuality + result.system.sourceModifier;
           await entry.update({ "system.progress.spells": progressItemCol });
-          // if (entry.system.applyError != "") {
+          // if (entry.system.applyError !== "") {
           //   console.warn(entry.system.applyError);
           // }
 
@@ -226,7 +230,7 @@ export function registerAdventuringTesting(quench) {
 
           arts[0].xp = entry.system.sourceQuality + result.system.sourceModifier;
           await entry.update({ "system.progress.arts": arts });
-          // if (entry.system.applyError != "") {
+          // if (entry.system.applyError !== "") {
           //   console.warn(entry.system.applyError);
           // }
 
@@ -398,7 +402,7 @@ export function registerAdventuringTesting(quench) {
           expect(result.system.applyError).to.equal("arm5e.activity.msg.wrongSingleItemXp");
           progressItemCol[0].xp = entry.system.sourceQuality + result.system.sourceModifier;
           await entry.update({ "system.progress.spells": progressItemCol });
-          // if (entry.system.applyError != "") {
+          // if (entry.system.applyError !== "") {
           //   console.warn(entry.system.applyError);
           // }
 
@@ -454,7 +458,7 @@ export function registerAdventuringTesting(quench) {
 
           arts[0].xp = entry.system.sourceQuality + result.system.sourceModifier;
           await entry.update({ "system.progress.arts": arts });
-          // if (entry.system.applyError != "") {
+          // if (entry.system.applyError !== "") {
           //   console.warn(entry.system.applyError);
           // }
 
@@ -676,7 +680,7 @@ export function registerAdventuringTesting(quench) {
 
             arts[0].xp = entry.system.sourceQuality + result.system.sourceModifier;
             await entry.update({ "system.progress.arts": arts });
-            // if (entry.system.applyError != "") {
+            // if (entry.system.applyError !== "") {
             //   console.warn(entry.system.applyError);
             // }
 

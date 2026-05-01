@@ -54,22 +54,21 @@ export class CombatAttackChatSchema extends CombatChatSchema {
     const updateData = {};
     updateData["system.combat.attacker"] = actor.uuid;
     updateData["system.combat.defenders"] = actor.rollInfo.combat.defenders;
-    updateData.flavor =
-      `<p>${game.i18n.format("arm5e.sheet.combat.flavor.attack", {
-        attacker: actor.tokenName,
-        target: actor.rollInfo.combat.defenders.length
-          ? actor.rollInfo.combat.defenders.map((e) => e.name).join(", ")
-          : "",
-        weapon: actor.system.combat.name
-          ? actor.system.combat.name
-          : game.i18n.localize("arm5e.sheet.combat.flavor.noWeapon")
-      })}</p>` + this.parent.flavor;
+    updateData.flavor = `<p>${game.i18n.format("arm5e.sheet.combat.flavor.attack", {
+      attacker: actor.tokenName,
+      target: actor.rollInfo.combat.defenders.length
+        ? actor.rollInfo.combat.defenders.map((e) => e.name).join(", ")
+        : "",
+      weapon: actor.system.combat.name
+        ? actor.system.combat.name
+        : game.i18n.localize("arm5e.sheet.combat.flavor.noWeapon")
+    })}</p>${this.parent.flavor}`;
 
     this.parent.updateSource(updateData);
   }
 
   formatTargets(html) {
-    const contentDiv = html; //.querySelector("li.chat-message");
+    const contentDiv = html; // .querySelector("li.chat-message");
     for (let def of this.combat.defenders) {
       const defender = fromUuidSync(def.uuid);
       if (defender) {
@@ -79,7 +78,7 @@ export class CombatAttackChatSchema extends CombatChatSchema {
         title.classList.add("ars-chat-title");
         title.innerHTML = def.name;
         div.append(title);
-        if (this.roll.botches == 0) {
+        if (this.roll.botches === 0) {
           const button = document.createElement("button");
           button.classList.add("defend", "chat-button", "flex0");
           button.dataset.msgUuid = this.parent.uuid;
@@ -109,6 +108,7 @@ export class CombatAttackChatSchema extends CombatChatSchema {
       }
     }
   }
+
   async rollDefense(defender, dataset) {
     // defender = fromUuidSync(dataset.defenderUuid);
     if (defender) {
@@ -169,6 +169,7 @@ export class CombatDefenseChatSchema extends CombatChatSchema {
       })
     };
   }
+
   enrichMessageData(actor) {
     const updateData = {};
     const rootMsg = fromUuidSync(actor.rollInfo.rootMessageUuid);
@@ -183,14 +184,13 @@ export class CombatDefenseChatSchema extends CombatChatSchema {
       };
       updateData["system.combat.damageComputed"] = false;
       const attacker = fromUuidSync(attackerUuid);
-      updateData.flavor =
-        `<p>${game.i18n.format("arm5e.sheet.combat.flavor.defense", {
-          defender: defender.name,
-          attacker: attacker?.tokenName ?? game.i18n.localize("arm5e.generic.unknown"),
-          weapon: actor.system.combat.name
-            ? actor.system.combat.name
-            : game.i18n.localize("arm5e.sheet.combat.flavor.noWeapon")
-        })}</p>` + this.parent.flavor;
+      updateData.flavor = `<p>${game.i18n.format("arm5e.sheet.combat.flavor.defense", {
+        defender: defender.name,
+        attacker: attacker?.tokenName ?? game.i18n.localize("arm5e.generic.unknown"),
+        weapon: actor.system.combat.name
+          ? actor.system.combat.name
+          : game.i18n.localize("arm5e.sheet.combat.flavor.noWeapon")
+      })}</p>${this.parent.flavor}`;
     } else {
       // rolled independently
       let lastAttackMessage = getLastCombatMessageOfType("combatAttack", (msg) => {
@@ -206,14 +206,13 @@ export class CombatDefenseChatSchema extends CombatChatSchema {
       }
       if (lastAttackMessage) {
         const attacker = fromUuidSync(lastAttackMessage.system.combat.attacker);
-        updateData.flavor =
-          `<p>${game.i18n.format("arm5e.sheet.combat.flavor.defense", {
-            defender: actor.tokenName,
-            attacker: attacker?.tokenName ?? game.i18n.localize("arm5e.generic.unknown"),
-            weapon: actor.system.combat.name
-              ? actor.system.combat.name
-              : game.i18n.localize("arm5e.sheet.combat.flavor.noWeapon")
-          })}</p>` + this.parent.flavor;
+        updateData.flavor = `<p>${game.i18n.format("arm5e.sheet.combat.flavor.defense", {
+          defender: actor.tokenName,
+          attacker: attacker?.tokenName ?? game.i18n.localize("arm5e.generic.unknown"),
+          weapon: actor.system.combat.name
+            ? actor.system.combat.name
+            : game.i18n.localize("arm5e.sheet.combat.flavor.noWeapon")
+        })}</p>${this.parent.flavor}`;
         updateData["system.combat"] = {
           attacker: attacker?.uuid ?? null,
           defender: {
@@ -222,13 +221,12 @@ export class CombatDefenseChatSchema extends CombatChatSchema {
           }
         };
       } else {
-        updateData.flavor =
-          `<p>${game.i18n.format("arm5e.sheet.combat.flavor.defenseNoAttacker", {
-            defender: actor.tokenName,
-            weapon: actor.system.combat.name
-              ? actor.system.combat.name
-              : game.i18n.localize("arm5e.sheet.combat.flavor.noWeapon")
-          })}</p>` + this.parent.flavor;
+        updateData.flavor = `<p>${game.i18n.format("arm5e.sheet.combat.flavor.defenseNoAttacker", {
+          defender: actor.tokenName,
+          weapon: actor.system.combat.name
+            ? actor.system.combat.name
+            : game.i18n.localize("arm5e.sheet.combat.flavor.noWeapon")
+        })}</p>${this.parent.flavor}`;
         updateData["system.combat"] = {
           attacker: null,
           defender: {
@@ -245,7 +243,7 @@ export class CombatDefenseChatSchema extends CombatChatSchema {
   getAdvantage() {
     const defenseMessage = this.parent;
     let attackMessage = fromUuidSync(this.rootMessage);
-    if (attackMessage == null) {
+    if (attackMessage === null) {
       attackMessage = getLastCombatMessageOfType("combatAttack", (msg) => {
         return msg.system.combat.defenders.some(
           (def) => def.uuid === this.parent.actor.uuid && def.state === "attacked"
@@ -498,7 +496,7 @@ export class CombatDamageChatSchema extends CombatChatSchema {
         target: defender.name
       })}</p>`;
     }
-    if (this.combat.damageForm != "") {
+    if (this.combat.damageForm !== "") {
       updateData.flavor += `<br/>${game.i18n.format("arm5e.damage.form")} : ${
         CONFIG.ARM5E.magic.forms[this.combat.damageForm].label
       }`;
@@ -511,7 +509,7 @@ export class CombatDamageChatSchema extends CombatChatSchema {
   }
 
   formatTargets(html) {
-    if (this.parent.rolls.length == 0) return html;
+    if (this.parent.rolls.length === 0) return html;
     const contentDiv = html.querySelector(".message-content");
 
     const div = document.createElement("div");
@@ -537,8 +535,9 @@ export class CombatDamageChatSchema extends CombatChatSchema {
       this.combat.defender.woundGravity !== 0
         ? game.i18n.format("arm5e.messages.woundResult", {
             typeWound: game.i18n.localize(
-              "arm5e.messages.wound." +
+              `arm5e.messages.wound.${
                 CONFIG.ARM5E.recovery.rankMapping[this.combat.defender.woundGravity]
+              }`
             )
           })
         : game.i18n.localize("arm5e.messages.noWound");
@@ -573,7 +572,7 @@ export class CombatSoakChatSchema extends CombatChatSchema {
       this.impact.woundGravity !== 0
         ? game.i18n.format("arm5e.messages.woundResult", {
             typeWound: game.i18n.localize(
-              "arm5e.messages.wound." + CONFIG.ARM5E.recovery.rankMapping[this.impact.woundGravity]
+              `arm5e.messages.wound.${CONFIG.ARM5E.recovery.rankMapping[this.impact.woundGravity]}`
             )
           })
         : game.i18n.localize("arm5e.messages.noWound");

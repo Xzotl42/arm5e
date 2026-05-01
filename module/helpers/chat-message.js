@@ -73,14 +73,14 @@ export class Arm5eChatMessage extends ChatMessage {
     } else if (this.type === "base" && this.isRoll) {
       // chat roll
       this.rolls[0].total;
-      if (this.rolls.length == 1 && this.rolls[0].botchCheck) {
+      if (this.rolls.length === 1 && this.rolls[0].botchCheck) {
         const botches = this.rolls[0].botches;
-        if (botches == 0) {
+        if (botches === 0) {
           this.flavor += `<div class='flex-center' ><b style='text-align: center'>${game.i18n.format(
             "arm5e.messages.die.noBotch",
             { dicenum: this.rolls[0].botchDice }
           )}</b></div>`;
-        } else if (botches == 1) {
+        } else if (botches === 1) {
           this.flavor += `<div class='flex-center' ><b style='text-align: center'>${game.i18n.localize(
             "arm5e.messages.die.botch"
           )}</b></div>`;
@@ -147,7 +147,9 @@ export class Arm5eChatMessage extends ChatMessage {
     // if (!this.isRoll) return html;
 
     const flavor = html.querySelector(".flavor-text");
-    flavor.append(this.addActionButtons(html));
+    if (flavor) {
+      flavor.append(this.addActionButtons(html));
+    }
 
     // format any additional rolls
     if (this.system.formatTargets) {
@@ -161,7 +163,7 @@ export class Arm5eChatMessage extends ChatMessage {
     const originatorOrGM = this.originatorOrGM;
 
     if (!originatorOrGM) {
-      html.querySelector(".clickable").remove();
+      html.querySelector(".clickable")?.remove();
     }
 
     return html;
@@ -194,6 +196,14 @@ export class Arm5eChatMessage extends ChatMessage {
   }
 }
 
+/**
+ *
+ * @param content
+ * @param actor
+ * @param title
+ * @param flavor
+ * @param type
+ */
 export async function privateMessage(content, actor, title, flavor, type = "") {
   let messageData = {
     content: "",

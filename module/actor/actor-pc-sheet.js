@@ -145,7 +145,7 @@ export class ArM5ePCActorSheet extends ArM5eActorSheet {
     const info = getUuidInfo(data.uuid);
     const item = await fromUuid(data.uuid);
     // transform input into labText
-    if (item.type == "ability") {
+    if (item.type === "ability") {
       if (this.actor.hasSkill(item.system.key)) {
         ui.notifications.warn(
           `${game.i18n.localize("arm5e.notification.doubleAbility")} : ${item.name}`
@@ -155,7 +155,7 @@ export class ArM5ePCActorSheet extends ArM5eActorSheet {
     const res = await super._onDropItem(event, data);
     // not dropped in the same actor
     if (this.actor.uuid !== item.parent?.uuid) {
-      if (res && res.length == 1) {
+      if (res && res.length === 1) {
         res[0].sheet.render(true);
       }
     }

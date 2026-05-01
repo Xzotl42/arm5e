@@ -23,7 +23,7 @@ export default class ArM5eActiveEffect extends ActiveEffect {
     // In V10, if the effect is from an Item (virtue, etc) and is owned, prevent edition
     this.noEdit = !game.user.isTrusted || this.getFlag("arm5e", "noEdit");
     this.noDelete =
-      (this.parent?.documentName === "Item" && this.parent?.isOwned == true) ||
+      (this.parent?.documentName === "Item" && this.parent?.isOwned === true) ||
       (this.parent?.documentName === "Actor" && this.origin?.includes("Item"));
     if (!this.origin && this.target instanceof ArM5eActor && this.parent instanceof ArM5eItem) {
       this.origin = this.parent.uuid;
@@ -106,7 +106,7 @@ export default class ArM5eActiveEffect extends ActiveEffect {
   /**
    * Prepare the data structure for Active Effects which are currently applied to an Actor or Item.
    * @param {ActiveEffect[]} effects    The array of Active Effect instances to prepare sheet data for
-   * @return {object}                   Data for rendering
+   * @returns {object}                   Data for rendering
    */
   static prepareActiveEffectCategories(effects) {
     // Define effect header categories
@@ -248,9 +248,9 @@ export default class ArM5eActiveEffect extends ActiveEffect {
     log(false, `CUSTOM effect apply: change: ${change}, current : ${current}, delta: ${delta}`);
   }
 
-  //********************************* */
+  //* ******************************** */
   // ACTIVE EFFECT NON STATIC METHODS
-  //********************************* */
+  //* ******************************** */
 
   // TODO review before use
   buildActiveEffectDescription() {
@@ -263,7 +263,7 @@ export default class ArM5eActiveEffect extends ActiveEffect {
       let effectOption = this.getFlag("arm5e", "option");
       for (let c of Object.values(this.changes)) {
         // log(false, ACTIVE_EFFECTS_TYPES[effectTypes[idx]]);
-        descr += game.i18n.localize(ACTIVE_EFFECTS_TYPES[effectTypes[idx]].mnemonic) + ": ";
+        descr += `${game.i18n.localize(ACTIVE_EFFECTS_TYPES[effectTypes[idx]].mnemonic)}: `;
         let subtype = game.i18n.localize(
           ACTIVE_EFFECTS_TYPES[effectTypes[idx]].subtypes[effectSubtypes[idx]].mnemonic
         );

@@ -37,7 +37,7 @@ export class ArM5eCovenantActorSheet extends ArM5eActorSheet {
 
   getUserCache() {
     let usercache = JSON.parse(sessionStorage.getItem(`usercache-${game.user.id}`));
-    if (usercache[this.actor.id] == undefined) {
+    if (usercache[this.actor.id] === undefined) {
       usercache[this.actor.id] = {
         filters: {
           hermetic: {
@@ -59,7 +59,7 @@ export class ArM5eCovenantActorSheet extends ArM5eActorSheet {
       };
 
       sessionStorage.setItem(`usercache-${game.user.id}`, JSON.stringify(usercache));
-    } else if (usercache[this.actor.id].lists?.visibility == undefined) {
+    } else if (usercache[this.actor.id].lists?.visibility === undefined) {
       usercache[this.actor.id].lists = { visibility: { inhabitants: {} } };
       sessionStorage.setItem(`usercache-${game.user.id}`, JSON.stringify(usercache));
     }
@@ -309,7 +309,7 @@ export class ArM5eCovenantActorSheet extends ArM5eActorSheet {
    * Handle dropping of an item reference or item data onto an Actor Sheet
    * @param {DragEvent} event     The concluding DragEvent which contains drop data
    * @param {Object} data         The data transfer extracted from the event
-   * @return {Promise<Object>}    A data object which describes the result of the drop
+   * @returns {Promise<Object>}    A data object which describes the result of the drop
    * @private
    * @override
    */
@@ -392,7 +392,7 @@ export class ArM5eCovenantActorSheet extends ArM5eActorSheet {
    * Handle dropping of an actor reference or item data onto an Actor Sheet
    * @param {DragEvent} event     The concluding DragEvent which contains drop data
    * @param {Object} data         The data transfer extracted from the event
-   * @return {Promise<Object>}    A data object which describes the result of the drop
+   * @returns {Promise<Object>}    A data object which describes the result of the drop
    * @private
    * @override
    */
@@ -427,7 +427,7 @@ export class ArM5eCovenantActorSheet extends ArM5eActorSheet {
     let targetActor = this.actor;
     if (actor.isMagus()) {
       let pts = 5;
-      if (targetActor.system.season == "summer" || targetActor.system.season == "autumn") {
+      if (targetActor.system.season === "summer" || targetActor.system.season === "autumn") {
         pts = 10;
       }
       // check if it has gentle or blatant gift
@@ -448,20 +448,17 @@ export class ArM5eCovenantActorSheet extends ArM5eActorSheet {
             category: "magi",
             actorId: actor._id,
             giftType: giftType,
-            job:
-              actor.system.description.title.value +
-              " " +
-              game.i18n.localize("arm5e.sheet.house") +
-              " " +
-              CONFIG.ARM5E.character.houses[actor.system.house.value].label,
+            job: `${actor.system.description.title.value} ${game.i18n.localize(
+              "arm5e.sheet.house"
+            )} ${CONFIG.ARM5E.character.houses[actor.system.house.value].label}`,
             points: pts,
             yearBorn: actor.system.description.born.value
           }
         }
       ];
       // check if it is already bound
-      let magi = targetActor.system.inhabitants.magi.filter((h) => h.name == actor.name);
-      if (magi.length == 0) {
+      let magi = targetActor.system.inhabitants.magi.filter((h) => h.name === actor.name);
+      if (magi.length === 0) {
         log(false, "Added to inhabitants Magi");
         return await this.actor.createEmbeddedDocuments("Item", itemData, { render: true });
       } else {
@@ -470,7 +467,7 @@ export class ArM5eCovenantActorSheet extends ArM5eActorSheet {
       }
     } else if (actor.isCompanion()) {
       let pts = 3;
-      if (targetActor.system.season == "summer" || targetActor.system.season == "autumn") {
+      if (targetActor.system.season === "summer" || targetActor.system.season === "autumn") {
         pts = 5;
       }
       // TODO: fill other fields?
@@ -490,8 +487,8 @@ export class ArM5eCovenantActorSheet extends ArM5eActorSheet {
       ];
 
       // check if it is already bound
-      let comp = targetActor.system.inhabitants.companion.filter((h) => h.name == actor.name);
-      if (comp.length == 0) {
+      let comp = targetActor.system.inhabitants.companion.filter((h) => h.name === actor.name);
+      if (comp.length === 0) {
         log(false, "Added to inhabitants Companion");
         return await this.actor.createEmbeddedDocuments("Item", itemData, { render: true });
       } else {
@@ -500,7 +497,7 @@ export class ArM5eCovenantActorSheet extends ArM5eActorSheet {
       }
     } else if (
       actor.isGrog() ||
-      (actor.type == "npc" && actor.system.charType.value == "mundane")
+      (actor.type === "npc" && actor.system.charType.value === "mundane")
     ) {
       let pts = 1;
       const itemData = [
@@ -519,15 +516,15 @@ export class ArM5eCovenantActorSheet extends ArM5eActorSheet {
       ];
 
       // check if it is already bound
-      let hab = targetActor.system.inhabitants.habitants.filter((h) => h.name == actor.name);
-      if (hab.length == 0) {
+      let hab = targetActor.system.inhabitants.habitants.filter((h) => h.name === actor.name);
+      if (hab.length === 0) {
         log(false, "Added to inhabitants");
         return await this.actor.createEmbeddedDocuments("Item", itemData, { render: true });
       } else {
         itemData[0]._id = hab[0]._id;
         return await this.actor.updateEmbeddedDocuments("Item", itemData, { render: true });
       }
-    } else if (actor.type == "laboratory") {
+    } else if (actor.type === "laboratory") {
       const itemData = [
         {
           name: actor.name,
@@ -542,8 +539,8 @@ export class ArM5eCovenantActorSheet extends ArM5eActorSheet {
         }
       ];
       // check if it is already bound
-      let lab = targetActor.system.labs.filter((h) => h.name == actor.name);
-      if (lab.length == 0) {
+      let lab = targetActor.system.labs.filter((h) => h.name === actor.name);
+      if (lab.length === 0) {
         log(false, "Added to sanctums");
         return await this.actor.createEmbeddedDocuments("Item", itemData, { render: true });
       } else {
@@ -558,30 +555,30 @@ export class ArM5eCovenantActorSheet extends ArM5eActorSheet {
     if (!["laboratory", "player", "npc", "beast"].includes(actor.type)) return [];
     let targetActor = this.actor;
     if (actor.isMagus()) {
-      let hab = targetActor.system.inhabitants.magi.filter((h) => h.system.actorId == actor._id);
+      let hab = targetActor.system.inhabitants.magi.filter((h) => h.system.actorId === actor._id);
       if (hab.length) {
         return this.actor.deleteEmbeddedDocuments("Item", [hab[0]._id], { render: true });
       }
     } else if (actor.isCompanion()) {
       let hab = targetActor.system.inhabitants.companion.filter(
-        (h) => h.system.actorId == actor._id
+        (h) => h.system.actorId === actor._id
       );
       if (hab.length) {
         return this.actor.deleteEmbeddedDocuments("Item", [hab[0]._id], { render: true });
       }
     } else if (
       actor.isGrog() ||
-      (actor.type == "npc" && actor.system.charType.value == "mundane")
+      (actor.type === "npc" && actor.system.charType.value === "mundane")
     ) {
       let hab = targetActor.system.inhabitants.habitants.filter(
-        (h) => h.system.actorId == actor._id
+        (h) => h.system.actorId === actor._id
       );
       if (hab.length) {
         return this.actor.deleteEmbeddedDocuments("Item", [hab[0]._id], { render: true });
       }
-    } else if (actor.type == "laboratory") {
+    } else if (actor.type === "laboratory") {
       // check if it is already bound
-      let lab = targetActor.system.labs.filter((l) => l.system.sanctumId == actor._id);
+      let lab = targetActor.system.labs.filter((l) => l.system.sanctumId === actor._id);
       if (lab.length) {
         return this.actor.deleteEmbeddedDocuments("Item", [lab[0]._id], { render: true });
       }
@@ -594,7 +591,7 @@ export class ArM5eCovenantActorSheet extends ArM5eActorSheet {
    * Currently supports dropping a Folder of Items to create all items as owned items.
    * @param {DragEvent} event     The concluding DragEvent which contains drop data
    * @param {Object} data         The data transfer extracted from the event
-   * @return {Promise<Item[]>}
+   * @returns {Promise<Item[]>}
    * @private
    */
 
