@@ -211,6 +211,9 @@ export class DamageChatSchema extends RollChatSchema {
         if (this.parent.isAuthor || game.user.isGM) {
           log(false, "applying soak chat message update", updateData);
           await Promise.all(this._applyChatMessageUpdate(updateData));
+          let updatedActor = this.parent.actor;
+          log(false, `Updated actor: ${updatedActor}`);
+          log(false, `Updated actor uuid: ${updatedActor.uuid}`);
         } else if (this.parent.actor.isOwner) {
           // Not the author, but owner of the actor rolling
           game.arm5e.socketHandler.emitAwaited(SMSG_TYPES.CHAT, "rollSoak", {

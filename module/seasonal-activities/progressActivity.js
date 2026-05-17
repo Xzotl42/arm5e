@@ -47,6 +47,7 @@ export class ResourceActivity extends Activity {
   constructor(actorUuid, type) {
     super(actorUuid, type);
   }
+
   application(diary) {
     return diary.progressApply();
   }

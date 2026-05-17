@@ -1,10 +1,16 @@
-import { compareLabTexts, log, hermeticFilter, getUuidInfo, getDataset } from "../tools/tools.js";
+import {
+  compareLabTexts,
+  log,
+  hermeticFilter,
+  getUuidInfo,
+  getDataset
+} from "../module/tools/tools.js";
 import { ArM5eActorSheet } from "./actor-sheet.js";
-import { HERMETIC_FILTER, TIME_FILTER, TOPIC_FILTER } from "../constants/userdata.js";
-import { effectToLabText, resetOwnerFields } from "../item/item-converter.js";
-import { ArM5eActor } from "./actor.js";
-import { getConfirmation } from "../ui/dialogs.js";
-import Aura from "../helpers/aura.js";
+import { HERMETIC_FILTER, TIME_FILTER, TOPIC_FILTER } from "../module/constants/userdata.js";
+import { effectToLabText, resetOwnerFields } from "../module/item/item-converter.js";
+import { ArM5eActor } from "../module/actor/actor.js";
+import { getConfirmation } from "../module/ui/dialogs.js";
+import Aura from "../module/helpers/aura.js";
 
 /**
  * Extend the basic ArM5eActorSheet

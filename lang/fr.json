@@ -1080,7 +1080,7 @@
         "penaltyAdviceMedium": "Le personnage peut marcher, à condition qu'on lui permette d'aller lentement et de se reposer fréquemment. Toutes les vitesses de déplacement longue distance sont réduites de moitié. Le personnage peut étudier, mais son Total d'Avancement est divisé par deux s'il est à ce niveau de pénalité pendant un mois ou plus de la saison. Le travail en laboratoire hermétique et les travaux artisanaux sont impossibles.",
         "sunriseRoll": "Lever du soleil",
         "sunsetRoll": "Coucher du soleil",
-        "worstPenaltyNote": "Pénalité de blessure de {penalty} soutenue pendant {days} jours cette saison."
+        "worstPenaltyNote": "Pénalité de blessure de {penalty} pendant {days} jours cette saison."
       },
       "mundaneHelp": "Aide vulgaire",
       "recoveryBonus": "Bonus de récupération",
@@ -1953,7 +1953,7 @@
         "if": "Si (Féerique)",
         "minutes": "Minutes (Astrologique)",
         "mm": "Midi/Minuit (Féérique)",
-        "moment": "Instantané",
+        "moment": "Momentanée",
         "moon": "Lune",
         "not": "Pas (Féérique)",
         "office": "Service (Sacrée)",

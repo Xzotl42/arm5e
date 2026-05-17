@@ -131,7 +131,7 @@
     {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
     {{> "systems/arm5e/templates/actor/parts/hermeticFilter.hbs" category="hermetic" list="spells" visibility=ui.spellsFilterVisibility}}
     {{#each system.filteredSpells as |item id|}}
-      <li class="item item-value flexrow macro-ready" data-name="{{item.name}}" data-item-id="{{item._id}}"
+      <li class="item item-value flexrow macro-ready draggable" data-name="{{item.name}}" data-item-id="{{item._id}}"
         data-attribute="{{id}}">
         <div class="item-image item-control item-edit" data-action="itemEdit"><img src="{{item.img}}"
             title="{{item.name}}" /></div>
@@ -184,7 +184,7 @@
     {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
     {{> "systems/arm5e/templates/actor/parts/hermeticFilter.hbs" category="hermetic" list="magicalEffects" visibility=ui.magicEffectFilterVisibility}}
     {{#each system.filteredMagicalEffects as |item id|}}
-      <li class="item item-value flexrow macro-ready" data-name="{{item.name}}" data-item-id="{{item._id}}"
+      <li class="item item-value flexrow macro-ready draggable" data-name="{{item.name}}" data-item-id="{{item._id}}"
         data-attribute="{{id}}">
         <div class="item-image item-control item-edit" data-action="itemEdit"><img src="{{item.img}}"
             title="{{item.name}}" /></div>

@@ -43,7 +43,7 @@ export function registerExposureTesting(quench) {
         it("Single Ability", async function () {
           let sheet = entry.sheet;
 
-          const sheetData = await entry.sheet.getData();
+          const sheetData = await entry.sheet._prepareContext({});
           log(false, JSON.stringify(sheetData.system));
           // sheet._tabs[0].activate("advanced");
           expect(entry.system.done).to.equal(false);
@@ -58,13 +58,13 @@ export function registerExposureTesting(quench) {
           expect(entry.system.progress.newSpells.length).to.equal(0);
           expect(entry.system.progress.abilities.length).to.equal(1);
 
-          result = await sheet._onProgressApply(event, false);
+          result = await sheet._progressApply({ sourceModifier: 0 });
           expect(result.system.applyError).to.equal("arm5e.activity.msg.wrongTotalXp");
 
           // assign xp
           progressItemCol[0].xp = 24;
           await entry.update({ "system.progress.abilities": progressItemCol });
-          result = await sheet._onProgressApply(event, false);
+          result = await sheet._progressApply({ sourceModifier: 0 });
           expect(result.system.applyError).to.equal("arm5e.activity.msg.wrongSingleItemXp");
           progressItemCol[0].xp = entry.system.sourceQuality + result.system.sourceModifier;
           await entry.update({ "system.progress.abilities": progressItemCol });
@@ -73,14 +73,14 @@ export function registerExposureTesting(quench) {
             console.warn(entry.system.applyError);
           }
 
-          result = await sheet._onProgressApply(event, false);
+          result = await sheet._progressApply({ sourceModifier: 0 });
           expect(result.system.applyError).to.equal("");
 
           expect(ability.system.xp).to.equal(
             oldXp + entry.system.sourceQuality + result.system.sourceModifier
           );
 
-          await sheet._onProgressRollback(undefined, false);
+          await sheet._progressRollback(false);
           expect(ability.system.xp).to.equal(oldXp);
           // log(false, JSON.stringify(sheetData));
           await entry.update({ "system.progress.abilities": [] });
@@ -90,7 +90,7 @@ export function registerExposureTesting(quench) {
         it("Exposure spell mastery", async function () {
           let sheet = entry.sheet;
 
-          const sheetData = await entry.sheet.getData();
+          const sheetData = await entry.sheet._prepareContext({});
           log(false, JSON.stringify(sheetData.system));
           expect(entry.system.done).to.equal(false);
           expect(entry.system.dates.length).to.equal(1);
@@ -109,13 +109,13 @@ export function registerExposureTesting(quench) {
           expect(entry.system.progress.newSpells.length).to.equal(0);
           expect(entry.system.progress.abilities.length).to.equal(0);
 
-          result = await sheet._onProgressApply(event, false);
+          result = await sheet._progressApply({ sourceModifier: 0 });
           expect(result.system.applyError).to.equal("arm5e.activity.msg.wrongTotalXp");
 
           // assign xp
           progressItemCol[0].xp = 250;
           await entry.update({ "system.progress.spells": progressItemCol });
-          result = await sheet._onProgressApply(event, false);
+          result = await sheet._progressApply({ sourceModifier: 0 });
           expect(result.system.applyError).to.equal("arm5e.activity.msg.wrongSingleItemXp");
           progressItemCol[0].xp = entry.system.sourceQuality + result.system.sourceModifier;
           await entry.update({ "system.progress.spells": progressItemCol });
@@ -123,14 +123,14 @@ export function registerExposureTesting(quench) {
           //   console.warn(entry.system.applyError);
           // }
 
-          result = await sheet._onProgressApply(event, false);
+          result = await sheet._progressApply({ sourceModifier: 0 });
           expect(result.system.applyError).to.equal("");
 
           expect(spell.system.xp).to.equal(
             oldXp + entry.system.sourceQuality + result.system.sourceModifier
           );
 
-          await sheet._onProgressRollback(undefined, false);
+          await sheet._progressRollback(false);
           expect(spell.system.xp).to.equal(oldXp);
           // log(false, JSON.stringify(sheetData));
           await entry.update({ "system.progress.spells": [] });
@@ -140,7 +140,7 @@ export function registerExposureTesting(quench) {
         it("Single Art", async function () {
           let sheet = entry.sheet;
 
-          const sheetData = await entry.sheet.getData();
+          const sheetData = await entry.sheet._prepareContext({});
           log(false, JSON.stringify(sheetData.system));
           expect(entry.system.done).to.equal(false);
           expect(entry.system.dates.length).to.equal(1);
@@ -154,13 +154,13 @@ export function registerExposureTesting(quench) {
           expect(entry.system.progress.newSpells.length).to.equal(0);
           expect(entry.system.progress.abilities.length).to.equal(0);
 
-          result = await sheet._onProgressApply(event, false);
+          result = await sheet._progressApply({ sourceModifier: 0 });
           expect(result.system.applyError).to.equal("arm5e.activity.msg.wrongTotalXp");
 
           // assign xp
           arts[0].xp = 250;
           await entry.update({ "system.progress.arts": arts });
-          result = await sheet._onProgressApply(event, false);
+          result = await sheet._progressApply({ sourceModifier: 0 });
           expect(result.system.applyError).to.equal("arm5e.activity.msg.wrongSingleItemXp");
 
           arts[0].xp = entry.system.sourceQuality + result.system.sourceModifier;
@@ -169,11 +169,11 @@ export function registerExposureTesting(quench) {
           //   console.warn(entry.system.applyError);
           // }
 
-          result = await sheet._onProgressApply(event, false);
+          result = await sheet._progressApply({ sourceModifier: 0 });
           expect(result.system.applyError).to.equal("");
           expect(magus.system.arts.techniques.mu.xp).to.equal(oldXp + 3);
 
-          await sheet._onProgressRollback(undefined, false);
+          await sheet._progressRollback(false);
           expect(art.xp).to.equal(oldXp);
           await entry.update({ "system.progress.arts": [] });
           assert.ok(true);
@@ -182,7 +182,7 @@ export function registerExposureTesting(quench) {
         it("Combo", async function () {
           await entry.update({ "system.sourceQuality": 15 });
           let sheet = entry.sheet;
-          const sheetData = await entry.sheet.getData();
+          const sheetData = await entry.sheet._prepareContext({});
           const ability = magus.system.abilities[0];
           const oldXpAb = ability.system.xp;
           const spell = magus.items.get(sheetData.system.defaultSpellMastery);
@@ -208,28 +208,28 @@ export function registerExposureTesting(quench) {
           expect(entry.system.progress.newSpells.length).to.equal(0);
           expect(entry.system.progress.abilities.length).to.equal(1);
 
-          result = await sheet._onProgressApply(event, false);
+          result = await sheet._progressApply({ sourceModifier: 0 });
           expect(result.system.applyError).to.equal("arm5e.activity.msg.wrongTotalXp");
 
           // assign xp
           abilities[0].xp = 5;
           await entry.update({ "system.progress.abilities": abilities });
-          result = await sheet._onProgressApply(event, false);
+          result = await sheet._progressApply({ sourceModifier: 0 });
           expect(result.system.applyError).to.equal("arm5e.activity.msg.wrongTotalXp");
           spells[0].xp = 5;
           await entry.update({ "system.progress.spells": spells });
-          result = await sheet._onProgressApply(event, false);
+          result = await sheet._progressApply({ sourceModifier: 0 });
           expect(result.system.applyError).to.equal("arm5e.activity.msg.wrongTotalXp");
           arts[0].xp = 5;
           await entry.update({ "system.progress.arts": arts });
-          result = await sheet._onProgressApply(event, false);
+          result = await sheet._progressApply({ sourceModifier: 0 });
           expect(result.system.applyError).to.equal("");
 
           expect(ability.system.xp).to.equal(oldXpAb + 5);
           expect(spell.system.xp).to.equal(oldXpSpell + 5);
           expect(magus.system.arts.forms.me.xp).to.equal(oldXpArt + 5);
 
-          await sheet._onProgressRollback(undefined, false);
+          await sheet._progressRollback(false);
           expect(ability.system.xp).to.equal(oldXpAb);
           expect(spell.system.xp).to.equal(oldXpSpell);
           expect(magus.system.arts.forms.me.xp).to.equal(oldXpArt);

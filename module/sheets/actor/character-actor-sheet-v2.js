@@ -406,42 +406,30 @@ export class Arm5eCharacterActorSheetV2 extends ArM5eActorSheetV2 {
       relativeTo: this.actor
     };
 
-    if (this.actor.system.biography) {
-      context.enrichedBiography = await foundry.applications.ux.TextEditor.enrichHTML(
-        this.actor.system.biography,
-        enrichOptions
-      );
-    }
-    if (this.actor.system.secrets) {
-      context.enrichedSecrets = await foundry.applications.ux.TextEditor.enrichHTML(
-        this.actor.system.secrets,
-        enrichOptions
-      );
-    }
-    if (this.actor.system.sigil?.value) {
-      context.enrichedSigil = await foundry.applications.ux.TextEditor.enrichHTML(
-        this.actor.system.sigil.value,
-        enrichOptions
-      );
-    }
-    if (this.actor.system.warping?.effects) {
-      context.enrichedWarping = await foundry.applications.ux.TextEditor.enrichHTML(
-        this.actor.system.warping.effects,
-        enrichOptions
-      );
-    }
-    if (this.actor.system.decrepitude?.effects) {
-      context.enrichedDecrepitude = await foundry.applications.ux.TextEditor.enrichHTML(
-        this.actor.system.decrepitude.effects,
-        enrichOptions
-      );
-    }
-    if (this.actor.system.laboratory?.longevityRitual?.twilightScars) {
-      context.enrichedTwilightScars = await foundry.applications.ux.TextEditor.enrichHTML(
-        this.actor.system.laboratory.longevityRitual.twilightScars,
-        enrichOptions
-      );
-    }
+    context.enrichedBiography = await foundry.applications.ux.TextEditor.enrichHTML(
+      this.actor.system.biography ?? "",
+      enrichOptions
+    );
+    context.enrichedSecrets = await foundry.applications.ux.TextEditor.enrichHTML(
+      this.actor.system.secrets ?? "",
+      enrichOptions
+    );
+    context.enrichedSigil = await foundry.applications.ux.TextEditor.enrichHTML(
+      this.actor.system.sigil?.value ?? "",
+      enrichOptions
+    );
+    context.enrichedWarping = await foundry.applications.ux.TextEditor.enrichHTML(
+      this.actor.system.warping?.effects ?? "",
+      enrichOptions
+    );
+    context.enrichedDecrepitude = await foundry.applications.ux.TextEditor.enrichHTML(
+      this.actor.system.decrepitude?.effects ?? "",
+      enrichOptions
+    );
+    context.enrichedTwilightScars = await foundry.applications.ux.TextEditor.enrichHTML(
+      this.actor.system.laboratory?.longevityRitual?.twilightScars ?? "",
+      enrichOptions
+    );
   }
 
   /**

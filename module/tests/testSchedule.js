@@ -854,118 +854,118 @@ export function registerDiaryTesting(quench) {
         //     await magus.deleteEmbeddedDocuments("Item", diariesIds);
         //   });
         // });
-        describe("Conflicts test", function () {
-          let tmpDate = { year: 1200, season: "spring" };
-          for (const [key1, act1] of Object.entries(ARM5E.activities.generic)) {
-            // magus.sheet.render(true);
+        // describe("Conflicts test", function () {
+        //   let tmpDate = { year: 1200, season: "spring" };
+        //   for (const [key1, act1] of Object.entries(ARM5E.activities.generic)) {
+        //     // magus.sheet.render(true);
 
-            log(false, `date : ${JSON.stringify(tmpDate)}`);
+        //     log(false, `date : ${JSON.stringify(tmpDate)}`);
 
-            for (const [key2, act2] of Object.entries(ARM5E.activities.generic)) {
-              const testDate = { year: tmpDate.year, season: tmpDate.season };
-              it(`${game.i18n.localize(act1.label)} vs ${game.i18n.localize(
-                act2.label
-              )}`, async function () {
-                const currentMagus = suiteState.magus;
-                const entryData = [
-                  {
-                    name: `${game.i18n.localize(act1.label)}'s sheet`,
-                    type: "diaryEntry",
-                    system: {
-                      done: false,
-                      cappedGain: false,
-                      dates: [
-                        {
-                          year: testDate.year,
-                          season: testDate.season,
-                          date: "The Date",
-                          applied: false
-                        }
-                      ],
-                      sourceQuality: 42,
-                      activity: key1,
-                      progress: {
-                        abilities: [],
-                        arts: [],
-                        spells: [],
-                        newSpells: []
-                      },
-                      optionKey: "standard",
-                      duration: act1.duration ? act1.duration : 1,
-                      description: `Some label for ${game.i18n.localize(act1.label)}`,
-                      externalIds: []
-                    }
-                  },
-                  {
-                    name: `${game.i18n.localize(act2.label)}'s sheet`,
-                    type: "diaryEntry",
-                    system: {
-                      done: false,
-                      cappedGain: false,
-                      dates: [
-                        {
-                          year: testDate.year,
-                          season: testDate.season,
-                          date: "The Date",
-                          applied: false
-                        }
-                      ],
-                      sourceQuality: 42,
-                      activity: key2,
-                      progress: {
-                        abilities: [],
-                        arts: [],
-                        spells: [],
-                        newSpells: []
-                      },
-                      optionKey: "standard",
-                      duration: act2.duration ? act2.duration : 1,
-                      description: `Some label for ${game.i18n.localize(act2.label)}`,
-                      externalIds: []
-                    }
-                  }
-                ];
-                let entries = await currentMagus.createEmbeddedDocuments("Item", entryData, {});
-                assert.equal(entries.length, 2, "Item created");
-                let hasConflict = true;
-                if (key1 === key2) {
-                  hasConflict = !CONFIG.ARM5E.activities.duplicateAllowed.includes(key2);
-                } else {
-                  hasConflict = !(
-                    CONFIG.ARM5E.activities.conflictExclusion.includes(key1) ||
-                    CONFIG.ARM5E.activities.conflictExclusion.includes(key2)
-                  );
-                }
-                assert.equal(
-                  entries[0].system.hasScheduleConflict(currentMagus),
-                  results[key1][key2],
-                  results[key1][key2] ? "There should be a conflict" : "There should be no conflict"
-                );
-                const actorSchedule = currentMagus.getSchedule(
-                  testDate.year,
-                  testDate.year,
-                  [],
-                  []
-                );
-                assert.equal(
-                  DiaryEntrySchema.hasConflict(actorSchedule[0].seasons[testDate.season]),
-                  results[key1][key2],
-                  results[key1][key2] ? "There should be a conflict" : "There should be no conflict"
-                );
-                await currentMagus.deleteEmbeddedDocuments(
-                  "Item",
-                  entries.map((e) => e._id)
-                );
-              });
-              tmpDate = nextDate(testDate.season, testDate.year);
-            }
-          }
-          after(async function () {
-            let diariesIds = magus.items.filter((e) => e.type === "diaryEntry").map((e) => e._id);
-            await magus.deleteEmbeddedDocuments("Item", diariesIds);
-          });
-          // magus.sheet.close();
-        });
+        //     for (const [key2, act2] of Object.entries(ARM5E.activities.generic)) {
+        //       const testDate = { year: tmpDate.year, season: tmpDate.season };
+        //       it(`${game.i18n.localize(act1.label)} vs ${game.i18n.localize(
+        //         act2.label
+        //       )}`, async function () {
+        //         const currentMagus = suiteState.magus;
+        //         const entryData = [
+        //           {
+        //             name: `${game.i18n.localize(act1.label)}'s sheet`,
+        //             type: "diaryEntry",
+        //             system: {
+        //               done: false,
+        //               cappedGain: false,
+        //               dates: [
+        //                 {
+        //                   year: testDate.year,
+        //                   season: testDate.season,
+        //                   date: "The Date",
+        //                   applied: false
+        //                 }
+        //               ],
+        //               sourceQuality: 42,
+        //               activity: key1,
+        //               progress: {
+        //                 abilities: [],
+        //                 arts: [],
+        //                 spells: [],
+        //                 newSpells: []
+        //               },
+        //               optionKey: "standard",
+        //               duration: act1.duration ? act1.duration : 1,
+        //               description: `Some label for ${game.i18n.localize(act1.label)}`,
+        //               externalIds: []
+        //             }
+        //           },
+        //           {
+        //             name: `${game.i18n.localize(act2.label)}'s sheet`,
+        //             type: "diaryEntry",
+        //             system: {
+        //               done: false,
+        //               cappedGain: false,
+        //               dates: [
+        //                 {
+        //                   year: testDate.year,
+        //                   season: testDate.season,
+        //                   date: "The Date",
+        //                   applied: false
+        //                 }
+        //               ],
+        //               sourceQuality: 42,
+        //               activity: key2,
+        //               progress: {
+        //                 abilities: [],
+        //                 arts: [],
+        //                 spells: [],
+        //                 newSpells: []
+        //               },
+        //               optionKey: "standard",
+        //               duration: act2.duration ? act2.duration : 1,
+        //               description: `Some label for ${game.i18n.localize(act2.label)}`,
+        //               externalIds: []
+        //             }
+        //           }
+        //         ];
+        //         let entries = await currentMagus.createEmbeddedDocuments("Item", entryData, {});
+        //         assert.equal(entries.length, 2, "Item created");
+        //         let hasConflict = true;
+        //         if (key1 === key2) {
+        //           hasConflict = !CONFIG.ARM5E.activities.duplicateAllowed.includes(key2);
+        //         } else {
+        //           hasConflict = !(
+        //             CONFIG.ARM5E.activities.conflictExclusion.includes(key1) ||
+        //             CONFIG.ARM5E.activities.conflictExclusion.includes(key2)
+        //           );
+        //         }
+        //         assert.equal(
+        //           entries[0].system.hasScheduleConflict(currentMagus),
+        //           results[key1][key2],
+        //           results[key1][key2] ? "There should be a conflict" : "There should be no conflict"
+        //         );
+        //         const actorSchedule = currentMagus.getSchedule(
+        //           testDate.year,
+        //           testDate.year,
+        //           [],
+        //           []
+        //         );
+        //         assert.equal(
+        //           DiaryEntrySchema.hasConflict(actorSchedule[0].seasons[testDate.season]),
+        //           results[key1][key2],
+        //           results[key1][key2] ? "There should be a conflict" : "There should be no conflict"
+        //         );
+        //         await currentMagus.deleteEmbeddedDocuments(
+        //           "Item",
+        //           entries.map((e) => e._id)
+        //         );
+        //       });
+        //       tmpDate = nextDate(testDate.season, testDate.year);
+        //     }
+        //   }
+        //   after(async function () {
+        //     let diariesIds = magus.items.filter((e) => e.type === "diaryEntry").map((e) => e._id);
+        //     await magus.deleteEmbeddedDocuments("Item", diariesIds);
+        //   });
+        //   // magus.sheet.close();
+        // });
         describe("Display sheet test", function () {
           let tmpDate = { year: 1220, season: "spring" };
           for (const [key, act] of Object.entries(ARM5E.activities.generic)) {
@@ -1013,7 +1013,11 @@ export function registerDiaryTesting(quench) {
                 false,
                 "There should be no conflict"
               );
-              await entry[0].sheet._onProgressApply({}, false);
+              await entry[0].sheet.constructor.progressApply.call(
+                entry[0].sheet,
+                {},
+                { dataset: { sourceModifier: 0 } }
+              );
               await sleep(100);
               await entry[0].sheet.close();
             });

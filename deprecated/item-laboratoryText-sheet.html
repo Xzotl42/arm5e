@@ -19,7 +19,25 @@
       {{/if}}
       <h1 class="bigname"><input name="name" {{noEdit}} type="text" value="{{item.name}}" placeholder="Name" /></h1>
       <div class="padding4 flexrow">
-        {{> "systems/arm5e/templates/item/parts/authorship.html" }}
+        <div class="resource">
+          <label class="">{{localize "arm5e.sheet.authorship.author"}}</label>
+          <input type="text" {{noEdit}} name="system.author" value="{{system.author}}" data-dtype="String" />
+        </div>
+        <div class="resource">
+          <label class="">{{localize "arm5e.sheet.authorship.language"}}</label>
+          <input type="text" {{noEdit}} name="system.language" value="{{system.language}}" data-dtype="String" />
+        </div>
+        <div class="resource">
+          <label class="">{{localize "arm5e.sheet.season"}}</label>
+          <select {{noSelect}} name="system.season" data-dtype="String">
+            {{selectOptions config.seasons selected=system.season labelAttr="label" localize=true }}
+          </select>
+        </div>
+        <div class="resource">
+          <label class="">{{localize "arm5e.sheet.year"}}</label>
+          <input type="number" {{noEdit}} name="system.year" value="{{system.year}}" data-dtype="Number"
+            class="select-on-focus" style="width:60px" />
+        </div>
       </div>
       <div class="flexrow">
         <div class="padding2">
@@ -60,7 +78,7 @@
         editable=editable
       }}
     {{else}}
-      {{> "systems/arm5e/templates/item/parts/spell-design-V2.html" docId=@root.item._id container="book" 
+      {{> "systems/arm5e/templates/item/parts/spell-design-alt.html" docId=@root.item._id container="book" 
     prefix="" spelldata=@root visibility=@root.ui.sections.visibility.book ritual=(eq system.type "spell") noApplyFocus=true}}
     {{/if}}
     {{#if (eq system.type "enchantment")}}

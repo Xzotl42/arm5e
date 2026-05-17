@@ -483,7 +483,7 @@ ARM5E.GENERAL_ABILITIES = {
     option: true,
     category: "general",
     optionPlaceholder: "arm5e.skill.options.area",
-    optionDefault: "area-name"
+    optionDefault: "Area-Lore"
   },
   athletics: {
     mnemonic: "arm5e.skill.general.athletics",

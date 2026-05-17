@@ -65,7 +65,7 @@
 
         {{#each system.qualities as |item id|}}
           {{#if item.system.visible }}
-            <li class="item item-value flexrow" data-name="{{item.name}}" data-item-id="{{item._id}}">
+            <li class="item item-value flexrow draggable" data-name="{{item.name}}" data-item-id="{{item._id}}">
               <div class="item-image item-control item-edit" data-action="itemEdit">
                 <img src="{{item.img}}" width="45" height="45" title="{{item.name}}" />
               </div>
@@ -113,7 +113,7 @@
 
       {{#each system.flaws as |item id|}}
         {{#if item.system.visible }}
-          <li class="item item-value flexrow" data-name="{{item.name}}" data-item-id="{{item._id}}">
+          <li class="item item-value flexrow draggable" data-name="{{item.name}}" data-item-id="{{item._id}}">
             <div class="item-image item-control item-edit" data-action="itemEdit">
               <img src="{{item.img}}" width="45" height="45" title="{{item.name}}" />
             </div>
@@ -158,7 +158,7 @@
 
         {{#each system.inferiorities as |item id|}}
           {{#if item.system.visible }}
-            <li class="item item-value flexrow" data-name="{{item.name}}" data-item-id="{{item._id}}">
+            <li class="item item-value flexrow draggable" data-name="{{item.name}}" data-item-id="{{item._id}}">
               <div class="item-image item-control item-edit" data-action="itemEdit">
                 <img src="{{item.img}}" width="45" height="45" title="{{item.name}}" />
               </div>

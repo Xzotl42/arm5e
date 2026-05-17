@@ -1,0 +1,36 @@
+<div class="sheet-header-part">
+  <div class="header-background">
+    <img src="systems/arm5e/assets/item/{{ flavor }}_header.png" />
+  </div>
+  <header class="sheet-header marginItemPart">
+    <img
+      class="item-img"
+      src="{{ item.img }}"
+      data-action="editImage"
+      data-edit="img"
+      title="{{ item.name }}"
+    />
+    <div class="header-fields">
+      <h1 class="bigname">
+        <input name="name" type="text" value="{{ item.name }}" placeholder="Name" {{ noEdit }} />
+      </h1>
+      <div class="resource">
+        <label>{{localize 'arm5e.sheet.season'}}</label>
+        <select name="system.season" data-type="String" {{ noSelect }}>
+          {{selectOptions config.seasons selected=system.season labelAttr='label' localize=true}}
+        </select>
+      </div>
+    </div>
+    {{#if isOwned}}
+    <div class="item-controls">
+      <a
+        class="item-control item-delete-confirm"
+        data-action="itemDeleteConfirm"
+        title="{{localize 'arm5e.hints.delete' item=(localize 'TYPES.Item.calendarCovenant')}}"
+        ><i class="ars-Icon_Delete_Hand_Gesture"></i
+      ></a>
+    </div>
+    {{/if}}
+  </header>
+  <div class="marginItemPart">{{> "systems/arm5e/templates/generic/metalic-bar.html" }}</div>
+</div>

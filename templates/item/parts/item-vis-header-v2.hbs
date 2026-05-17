@@ -1,0 +1,54 @@
+<div class="sheet-header-part">
+  <div class="header-background">
+    <img src="systems/arm5e/assets/item/{{ flavor }}_header.png" />
+  </div>
+  <header class="sheet-header marginItemPart">
+    <img
+      class="item-img profile-img"
+      src="{{ item.img }}"
+      data-edit="img"
+      data-tooltip="<img
+      class='img-tooltip'
+      src='{{ item.img }}'/>"
+      data-tooltip-direction="CENTER"
+      title="{{ item.name }}"
+    />
+    <div class="header-fields flexcol">
+      <h1 class="bigname flexrow">
+        <input
+          name="name"
+          type="text"
+          value="{{ item.name }}"
+          title="{{ item.name }}"
+          placeholder="Name"
+        />
+        {{#if displayStudyIcon}}
+        <div class="flex0 padding2">
+          <a data-action="studyVis" title="{{localize 'arm5e.activity.visStudy'}}"
+            ><i class="ars-Icon_Effects"></i
+          ></a>
+        </div>
+        {{/if}}
+        {{#if editable}}
+        <div class="flex0 padding2">
+          <a
+            data-action="itemDeleteConfirm"
+            title="{{localize 'arm5e.hints.delete' item=item.name}}"
+            ><i class="ars-Icon_Delete_Hand_Gesture item-delete-large"></i
+          ></a>
+        </div>
+        {{/if}}
+      </h1>
+      <div class="grid grid-2col">
+        <div class="resource flexcol">
+          <label>{{localize 'arm5e.sheet.art'}}</label>
+          <select name="system.art" data-type="String">
+            {{selectOptions config.magic.arts selected=system.art labelAttr='label'}}
+          </select>
+        </div>
+        {{> 'systems/arm5e/templates/item/parts/cost.hbs' classes='fit'}}
+      </div>
+    </div>
+  </header>
+  <div class="marginItemPart">{{> "systems/arm5e/templates/generic/metalic-bar.html" }}</div>
+</div>

@@ -577,7 +577,6 @@ export class RollChatSchema extends BasicChatSchema {
 
     return impactMessage;
   }
-
 }
 
 /**

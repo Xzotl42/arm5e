@@ -57,7 +57,21 @@ export class Arm5eChatMessage extends ChatMessage {
   }
 
   get actor() {
-    return ChatMessage.getSpeakerActor(this.speaker);
+    if (!this.speaker) return null;
+    let actor = null;
+
+    // Case 1 - Token actor
+    if (this.speaker.scene && this.speaker.token) {
+      const scene = game.scenes.get(this.speaker.scene);
+      const token = scene ? scene.tokens.get(this.speaker.token) : null;
+      actor = token?.actor;
+    }
+
+    // Case 2 - explicit actor
+    if (this.speaker.actor && !actor) {
+      actor = game.actors.get(this.speaker.actor);
+    }
+    return actor || null;
   }
 
   get originatorOrGM() {

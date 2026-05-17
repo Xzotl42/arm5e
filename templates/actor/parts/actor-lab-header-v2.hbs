@@ -10,6 +10,10 @@
         src="{{ actor.img }}"
         data-edit="img"
         title="{{ actor.name }}"
+        data-tooltip="<img
+        class='img-tooltip'
+        src='{{ actor.img }}'/>"
+        data-tooltip-direction="CENTER"
         height="150"
         width="150"
       />
@@ -152,6 +156,10 @@
 
 
 
+
+
+
+
             }}&NonBreakingSpace;=&NonBreakingSpace;{{numberFormat
               system.size.total
               decimals=0
@@ -175,6 +183,10 @@
           />
           <span class="flex06"
             >{{numberFormat system.generalQuality.bonus decimals=0 sign=true
+
+
+
+
 
 
 
@@ -208,6 +220,10 @@
 
 
 
+
+
+
+
             }}&NonBreakingSpace;=&NonBreakingSpace;{{numberFormat
               system.safety.total
               decimals=0
@@ -231,6 +247,10 @@
           />
           <span class="flex06"
             >{{numberFormat system.health.bonus decimals=0 sign=true
+
+
+
+
 
 
 
@@ -264,6 +284,10 @@
 
 
 
+
+
+
+
             }}&NonBreakingSpace;=&NonBreakingSpace;{{numberFormat
               system.refinement.total
               decimals=0
@@ -287,6 +311,10 @@
           />
           <span class="flex06"
             >{{numberFormat system.upkeep.bonus decimals=0 sign=true
+
+
+
+
 
 
 
@@ -320,6 +348,10 @@
 
 
 
+
+
+
+
             }}&NonBreakingSpace;=&NonBreakingSpace;{{numberFormat
               system.warping.total
               decimals=0
@@ -344,6 +376,10 @@
           {{#if (eq system.aesthetics.max 999)}}
           <span class="flex06"
             >{{numberFormat system.aesthetics.bonus decimals=0 sign=true
+
+
+
+
 
 
 

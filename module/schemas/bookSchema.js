@@ -10,6 +10,7 @@ import {
 } from "./commonSchemas.js";
 import { EnchantmentExtension, ItemState } from "./enchantmentSchema.js";
 import { LabTextTopicSchema } from "./labTextSchema.js";
+import { getTopicDescription } from "../helpers/book-topic.js";
 const fields = foundry.data.fields;
 export class BookSchema extends foundry.abstract.TypeDataModel {
   static defineSchema() {
@@ -188,8 +189,29 @@ export class BookSchema extends foundry.abstract.TypeDataModel {
     return res;
   }
 
-  getTableOfContents() {
-    return "TODO";
+  static getTableOfContentsVerbose(systemData, withTitle = true) {
+    let res = `<h3>${game.i18n.localize("arm5e.book.tableContents")}</h3><ol>`;
+    for (const topic of systemData.topics) {
+      if (topic.category === "labText") {
+        res += `<li>${game.i18n.localize("arm5e.book.labText.intro")} `;
+      } else {
+        switch (topic.type) {
+          case "Summa":
+            res += `<li>${game.i18n.format("arm5e.book.summaLong", {
+              quality: topic.quality,
+              level: topic.level
+            })} `;
+            break;
+          case "Tractatus":
+            res += `<li>${game.i18n.format("arm5e.book.tractLong", {
+              quality: topic.quality
+            })} `;
+            break;
+        }
+      }
+      res += `${getTopicDescription(topic)}</li>`;
+    }
+    return (res += "</ol>");
   }
 
   static getTableOfContentsSynthetic(systemData, withTitle = true) {
@@ -221,6 +243,9 @@ export class BookSchema extends foundry.abstract.TypeDataModel {
       }
 
       if (topic.category === "labText") {
+        if (topic.labtext === undefined || topic.labtext === null) {
+          continue; // the topic exists but no labtext was put in it; skip it in the table of contents
+        }
         let type = game.i18n.localize("arm5e.generic.other");
         switch (topic.labtext.type) {
           case "spell":
@@ -272,6 +297,7 @@ export class BookSchema extends foundry.abstract.TypeDataModel {
 
     const scriptorium = new Scriptorium(formData, {}); // data, options
     const res = await scriptorium.render(true);
+    scriptorium.changeTab("reading", "primary");
     if (formData.reading.reader.id) {
       item.actor.apps[scriptorium.appId] = scriptorium;
     }
@@ -279,9 +305,6 @@ export class BookSchema extends foundry.abstract.TypeDataModel {
 
   async copyBook(item, dataset) {
     const topic = this.topics[dataset.index];
-    if (topic.category === "labText") {
-      return;
-    }
 
     let formData = new ScriptoriumObject();
     if (item.isOwned && item.actor.isCharacter()) {
@@ -292,6 +315,7 @@ export class BookSchema extends foundry.abstract.TypeDataModel {
 
     await scriptorium._addBookToCopy(item);
     const res = await scriptorium.render(true);
+    scriptorium.changeTab("copying", "primary");
   }
 
   static migrate(itemData) {

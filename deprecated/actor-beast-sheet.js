@@ -1,4 +1,4 @@
-import { getDataset, getUuidInfo, log } from "../tools/tools.js";
+import { getUuidInfo, log } from "../module/tools/tools.js";
 import { ArM5eActorSheet } from "./actor-sheet.js";
 
 /**
@@ -6,12 +6,12 @@ import { ArM5eActorSheet } from "./actor-sheet.js";
  * @extends {ArM5eActorSheet}
  */
 
-export class ArM5eNPCActorSheet extends ArM5eActorSheet {
+export class ArM5eBeastActorSheet extends ArM5eActorSheet {
   /** @override */
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["arm5e", "sheet", "actor"],
-      template: "systems/arm5e/templates/actor/actor-npc-sheet.html",
+      template: "systems/arm5e/templates/actor/actor-beast-sheet.html",
       width: 790,
       height: 800,
       tabs: [
@@ -29,36 +29,6 @@ export class ArM5eNPCActorSheet extends ArM5eActorSheet {
           navSelector: ".desc-tabs",
           contentSelector: ".desc-body",
           initial: "desc"
-        },
-        {
-          navSelector: ".powers-tabs",
-          contentSelector: ".powers-body",
-          initial: "powers"
-        },
-        {
-          navSelector: ".arts-tabs",
-          contentSelector: ".arts-body",
-          initial: "arts-subtab"
-        },
-        {
-          navSelector: ".tradition-tabs",
-          contentSelector: ".tradition-body",
-          initial: "tradition-subtab"
-        },
-        {
-          navSelector: ".lab-tabs",
-          contentSelector: ".lab-body",
-          initial: "lab"
-        },
-        {
-          navSelector: ".inventory-tabs",
-          contentSelector: ".inventory-body",
-          initial: "inventory"
-        },
-        {
-          navSelector: ".config-tabs",
-          contentSelector: ".config-body",
-          initial: "config"
         }
       ]
     });
@@ -67,11 +37,10 @@ export class ArM5eNPCActorSheet extends ArM5eActorSheet {
   /** @override */
   get template() {
     if (this.actor.testUserPermission(game.user, CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER)) {
-      return `systems/arm5e/templates/actor/actor-npc-sheet.html`;
+      return `systems/arm5e/templates/actor/actor-beast-sheet.html`;
     }
     return `systems/arm5e/templates/actor/actor-limited-sheet.html`;
   }
-
   /* -------------------------------------------- */
 
   /** @override */
@@ -80,16 +49,12 @@ export class ArM5eNPCActorSheet extends ArM5eActorSheet {
 
     context.config = CONFIG.ARM5E;
     await this.enrichCharacterEditors(context);
-
     // Prepare items.
     this._prepareActorItems(context);
+    // }
 
-    if (context.system.charType.value === "entity") {
-      context.ui.qualities = { display: true };
-    }
-
-    log(false, "Npc-sheet getData");
-    log(false, context);
+    context.ui.qualities = { display: true };
+    log(false, "Beast-sheet getData", context);
 
     return context;
   }
@@ -124,10 +89,6 @@ export class ArM5eNPCActorSheet extends ArM5eActorSheet {
           default:
             return true;
         }
-
-      case "power":
-        if (this.actor.system.charType.value === "entity") return true;
-        else return false;
       case "spell":
       case "magicalEffect":
       case "abilityFamiliar":
@@ -135,7 +96,8 @@ export class ArM5eNPCActorSheet extends ArM5eActorSheet {
         return this.actor.isMagus();
       case "supernaturalEffect":
         return this.actor.system.features.magicSystem;
-
+      case "quality":
+      case "inferiority":
       case "weapon":
       case "armor":
       case "vis":
@@ -145,48 +107,24 @@ export class ArM5eNPCActorSheet extends ArM5eActorSheet {
       case "diaryEntry":
       case "personalityTrait":
       case "reputation":
-      case "quality":
-      case "inferiority":
         return true;
       default:
         return false;
     }
   }
 
-  /** @override */
-  activateListeners(html) {
-    super.activateListeners(html);
-    html.find(".change-realm").change(async (event) => {
-      event.preventDefault();
-      let chosenRealm = html.find(".change-realm")[0].value;
-      let currentRealm = getDataset(event).realm;
-      let updateData = {};
-      if (chosenRealm !== "mundane") {
-        updateData[`system.realms.${chosenRealm}.aligned`] = true;
-      }
-      if (currentRealm !== "mundane") {
-        updateData[`system.realms.${currentRealm}.aligned`] = false;
-      }
-      updateData["system.realm"] = chosenRealm;
-
-      await this.submit({ preventClose: true, updateData: updateData });
-      this.render();
-    });
-  }
-
   async _onDropItem(event, data) {
     const info = getUuidInfo(data.uuid);
     const item = await fromUuid(data.uuid);
-    if (item.type === "ability") {
+    const type = item.type;
+    if (type === "ability") {
       if (this.actor.hasSkill(item.system.key)) {
         ui.notifications.warn(
           `${game.i18n.localize("arm5e.notification.doubleAbility")} : ${item.name}`
         );
       }
     }
-    // }
     const res = await super._onDropItem(event, data);
-
     // not dropped in the same actor
     if (this.actor.uuid !== item.parent?.uuid) {
       if (res && res.length === 1) {

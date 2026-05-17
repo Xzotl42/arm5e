@@ -200,17 +200,12 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
     }
 
     // --- Enriched description HTML ---
-    const description = this.actor?.system?.description;
-    if (description) {
-      context.enrichedDescription = await foundry.applications.ux.TextEditor.enrichHTML(
-        description,
-        {
-          secrets: this.document.isOwner,
-          rollData: context.rollData,
-          relativeTo: this.actor
-        }
-      );
-    }
+    const description = this.actor?.system?.description ?? "";
+    context.enrichedDescription = await foundry.applications.ux.TextEditor.enrichHTML(description, {
+      secrets: this.document.isOwner,
+      rollData: context.rollData,
+      relativeTo: this.actor
+    });
 
     // --- Diary entries filter and activity map (grouped by year/season) ---
     if (context.system.diaryEntries) {
@@ -1137,6 +1132,24 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
     this.element.querySelectorAll(".item").forEach((el) => {
       el.addEventListener("contextmenu", (event) => this._onItemContextMenu(event));
     });
+  }
+
+  static getFlavorColor(actorType) {
+    switch (actorType) {
+      case "player":
+        return "blue";
+      case "npc":
+      case "beast":
+        return "brown";
+      case "covenant":
+        return "red";
+      case "laboratory":
+        return "green";
+      case "magicCodex":
+        return "purple";
+      default:
+        return "black";
+    }
   }
 
   static getFlavor(actorType) {

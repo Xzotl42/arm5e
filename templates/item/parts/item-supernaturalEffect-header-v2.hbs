@@ -1,0 +1,174 @@
+<div class="sheet-header-part">
+  <div class="header-background">
+    <img src="systems/arm5e/assets/item/{{ flavor }}_header.png" />
+  </div>
+  <header class="sheet-header marginItemPart">
+    <img
+      class="item-img profile-img"
+      src="{{ item.img }}"
+      data-action="editImage"
+      data-edit="img"
+      data-tooltip="<img
+      class='img-tooltip'
+      src='{{ item.img }}'/>"
+      data-tooltip-direction="CENTER"
+      title="{{ item.name }}"
+    />
+    <div class="header-fields flexcol">
+      <h1 class="bigname">
+        <div class="flexrow">
+          <input name="name" type="text" value="{{ item.name }}" placeholder="Name" />
+          {{#if (and isOwned system.valid)}}
+          <div class="flex0 padding10">
+            <a data-action="rollEffect" title="{{localize 'arm5e.dialog.button.roll'}}">
+              <img
+                src="systems/arm5e/assets/dice.png"
+                style="border: 0; height: 30px; min-height: 30px; min-width: 30px"
+              />
+            </a>
+          </div>
+          {{/if}}
+        </div>
+      </h1>
+      {{#if locked}}<i class="ars-Icon_Locked"></i>{{/if}}
+      {{#unless system.valid}}
+      <div class="resource flexcol flex-center">
+        <label class="warning" style="padding: 10px">Invalid: {{{system.invalidMsg}}}</label>
+      </div>
+      {{/unless}}
+      <div class="flexrow">
+        {{#if system.verb.active}}
+        <div class="resource flexcol flex-center">
+          <label>{{localize 'arm5e.sheet.verb'}}</label>
+          {{#if system.verb.valid}}
+          <div class="resource flexcol flex-center">
+            <select class="verb-change" data-action="verbChange" {{noSelect}}>
+              {{selectOptions selection.verbs selected=system.verb.id labelAttr='label' valueAttr='id' nameAttr='id'}}
+            </select>
+            {{#if system.verb.specialty}}
+            <div class="resource flexrow">
+              <input
+                class="resource"
+                type="text"
+                readonly
+                value="{{ system.verb.specialty }}"
+                style="margin: 3px"
+              />
+              <input
+                class="resource"
+                name="system.verb.specApply"
+                type="checkbox"
+                {{checked
+                system.verb.specApply}}
+              />
+            </div>
+            {{/if}}
+          </div>
+          {{else}}
+          <div class="resource flexcol flex-center">
+            <select class="verb-change" data-action="verbChange" {{noSelect}}>
+              {{selectOptions selection.verbs selected=system.verb.id labelAttr='label' valueAttr='id' nameAttr='id'}}
+            </select>
+            <input class="resource" type="text" readonly value="{{ system.verb.label }}" />
+          </div>
+          {{/if}}
+        </div>
+        {{/if}}
+
+        {{#if system.noun.active}}
+        <div class="resource flexcol flex-center">
+          <label>{{localize 'arm5e.sheet.noun'}}</label>
+          {{#if system.noun.valid}}
+          <div class="resource flexcol flex-center">
+            <select class="noun-change" data-action="nounChange" {{noSelect}}>
+              {{selectOptions selection.nouns selected=system.noun.id labelAttr='label' valueAttr='id' nameAttr='id'}}
+            </select>
+            {{#if system.noun.specialty}}
+            <div class="resource flexrow">
+              <input
+                class="resource"
+                type="text"
+                readonly
+                value="{{ system.noun.specialty }}"
+                style="margin: 3px"
+              />
+              <input
+                class="resource"
+                name="system.noun.specApply"
+                type="checkbox"
+                {{checked
+                system.noun.specApply}}
+              />
+            </div>
+            {{/if}}
+          </div>
+          {{else}}
+          <div class="resource flexcol flex-center">
+            <select class="noun-change" data-action="nounChange" {{noSelect}}>
+              {{selectOptions selection.nouns selected=system.noun.id labelAttr='label' valueAttr='id' nameAttr='id'}}
+            </select>
+            <input class="resource" type="text" readonly value="{{ system.noun.label }}" />
+          </div>
+          {{/if}}
+        </div>
+        {{/if}}
+
+        {{#if system.bonusAbility.active}}
+        <div class="resource flexcol flex-center">
+          <label>{{localize 'Bonus ability'}}</label>
+          <input class="resource" type="text" readonly value="{{ system.bonusAbility.label }}" />
+          {{#if system.bonusAbility.specialty}}
+          <div class="resource flexrow">
+            <input
+              class="resource"
+              type="text"
+              readonly
+              value="{{ system.bonusAbility.specialty }}"
+              style="margin: 3px"
+            />
+            <input
+              class="resource"
+              name="system.bonusAbility.specApply"
+              type="checkbox"
+              {{checked
+              system.bonusAbility.specApply}}
+            />
+          </div>
+          {{/if}}
+        </div>
+        {{/if}}
+      </div>
+
+      <div class="flexrow">
+        {{#if system.modifier.active}}
+        <div class="resource flexcol flex-center">
+          <label>{{ system.modifier.label }}</label>
+          <input
+            class="select-on-focus"
+            type="number"
+            readonly
+            value="{{ system.modifier.value }}"
+          />
+        </div>
+        {{/if}}
+        <div class="resource flexcol flex-center">
+          <label>{{localize 'arm5e.sheet.level'}}</label>
+          <input
+            type="number"
+            name="system.level"
+            value="{{ system.level }}"
+            class="select-on-focus"
+            {{noEdit}}
+            style="max-width: 60px"
+          />
+        </div>
+      </div>
+    </div>
+    {{#if editable}}
+    <a data-action="itemDeleteConfirm" title="{{localize 'arm5e.hints.delete' item=item.name}}"
+      ><i class="ars-Icon_Delete_Hand_Gesture item-delete-large"></i
+    ></a>
+    {{/if}}
+  </header>
+  <div class="marginItemPart">{{> "systems/arm5e/templates/generic/metalic-bar.html" }}</div>
+</div>

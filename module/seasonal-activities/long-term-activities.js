@@ -16,6 +16,7 @@ import {
 import { LabActivity } from "./labActivity.js";
 import { customDialog, customDialogAsync } from "../ui/dialogs.js";
 import { Arm5eChatMessage } from "../helpers/chat-message.js";
+import { ArM5eDiaryEntryItemSheetV2 } from "../sheets/item/item-diaryEntry-sheet-v2.js";
 const renderTemplate = foundry.applications.handlebars.renderTemplate;
 
 /**
@@ -1070,7 +1071,6 @@ export function validTraining(context, actor, item) {
     context.system.progress.abilities[0].xp = context.system.cappedGain
       ? context.system.sourceQuality
       : context.system.sourceQuality + context.system.sourceModifier;
-    item._source.system.progress.abilities[0].xp = context.system.progress.abilities[0].xp;
     context.system.totalXp.abilities += context.system.progress.abilities[0].xp;
   } else if (spellsArr.length > 0) {
     const teacherScore = Number(item.system.progress.spells[0].teacherScore);
@@ -1094,7 +1094,6 @@ export function validTraining(context, actor, item) {
     context.system.progress.spells[0].xp = context.system.cappedGain
       ? context.system.sourceQuality
       : context.system.sourceQuality + context.system.sourceModifier;
-    item._source.system.progress.spells[0].xp = context.system.progress.spells[0].xp;
     context.system.totalXp.masteries += context.system.progress.spells[0].xp;
   }
 
@@ -1158,7 +1157,6 @@ export function validTeaching(context, actor, item) {
     context.system.progress.abilities[0].xp = context.system.cappedGain
       ? context.system.sourceQuality
       : context.system.sourceQuality + context.system.sourceModifier + context.system.sourceBonus;
-    item._source.system.progress.abilities[0].xp = context.system.progress.abilities[0].xp;
     context.system.totalXp.abilities += context.system.progress.abilities[0].xp;
   } else if (spellsArr.length > 0) {
     const teacherScore = Number(item.system.progress.spells[0].teacherScore);
@@ -1183,7 +1181,6 @@ export function validTeaching(context, actor, item) {
     context.system.progress.spells[0].xp = context.system.cappedGain
       ? context.system.sourceQuality
       : context.system.sourceQuality + context.system.sourceModifier + context.system.sourceBonus;
-    item._source.system.progress.spells[0].xp = context.system.progress.spells[0].xp;
     context.system.totalXp.masteries += context.system.progress.spells[0].xp;
   } else if (artsArr.length > 0) {
     const progressArt = item.system.progress.arts[0];
@@ -1219,7 +1216,6 @@ export function validTeaching(context, actor, item) {
     context.system.progress.arts[0].xp = context.system.cappedGain
       ? context.system.sourceQuality
       : context.system.sourceQuality + context.system.sourceModifier + context.system.sourceBonus;
-    item._source.system.progress.arts[0].xp = context.system.progress.arts[0].xp;
     context.system.totalXp.arts += context.system.progress.arts[0].xp;
   }
   if (context.system.cappedGain && context.system.sourceQuality === 0) {
@@ -1383,7 +1379,7 @@ export async function setVisStudyResults(actor, roll, message, rollInfo) {
     // "system.description": desc,
 
     await actor.updateEmbeddedDocuments("Item", [updateData], {});
-    await diaryitem.sheet._onProgressApply({});
+    await diaryitem.sheet._progressApply({});
   }
 }
 

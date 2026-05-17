@@ -1,4 +1,4 @@
-import { ArM5eActorSheet } from "../actor/actor-sheet.js";
+import { ArM5eActorSheet } from "../../deprecated/actor-sheet.js";
 import { getConfirmation } from "../ui/dialogs.js";
 import { compareDates, nextDate } from "../tools/time.js";
 

@@ -16,7 +16,7 @@ export function log(force, ...args) {
         ? `${callerMatch[1]} (${callerMatch[2].split("/").pop()}:${callerMatch[3]})`
         : callerLine?.trim() || "unknown";
 
-      console.log(ARM5E.SYSTEM_ID, "|", `[${caller}]`, ...args);
+      console.log(ARM5E.SYSTEM_ID, "|", ...args, `[${caller}]`);
     }
   } catch (e) {
     console.log(e);
@@ -59,7 +59,7 @@ export function error(force, ...args) {
         ? `${callerMatch[1]} (${callerMatch[2].split("/").pop()}:${callerMatch[3]})`
         : callerLine?.trim() || "unknown";
 
-      console.error(ARM5E.SYSTEM_ID, "|", `[${caller}]`, ...args);
+      console.error(ARM5E.SYSTEM_ID, "|", ...args, `[${caller}]`);
     }
   } catch (e) {
     console.error(e);

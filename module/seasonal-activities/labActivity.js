@@ -12,7 +12,7 @@ import {
   spellTechniqueLabel
 } from "../helpers/magic.js";
 
-import { ArM5eItemDiarySheet } from "../item/item-diary-sheet.js";
+import { ArM5eDiaryEntryItemSheetV2 } from "../sheets/item/item-diaryEntry-sheet-v2.js";
 import { ArM5eItem } from "../item/item.js";
 import { EnchantmentExtension } from "../schemas/enchantmentSchema.js";
 import { log } from "../tools/tools.js";
@@ -330,7 +330,9 @@ export class SpellActivity extends LabActivity {
 
   getDiaryEntryData(planning) {
     const res = super.getDiaryEntryData(planning);
-    res.system.progress.newSpells.push(ArM5eItemDiarySheet._addNewSpell(planning.data));
+    res.system.progress.newSpells.push(
+      ArM5eDiaryEntryItemSheetV2._buildNewSpellEntry(planning.data)
+    );
     return res;
   }
 

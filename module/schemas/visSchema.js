@@ -115,10 +115,19 @@ export class VisSchema extends foundry.abstract.TypeDataModel {
       roll: "option",
       name: "",
       physicalcondition: false,
-      moredata: { id: this.parent._id, art: this.art, amount: amount, diaryId: item._id }
+      moredata: {
+        id: this.parent._id,
+        art: this.art,
+        amount: amount,
+        diaryId: item._id,
+        sourceModifier: 0
+      }
     };
     actor.rollInfo.init(dataset, actor);
-    const html = await renderTemplate("systems/arm5e/templates/generic/vis-study.html", dialogData);
+    const html = await foundry.applications.handlebars.renderTemplate(
+      "systems/arm5e/templates/generic/vis-study.html",
+      dialogData
+    );
 
     await customDialogAsync({
       window: { title: game.i18n.localize("arm5e.activity.visStudy") },

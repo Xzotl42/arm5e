@@ -49,7 +49,8 @@ export class ActivitySchedule extends HandlebarsApplicationMixin(ApplicationV2) 
     tag: "form",
     actions: {
       changeYear: ActivitySchedule.changeYear,
-      openItem: ActivitySchedule.openItem
+      openItem: ActivitySchedule.openItem,
+      update: ActivitySchedule.updateSchedule
     }
   };
 
@@ -95,7 +96,8 @@ export class ActivitySchedule extends HandlebarsApplicationMixin(ApplicationV2) 
       return { conflict: false, enforceConflict: false };
     }
 
-    if (thisYearSchedule[0].seasons[selectedSeason.season]?.length === 0) {
+    const seasonActivities = thisYearSchedule[0].seasons[selectedSeason.season] ?? [];
+    if (seasonActivities.length === 0) {
       return { conflict: false, enforceConflict: false };
     }
 
@@ -107,10 +109,8 @@ export class ActivitySchedule extends HandlebarsApplicationMixin(ApplicationV2) 
       type: activity.system.activity
     };
 
-    const hasConflict = DiaryEntrySchema.hasConflict(
-      thisYearSchedule[0].seasons[selectedSeason.season],
-      currentEntry
-    );
+    // hasConflict mutates input by pushing current; pass a clone to keep schedule data immutable.
+    const hasConflict = DiaryEntrySchema.hasConflict([...seasonActivities], currentEntry);
 
     const enforceConflict = hasConflict && enforceSchedule;
     return { conflict: hasConflict, enforceConflict };
@@ -191,21 +191,14 @@ export class ActivitySchedule extends HandlebarsApplicationMixin(ApplicationV2) 
 
       // Process other activities and check conflicts
       if (thisYearSchedule.length > 0 && thisYearSchedule[0].seasons[s].length > 0) {
-        if (!isSelected) {
-          // Not selected: just check if others conflict
-          yearData.seasons[s].conflict = DiaryEntrySchema.hasConflict(
-            thisYearSchedule[0].seasons[s]
-          );
-        } else {
-          // Selected: check if current activity conflicts with others
-          const conflictCheck = this.#checkSeasonConflict(
-            { year, season: s },
-            thisYearSchedule,
-            currentActivity,
-            enforceSchedule
-          );
-          yearData.seasons[s].conflict = conflictCheck.conflict;
-        }
+        // Always check conflict against the current activity, including non-selected seasons.
+        const conflictCheck = this.#checkSeasonConflict(
+          { year, season: s },
+          thisYearSchedule,
+          currentActivity,
+          enforceSchedule
+        );
+        yearData.seasons[s].conflict = conflictCheck.conflict;
 
         // Add other activities to display
         for (let busy of thisYearSchedule[0].seasons[s]) {
@@ -265,6 +258,7 @@ export class ActivitySchedule extends HandlebarsApplicationMixin(ApplicationV2) 
         // Other activities exist
         if (
           enforceSchedule &&
+          conflict &&
           !ARM5E.activities.conflictExclusion.includes(actType) &&
           !ARM5E.activities.duplicateAllowed.includes(actType)
         ) {
@@ -414,6 +408,12 @@ export class ActivitySchedule extends HandlebarsApplicationMixin(ApplicationV2) 
       item.apps[this.options.uniqueId] = this;
       item.sheet.render(true, { focus: true });
     }
+  }
+
+  static async updateSchedule(event, target) {
+    event.preventDefault();
+    await this.submit();
+    this.close();
   }
 
   /**

@@ -192,6 +192,10 @@
   font-family: var(--font-header);
 }
 
+.arm5e .prosemirror h3 {
+  font-size: var(--font-size-20);
+}
+
 label,
 .arm5e .bold,
 .arm5e label,
@@ -617,6 +621,12 @@ h3.dice-msg {
   min-width: fit-content;
 }
 
+/* In flex-column containers (e.g. sheet headers), selects would otherwise
+   stretch to full width via align-self:stretch. Constrain to content size. */
+.arm5e .sheet-header select {
+  align-self: flex-start;
+}
+
 .arm5e input[type="number"],
 .arm5e input[type="text"].numberformat,
 .arm5e-dialog input[type="number"],
@@ -856,6 +866,9 @@ input[type="checkbox"].tiny-checkbox:checked::before {
 .w-full {
   width: 100%;
 }
+.flex-1 {
+  flex: 1;
+}
 
 /* Covenant sheet utilities */
 .covenant-label {
@@ -914,7 +927,7 @@ input[type="checkbox"].tiny-checkbox:checked::before {
 .book-scrollable {
   height: auto;
   overflow-y: auto;
-  max-height: 210px;
+  max-height: 220px;
 }
 .book-dropbox {
   height: 120px;
@@ -991,6 +1004,7 @@ input[type="checkbox"].tiny-checkbox:checked::before {
 body #tooltip.doc-picker-tooltip,
 body .locked-tooltip.doc-picker-tooltip,
 body #tooltip.covenant-tooltip,
+header #tooltip.img-tooltip,
 body .locked-tooltip.covenant-tooltip {
   position: absolute;
   width: max-content;
@@ -1013,6 +1027,8 @@ body .locked-tooltip.covenant-tooltip {
 }
 
 body #tooltip.covenant-tooltip *,
+header #tooltip.img-tooltip *,
+header .locked-tooltip.img-tooltip *,
 body .locked-tooltip.covenant-tooltip *,
 body #tooltip.doc-picker-tooltip *,
 body .locked-tooltip.doc-picker-tooltip * {
@@ -1020,6 +1036,8 @@ body .locked-tooltip.doc-picker-tooltip * {
 }
 body #tooltip.active.covenant-tooltip,
 body #tooltip.active.doc-picker-tooltip,
+header #tooltip.active.img-tooltip,
+header .locked-tooltip.active.img-tooltip,
 body .locked-tooltip.active {
   visibility: visible;
   opacity: 1;
@@ -1166,6 +1184,160 @@ body .locked-tooltip.active {
   gap: 0;
   display: flex;
   flex-direction: column;
+}
+
+/* ============================================
+   ITEM SHEETS (AppV2)
+   ============================================ */
+
+.arm5e.sheet.item .window-content {
+  background-size: 100% auto;
+  background-repeat: repeat-y;
+  scrollbar-gutter: stable;
+  scrollbar-color: transparent transparent;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: scrollbar-color 0.3s;
+}
+
+.arm5e.sheet.item .window-content:hover {
+  scrollbar-color: rgba(90, 60, 20, 1) transparent;
+}
+
+.arm5e.sheet.item .window-content::-webkit-scrollbar {
+  width: 25px;
+}
+.arm5e.sheet.item .window-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+.arm5e.sheet.item .window-content::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 4px;
+  transition: background 0.3s;
+}
+.arm5e.sheet.item .window-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(90, 60, 20, 1);
+}
+
+.arm5e.sheet.item.item-flavor-pc .window-content,
+.arm5e.sheet.item .window-content.item-flavor-pc {
+  background-image: url("../assets/item/PC_background.webp");
+}
+
+.arm5e.sheet.item.item-flavor-npc .window-content,
+.arm5e.sheet.item .window-content.item-flavor-npc {
+  background-image: url("../assets/item/NPC_background.webp");
+}
+
+.arm5e.sheet.item.item-flavor-covenant .window-content,
+.arm5e.sheet.item .window-content.item-flavor-covenant {
+  background-image: url("../assets/item/covenant_background.webp");
+}
+
+.arm5e.sheet.item.item-flavor-lab .window-content,
+.arm5e.sheet.item .window-content.item-flavor-lab {
+  background-image: url("../assets/item/Lab_background.webp");
+}
+
+.arm5e.sheet.item.item-flavor-codex .window-content,
+.arm5e.sheet.item .window-content.item-flavor-codex {
+  background-image: url("../assets/item/codex_background.webp");
+}
+
+.arm5e.sheet.item.item-flavor-neutral .window-content,
+.arm5e.sheet.item .window-content.item-flavor-neutral {
+  background-image: url("../assets/item/Neutral_background.webp");
+}
+
+.arm5e.sheet.item.item-flavor-pc .window-content:hover,
+.arm5e.sheet.item .window-content.item-flavor-pc:hover {
+  scrollbar-color: rgba(10, 20, 80, 1) transparent;
+}
+
+.arm5e.sheet.item.item-flavor-npc .window-content:hover,
+.arm5e.sheet.item .window-content.item-flavor-npc:hover {
+  scrollbar-color: rgba(90, 60, 5, 1) transparent;
+}
+
+.arm5e.sheet.item.item-flavor-covenant .window-content:hover,
+.arm5e.sheet.item .window-content.item-flavor-covenant:hover {
+  scrollbar-color: rgba(80, 10, 10, 1) transparent;
+}
+
+.arm5e.sheet.item.item-flavor-lab .window-content:hover,
+.arm5e.sheet.item .window-content.item-flavor-lab:hover {
+  scrollbar-color: rgba(10, 50, 15, 1) transparent;
+}
+
+.arm5e.sheet.item.item-flavor-codex .window-content:hover,
+.arm5e.sheet.item .window-content.item-flavor-codex:hover,
+.arm5e.sheet.item.item-flavor-neutral .window-content:hover,
+.arm5e.sheet.item .window-content.item-flavor-neutral:hover {
+  scrollbar-color: rgba(90, 60, 20, 1) transparent;
+}
+
+.arm5e.sheet.item.item-flavor-pc .window-content::-webkit-scrollbar-thumb:hover,
+.arm5e.sheet.item .window-content.item-flavor-pc::-webkit-scrollbar-thumb:hover {
+  background: rgba(10, 20, 80, 1);
+}
+
+.arm5e.sheet.item.item-flavor-npc .window-content::-webkit-scrollbar-thumb:hover,
+.arm5e.sheet.item .window-content.item-flavor-npc::-webkit-scrollbar-thumb:hover {
+  background: rgba(90, 60, 5, 1);
+}
+
+.arm5e.sheet.item.item-flavor-covenant .window-content::-webkit-scrollbar-thumb:hover,
+.arm5e.sheet.item .window-content.item-flavor-covenant::-webkit-scrollbar-thumb:hover {
+  background: rgba(80, 10, 10, 1);
+}
+
+.arm5e.sheet.item.item-flavor-lab .window-content::-webkit-scrollbar-thumb:hover,
+.arm5e.sheet.item .window-content.item-flavor-lab::-webkit-scrollbar-thumb:hover {
+  background: rgba(10, 50, 15, 1);
+}
+
+.arm5e.sheet.item.item-flavor-codex .window-content::-webkit-scrollbar-thumb:hover,
+.arm5e.sheet.item .window-content.item-flavor-codex::-webkit-scrollbar-thumb:hover,
+.arm5e.sheet.item.item-flavor-neutral .window-content::-webkit-scrollbar-thumb:hover,
+.arm5e.sheet.item .window-content.item-flavor-neutral::-webkit-scrollbar-thumb:hover {
+  background: rgba(90, 60, 20, 1);
+}
+
+/* Extend header/footer decorative images into the scrollbar gutter. */
+.arm5e.sheet.item .window-content .header-background,
+.arm5e.sheet.item .window-content .footer-background {
+  width: calc(100% + 10px);
+}
+
+.arm5e.sheet.item .window-content .header-background img,
+.arm5e.sheet.item .window-content .footer-background img {
+  width: 100%;
+  border: 0;
+}
+
+/* Item sheets can use different body part keys (description, effects, etc.).
+  Unlike actor sheets that sometimes target .window-content > .tab or fixed
+  content keys, keep this selector generic for any non-header/tabs/footer part. */
+.arm5e.sheet.item
+  .window-content
+  > [data-application-part]:not([data-application-part="header"]):not(
+    [data-application-part="tabs"]
+  ):not([data-application-part="footer"]) {
+  flex: 1 1 auto;
+}
+
+/* Footer stays pinned at the bottom of the window. */
+.arm5e.sheet.item .window-content [data-application-part="footer"] {
+  position: sticky;
+  bottom: 0;
+  flex-shrink: 0;
+}
+
+.item .sheet-body {
+  margin-left: 36px;
+  margin-right: 20px;
 }
 
 /* Component-specific exceptions retained where required by layout */
@@ -2589,8 +2761,8 @@ li.effect-change {
 }
 
 .arm5e .sheet-header .item-img {
-  flex: 0 0 200px;
-  height: 200px;
+  flex: 0 0 100px;
+  height: 100px;
   margin-right: 16px;
   margin-bottom: 16px;
   object-fit: contain;
@@ -2686,6 +2858,7 @@ img.tinyimg {
   font-family: var(--font-book);
   font-size: 10pt;
   text-align: center;
+  width: 100%;
   /* background-image: url("../assets/player/bar.webp"); */
   background-repeat: repeat-x;
   background-position-y: bottom;
@@ -2700,16 +2873,49 @@ img.tinyimg {
   text-decoration: overline;
 }
 
+/* .arm5e .ability-key, */
 .arm5e .spell-attribute {
-  max-width: 160px;
+  max-width: 100%;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
 }
 .arm5e-roll .ability-key,
 .arm5e .ability-key {
   max-width: 250px;
 }
 
-.arm5e .ability-key-slim {
+.arm5e select.ability-key-slim {
+  flex: 0 0 auto;
+  width: 200px;
+  min-width: 0;
   max-width: 200px;
+  height: auto;
+}
+
+.arm5e .ability-key-row {
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+.arm5e .ability-key-field {
+  flex: 0 0 200px;
+  min-width: 0;
+}
+
+.arm5e .ability-option-field {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.arm5e .ability-option-field > .flexrow {
+  gap: 0.25rem;
+  align-items: flex-end;
+}
+
+.arm5e .ability-option-field input[type="text"] {
+  width: 100%;
+  min-width: 0;
 }
 
 .arm5e .ability-category {
@@ -2971,6 +3177,7 @@ div[class*="foldable-section"] {
 .arm5e .diary-body {
   padding-top: 7px;
   height: 200px;
+  width: 100%;
   overflow-y: auto;
 }
 
@@ -3044,6 +3251,7 @@ label.uppercase {
   background-position-y: bottom;
 }
 
+.brownBar,
 .arm5eTabsNPC {
   background-image: url("../assets/NPC/bar.webp");
   background-repeat: repeat-x;
@@ -3057,14 +3265,23 @@ label.uppercase {
   background-position-y: bottom;
 }
 
+.redBar,
 .arm5eTabsCOV {
   background-image: url("../assets/covenant/bar.webp");
   background-repeat: repeat-x;
   background-position-y: bottom;
 }
 
+.purpleBar,
 .arm5eTabsCOD {
   background-image: url("../assets/codex/bar.webp");
+  background-repeat: repeat-x;
+  background-position-y: bottom;
+}
+
+.blackBar,
+.arm5eTabsNEUTRAL {
+  background-image: url("../assets/neutral/bar.webp");
   background-repeat: repeat-x;
   background-position-y: bottom;
 }
@@ -3521,6 +3738,10 @@ img.art-icon {
   margin-right: 32px;
 }
 
+.marginItemPart {
+  margin-left: 36px;
+  margin-right: 20px;
+}
 .arm5e .smallTitle {
   font-family: var(--font-header);
   margin-bottom: 0px;
@@ -3559,6 +3780,23 @@ body h3.covenant-tooltip {
   font-family: var(--font-book-bold);
   font-size: 15px;
   color: var(--arm5e-c-black);
+}
+
+img.img-tooltip {
+  flex: 0 0 200px;
+  height: 200px;
+  object-fit: contain;
+
+  background-color: var(--arm5e-c-beige);
+}
+
+#tooltip.active.img-tooltip {
+  visibility: visible;
+  opacity: 1;
+  margin: 0px;
+  padding: 0px;
+  transition: opacity 500ms;
+  background-color: var(--arm5e-c-beige);
 }
 
 #tooltip.active.covenant-tooltip,

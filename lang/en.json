@@ -372,6 +372,7 @@
       "summaLong": "Summa of level {level} and quality {quality} about",
       "summaShort": "Summa L{level} Q{quality} ",
       "tableContents": "Table of contents",
+      "topic": "Topic",
       "tractLong": "Tractatus of quality {quality} about",
       "tractShort": "Tractatus Q{quality}"
     },

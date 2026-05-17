@@ -1,0 +1,52 @@
+<div class='sheet-header-part'>
+  <div class='header-background'>
+    <img src='systems/arm5e/assets/item/{{ flavor }}_header.png' />
+  </div>
+  <header class='sheet-header marginItemPart'>
+    <img
+      class='item-img'
+      src='{{ item.img }}'
+      data-action='editImage'
+      data-edit='img'
+      data-tooltip="<img
+      class='img-tooltip'
+      src='{{ item.img }}'/>"
+      data-tooltip-direction="CENTER"
+      title='{{ item.name }}'
+    />
+    <div class='header-fields'>
+      <h1 class='bigname'>
+        <input name='name' type='text' value='{{ item.name }}' placeholder='name' />
+      </h1>
+      <div class='flexcol'>
+        <div class='flexrow'>
+          <div class='resource'>
+            <label>{{localize 'arm5e.sheet.type'}}</label>
+            <input type='text' name='system.type' value='{{ system.type }}' data-dtype='String' />
+          </div>
+          <div class='resource'>
+            <label>{{localize 'arm5e.sheet.incoming'}}</label>
+            <input
+              type='number'
+              name='system.incoming'
+              value='{{ system.incoming }}'
+              class='select-on-focus'
+              data-dtype='Number'
+            />
+          </div>
+          {{#if isOwned}}
+          <div class='flexrow'>
+            <a
+              class='item-control item-delete-confirm'
+              data-action='itemDeleteConfirm'
+              title='{{localize 'arm5e.hints.delete' item=(localize 'arm5e.sheet.incomingSource')}}'
+              ><i class='ars-Icon_Delete_Hand_Gesture'></i
+            ></a>
+          </div>
+          {{/if}}
+        </div>
+      </div>
+    </div>
+  </header>
+  <div class='marginItemPart'>{{> "systems/arm5e/templates/generic/metalic-bar.html" }}</div>
+</div>

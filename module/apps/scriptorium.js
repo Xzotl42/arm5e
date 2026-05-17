@@ -202,7 +202,8 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
       { dragSelector: null, dropSelector: ".drop-scribe" },
       { dragSelector: null, dropSelector: ".drop-writer" },
       { dragSelector: null, dropSelector: ".append-book" },
-      { dragSelector: null, dropSelector: ".add-labtext" }
+      { dragSelector: null, dropSelector: ".add-labtext" },
+      { dragSelector: null, dropSelector: ".copy-labtext" }
     ],
     actions: {
       setDate: Scriptorium.setDate,
@@ -338,45 +339,53 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
    */
   async _onDrop(event) {
     try {
+      event.preventDefault();
       const dropData = foundry.applications.ux.TextEditor.getDragEventData(event);
+      const dropTarget = event.currentTarget ?? event.target?.closest?.("[data-drop]");
+      const dropType = dropTarget?.dataset?.drop;
       if (dropData.type === "Item") {
         // If (this.item.system.activity === "teaching" || this.item.system.activity === "training") {
 
-        if (event.currentTarget.dataset.drop === "book") {
+        if (dropType === "book") {
           const book = await Item.implementation.fromDropData(dropData);
           if (book.type === "book") {
             await this._setReadingBook(book);
           }
-        } else if (event.currentTarget.dataset.drop === "append-book") {
+        } else if (dropType === "append-book") {
           const book = await Item.implementation.fromDropData(dropData);
           if (book.type === "book") {
             await this._setWritingBook(book);
           }
-        } else if (event.currentTarget.dataset.drop === "add-labtext") {
+        } else if (dropType === "add-labtext") {
           const text = await Item.implementation.fromDropData(dropData);
           if (text.type === "laboratoryText") {
             await this._addLabText(text);
           }
-        } else if (event.currentTarget.dataset.drop === "copy-book") {
+        } else if (dropType === "copy-book") {
           const book = await Item.implementation.fromDropData(dropData);
           if (book.type === "book") {
             await this._addBookToCopy(book, dropData.topicIdx);
           } else if (book.type === "laboratoryText") {
             await this._addLabTextToCopy(book);
           }
+        } else if (dropType === "copy-labtext") {
+          const text = await Item.implementation.fromDropData(dropData);
+          if (text.type === "laboratoryText") {
+            await this._addLabTextToCopy(text);
+          }
         }
       } else if (dropData.type === "Actor") {
-        if (event.currentTarget.dataset.drop === "reader") {
+        if (dropType === "reader") {
           const reader = await Actor.implementation.fromDropData(dropData);
           if (reader.type === "player" || reader.type === "npc") {
             await this._setReader(reader);
           }
-        } else if (event.currentTarget.dataset.drop === "writer") {
+        } else if (dropType === "writer") {
           const writer = await Actor.implementation.fromDropData(dropData);
           if (writer.type === "player" || writer.type === "npc") {
             await this._setWriter(writer);
           }
-        } else if (event.currentTarget.dataset.drop === "scribe") {
+        } else if (dropType === "scribe") {
           const scribe = await Actor.implementation.fromDropData(dropData);
           if (scribe.type === "player" || scribe.type === "npc") {
             await this._setScribe(scribe);
@@ -2168,7 +2177,10 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
         return;
       }
     } else {
-      const index = topicIndex ? topicIndex : bookToAdd.getFlag("arm5e", "currentBookTopic") ?? 0;
+      const index =
+        topicIndex !== undefined && topicIndex !== null
+          ? Number(topicIndex)
+          : bookToAdd.getFlag("arm5e", "currentBookTopic") ?? 0;
       const topic = bookData.topics[index];
       if (topic.category === "labText") {
         topic.system = topic.labtext;

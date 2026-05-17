@@ -38,7 +38,7 @@
   {{#each system.activities as |activity year|}}
     {{#each activity.seasons as |entries season|}}
       {{#each entries}}
-        <li class="item item-value flexrow flex-center" data-name="{{name}}" data-attribute="{{id}}"
+        <li class="item draggable item-value flexrow flex-center" data-name="{{name}}" data-attribute="{{id}}"
           data-item-id="{{_id}}">
           <div class="item-image item-control item-edit" data-action="itemEdit"><img src="{{img}}" title="{{name}}" />
           </div>
