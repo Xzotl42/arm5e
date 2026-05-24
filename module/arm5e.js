@@ -8,7 +8,6 @@ import { ArM5eLaboratoryActorSheetV2 } from "./sheets/actor/actor-laboratory-she
 import { ArM5eCovenantActorSheetV2 } from "./sheets/actor/actor-covenant-sheet-v2.js";
 import { ArM5eMagicCodexSheetV2 } from "./sheets/actor/actor-magic-codex-sheet-v2.js";
 import { ArM5eItem } from "./item/item.js";
-import { ArM5eItemSheet, ArM5eItemSheetNoDesc } from "./item/item-sheet.js";
 import { ArM5eReputationItemSheetV2 } from "./sheets/item/item-reputation-sheet-v2.js";
 import { ArM5eIncomeSourceItemSheetV2 } from "./sheets/item/item-incomeSource-sheet-v2.js";
 import { ArM5ePersonalityTraitItemSheetV2 } from "./sheets/item/item-personalityTrait-sheet-v2.js";
@@ -101,6 +100,10 @@ import {
 } from "./schemas/combatChatSchema.js";
 import { MagicChatSchema } from "./schemas/magicChatSchema.js";
 import { DamageChatSchema } from "./schemas/damageChatSchema.js";
+import {
+  buildConflictExclusionTypes,
+  buildDuplicateAllowedTypes
+} from "./seasonal-activities/activity-config.js";
 
 Hooks.once("i18nInit", async function () {
   CONFIG.ARM5E.LOCALIZED_ABILITIES = localizeAbilities();
@@ -193,12 +196,8 @@ Hooks.once("init", async function () {
 
   Hooks.callAll("arm5e-config-done", CONFIG);
 
-  CONFIG.ARM5E.activities.conflictExclusion = Object.entries(CONFIG.ARM5E.activities.generic)
-    .filter((e) => e[1].scheduling.conflict === false)
-    .map((e) => e[0]);
-  CONFIG.ARM5E.activities.duplicateAllowed = Object.entries(CONFIG.ARM5E.activities.generic)
-    .filter((e) => e[1].scheduling.duplicate)
-    .map((e) => e[0]);
+  CONFIG.ARM5E.activities.conflictExclusion = buildConflictExclusionTypes();
+  CONFIG.ARM5E.activities.duplicateAllowed = buildDuplicateAllowedTypes();
 
   // Define custom Document classes
   CONFIG.Actor.documentClass = ArM5eActor;
@@ -774,7 +773,7 @@ function registerSheets() {
 
     foundry.applications.apps.DocumentSheetConfig.registerSheet(
       Item,
-      "arm5eV2",
+      "arm5e",
       ArM5eWoundItemSheetV2,
       {
         types: ["wound"],
@@ -782,17 +781,9 @@ function registerSheets() {
       }
     );
 
-    foundry.applications.apps.DocumentSheetConfig.registerSheet(Item, "arm5e", ArM5eItemSheet, {
-      types: [
-        // "might",
-        // "mightFamiliar"
-      ],
-      makeDefault: true
-    });
-
     foundry.applications.apps.DocumentSheetConfig.registerSheet(
       Item,
-      "arm5eV2",
+      "arm5e",
       ArM5eAbilityFamiliarItemSheetV2,
       {
         types: ["abilityFamiliar"],
@@ -802,7 +793,7 @@ function registerSheets() {
 
     foundry.applications.apps.DocumentSheetConfig.registerSheet(
       Item,
-      "arm5eV2",
+      "arm5e",
       ArM5ePowerFamiliarItemSheetV2,
       {
         types: ["powerFamiliar"],
@@ -812,7 +803,7 @@ function registerSheets() {
 
     foundry.applications.apps.DocumentSheetConfig.registerSheet(
       Item,
-      "arm5eV2",
+      "arm5e",
       ArM5eCalendarCovenantItemSheetV2,
       {
         types: ["calendarCovenant"],
@@ -822,7 +813,7 @@ function registerSheets() {
 
     foundry.applications.apps.DocumentSheetConfig.registerSheet(
       Item,
-      "arm5eV2",
+      "arm5e",
       ArM5eLabCovenantItemSheetV2,
       {
         types: ["labCovenant"],
@@ -832,7 +823,7 @@ function registerSheets() {
 
     foundry.applications.apps.DocumentSheetConfig.registerSheet(
       Item,
-      "arm5eV2",
+      "arm5e",
       ArM5eReputationItemSheetV2,
       {
         types: ["reputation"],
@@ -842,7 +833,7 @@ function registerSheets() {
 
     foundry.applications.apps.DocumentSheetConfig.registerSheet(
       Item,
-      "arm5eV2",
+      "arm5e",
       ArM5eIncomeSourceItemSheetV2,
       {
         types: ["incomingSource"],
@@ -852,7 +843,7 @@ function registerSheets() {
 
     foundry.applications.apps.DocumentSheetConfig.registerSheet(
       Item,
-      "arm5eV2",
+      "arm5e",
       ArM5ePersonalityTraitItemSheetV2,
       {
         types: ["personalityTrait"],
@@ -862,7 +853,7 @@ function registerSheets() {
 
     foundry.applications.apps.DocumentSheetConfig.registerSheet(
       Item,
-      "arm5eV2",
+      "arm5e",
       ArM5ePossessionsCovenantItemSheetV2,
       {
         types: ["possessionsCovenant"],
@@ -872,7 +863,7 @@ function registerSheets() {
 
     foundry.applications.apps.DocumentSheetConfig.registerSheet(
       Item,
-      "arm5eV2",
+      "arm5e",
       ArM5eVirtueItemSheetV2,
       {
         types: ["virtue"],
@@ -882,7 +873,7 @@ function registerSheets() {
 
     foundry.applications.apps.DocumentSheetConfig.registerSheet(
       Item,
-      "arm5eV2",
+      "arm5e",
       ArM5eFlawItemSheetV2,
       {
         types: ["flaw"],
@@ -892,7 +883,7 @@ function registerSheets() {
 
     foundry.applications.apps.DocumentSheetConfig.registerSheet(
       Item,
-      "arm5eV2",
+      "arm5e",
       ArM5eQualityItemSheetV2,
       {
         types: ["quality"],
@@ -902,7 +893,7 @@ function registerSheets() {
 
     foundry.applications.apps.DocumentSheetConfig.registerSheet(
       Item,
-      "arm5eV2",
+      "arm5e",
       ArM5eInferiorityItemSheetV2,
       {
         types: ["inferiority"],
@@ -912,7 +903,7 @@ function registerSheets() {
 
     foundry.applications.apps.DocumentSheetConfig.registerSheet(
       Item,
-      "arm5eV2",
+      "arm5e",
       ArM5eArtItemSheetV2,
       {
         types: ["art"],
@@ -922,7 +913,7 @@ function registerSheets() {
 
     foundry.applications.apps.DocumentSheetConfig.registerSheet(
       Item,
-      "arm5eV2",
+      "arm5e",
       ArM5eAbilityItemSheetV2,
       {
         types: ["ability"],
@@ -932,7 +923,7 @@ function registerSheets() {
 
     foundry.applications.apps.DocumentSheetConfig.registerSheet(
       Item,
-      "arm5eV2",
+      "arm5e",
       ArM5eVisSourcesCovenantItemSheetV2,
       {
         types: ["visSourcesCovenant"],
@@ -942,7 +933,7 @@ function registerSheets() {
 
     foundry.applications.apps.DocumentSheetConfig.registerSheet(
       Item,
-      "arm5eV2",
+      "arm5e",
       ArM5eWeaponItemSheetV2,
       {
         types: ["weapon"],
@@ -952,7 +943,7 @@ function registerSheets() {
 
     foundry.applications.apps.DocumentSheetConfig.registerSheet(
       Item,
-      "arm5eV2",
+      "arm5e",
       ArM5eArmorItemSheetV2,
       {
         types: ["armor"],
@@ -962,7 +953,7 @@ function registerSheets() {
 
     foundry.applications.apps.DocumentSheetConfig.registerSheet(
       Item,
-      "arm5eV2",
+      "arm5e",
       ArM5eGenericItemSheetV2,
       {
         types: ["item"],
@@ -972,7 +963,7 @@ function registerSheets() {
 
     foundry.applications.apps.DocumentSheetConfig.registerSheet(
       Item,
-      "arm5eV2",
+      "arm5e",
       ArM5eVisItemSheetV2,
       {
         types: ["vis"],
@@ -981,7 +972,7 @@ function registerSheets() {
     );
     foundry.applications.apps.DocumentSheetConfig.registerSheet(
       Item,
-      "arm5eV2",
+      "arm5e",
       ArM5eBookItemSheetV2,
       {
         types: ["book"],
@@ -991,7 +982,7 @@ function registerSheets() {
 
     foundry.applications.apps.DocumentSheetConfig.registerSheet(
       Item,
-      "arm5eV2",
+      "arm5e",
       ArM5eDiaryEntryItemSheetV2,
       {
         types: ["diaryEntry"],
@@ -1000,7 +991,7 @@ function registerSheets() {
     );
     foundry.applications.apps.DocumentSheetConfig.registerSheet(
       Item,
-      "arm5eV2",
+      "arm5e",
       ArM5eInhabitantItemSheetV2,
       {
         types: ["inhabitant"],
@@ -1010,7 +1001,7 @@ function registerSheets() {
 
     foundry.applications.apps.DocumentSheetConfig.registerSheet(
       Item,
-      "arm5eV2",
+      "arm5e",
       ArM5eLaboratoryTextItemSheetV2,
       {
         types: ["laboratoryText"],
@@ -1020,43 +1011,41 @@ function registerSheets() {
 
     foundry.applications.apps.DocumentSheetConfig.registerSheet(
       Item,
-      "arm5eV2",
+      "arm5e",
       ArM5eSpellItemSheetV2,
       { types: ["spell"], makeDefault: true }
     );
     foundry.applications.apps.DocumentSheetConfig.registerSheet(
       Item,
-      "arm5eV2",
+      "arm5e",
       ArM5eMagicalEffectItemSheetV2,
       { types: ["magicalEffect"], makeDefault: true }
     );
     foundry.applications.apps.DocumentSheetConfig.registerSheet(
       Item,
-      "arm5eV2",
+      "arm5e",
       ArM5eBaseEffectItemSheetV2,
       { types: ["baseEffect"], makeDefault: true }
     );
     foundry.applications.apps.DocumentSheetConfig.registerSheet(
       Item,
-      "arm5eV2",
+      "arm5e",
       ArM5ePowerItemSheetV2,
       { types: ["power"], makeDefault: true }
     );
     foundry.applications.apps.DocumentSheetConfig.registerSheet(
       Item,
-      "arm5eV2",
+      "arm5e",
       ArM5eEnchantmentItemSheetV2,
       { types: ["enchantment"], makeDefault: true }
     );
 
     foundry.applications.apps.DocumentSheetConfig.registerSheet(
       Item,
-      "arm5eV2",
+      "arm5e",
       ArM5eSupernaturalEffectItemSheetV2,
       { types: ["supernaturalEffect"], makeDefault: true }
     );
-
-    // Items.registerSheet("arm5e", ArM5eItemSheetNoDesc, { types: ["vis"] });
 
     foundry.applications.apps.DocumentSheetConfig.unregisterSheet(
       ActiveEffect,

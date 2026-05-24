@@ -74,6 +74,7 @@
     {{> "systems/arm5e/templates/generic/parts/ars-tab-navigation.hbs" tabs=subtabs navClass=subtabNavClass navStyle=subtabNavStyle}}
 
     <section class="diary-body">
+      {{!-- {{log "TEACHER TAB" }} --}}
       {{!-- Teacher tab --}}
       <div
         class="tab{{#if subtabs.teacher.active}} active{{/if}} item flexcol marginItemPart"
@@ -97,50 +98,58 @@
               class="select-on-focus"
             />
             {{#if (eq system.activity "teaching")}}
-            <label class="">{{localize "arm5e.sheet.com"}}</label>
-            <input
-              type="number"
-              name="system.teacher.com"
-              value="{{ system.teacher.com }}"
-              data-dtype="Number"
-              style="max-width: 50px"
-              {{system.canEditTeacher}}
-              class="select-on-focus"
-            />
-            <label class="">{{localize "arm5e.skill.general.teaching"}}</label>
-            <input
-              type="number"
-              name="system.teacher.teaching"
-              value="{{ system.teacher.teaching }}"
-              data-dtype="Number"
-              style="max-width: 50px"
-              {{system.canEditTeacher}}
-              class="select-on-focus"
-            />
-            <label class=""
-              >{{localize "arm5e.sheet.speciality"}} ({{ system.teacher.speciality }})</label
-            >
-            <input
-              type="checkbox"
-              name="system.teacher.applySpec"
-              {{checked
-              system.teacher.applySpec}}
-              data-dtype="Boolean"
-              {{system.disabled}}
-            />
+            <div class="flexrow">
+              <label class="">{{localize "arm5e.sheet.com"}}</label>
+              <input
+                type="number"
+                name="system.teacher.com"
+                value="{{ system.teacher.com }}"
+                data-dtype="Number"
+                style="max-width: 50px"
+                {{system.canEditTeacher}}
+                class="select-on-focus"
+              />
+            </div>
+            <div class="flexrow">
+              <label class="">{{localize "arm5e.skill.general.teaching"}}</label>
+              <input
+                type="number"
+                name="system.teacher.teaching"
+                value="{{ system.teacher.teaching }}"
+                data-dtype="Number"
+                style="max-width: 50px"
+                {{system.canEditTeacher}}
+                class="select-on-focus"
+              />
+            </div>
+            <div class="flexrow">
+              <label class=""
+                >{{localize "arm5e.sheet.speciality"}} ({{ system.teacher.speciality }})</label
+              >
+              <input
+                type="checkbox"
+                name="system.teacher.applySpec"
+                {{checked
+                system.teacher.applySpec}}
+                data-dtype="Boolean"
+                {{system.disabled}}
+              />
+            </div>
             {{/if}}
             {{#unless system.teacherLinked}}
-            <label class="">{{localize "arm5e.sheet.score"}}</label>
-            <input
-              type="number"
-              class="score-teacher"
-              name="system.teacher.score"
-              value="{{ system.teacher.score }}"
-              data-dtype="Number"
-              style="max-width: 50px"
-              {{system.canEditTeacher}}
-              class="select-on-focus"
-            />
+            <div class="flexrow">
+              <label class="">{{localize "arm5e.sheet.score"}}</label>
+              <input
+                type="number"
+                class="score-teacher"
+                name="system.teacher.score"
+                value="{{ system.teacher.score }}"
+                data-dtype="Number"
+                style="max-width: 50px"
+                {{system.canEditTeacher}}
+                class="select-on-focus"
+              />
+            </div>
             {{/unless}}
           </div>
           <div class="flexcol" style="text-align: center">
@@ -156,6 +165,7 @@
       </div>
 
       {{!-- Abilities tab --}}
+      {{!-- {{log "ABILITIES TAB" }} --}}
       <div
         class="tab{{#if subtabs.abilities.active}} active{{/if}} item flexcol marginItemPart progress-abilities"
         data-tab="abilities"
@@ -274,7 +284,7 @@
           </ol>
         </div>
       </div>
-
+      {{!-- {{log "ARTS TAB" }} --}}
       {{!-- Arts tab --}}
       <div
         class="tab{{#if subtabs.arts.active}} active{{/if}} item flexcol marginItemPart"
@@ -377,7 +387,7 @@
           </ol>
         </div>
       </div>
-
+      {{!-- {{log "MASTERIES TAB" }} --}}
       {{!-- Masteries tab --}}
       <div
         class="tab{{#if subtabs.masteries.active}} active{{/if}} item flexcol marginItemPart"
@@ -496,6 +506,7 @@
       </div>
 
       {{!-- New Spells tab --}}
+      {{!-- {{log "SPELLS TAB" }} --}}
       <div
         class="tab{{#if subtabs.spells.active}} active{{/if}} item flexcol marginItemPart"
         data-tab="spells"

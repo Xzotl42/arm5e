@@ -8,6 +8,10 @@ import {
   genericValidationOfActivity,
   getNewTitleForActivity
 } from "../../seasonal-activities/long-term-activities.js";
+import {
+  getActivityDefinition,
+  getSelectableActivityDefinitions
+} from "../../seasonal-activities/activity-config.js";
 import { getAbilityFromCompendium } from "../../tools/compendia.js";
 import { spellFormLabel, spellTechniqueLabel } from "../../helpers/magic.js";
 import { log } from "../../tools/tools.js";
@@ -97,7 +101,7 @@ export class ArM5eDiaryEntryItemSheetV2 extends ArM5eItemSheetV2 {
     context.ui.showTab = false;
 
     context.selection.activities = {};
-    for (const [k, v] of Object.entries(CONFIG.ARM5E.activities.generic)) {
+    for (const [k, v] of getSelectableActivityDefinitions()) {
       if (v.display.attribute === undefined) {
         context.selection.activities[k] = v.label;
       }
@@ -108,7 +112,9 @@ export class ArM5eDiaryEntryItemSheetV2 extends ArM5eItemSheetV2 {
     if (!Object.keys(context.selection.activities).includes(actType)) {
       context.activityState = "disabled";
     }
-    context.selection.activities[actType] = CONFIG.ARM5E.activities.generic[actType].label;
+    // if the activity type is not usually available for selection,
+    // we need to add it to the list so it can be displayed in the sheet (but still disabled for selection)
+    context.selection.activities[actType] = getActivityDefinition(actType).label;
 
     // Initialize string fields used in the advanced template's action buttons section.
     // These must be set before any early return so the template never receives undefined
@@ -125,7 +131,7 @@ export class ArM5eDiaryEntryItemSheetV2 extends ArM5eItemSheetV2 {
       return context;
     }
 
-    const activityConfig = CONFIG.ARM5E.activities.generic[actType];
+    const activityConfig = getActivityDefinition(actType);
 
     if (activityConfig.durationEdit === true) {
       context.ui.editDuration = "";
@@ -139,9 +145,9 @@ export class ArM5eDiaryEntryItemSheetV2 extends ArM5eItemSheetV2 {
     context.ui.showTab = true;
 
     context.rollNeeded = false;
-    if (activityConfig.roll && !context.system.done) {
+    if (this.item.system.activityHandler?.roll && !context.system.done) {
       context.rollNeeded = true;
-      context.rollLabel = activityConfig.roll.label;
+      context.rollLabel = this.item.system.activityHandler.roll.label;
     }
 
     context.enforceSchedule = game.settings.get("arm5e", "enforceSchedule");
@@ -169,6 +175,7 @@ export class ArM5eDiaryEntryItemSheetV2 extends ArM5eItemSheetV2 {
     context.system.defaultArt = "";
     context.system.ownedArts = [];
     context.system.defaultSpellMastery = "";
+    context.system.sourceModifier = context.system.sourceModifier ?? 0;
 
     context.system.canEdit = "";
     context.system.disabled = "";
@@ -260,8 +267,6 @@ export class ArM5eDiaryEntryItemSheetV2 extends ArM5eItemSheetV2 {
       return context;
     }
 
-    genericValidationOfActivity(context, this.actor, this.item);
-
     const hasScheduleConflict =
       this.item.isOwned && this.item.system.hasScheduleConflict(this.item.actor);
     if (hasScheduleConflict && context.enforceSchedule && !context.system.done) {
@@ -328,9 +333,7 @@ export class ArM5eDiaryEntryItemSheetV2 extends ArM5eItemSheetV2 {
       context.system.applyError = "arm5e.activity.msg.sourceQualityHalved";
     }
 
-    if (activityConfig.validation !== null) {
-      activityConfig.validation(context, this.actor, this.item);
-    }
+    genericValidationOfActivity(context, this.actor, this.item);
 
     context.totalQuality =
       context.system.sourceQuality + context.system.sourceModifier + context.system.sourceBonus;
@@ -346,6 +349,7 @@ export class ArM5eDiaryEntryItemSheetV2 extends ArM5eItemSheetV2 {
     context.partialDates ??= [];
     context.partialButton = context.partialApply && !context.system.applyPossible;
 
+    log("Prepared context for diary entry sheet:", context);
     return context;
   }
 
@@ -644,14 +648,14 @@ export class ArM5eDiaryEntryItemSheetV2 extends ArM5eItemSheetV2 {
     }
 
     for (const a of context.system.progress.abilities) {
-      if (context.hasTeacher) {
+      if (hasTeacher) {
         if (context.system.teacher.id === null) {
           a.teacherScore = context.system.teacher.score ?? 0;
         } else {
           const teacherAbility = context.teacherAbilities?.find(
             (e) => e.system.key === a.key && e.system.option === a.option
           );
-          a.teacherScore = teacherAbility ? teacherAbility.system.derivedScore : 100;
+          a.teacherScore = teacherAbility ? teacherAbility.system.derivedScore : 0;
         }
       }
       const computedKey = a.option !== "" ? `${a.key}_${a.option}` : a.key;
@@ -861,6 +865,13 @@ export class ArM5eDiaryEntryItemSheetV2 extends ArM5eItemSheetV2 {
     }
 
     for (const s of context.system.progress.spells) {
+      if (s.form && context.system.ownedSpellForms[s.form] === undefined) {
+        context.system.ownedSpellForms[s.form] = CONFIG.ARM5E.magic.forms[s.form]?.label ?? s.form;
+      }
+      if (s.form && context.system.ownedSpells[s.form] === undefined) {
+        context.system.ownedSpells[s.form] = [];
+      }
+
       if (context.system.teacher.id === null) {
         s.teacherScore = context.system.teacher.score ?? 0;
       } else if (teacher) {
@@ -1048,11 +1059,11 @@ export class ArM5eDiaryEntryItemSheetV2 extends ArM5eItemSheetV2 {
     const actType = event.currentTarget.value;
     const updateData = { "system.sourceQuality": 0 };
 
-    const config = CONFIG.ARM5E.activities.generic[actType];
-    if (config.display.abilities === false) updateData["system.progress.abilities"] = [];
-    if (config.display.arts === false) updateData["system.progress.arts"] = [];
-    if (config.display.masteries === false) updateData["system.progress.spells"] = [];
-    if (config.display.spells === false) updateData["system.progress.newSpells"] = [];
+    const config = getActivityDefinition(actType);
+    updateData["system.progress.abilities"] = [];
+    updateData["system.progress.arts"] = [];
+    updateData["system.progress.spells"] = [];
+    updateData["system.progress.newSpells"] = [];
 
     updateData["system.sourceQuality"] = config.source.default;
     const duration = config.duration ?? 1;
@@ -1165,10 +1176,7 @@ export class ArM5eDiaryEntryItemSheetV2 extends ArM5eItemSheetV2 {
     if (data?.sourceModifier !== undefined && data?.sourceModifier !== null) {
       context.system.sourceModifier = Number(data.sourceModifier);
       context.system.cappedGain = false;
-      const activityConfig = CONFIG.ARM5E.activities.generic[context.system.activity];
-      if (activityConfig?.validation) {
-        activityConfig.validation(context, this.actor, this.item);
-      }
+      this.item.system.activityHandler?.validateDiary(context, this.actor, this.item);
       context.totalQuality =
         context.system.sourceQuality +
         context.system.sourceModifier +
@@ -1234,10 +1242,15 @@ export class ArM5eDiaryEntryItemSheetV2 extends ArM5eItemSheetV2 {
       }
     }
 
-    const success = await this._applyProgress(context, progress, {
-      includeAchievements: true,
-      includeNewSpells: true
-    });
+    const success = this.item.system.activityHandler
+      ? await this.item.system.activityHandler.apply(this, context, progress, {
+          includeAchievements: true,
+          includeNewSpells: true
+        })
+      : await this._applyProgress(context, progress, {
+          includeAchievements: true,
+          includeNewSpells: true
+        });
     if (!success) return context;
 
     context.description += "</ol>";
@@ -1530,10 +1543,15 @@ export class ArM5eDiaryEntryItemSheetV2 extends ArM5eItemSheetV2 {
       }
     }
 
-    const success = await this._applyProgress(context, scaledProgress, {
-      includeAchievements: false,
-      includeNewSpells: false
-    });
+    const success = this.item.system.activityHandler
+      ? await this.item.system.activityHandler.apply(this, context, scaledProgress, {
+          includeAchievements: false,
+          includeNewSpells: false
+        })
+      : await this._applyProgress(context, scaledProgress, {
+          includeAchievements: false,
+          includeNewSpells: false
+        });
     if (!success) return;
 
     context.description += "</ol>";
@@ -1595,152 +1613,9 @@ export class ArM5eDiaryEntryItemSheetV2 extends ArM5eItemSheetV2 {
       if (items.length > 0) promises.push(actor.deleteEmbeddedDocuments("Item", items, {}));
     }
 
-    const actType = this.item.system.activity;
-
-    switch (actType) {
-      case "writing": {
-        const dependency = this.item.system.externalIds?.[0];
-        if (dependency) {
-          const book = actor.items.get(dependency.itemId);
-          if (book) {
-            if (dependency.data.topic) {
-              const topicToDelete = dependency.data.topic;
-              const indexToDelete = this.item.system.achievements[0]?.system.topics.findLastIndex(
-                (e) =>
-                  e.category === topicToDelete.category &&
-                  e.level === topicToDelete.level &&
-                  e.quality === topicToDelete.quality &&
-                  e.type === topicToDelete.type &&
-                  e.key === topicToDelete.key &&
-                  e.option === topicToDelete.option &&
-                  e.art === topicToDelete.art &&
-                  e.author === topicToDelete.author
-              );
-              if (indexToDelete >= 0) {
-                const topics = foundry.utils.duplicate(book.system.topics);
-                topics.splice(indexToDelete, 1);
-                promises.push(
-                  actor.updateEmbeddedDocuments(
-                    "Item",
-                    [{ _id: book._id, system: { topics }, "flags.arm5e.currentBookTopic": 0 }],
-                    {}
-                  )
-                );
-              } else {
-                await Promise.all(promises);
-                ui.notifications.warn(game.i18n.localize("arm5e.scriptorium.msg.topicNoFound"));
-                return;
-              }
-            } else if (dependency.data.topicNumber) {
-              const topics = foundry.utils.duplicate(book.system.topics);
-              topics.splice(dependency.data.topicIndex, dependency.data.topicNumber);
-              promises.push(
-                actor.updateEmbeddedDocuments(
-                  "Item",
-                  [{ _id: book._id, system: { topics }, "flags.arm5e.currentBookTopic": 0 }],
-                  {}
-                )
-              );
-            }
-          } else {
-            await Promise.all(promises);
-            ui.notifications.warn(game.i18n.localize("arm5e.scriptorium.msg.topicNoFound"));
-            return;
-          }
-        }
-      }
-      // Intentional fallthrough: same rollback handling as one-shot activities
-      case "recovery":
-      case "itemInvestigation":
-      case "twilight": {
-        promises.push(actor.deleteEmbeddedDocuments("Item", [this.item.id], {}));
-        await Promise.all(promises);
-        return;
-      }
-
-      case "learnSpell":
-      case "inventSpell":
-      case "visExtraction":
-      case "visStudy":
-      case "minorEnchantment":
-      case "chargedItem": {
-        for (const dependency of this.item.system.externalIds ?? []) {
-          if (!game.actors.has(dependency.actorId)) continue;
-          const depActor = game.actors.get(dependency.actorId);
-          if (!depActor.items.has(dependency.itemId)) continue;
-          if (dependency.flags === 0) {
-            promises.push(depActor.deleteEmbeddedDocuments("Item", [dependency.itemId], {}));
-          } else if (dependency.flags === 1) {
-            const depItem = depActor.items.get(dependency.itemId);
-            promises.push(
-              depItem.update(
-                { "system.quantity": depItem.system.quantity + dependency.data.amount },
-                { parent: depActor }
-              )
-            );
-          } else if (dependency.flags === 2) {
-            const depItem = depActor.items.get(dependency.itemId);
-            if (depItem.type === "diaryEntry" && depItem.system.activity === "lab") {
-              promises.push(depItem.update(depItem.system._rollbackSchedule(), {}));
-            }
-          }
-        }
-        break;
-      }
-
-      case "aging": {
-        const confirmed = await getConfirmation(
-          game.i18n.localize("arm5e.aging.rollback.title"),
-          game.i18n.localize("arm5e.aging.rollback.confirm"),
-          ArM5eActorSheetV2.getFlavor(this.item.actor?.type)
-        );
-        if (!confirmed) {
-          await Promise.all(promises);
-          return;
-        }
-
-        const sysActorUpdate = { "states.pendingCrisis": false };
-        const effects = this.item.getFlag("arm5e", "effect");
-
-        if (effects?.apparent) {
-          sysActorUpdate.apparent = { value: actor.system.apparent.value - 1 };
-        }
-        if (effects?.charac) {
-          sysActorUpdate.characteristics = {};
-        }
-        for (const [char, stats] of Object.entries(effects?.charac ?? {})) {
-          const currentCharValue = actor.system.characteristics[char].value;
-          if (stats.score) {
-            sysActorUpdate.characteristics[char] = {
-              value: currentCharValue + 1,
-              aging: Math.max(0, Math.abs(currentCharValue + 1) - stats.aging)
-            };
-          } else {
-            const newAgingPts = actor.system.characteristics[char].aging - stats.aging;
-            sysActorUpdate.characteristics[char] = {
-              value: currentCharValue,
-              aging: newAgingPts < 0 ? 0 : newAgingPts
-            };
-          }
-        }
-
-        const newDecrepitude = actor.system.decrepitude.points - (effects?.decrepitude ?? 0);
-        sysActorUpdate.decrepitude = { points: newDecrepitude < 0 ? 0 : newDecrepitude };
-
-        if (this.item.system.dates[0]?.season === "winter") {
-          const newWarping =
-            actor.system.warping.points - CONFIG.ARM5E.activities.aging.warping.impact;
-          sysActorUpdate.warping = { points: newWarping < 0 ? 0 : newWarping };
-        }
-
-        promises.push(actor.update({ system: sysActorUpdate }, {}));
-        promises.push(actor.deleteEmbeddedDocuments("Item", [this.item.id], {}));
-        await Promise.all(promises);
-        return;
-      }
-
-      default:
-        break;
+    const rollbackState = { actor, promises, updateData, toConfirm };
+    if (await this.item.system.activityHandler?.rollback(this, rollbackState)) {
+      return;
     }
 
     // Undo XP gains
@@ -1773,12 +1648,6 @@ export class ArM5eDiaryEntryItemSheetV2 extends ArM5eItemSheetV2 {
     promises.push(actor.update(actorUpdate, { render: true }));
     if (updateData.length > 0)
       promises.push(actor.updateEmbeddedDocuments("Item", updateData, { render: true }));
-
-    if (["visExtraction", "visStudy", "minorEnchantment"].includes(actType)) {
-      promises.push(actor.deleteEmbeddedDocuments("Item", [this.item.id], {}));
-      await Promise.all(promises);
-      return;
-    }
 
     promises.push(
       this.item.update({
@@ -1912,6 +1781,10 @@ export class ArM5eDiaryEntryItemSheetV2 extends ArM5eItemSheetV2 {
 
   static async resetTeacher(event, target) {
     if (this.item.system.done) return;
+    await this._resetTeacher();
+  }
+
+  async _resetTeacher() {
     await this.item.update({
       "system.teacher.id": null,
       "system.progress.abilities": [],
@@ -1954,9 +1827,9 @@ export class ArM5eDiaryEntryItemSheetV2 extends ArM5eItemSheetV2 {
   }
 
   static async rollActivity(event, target) {
-    const activityConfig = CONFIG.ARM5E.activities.generic[this.item.system.activity];
-    if (activityConfig?.roll) {
-      await activityConfig.roll.action(this.item);
+    const activityHandler = this.item.system.activityHandler;
+    if (activityHandler?.roll) {
+      await activityHandler.roll.action(this.item);
     }
   }
 

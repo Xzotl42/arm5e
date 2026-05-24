@@ -123,10 +123,24 @@ export class LabActivity extends Activity {
   }
 
   async activityCosts(input) {
-    if (this.hasVisCost) {
-    } else {
+    if (!this.hasVisCost) {
       return null;
     }
+  }
+
+  async rollback(sheet, state) {
+    if (["investigateItem", "itemInvestigation"].includes(this.type)) {
+      return await this.deleteDiary(sheet, state.promises);
+    }
+
+    await this.rollbackExternalDependencies(sheet, state.promises);
+    this.queueProgressRollback(sheet, state);
+
+    if (["visExtraction", "minorEnchantment"].includes(this.type)) {
+      return await this.deleteDiary(sheet, state.promises);
+    }
+
+    return await this.restoreDiary(sheet, state.promises);
   }
 
   visUsed(data) {
@@ -217,7 +231,6 @@ export class LabActivity extends Activity {
         labTot.label += `   ( +${this.modifiers.philosophy} ${game.i18n.localize(
           "arm5e.lab.bonus.aspectsVerditius"
         )}, `;
-      } else {
       }
       labTot.label += `${game.i18n.localize("arm5e.lab.bonus.aspectsMax")})&#10`;
     }
@@ -308,10 +321,6 @@ export class NoLabActivity extends LabActivity {
 // //////////////////////
 
 export class SpellActivity extends LabActivity {
-  constructor(labUuid, actorUuid, type) {
-    super(labUuid, actorUuid, type);
-  }
-
   get title() {
     return game.i18n.localize("arm5e.activity.newSpellName");
   }

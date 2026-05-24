@@ -18,7 +18,8 @@ import {
   hermeticFilter,
   hermeticTopicFilter,
   topicFilter,
-  compareLabTexts
+  compareLabTexts,
+  log
 } from "../../tools/tools.js";
 import { UI } from "../../constants/ui.js";
 import { customDialogAsync, getConfirmation } from "../../ui/dialogs.js";
@@ -134,6 +135,19 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
     context.datetime.seasonLabel = game.i18n.localize(
       CONFIG.ARM5E.seasons[context.datetime.season].label
     );
+
+    if (this.actor._hasDate()) {
+      if (this.actor.isCharacter()) {
+        if (this.actor.system.states.creationMode) {
+          context.system.description.born.value =
+            context.datetime.year - (this.actor.system.age.value ? this.actor.system.age.value : 0);
+        } else {
+          context.system.age.value = context.system.description?.born?.value
+            ? context.datetime.year - context.system.description.born.value
+            : 20;
+        }
+      }
+    }
 
     // --- Book topic filters (not applicable to the magic codex) ---
     if (this.actor.type !== "magicCodex") {
@@ -1071,6 +1085,23 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
     prepared = foundry.utils.expandObject(flattened);
 
     return prepared;
+  }
+
+  /** @override */
+  _onFirstRender(context, options) {
+    super._onFirstRender(context, options);
+    this.timeHook = Hooks.on("arm5e-date-change", async (date) => {
+      if (this.actor._hasDate()) {
+        this.render(false);
+        log(false, "Render on date change");
+      }
+    });
+  }
+
+  /** @override */
+  async _onClose(options = {}) {
+    Hooks.off("arm5e-date-change", this.timeHook);
+    return super._onClose(options);
   }
 
   /** @override */

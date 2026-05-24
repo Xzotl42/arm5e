@@ -1,4 +1,4 @@
-## 3.0.0.13 Stentorius
+## 3.0.0.14 Stentorius
 
 ### Compatibility
 
@@ -12,6 +12,7 @@
 - All dialogs are now DialogV2
 - All roll dialogs are now ApplicationV2
 - All Actor sheets migrated to ActorSheetV2
+- All Item sheets migrated to ItemSheetV2
 
 ### Features & changes
 
@@ -49,6 +50,8 @@
   - Brazilian Portuguese by @Gapherd
 - Characteristics are readonly when not in creation mode.
 - Smaller and more compact limited actor sheets
+- Smaller and more compact item sheets
+- [technical] refactor of diary activities
 
 ### Bug fixes
 

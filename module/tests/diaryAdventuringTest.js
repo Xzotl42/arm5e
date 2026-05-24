@@ -62,20 +62,20 @@ export function registerAdventuringTesting(quench) {
           expect(entry.system.progress.newSpells.length).to.equal(0);
           expect(entry.system.progress.abilities.length).to.equal(1);
 
-          result = await sheet._progressApply({ sourceModifier: event?.sourceModifier ?? 0 });
+          result = await sheet._progressApply({});
 
           expect(result.system.applyError).to.equal("arm5e.activity.msg.wrongTotalXp");
 
           // assign xp
           progressItemCol[0].xp = 99;
           await entry.update({ "system.progress.abilities": progressItemCol });
-          result = await sheet._progressApply({ sourceModifier: event?.sourceModifier ?? 0 });
+          result = await sheet._progressApply({});
 
           expect(result.system.applyError).to.equal("arm5e.activity.msg.wrongSingleItemXp");
           progressItemCol[0].xp = entry.system.sourceQuality + entry.system.sourceModifier;
           await entry.update({ "system.progress.abilities": progressItemCol });
 
-          result = await sheet._progressApply({ sourceModifier: event?.sourceModifier ?? 0 });
+          result = await sheet._progressApply({});
 
           expect(result.system.applyError).to.equal("");
 
@@ -116,7 +116,7 @@ export function registerAdventuringTesting(quench) {
           expect(entry.system.progress.newSpells.length).to.equal(0);
           expect(entry.system.progress.abilities.length).to.equal(2);
 
-          result = await sheet._progressApply({ sourceModifier: event?.sourceModifier ?? 0 });
+          result = await sheet._progressApply({});
 
           expect(result.system.applyError).to.equal("arm5e.activity.msg.wrongTotalXp");
 
@@ -124,14 +124,14 @@ export function registerAdventuringTesting(quench) {
 
           progressAbilities[0].xp = 99;
           await entry.update({ "system.progress.abilities": progressAbilities });
-          result = await sheet._progressApply({ sourceModifier: event?.sourceModifier ?? 0 });
+          result = await sheet._progressApply({});
 
           expect(result.system.applyError).to.equal("arm5e.activity.msg.wrongSingleItemXp");
           progressAbilities[0].xp = 3 + entry.system.sourceModifier;
           progressAbilities[1].xp = 2;
           await entry.update({ "system.progress.abilities": progressAbilities });
 
-          result = await sheet._progressApply({ sourceModifier: event?.sourceModifier ?? 0 });
+          result = await sheet._progressApply({});
 
           expect(result.system.applyError).to.equal("");
 
@@ -171,14 +171,14 @@ export function registerAdventuringTesting(quench) {
           expect(entry.system.progress.newSpells.length).to.equal(0);
           expect(entry.system.progress.abilities.length).to.equal(0);
 
-          result = await sheet._progressApply({ sourceModifier: event?.sourceModifier ?? 0 });
+          result = await sheet._progressApply({});
 
           expect(result.system.applyError).to.equal("arm5e.activity.msg.wrongTotalXp");
 
           // assign xp
           progressItemCol[0].xp = 99;
           await entry.update({ "system.progress.spells": progressItemCol });
-          result = await sheet._progressApply({ sourceModifier: event?.sourceModifier ?? 0 });
+          result = await sheet._progressApply({});
 
           expect(result.system.applyError).to.equal("arm5e.activity.msg.wrongSingleItemXp");
           progressItemCol[0].xp = entry.system.sourceQuality + result.system.sourceModifier;
@@ -187,7 +187,7 @@ export function registerAdventuringTesting(quench) {
           //   console.warn(result.system.applyError);
           // }
 
-          result = await sheet._progressApply({ sourceModifier: event?.sourceModifier ?? 0 });
+          result = await sheet._progressApply({});
 
           expect(result.system.applyError).to.equal("");
 
@@ -217,14 +217,14 @@ export function registerAdventuringTesting(quench) {
           expect(entry.system.progress.newSpells.length).to.equal(0);
           expect(entry.system.progress.abilities.length).to.equal(0);
 
-          result = await sheet._progressApply({ sourceModifier: event?.sourceModifier ?? 0 });
+          result = await sheet._progressApply({});
 
           expect(result.system.applyError).to.equal("arm5e.activity.msg.wrongTotalXp");
 
           // assign xp
           arts[0].xp = 99;
           await entry.update({ "system.progress.arts": arts });
-          result = await sheet._progressApply({ sourceModifier: event?.sourceModifier ?? 0 });
+          result = await sheet._progressApply({});
 
           expect(result.system.applyError).to.equal("arm5e.activity.msg.wrongSingleItemXp");
 
@@ -234,7 +234,7 @@ export function registerAdventuringTesting(quench) {
           //   console.warn(result.system.applyError);
           // }
 
-          result = await sheet._progressApply({ sourceModifier: event?.sourceModifier ?? 0 });
+          result = await sheet._progressApply({});
 
           expect(result.system.applyError).to.equal("");
           expect(magus.system.arts.techniques.mu.xp).to.equal(oldXp + 5);
@@ -268,24 +268,24 @@ export function registerAdventuringTesting(quench) {
           expect(entry.system.progress.newSpells.length).to.equal(0);
           expect(entry.system.progress.abilities.length).to.equal(1);
 
-          result = await sheet._progressApply({ sourceModifier: event?.sourceModifier ?? 0 });
+          result = await sheet._progressApply({});
 
           expect(result.system.applyError).to.equal("arm5e.activity.msg.wrongTotalXp");
 
           // assign xp
           abilities[0].xp = 5;
           await entry.update({ "system.progress.abilities": abilities });
-          result = await sheet._progressApply({ sourceModifier: event?.sourceModifier ?? 0 });
+          result = await sheet._progressApply({});
 
           expect(result.system.applyError).to.equal("arm5e.activity.msg.wrongTotalXp");
           spells[0].xp = 5;
           await entry.update({ "system.progress.spells": spells });
-          result = await sheet._progressApply({ sourceModifier: event?.sourceModifier ?? 0 });
+          result = await sheet._progressApply({});
 
           expect(result.system.applyError).to.equal("arm5e.activity.msg.wrongTotalXp");
           arts[0].xp = 5;
           await entry.update({ "system.progress.arts": arts });
-          result = await sheet._progressApply({ sourceModifier: event?.sourceModifier ?? 0 });
+          result = await sheet._progressApply({});
 
           expect(result.system.applyError).to.equal("");
 
@@ -338,20 +338,20 @@ export function registerAdventuringTesting(quench) {
           expect(entry.system.progress.newSpells.length).to.equal(0);
           expect(entry.system.progress.abilities.length).to.equal(1);
           event.sourceModifier = result.system.sourceModifier;
-          result = await sheet._progressApply({ sourceModifier: event?.sourceModifier ?? 0 });
+          result = await sheet._progressApply({});
           event.sourceModifier = result.system.sourceModifier;
           expect(result.system.applyError).to.equal("arm5e.activity.msg.wrongTotalXp");
 
           // assign xp
           progressItemCol[0].xp = 99;
           await entry.update({ "system.progress.abilities": progressItemCol });
-          result = await sheet._progressApply({ sourceModifier: event?.sourceModifier ?? 0 });
+          result = await sheet._progressApply({});
 
           expect(result.system.applyError).to.equal("arm5e.activity.msg.wrongSingleItemXp");
           progressItemCol[0].xp = entry.system.sourceQuality + result.system.sourceModifier;
           await entry.update({ "system.progress.abilities": progressItemCol });
 
-          result = await sheet._progressApply({ sourceModifier: event?.sourceModifier ?? 0 });
+          result = await sheet._progressApply({});
 
           expect(result.system.applyError).to.equal("");
           // await entry.sheet.render(true);
@@ -396,14 +396,14 @@ export function registerAdventuringTesting(quench) {
           expect(entry.system.progress.newSpells.length).to.equal(0);
           expect(entry.system.progress.abilities.length).to.equal(0);
 
-          result = await sheet._progressApply({ sourceModifier: event?.sourceModifier ?? 0 });
+          result = await sheet._progressApply({});
 
           expect(result.system.applyError).to.equal("arm5e.activity.msg.wrongTotalXp");
 
           // assign xp
           progressItemCol[0].xp = 99;
           await entry.update({ "system.progress.spells": progressItemCol });
-          result = await sheet._progressApply({ sourceModifier: event?.sourceModifier ?? 0 });
+          result = await sheet._progressApply({});
 
           expect(result.system.applyError).to.equal("arm5e.activity.msg.wrongSingleItemXp");
           progressItemCol[0].xp = entry.system.sourceQuality + result.system.sourceModifier;
@@ -412,7 +412,7 @@ export function registerAdventuringTesting(quench) {
           //   console.warn(result.system.applyError);
           // }
 
-          result = await sheet._progressApply({ sourceModifier: event?.sourceModifier ?? 0 });
+          result = await sheet._progressApply({});
 
           expect(result.system.applyError).to.equal("");
 
@@ -451,14 +451,14 @@ export function registerAdventuringTesting(quench) {
           expect(entry.system.progress.newSpells.length).to.equal(0);
           expect(entry.system.progress.abilities.length).to.equal(0);
 
-          result = await sheet._progressApply({ sourceModifier: event?.sourceModifier ?? 0 });
+          result = await sheet._progressApply({});
 
           expect(result.system.applyError).to.equal("arm5e.activity.msg.wrongTotalXp");
 
           // assign xp
           arts[0].xp = 99;
           await entry.update({ "system.progress.arts": arts });
-          result = await sheet._progressApply({ sourceModifier: event?.sourceModifier ?? 0 });
+          result = await sheet._progressApply({});
 
           expect(result.system.applyError).to.equal("arm5e.activity.msg.wrongSingleItemXp");
 
@@ -468,7 +468,7 @@ export function registerAdventuringTesting(quench) {
           //   console.warn(result.system.applyError);
           // }
 
-          result = await sheet._progressApply({ sourceModifier: event?.sourceModifier ?? 0 });
+          result = await sheet._progressApply({});
 
           expect(result.system.applyError).to.equal("");
           expect(magus.system.arts.techniques.mu.xp).to.equal(oldXp + 5);
@@ -509,22 +509,22 @@ export function registerAdventuringTesting(quench) {
           expect(entry.system.progress.arts.length).to.equal(1);
           expect(entry.system.progress.newSpells.length).to.equal(0);
           expect(entry.system.progress.abilities.length).to.equal(1);
-          result = await sheet._progressApply({ sourceModifier: event?.sourceModifier ?? 0 });
+          result = await sheet._progressApply({});
 
           expect(result.system.applyError).to.equal("arm5e.activity.msg.wrongTotalXp");
 
           // assign xp
           abilities[0].xp = 5;
           await entry.update({ "system.progress.abilities": abilities }, { actor: magus });
-          result = await sheet._progressApply({ sourceModifier: event?.sourceModifier ?? 0 });
+          result = await sheet._progressApply({});
           expect(result.system.applyError).to.equal("arm5e.activity.msg.wrongTotalXp");
           spells[0].xp = 5;
           await entry.update({ "system.progress.spells": spells }, { actor: magus });
-          result = await sheet._progressApply({ sourceModifier: event?.sourceModifier ?? 0 });
+          result = await sheet._progressApply({});
           expect(result.system.applyError).to.equal("arm5e.activity.msg.wrongTotalXp");
           arts[0].xp = 5;
           await entry.update({ "system.progress.arts": arts }, { actor: magus });
-          result = await sheet._progressApply({ sourceModifier: event?.sourceModifier ?? 0 });
+          result = await sheet._progressApply({});
           expect(result.system.applyError).to.equal("");
 
           expect(ability.system.xp).to.equal(oldXpAb + 5);
@@ -576,20 +576,20 @@ export function registerAdventuringTesting(quench) {
           expect(entry.system.progress.newSpells.length).to.equal(0);
           expect(entry.system.progress.abilities.length).to.equal(1);
 
-          result = await sheet._progressApply({ sourceModifier: event?.sourceModifier ?? 0 });
+          result = await sheet._progressApply({});
 
           expect(result.system.applyError).to.equal("arm5e.activity.msg.wrongTotalXp");
 
           // assign xp
           progressItemCol[0].xp = 99;
           await entry.update({ "system.progress.abilities": progressItemCol }, { actor: magus });
-          result = await sheet._progressApply({ sourceModifier: event?.sourceModifier ?? 0 });
+          result = await sheet._progressApply({});
 
           expect(result.system.applyError).to.equal("arm5e.activity.msg.wrongSingleItemXp");
           progressItemCol[0].xp = entry.system.sourceQuality + result.system.sourceModifier;
           await entry.update({ "system.progress.abilities": progressItemCol }, { actor: magus });
 
-          result = await sheet._progressApply({ sourceModifier: event?.sourceModifier ?? 0 });
+          result = await sheet._progressApply({});
 
           expect(result.system.applyError).to.equal("");
 

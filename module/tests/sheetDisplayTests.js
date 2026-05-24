@@ -57,6 +57,7 @@ export function registerSheetDisplayTests(quench) {
       });
 
       describe("Item create and display sheet ", function () {
+        this.timeout(300000); // 300 seconds for easier debugging
         for (let t of CONFIG.Item.documentClass.TYPES) {
           if (!SKIPPED_ITEM_TYPES.has(t)) {
             it(`Test ${t}'s constructor`, async function () {

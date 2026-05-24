@@ -8,7 +8,7 @@ export class ArM5eWoundItemSheetV2 extends ArM5eItemSheetV2 {
   /** @override */
   static DEFAULT_OPTIONS = {
     classes: ["arm5e", "sheet", "item"],
-    position: { width: 405, height: 602 },
+    position: { width: 405, height: 635 },
     actions: {
       sanatoriumRoll: ArM5eWoundItemSheetV2.sanatoriumRoll,
       itemDeleteConfirm: ArM5eItemSheetV2.itemDeleteConfirm
@@ -21,7 +21,7 @@ export class ArM5eWoundItemSheetV2 extends ArM5eItemSheetV2 {
       template: "systems/arm5e/templates/item/parts/item-wound-header-v2.hbs"
     },
     description: {
-      template: "systems/arm5e/templates/item/parts/item-description-v2.hbs"
+      template: "systems/arm5e/templates/item/parts/item-notab-description-v2.hbs"
     },
     footer: {
       template: "systems/arm5e/templates/item/parts/item-footer-v2.hbs"

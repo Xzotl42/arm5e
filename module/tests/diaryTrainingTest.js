@@ -131,7 +131,8 @@ export function registerTrainingTesting(quench) {
         });
       });
       describe("Training capped", function () {
-        it("Single Ability", async function () {
+        this.timeout(300000); // 300 seconds for easier debugging
+        it("Single Ability capped", async function () {
           let sheet = entry.sheet;
           const sheetData = await entry.sheet._prepareContext({});
           event.sourceModifier = sheetData.system.sourceModifier;
@@ -177,7 +178,7 @@ export function registerTrainingTesting(quench) {
           await entry.sheet._resetTeacher();
           assert.ok(true);
         });
-        it("Single spell", async function () {
+        it("Single spell capped", async function () {
           let sheet = entry.sheet;
           expect(entry.system.done).to.equal(false);
           expect(entry.system.dates.length).to.equal(1);
@@ -222,7 +223,8 @@ export function registerTrainingTesting(quench) {
         });
       });
       describe("Training with unlinked teacher", function () {
-        it("Single Ability", async function () {
+        this.timeout(300000); // 300 seconds for easier debugging
+        it("Single Ability unlinked", async function () {
           let sheet = entry.sheet;
           const sheetData = await entry.sheet._prepareContext({});
           event.sourceModifier = sheetData.system.sourceModifier;
@@ -258,7 +260,7 @@ export function registerTrainingTesting(quench) {
           await entry.update({ "system.progress.abilities": [] });
           assert.ok(true);
         });
-        it("Single spell", async function () {
+        it("Single spell unlinked", async function () {
           let sheet = entry.sheet;
           expect(entry.system.done).to.equal(false);
           expect(entry.system.dates.length).to.equal(1);
@@ -301,7 +303,8 @@ export function registerTrainingTesting(quench) {
         });
       });
       describe("Training with capped source and unlinked", function () {
-        it("Single Ability", async function () {
+        this.timeout(300000); // 300 seconds for easier debugging
+        it("Single Ability capped and unlinked", async function () {
           let sheet = entry.sheet;
           const sheetData = await entry.sheet._prepareContext({});
           event.sourceModifier = sheetData.system.sourceModifier;
@@ -345,7 +348,7 @@ export function registerTrainingTesting(quench) {
           await entry.sheet._resetTeacher();
           assert.ok(true);
         });
-        it("Single spell", async function () {
+        it("Single spell capped and unlinked", async function () {
           let sheet = entry.sheet;
           let teacherScore = 6;
           expect(entry.system.done).to.equal(false);
@@ -397,7 +400,8 @@ export function registerTrainingTesting(quench) {
         });
       });
       describe("Training nominal with AE", function () {
-        it("Single Ability", async function () {
+        this.timeout(300000); // 300 seconds for easier debugging
+        it("Single Ability with AE", async function () {
           let sheet = entry.sheet;
 
           activityBonusAE = await magus.addActiveEffect(
@@ -464,7 +468,7 @@ export function registerTrainingTesting(quench) {
           await entry.sheet._resetTeacher();
           assert.ok(true);
         });
-        it("Single spell", async function () {
+        it("Single spell with AE", async function () {
           let sheet = entry.sheet;
           activityBonusAE = await magus.addActiveEffect(
             "Bonus training",
@@ -525,7 +529,8 @@ export function registerTrainingTesting(quench) {
         });
       });
       describe("Training capped  with AE", function () {
-        it("Single Ability", async function () {
+        this.timeout(300000); // 300 seconds for easier debugging
+        it("Single Ability capped with AE", async function () {
           let sheet = entry.sheet;
           activityBonusAE = await magus.addActiveEffect(
             "Bonus training",
@@ -587,7 +592,7 @@ export function registerTrainingTesting(quench) {
           await entry.sheet._resetTeacher();
           assert.ok(true);
         });
-        it("Single Ability 2", async function () {
+        it("Single Ability 2 capped with AE", async function () {
           let sheet = entry.sheet;
           activityBonusAE = await magus.addActiveEffect(
             "Bonus training",
@@ -649,7 +654,7 @@ export function registerTrainingTesting(quench) {
           await entry.sheet._resetTeacher();
           assert.ok(true);
         });
-        it("Single spell", async function () {
+        it("Single spell capped with AE", async function () {
           let sheet = entry.sheet;
 
           activityBonusAE = await magus.addActiveEffect(
@@ -718,7 +723,8 @@ export function registerTrainingTesting(quench) {
         });
       });
       describe("Training with unlinked teacher  with AE", function () {
-        it("Single Ability", async function () {
+        this.timeout(300000); // 300 seconds for easier debugging
+        it("Single Ability capped with AE unlinked with AE", async function () {
           let sheet = entry.sheet;
           activityBonusAE = await magus.addActiveEffect(
             "Bonus training",
@@ -772,7 +778,7 @@ export function registerTrainingTesting(quench) {
           await entry.update({ "system.progress.abilities": [] });
           assert.ok(true);
         });
-        it("Single spell", async function () {
+        it("Single spell capped with AE unlinked with AE", async function () {
           let sheet = entry.sheet;
           activityBonusAE = await magus.addActiveEffect(
             "Bonus training",
@@ -838,7 +844,8 @@ export function registerTrainingTesting(quench) {
         });
       });
       describe("Training with capped source, with AE and unlinked", function () {
-        it("Single Ability", async function () {
+        this.timeout(300000); // 300 seconds for easier debugging
+        it("Single Ability with capped source, with AE and unlinked", async function () {
           let sheet = entry.sheet;
           activityBonusAE = await magus.addActiveEffect(
             "Bonus training",
@@ -899,7 +906,7 @@ export function registerTrainingTesting(quench) {
           await entry.sheet._resetTeacher();
           assert.ok(true);
         });
-        it("Single spell", async function () {
+        it("Single spell with capped source, with AE and unlinked", async function () {
           let sheet = entry.sheet;
           activityBonusAE = await magus.addActiveEffect(
             "Bonus training",
@@ -966,7 +973,7 @@ export function registerTrainingTesting(quench) {
           await entry.update({ "system.progress.spells": [] });
           assert.ok(true);
         });
-        it("Single spell 2", async function () {
+        it("Single spell 2 capped with AE unlinked", async function () {
           let sheet = entry.sheet;
           activityBonusAE = await magus.addActiveEffect(
             "Bonus training",

@@ -46,17 +46,18 @@ export function registerTeachingTesting(quench) {
 
         it("Single Ability", async function () {
           let sheet = entry.sheet;
+          let result;
           const sheetData = await entry.sheet._prepareContext({});
           event.sourceModifier = sheetData.system.sourceModifier;
           expect(entry.system.done).to.equal(false);
           expect(entry.system.dates.length).to.equal(1);
 
           expect(entry.system.progress.abilities.length).to.equal(0);
-          await sheet._progressApply({ sourceModifier: event.sourceModifier });
-          expect(entry.system.applyError).to.equal("arm5e.activity.msg.uselessTeacher");
+          result = await sheet._progressApply({});
+          expect(result.system.applyError).to.equal("arm5e.activity.msg.uselessTeacher");
           await sheet._setTeacher(teacher);
-          await sheet._progressApply({ sourceModifier: event.sourceModifier });
-          expect(entry.system.applyError).to.equal("arm5e.activity.msg.noProgressItems");
+          result = await sheet._progressApply({});
+          expect(result.system.applyError).to.equal("arm5e.activity.msg.noProgressItems");
           const ability = magus.system.abilities[2];
           const oldXp = ability.system.xp;
           let teacherSkill = await teacher.getAbilityStats(
@@ -78,15 +79,15 @@ export function registerTeachingTesting(quench) {
           expect(progressItem.teacherScore).to.equal(teacherSkill.score);
           // assign xp
 
-          await sheet._progressApply({ sourceModifier: event.sourceModifier });
-          expect(entry.system.applyError).to.equal("");
+          result = await sheet._progressApply({});
+          expect(result.system.applyError).to.equal("");
 
           expect(ability.system.xp).to.equal(oldXp + progressItem.xp);
 
-          await sheet.progressRollback(null, null);
+          await sheet._progressRollback(false);
           expect(ability.system.xp).to.equal(oldXp);
           // log(false, JSON.stringify(sheetData));
-          await sheet.resetTeacher(null, null);
+          await entry.sheet._resetTeacher();
           assert.ok(true);
         });
         it("Single art", async function () {
@@ -98,12 +99,12 @@ export function registerTeachingTesting(quench) {
           event.sourceModifier = sheetData.system.sourceModifier;
           expect(entry.system.progress.abilities.length).to.equal(0);
 
-          await sheet._progressApply({ sourceModifier: event.sourceModifier });
-          expect(entry.system.applyError).to.equal("arm5e.activity.msg.uselessTeacher");
+          let result = await sheet._progressApply({});
+          expect(result.system.applyError).to.equal("arm5e.activity.msg.uselessTeacher");
           await sheet._setTeacher(teacher);
 
-          await sheet._progressApply({ sourceModifier: event.sourceModifier });
-          expect(entry.system.applyError).to.equal("arm5e.activity.msg.noProgressItems");
+          result = await sheet._progressApply({});
+          expect(result.system.applyError).to.equal("arm5e.activity.msg.noProgressItems");
           const art = magus.system.arts.techniques.mu;
           const oldXp = art.xp;
           let teacherArt = teacher.system.arts.techniques.mu;
@@ -117,15 +118,15 @@ export function registerTeachingTesting(quench) {
 
           expect(progressItem.teacherScore).to.equal(teacherArt.finalScore);
 
-          await sheet._progressApply({ sourceModifier: event.sourceModifier });
-          expect(entry.system.applyError).to.equal("");
+          result = await sheet._progressApply({});
+          expect(result.system.applyError).to.equal("");
 
           expect(magus.system.arts.techniques.mu.xp).to.equal(oldXp + progressItem.xp);
 
-          await sheet.progressRollback(null, null);
+          await sheet._progressRollback(false);
           expect(magus.system.arts.techniques.mu.xp).to.equal(oldXp);
           // log(false, JSON.stringify(sheetData));
-          await sheet.resetTeacher(null, null);
+          await entry.sheet._resetTeacher();
           assert.ok(true);
         });
         it("Single spell", async function () {
@@ -136,12 +137,12 @@ export function registerTeachingTesting(quench) {
           event.sourceModifier = sheetData.system.sourceModifier;
           expect(entry.system.progress.abilities.length).to.equal(0);
 
-          await sheet._progressApply({ sourceModifier: event.sourceModifier });
-          expect(entry.system.applyError).to.equal("arm5e.activity.msg.uselessTeacher");
+          let result = await sheet._progressApply({});
+          expect(result.system.applyError).to.equal("arm5e.activity.msg.uselessTeacher");
           await sheet._setTeacher(teacher);
 
-          await sheet._progressApply({ sourceModifier: event.sourceModifier });
-          expect(entry.system.applyError).to.equal("arm5e.activity.msg.noProgressItems");
+          result = await sheet._progressApply({});
+          expect(result.system.applyError).to.equal("arm5e.activity.msg.noProgressItems");
           const spell = magus.items.get(entry.system.defaultSpellMastery);
           const oldXp = spell.system.xp;
           let progressItemCol = await addProgressItem(entry, "spells", spell._id);
@@ -155,20 +156,21 @@ export function registerTeachingTesting(quench) {
           expect(progressItem.teacherScore).to.equal(teacherSpell.system.finalScore);
           // assign xp
 
-          await sheet._progressApply({ sourceModifier: event.sourceModifier });
-          expect(entry.system.applyError).to.equal("");
+          result = await sheet._progressApply({});
+          expect(result.system.applyError).to.equal("");
 
           expect(spell.system.xp).to.equal(oldXp + progressItem.xp);
 
-          await sheet.progressRollback(null, null);
+          await sheet._progressRollback(false);
           expect(spell.system.xp).to.equal(oldXp);
           // log(false, JSON.stringify(sheetData));
-          await sheet.resetTeacher(null, null);
+          await entry.sheet._resetTeacher();
           // await entry.update({ "system.progress.spells": [] });
           assert.ok(true);
         });
       });
       describe("Teaching capped", function () {
+        this.timeout(300000); // 300 seconds for easier debugging
         it("Single Ability", async function () {
           let sheet = entry.sheet;
           const sheetData = await entry.sheet._prepareContext({});
@@ -179,12 +181,12 @@ export function registerTeachingTesting(quench) {
 
           expect(entry.system.progress.abilities.length).to.equal(0);
 
-          await sheet._progressApply({ sourceModifier: event.sourceModifier });
-          expect(entry.system.applyError).to.equal("arm5e.activity.msg.uselessTeacher");
+          result = await sheet._progressApply({});
+          expect(result.system.applyError).to.equal("arm5e.activity.msg.uselessTeacher");
           await sheet._setTeacher(teacher);
 
-          await sheet._progressApply({ sourceModifier: event.sourceModifier });
-          expect(entry.system.applyError).to.equal("arm5e.activity.msg.noProgressItems");
+          result = await sheet._progressApply({});
+          expect(result.system.applyError).to.equal("arm5e.activity.msg.noProgressItems");
           const ability = magus.system.abilities[0];
           let teacherSkill = await teacher.getAbilityStats(
             ability.system.key,
@@ -192,7 +194,7 @@ export function registerTeachingTesting(quench) {
           );
           let teacherXp = ((teacherSkill.score * (teacherSkill.score + 1)) / 2) * 5;
           await magus.updateEmbeddedDocuments("Item", [
-            { _id: ability._id, "system.xp": teacherXp - 5 }
+            { _id: ability._id, "system.xp": teacherXp - 1 }
           ]);
           const oldXp = ability.system.xp;
           let progressItemCol = await addProgressItem(entry, "abilities", ability._id);
@@ -204,15 +206,15 @@ export function registerTeachingTesting(quench) {
           expect(progressItem.teacherScore).to.equal(teacherSkill.score);
           // assign xp
 
-          await sheet._progressApply({ sourceModifier: event.sourceModifier });
-          expect(entry.system.applyError).to.equal("arm5e.activity.msg.gainCapped");
+          result = await sheet._progressApply({});
+          expect(result.system.applyError).to.equal("arm5e.activity.msg.gainCapped");
 
           expect(ability.system.xp).to.equal(oldXp + progressItem.xp);
 
-          await sheet.progressRollback(null, null);
+          await sheet._progressRollback(false);
           expect(ability.system.xp).to.equal(oldXp);
           // log(false, JSON.stringify(sheetData));
-          await sheet.resetTeacher(null, null);
+          await entry.sheet._resetTeacher();
           assert.ok(true);
         });
         it("Single art", async function () {
@@ -224,16 +226,16 @@ export function registerTeachingTesting(quench) {
           event.sourceModifier = sheetData.system.sourceModifier;
           expect(entry.system.progress.abilities.length).to.equal(0);
 
-          await sheet._progressApply({ sourceModifier: event.sourceModifier });
-          expect(entry.system.applyError).to.equal("arm5e.activity.msg.uselessTeacher");
+          result = await sheet._progressApply({});
+          expect(result.system.applyError).to.equal("arm5e.activity.msg.uselessTeacher");
           await sheet._setTeacher(teacher);
 
-          await sheet._progressApply({ sourceModifier: event.sourceModifier });
-          expect(entry.system.applyError).to.equal("arm5e.activity.msg.noProgressItems");
+          result = await sheet._progressApply({});
+          expect(result.system.applyError).to.equal("arm5e.activity.msg.noProgressItems");
 
           let teacherArt = teacher.system.arts.techniques.mu;
           let teacherXp = (teacherArt.finalScore * (teacherArt.finalScore + 1)) / 2;
-          await magus.update({ "system.arts.techniques.mu.xp": teacherXp - 5 });
+          await magus.update({ "system.arts.techniques.mu.xp": teacherXp - 1 });
           const oldXp = magus.system.arts.techniques.mu.xp;
           let progressItemCol = await addProgressItem(entry, "arts", "mu", teacherArt.finalScore);
           expect(entry.system.progress.spells.length).to.equal(0);
@@ -245,15 +247,15 @@ export function registerTeachingTesting(quench) {
 
           expect(progressItem.teacherScore).to.equal(teacherArt.finalScore);
 
-          await sheet._progressApply({ sourceModifier: event.sourceModifier });
-          expect(entry.system.applyError).to.equal("arm5e.activity.msg.gainCapped");
+          result = await sheet._progressApply({});
+          expect(result.system.applyError).to.equal("arm5e.activity.msg.gainCapped");
 
           expect(magus.system.arts.techniques.mu.xp).to.equal(oldXp + progressItem.xp);
 
-          await sheet.progressRollback(null, null);
+          await sheet._progressRollback(false);
           expect(magus.system.arts.techniques.mu.xp).to.equal(oldXp);
           // log(false, JSON.stringify(sheetData));
-          await sheet.resetTeacher(null, null);
+          await entry.sheet._resetTeacher();
           assert.ok(true);
         });
         it("Single spell", async function () {
@@ -264,16 +266,16 @@ export function registerTeachingTesting(quench) {
           event.sourceModifier = sheetData.system.sourceModifier;
           expect(entry.system.progress.abilities.length).to.equal(0);
 
-          await sheet._progressApply({ sourceModifier: event.sourceModifier });
-          expect(entry.system.applyError).to.equal("arm5e.activity.msg.uselessTeacher");
+          result = await sheet._progressApply({});
+          expect(result.system.applyError).to.equal("arm5e.activity.msg.uselessTeacher");
           await sheet._setTeacher(teacher);
 
-          await sheet._progressApply({ sourceModifier: event.sourceModifier });
-          expect(entry.system.applyError).to.equal("arm5e.activity.msg.noProgressItems");
+          result = await sheet._progressApply({});
+          expect(result.system.applyError).to.equal("arm5e.activity.msg.noProgressItems");
           const spell = magus.items.get(entry.system.defaultSpellMastery);
           let teacherSpell = await teacher.items.getName(spell.name);
           await magus.updateEmbeddedDocuments("Item", [
-            { _id: spell._id, "system.xp": teacherSpell.system.xp - 5 }
+            { _id: spell._id, "system.xp": teacherSpell.system.xp - 1 }
           ]);
           const oldXp = spell.system.xp;
           let progressItemCol = await addProgressItem(entry, "spells", spell._id);
@@ -287,20 +289,21 @@ export function registerTeachingTesting(quench) {
           expect(progressItem.teacherScore).to.equal(teacherSpell.system.finalScore);
           // assign xp
 
-          await sheet._progressApply({ sourceModifier: event.sourceModifier });
-          expect(entry.system.applyError).to.equal("arm5e.activity.msg.gainCapped");
+          result = await sheet._progressApply({});
+          expect(result.system.applyError).to.equal("arm5e.activity.msg.gainCapped");
 
-          expect(spell.system.xp).to.equal(teacherSpell.system.xp - 5 + progressItem.xp);
+          expect(spell.system.xp).to.equal(teacherSpell.system.xp - 1 + progressItem.xp);
 
-          await sheet.progressRollback(null, null);
+          await sheet._progressRollback(false);
           expect(spell.system.xp).to.equal(oldXp);
           // log(false, JSON.stringify(sheetData));
-          await sheet.resetTeacher(null, null);
+          await entry.sheet._resetTeacher();
           // await entry.update({ "system.progress.spells": [] });
           assert.ok(true);
         });
       });
       describe("Teaching with unlinked teacher", function () {
+        this.timeout(300000); // 300 seconds for easier debugging
         it("Single Ability", async function () {
           let sheet = entry.sheet;
           const sheetData = await entry.sheet._prepareContext({});
@@ -310,14 +313,14 @@ export function registerTeachingTesting(quench) {
 
           expect(entry.system.progress.abilities.length).to.equal(0);
 
-          await sheet._progressApply({ sourceModifier: event.sourceModifier });
-          expect(entry.system.applyError).to.equal("arm5e.activity.msg.uselessTeacher");
+          result = await sheet._progressApply({});
+          expect(result.system.applyError).to.equal("arm5e.activity.msg.uselessTeacher");
 
           await sheet._setTeacher(teacher);
-          await sheet.resetTeacher(null, null);
+          await entry.sheet._resetTeacher();
           await entry.update({ "system.teacher.score": 6 });
-          await sheet._progressApply({ sourceModifier: event.sourceModifier });
-          expect(entry.system.applyError).to.equal("arm5e.activity.msg.noProgressItems");
+          result = await sheet._progressApply({});
+          expect(result.system.applyError).to.equal("arm5e.activity.msg.noProgressItems");
           const ability = magus.system.abilities[0];
           const oldXp = ability.system.xp;
           let progressItemCol = await addProgressItem(entry, "abilities", ability._id);
@@ -329,12 +332,12 @@ export function registerTeachingTesting(quench) {
           expect(progressItem.teacherScore).to.equal(entry.system.teacher.score);
           // assign xp
 
-          await sheet._progressApply({ sourceModifier: event.sourceModifier });
-          expect(entry.system.applyError).to.equal("");
+          result = await sheet._progressApply({});
+          expect(result.system.applyError).to.equal("");
 
           expect(ability.system.xp).to.equal(oldXp + progressItem.xp);
 
-          await sheet.progressRollback(null, null);
+          await sheet._progressRollback(false);
           expect(ability.system.xp).to.equal(oldXp);
           // log(false, JSON.stringify(sheetData));
           await entry.update({ "system.progress.abilities": [] });
@@ -349,13 +352,13 @@ export function registerTeachingTesting(quench) {
           event.sourceModifier = sheetData.system.sourceModifier;
           expect(entry.system.progress.abilities.length).to.equal(0);
 
-          await sheet._progressApply({ sourceModifier: event.sourceModifier });
-          expect(entry.system.applyError).to.equal("arm5e.activity.msg.uselessTeacher");
+          result = await sheet._progressApply({});
+          expect(result.system.applyError).to.equal("arm5e.activity.msg.uselessTeacher");
           await sheet._setTeacher(teacher);
-          await sheet.resetTeacher(null, null);
+          await entry.sheet._resetTeacher();
           await entry.update({ "system.teacher.score": 26 });
-          await sheet._progressApply({ sourceModifier: event.sourceModifier });
-          expect(entry.system.applyError).to.equal("arm5e.activity.msg.noProgressItems");
+          result = await sheet._progressApply({});
+          expect(result.system.applyError).to.equal("arm5e.activity.msg.noProgressItems");
 
           const oldXp = magus.system.arts.techniques.mu.xp;
           let progressItemCol = await addProgressItem(entry, "arts", "mu");
@@ -368,15 +371,15 @@ export function registerTeachingTesting(quench) {
 
           expect(progressItem.teacherScore).to.equal(entry.system.teacher.score);
 
-          await sheet._progressApply({ sourceModifier: event.sourceModifier });
-          expect(entry.system.applyError).to.equal("");
+          result = await sheet._progressApply({});
+          expect(result.system.applyError).to.equal("");
 
           expect(magus.system.arts.techniques.mu.xp).to.equal(oldXp + progressItem.xp);
 
-          await sheet.progressRollback(null, null);
+          await sheet._progressRollback(false);
           expect(magus.system.arts.techniques.mu.xp).to.equal(oldXp);
           // log(false, JSON.stringify(sheetData));
-          await sheet.resetTeacher(null, null);
+          await entry.sheet._resetTeacher();
           assert.ok(true);
         });
         it("Single spell", async function () {
@@ -387,12 +390,12 @@ export function registerTeachingTesting(quench) {
           event.sourceModifier = sheetData.system.sourceModifier;
           expect(entry.system.progress.abilities.length).to.equal(0);
 
-          await sheet._progressApply({ sourceModifier: event.sourceModifier });
-          expect(entry.system.applyError).to.equal("arm5e.activity.msg.uselessTeacher");
+          result = await sheet._progressApply({});
+          expect(result.system.applyError).to.equal("arm5e.activity.msg.uselessTeacher");
           await entry.update({ "system.teacher.score": 6 });
 
-          await sheet._progressApply({ sourceModifier: event.sourceModifier });
-          expect(entry.system.applyError).to.equal("arm5e.activity.msg.noProgressItems");
+          result = await sheet._progressApply({});
+          expect(result.system.applyError).to.equal("arm5e.activity.msg.noProgressItems");
           const spell = magus.items.get(entry.system.defaultSpellMastery);
           const oldXp = spell.system.xp;
           let progressItemCol = await addProgressItem(
@@ -409,19 +412,20 @@ export function registerTeachingTesting(quench) {
           expect(progressItem.teacherScore).to.equal(entry.system.teacher.score);
           // assign xp
 
-          await sheet._progressApply({ sourceModifier: event.sourceModifier });
-          expect(entry.system.applyError).to.equal("");
+          result = await sheet._progressApply({});
+          expect(result.system.applyError).to.equal("");
 
           expect(spell.system.xp).to.equal(oldXp + progressItem.xp);
 
-          await sheet.progressRollback(null, null);
+          await sheet._progressRollback(false);
           expect(spell.system.xp).to.equal(oldXp);
           // log(false, JSON.stringify(sheetData));
-          await sheet.resetTeacher(null, null);
+          await entry.sheet._resetTeacher();
           assert.ok(true);
         });
       });
       describe("Teaching with capped source and unlinked", function () {
+        this.timeout(300000); // 300 seconds for easier debugging
         it("Single Ability", async function () {
           let sheet = entry.sheet;
           const sheetData = await entry.sheet._prepareContext({});
@@ -431,21 +435,21 @@ export function registerTeachingTesting(quench) {
 
           expect(entry.system.progress.abilities.length).to.equal(0);
 
-          await sheet._progressApply({ sourceModifier: event.sourceModifier });
-          expect(entry.system.applyError).to.equal("arm5e.activity.msg.uselessTeacher");
+          result = await sheet._progressApply({});
+          expect(result.system.applyError).to.equal("arm5e.activity.msg.uselessTeacher");
           await sheet._setTeacher(teacher);
-          await sheet.resetTeacher(null, null);
+          await entry.sheet._resetTeacher();
           let teacherScore = 5;
           let teacherXp = ((teacherScore * (teacherScore + 1)) / 2) * 5;
           await entry.update({ "system.teacher.score": teacherScore });
 
-          await sheet._progressApply({ sourceModifier: event.sourceModifier });
-          expect(entry.system.applyError).to.equal("arm5e.activity.msg.noProgressItems");
+          result = await sheet._progressApply({});
+          expect(result.system.applyError).to.equal("arm5e.activity.msg.noProgressItems");
           const ability = magus.system.abilities[0];
 
           let progressItemCol = await addProgressItem(entry, "abilities", ability._id);
           await magus.updateEmbeddedDocuments("Item", [
-            { _id: ability._id, "system.xp": teacherXp - 5 }
+            { _id: ability._id, "system.xp": teacherXp - 1 }
           ]);
           const oldXp = ability.system.xp;
           expect(entry.system.progress.spells.length).to.equal(0);
@@ -457,15 +461,15 @@ export function registerTeachingTesting(quench) {
           expect(progressItem.teacherScore).to.equal(entry.system.teacher.score);
           // assign xp
 
-          await sheet._progressApply({ sourceModifier: event.sourceModifier });
-          expect(entry.system.applyError).to.equal("arm5e.activity.msg.gainCapped");
+          result = await sheet._progressApply({});
+          expect(result.system.applyError).to.equal("arm5e.activity.msg.gainCapped");
 
           expect(ability.system.xp).to.equal(oldXp + progressItem.xp);
 
-          await sheet.progressRollback(null, null);
+          await sheet._progressRollback(false);
           expect(ability.system.xp).to.equal(oldXp);
           // log(false, JSON.stringify(sheetData));
-          await sheet.resetTeacher(null, null);
+          await entry.sheet._resetTeacher();
           assert.ok(true);
         });
         it("Single spell", async function () {
@@ -477,14 +481,14 @@ export function registerTeachingTesting(quench) {
           event.sourceModifier = sheetData.system.sourceModifier;
           expect(entry.system.progress.abilities.length).to.equal(0);
 
-          await sheet._progressApply({ sourceModifier: event.sourceModifier });
-          expect(entry.system.applyError).to.equal("arm5e.activity.msg.uselessTeacher");
+          result = await sheet._progressApply({});
+          expect(result.system.applyError).to.equal("arm5e.activity.msg.uselessTeacher");
           await sheet._setTeacher(teacher);
-          await sheet.resetTeacher(null, null);
+          await entry.sheet._resetTeacher();
           await entry.update({ "system.teacher.score": teacherScore });
 
-          await sheet._progressApply({ sourceModifier: event.sourceModifier });
-          expect(entry.system.applyError).to.equal("arm5e.activity.msg.noProgressItems");
+          result = await sheet._progressApply({});
+          expect(result.system.applyError).to.equal("arm5e.activity.msg.noProgressItems");
           const spell = magus.items.get(entry.system.defaultSpellMastery);
 
           let teacherXp = ((teacherScore * (teacherScore + 1)) / 2) * 5;
@@ -496,7 +500,7 @@ export function registerTeachingTesting(quench) {
             entry.system.defaultSpellMastery
           );
           await magus.updateEmbeddedDocuments("Item", [
-            { _id: spell._id, "system.xp": teacherXp - 5 }
+            { _id: spell._id, "system.xp": teacherXp - 1 }
           ]);
           const oldXp = spell.system.xp;
           expect(entry.system.progress.spells.length).to.equal(1);
@@ -508,16 +512,16 @@ export function registerTeachingTesting(quench) {
           expect(progressItem.teacherScore).to.equal(entry.system.teacher.score);
           // assign xp
 
-          await sheet._progressApply({ sourceModifier: event.sourceModifier });
-          expect(entry.system.applyError).to.equal("arm5e.activity.msg.gainCapped");
+          result = await sheet._progressApply({});
+          expect(result.system.applyError).to.equal("arm5e.activity.msg.gainCapped");
 
           expect(spell.system.xp).to.equal(oldXp + progressItem.xp);
           expect(entry.system.done).to.equal(true);
-          await sheet.progressRollback(null, null);
+          await sheet._progressRollback(false);
           expect(spell.system.xp).to.equal(oldXp);
           // log(false, JSON.stringify(sheetData));
           await entry.update({ "system.progress.spells": [] });
-          await sheet.resetTeacher(null, null);
+          await entry.sheet._resetTeacher();
           assert.ok(true);
         });
       });
@@ -549,12 +553,12 @@ export function registerTeachingTesting(quench) {
 
           expect(entry.system.progress.abilities.length).to.equal(0);
 
-          await sheet._progressApply({ sourceModifier: event.sourceModifier });
-          expect(entry.system.applyError).to.equal("arm5e.activity.msg.uselessTeacher");
+          result = await sheet._progressApply({});
+          expect(result.system.applyError).to.equal("arm5e.activity.msg.uselessTeacher");
           await sheet._setTeacher(teacher);
 
-          await sheet._progressApply({ sourceModifier: event.sourceModifier });
-          expect(entry.system.applyError).to.equal("arm5e.activity.msg.noProgressItems");
+          result = await sheet._progressApply({});
+          expect(result.system.applyError).to.equal("arm5e.activity.msg.noProgressItems");
           const ability = magus.system.abilities[0];
           await magus.updateEmbeddedDocuments("Item", [{ _id: ability._id, "system.xp": 30 }]);
           const oldXp = ability.system.xp;
@@ -577,15 +581,15 @@ export function registerTeachingTesting(quench) {
           expect(progressItem.teacherScore).to.equal(teacherSkill.score);
           // assign xp
 
-          await sheet._progressApply({ sourceModifier: event.sourceModifier });
-          expect(entry.system.applyError).to.equal("");
+          result = await sheet._progressApply({});
+          expect(result.system.applyError).to.equal("");
 
           expect(ability.system.xp).to.equal(oldXp + progressItem.xp);
 
-          await sheet.progressRollback(null, null);
+          await sheet._progressRollback(false);
           expect(ability.system.xp).to.equal(oldXp);
           // log(false, JSON.stringify(sheetData));
-          await sheet.resetTeacher(null, null);
+          await entry.sheet._resetTeacher();
           assert.ok(true);
         });
         it("Single spell", async function () {
@@ -615,12 +619,12 @@ export function registerTeachingTesting(quench) {
 
           expect(entry.system.progress.abilities.length).to.equal(0);
 
-          await sheet._progressApply({ sourceModifier: event.sourceModifier });
-          expect(entry.system.applyError).to.equal("arm5e.activity.msg.uselessTeacher");
+          result = await sheet._progressApply({});
+          expect(result.system.applyError).to.equal("arm5e.activity.msg.uselessTeacher");
           await sheet._setTeacher(teacher);
 
-          await sheet._progressApply({ sourceModifier: event.sourceModifier });
-          expect(entry.system.applyError).to.equal("arm5e.activity.msg.noProgressItems");
+          result = await sheet._progressApply({});
+          expect(result.system.applyError).to.equal("arm5e.activity.msg.noProgressItems");
           const spell = magus.items.get(entry.system.defaultSpellMastery);
           await magus.updateEmbeddedDocuments("Item", [{ _id: spell._id, "system.xp": 30 }]);
           const oldXp = spell.system.xp;
@@ -635,15 +639,15 @@ export function registerTeachingTesting(quench) {
           expect(progressItem.teacherScore).to.equal(teacherSpell.system.finalScore);
           // assign xp
 
-          await sheet._progressApply({ sourceModifier: event.sourceModifier });
-          expect(entry.system.applyError).to.equal("");
+          result = await sheet._progressApply({});
+          expect(result.system.applyError).to.equal("");
 
           expect(spell.system.xp).to.equal(oldXp + progressItem.xp);
 
-          await sheet.progressRollback(null, null);
+          await sheet._progressRollback(false);
           expect(spell.system.xp).to.equal(oldXp);
           // log(false, JSON.stringify(sheetData));
-          await sheet.resetTeacher(null, null);
+          await entry.sheet._resetTeacher();
           // await entry.update({ "system.progress.spells": [] });
           assert.ok(true);
         });
@@ -675,12 +679,12 @@ export function registerTeachingTesting(quench) {
 
           expect(entry.system.progress.abilities.length).to.equal(0);
 
-          await sheet._progressApply({ sourceModifier: event.sourceModifier });
-          expect(entry.system.applyError).to.equal("arm5e.activity.msg.uselessTeacher");
+          result = await sheet._progressApply({});
+          expect(result.system.applyError).to.equal("arm5e.activity.msg.uselessTeacher");
           await sheet._setTeacher(teacher);
 
-          await sheet._progressApply({ sourceModifier: event.sourceModifier });
-          expect(entry.system.applyError).to.equal("arm5e.activity.msg.noProgressItems");
+          result = await sheet._progressApply({});
+          expect(result.system.applyError).to.equal("arm5e.activity.msg.noProgressItems");
           const ability = magus.system.abilities[0];
           let teacherSkill = await teacher.getAbilityStats(
             ability.system.key,
@@ -688,7 +692,7 @@ export function registerTeachingTesting(quench) {
           );
           let teacherXp = ((teacherSkill.score * (teacherSkill.score + 1)) / 2) * 5;
           await magus.updateEmbeddedDocuments("Item", [
-            { _id: ability._id, "system.xp": teacherXp - 5 }
+            { _id: ability._id, "system.xp": teacherXp - 1 }
           ]);
           const oldXp = ability.system.xp;
           let progressItemCol = await addProgressItem(entry, "abilities", ability._id);
@@ -700,15 +704,15 @@ export function registerTeachingTesting(quench) {
           expect(progressItem.teacherScore).to.equal(teacherSkill.score);
           // assign xp
 
-          await sheet._progressApply({ sourceModifier: event.sourceModifier });
-          expect(entry.system.applyError).to.equal("arm5e.activity.msg.gainCapped");
+          result = await sheet._progressApply({});
+          expect(result.system.applyError).to.equal("arm5e.activity.msg.gainCapped");
 
           expect(ability.system.xp).to.equal(oldXp + progressItem.xp);
 
-          await sheet.progressRollback(null, null);
+          await sheet._progressRollback(false);
           expect(ability.system.xp).to.equal(oldXp);
           // log(false, JSON.stringify(sheetData));
-          await sheet.resetTeacher(null, null);
+          await entry.sheet._resetTeacher();
           assert.ok(true);
         });
         it("Single spell", async function () {
@@ -738,12 +742,12 @@ export function registerTeachingTesting(quench) {
 
           expect(entry.system.progress.abilities.length).to.equal(0);
 
-          await sheet._progressApply({ sourceModifier: event.sourceModifier });
-          expect(entry.system.applyError).to.equal("arm5e.activity.msg.uselessTeacher");
+          result = await sheet._progressApply({});
+          expect(result.system.applyError).to.equal("arm5e.activity.msg.uselessTeacher");
           await sheet._setTeacher(teacher);
 
-          await sheet._progressApply({ sourceModifier: event.sourceModifier });
-          expect(entry.system.applyError).to.equal("arm5e.activity.msg.noProgressItems");
+          result = await sheet._progressApply({});
+          expect(result.system.applyError).to.equal("arm5e.activity.msg.noProgressItems");
           const spell = magus.items.get(entry.system.defaultSpellMastery);
           let teacherSpell = await teacher.items.getName(spell.name);
 
@@ -753,7 +757,7 @@ export function registerTeachingTesting(quench) {
             entry.system.defaultSpellMastery
           );
           await magus.updateEmbeddedDocuments("Item", [
-            { _id: spell._id, "system.xp": teacherSpell.system.xp - 5 }
+            { _id: spell._id, "system.xp": teacherSpell.system.xp - 1 }
           ]);
 
           const oldXp = spell.system.xp;
@@ -766,15 +770,15 @@ export function registerTeachingTesting(quench) {
           expect(progressItem.teacherScore).to.equal(teacherSpell.system.finalScore);
           // assign xp
 
-          await sheet._progressApply({ sourceModifier: event.sourceModifier });
-          expect(entry.system.applyError).to.equal("arm5e.activity.msg.gainCapped");
+          result = await sheet._progressApply({});
+          expect(result.system.applyError).to.equal("arm5e.activity.msg.gainCapped");
 
           expect(spell.system.xp).to.equal(oldXp + progressItem.xp);
 
-          await sheet.progressRollback(null, null);
+          await sheet._progressRollback(false);
           expect(spell.system.xp).to.equal(oldXp);
           // log(false, JSON.stringify(sheetData));
-          await sheet.resetTeacher(null, null);
+          await entry.sheet._resetTeacher();
           // await entry.update({ "system.progress.spells": [] });
           assert.ok(true);
         });
@@ -806,13 +810,13 @@ export function registerTeachingTesting(quench) {
 
           expect(entry.system.progress.abilities.length).to.equal(0);
 
-          await sheet._progressApply({ sourceModifier: event.sourceModifier });
-          expect(entry.system.applyError).to.equal("arm5e.activity.msg.uselessTeacher");
+          result = await sheet._progressApply({});
+          expect(result.system.applyError).to.equal("arm5e.activity.msg.uselessTeacher");
           await sheet._setTeacher(teacher);
-          await sheet.resetTeacher(null, null);
+          await entry.sheet._resetTeacher();
           await entry.update({ "system.teacher.score": 6 });
-          await sheet._progressApply({ sourceModifier: event.sourceModifier });
-          expect(entry.system.applyError).to.equal("arm5e.activity.msg.noProgressItems");
+          result = await sheet._progressApply({});
+          expect(result.system.applyError).to.equal("arm5e.activity.msg.noProgressItems");
           const ability = magus.system.abilities[0];
           const oldXp = ability.system.xp;
           let progressItemCol = await addProgressItem(entry, "abilities", ability._id);
@@ -824,13 +828,13 @@ export function registerTeachingTesting(quench) {
           expect(progressItem.teacherScore).to.equal(entry.system.teacher.score);
           // assign xp
 
-          await sheet._progressApply({ sourceModifier: event.sourceModifier });
+          result = await sheet._progressApply({});
 
-          expect(entry.system.applyError).to.equal("");
+          expect(result.system.applyError).to.equal("");
 
           expect(ability.system.xp).to.equal(oldXp + progressItem.xp);
 
-          await sheet.progressRollback(null, null);
+          await sheet._progressRollback(false);
           expect(ability.system.xp).to.equal(oldXp);
           // log(false, JSON.stringify(sheetData));
           await entry.update({ "system.progress.abilities": [] });
@@ -862,14 +866,14 @@ export function registerTeachingTesting(quench) {
 
           expect(entry.system.progress.abilities.length).to.equal(0);
 
-          await sheet._progressApply({ sourceModifier: event.sourceModifier });
-          expect(entry.system.applyError).to.equal("arm5e.activity.msg.uselessTeacher");
+          result = await sheet._progressApply({});
+          expect(result.system.applyError).to.equal("arm5e.activity.msg.uselessTeacher");
           await sheet._setTeacher(teacher);
-          await sheet.resetTeacher(null, null);
+          await entry.sheet._resetTeacher();
           await entry.update({ "system.teacher.score": 6 });
 
-          await sheet._progressApply({ sourceModifier: event.sourceModifier });
-          expect(entry.system.applyError).to.equal("arm5e.activity.msg.noProgressItems");
+          result = await sheet._progressApply({});
+          expect(result.system.applyError).to.equal("arm5e.activity.msg.noProgressItems");
           const spell = magus.items.get(entry.system.defaultSpellMastery);
           let progressItemCol = await addProgressItem(
             entry,
@@ -878,7 +882,7 @@ export function registerTeachingTesting(quench) {
           );
           let teacherSpell = await teacher.items.getName(spell.name);
           await magus.updateEmbeddedDocuments("Item", [
-            { _id: spell._id, "system.xp": teacherSpell.system.xp - 5 }
+            { _id: spell._id, "system.xp": teacherSpell.system.xp - 1 }
           ]);
 
           const oldXp = spell.system.xp;
@@ -891,15 +895,15 @@ export function registerTeachingTesting(quench) {
           expect(progressItem.teacherScore).to.equal(entry.system.teacher.score);
           // assign xp
 
-          await sheet._progressApply({ sourceModifier: event.sourceModifier });
-          expect(entry.system.applyError).to.equal("");
+          result = await sheet._progressApply({});
+          expect(result.system.applyError).to.equal("");
 
           expect(spell.system.xp).to.equal(oldXp + progressItem.xp);
 
-          await sheet.progressRollback(null, null);
+          await sheet._progressRollback(false);
           expect(spell.system.xp).to.equal(oldXp);
           // log(false, JSON.stringify(sheetData));
-          await sheet.resetTeacher(null, null);
+          await entry.sheet._resetTeacher();
           assert.ok(true);
         });
       });
@@ -930,21 +934,21 @@ export function registerTeachingTesting(quench) {
 
           expect(entry.system.progress.abilities.length).to.equal(0);
 
-          await sheet._progressApply({ sourceModifier: event.sourceModifier });
-          expect(entry.system.applyError).to.equal("arm5e.activity.msg.uselessTeacher");
+          result = await sheet._progressApply({});
+          expect(result.system.applyError).to.equal("arm5e.activity.msg.uselessTeacher");
           await sheet._setTeacher(teacher);
-          await sheet.resetTeacher(null, null);
+          await entry.sheet._resetTeacher();
           let teacherScore = 5;
           let teacherXp = ((teacherScore * (teacherScore + 1)) / 2) * 5;
           await entry.update({ "system.teacher.score": teacherScore });
 
-          await sheet._progressApply({ sourceModifier: event.sourceModifier });
-          expect(entry.system.applyError).to.equal("arm5e.activity.msg.noProgressItems");
+          result = await sheet._progressApply({});
+          expect(result.system.applyError).to.equal("arm5e.activity.msg.noProgressItems");
           const ability = magus.system.abilities[0];
 
           let progressItemCol = await addProgressItem(entry, "abilities", ability._id);
           await magus.updateEmbeddedDocuments("Item", [
-            { _id: ability._id, "system.xp": teacherXp - 5 }
+            { _id: ability._id, "system.xp": teacherXp - 1 }
           ]);
           const oldXp = ability.system.xp;
           expect(entry.system.progress.spells.length).to.equal(0);
@@ -956,15 +960,15 @@ export function registerTeachingTesting(quench) {
           expect(progressItem.teacherScore).to.equal(entry.system.teacher.score);
           // assign xp
 
-          await sheet._progressApply({ sourceModifier: event.sourceModifier });
-          expect(entry.system.applyError).to.equal("arm5e.activity.msg.gainCapped");
+          result = await sheet._progressApply({});
+          expect(result.system.applyError).to.equal("arm5e.activity.msg.gainCapped");
 
           expect(ability.system.xp).to.equal(oldXp + progressItem.xp);
 
-          await sheet.progressRollback(null, null);
+          await sheet._progressRollback(false);
           expect(ability.system.xp).to.equal(oldXp);
           // log(false, JSON.stringify(sheetData));
-          await sheet.resetTeacher(null, null);
+          await entry.sheet._resetTeacher();
           assert.ok(true);
         });
         it("Single spell", async function () {
@@ -994,14 +998,14 @@ export function registerTeachingTesting(quench) {
 
           expect(entry.system.progress.abilities.length).to.equal(0);
 
-          await sheet._progressApply({ sourceModifier: event.sourceModifier });
-          expect(entry.system.applyError).to.equal("arm5e.activity.msg.uselessTeacher");
+          result = await sheet._progressApply({});
+          expect(result.system.applyError).to.equal("arm5e.activity.msg.uselessTeacher");
           await sheet._setTeacher(teacher);
-          await sheet.resetTeacher(null, null);
+          await entry.sheet._resetTeacher();
           await entry.update({ "system.teacher.score": teacherScore });
 
-          await sheet._progressApply({ sourceModifier: event.sourceModifier });
-          expect(entry.system.applyError).to.equal("arm5e.activity.msg.noProgressItems");
+          result = await sheet._progressApply({});
+          expect(result.system.applyError).to.equal("arm5e.activity.msg.noProgressItems");
           const spell = magus.items.get(entry.system.defaultSpellMastery);
 
           let teacherXp = ((teacherScore * (teacherScore + 1)) / 2) * 5;
@@ -1013,7 +1017,7 @@ export function registerTeachingTesting(quench) {
             entry.system.defaultSpellMastery
           );
           await magus.updateEmbeddedDocuments("Item", [
-            { _id: spell._id, "system.xp": teacherXp - 5 }
+            { _id: spell._id, "system.xp": teacherXp - 1 }
           ]);
           const oldXp = spell.system.xp;
           expect(entry.system.progress.spells.length).to.equal(1);
@@ -1025,12 +1029,12 @@ export function registerTeachingTesting(quench) {
           expect(progressItem.teacherScore).to.equal(entry.system.teacher.score);
           // assign xp
 
-          await sheet._progressApply({ sourceModifier: event.sourceModifier });
-          expect(entry.system.applyError).to.equal("arm5e.activity.msg.gainCapped");
+          result = await sheet._progressApply({});
+          expect(result.system.applyError).to.equal("arm5e.activity.msg.gainCapped");
 
           expect(spell.system.xp).to.equal(oldXp + progressItem.xp);
 
-          await sheet.progressRollback(null, null);
+          await sheet._progressRollback(false);
           expect(spell.system.xp).to.equal(oldXp);
           // log(false, JSON.stringify(sheetData));
           await entry.update({ "system.progress.spells": [] });

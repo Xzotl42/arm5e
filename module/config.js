@@ -1,20 +1,8 @@
 import {
-  validAdventuring,
-  validExposure,
-  validPractice,
-  validTraining,
-  validTeaching,
-  validChildhood,
-  validTotalXp,
-  validReading,
-  validVisStudy,
   agingRoll,
-  validAging,
   visStudy,
   investigate,
-  validWriting,
-  twilightUnderstandingRoll,
-  validCopying
+  twilightUnderstandingRoll
 } from "./seasonal-activities/long-term-activities.js";
 
 export const ARM5E = {};
@@ -2277,7 +2265,6 @@ ARM5E.activities.generic = {
     source: { default: 0, readonly: true },
     maxXp: 0,
     bonusOptions: null,
-    validation: null,
     secondaryFilter: null,
     scheduling: {
       duplicate: true,
@@ -2291,7 +2278,6 @@ ARM5E.activities.generic = {
     source: { default: 0, readonly: true },
     maxXp: 0,
     bonusOptions: null,
-    validation: null,
     secondaryFilter: null,
     scheduling: {
       duplicate: true,
@@ -2312,7 +2298,6 @@ ARM5E.activities.generic = {
     source: { default: 5, readonly: false },
     maxXp: 5,
     bonusOptions: null,
-    validation: validAdventuring,
     secondaryFilter: null,
     scheduling: {
       duplicate: true,
@@ -2333,7 +2318,6 @@ ARM5E.activities.generic = {
     source: { default: 2, readonly: false },
     maxXp: 2,
     bonusOptions: null,
-    validation: validExposure,
     secondaryFilter: null,
     scheduling: {
       duplicate: false,
@@ -2360,7 +2344,6 @@ ARM5E.activities.generic = {
       forced: { label: "arm5e.activity.options.forced", modifier: 1 },
       mastery: { label: "arm5e.activity.options.mastery", modifier: 1 }
     },
-    validation: validPractice,
     secondaryFilter: null,
     scheduling: {
       duplicate: false,
@@ -2381,7 +2364,6 @@ ARM5E.activities.generic = {
     source: { default: null, readonly: true },
     maxXp: 0,
     bonusOptions: null,
-    validation: validTraining,
     secondaryFilter: null,
     scheduling: {
       duplicate: false,
@@ -2406,7 +2388,6 @@ ARM5E.activities.generic = {
       singleStudent: { label: "arm5e.activity.options.singleStudent", modifier: 6 },
       twoStudents: { label: "arm5e.activity.options.twoStudents", modifier: 3 }
     },
-    validation: validTeaching,
     secondaryFilter: null,
     scheduling: {
       duplicate: false,
@@ -2428,7 +2409,6 @@ ARM5E.activities.generic = {
     source: { default: 240, readonly: false },
     maxXp: 1000,
     bonusOptions: null,
-    validation: validTotalXp,
     secondaryFilter: null,
     duration: 60,
     durationEdit: true,
@@ -2451,7 +2431,6 @@ ARM5E.activities.generic = {
     source: { default: 120, readonly: false },
     maxXp: 1000,
     bonusOptions: null,
-    validation: validChildhood,
     secondaryFilter: null,
     duration: 20,
     durationEdit: true,
@@ -2474,7 +2453,6 @@ ARM5E.activities.generic = {
     source: { default: 15, readonly: false },
     maxXp: 1000,
     bonusOptions: null,
-    validation: validTotalXp,
     secondaryFilter: null,
     duration: 4,
     durationEdit: true,
@@ -2497,7 +2475,6 @@ ARM5E.activities.generic = {
     source: { default: 30, readonly: false },
     maxXp: 1000,
     bonusOptions: null,
-    validation: validTotalXp,
     secondaryFilter: null,
     duration: 4,
     durationEdit: true,
@@ -2521,7 +2498,6 @@ ARM5E.activities.generic = {
     source: { default: 0, readonly: true },
     maxXp: 0,
     bonusOptions: null,
-    validation: validReading,
     secondaryFilter: null,
     scheduling: {
       duplicate: false,
@@ -2543,7 +2519,6 @@ ARM5E.activities.generic = {
     source: { default: 0, readonly: true },
     maxXp: 0,
     bonusOptions: null,
-    validation: validWriting,
     secondaryFilter: null,
     scheduling: {
       duplicate: false,
@@ -2565,7 +2540,6 @@ ARM5E.activities.generic = {
     source: { default: 0, readonly: true },
     maxXp: 0,
     bonusOptions: null,
-    validation: validCopying,
     secondaryFilter: null,
     scheduling: {
       duplicate: false,
@@ -2587,7 +2561,6 @@ ARM5E.activities.generic = {
     source: { default: 0, readonly: true },
     maxXp: 0,
     bonusOptions: null,
-    validation: null,
     secondaryFilter: null,
     scheduling: {
       duplicate: false,
@@ -2609,7 +2582,6 @@ ARM5E.activities.generic = {
     source: { default: 0, readonly: true },
     maxXp: 0,
     bonusOptions: null,
-    validation: null,
     secondaryFilter: null,
     scheduling: {
       duplicate: true,
@@ -2631,7 +2603,6 @@ ARM5E.activities.generic = {
     source: { default: 0, readonly: true },
     maxXp: 0,
     bonusOptions: null,
-    validation: null,
     secondaryFilter: null,
     scheduling: {
       duplicate: false,
@@ -2645,7 +2616,6 @@ ARM5E.activities.generic = {
     source: { default: 0, readonly: true },
     maxXp: 0,
     bonusOptions: null,
-    validation: null,
     secondaryFilter: null,
     scheduling: {
       duplicate: false,
@@ -2667,7 +2637,6 @@ ARM5E.activities.generic = {
     source: { default: 0, readonly: true },
     maxXp: 0,
     bonusOptions: null,
-    validation: validAging,
     secondaryFilter: null,
     roll: { label: "arm5e.activity.roll.aging", action: agingRoll },
     scheduling: {
@@ -2691,7 +2660,6 @@ ARM5E.activities.generic = {
     maxXp: 0,
     bonusOptions: null,
     secondaryFilter: null,
-    validation: null,
     roll: { label: "arm5e.twilight.episode", action: twilightUnderstandingRoll },
     scheduling: {
       duplicate: true,
@@ -2713,7 +2681,6 @@ ARM5E.activities.generic = {
     source: { default: 0, readonly: true },
     maxXp: 0,
     bonusOptions: null,
-    validation: validVisStudy,
     secondaryFilter: null,
     roll: { label: "arm5e.activity.roll.visStudy", action: visStudy },
     scheduling: {
@@ -2736,7 +2703,6 @@ ARM5E.activities.generic = {
     source: { default: 0, readonly: true },
     maxXp: 0,
     bonusOptions: null,
-    validation: null,
     secondaryFilter: null,
     scheduling: {
       duplicate: true,
@@ -2758,7 +2724,6 @@ ARM5E.activities.generic = {
     source: { default: 0, readonly: true },
     maxXp: 0,
     bonusOptions: null,
-    validation: null,
     secondaryFilter: null,
     scheduling: {
       duplicate: false,
@@ -2781,7 +2746,6 @@ ARM5E.activities.generic = {
     source: { default: 0, readonly: true },
     maxXp: 0,
     bonusOptions: null,
-    validation: null,
     secondaryFilter: null,
     scheduling: {
       duplicate: false,
@@ -2803,7 +2767,6 @@ ARM5E.activities.generic = {
     source: { default: 0, readonly: true },
     maxXp: 0,
     bonusOptions: null,
-    validation: null,
     secondaryFilter: null,
     scheduling: {
       duplicate: false,
@@ -2825,7 +2788,6 @@ ARM5E.activities.generic = {
     source: { default: 0, readonly: true },
     maxXp: 0,
     bonusOptions: null,
-    validation: null,
     secondaryFilter: null,
     roll: { label: "arm5e.activity.roll.investigate", action: investigate },
     scheduling: {

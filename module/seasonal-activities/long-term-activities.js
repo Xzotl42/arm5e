@@ -3,8 +3,8 @@ import { ArM5eActor } from "../actor/actor.js";
 import { InvestigationRoll } from "../apps/investigationRoll.js";
 import { getAbilityFromCompendium } from "../tools/compendia.js";
 import { ArsRoll } from "../helpers/roll.js";
+import { AgingActivity } from "./agingActivity.js";
 import {
-  AgingActivity,
   BookActivity,
   DiaryActivity,
   ProgressActivity,
@@ -17,7 +17,32 @@ import { LabActivity } from "./labActivity.js";
 import { customDialog, customDialogAsync } from "../ui/dialogs.js";
 import { Arm5eChatMessage } from "../helpers/chat-message.js";
 import { ArM5eDiaryEntryItemSheetV2 } from "../sheets/item/item-diaryEntry-sheet-v2.js";
+import { getActivityDefinition, normalizeActivityType } from "./activity-config.js";
 const renderTemplate = foundry.applications.handlebars.renderTemplate;
+
+const LAB_ACTIVITY_TYPES = new Set([
+  "inventSpell",
+  "learnSpell",
+  "minorEnchantment",
+  "chargedItem",
+  "visExtraction",
+  "longevityRitual",
+  "investigateItem"
+]);
+
+const PROGRESS_ACTIVITY_TYPES = new Set([
+  "adventuring",
+  "exposure",
+  "practice",
+  "training",
+  "teaching",
+  "hermeticApp",
+  "childhood",
+  "laterLife",
+  "laterLifeMagi"
+]);
+
+const BOOK_ACTIVITY_TYPES = new Set(["reading", "writing", "copying"]);
 
 /**
  *
@@ -26,52 +51,44 @@ const renderTemplate = foundry.applications.handlebars.renderTemplate;
  * @param diaryData
  */
 export function ActivityFactory(type, owner, diaryData) {
-  let ownerUuid = owner ? owner.uuid : null;
-  switch (type) {
-    case "inventSpell":
-    case "learnSpell":
-    case "minorEnchantment":
-    case "chargedItem":
-    case "visExtraction":
-    case "longevityRitual":
-    case "investigateItem":
-      const labUuid = diaryData.lab ? diaryData.lab.uuid : null;
-      ownerUuid = diaryData.lab ? diaryData.lab.owner : null;
-      return LabActivity.LabActivityFactory(labUuid, ownerUuid, type);
-    case "resource":
-    case "lab":
-      const labUuid2 = diaryData.lab ? diaryData.lab.uuid : null;
-      ownerUuid = diaryData.lab ? diaryData.lab.owner : null;
-      return new ResourceActivity(labUuid2, ownerUuid, type);
-    case "adventuring":
-    case "exposure":
-    case "practice":
-    case "training":
-    case "teaching":
-    case "hermeticApp":
-    case "childhood":
-    case "laterLife":
-    case "laterLifeMagi":
-      return new ProgressActivity(ownerUuid, type);
-    case "reading":
-    case "writing":
-    case "copying":
-      let book = diaryData.externalIds.length > 0 ? diaryData.externalIds[0].itemId : null;
-      return new BookActivity(ownerUuid, book, type);
-    case "aging":
-      return new AgingActivity(ownerUuid);
-    case "twilight":
-      return new TwilightActivity(ownerUuid);
-    case "visStudy":
-      return new VisStudy(ownerUuid);
-    case "recovery":
-      return new RecoveryActivity(ownerUuid);
-    case "none":
-      return new DiaryActivity(ownerUuid);
-    default:
-      log(false, "Unknown activity");
-      return null;
+  const normalizedType = normalizeActivityType(type);
+  let ownerUuid = owner?.uuid ?? null;
+  const labUuid = diaryData?.lab?.uuid ?? null;
+  const externalIds = Array.isArray(diaryData?.externalIds) ? diaryData.externalIds : [];
+
+  if (LAB_ACTIVITY_TYPES.has(normalizedType)) {
+    ownerUuid = diaryData?.lab?.owner ?? null;
+    return LabActivity.LabActivityFactory(labUuid, ownerUuid, normalizedType);
   }
+
+  if (["resource", "lab"].includes(normalizedType)) {
+    ownerUuid = diaryData?.lab?.owner ?? null;
+    return new ResourceActivity(labUuid, ownerUuid, normalizedType);
+  }
+
+  if (PROGRESS_ACTIVITY_TYPES.has(normalizedType)) {
+    return new ProgressActivity(ownerUuid, normalizedType);
+  }
+
+  if (BOOK_ACTIVITY_TYPES.has(normalizedType)) {
+    const book = externalIds.length > 0 ? externalIds[0].itemId : null;
+    return new BookActivity(ownerUuid, book, normalizedType);
+  }
+
+  const factoryRegistry = {
+    aging: () => new AgingActivity(ownerUuid),
+    twilight: () => new TwilightActivity(ownerUuid),
+    visStudy: () => new VisStudy(ownerUuid),
+    recovery: () => new RecoveryActivity(ownerUuid),
+    none: () => new DiaryActivity(ownerUuid)
+  };
+
+  if (factoryRegistry[normalizedType]) {
+    return factoryRegistry[normalizedType]();
+  }
+
+  log(false, `Unknown activity: ${normalizedType}, falling back to none`);
+  return new DiaryActivity(ownerUuid);
 }
 
 /**
@@ -596,6 +613,11 @@ export function listOfPartialDates(actor, item) {
  * @param item
  */
 export function genericValidationOfActivity(context, actor, item) {
+  if (typeof item?.system?.activityHandler?.validateDiary === "function") {
+    item.system.activityHandler.validateDiary(context, actor, item);
+    return;
+  }
+
   context.partialDates = [];
   // check if there are any previous activities not applied.
   if (context.enforceSchedule && item.system.hasUnappliedActivityInThePast(actor)) {
@@ -615,7 +637,7 @@ export function genericValidationOfActivity(context, actor, item) {
     context.system.applyError = "arm5e.activity.msg.activityStartsInFuture";
     return;
   }
-  const activityConfig = CONFIG.ARM5E.activities.generic[context.system.activity];
+  const activityConfig = getActivityDefinition(context.system.activity);
   if (activityConfig.scheduling.partial && context.system.duration > 1) {
     // get how many unapplied seasons are in the past
     context.partialDates = context.system.dates.filter(
@@ -641,18 +663,16 @@ export function genericValidationOfActivity(context, actor, item) {
       context.system.applyPossible = false;
       context.endsInTheFuture = true;
     }
-  } else {
+  } else if (
     // check if it ends in the future
-    if (
-      context.lastSeason.year > currentDate.year ||
-      (context.lastSeason.year === currentDate.year &&
-        CONFIG.SEASON_ORDER[context.lastSeason.season] > CONFIG.SEASON_ORDER[currentDate.season])
-    ) {
-      context.endsInTheFuture = true;
-      context.partialApply = false;
-      context.system.applyPossible = false;
-      context.system.applyError = "arm5e.activity.msg.activityEndsInFuture";
-    }
+    context.lastSeason.year > currentDate.year ||
+    (context.lastSeason.year === currentDate.year &&
+      CONFIG.SEASON_ORDER[context.lastSeason.season] > CONFIG.SEASON_ORDER[currentDate.season])
+  ) {
+    context.endsInTheFuture = true;
+    context.partialApply = false;
+    context.system.applyPossible = false;
+    context.system.applyError = "arm5e.activity.msg.activityEndsInFuture";
   }
 }
 
@@ -739,16 +759,6 @@ function checkMaxXpPerItem(context, array, max) {
  * @param actor
  * @param item
  */
-export function validAging(context, actor, item) {
-  if (actor.system.description.born.value === null) {
-    context.system.applyError = game.i18n.localize("arm5e.activity.msg.noYearOfBirth");
-  }
-  if (context.firstSeason.season !== "winter") {
-    context.system.applyInfo = game.i18n.localize("arm5e.activity.msg.agingInWinter");
-    context.unnaturalAging = true;
-  }
-}
-
 /**
  *
  * @param context
@@ -1030,6 +1040,23 @@ function checkIfCapped(context, teacherScore, coeff, progressItem) {
 /**
  *
  * @param context
+ * @param learnerScore
+ * @param teacherScore
+ */
+function blockIfTeacherSkillChanged(context, learnerScore, teacherScore) {
+  if (Number(teacherScore) > Number(learnerScore)) {
+    return false;
+  }
+
+  context.system.applyPossible = false;
+  context.system.applyError = "arm5e.activity.msg.wrongOption";
+  context.system.errorParam = game.i18n.localize("arm5e.activity.teacher.label");
+  return true;
+}
+
+/**
+ *
+ * @param context
  * @param actor
  * @param item
  */
@@ -1065,6 +1092,10 @@ export function validTraining(context, actor, item) {
       ability = { system: { key: taughtAb.key, option: taughtAb.option, xp: 0 } };
     }
 
+    if (blockIfTeacherSkillChanged(context, ability.system.derivedScore ?? 0, teacherScore)) {
+      return;
+    }
+
     const coeff = actor._getAbilityXpCoeff(ability.system.key, ability.system.option);
     checkIfCapped(context, teacherScore, coeff, ability);
 
@@ -1089,6 +1120,11 @@ export function validTraining(context, actor, item) {
         return;
       }
     }
+
+    if (blockIfTeacherSkillChanged(context, spell.system.finalScore ?? 0, teacherScore)) {
+      return;
+    }
+
     checkIfCapped(context, teacherScore, spell.system.xpCoeff, spell);
 
     context.system.progress.spells[0].xp = context.system.cappedGain
@@ -1151,6 +1187,11 @@ export function validTeaching(context, actor, item) {
     if (ability === undefined) {
       ability = { system: { key: taughtAb.key, option: taughtAb.option, xp: 0 } };
     }
+
+    if (blockIfTeacherSkillChanged(context, ability.system.derivedScore ?? 0, teacherScore)) {
+      return;
+    }
+
     const coeff = actor._getAbilityXpCoeff(ability.system.key, ability.system.option);
     checkIfCapped(context, teacherScore, coeff, ability);
 
@@ -1176,6 +1217,11 @@ export function validTeaching(context, actor, item) {
     const spell = Object.values(actor.system.spells).find((e) => {
       return e._id === item.system.progress.spells[0].id;
     });
+
+    if (blockIfTeacherSkillChanged(context, spell?.system?.finalScore ?? 0, teacherScore)) {
+      return;
+    }
+
     checkIfCapped(context, teacherScore, 1, spell);
 
     context.system.progress.spells[0].xp = context.system.cappedGain
@@ -1202,6 +1248,10 @@ export function validTeaching(context, actor, item) {
       artType = "forms";
     }
     const art = actor.system.arts[artType][progressArt.key];
+    if (blockIfTeacherSkillChanged(context, art.derivedScore ?? 0, teacherScore)) {
+      return;
+    }
+
     // checkIfCapped(context, teacherScore, 1, spell);
     let newXp = context.system.sourceQuality + art.xp;
     let teacherXp = ArM5eActor.getArtXp(teacherScore);
