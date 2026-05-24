@@ -28,7 +28,7 @@ export function getTopicDescription(topic) {
       break;
     case "labText":
       if (topic.labtextTitle === "") {
-        return game.i18.localize("arm5e.generic.nothing");
+        return game.i18n.localize("arm5e.generic.nothing");
       } else {
         switch (topic.labtext.type) {
           case "spell":

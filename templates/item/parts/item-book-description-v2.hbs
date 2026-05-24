@@ -1,0 +1,269 @@
+<section class='sheet-body-part sheet-body marginItemPart'>
+  <div class='tab {{tab.cssClass}}' data-group='primary' data-tab='description'>
+    <div class='flexcol'>
+
+      {{!-- Description section (inert books only) --}}
+      {{#if (eq system.state 'inert')}}
+      <div>
+        <div class='padding4 flexrow flex-group-left'>
+          <label
+            class='section-handle clickable'
+            data-action='toggleSectionCollapse'
+            data-category='common'
+            data-section='item-description'
+            >{{localize 'arm5e.sheet.description'}}</label
+          >
+        </div>
+        <div
+          class='foldable-section-small backSection item-description {{lookup (lookup ui.sections.visibility "common") "item-description"}}'
+          id='common-item-description-{{item._id}}'
+        >
+          <div class='flex-group-left book-scrollable'>
+            {{> 'systems/arm5e/templates/generic/ars-editor-V2.hbs'
+              content=enrichedDescription
+              target='system.description'
+              editable=editable
+            }}
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+      {{!-- Topics section --}}
+      <div>
+        {{#unless topicNum}}
+        <div class='padding48 flexrow flex-group-center'>
+          <label>{{localize 'arm5e.sheet.blankBook'}}</label>
+        </div>
+        {{else}}
+        <div class='padding4 flexrow flex-group-left'>
+          <label
+            class='section-handle clickable'
+            data-action='toggleSectionCollapse'
+            data-category='book'
+            data-section='topics'
+            >{{localize 'arm5e.sheet.bookTopics'}}</label
+          >
+        </div>
+        <div
+          class='foldable-section backSection enchantment-short {{lookup (lookup ui.sections.visibility "book") "topics"}}'
+          id='book-topics-{{item._id}}'
+        >
+          {{!-- Category / Author / Language --}}
+          <div class='resource flexrow'>
+            <div class='resource w-30pct'>
+              <label>{{localize 'arm5e.sheet.bookTopic'}}</label>
+              <select
+                class='book-category'
+                name='system.topics.{{topicIdx}}.category'
+                data-index='{{topicIdx}}'
+                data-dtype='String'
+              >
+                {{selectOptions config.books.categories selected=currentTopic.category localize=true}}
+              </select>
+            </div>
+            <div class='resource w-35pct'>
+              <label>{{localize 'arm5e.sheet.authorship.author'}}</label>
+              <input
+                type='text'
+                {{noEdit}}
+                name='system.topics.{{topicIdx}}.author'
+                value='{{currentTopic.author}}'
+                data-dtype='String'
+              />
+            </div>
+            <div class='resource w-35pct'>
+              <label>{{localize 'arm5e.sheet.authorship.language'}}</label>
+              <input
+                type='text'
+                {{noEdit}}
+                name='system.topics.{{topicIdx}}.language'
+                value='{{currentTopic.language}}'
+                data-dtype='String'
+              />
+            </div>
+          </div>
+
+          {{!-- Season / Year --}}
+          <div class='resource flexrow w-50pct'>
+            <div class='resource'>
+              <label>{{localize 'arm5e.sheet.season'}}</label>
+              <select {{noSelect}} name='system.topics.{{topicIdx}}.season' data-dtype='String'>
+                {{selectOptions config.seasons selected=currentTopic.season labelAttr='label' localize=true}}
+              </select>
+            </div>
+            <div class='resource w-50pct'>
+              <label>{{localize 'arm5e.sheet.year'}}</label>
+              <input
+                type='number'
+                {{noEdit}}
+                name='system.topics.{{topicIdx}}.year'
+                value='{{currentTopic.year}}'
+                data-dtype='Number'
+                class='select-on-focus w-60px'
+              />
+            </div>
+          </div>
+
+          {{!-- Type / Level / Quality (not for labText) --}}
+          {{#unless (eq currentTopic.category 'labText')}}
+          <div class='grid grid-3col'>
+            <div class='resource flexcol'>
+              <label>{{localize 'arm5e.sheet.bookType'}}</label>
+              <select
+                name='system.topics.{{topicIdx}}.type'
+                class='book-type'
+                data-type='String'
+                {{lookup (lookup topicsUi topicIdx) 'bookTypeEdit'}}
+                data-index='{{topicIdx}}'
+              >
+                {{selectOptions config.books.types selected=currentTopic.type}}
+              </select>
+            </div>
+            {{#if (eq currentTopic.type 'Summa')}}
+            <div class='resource'>
+              <label>{{localize 'arm5e.sheet.level'}}</label>
+              <input
+                type='number'
+                name='system.topics.{{topicIdx}}.level'
+                value='{{currentTopic.level}}'
+                class='select-on-focus numberformat slim'
+                data-dtype='Number'
+              />
+            </div>
+            {{/if}}
+            <div class='resource'>
+              <label>{{localize 'arm5e.sheet.quality'}}</label>
+              <input
+                type='number'
+                name='system.topics.{{topicIdx}}.quality'
+                value='{{currentTopic.quality}}'
+                class='select-on-focus numberformat slim'
+                data-dtype='Number'
+              />
+            </div>
+          </div>
+          {{/unless}}
+
+          {{!-- Art select --}}
+          {{#if (eq currentTopic.category 'art')}}
+          <div class='resource book-field-med'>
+            <label>{{localize 'arm5e.sheet.art'}}</label>
+            <select name='system.topics.{{topicIdx}}.art' data-type='String'>
+              {{selectOptions config.magic.arts selected=currentTopic.art labelAttr='label'}}
+            </select>
+          </div>
+          {{/if}}
+
+          {{!-- Ability key / option --}}
+          {{#if (eq currentTopic.category 'ability')}}
+          <div class='resource flexrow pt-5'>
+            <div class='resource flexcol'>
+              <label>{{localize 'arm5e.sheet.name'}}</label>
+              <input
+                type='text'
+                name='system.topics.{{topicIdx}}.name'
+                value='{{currentTopic.name}}'
+              />
+            </div>
+            <div class='resource flexcol'>
+              <label>{{localize 'arm5e.sheet.skill.abilityKey'}}</label>
+              <select
+                name='system.topics.{{topicIdx}}.key'
+                data-dtype='String'
+                class='ability-key'
+              >
+                {{selectOptions abilityKeysList selected=currentTopic.key labelAttr='label'}}
+              </select>
+            </div>
+          </div>
+          <div class='resource book-field-med'>
+            {{#if (lookup (lookup abilityKeysList currentTopic.key) 'option')}}
+            <label>{{localize 'arm5e.sheet.skill.abilityOption'}}</label>
+            <input
+              type='text'
+              class='ability-option'
+              name='system.topics.{{topicIdx}}.option'
+              value='{{currentTopic.option}}'
+            />
+            {{else}}
+            <label style='color: gray'>{{localize 'arm5e.sheet.skill.abilityOption'}}</label>
+            <input
+              type='text'
+              name='system.topics.{{topicIdx}}.option'
+              data-dtype='String'
+              value=''
+              readonly
+            />
+            {{/if}}
+          </div>
+          {{/if}}
+
+          {{!-- Mastery: spell name + technique + form --}}
+          {{#if (eq currentTopic.category 'mastery')}}
+          <div class='resource flexrow'>
+            <div class='resource book-field-med'>
+              <label>{{localize 'arm5e.sheet.spell'}}</label>
+              <input
+                type='text'
+                name='system.topics.{{topicIdx}}.spellName'
+                value='{{currentTopic.spellName}}'
+              />
+            </div>
+            <div class='resource flexcol flex0'>
+              <label>{{localize 'arm5e.sheet.technique'}}</label>
+              <select name='system.topics.{{topicIdx}}.spellTech' data-type='String'>
+                {{selectOptions config.magic.techniques selected=currentTopic.spellTech labelAttr='label'}}
+              </select>
+            </div>
+            <div class='resource flexcol flex0'>
+              <label>{{localize 'arm5e.sheet.form'}}</label>
+              <select name='system.topics.{{topicIdx}}.spellForm' data-type='String'>
+                {{selectOptions config.magic.forms selected=currentTopic.spellForm labelAttr='label'}}
+              </select>
+            </div>
+          </div>
+          {{/if}}
+
+          {{!-- LabText: drop zone or summary + editor --}}
+          {{#if (eq currentTopic.category 'labText')}}
+          {{#if (eq currentTopic.labtextTitle '')}}
+          <div
+            class='resource drop-box drop-labtext flexcol book-dropbox'
+            data-drop='labtext'
+            data-index='{{topicIdx}}'
+          >
+            <label class='flex03'>{{localize 'arm5e.book.dropLabtext'}}</label>
+          </div>
+          {{else}}
+          <div class='resource flexrow'>
+            <label>{{currentTopic.labtext.summary}}</label>
+            <a
+              class='item-control flex0 book-control-spacing-alt'
+              data-action='showLabText'
+              title='{{localize "arm5e.generic.details"}}'
+              data-index='{{topicIdx}}'
+              ><i class='ars-Icon_Read'></i
+            ></a>
+          </div>
+          {{> 'systems/arm5e/templates/generic/ars-editor-V2.hbs'
+            content=currentTopic.labtext.description
+            target='currentTopic.labtext.description'
+            button=false
+            editable=false
+          }}
+          {{/if}}
+          {{/if}}
+
+        </div>
+        {{/unless}}
+      </div>
+
+      {{#if metagame.view}}
+      {{> "systems/arm5e/templates/generic/metalic-bar.html"}}
+      {{> "systems/arm5e/templates/generic/source.html"}}
+      {{/if}}
+
+    </div>
+  </div>
+</section>

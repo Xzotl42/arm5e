@@ -1,0 +1,207 @@
+<section class="sheet-body-part sheet-body marginItemPart">
+  <div class="tab {{ tab.cssClass }} flexcol" data-group="primary" data-tab="attributes">
+    {{!-- Base level, General flag, Level offset --}}
+    <div class="flexrow">
+      <div class="resource flexcol flex-center">
+        <label>{{localize 'arm5e.spell.effect.baseLevel'}}</label>
+        <input
+          type="number"
+          name="system.baseLevel"
+          size="4"
+          value="{{ system.baseLevel }}"
+          class="select-on-focus modifier"
+          data-dtype="Number"
+          style="max-width: 70px"
+        />
+      </div>
+      <div class="resource flexcol flex-center">
+        <label>{{localize 'arm5e.sheet.general'}}</label>
+        <input type="checkbox" name="system.general" {{checked system.general}} {{noSelect}} />
+      </div>
+      {{#if system.general}}
+      <div class="resource flexcol flex-center">
+        <label>{{localize 'arm5e.spell.effect.levelOffset'}}</label>
+        <input
+          type="number"
+          name="system.levelOffset"
+          value="{{ system.levelOffset }}"
+          class="select-on-focus"
+          data-dtype="Number"
+          style="max-width: 40px"
+        />
+      </div>
+      {{/if}}
+    </div>
+
+    {{!-- Base effect description (short text) --}}
+    <div class="resource">
+      <label>{{localize 'arm5e.spell.effect.description'}}</label>
+      <input
+        type="text"
+        {{noEdit}}
+        name="system.baseEffectDescription"
+        value="{{ system.baseEffectDescription }}"
+        data-dtype="String"
+      />
+    </div>
+
+    {{!-- Range / Duration / Target --}}
+    <div class="flexrow" style="flex-wrap: nowrap; gap: 4px">
+      <div class="resource flexcol" style="flex: 1 1 0; min-width: 0">
+        <label>{{localize 'arm5e.sheet.range'}}</label>
+        <select name="system.range.value" {{noSelect}} data-type="String" class="spell-attribute">
+          {{magicalAttributesHelper selection.ranges selected=system.range.value labelAttr='label'}}
+        </select>
+      </div>
+      <div class="resource flexcol" style="flex: 1 1 0; min-width: 0">
+        <label>{{localize 'arm5e.sheet.duration'}}</label>
+        <select
+          name="system.duration.value"
+          {{noSelect}}
+          data-type="String"
+          class="spell-attribute"
+        >
+          {{magicalAttributesHelper selection.durations selected=system.duration.value labelAttr='label'}}
+        </select>
+      </div>
+      <div class="resource flexcol" style="flex: 1 1 0; min-width: 0">
+        <label>{{localize 'arm5e.sheet.target'}}</label>
+        <select name="system.target.value" {{noSelect}} data-type="String" class="spell-attribute">
+          {{magicalAttributesHelper selection.targets selected=system.target.value labelAttr='label'}}
+        </select>
+      </div>
+    </div>
+
+    {{!-- Target size / Complexity / Enhancing requisite / Apply focus --}}
+    <div class="flexrow">
+      <div class="resource flex-group-center">
+        <label>{{localize 'arm5e.spell.targets.targetSize'}}</label>
+        <input
+          type="number"
+          {{noEdit}}
+          name="system.targetSize"
+          value="{{ system.targetSize }}"
+          class="select-on-focus"
+          data-dtype="Number"
+          style="max-width: 70px"
+        />
+      </div>
+      <div class="resource flex-group-center">
+        <label>{{localize 'arm5e.spell.targets.complexity'}}</label>
+        <input
+          type="number"
+          {{noEdit}}
+          name="system.complexity"
+          value="{{ system.complexity }}"
+          class="select-on-focus"
+          data-dtype="Number"
+          style="max-width: 70px"
+        />
+      </div>
+      <div class="resource flex-group-center">
+        <label>{{localize 'arm5e.spell.targets.enhancingReq'}}</label>
+        <input
+          type="number"
+          {{noEdit}}
+          name="system.enhancingRequisite"
+          value="{{ system.enhancingRequisite }}"
+          class="select-on-focus"
+          data-dtype="Number"
+          style="max-width: 70px"
+        />
+      </div>
+      {{#if isCharacter}}
+      <div
+        class="resource flex-group-center"
+        style="min-width: 150px; max-width: 190px; margin-top: 6px"
+      >
+        <label>{{localize 'arm5e.spell.applyFocus'}}</label>
+        <input
+          type="checkbox"
+          name="system.applyFocus"
+          {{checked
+          system.applyFocus}}
+          {{noSelect}}
+        />
+      </div>
+      {{/if}}
+    </div>
+
+    {{!-- Base size from form config --}}
+    <div class="resource flex-group-center">
+      <label
+        ><b>{{localize 'arm5e.spell.targets.baseSize.label'}}: </b></label
+      >
+      {{#with (lookup config.magic.forms system.form.value)}}
+      <label class="label-light">{{localize baseSize}}</label>
+      {{/with}}
+    </div>
+
+    {{!-- Mastery section: only for spell type when owned by a character --}}
+    {{#if isCharacter}}
+    {{#if (eq item.type 'spell')}}
+    <div class="flexrow" style="margin-top: 8px">
+      <label class="flex0"
+        >{{localize 'arm5e.sheet.mastery'}}
+        <input
+          type="number"
+          class="modifier flex01"
+          name=""
+          value="{{ system.finalScore }}"
+          data-dtype="Number"
+          readonly
+        />
+      </label>
+      <div class="resource flex0" style="padding-top: 8px; padding-left: 8px; padding-right: 8px">
+        <a data-action="increaseScore" title="Increase mastery"><i class="fas fa-plus"></i></a>
+        <a data-action="decreaseScore" title="Decrease mastery"><i class="fas fa-minus"></i></a>
+      </div>
+      <label class="flex01"
+        >{{localize 'arm5e.sheet.experience'}}
+        <input
+          type="number"
+          class="modifier select-on-focus"
+          name="system.xp"
+          value="{{ system.xp }}"
+          data-dtype="Number"
+        />
+      </label>
+      <label style="padding-top: 16px"> / {{ system.xpNextLevel }}</label>
+    </div>
+    <div class="flexrow">
+      <div class="resource">
+        <label>{{localize 'arm5e.sheet.bonus.label'}}</label>
+        <input
+          type="number"
+          {{noEdit}}
+          name="system.bonus"
+          value="{{ system.bonus }}"
+          data-dtype="Number"
+          class="select-on-focus"
+        />
+      </div>
+      <div class="resource">
+        <label>{{localize 'arm5e.sheet.bonusDesc'}}</label>
+        <input
+          type="text"
+          {{noEdit}}
+          name="system.bonusDesc"
+          value="{{ system.bonusDesc }}"
+          data-dtype="String"
+        />
+      </div>
+    </div>
+    <div class="resource">
+      <label>{{localize 'arm5e.sheet.masteryAbilities'}}</label>
+      <input
+        type="text"
+        {{noEdit}}
+        name="system.masteryAbilities"
+        value="{{ system.masteryAbilities }}"
+        data-dtype="String"
+      />
+    </div>
+    {{/if}}
+    {{/if}}
+  </div>
+</section>

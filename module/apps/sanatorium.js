@@ -293,7 +293,7 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
     } else if (
       // Patient is fully healthy - no active wounds
       Object.entries(context.wounds).filter(
-        (e) => CONFIG.ARM5E.recovery.wounds[e[0]].rank > 0 && e[1] !== []
+        (e) => CONFIG.ARM5E.recovery.wounds[e[0]].rank > 0 && e[1].length > 0
       ).length === 0
     ) {
       context.canRoll = "disabled";

@@ -3,8 +3,8 @@
  * @extends {ActorSheet}
  */
 
-import { resetOwnerFields } from "../item/item-converter.js";
-import { ARM5E } from "../config.js";
+import { resetOwnerFields } from "../module/item/item-converter.js";
+import { ARM5E } from "../module/config.js";
 import {
   log,
   getDataset,
@@ -18,16 +18,16 @@ import {
   getLastCombatMessageOfType,
   slugify,
   getWoundRanges
-} from "../tools/tools.js";
-import ArM5eActiveEffect from "../helpers/active-effects.js";
+} from "../module/tools/tools.js";
+import ArM5eActiveEffect from "../module/helpers/active-effects.js";
 import {
   HERMETIC_FILTER,
   HERMETIC_TOPIC_FILTER,
   TIME_FILTER,
   TOPIC_FILTER,
   updateUserCache
-} from "../constants/userdata.js";
-import { ROLL_MODES, getRollTypeProperties, openRollDialog } from "../ui/roll-window.js";
+} from "../module/constants/userdata.js";
+import { ROLL_MODES, getRollTypeProperties, openRollDialog } from "../module/ui/roll-window.js";
 
 import {
   buildSoakDataset,
@@ -37,16 +37,16 @@ import {
   quickCombat,
   quickVitals,
   setWounds
-} from "../helpers/combat.js";
+} from "../module/helpers/combat.js";
 import {
   quickMagic,
   spellFormLabel,
   spellTechniqueLabel,
   useMagicItem,
   usePower
-} from "../helpers/magic.js";
-import { UI } from "../constants/ui.js";
-import { Schedule } from "../apps/schedule.js";
+} from "../module/helpers/magic.js";
+import { UI } from "../module/constants/ui.js";
+import { Schedule } from "../module/apps/schedule.js";
 import {
   createAgingDiaryEntry,
   createTwilightDiaryEntry,
@@ -54,21 +54,21 @@ import {
   TWILIGHT_STAGES,
   TwilightEpisode,
   twilightRoll
-} from "../seasonal-activities/long-term-activities.js";
-import { Sanatorium } from "../apps/sanatorium.js";
-import { MedicalHistory } from "../apps/med-history.js";
-import { ArM5eActorProfiles } from "./subsheets/actor-profiles.js";
-import { ArM5eMagicSystem } from "./subsheets/magic-system.js";
-import { getRefCompendium } from "../tools/compendia.js";
+} from "../module/seasonal-activities/long-term-activities.js";
+import { Sanatorium } from "../module/apps/sanatorium.js";
+import { MedicalHistory } from "../module/apps/med-history.js";
+import { ArM5eActorProfiles } from "../module/actor/subsheets/actor-profiles.js";
+import { ArM5eMagicSystem } from "../module/actor/subsheets/magic-system.js";
+import { getRefCompendium } from "../module/tools/compendia.js";
 import {
   customDialog,
   customDialogAsync,
   getConfirmation,
   numberInput,
   textInput
-} from "../ui/dialogs.js";
-import { Arm5eChatMessage } from "../helpers/chat-message.js";
-import { ArM5eActorSheetV2 } from "../sheets/actor/actor-sheet-v2.js";
+} from "../module/ui/dialogs.js";
+import { Arm5eChatMessage } from "../module/helpers/chat-message.js";
+import { ArM5eActorSheetV2 } from "../module/sheets/actor/actor-sheet-v2.js";
 
 const renderTemplate = foundry.applications.handlebars.renderTemplate;
 const TextEditor = foundry.applications.ux.TextEditor;

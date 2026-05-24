@@ -8,11 +8,36 @@ import { ArM5eLaboratoryActorSheetV2 } from "./sheets/actor/actor-laboratory-she
 import { ArM5eCovenantActorSheetV2 } from "./sheets/actor/actor-covenant-sheet-v2.js";
 import { ArM5eMagicCodexSheetV2 } from "./sheets/actor/actor-magic-codex-sheet-v2.js";
 import { ArM5eItem } from "./item/item.js";
-import { ArM5eItemSheet, ArM5eItemSheetNoDesc } from "./item/item-sheet.js";
-import { ArM5eItemMagicSheet } from "./item/item-magic-sheet.js";
-import { ArM5eBookSheet } from "./item/item-book-sheet.js";
-import { ArM5eItemDiarySheet } from "./item/item-diary-sheet.js";
-import { ArM5eItemVisSheet } from "./item/item-vis-sheet.js";
+import { ArM5eReputationItemSheetV2 } from "./sheets/item/item-reputation-sheet-v2.js";
+import { ArM5eIncomeSourceItemSheetV2 } from "./sheets/item/item-incomeSource-sheet-v2.js";
+import { ArM5ePersonalityTraitItemSheetV2 } from "./sheets/item/item-personalityTrait-sheet-v2.js";
+import { ArM5ePossessionsCovenantItemSheetV2 } from "./sheets/item/item-possessionsCovenant-sheet-v2.js";
+import { ArM5eVirtueItemSheetV2 } from "./sheets/item/item-virtue-sheet-v2.js";
+import { ArM5eFlawItemSheetV2 } from "./sheets/item/item-flaw-sheet-v2.js";
+import { ArM5eQualityItemSheetV2 } from "./sheets/item/item-quality-sheet-v2.js";
+import { ArM5eInferiorityItemSheetV2 } from "./sheets/item/item-inferiority-sheet-v2.js";
+import { ArM5eArtItemSheetV2 } from "./sheets/item/item-art-sheet-v2.js";
+import { ArM5eAbilityItemSheetV2 } from "./sheets/item/item-ability-sheet-v2.js";
+import { ArM5eVisSourcesCovenantItemSheetV2 } from "./sheets/item/item-visSourcesCovenant-sheet-v2.js";
+import { ArM5eWeaponItemSheetV2 } from "./sheets/item/item-weapon-sheet-v2.js";
+import { ArM5eArmorItemSheetV2 } from "./sheets/item/item-armor-sheet-v2.js";
+import { ArM5eGenericItemSheetV2 } from "./sheets/item/item-generic-item-sheet-v2.js";
+import { ArM5eVisItemSheetV2 } from "./sheets/item/item-vis-sheet-v2.js";
+import { ArM5eWoundItemSheetV2 } from "./sheets/item/item-wound-sheet-v2.js";
+import { ArM5eInhabitantItemSheetV2 } from "./sheets/item/item-inhabitant-sheet-v2.js";
+import { ArM5eLaboratoryTextItemSheetV2 } from "./sheets/item/item-laboratoryText-sheet-v2.js";
+import { ArM5eSpellItemSheetV2 } from "./sheets/item/item-spell-sheet-v2.js";
+import { ArM5eMagicalEffectItemSheetV2 } from "./sheets/item/item-magicalEffect-sheet-v2.js";
+import { ArM5eBaseEffectItemSheetV2 } from "./sheets/item/item-baseEffect-sheet-v2.js";
+import { ArM5ePowerItemSheetV2 } from "./sheets/item/item-power-sheet-v2.js";
+import { ArM5eEnchantmentItemSheetV2 } from "./sheets/item/item-enchantment-sheet-v2.js";
+import { ArM5eSupernaturalEffectItemSheetV2 } from "./sheets/item/item-supernaturalEffect-sheet-v2.js";
+import { ArM5eBookItemSheetV2 } from "./sheets/item/item-book-sheet-v2.js";
+import { ArM5eDiaryEntryItemSheetV2 } from "./sheets/item/item-diaryEntry-sheet-v2.js";
+import { ArM5eCalendarCovenantItemSheetV2 } from "./sheets/item/item-calendarCovenant-sheet-v2.js";
+import { ArM5eLabCovenantItemSheetV2 } from "./sheets/item/item-labCovenant-sheet-v2.js";
+import { ArM5eAbilityFamiliarItemSheetV2 } from "./sheets/item/item-abilityFamiliar-sheet-v2.js";
+import { ArM5ePowerFamiliarItemSheetV2 } from "./sheets/item/item-powerFamiliar-sheet-v2.js";
 import ArM5eActiveEffect from "./helpers/active-effects.js";
 import { prepareDatasetByTypeOfItem } from "./helpers/hotbar-helpers.js";
 import { ArM5ePreloadHandlebarsTemplates } from "./ui/templates.js";
@@ -53,12 +78,9 @@ import {
 import { InhabitantSchema } from "./schemas/inhabitantSchema.js";
 import { SimpleCalendarSeasons, seasonOrder, seasonOrderInv } from "./tools/time.js";
 import { WoundSchema } from "./schemas/woundSchema.js";
-import { ArM5eSmallSheet } from "./item/item-small-sheet.js";
 import { EnchantmentEffectSchema } from "./schemas/enchantmentSchema.js";
 import { magicalAttributesHelper } from "./helpers/magic.js";
 import { CovenantSchema } from "./schemas/covenantSchema.js";
-import { ArM5eCovenantInhabitantSheet } from "./item/item-inhabitantCovenant.js";
-import { ArM5eSupernaturalEffectSheet } from "./item/item-supernaturalEffect-sheet.js";
 import { SupernaturalEffectSchema } from "./schemas/supernaturalEffectSchema.js";
 import { Arm5eSocketHandler } from "./tools/socket-messages.js";
 import { PowerSchema } from "./schemas/powerSchemas.js";
@@ -78,6 +100,10 @@ import {
 } from "./schemas/combatChatSchema.js";
 import { MagicChatSchema } from "./schemas/magicChatSchema.js";
 import { DamageChatSchema } from "./schemas/damageChatSchema.js";
+import {
+  buildConflictExclusionTypes,
+  buildDuplicateAllowedTypes
+} from "./seasonal-activities/activity-config.js";
 
 Hooks.once("i18nInit", async function () {
   CONFIG.ARM5E.LOCALIZED_ABILITIES = localizeAbilities();
@@ -170,12 +196,8 @@ Hooks.once("init", async function () {
 
   Hooks.callAll("arm5e-config-done", CONFIG);
 
-  CONFIG.ARM5E.activities.conflictExclusion = Object.entries(CONFIG.ARM5E.activities.generic)
-    .filter((e) => e[1].scheduling.conflict === false)
-    .map((e) => e[0]);
-  CONFIG.ARM5E.activities.duplicateAllowed = Object.entries(CONFIG.ARM5E.activities.generic)
-    .filter((e) => e[1].scheduling.duplicate)
-    .map((e) => e[0]);
+  CONFIG.ARM5E.activities.conflictExclusion = buildConflictExclusionTypes();
+  CONFIG.ARM5E.activities.duplicateAllowed = buildDuplicateAllowedTypes();
 
   // Define custom Document classes
   CONFIG.Actor.documentClass = ArM5eActor;
@@ -749,60 +771,219 @@ function registerSheets() {
       foundry.appv1.sheets.ItemSheet
     );
 
-    foundry.applications.apps.DocumentSheetConfig.registerSheet(Item, "arm5e", ArM5eSmallSheet, {
-      types: ["wound"],
-      makeDefault: true
-    });
-
-    foundry.applications.apps.DocumentSheetConfig.registerSheet(Item, "arm5e", ArM5eItemSheet, {
-      types: [
-        "art",
-        "weapon",
-        "armor",
-        "item",
-        "virtue",
-        "flaw",
-        "quality",
-        "inferiority",
-        "ability",
-        "abilityFamiliar",
-        // "might",
-        "powerFamiliar",
-        // "mightFamiliar",
-        "speciality",
-        "distinctive",
-        "sanctumRoom",
-        "reputation",
-        // "inhabitant",
-        "habitantMagi", // Deprecated
-        "habitantCompanion", // Deprecated
-        "habitantSpecialists", // Deprecated
-        "habitantHabitants", // Deprecated
-        "habitantHorses", // Deprecated
-        "habitantLivestock", // Deprecated
-        "possessionsCovenant",
-        "visSourcesCovenant",
-        "visStockCovenant",
-        "calendarCovenant",
-        "incomingSource",
-        "labCovenant",
-        "personalityTrait"
-      ],
-      makeDefault: true
-    });
-    foundry.applications.apps.DocumentSheetConfig.registerSheet(Item, "arm5e", ArM5eItemVisSheet, {
-      types: ["vis"],
-      makeDefault: true
-    });
-    foundry.applications.apps.DocumentSheetConfig.registerSheet(Item, "arm5e", ArM5eBookSheet, {
-      types: ["book"],
-      makeDefault: true
-    });
+    foundry.applications.apps.DocumentSheetConfig.registerSheet(
+      Item,
+      "arm5e",
+      ArM5eWoundItemSheetV2,
+      {
+        types: ["wound"],
+        makeDefault: true
+      }
+    );
 
     foundry.applications.apps.DocumentSheetConfig.registerSheet(
       Item,
       "arm5e",
-      ArM5eItemDiarySheet,
+      ArM5eAbilityFamiliarItemSheetV2,
+      {
+        types: ["abilityFamiliar"],
+        makeDefault: true
+      }
+    );
+
+    foundry.applications.apps.DocumentSheetConfig.registerSheet(
+      Item,
+      "arm5e",
+      ArM5ePowerFamiliarItemSheetV2,
+      {
+        types: ["powerFamiliar"],
+        makeDefault: true
+      }
+    );
+
+    foundry.applications.apps.DocumentSheetConfig.registerSheet(
+      Item,
+      "arm5e",
+      ArM5eCalendarCovenantItemSheetV2,
+      {
+        types: ["calendarCovenant"],
+        makeDefault: true
+      }
+    );
+
+    foundry.applications.apps.DocumentSheetConfig.registerSheet(
+      Item,
+      "arm5e",
+      ArM5eLabCovenantItemSheetV2,
+      {
+        types: ["labCovenant"],
+        makeDefault: true
+      }
+    );
+
+    foundry.applications.apps.DocumentSheetConfig.registerSheet(
+      Item,
+      "arm5e",
+      ArM5eReputationItemSheetV2,
+      {
+        types: ["reputation"],
+        makeDefault: true
+      }
+    );
+
+    foundry.applications.apps.DocumentSheetConfig.registerSheet(
+      Item,
+      "arm5e",
+      ArM5eIncomeSourceItemSheetV2,
+      {
+        types: ["incomingSource"],
+        makeDefault: true
+      }
+    );
+
+    foundry.applications.apps.DocumentSheetConfig.registerSheet(
+      Item,
+      "arm5e",
+      ArM5ePersonalityTraitItemSheetV2,
+      {
+        types: ["personalityTrait"],
+        makeDefault: true
+      }
+    );
+
+    foundry.applications.apps.DocumentSheetConfig.registerSheet(
+      Item,
+      "arm5e",
+      ArM5ePossessionsCovenantItemSheetV2,
+      {
+        types: ["possessionsCovenant"],
+        makeDefault: true
+      }
+    );
+
+    foundry.applications.apps.DocumentSheetConfig.registerSheet(
+      Item,
+      "arm5e",
+      ArM5eVirtueItemSheetV2,
+      {
+        types: ["virtue"],
+        makeDefault: true
+      }
+    );
+
+    foundry.applications.apps.DocumentSheetConfig.registerSheet(
+      Item,
+      "arm5e",
+      ArM5eFlawItemSheetV2,
+      {
+        types: ["flaw"],
+        makeDefault: true
+      }
+    );
+
+    foundry.applications.apps.DocumentSheetConfig.registerSheet(
+      Item,
+      "arm5e",
+      ArM5eQualityItemSheetV2,
+      {
+        types: ["quality"],
+        makeDefault: true
+      }
+    );
+
+    foundry.applications.apps.DocumentSheetConfig.registerSheet(
+      Item,
+      "arm5e",
+      ArM5eInferiorityItemSheetV2,
+      {
+        types: ["inferiority"],
+        makeDefault: true
+      }
+    );
+
+    foundry.applications.apps.DocumentSheetConfig.registerSheet(
+      Item,
+      "arm5e",
+      ArM5eArtItemSheetV2,
+      {
+        types: ["art"],
+        makeDefault: true
+      }
+    );
+
+    foundry.applications.apps.DocumentSheetConfig.registerSheet(
+      Item,
+      "arm5e",
+      ArM5eAbilityItemSheetV2,
+      {
+        types: ["ability"],
+        makeDefault: true
+      }
+    );
+
+    foundry.applications.apps.DocumentSheetConfig.registerSheet(
+      Item,
+      "arm5e",
+      ArM5eVisSourcesCovenantItemSheetV2,
+      {
+        types: ["visSourcesCovenant"],
+        makeDefault: true
+      }
+    );
+
+    foundry.applications.apps.DocumentSheetConfig.registerSheet(
+      Item,
+      "arm5e",
+      ArM5eWeaponItemSheetV2,
+      {
+        types: ["weapon"],
+        makeDefault: true
+      }
+    );
+
+    foundry.applications.apps.DocumentSheetConfig.registerSheet(
+      Item,
+      "arm5e",
+      ArM5eArmorItemSheetV2,
+      {
+        types: ["armor"],
+        makeDefault: true
+      }
+    );
+
+    foundry.applications.apps.DocumentSheetConfig.registerSheet(
+      Item,
+      "arm5e",
+      ArM5eGenericItemSheetV2,
+      {
+        types: ["item"],
+        makeDefault: true
+      }
+    );
+
+    foundry.applications.apps.DocumentSheetConfig.registerSheet(
+      Item,
+      "arm5e",
+      ArM5eVisItemSheetV2,
+      {
+        types: ["vis"],
+        makeDefault: true
+      }
+    );
+    foundry.applications.apps.DocumentSheetConfig.registerSheet(
+      Item,
+      "arm5e",
+      ArM5eBookItemSheetV2,
+      {
+        types: ["book"],
+        makeDefault: true
+      }
+    );
+
+    foundry.applications.apps.DocumentSheetConfig.registerSheet(
+      Item,
+      "arm5e",
+      ArM5eDiaryEntryItemSheetV2,
       {
         types: ["diaryEntry"],
         makeDefault: true
@@ -811,7 +992,7 @@ function registerSheets() {
     foundry.applications.apps.DocumentSheetConfig.registerSheet(
       Item,
       "arm5e",
-      ArM5eCovenantInhabitantSheet,
+      ArM5eInhabitantItemSheetV2,
       {
         types: ["inhabitant"],
         makeDefault: true
@@ -821,17 +1002,9 @@ function registerSheets() {
     foundry.applications.apps.DocumentSheetConfig.registerSheet(
       Item,
       "arm5e",
-      ArM5eItemMagicSheet,
+      ArM5eLaboratoryTextItemSheetV2,
       {
-        types: [
-          "magicalEffect",
-          "enchantment",
-          "spell",
-          "baseEffect",
-          "laboratoryText",
-          "magicItem",
-          "power"
-        ],
+        types: ["laboratoryText"],
         makeDefault: true
       }
     );
@@ -839,14 +1012,40 @@ function registerSheets() {
     foundry.applications.apps.DocumentSheetConfig.registerSheet(
       Item,
       "arm5e",
-      ArM5eSupernaturalEffectSheet,
-      {
-        types: ["supernaturalEffect"],
-        makeDefault: true
-      }
+      ArM5eSpellItemSheetV2,
+      { types: ["spell"], makeDefault: true }
+    );
+    foundry.applications.apps.DocumentSheetConfig.registerSheet(
+      Item,
+      "arm5e",
+      ArM5eMagicalEffectItemSheetV2,
+      { types: ["magicalEffect"], makeDefault: true }
+    );
+    foundry.applications.apps.DocumentSheetConfig.registerSheet(
+      Item,
+      "arm5e",
+      ArM5eBaseEffectItemSheetV2,
+      { types: ["baseEffect"], makeDefault: true }
+    );
+    foundry.applications.apps.DocumentSheetConfig.registerSheet(
+      Item,
+      "arm5e",
+      ArM5ePowerItemSheetV2,
+      { types: ["power"], makeDefault: true }
+    );
+    foundry.applications.apps.DocumentSheetConfig.registerSheet(
+      Item,
+      "arm5e",
+      ArM5eEnchantmentItemSheetV2,
+      { types: ["enchantment"], makeDefault: true }
     );
 
-    // Items.registerSheet("arm5e", ArM5eItemSheetNoDesc, { types: ["vis"] });
+    foundry.applications.apps.DocumentSheetConfig.registerSheet(
+      Item,
+      "arm5e",
+      ArM5eSupernaturalEffectItemSheetV2,
+      { types: ["supernaturalEffect"], makeDefault: true }
+    );
 
     foundry.applications.apps.DocumentSheetConfig.unregisterSheet(
       ActiveEffect,

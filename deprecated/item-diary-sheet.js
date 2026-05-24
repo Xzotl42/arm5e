@@ -1463,7 +1463,7 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
     // }
 
     // Final update on the diary
-
+    //
     let newTitle = await getNewTitleForActivity(this.actor, this.item);
 
     await this.actor.update(context.actorUpdate, { render: true });

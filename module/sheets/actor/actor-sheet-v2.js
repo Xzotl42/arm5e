@@ -18,7 +18,8 @@ import {
   hermeticFilter,
   hermeticTopicFilter,
   topicFilter,
-  compareLabTexts
+  compareLabTexts,
+  log
 } from "../../tools/tools.js";
 import { UI } from "../../constants/ui.js";
 import { customDialogAsync, getConfirmation } from "../../ui/dialogs.js";
@@ -135,6 +136,19 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
       CONFIG.ARM5E.seasons[context.datetime.season].label
     );
 
+    if (this.actor._hasDate()) {
+      if (this.actor.isCharacter()) {
+        if (this.actor.system.states.creationMode) {
+          context.system.description.born.value =
+            context.datetime.year - (this.actor.system.age.value ? this.actor.system.age.value : 0);
+        } else {
+          context.system.age.value = context.system.description?.born?.value
+            ? context.datetime.year - context.system.description.born.value
+            : 20;
+        }
+      }
+    }
+
     // --- Book topic filters (not applicable to the magic codex) ---
     if (this.actor.type !== "magicCodex") {
       // Arts topics filter
@@ -200,17 +214,12 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
     }
 
     // --- Enriched description HTML ---
-    const description = this.actor?.system?.description;
-    if (description) {
-      context.enrichedDescription = await foundry.applications.ux.TextEditor.enrichHTML(
-        description,
-        {
-          secrets: this.document.isOwner,
-          rollData: context.rollData,
-          relativeTo: this.actor
-        }
-      );
-    }
+    const description = this.actor?.system?.description ?? "";
+    context.enrichedDescription = await foundry.applications.ux.TextEditor.enrichHTML(description, {
+      secrets: this.document.isOwner,
+      rollData: context.rollData,
+      relativeTo: this.actor
+    });
 
     // --- Diary entries filter and activity map (grouped by year/season) ---
     if (context.system.diaryEntries) {
@@ -1079,6 +1088,23 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
   }
 
   /** @override */
+  _onFirstRender(context, options) {
+    super._onFirstRender(context, options);
+    this.timeHook = Hooks.on("arm5e-date-change", async (date) => {
+      if (this.actor._hasDate()) {
+        this.render(false);
+        log(false, "Render on date change");
+      }
+    });
+  }
+
+  /** @override */
+  async _onClose(options = {}) {
+    Hooks.off("arm5e-date-change", this.timeHook);
+    return super._onClose(options);
+  }
+
+  /** @override */
   _onRender(context, options) {
     super._onRender(context, options);
 
@@ -1137,6 +1163,24 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
     this.element.querySelectorAll(".item").forEach((el) => {
       el.addEventListener("contextmenu", (event) => this._onItemContextMenu(event));
     });
+  }
+
+  static getFlavorColor(actorType) {
+    switch (actorType) {
+      case "player":
+        return "blue";
+      case "npc":
+      case "beast":
+        return "brown";
+      case "covenant":
+        return "red";
+      case "laboratory":
+        return "green";
+      case "magicCodex":
+        return "purple";
+      default:
+        return "black";
+    }
   }
 
   static getFlavor(actorType) {

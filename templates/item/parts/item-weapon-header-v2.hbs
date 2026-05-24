@@ -1,0 +1,141 @@
+<div class="sheet-header-part">
+  <div class="header-background">
+    <img src="systems/arm5e/assets/item/{{ flavor }}_header.png" />
+  </div>
+  <header class="sheet-header marginItemPart">
+    <div>
+      <img
+        class="item-img profile-img"
+        src="{{ item.img }}"
+        data-edit="img"
+        data-tooltip="<img
+        class='img-tooltip'
+        src='{{ item.img }}'/>"
+        data-tooltip-direction="CENTER"
+        title="{{ item.name }}"
+      />
+      {{#unless system.naturalWeapon}}
+      {{> 'systems/arm5e/templates/item/parts/cost.hbs' classes='fit'}}
+      <div class="resource flexrow">
+        <label>{{localize 'arm5e.sheet.strengthNeeded'}}</label>
+        <input
+          type="number"
+          name="system.str"
+          value="{{ system.str }}"
+          class="modifier select-on-focus"
+          data-dtype="Number"
+        />
+      </div>
+      {{/unless}}
+    </div>
+    <div class="header-fields flexcol">
+      <h1 class="bigname flexrow">
+        <input name="name" type="text" value="{{ item.name }}" placeholder="Name" />
+        {{#if editable}}
+        <a
+          class="flex0 padding2"
+          data-action="itemDeleteConfirm"
+          title="{{localize 'arm5e.hints.delete' item=item.name}}"
+        >
+          <i class="ars-Icon_Delete_Hand_Gesture item-delete-large"></i>
+        </a>
+        {{/if}}
+      </h1>
+      {{#if system.canEquip}}
+      <div class="resource flexrow">
+        <label>{{localize 'arm5e.sheet.ability'}}</label>
+        <select name="system.ability.id" class="weapon-ability" data-action="changeWeaponAbility">
+          {{selectOptions system.abilities selected=system.ability.id labelAttr='name' valueAttr='id' nameAttr='id'}}
+        </select>
+      </div>
+      {{/if}}
+      <div class="grid grid-2col">
+        <div class="resource flexrow">
+          <label>{{localize 'arm5e.sheet.naturalweapon'}}</label>
+          <input type="checkbox" name="system.naturalWeapon" {{checked system.naturalWeapon}} />
+        </div>
+        {{#if system.canEquip}}
+        {{#unless system.naturalWeapon}}
+        <div class="resource flexrow">
+          <label>{{localize 'arm5e.sheet.equipped'}}</label>
+          <input type="checkbox" data-action="toggleEquipped" {{checked system.equipped}} />
+        </div>
+        {{/unless}}
+        <div class="resource flexrow">
+          <label>{{localize 'arm5e.sheet.weaponExpert'}}</label>
+          <input type="checkbox" name="system.weaponExpert" {{checked system.weaponExpert}} />
+        </div>
+        {{/if}}
+      </div>
+      <div class="grid grid-3col">
+        <div class="resource flex-group-right">
+          <label>{{localize 'arm5e.sheet.initiative'}}</label>
+          <input
+            type="number"
+            name="system.init"
+            value="{{ system.init }}"
+            class="modifier select-on-focus"
+            data-dtype="Number"
+          />
+        </div>
+        <div class="resource flex-group-right">
+          <label>{{localize 'arm5e.sheet.attack'}}</label>
+          <input
+            type="number"
+            name="system.atk"
+            value="{{ system.atk }}"
+            class="modifier select-on-focus"
+            data-dtype="Number"
+          />
+        </div>
+        <div class="resource flex-group-right">
+          <label>{{localize 'arm5e.sheet.defense'}}</label>
+          <input
+            type="number"
+            name="system.dfn"
+            value="{{ system.dfn }}"
+            class="modifier select-on-focus"
+            data-dtype="Number"
+          />
+        </div>
+        <div class="resource flex-group-right">
+          <label>{{localize 'arm5e.damage.label'}}</label>
+          <input
+            type="number"
+            name="system.dam"
+            value="{{ system.dam }}"
+            class="modifier select-on-focus"
+            data-dtype="Number"
+          />
+        </div>
+        <div class="resource flex-group-right">
+          <label>{{localize 'arm5e.sheet.range'}}</label>
+          <input
+            type="number"
+            name="system.range"
+            value="{{ system.range }}"
+            class="modifier select-on-focus"
+            data-dtype="Number"
+          />
+        </div>
+        <div class="resource flex-group-right">
+          <label>{{localize 'arm5e.sheet.load'}}</label>
+          <input
+            type="number"
+            name="system.load"
+            value="{{ system.load }}"
+            class="modifier select-on-focus"
+            data-dtype="Number"
+          />
+        </div>
+      </div>
+      <div class="flexrow">
+        <div class="resource flexrow">
+          <label>{{localize 'arm5e.sheet.mounted'}}</label>
+          <input type="checkbox" name="system.horse" {{checked system.horse}} />
+        </div>
+      </div>
+    </div>
+  </header>
+  <div class="marginItemPart">{{> "systems/arm5e/templates/generic/metalic-bar.html" }}</div>
+</div>

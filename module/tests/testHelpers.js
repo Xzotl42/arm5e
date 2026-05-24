@@ -23,7 +23,7 @@
  * @returns {{ preventDefault: Function, [key: string]: any }}
  */
 export function makeEvent(extra = {}) {
-  return Object.assign({ preventDefault: () => {} }, extra);
+  return { preventDefault: () => {}, ...extra };
 }
 
 // ─── Dice-so-nice guard ───────────────────────────────────────────────────────
@@ -135,7 +135,7 @@ export function makeDiaryTemplate(sourceQuality = 5, duration = 1) {
 
 /**
  * Simulate a user clicking the "add progress item" button on a diary-entry
- * sheet.  Calls `entry.sheet._onProgressControl` with a synthetic event.
+ * sheet. Calls the V2 `progressControl` action with a synthetic event.
  *
  * The `teacherScoreOrSheetData` parameter is flexible:
  *   - `undefined`  → reads `entry.system.teacher.score` directly.
@@ -163,7 +163,7 @@ export async function addProgressItem(entry, type, defaultItem, teacherScoreOrSh
     currentTarget: {
       dataset: {
         type,
-        action: "add",
+        subaction: "add",
         default: defaultItem,
         secondary: "false",
         teacherscore
@@ -171,7 +171,8 @@ export async function addProgressItem(entry, type, defaultItem, teacherScoreOrSh
     }
   };
 
-  return await entry.sheet._onProgressControl(event);
+  await entry.sheet.constructor.progressControl.call(entry.sheet, event, event.currentTarget);
+  return entry.system.progress[type];
 }
 
 // ─── Window cleanup ───────────────────────────────────────────────────────────

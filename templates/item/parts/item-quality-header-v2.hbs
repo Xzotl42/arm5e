@@ -1,0 +1,50 @@
+<div class='sheet-header-part'>
+  <div class='header-background'>
+    <img src='systems/arm5e/assets/item/{{ flavor }}_header.png' />
+  </div>
+  <header class='sheet-header marginItemPart'>
+    <img
+      class='item-img'
+      src='{{ item.img }}'
+      data-action='editImage'
+      data-edit='img'
+      title='{{ item.name }}'
+    />
+    <div class='header-fields'>
+      <h1 class='bigname'>
+        <input name='name' type='text' value='{{ item.name }}' placeholder='name' />
+      </h1>
+      <div class='flexcol'>
+        <div class='resource'>
+          <label>{{localize 'arm5e.sheet.type'}}</label>
+          <select name='system.type' data-type='String'>
+            {{selectOptions config.qualityTypes selected=system.type labelAttr='label' localize=true}}
+          </select>
+        </div>
+        <div class='resource'>
+          <label>{{localize system.impact.label}}</label>
+          <select name='system.impact.value' data-type='String'>
+            {{selectOptions config.impacts selected=system.impact.value labelAttr='label' localize=true}}
+          </select>
+        </div>
+        <div class='flexrow'>
+          <div class='resource'>
+            <label class='label-light checkbox'>{{localize 'arm5e.generic.hidden'}}</label>
+            <input type='checkbox' name='system.hidden' {{checked system.hidden}}>
+          </div>
+          {{#if isOwned}}
+          <div class='flexrow'>
+            <a
+              class='item-control item-delete-confirm'
+              data-action='itemDeleteConfirm'
+              title='{{localize 'arm5e.hints.delete' item=item.name}}'
+              ><i class='ars-Icon_Delete_Hand_Gesture'></i
+            ></a>
+          </div>
+          {{/if}}
+        </div>
+      </div>
+    </div>
+  </header>
+  <div class='marginItemPart'>{{> "systems/arm5e/templates/generic/metalic-bar.html" }}</div>
+</div>

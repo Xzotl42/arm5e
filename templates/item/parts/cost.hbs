@@ -1,30 +1,35 @@
-<div class="resource flex-group-center flex01 smallBackSection {{classes}}" title="{{cost.hint}}">
+<div
+  class="resource flex-group-center flex01 smallBackSection {{ classes }}"
+  title="{{ cost.hint }}"
+>
   {{#if (ne cost.detail "NONE")}}
-    {{#if (eq cost.detail "QUALIFIER")}}
-      <label for="system.cost.value" class="">{{localize "arm5e.sheet.cost"}}</label>
-      <select name="system.cost.value" data-type="String">
-        {{selectOptions
+  {{#if (eq cost.detail "QUALIFIER")}}
+  <label for="system.cost.value" class="">{{localize "arm5e.sheet.cost"}}</label>
+  <select name="system.cost.value" data-type="String">
+    {{selectOptions
           config.item.costs
           selected=system.cost.value
           localize=true
           labelAttr="label"
-        }}
-      </select>
-    {{else}}
-      <label for="system.cost.amount" class="">{{localize "arm5e.sheet.cost"}}</label>
-      <div class="resource-content flexrow flex-center flex-between margintop6">
-        <input
-          type="number"
-          name="system.cost.amount"
-          value="{{system.cost.amount}}"
-          data-dtype="Number"
-          class="{{classes}}"
-          title="{{hint}}"
-        />
-      </div>
-      <label class="smallTitle">{{cost.currency}}</label>
+    }}
+  </select>
+  {{else}}
+  <div class="flexrow">
+    <label for="system.cost.amount" class="">{{localize "arm5e.sheet.cost"}}</label>
+    <div class="resource-content flexrow flex-center flex-between margintop6">
+      <input
+        type="number"
+        name="system.cost.amount"
+        value="{{ system.cost.amount }}"
+        data-dtype="Number"
+        class="numberformat slim {{ classes }}"
+        title="{{ hint }}"
+      />
+    </div>
 
-    {{/if}}
+    <label class="smallTitle">{{ cost.currency }}</label>
+  </div>
+  {{/if}}
 
   {{/if}}
   <div class="resource">
@@ -32,8 +37,8 @@
     <input
       type="number"
       name="system.quantity"
-      value="{{system.quantity}}"
-      class="modifier select-on-focus"
+      value="{{ system.quantity }}"
+      class="numberformat slim modifier select-on-focus"
       data-dtype="Number"
     />
   </div>

@@ -1,0 +1,94 @@
+import { ArM5eItemSheetV2 } from "./item-sheet-v2.js";
+
+/**
+ * AppV2 sheet for weapon items.
+ */
+export class ArM5eWeaponItemSheetV2 extends ArM5eItemSheetV2 {
+  /** @override */
+  static DEFAULT_OPTIONS = {
+    classes: ["arm5e", "sheet", "item"],
+    position: { width: 500, height: 600 },
+    actions: {
+      itemDeleteConfirm: ArM5eItemSheetV2.itemDeleteConfirm
+    }
+  };
+
+  /** @override */
+  static TABS = {
+    primary: {
+      tabs: [
+        { id: "description", label: "arm5e.sheet.description", cssClass: "item flexrow" },
+        { id: "effects", label: "arm5e.sheet.effects", cssClass: "item flexrow" }
+      ],
+      initial: "description"
+    }
+  };
+
+  /** @override */
+  static PARTS = {
+    header: {
+      template: "systems/arm5e/templates/item/parts/item-weapon-header-v2.hbs"
+    },
+    tabs: {
+      template: "systems/arm5e/templates/generic/parts/ars-tab-navigation.hbs",
+      classes: ["marginItemPart"]
+    },
+    description: {
+      template: "systems/arm5e/templates/item/parts/item-description-v2.hbs"
+    },
+    effects: {
+      template: "systems/arm5e/templates/item/parts/item-effects-v2.hbs"
+    },
+    footer: {
+      template: "systems/arm5e/templates/item/parts/item-footer-v2.hbs"
+    }
+  };
+
+  /** @override */
+  async _prepareContext(options) {
+    const context = await super._prepareContext(options);
+    context.tabs = this._prepareTabs("primary");
+    return context;
+  }
+
+  /** @override */
+  async _preparePartContext(partId, context, options) {
+    if (partId === "description" || partId === "effects") {
+      context.tab = context.tabs?.[partId];
+    }
+    return super._preparePartContext(partId, context, options);
+  }
+
+  /** @override */
+  _onRender(context, options) {
+    super._onRender(context, options);
+    // Weapon ability select change: update ability.{id, key, option}
+    this.element.querySelectorAll(".weapon-ability").forEach((el) => {
+      el.addEventListener("change", async (event) => {
+        event.preventDefault();
+        const ab = this.item.actor?.items?.get(event.target.value);
+        if (!ab) return;
+        await this.item.update({
+          system: {
+            ability: {
+              id: event.target.value,
+              key: ab.system.key,
+              option: ab.system.option
+            }
+          }
+        });
+      });
+    });
+
+    // Equipped checkbox: update actor combatPreps
+    this.element.querySelectorAll("input[data-action='toggleEquipped']").forEach((el) => {
+      el.addEventListener("change", async (event) => {
+        event.preventDefault();
+        const itemId = this.item.id;
+        if (this.item.isOwned && this.actor?.sheet?._toggleEquip) {
+          await this.actor.sheet._toggleEquip(itemId);
+        }
+      });
+    });
+  }
+}

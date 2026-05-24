@@ -1,17 +1,17 @@
 import { ArM5eActorSheet } from "./actor-sheet.js";
 
-import { compareBaseEffects, compareSpells, hermeticFilter, log } from "../tools/tools.js";
+import { compareBaseEffects, compareSpells, hermeticFilter, log } from "../module/tools/tools.js";
 
-import { labTextToEffect } from "../item/item-converter.js";
-import { ArM5eItem } from "../item/item.js";
-import { HERMETIC_FILTER } from "../constants/userdata.js";
+import { labTextToEffect } from "../module/item/item-converter.js";
+import { ArM5eItem } from "../module/item/item.js";
+import { HERMETIC_FILTER } from "../module/constants/userdata.js";
 import {
   GetEffectAttributesLabel,
   GetFilteredAspects,
   spellFormLabel,
   spellTechniqueLabel
-} from "../helpers/magic.js";
-import { getConfirmation } from "../ui/dialogs.js";
+} from "../module/helpers/magic.js";
+import { getConfirmation } from "../module/ui/dialogs.js";
 /**
  * Extend the basic ActorSheet with some very simple modifications
  * @extends {ActorSheet}

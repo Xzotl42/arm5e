@@ -1,0 +1,63 @@
+<div class='sheet-header-part'>
+  <div class='header-background'>
+    <img src='systems/arm5e/assets/item/{{ flavor }}_header.png' />
+  </div>
+  <header class='sheet-header marginItemPart'>
+    <img
+      class='item-img'
+      src='{{ item.img }}'
+      data-action='editImage'
+      data-edit='img'
+      title='{{ item.name }}'
+    />
+    <div class='header-fields'>
+      <h1 class='bigname'>
+        <input name='name' type='text' value='{{ item.name }}' placeholder='Name' />
+      </h1>
+      <div class='flexcol'>
+        <div class='flexrow'>
+          <div class='resource'>
+            <label>{{localize 'arm5e.sheet.location'}}</label>
+            <input
+              type='text'
+              name='system.location'
+              value='{{ system.location }}'
+              data-dtype='String'
+            />
+          </div>
+        </div>
+        <div class='flexrow'>
+          <div class='resource'>
+            <label>{{localize 'arm5e.sheet.dimensions'}}</label>
+            <input
+              type='text'
+              name='system.dimensions'
+              value='{{ system.dimensions }}'
+              data-dtype='String'
+            />
+          </div>
+          <div class='resource'>
+            <label>{{localize 'arm5e.sheet.inhabitants'}}</label>
+            <input
+              type='text'
+              name='system.inhabitants'
+              value='{{ system.inhabitants }}'
+              data-dtype='String'
+            />
+          </div>
+          {{#if isOwned}}
+          <div class='flexrow'>
+            <a
+              class='item-control item-delete-confirm'
+              data-action='itemDeleteConfirm'
+              title='{{localize 'arm5e.hints.delete' item=(localize 'arm5e.sheet.possessionsCovenant')}}'
+              ><i class='ars-Icon_Delete_Hand_Gesture'></i
+            ></a>
+          </div>
+          {{/if}}
+        </div>
+      </div>
+    </div>
+  </header>
+  <div class='marginItemPart'>{{> "systems/arm5e/templates/generic/metalic-bar.html" }}</div>
+</div>

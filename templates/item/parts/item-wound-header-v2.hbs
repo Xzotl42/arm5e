@@ -1,0 +1,114 @@
+<div class="sheet-header-part">
+  <div class="header-background">
+    <img src="systems/arm5e/assets/item/{{ flavor }}_header.png" />
+  </div>
+  <header class="sheet-header marginItemPart">
+    <div class="flexcol" style="max-width: 100px">
+      <img
+        class="item-img profile-img"
+        src="{{ item.img }}"
+        data-edit="img"
+        data-tooltip="<img
+        class='img-tooltip'
+        src='{{ item.img }}'/>"
+        data-tooltip-direction="CENTER"
+        title="{{ item.name }}"
+      />
+      {{#if isOwned}}
+      <div class="flexrow">
+        <a
+          data-action="sanatoriumRoll"
+          title="{{localize 'arm5e.sanatorium.button.rollSingle'}}"
+          style="text-align: right; font-size: 16pt"
+        >
+          <i class="ars-Icon_Sanatorium2"></i>
+          <a
+            data-action="itemDeleteConfirm"
+            title="{{localize 'arm5e.hints.delete' item=item.name}}"
+            ><i class="ars-Icon_Delete_Hand_Gesture item-delete-large"></i
+          ></a>
+        </a>
+      </div>
+      {{/if}}
+    </div>
+    <div class="header-fields flexcol">
+      <div class="flexrow">
+        <h1 class="bigname">
+          <input name="name" type="text" value="{{ item.name }}" placeholder="Name" />
+        </h1>
+      </div>
+      <div class="flexcol">
+        <div class="resource flexrow">
+          <label>{{localize 'arm5e.sheet.wound.inflicted'}}</label>
+          <select name="system.inflictedDate.season" data-type="String">
+            {{selectOptions config.seasons selected=system.inflictedDate.season labelAttr='label' localize=true}}
+          </select>
+          <input
+            type="number"
+            name="system.inflictedDate.year"
+            value="{{ system.inflictedDate.year }}"
+            data-dtype="Number"
+          />
+        </div>
+        <div class="resource flexrow">
+          {{#if system.healedDate.year}}
+          <label>{{localize 'arm5e.sheet.wound.healed'}}</label>
+          <select name="system.healedDate.season" data-type="String">
+            {{selectOptions config.seasons selected=system.healedDate.season labelAttr='label' localize=true}}
+          </select>
+          <input
+            type="number"
+            name="system.healedDate.year"
+            value="{{ system.healedDate.year }}"
+            data-dtype="Number"
+          />
+          {{else}}
+          {{#if system.recoveryTime}}
+          {{localize 'arm5e.sheet.wound.inrecovery'}}
+          {{else}}
+          {{localize 'arm5e.sheet.wound.fresh'}}
+          {{/if}}
+          {{/if}}
+        </div>
+      </div>
+      <div class="flexrow">
+        <div class="resource flexcol">
+          <label>{{localize 'arm5e.sheet.wound.gravity'}}</label>
+          <select name="system.gravity" data-type="String" data-action="changeGravity">
+            {{selectOptions config.recovery.wounds selected=system.gravity labelAttr='label' localize=true}}
+          </select>
+        </div>
+        <div class="resource">
+          <label>{{localize 'arm5e.sheet.bonus.label'}}</label>
+          <input
+            type="number"
+            name="system.bonus"
+            value="{{ system.bonus }}"
+            data-dtype="Number"
+            readonly
+          />
+        </div>
+        <div class="resource">
+          <label>{{localize 'arm5e.sheet.wound.recovery'}}</label>
+          <input
+            type="number"
+            name="system.recoveryTime"
+            value="{{ system.recoveryTime }}"
+            data-dtype="Number"
+            readonly
+          />
+        </div>
+      </div>
+      <div class="resource">
+        <label>{{localize 'arm5e.sheet.location'}}</label>
+        <input
+          type="text"
+          name="system.location"
+          value="{{ system.location }}"
+          data-dtype="String"
+        />
+      </div>
+    </div>
+  </header>
+  <div class="marginItemPart">{{> "systems/arm5e/templates/generic/metalic-bar.html" }}</div>
+</div>

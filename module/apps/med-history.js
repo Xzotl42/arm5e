@@ -1,6 +1,6 @@
-import { ArM5eActorSheet } from "../actor/actor-sheet.js";
 import { getConfirmation } from "../ui/dialogs.js";
 import { compareDates, nextDate } from "../tools/time.js";
+import { ArM5eActorSheetV2 } from "../sheets/actor/actor-sheet-v2.js";
 
 export class MedicalHistory extends foundry.applications.api.HandlebarsApplicationMixin(
   foundry.applications.api.ApplicationV2

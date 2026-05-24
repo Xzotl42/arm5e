@@ -1,0 +1,63 @@
+<div class="sheet-header-part">
+  <div class="header-background">
+    <img src="systems/arm5e/assets/item/{{ flavor }}_header.png" />
+  </div>
+  <header class="sheet-header marginItemPart">
+    <img
+      class="item-img profile-img"
+      src="{{ item.img }}"
+      data-edit="img"
+      data-tooltip="<img
+      class='img-tooltip'
+      src='{{ item.img }}'/>"
+      data-tooltip-direction="CENTER"
+      title="{{ item.name }}"
+    />
+    <div class="header-fields flexcol">
+      <h1 class="bigname">
+        <input name="name" type="text" value="{{ item.name }}" placeholder="Name" />
+      </h1>
+      <div class="flexrow">
+        <div class="resource" style="max-width: 115px">
+          <label>{{localize 'arm5e.sheet.protection'}}</label>
+          <input
+            type="number"
+            name="system.prot"
+            value="{{ system.prot }}"
+            class="modifier select-on-focus"
+            data-dtype="Number"
+          />
+        </div>
+        <div class="resource" style="max-width: 110px">
+          <label>{{localize 'arm5e.sheet.load'}}</label>
+          <input
+            type="number"
+            name="system.load"
+            value="{{ system.load }}"
+            class="modifier select-on-focus"
+            data-dtype="Number"
+          />
+        </div>
+        <div class="resource flexrow">
+          <label class="checkbox-label">{{localize 'arm5e.sheet.fullSet'}}</label>
+          <input type="checkbox" name="system.full" {{checked system.full}} />
+        </div>
+      </div>
+      <div class="flexrow">
+        {{> 'systems/arm5e/templates/item/parts/cost.hbs' classes='fit'}}
+        {{#if system.canEquip}}
+        <div class="resource flexrow">
+          <label class="checkbox-label">{{localize 'arm5e.sheet.equipped'}}</label>
+          <input type="checkbox" data-action="toggleEquipped" {{checked system.equipped}} />
+        </div>
+        {{/if}}
+      </div>
+    </div>
+    {{#if editable}}
+    <a data-action="itemDeleteConfirm" title="{{localize 'arm5e.hints.delete' item=item.name}}"
+      ><i class="ars-Icon_Delete_Hand_Gesture item-delete-large"></i
+    ></a>
+    {{/if}}
+  </header>
+  <div class="marginItemPart">{{> "systems/arm5e/templates/generic/metalic-bar.html" }}</div>
+</div>

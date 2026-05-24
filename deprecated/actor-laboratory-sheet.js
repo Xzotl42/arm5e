@@ -1,5 +1,5 @@
-import { ARM5E } from "../config.js";
-import ArM5eActiveEffect from "../helpers/active-effects.js";
+import { ARM5E } from "../module/config.js";
+import ArM5eActiveEffect from "../module/helpers/active-effects.js";
 import {
   GetEffectAttributesLabel,
   GetEnchantmentSelectOptions,
@@ -8,23 +8,27 @@ import {
   PickRequisites,
   computeLevel,
   computeRawCastingTotal
-} from "../helpers/magic.js";
-import { resetOwnerFields } from "../item/item-converter.js";
-import { ArM5eItemMagicSheet } from "../item/item-magic-sheet.js";
-import { getDataset, log } from "../tools/tools.js";
+} from "../module/helpers/magic.js";
+import { resetOwnerFields } from "../module/item/item-converter.js";
+import { ArM5eItemMagicSheet } from "../module/item/item-magic-sheet.js";
+import { getDataset, log } from "../module/tools/tools.js";
 import { ArM5eActorSheet } from "./actor-sheet.js";
-import { ArM5eItemDiarySheet } from "../item/item-diary-sheet.js";
+import { ArM5eItemDiarySheet } from "../module/item/item-diary-sheet.js";
 import {
   HERMETIC_FILTER,
   HERMETIC_TOPIC_FILTER,
   TIME_FILTER,
   TOPIC_FILTER
-} from "../constants/userdata.js";
-import { DiaryEntrySchema } from "../schemas/diarySchema.js";
-import { LabActivity, NoLabActivity, SpellActivity } from "../seasonal-activities/labActivity.js";
+} from "../module/constants/userdata.js";
+import { DiaryEntrySchema } from "../module/schemas/diarySchema.js";
+import {
+  LabActivity,
+  NoLabActivity,
+  SpellActivity
+} from "../module/seasonal-activities/labActivity.js";
 
-import { investigate } from "../seasonal-activities/long-term-activities.js";
-import { ArM5eItem } from "../item/item.js";
+import { investigate } from "../module/seasonal-activities/long-term-activities.js";
+import { ArM5eItem } from "../module/item/item.js";
 /**
  * Extend the basic ArM5eActorSheet
  * @extends {ArM5eActorSheet}

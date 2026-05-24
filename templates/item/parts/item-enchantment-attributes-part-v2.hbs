@@ -1,0 +1,11 @@
+<section class="sheet-body-part sheet-body marginItemPart">
+  <div class="tab {{ tab.cssClass }}" data-group="primary" data-tab="enchantment">
+    {{> "systems/arm5e/templates/item/parts/enchantment-attributes.html"
+      container="enchantment"
+      enchantData=this
+      docId=item._id
+      expiryAllowed=true
+      visibility=(lookup ui.sections.visibility 'enchantment')
+    }}
+  </div>
+</section>
