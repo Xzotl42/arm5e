@@ -1141,6 +1141,16 @@ export function validWriting(context, actor, item) {
   return;
 }
 
+/**
+ *
+ * @param context
+ * @param actor
+ * @param item
+ */
+export function validCopying(context, actor, item) {
+  return;
+}
+
 export function validVisStudy(context, actor, item) {
   context.system.totalXp = { abilities: 0, arts: 0, masteries: 0, spellLevels: 0 };
   // const progressArt = item.system.progress.arts[0];
@@ -1166,6 +1176,7 @@ export function computeTotals(context) {
 
 export async function setVisStudyResults(actor, roll, message, rollInfo) {
   if (roll.botches > 0) {
+    const updateData = {};
     if (roll.botches >= actor.system.bonuses.arts.warpingThreshold) {
       // twilight pending
       updateData["system.twilight.pointsGained"] = roll.botches;
@@ -1197,7 +1208,7 @@ export async function setVisStudyResults(actor, roll, message, rollInfo) {
     // "system.description": desc,
 
     await actor.updateEmbeddedDocuments("Item", [updateData], {});
-    await diaryitem.sheet._onProgressApply({});
+    await diaryitem.sheet._onProgressApply({ qualitymod: 0 });
   }
 }
 

@@ -135,7 +135,7 @@ export class RollChatSchema extends BasicChatSchema {
   }
 
   get confidenceModifier() {
-    return (this.confidence.used * 3) / this.roll?.divider ?? 1;
+    return (this.confidence.used * 3) / (this.roll?.divider ?? 1);
   }
 
   getFlavor() {

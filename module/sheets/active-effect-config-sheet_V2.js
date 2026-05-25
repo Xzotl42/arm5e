@@ -70,8 +70,18 @@ export class ArM5eActiveEffectConfigV2 extends ActiveEffectConfig {
     this.filter = filter;
   }
 
+  _getChangesData() {
+    const changes = CONFIG.ISV14 ? this.document.system?.changes : this.document.changes;
+    return foundry.utils.deepClone(changes ?? []);
+  }
+
+  _changesUpdateData(changesData) {
+    return CONFIG.ISV14 ? { "system.changes": changesData } : { changes: changesData };
+  }
+
   async _prepareContext(options) {
     const context = await super._prepareContext(options);
+    const changesData = this._getChangesData();
     context.data = context.document.toObject();
     context.tabs = this._prepareTabs("primary");
     if (this.filter) {
@@ -95,11 +105,11 @@ export class ArM5eActiveEffectConfigV2 extends ActiveEffectConfig {
 
     // first effect created, add null effect type and subtype (still needed?)
     context.selectedTypes = this.document.getFlag("arm5e", "type");
-    if (context.document.changes.length > 0 && context.selectedTypes == null) {
+    if (changesData.length > 0 && context.selectedTypes == null) {
       context.selectedTypes = ["none"];
     }
     context.selectedSubtypes = this.document.getFlag("arm5e", "subtype");
-    if (context.document.changes.length > 0 && context.selectedSubtypes == null) {
+    if (changesData.length > 0 && context.selectedSubtypes == null) {
       context.selectedSubtypes = ["none"];
     }
 
@@ -236,13 +246,13 @@ export class ArM5eActiveEffectConfigV2 extends ActiveEffectConfig {
     let arrayTypes = this.document.getFlag("arm5e", "type");
     let arraySubtypes = this.document.getFlag("arm5e", "subtype");
     let arrayOptions = this.document.getFlag("arm5e", "option");
-    let changes = this.document.changes;
+    let changes = this._getChangesData();
     arrayTypes.splice(index, 1);
     arraySubtypes.splice(index, 1);
     arrayOptions.splice(index, 1);
     changes.splice(index, 1);
     let updateFlags = {
-      changes: changes,
+      ...this._changesUpdateData(changes),
       flags: {
         arm5e: {
           type: arrayTypes,
@@ -267,15 +277,13 @@ export class ArM5eActiveEffectConfigV2 extends ActiveEffectConfig {
     if (typeof effect.default == "boolean") {
       value = true;
     }
-    const changesData = this.document.changes;
+    const changesData = this._getChangesData();
     changesData[index] = {
       mode: ACTIVE_EFFECTS_TYPES[arrayTypes[index]].subtypes[arraySubtypes[index]].mode,
       key: newKey,
       value: value
     };
-    let updateFlags = {
-      changes: changesData
-    };
+    let updateFlags = this._changesUpdateData(changesData);
     await this.submit({ preventClose: true, updateData: updateFlags }).then(() => this.render());
   }
 
@@ -287,7 +295,7 @@ export class ArM5eActiveEffectConfigV2 extends ActiveEffectConfig {
     arraySubtypes[index] = Object.keys(ACTIVE_EFFECTS_TYPES[value].subtypes)[0];
     let arrayOptions = this.document.getFlag("arm5e", "option");
     arrayOptions[index] = ACTIVE_EFFECTS_TYPES[value].subtypes[arraySubtypes[index]].option || null;
-    const changesData = this.document.changes;
+    const changesData = this._getChangesData();
     changesData[index] = {
       mode: ACTIVE_EFFECTS_TYPES[value].subtypes[arraySubtypes[index]].mode,
       key: ACTIVE_EFFECTS_TYPES[value].subtypes[arraySubtypes[index]].key,
@@ -301,7 +309,7 @@ export class ArM5eActiveEffectConfigV2 extends ActiveEffectConfig {
           option: arrayOptions
         }
       },
-      changes: changesData
+      ...this._changesUpdateData(changesData)
     };
     await this.submit({ preventClose: true, updateData: updateFlags }).then(() => this.render());
   }
@@ -316,7 +324,7 @@ export class ArM5eActiveEffectConfigV2 extends ActiveEffectConfig {
     if (arrayOptions[index] != null) {
       computedKey = computedKey.replace("#OPTION#", arrayOptions[index]);
     }
-    const changesData = this.document.changes;
+    const changesData = this._getChangesData();
     changesData[index] = {
       mode: ACTIVE_EFFECTS_TYPES[arrayTypes[index]].subtypes[value].mode,
       key: computedKey,
@@ -330,7 +338,7 @@ export class ArM5eActiveEffectConfigV2 extends ActiveEffectConfig {
           option: arrayOptions
         }
       },
-      changes: changesData
+      ...this._changesUpdateData(changesData)
     };
 
     await this.submit({ preventClose: true, updateData: update }).then(() => this.render());
@@ -408,19 +416,19 @@ export class ArM5eActiveEffectConfigV2 extends ActiveEffectConfig {
     let updateData = {};
     arrayOptions[index] = chosenOption;
     updateData[`flags.arm5e.option`] = arrayOptions;
-    const changesData = this.document.changes;
+    const changesData = this._getChangesData();
     changesData[index].key = computedKey.replace("#OPTION#", chosenOption);
-    updateData.changes = changesData;
+    Object.assign(updateData, this._changesUpdateData(changesData));
     return await this.submit({ preventClose: true, updateData: updateData });
   }
 
   async _addEffectChange(updateFlags) {
-    const changesData = this.document.changes;
+    const changesData = this._getChangesData();
     changesData.push({ key: "", mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: "" });
     return await this.submit({
       preventClose: true,
       updateData: {
-        changes: changesData,
+        ...this._changesUpdateData(changesData),
         flags: updateFlags
       }
     });

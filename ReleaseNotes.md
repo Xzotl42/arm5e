@@ -1,3 +1,20 @@
+## 2.4.1.19, Radislav, Cognizant Wisdom BF5
+
+[IMPORTANT] Known limitation for V12, if text seems greyed out, go in the core settings and change the Preferred Color Scheme to "Light".
+
+### Compatibility
+
+- Verified for version 14.363
+
+### Features & changes
+
+### Bug fixes
+
+- Fixed the edition of Active effects for V14 (existing effects may have to be recreated if edited)
+- [DiceSoNice] Removed the double roll display for multiple rolls chat messages
+- Age is properly updated when changing the year.
+- Fixed a bug where the Vis used for vis study was not removed.
+
 ## 2.4.1.18, Radislav, Cognizant Wisdom BF4
 
 [IMPORTANT] Known limitation for V12, if text seems greyed out, go in the core settings and change the Preferred Color Scheme to "Light".

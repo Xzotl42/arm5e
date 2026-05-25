@@ -444,6 +444,16 @@ Hooks.on("simple-calendar-date-time-change", async (data) => {
     Hooks.callAll("arm5e-date-change", newDatetime);
   }
 });
+
+Hooks.on("diceSoNiceMessageProcessed", (messageId, interception) => {
+  if (!game.dice3d) return;
+  const message = game.messages.get(messageId);
+  if (!message) return;
+  if (message.rolls.length >= 1) {
+    interception.willTrigger3DRoll = false;
+  }
+});
+
 /* -------------------------------------------- */
 /*  Hotbar Macros                               */
 /* -------------------------------------------- */

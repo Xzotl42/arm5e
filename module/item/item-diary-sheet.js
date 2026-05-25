@@ -1377,7 +1377,7 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
   }
 
   async _onProgressApply(event, notif = true) {
-    let dataset = getDataset(event);
+    let dataset = getDataset(event ?? {});
 
     if (this.item.system.done) {
       // no idea how it got there:
@@ -1501,7 +1501,7 @@ export class ArM5eItemDiarySheet extends ArM5eItemSheet {
     //     );
     //   }
 
-    const dates = this.item.system.dates;
+    const dates = foundry.utils.deepClone(this.item.system.dates);
     for (let d of dates) {
       d.applied = true;
     }

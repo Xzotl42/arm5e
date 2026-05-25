@@ -72,15 +72,30 @@ import { Arm5eChatMessage } from "../helpers/chat-message.js";
 export class ArM5eActorSheet extends ActorSheet {
   constructor(object, options) {
     super(object, options);
+    this.actorProfiles = new ArM5eActorProfiles(object);
+  }
+
+  _bindDateHook() {
+    if (this.timeHook) return;
 
     this.timeHook = Hooks.on("arm5e-date-change", async (date) => {
       if (this.actor._hasDate()) {
-        this.actor.updateSource({ "datetime.year": date.year });
         this.render(false);
         log(false, "Render on date change");
       }
     });
-    this.actorProfiles = new ArM5eActorProfiles(object);
+  }
+
+  _unbindDateHook() {
+    if (!this.timeHook) return;
+
+    Hooks.off("arm5e-date-change", this.timeHook);
+    this.timeHook = null;
+  }
+
+  async close(options = {}) {
+    this._unbindDateHook();
+    return super.close(options);
   }
 
   // /** @override */
@@ -294,6 +309,19 @@ export class ArM5eActorSheet extends ActorSheet {
     context.datetime.seasonLabel = game.i18n.localize(
       CONFIG.ARM5E.seasons[context.datetime.season].label
     );
+
+    if (this.actor._hasDate()) {
+      if (this.actor.isCharacter()) {
+        if (this.actor.system.states?.creationMode) {
+          context.system.description.born.value =
+            context.datetime.year - (this.actor.system.age.value ? this.actor.system.age.value : 0);
+        } else {
+          context.system.age.value = context.system.description?.born?.value
+            ? context.datetime.year - context.system.description.born.value
+            : 20;
+        }
+      }
+    }
 
     actorData.system.effectCreation = game.user.isTrusted;
 
@@ -829,6 +857,9 @@ export class ArM5eActorSheet extends ActorSheet {
   async _render(force, options = {}) {
     // Parent class rendering workflow
     await super._render(force, options);
+    if (this.actor._hasDate()) {
+      this._bindDateHook();
+    }
 
     // Register the active Application with the referenced Documents
 

@@ -160,7 +160,7 @@ export class VisSchema extends foundry.abstract.TypeDataModel {
           done: false,
           rollDone: false,
           cappedGain: false,
-          dates: [{ season: currentDate.season, date: "", year: currentDate.year, applied: true }],
+          dates: [{ season: currentDate.season, date: "", year: currentDate.year, applied: false }],
           sourceQuality: 0,
           activity: "visStudy",
           progress: {
