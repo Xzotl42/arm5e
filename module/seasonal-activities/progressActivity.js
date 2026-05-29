@@ -1,5 +1,7 @@
 import { Activity } from "./activity.js";
 import { AgingActivity } from "./agingActivity.js";
+import { TwilightActivity } from "./twilightActivity.js";
+import { VisStudy } from "./visStudyActivity.js";
 import {
   validAdventuring,
   validExposure,
@@ -10,8 +12,7 @@ import {
   validChildhood,
   validReading,
   validWriting,
-  validCopying,
-  validVisStudy
+  validCopying
 } from "./long-term-activities.js";
 
 export class DiaryActivity extends Activity {
@@ -25,20 +26,6 @@ export class DiaryActivity extends Activity {
 
   async rollback(sheet, state) {
     return await super.rollback(sheet, state);
-  }
-}
-
-export class TwilightActivity extends Activity {
-  constructor(actorUuid) {
-    super(actorUuid, "twilight");
-  }
-
-  async apply(sheet, context, progressData, options) {
-    return await super.apply(sheet, context, progressData, options);
-  }
-
-  async rollback(sheet, state) {
-    return await this.deleteDiary(sheet, state.promises);
   }
 }
 
@@ -56,30 +43,6 @@ export class RecoveryActivity extends Activity {
   }
 
   async rollback(sheet, state) {
-    return await this.deleteDiary(sheet, state.promises);
-  }
-}
-
-export class VisStudy extends Activity {
-  constructor(actorUuid) {
-    super(actorUuid, "visStudy");
-  }
-
-  validateDiary(context, actor, item) {
-    this.validateDiarySchedule(context, actor, item);
-    if (!context.system.applyPossible) {
-      return;
-    }
-    validVisStudy(context, actor, item);
-  }
-
-  async apply(sheet, context, progressData, options) {
-    return await super.apply(sheet, context, progressData, options);
-  }
-
-  async rollback(sheet, state) {
-    await this.rollbackExternalDependencies(sheet, state.promises);
-    this.queueProgressRollback(sheet, state);
     return await this.deleteDiary(sheet, state.promises);
   }
 }

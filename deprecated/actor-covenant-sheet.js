@@ -267,7 +267,6 @@ export class ArM5eCovenantActorSheet extends ArM5eActorSheet {
       // case "habitantLivestock":
       case "possessionsCovenant":
       case "visSourcesCovenant":
-      case "visStockCovenant": // TODO convert and remove
       case "magicalEffect":
       case "calendarCovenant":
       case "incomingSource":

@@ -82,6 +82,7 @@
 - Dropping a lab on a character was not setting the lab's owner properly
 - Added some robustness on settings migration and user cache in case of corruption.
 - [dice-so-nice] smart messages with multiple rolls (eg: damage rolls) won't display the rolling of dice twice for subsequent rolls after the first
+- [V14] Fixed the edition of Active effects (existing effects may have to be recreated if edited)
 
 ## 2.4.1.14, Radislav, Cognizant Wisdom BF1
 
