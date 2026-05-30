@@ -465,16 +465,30 @@ export class ActivitySchedule extends HandlebarsApplicationMixin(ApplicationV2) 
     // Create a copy of the dates array to avoid mutating the original
     let newDates = [...this.dates];
     let wasChecked = dataset.selected === "true";
+    const year = Number(dataset.year);
+    const season = dataset.season;
     if (wasChecked) {
       // it was checked, so remove this season
       this.dates = newDates.filter((e) => {
-        return !(e.year === Number(dataset.year) && e.season === dataset.season);
+        return !(e.year === year && e.season === season);
       });
     } else {
+      const isAlreadySelected = newDates.some((e) => e.year === year && e.season === season);
+      if (isAlreadySelected) {
+        this.render();
+        return;
+      }
+
+      const duration = Number(this.activity?.system?.duration ?? 0);
+      if (duration > 0 && newDates.length >= duration) {
+        this.render();
+        return;
+      }
+
       // it was unchecked, so add this season
       newDates.push({
-        year: Number(dataset.year),
-        season: dataset.season,
+        year,
+        season,
         date: "",
         applied: false
       });

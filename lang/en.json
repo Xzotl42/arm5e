@@ -485,6 +485,7 @@
       "design-enchantment-question": "Do you want to design an enchantement based on that effect?",
       "design-spell-question": "Do you want to design a spell based on that effect?",
       "enchant-question": "Do you want to enchant that item? (The original will be destroyed)",
+      "enchant-deletion-confirm": "This will delete all enchantments. Are you sure?",
       "hint": {
         "abilityOption": "Only alphanumeric characters."
       },
@@ -520,6 +521,8 @@
         "sumMode": "Sum",
         "summary": "Used/Total Capacity"
       },
+      "customModifier": "Custom modifier",
+      "customModifierLabel": "Custom modifier label",
       "invalidItem": "Invalid enchantment",
       "msg": {
         "capacityOverflow": "Capacity is too small for the effects.",

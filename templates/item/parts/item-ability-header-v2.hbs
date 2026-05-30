@@ -16,14 +16,16 @@
     />
     <div class="header-fields">
       <h1 class="bigname">
-        <input
-          name="name"
-          type="text"
-          value="{{ item.name }}"
-          title="{{ item.name }}"
-          placeholder="name"
-          class="item-name"
-        />
+        <div class="flexrow">
+          <input
+            name="name"
+            type="text"
+            value="{{ item.name }}"
+            title="{{ item.name }}"
+            placeholder="name"
+            class="item-name"
+          />
+        </div>
       </h1>
       {{#unless altArt}}
       <div class="resource">
@@ -40,6 +42,7 @@
       <div class="flexrow" style="padding-top: 5px">
         <label style="max-width: 65px"
           >{{localize 'arm5e.sheet.score'
+
           }}<input
             type="number"
             name="system.finalScore"
@@ -61,13 +64,6 @@
         <div class="flexrow" style="max-width: 65px">
           <label
             >{{localize 'arm5e.sheet.experienceShort'
-
-
-
-
-
-
-
             }}<input
               type="number"
               name="system.xp"

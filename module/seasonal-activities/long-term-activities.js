@@ -4,14 +4,14 @@ import { InvestigationRoll } from "../apps/investigationRoll.js";
 import { getAbilityFromCompendium } from "../tools/compendia.js";
 import { ArsRoll } from "../helpers/roll.js";
 import { AgingActivity } from "./agingActivity.js";
+import { TwilightActivity } from "./twilightActivity.js";
+import { VisStudy } from "./visStudyActivity.js";
 import {
   BookActivity,
   DiaryActivity,
   ProgressActivity,
   RecoveryActivity,
-  ResourceActivity,
-  TwilightActivity,
-  VisStudy
+  ResourceActivity
 } from "./progressActivity.js";
 import { LabActivity } from "./labActivity.js";
 import { customDialog, customDialogAsync } from "../ui/dialogs.js";
@@ -1358,14 +1358,6 @@ export function validCopying(context, actor, item) {}
  * @param actor
  * @param item
  */
-export function validVisStudy(context, actor, item) {
-  context.system.totalXp = { abilities: 0, arts: 0, masteries: 0, spellLevels: 0 };
-  // const progressArt = item.system.progress.arts[0];
-
-  context.system.totalXp.arts +=
-    Number(context.system.sourceQuality) + context.system.sourceModifier;
-}
-
 /**
  *
  * @param item

@@ -543,6 +543,10 @@ export function computeLevel(system, type, general = true) {
     if (system.linkedTrigger) {
       effectLevel += 3;
     }
+
+    if (system.customModifier) {
+      effectLevel += system.customModifier;
+    }
   } else {
     let shouldBeRitual = system.ritual;
     // Duration above moon are rituals and rituals are minimum level 20

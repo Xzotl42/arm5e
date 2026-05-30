@@ -51,6 +51,16 @@
             ><i class="ars-Icon_Delete_Hand_Gesture"></i
           ></a>
           {{/if}}
+          {{#if isGM}}
+          <a
+            class="item-control padding2"
+            data-action="enchantmentToggle"
+            title="{{localize 'arm5e.lab.enchantment.item.enable'}}"
+            ><img
+              src="systems/arm5e/assets/icons/Icon_Details_option1.png"
+              style="border: 0px; width: 24px; height: 24px"
+          /></a>
+          {{/if}}
           <a
             class="item-control padding10"
             data-action="createTableOfContents"

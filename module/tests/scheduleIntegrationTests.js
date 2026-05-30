@@ -276,6 +276,34 @@ export function registerScheduleIntegrationTesting(quench) {
           }
           await as.close();
         });
+
+        it("ActivitySchedule.7: cannot select more seasons than duration", async function () {
+          this.timeout(300000);
+          const as = new ActivitySchedule({
+            document: {
+              actor: magus,
+              activity: {
+                system: {
+                  duration: 1,
+                  externalIds: [],
+                  dates: [{ year: 1220, season: "spring", date: "", applied: false }]
+                }
+              }
+            }
+          });
+
+          as.render = () => {};
+          as.dates = [{ year: 1220, season: "spring", date: "", applied: false }];
+
+          await as._selectSeason({
+            preventDefault: () => {},
+            target: { dataset: { selected: "false", year: "1220", season: "summer" } }
+          });
+
+          assert.equal(as.dates.length, 1, "dates should be capped to activity duration");
+          assert.equal(as.dates[0].season, "spring", "existing selected season should be retained");
+          await as.close();
+        });
       });
 
       // ========== Navigation and State Transitions ==========

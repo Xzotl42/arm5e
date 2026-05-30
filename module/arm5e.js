@@ -1,43 +1,8 @@
 // Import Modules
 import { ARM5E, enrichAbilities, localizeAbilities, localizeCategories } from "./config.js";
 import { ArM5eActor } from "./actor/actor.js";
-import { ArM5ePCActorSheetV2 } from "./sheets/actor/actor-pc-sheet-v2.js";
-import { ArM5eBeastActorSheetV2 } from "./sheets/actor/actor-beast-sheet-v2.js";
-import { ArM5eNPCActorSheetV2 } from "./sheets/actor/actor-npc-sheet-v2.js";
-import { ArM5eLaboratoryActorSheetV2 } from "./sheets/actor/actor-laboratory-sheet-v2.js";
-import { ArM5eCovenantActorSheetV2 } from "./sheets/actor/actor-covenant-sheet-v2.js";
-import { ArM5eMagicCodexSheetV2 } from "./sheets/actor/actor-magic-codex-sheet-v2.js";
 import { ArM5eItem } from "./item/item.js";
-import { ArM5eReputationItemSheetV2 } from "./sheets/item/item-reputation-sheet-v2.js";
-import { ArM5eIncomeSourceItemSheetV2 } from "./sheets/item/item-incomeSource-sheet-v2.js";
-import { ArM5ePersonalityTraitItemSheetV2 } from "./sheets/item/item-personalityTrait-sheet-v2.js";
-import { ArM5ePossessionsCovenantItemSheetV2 } from "./sheets/item/item-possessionsCovenant-sheet-v2.js";
-import { ArM5eVirtueItemSheetV2 } from "./sheets/item/item-virtue-sheet-v2.js";
-import { ArM5eFlawItemSheetV2 } from "./sheets/item/item-flaw-sheet-v2.js";
-import { ArM5eQualityItemSheetV2 } from "./sheets/item/item-quality-sheet-v2.js";
-import { ArM5eInferiorityItemSheetV2 } from "./sheets/item/item-inferiority-sheet-v2.js";
-import { ArM5eArtItemSheetV2 } from "./sheets/item/item-art-sheet-v2.js";
-import { ArM5eAbilityItemSheetV2 } from "./sheets/item/item-ability-sheet-v2.js";
-import { ArM5eVisSourcesCovenantItemSheetV2 } from "./sheets/item/item-visSourcesCovenant-sheet-v2.js";
-import { ArM5eWeaponItemSheetV2 } from "./sheets/item/item-weapon-sheet-v2.js";
-import { ArM5eArmorItemSheetV2 } from "./sheets/item/item-armor-sheet-v2.js";
-import { ArM5eGenericItemSheetV2 } from "./sheets/item/item-generic-item-sheet-v2.js";
-import { ArM5eVisItemSheetV2 } from "./sheets/item/item-vis-sheet-v2.js";
-import { ArM5eWoundItemSheetV2 } from "./sheets/item/item-wound-sheet-v2.js";
-import { ArM5eInhabitantItemSheetV2 } from "./sheets/item/item-inhabitant-sheet-v2.js";
-import { ArM5eLaboratoryTextItemSheetV2 } from "./sheets/item/item-laboratoryText-sheet-v2.js";
-import { ArM5eSpellItemSheetV2 } from "./sheets/item/item-spell-sheet-v2.js";
-import { ArM5eMagicalEffectItemSheetV2 } from "./sheets/item/item-magicalEffect-sheet-v2.js";
-import { ArM5eBaseEffectItemSheetV2 } from "./sheets/item/item-baseEffect-sheet-v2.js";
-import { ArM5ePowerItemSheetV2 } from "./sheets/item/item-power-sheet-v2.js";
-import { ArM5eEnchantmentItemSheetV2 } from "./sheets/item/item-enchantment-sheet-v2.js";
-import { ArM5eSupernaturalEffectItemSheetV2 } from "./sheets/item/item-supernaturalEffect-sheet-v2.js";
-import { ArM5eBookItemSheetV2 } from "./sheets/item/item-book-sheet-v2.js";
-import { ArM5eDiaryEntryItemSheetV2 } from "./sheets/item/item-diaryEntry-sheet-v2.js";
-import { ArM5eCalendarCovenantItemSheetV2 } from "./sheets/item/item-calendarCovenant-sheet-v2.js";
-import { ArM5eLabCovenantItemSheetV2 } from "./sheets/item/item-labCovenant-sheet-v2.js";
-import { ArM5eAbilityFamiliarItemSheetV2 } from "./sheets/item/item-abilityFamiliar-sheet-v2.js";
-import { ArM5ePowerFamiliarItemSheetV2 } from "./sheets/item/item-powerFamiliar-sheet-v2.js";
+import { ACTOR_SHEET_REGISTRATIONS_V2, ITEM_SHEET_REGISTRATIONS_V2 } from "./sheets/v2-sheets.js";
 import ArM5eActiveEffect from "./helpers/active-effects.js";
 import { prepareDatasetByTypeOfItem } from "./helpers/hotbar-helpers.js";
 import { ArM5ePreloadHandlebarsTemplates } from "./ui/templates.js";
@@ -53,53 +18,25 @@ import { log } from "./tools/tools.js";
 import { migrateSettings, registerSettings } from "./settings.js";
 import { registerTestSuites } from "./tests/tests.js";
 import { AlternateStressDie, ArsRoll, StressDie, StressDieInternal } from "./helpers/roll.js";
-import { BaseEffectSchema, MagicalEffectSchema, SpellSchema } from "./schemas/magicSchemas.js";
-import { AbilitySchema } from "./schemas/abilitySchema.js";
-import { BookSchema } from "./schemas/bookSchema.js";
-import { DiaryEntrySchema } from "./schemas/diarySchema.js";
-import {
-  ItemSchema,
-  PersonalityTraitSchema,
-  QualityInferioritySchema,
-  ReputationSchema,
-  SanctumSchema,
-  VirtueFlawSchema
-} from "./schemas/minorItemsSchemas.js";
-import { LabSchema } from "./schemas/labSchema.js";
-import { ArmorSchema, WeaponSchema } from "./schemas/weaponArmorSchema.js";
-import { CodexSchema } from "./schemas/actorCommonSchema.js";
-import { VisSchema, VisSourceSchema } from "./schemas/visSchema.js";
 import { clearUserCache } from "./constants/userdata.js";
 import {
   ACTIVITIES_DEFAULT_ICONS,
   ARM5E_DEFAULT_ICONS,
   INHABITANTS_DEFAULT_ICONS
 } from "./constants/ui.js";
-import { InhabitantSchema } from "./schemas/inhabitantSchema.js";
 import { SimpleCalendarSeasons, seasonOrder, seasonOrderInv } from "./tools/time.js";
-import { WoundSchema } from "./schemas/woundSchema.js";
-import { EnchantmentEffectSchema } from "./schemas/enchantmentSchema.js";
 import { magicalAttributesHelper } from "./helpers/magic.js";
-import { CovenantSchema } from "./schemas/covenantSchema.js";
-import { SupernaturalEffectSchema } from "./schemas/supernaturalEffectSchema.js";
 import { Arm5eSocketHandler } from "./tools/socket-messages.js";
-import { PowerSchema } from "./schemas/powerSchemas.js";
-import { BasicChatSchema } from "./schemas/basicChatSchema.js";
 import { Arm5eChatMessage } from "./helpers/chat-message.js";
 import { addActiveEffectsDefinitions } from "./constants/activeEffectsTypes.js";
 // import { Astrolab } from "./tools/astrolab.js";
 import { ArsApps } from "./ui/apps.js";
-import { LabTextSchema } from "./schemas/labTextSchema.js";
-import { RollChatSchema } from "./schemas/rollChatSchema.js";
 import {
-  CombatAttackChatSchema,
-  CombatChatSchema,
-  CombatDamageChatSchema,
-  CombatDefenseChatSchema,
-  CombatSoakChatSchema
-} from "./schemas/combatChatSchema.js";
-import { MagicChatSchema } from "./schemas/magicChatSchema.js";
-import { DamageChatSchema } from "./schemas/damageChatSchema.js";
+  ACTOR_DATAMODEL_REGISTRATIONS,
+  CHAT_DATAMODEL_REGISTRATIONS,
+  DEPRECATED_ITEM_DATAMODEL_ALIASES,
+  ITEM_DATAMODEL_REGISTRATIONS
+} from "./schemas/schema-registrations.js";
 import {
   buildConflictExclusionTypes,
   buildDuplicateAllowedTypes
@@ -125,6 +62,8 @@ Hooks.once("init", async function () {
     rollItemMacro,
     migrateCompendium
   };
+
+  CONFIG.ISV14 = game.release.generation === 14;
 
   // Add system metadata
   CONFIG.ARM5E = ARM5E;
@@ -642,52 +581,12 @@ Hooks.on("getSceneControlButtons", (buttons) => addArsButtons(buttons));
  *
  */
 function setDatamodels() {
-  // CONFIG.ARM5E.ItemDataModels["art"] = ArtSchema;
-  CONFIG.ARM5E.ItemDataModels.ability = AbilitySchema;
-  CONFIG.ARM5E.ItemDataModels.virtue = VirtueFlawSchema;
-  CONFIG.ARM5E.ItemDataModels.flaw = VirtueFlawSchema;
-  CONFIG.ARM5E.ItemDataModels.quality = QualityInferioritySchema;
-  CONFIG.ARM5E.ItemDataModels.inferiority = QualityInferioritySchema;
-  CONFIG.ARM5E.ItemDataModels.item = ItemSchema;
-  CONFIG.ARM5E.ItemDataModels.vis = VisSchema;
-  CONFIG.ARM5E.ItemDataModels.visSourcesCovenant = VisSourceSchema;
-  CONFIG.ARM5E.ItemDataModels.baseEffect = BaseEffectSchema;
-  CONFIG.ARM5E.ItemDataModels.magicalEffect = MagicalEffectSchema;
-  CONFIG.ARM5E.ItemDataModels.spell = SpellSchema;
-  CONFIG.ARM5E.ItemDataModels.laboratoryText = LabTextSchema;
-  CONFIG.ARM5E.ItemDataModels.personalityTrait = PersonalityTraitSchema;
-  CONFIG.ARM5E.ItemDataModels.reputation = ReputationSchema;
-  CONFIG.ARM5E.ItemDataModels.armor = ArmorSchema;
-  CONFIG.ARM5E.ItemDataModels.weapon = WeaponSchema;
-  CONFIG.ARM5E.ItemDataModels.inhabitant = InhabitantSchema;
-  CONFIG.ARM5E.ItemDataModels.wound = WoundSchema;
-  CONFIG.ARM5E.ItemDataModels.labCovenant = SanctumSchema;
+  Object.assign(CONFIG.ARM5E.ItemDataModels, ITEM_DATAMODEL_REGISTRATIONS);
+  Object.assign(CONFIG.ARM5E.ActorDataModels, ACTOR_DATAMODEL_REGISTRATIONS);
+  Object.assign(CONFIG.ChatMessage.dataModels, CHAT_DATAMODEL_REGISTRATIONS);
 
-  CONFIG.ARM5E.ItemDataModels.enchantment = EnchantmentEffectSchema;
-  CONFIG.ARM5E.ItemDataModels.book = BookSchema;
-  CONFIG.ARM5E.ItemDataModels.diaryEntry = DiaryEntrySchema;
-  CONFIG.ARM5E.ItemDataModels.supernaturalEffect = SupernaturalEffectSchema;
-  CONFIG.ARM5E.ItemDataModels.power = PowerSchema;
-  // Actors
-  CONFIG.ARM5E.ActorDataModels.laboratory = LabSchema;
-  CONFIG.ARM5E.ActorDataModels.magicCodex = CodexSchema;
-  CONFIG.ARM5E.ActorDataModels.covenant = CovenantSchema;
-
-  // ChatMessages
-
-  CONFIG.ChatMessage.dataModels.standard = BasicChatSchema;
-  CONFIG.ChatMessage.dataModels.roll = RollChatSchema;
-  CONFIG.ChatMessage.dataModels.init = CombatChatSchema;
-  CONFIG.ChatMessage.dataModels.combat = CombatChatSchema; // TMP for backward compatiblity
-  CONFIG.ChatMessage.dataModels.combatAttack = CombatAttackChatSchema;
-  CONFIG.ChatMessage.dataModels.combatDefense = CombatDefenseChatSchema;
-  CONFIG.ChatMessage.dataModels.combatDamage = CombatDamageChatSchema;
-  CONFIG.ChatMessage.dataModels.combatSoak = CombatSoakChatSchema;
-
-  CONFIG.ChatMessage.dataModels.magic = MagicChatSchema;
-  CONFIG.ChatMessage.dataModels.damage = DamageChatSchema;
   // Deprecated types
-  CONFIG.ARM5E.ItemDataModels.visStockCovenant = VisSchema;
+  Object.assign(CONFIG.ARM5E.ItemDataModels, DEPRECATED_ITEM_DATAMODEL_ALIASES);
 }
 
 /**
@@ -701,69 +600,9 @@ function registerSheets() {
       foundry.appv1.sheets.ActorSheet
     );
 
-    // ["player","npc","laboratoy","covenant"],
-    foundry.applications.apps.DocumentSheetConfig.registerSheet(
-      Actor,
-      "arm5ePC",
-      ArM5ePCActorSheetV2,
-      {
-        types: ["player"],
-        makeDefault: true,
-        label: "arm5e.sheet.player"
-      }
-    );
-    foundry.applications.apps.DocumentSheetConfig.registerSheet(
-      Actor,
-      "arm5eNPC",
-      ArM5eNPCActorSheetV2,
-      {
-        types: ["npc"],
-        makeDefault: true,
-        label: "arm5e.sheet.npc"
-      }
-    );
-    foundry.applications.apps.DocumentSheetConfig.registerSheet(
-      Actor,
-      "arm5eBeast",
-      ArM5eBeastActorSheetV2,
-      {
-        types: ["beast"],
-        makeDefault: true,
-        label: "arm5e.sheet.beast"
-      }
-    );
-
-    foundry.applications.apps.DocumentSheetConfig.registerSheet(
-      Actor,
-      "arm5eLaboratory",
-      ArM5eLaboratoryActorSheetV2,
-      {
-        types: ["laboratory"],
-        makeDefault: true,
-        label: "arm5e.sheet.laboratory"
-      }
-    );
-    foundry.applications.apps.DocumentSheetConfig.registerSheet(
-      Actor,
-      "arm5eCovenant",
-      ArM5eCovenantActorSheetV2,
-      {
-        types: ["covenant"],
-        makeDefault: true,
-        label: "arm5e.sheet.covenant"
-      }
-    );
-
-    foundry.applications.apps.DocumentSheetConfig.registerSheet(
-      Actor,
-      "arm5eMagicCodex",
-      ArM5eMagicCodexSheetV2,
-      {
-        types: ["magicCodex"],
-        makeDefault: true,
-        label: "arm5e.sheet.magic-codex"
-      }
-    );
+    for (const { id, sheetClass, options } of ACTOR_SHEET_REGISTRATIONS_V2) {
+      foundry.applications.apps.DocumentSheetConfig.registerSheet(Actor, id, sheetClass, options);
+    }
 
     foundry.applications.apps.DocumentSheetConfig.unregisterSheet(
       Item,
@@ -771,281 +610,14 @@ function registerSheets() {
       foundry.appv1.sheets.ItemSheet
     );
 
-    foundry.applications.apps.DocumentSheetConfig.registerSheet(
-      Item,
-      "arm5e",
-      ArM5eWoundItemSheetV2,
-      {
-        types: ["wound"],
-        makeDefault: true
-      }
-    );
-
-    foundry.applications.apps.DocumentSheetConfig.registerSheet(
-      Item,
-      "arm5e",
-      ArM5eAbilityFamiliarItemSheetV2,
-      {
-        types: ["abilityFamiliar"],
-        makeDefault: true
-      }
-    );
-
-    foundry.applications.apps.DocumentSheetConfig.registerSheet(
-      Item,
-      "arm5e",
-      ArM5ePowerFamiliarItemSheetV2,
-      {
-        types: ["powerFamiliar"],
-        makeDefault: true
-      }
-    );
-
-    foundry.applications.apps.DocumentSheetConfig.registerSheet(
-      Item,
-      "arm5e",
-      ArM5eCalendarCovenantItemSheetV2,
-      {
-        types: ["calendarCovenant"],
-        makeDefault: true
-      }
-    );
-
-    foundry.applications.apps.DocumentSheetConfig.registerSheet(
-      Item,
-      "arm5e",
-      ArM5eLabCovenantItemSheetV2,
-      {
-        types: ["labCovenant"],
-        makeDefault: true
-      }
-    );
-
-    foundry.applications.apps.DocumentSheetConfig.registerSheet(
-      Item,
-      "arm5e",
-      ArM5eReputationItemSheetV2,
-      {
-        types: ["reputation"],
-        makeDefault: true
-      }
-    );
-
-    foundry.applications.apps.DocumentSheetConfig.registerSheet(
-      Item,
-      "arm5e",
-      ArM5eIncomeSourceItemSheetV2,
-      {
-        types: ["incomingSource"],
-        makeDefault: true
-      }
-    );
-
-    foundry.applications.apps.DocumentSheetConfig.registerSheet(
-      Item,
-      "arm5e",
-      ArM5ePersonalityTraitItemSheetV2,
-      {
-        types: ["personalityTrait"],
-        makeDefault: true
-      }
-    );
-
-    foundry.applications.apps.DocumentSheetConfig.registerSheet(
-      Item,
-      "arm5e",
-      ArM5ePossessionsCovenantItemSheetV2,
-      {
-        types: ["possessionsCovenant"],
-        makeDefault: true
-      }
-    );
-
-    foundry.applications.apps.DocumentSheetConfig.registerSheet(
-      Item,
-      "arm5e",
-      ArM5eVirtueItemSheetV2,
-      {
-        types: ["virtue"],
-        makeDefault: true
-      }
-    );
-
-    foundry.applications.apps.DocumentSheetConfig.registerSheet(
-      Item,
-      "arm5e",
-      ArM5eFlawItemSheetV2,
-      {
-        types: ["flaw"],
-        makeDefault: true
-      }
-    );
-
-    foundry.applications.apps.DocumentSheetConfig.registerSheet(
-      Item,
-      "arm5e",
-      ArM5eQualityItemSheetV2,
-      {
-        types: ["quality"],
-        makeDefault: true
-      }
-    );
-
-    foundry.applications.apps.DocumentSheetConfig.registerSheet(
-      Item,
-      "arm5e",
-      ArM5eInferiorityItemSheetV2,
-      {
-        types: ["inferiority"],
-        makeDefault: true
-      }
-    );
-
-    foundry.applications.apps.DocumentSheetConfig.registerSheet(
-      Item,
-      "arm5e",
-      ArM5eArtItemSheetV2,
-      {
-        types: ["art"],
-        makeDefault: true
-      }
-    );
-
-    foundry.applications.apps.DocumentSheetConfig.registerSheet(
-      Item,
-      "arm5e",
-      ArM5eAbilityItemSheetV2,
-      {
-        types: ["ability"],
-        makeDefault: true
-      }
-    );
-
-    foundry.applications.apps.DocumentSheetConfig.registerSheet(
-      Item,
-      "arm5e",
-      ArM5eVisSourcesCovenantItemSheetV2,
-      {
-        types: ["visSourcesCovenant"],
-        makeDefault: true
-      }
-    );
-
-    foundry.applications.apps.DocumentSheetConfig.registerSheet(
-      Item,
-      "arm5e",
-      ArM5eWeaponItemSheetV2,
-      {
-        types: ["weapon"],
-        makeDefault: true
-      }
-    );
-
-    foundry.applications.apps.DocumentSheetConfig.registerSheet(
-      Item,
-      "arm5e",
-      ArM5eArmorItemSheetV2,
-      {
-        types: ["armor"],
-        makeDefault: true
-      }
-    );
-
-    foundry.applications.apps.DocumentSheetConfig.registerSheet(
-      Item,
-      "arm5e",
-      ArM5eGenericItemSheetV2,
-      {
-        types: ["item"],
-        makeDefault: true
-      }
-    );
-
-    foundry.applications.apps.DocumentSheetConfig.registerSheet(
-      Item,
-      "arm5e",
-      ArM5eVisItemSheetV2,
-      {
-        types: ["vis"],
-        makeDefault: true
-      }
-    );
-    foundry.applications.apps.DocumentSheetConfig.registerSheet(
-      Item,
-      "arm5e",
-      ArM5eBookItemSheetV2,
-      {
-        types: ["book"],
-        makeDefault: true
-      }
-    );
-
-    foundry.applications.apps.DocumentSheetConfig.registerSheet(
-      Item,
-      "arm5e",
-      ArM5eDiaryEntryItemSheetV2,
-      {
-        types: ["diaryEntry"],
-        makeDefault: true
-      }
-    );
-    foundry.applications.apps.DocumentSheetConfig.registerSheet(
-      Item,
-      "arm5e",
-      ArM5eInhabitantItemSheetV2,
-      {
-        types: ["inhabitant"],
-        makeDefault: true
-      }
-    );
-
-    foundry.applications.apps.DocumentSheetConfig.registerSheet(
-      Item,
-      "arm5e",
-      ArM5eLaboratoryTextItemSheetV2,
-      {
-        types: ["laboratoryText"],
-        makeDefault: true
-      }
-    );
-
-    foundry.applications.apps.DocumentSheetConfig.registerSheet(
-      Item,
-      "arm5e",
-      ArM5eSpellItemSheetV2,
-      { types: ["spell"], makeDefault: true }
-    );
-    foundry.applications.apps.DocumentSheetConfig.registerSheet(
-      Item,
-      "arm5e",
-      ArM5eMagicalEffectItemSheetV2,
-      { types: ["magicalEffect"], makeDefault: true }
-    );
-    foundry.applications.apps.DocumentSheetConfig.registerSheet(
-      Item,
-      "arm5e",
-      ArM5eBaseEffectItemSheetV2,
-      { types: ["baseEffect"], makeDefault: true }
-    );
-    foundry.applications.apps.DocumentSheetConfig.registerSheet(
-      Item,
-      "arm5e",
-      ArM5ePowerItemSheetV2,
-      { types: ["power"], makeDefault: true }
-    );
-    foundry.applications.apps.DocumentSheetConfig.registerSheet(
-      Item,
-      "arm5e",
-      ArM5eEnchantmentItemSheetV2,
-      { types: ["enchantment"], makeDefault: true }
-    );
-
-    foundry.applications.apps.DocumentSheetConfig.registerSheet(
-      Item,
-      "arm5e",
-      ArM5eSupernaturalEffectItemSheetV2,
-      { types: ["supernaturalEffect"], makeDefault: true }
-    );
+    for (const { sheetClass, options } of ITEM_SHEET_REGISTRATIONS_V2) {
+      foundry.applications.apps.DocumentSheetConfig.registerSheet(
+        Item,
+        "arm5e",
+        sheetClass,
+        options
+      );
+    }
 
     foundry.applications.apps.DocumentSheetConfig.unregisterSheet(
       ActiveEffect,

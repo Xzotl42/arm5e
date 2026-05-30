@@ -1,13 +1,13 @@
-import { getDataset, log, slugify } from "../tools/tools.js";
-import ArM5eActiveEffect from "../helpers/active-effects.js";
-import { EnchantmentExtension } from "../schemas/enchantmentSchema.js";
-import { ArM5eItemEnchantmentSheet } from "./subsheet/enchant-extension-sheet.js";
-import { ARM5E } from "../config.js";
-import { effectToLabText } from "./item-converter.js";
-import { Sanatorium } from "../apps/sanatorium.js";
-import { getConfirmation } from "../ui/dialogs.js";
-import { FLAVORS } from "../constants/ui.js";
-import { ArM5eActorSheetV2 } from "../sheets/actor/actor-sheet-v2.js";
+import { getDataset, log, slugify } from "../module/tools/tools.js";
+import ArM5eActiveEffect from "../module/helpers/active-effects.js";
+import { EnchantmentExtension } from "../module/schemas/enchantmentSchema.js";
+import { ArM5eItemEnchantmentSheet } from "../module/item/subsheet/enchant-extension-sheet.js";
+import { ARM5E } from "../module/config.js";
+import { effectToLabText } from "../module/item/item-converter.js";
+import { Sanatorium } from "../module/apps/sanatorium.js";
+import { getConfirmation } from "../module/ui/dialogs.js";
+import { FLAVORS } from "../module/constants/ui.js";
+import { ArM5eActorSheetV2 } from "../module/sheets/actor/actor-sheet-v2.js";
 
 const TextEditor = foundry.applications.ux.TextEditor;
 

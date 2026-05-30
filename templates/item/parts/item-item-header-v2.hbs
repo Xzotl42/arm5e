@@ -1,22 +1,61 @@
-<div class='sheet-header-part'>
-  <div class='header-background'>
-    <img src='systems/arm5e/assets/item/{{flavor}}_header.png' />
+<div class="sheet-header-part">
+  <div class="header-background">
+    <img src="systems/arm5e/assets/item/{{ flavor }}_header.png" />
   </div>
-  <header class='sheet-header marginItemPart'>
-    <img class='item-img profile-img' src='{{item.img}}' data-edit='img' title='{{item.name}}' />
-    <div class='header-fields flexcol'>
-      <h1 class='bigname'><input name='name' type='text' value='{{item.name}}' placeholder='Name' /></h1>
-      <div class='grid grid-2col'>
+  <header class="sheet-header marginItemPart">
+    <img
+      class="item-img profile-img"
+      src="{{ item.img }}"
+      data-edit="img"
+      title="{{ item.name }}"
+      data-tooltip="<img
+      class='img-tooltip'
+      src='{{ item.img }}'/>"
+      data-tooltip-direction="CENTER"
+    />
+    <div class="header-fields flexcol">
+      <h1 class="bigname">
+        <div class="flexrow">
+          <input name="name" type="text" value="{{ item.name }}" title="{{ item.name }}" />
+          {{#if (and editable isOwned)}}
+          <div class="flex0 padding2">
+            <a
+              data-action="itemDeleteConfirm"
+              title="{{localize 'arm5e.hints.delete' item=item.name}}"
+            >
+              <i class="ars-Icon_Delete_Hand_Gesture item-delete-large"></i>
+            </a>
+          </div>
+          {{/if}}
+          {{#if isGM}}
+          <div class="flex0 padding2">
+            <a
+              data-action="enchantmentToggle"
+              title="{{localize 'arm5e.lab.enchantment.item.enable'}}"
+            >
+              <img
+                src="systems/arm5e/assets/icons/Icon_Details_option1.png"
+                style="border: 0px; width: 32px; height: 32px"
+              />
+            </a>
+          </div>
+          {{/if}}
+        </div>
+      </h1>
+      <div class="grid grid-2col">
         {{> 'systems/arm5e/templates/item/parts/cost.hbs' classes='fit'}}
-        <div class='resource'>
+        <div class="resource">
           <label>{{localize 'arm5e.sheet.weight'}}</label>
-          <input type='number' name='system.weight' value='{{system.weight}}' class='modifier select-on-focus' data-dtype='Number' />
+          <input
+            type="number"
+            name="system.weight"
+            value="{{ system.weight }}"
+            class="modifier select-on-focus"
+            data-dtype="Number"
+          />
         </div>
       </div>
     </div>
-    {{#if editable}}
-      <a data-action='itemDeleteConfirm' title='{{localize 'arm5e.hints.delete' item=item.name}}'><i class='ars-Icon_Delete_Hand_Gesture item-delete-large'></i></a>
-    {{/if}}
   </header>
-  <div class='marginItemPart'>{{> "systems/arm5e/templates/generic/metalic-bar.html" }}</div>
+  <div class="marginItemPart">{{> "systems/arm5e/templates/generic/metalic-bar.html" }}</div>
 </div>
