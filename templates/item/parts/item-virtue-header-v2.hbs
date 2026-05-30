@@ -16,7 +16,15 @@
     />
     <div class="header-fields">
       <h1 class="bigname">
-        <input name="name" type="text" value="{{ item.name }}" placeholder="name" />
+        <div class="flexrow">
+          <input
+            name="name"
+            type="text"
+            value="{{ item.name }}"
+            title="{{ item.name }}"
+            placeholder="name"
+          />
+        </div>
       </h1>
       <div class="flexcol">
         <div class="resource">

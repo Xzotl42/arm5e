@@ -1,4 +1,4 @@
-## 3.0.0.14 Stentorius
+## 3.0.0.15 Stentorius
 
 ### Compatibility
 
@@ -52,6 +52,7 @@
 - Smaller and more compact limited actor sheets
 - Smaller and more compact item sheets
 - [technical] refactor of diary activities
+- New generic custom modifier for enchantments effects
 
 ### Bug fixes
 

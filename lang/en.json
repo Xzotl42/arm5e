@@ -521,6 +521,8 @@
         "sumMode": "Sum",
         "summary": "Used/Total Capacity"
       },
+      "customModifier": "Custom modifier",
+      "customModifierLabel": "Custom modifier label",
       "invalidItem": "Invalid enchantment",
       "msg": {
         "capacityOverflow": "Capacity is too small for the effects.",

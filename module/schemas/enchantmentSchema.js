@@ -265,7 +265,13 @@ export const EnchantmentAttributes = () => {
       blank: false,
       initial: "0",
       choices: Object.keys(ARM5E.lab.enchantment.expiry)
-    })
+    }),
+    customModifierLabel: new fields.StringField({
+      required: false,
+      blank: true,
+      initial: "custom"
+    }),
+    customModifier: ModifierField()
   };
 };
 
