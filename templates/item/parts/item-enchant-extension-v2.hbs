@@ -1,0 +1,593 @@
+<section class="sheet-body-part sheet-body marginItemPart">
+  <div class="tab {{ tab.cssClass }}" data-group="primary" data-tab="enchantments">
+    {{#if system.enchantments}}
+    {{!-- ─── ENCHANTMENT METADATA ─────────────────────────────────────────────── --}}
+    <div class="padding4 drop-enchant">
+      <div class="padding4 flexrow">
+        <div class="resource">
+          <label>{{localize "arm5e.sheet.creator"}}</label>
+          <input
+            type="text"
+            {{noEdit}}
+            name="system.enchantments.author"
+            value="{{ system.enchantments.author }}"
+            data-dtype="String"
+            style="max-width: 200px"
+          />
+        </div>
+        <div class="flexrow">
+          <div class="resource">
+            <label>{{localize "arm5e.sheet.season"}}</label>
+            <select {{noSelect}} name="system.enchantments.season" data-dtype="String">
+              {{selectOptions config.seasons selected=system.enchantments.season labelAttr="label" localize=true}}
+            </select>
+          </div>
+          <div class="resource">
+            <label>{{localize "arm5e.sheet.year"}}</label>
+            <input
+              type="number"
+              {{noEdit}}
+              name="system.enchantments.year"
+              value="{{ system.enchantments.year }}"
+              data-dtype="Number"
+              class="select-on-focus"
+              style="width: 60px"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {{!-- ─── ENCHANTMENTS LIST ───────────────────────────────────────────────────── --}}
+    <div class="drop-enchant">
+      <div class="padding4">
+        <div class="padding4 flexrow flex-group-left">
+          <label
+            class="section-handle clickable"
+            data-action="toggleSectionCollapse"
+            data-category="enchantExt"
+            data-section="enchant"
+            >{{localize "arm5e.sheet.item.enchantments"}} –
+            {{ system.enchantments.visibleEnchant }}</label
+          >
+          <div class="flex0 padding2">
+            {{#if system.enchantments.addEffect}}
+            <a
+              class="item-control enchantment-create"
+              data-action="enchantmentCreate"
+              title="{{localize 'arm5e.hints.create' item=(localize 'arm5e.sheet.enchantments')}}"
+              ><i class="fas fa-plus"></i
+            ></a>
+            {{/if}}
+          </div>
+        </div>
+        <div
+          class="foldable-section-small backSection enchantment-short {{
+            ui.sections.visibility.enchantExt.enchant
+          }}"
+          id="enchantExt-enchant-{{ item._id }}"
+        >
+          <div class="resource flexcol">
+            {{#each system.enchantments.effects as |effect idx|}}
+            {{#if effect.visible}}
+            <div style="border-bottom: 1px; border-bottom-style: double; padding-bottom: 3px">
+              <div class="resource flexrow">
+                <div
+                  class="drag-enchant trigger-enchant item-image"
+                  data-action="triggerEnchant"
+                  data-index="{{ idx }}"
+                  data-name="{{ effect.name }}"
+                  style="max-width: 32px"
+                >
+                  <img
+                    class="clickable"
+                    src="{{ effect.img }}"
+                    title="{{localize 'arm5e.hints.useMagicItem' name=effect.name}}"
+                    style="height: 30px; width: 30px"
+                  />
+                </div>
+                <div class="flexcol flex-group-left">
+                  <div class="padding2">
+                    <input
+                      type="text"
+                      name="{{ effect.prefix }}name"
+                      value="{{ effect.name }}"
+                      data-dtype="String"
+                      style="min-width: 175px"
+                      title="{{ effect.name }}"
+                    />
+                  </div>
+                  <div class="padding2">
+                    <label class="label-light">{{ effect.details }}</label>
+                  </div>
+                </div>
+                <div class="padding2 modifier">
+                  <label>{{ effect.system.level }}</label>
+                </div>
+                {{#if @root.system.enchantments.charged}}
+                <div class="flexrow flex-group-center">
+                  <label
+                    class="label-light"
+                    >{{localize "arm5e.lab.enchantment.item.charges"}}</label
+                  >
+                  <div class="modifier">
+                    <input
+                      type="number"
+                      name="system.enchantments.charges"
+                      value="{{@root.system.enchantments.charges}}"
+                      data-dtype="Number"
+                    />
+                  </div>
+                  /
+                  <div class="modifier">
+                    <input
+                      type="number"
+                      name="system.enchantments.originalCharges"
+                      value="{{@root.system.enchantments.originalCharges}}"
+                      data-dtype="Number"
+                    />
+                  </div>
+                </div>
+                {{/if}}
+                {{#if @root.isGM}}
+                <div class="padding2">
+                  <label class="label-light">{{localize "arm5e.generic.hidden"}}</label>
+                  <input
+                    type="checkbox"
+                    name="{{ effect.prefix }}system.hidden"
+                    {{checked
+                    effect.system.hidden}}
+                  />
+                </div>
+                {{/if}}
+                <div class="padding2 modifier">
+                  <a
+                    class="item-control"
+                    data-action="enchantmentEffectShow"
+                    data-index="{{ idx }}"
+                    title="{{localize 'arm5e.hints.detail' item=(localize 'arm5e.sheet.enchantment')}}"
+                  >
+                    <i class="ars-Icon_Details2"></i
+                  ></a>
+                </div>
+                <div class="padding2 modifier">
+                  <a
+                    class="item-control"
+                    data-action="enchantmentEffectDelete"
+                    data-index="{{ idx }}"
+                    title="{{localize 'arm5e.hints.delete' item=(localize 'arm5e.sheet.enchantment')}}"
+                  >
+                    <i class="ars-Icon_Delete_Hand_Gesture"></i
+                  ></a>
+                </div>
+              </div>
+              <div class="resource flexrow">
+                <div class="flex02">
+                  <label class="label-light"
+                    >{{localize "arm5e.enchantment.receptacle.label"}} :
+                  </label>
+                </div>
+                <div>
+                  <select
+                    class="receptacle-idx-change"
+                    data-dtype="Number"
+                    data-index="{{ idx }}"
+                    style="max-width: 180px"
+                  >
+                    {{selectOptions @root.selection.capacities selected=effect.receptacleId}}
+                  </select>
+                </div>
+              </div>
+            </div>
+            {{/if}}
+            {{/each}}
+          </div>
+        </div>
+      </div>
+
+      {{!-- ─── INFO (state, bonuses, validation) ────────────────────────────────── --}}
+      <div>
+        <div class="padding4">
+          <div class="padding4 flexrow flex-group-left">
+            <label
+              class="section-handle clickable"
+              data-action="toggleSectionCollapse"
+              data-category="enchantExt"
+              data-section="info"
+              >{{localize "arm5e.generic.info"}}</label
+            >
+          </div>
+        </div>
+        <div
+          class="foldable-section backSection enchantment {{
+            ui.sections.visibility.enchantExt.info
+          }}"
+          id="enchantExt-info-{{ item._id }}"
+        >
+          <div class="padding4 flexcol">
+            <div class="padding2 flexrow">
+              {{#if system.enchantments.visibleType}}
+              <div class="flexcol flex-group-center">
+                <label>{{localize "arm5e.sheet.type"}}</label>
+                <select
+                  class="enchantment-state flex01"
+                  data-dtype="String"
+                  data-state="{{ system.enchantments.state }}"
+                >
+                  {{selectOptions selection.states selected=system.enchantments.state labelAttr="label" localize=true}}
+                </select>
+              </div>
+              {{/if}}
+              <div class="form-group" style="height: max-content">
+                <fieldset>
+                  <legend>
+                    {{localize "Bonuses"}}
+                    <a
+                      class="item-control"
+                      data-action="bonusCreate"
+                      title="{{localize 'arm5e.hints.create' item=(localize 'arm5e.sheet.bonuses.label')}}"
+                      ><i class="fas fa-plus"></i
+                    ></a>
+                  </legend>
+                  {{#each system.enchantments.bonuses as |bonus bidx|}}
+                  <div class="form-group">
+                    <input
+                      type="text"
+                      name="system.enchantments.bonuses.{{ bidx }}.name"
+                      value="{{ bonus.name }}"
+                    />
+                    <div class="modifier">
+                      <input
+                        type="number"
+                        name="system.enchantments.bonuses.{{ bidx }}.value"
+                        value="{{ bonus.value }}"
+                      />
+                    </div>
+                    <div class="padding2">
+                      <a
+                        class="item-control"
+                        data-action="bonusDelete"
+                        data-index="{{ bidx }}"
+                        title="{{localize 'arm5e.hints.delete' item=(localize 'arm5e.sheet.bonuses')}}"
+                      >
+                        <i class="ars-Icon_Delete_Hand_Gesture"></i
+                      ></a>
+                    </div>
+                  </div>
+                  {{/each}}
+                </fieldset>
+              </div>
+            </div>
+            <div class="padding2 flexrow">
+              {{#if system.enchantments.invalidItem}}
+              <ul>
+                <label
+                  style="color: rgb(200, 0, 0)"
+                  >{{localize "arm5e.enchantment.invalidItem"}}</label
+                >
+                {{#each system.enchantments.invalidMsg}}
+                <li>
+                  <label>{{localize this}}</label>
+                </li>
+                {{/each}}
+              </ul>
+              {{/if}}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {{!-- ─── CAPACITIES ──────────────────────────────────────────────────────────── --}}
+      <div>
+        <div class="padding4">
+          <div class="padding4 flexrow flex-group-left">
+            <label
+              class="section-handle clickable"
+              data-action="toggleSectionCollapse"
+              data-category="enchantExt"
+              data-section="capacity"
+              >{{localize "arm5e.enchantment.capacity.label"}} –
+              {{ system.enchantments.visibleCapacities }}</label
+            >
+            <div class="flex0 padding2">
+              {{#if system.enchantments.addCapa}}
+              <a
+                class="item-control"
+                data-action="capacityCreate"
+                title="{{localize 'arm5e.hints.create' item=(localize 'arm5e.sheet.attributes')}}"
+                ><i class="fas fa-plus"></i
+              ></a>
+              {{/if}}
+            </div>
+          </div>
+        </div>
+        <div
+          class="foldable-section backSection enchantment {{
+            ui.sections.visibility.enchantExt.capacity
+          }}"
+          id="enchantExt-capacity-{{ item._id }}"
+        >
+          <div class="resource flexrow">
+            {{#if (or (gt system.enchantments.visibleCapacities 1) isGM)}}
+            <label class="label-light">Computation</label>
+            <div class="padding2">
+              <select name="system.enchantments.capacityMode" style="max-width: 100px">
+                {{selectOptions selection.capacityMode selected=system.enchantments.capacityMode localize=true}}
+              </select>
+            </div>
+            <div class="resource flexrow">
+              <div class="flex-group-left flexrow">
+                <div class="padding2">
+                  <label
+                    class="label-light"
+                    >{{localize "arm5e.enchantment.capacity.summary"}}</label
+                  >
+                </div>
+                <div class="padding2 modifier">
+                  <input
+                    type="number"
+                    readonly
+                    value="{{ system.enchantments.usedCapa }}"
+                    data-dtype="Number"
+                  />
+                </div>
+                <div class="padding2 flex0">/</div>
+                <div class="padding2 modifier">
+                  <input
+                    type="number"
+                    readonly
+                    value="{{ system.enchantments.totalCapa }}"
+                    data-dtype="Number"
+                  />
+                </div>
+              </div>
+            </div>
+            {{/if}}
+          </div>
+          {{#each system.enchantments.capacities as |capa cidx|}}
+          {{#if capa.visible}}
+          <div class="resource flexrow">
+            <div class="padding2">
+              <select
+                name="system.enchantments.capacities.{{ cidx }}.materialBase"
+                style="max-width: 140px"
+              >
+                {{selectOptions @root.selection.materialBase selected=capa.materialBase}}
+              </select>
+            </div>
+            <div class="padding2">
+              <select
+                name="system.enchantments.capacities.{{ cidx }}.sizeMultiplier"
+                style="max-width: 130px"
+              >
+                {{selectOptions @root.selection.sizeMultiplier selected=capa.sizeMultiplier}}
+              </select>
+            </div>
+            <div class="padding2">
+              <input
+                type="text"
+                name="system.enchantments.capacities.{{ cidx }}.desc"
+                value="{{ capa.desc }}"
+                data-dtype="String"
+                style="min-width: 160px"
+                title="{{ capa.desc }}"
+              />
+            </div>
+            <div class="padding2 modifier">
+              <input type="number" readonly value="{{ capa.total }}" data-dtype="Number" />
+              <input
+                type="text"
+                name="system.enchantments.capacities.{{ cidx }}.id"
+                hidden
+                value="{{ capa.id }}"
+                data-dtype="String"
+              />
+            </div>
+            {{#if capa.visiblePreparation}}
+            <div class="padding2 flex-group-center">
+              <label
+                class="label-light"
+                style="position: relative; bottom: 10px"
+                >{{localize "arm5e.lab.enchantment.item.state.prepared"}}</label
+              >
+              <input
+                type="checkbox"
+                {{checked
+                capa.prepared}}
+                data-dtype="Boolean"
+                {{@root.system.enchantments.ui.prepared}}
+                name="system.enchantments.capacities.{{ cidx }}.prepared"
+                style="position: relative; bottom: 5px"
+              />
+            </div>
+            {{/if}}
+            {{#unless @root.system.enchantments.noDelete}}
+            <div class="padding2">
+              <a
+                class="item-control"
+                data-action="capacityDelete"
+                data-index="{{ cidx }}"
+                data-id="{{ capa.id }}"
+                title="{{localize 'arm5e.hints.delete' item=(localize 'arm5e.sheet.attributes')}}"
+              >
+                <i class="ars-Icon_Delete_Hand_Gesture"></i
+              ></a>
+            </div>
+            {{/unless}}
+          </div>
+          {{/if}}
+          {{/each}}
+        </div>
+      </div>
+
+      {{!-- ─── SHAPES & MATERIALS (ASPECTS) ──────────────────────────────────────── --}}
+      <div class="padding4">
+        <div class="padding4 flexrow flex-group-left">
+          <label
+            class="section-handle clickable"
+            data-action="toggleSectionCollapse"
+            data-category="enchantExt"
+            data-section="aspect"
+            >{{localize "arm5e.enchantment.aspects"}} –
+            {{ system.enchantments.aspects.length }}</label
+          >
+          <div class="padding2 flex0">
+            {{#if system.enchantments.addAspect}}
+            <a
+              class="item-control"
+              data-action="aspectCreate"
+              title="{{localize 'arm5e.hints.create' item=(localize 'arm5e.sheet.aspect')}}"
+              ><i class="fas fa-plus"></i
+            ></a>
+            {{/if}}
+          </div>
+        </div>
+        <div
+          class="foldable-section backSection enchantment {{
+            ui.sections.visibility.enchantExt.aspect
+          }}"
+          id="enchantExt-aspect-{{ item._id }}"
+        >
+          <div class="resource flexrow">
+            {{#if isGM}}
+            <label class="label-light">{{localize "arm5e.enchantment.attunementVisible"}}</label>
+            <div class="padding2">
+              <input
+                type="checkbox"
+                {{checked
+                system.enchantments.attunementVisible}}
+                data-dtype="Boolean"
+                name="system.enchantments.attunementVisible"
+                style="position: relative; bottom: 5px"
+              />
+            </div>
+            {{/if}}
+          </div>
+          {{#each system.enchantments.aspects as |aspect aidx|}}
+          <div class="resource flexrow">
+            <div class="padding2">
+              <select
+                name="system.enchantments.aspects.{{ aidx }}.aspect"
+                style="max-width: 175px"
+                class="aspect-change"
+                data-index="{{ aidx }}"
+              >
+                {{selectOptions @root.system.enchantments.ASPECTS selected=aspect.aspect labelAttr="name"}}
+              </select>
+            </div>
+            <div class="padding2">
+              <select
+                name="system.enchantments.aspects.{{ aidx }}.effect"
+                style="max-width: 175px; width: 175px"
+                class="effect-change"
+                data-index="{{ aidx }}"
+              >
+                {{selectOptions aspect.effects selected=aspect.effect labelAttr="selectLabel"}}
+              </select>
+            </div>
+            <div class="padding2 modifier">
+              <input type="number" readonly value="{{ aspect.bonus }}" data-dtype="Number" />
+            </div>
+            {{#if (or @root.isGM @root.system.enchantments.attunementVisible)}}
+            <div class="padding2">
+              <label
+                class="label-light"
+                style="position: relative; bottom: 10px"
+                >{{localize "arm5e.enchantment.attuned"}}</label
+              >
+              <input
+                type="checkbox"
+                {{@root.system.enchantments.ui.attuned}}
+                {{checked
+                aspect.attuned}}
+                data-dtype="Boolean"
+                name="system.enchantments.aspects.{{ aidx }}.attuned"
+                style="position: relative; bottom: 5px"
+              />
+            </div>
+            {{/if}}
+            <div class="padding2 modifier">
+              <a
+                class="item-control"
+                data-action="aspectDelete"
+                data-index="{{ aidx }}"
+                title="{{localize 'arm5e.hints.delete' item=(localize 'arm5e.sheet.attributes')}}"
+              >
+                <i class="ars-Icon_Delete_Hand_Gesture"></i
+              ></a>
+            </div>
+          </div>
+          {{/each}}
+        </div>
+      </div>
+    </div>
+
+    {{!-- ─── PER-EFFECT DETAILED EDITOR ────────────────────────────────────────── --}}
+    {{#each system.enchantments.effects as |effect idx|}}
+    {{#if effect.visible}}
+    <div class="padding4" style="border-top: 1px solid #888; margin-top: 6px">
+      <div class="flexrow flex-group-left">
+        <div class="drag-enchant item-image" style="max-width: 36px; margin-right: 6px">
+          <img
+            class="item-img clickable"
+            src="{{ effect.img }}"
+            name="{{ effect.prefix }}img"
+            data-edit="{{ effect.prefix }}img"
+            title="{{ effect.name }}"
+            style="height: 32px; width: 32px"
+          />
+        </div>
+        <label
+          class="section-handle clickable"
+          data-action="toggleSectionCollapse"
+          data-category="enchantments"
+          data-section="whole"
+          data-index="{{ idx }}"
+        >
+          {{ effect.name }}</label
+        >
+        {{#if @root.isOwned}}
+        <div class="flex0 padding2">
+          <a
+            class="item-control"
+            data-action="createEnchanLabText"
+            data-index="{{ idx }}"
+            title="{{localize 'arm5e.hints.create' item=(localize 'arm5e.sheet.labtext')}}"
+          >
+            <i class="ars-Icon_Details2"></i
+          ></a>
+        </div>
+        {{/if}}
+      </div>
+      <div
+        class="foldable-section backSection enchantment {{lookup effect.visibility 'whole'}}"
+        id="enchantments-whole{{ idx }}-{{@root.item._id}}"
+      >
+        {{> "systems/arm5e/templates/item/parts/spell-design-alt.html"
+              container="enchantments"
+              index=idx
+              docId=@root.item._id
+              spelldata=effect
+              prefix=effect.prefix
+              visibility=effect.visibility
+              edition=@root.edition
+        }}
+        {{> "systems/arm5e/templates/item/parts/enchantment-attributes.html"
+              container="enchantments"
+              index=idx
+              docId=@root.item._id
+              enchantData=effect
+              prefix=effect.prefix
+              visibility=effect.visibility
+              charged=@root.system.enchantments.charged
+              expiryAllowed=@root.system.enchantments.expiryAllowed
+              noEdit=@root.noEdit
+              noSelect=@root.noSelect
+        }}
+      </div>
+    </div>
+    {{/if}}
+    {{/each}}
+    {{/if}}
+  </div>
+</section>

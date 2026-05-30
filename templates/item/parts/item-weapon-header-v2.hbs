@@ -31,14 +31,29 @@
     <div class="header-fields flexcol">
       <h1 class="bigname flexrow">
         <input name="name" type="text" value="{{ item.name }}" placeholder="Name" />
-        {{#if editable}}
-        <a
-          class="flex0 padding2"
-          data-action="itemDeleteConfirm"
-          title="{{localize 'arm5e.hints.delete' item=item.name}}"
-        >
-          <i class="ars-Icon_Delete_Hand_Gesture item-delete-large"></i>
-        </a>
+        {{#if (and editable isOwned)}}
+        <div class="flex0 padding2">
+          <a
+            class="flex0 padding2"
+            data-action="itemDeleteConfirm"
+            title="{{localize 'arm5e.hints.delete' item=item.name}}"
+          >
+            <i class="ars-Icon_Delete_Hand_Gesture item-delete-large"></i>
+          </a>
+        </div>
+        {{/if}}
+        {{#if isGM}}
+        <div class="flex0 padding2">
+          <a
+            data-action="enchantmentToggle"
+            title="{{localize 'arm5e.lab.enchantment.item.enable'}}"
+          >
+            <img
+              src="systems/arm5e/assets/icons/Icon_Details_option1.png"
+              style="border: 0px; width: 32px; height: 32px"
+            />
+          </a>
+        </div>
         {{/if}}
       </h1>
       {{#if system.canEquip}}

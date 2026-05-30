@@ -49,8 +49,6 @@ Hooks.once("i18nInit", async function () {
   // CONFIG.ARM5E.LOCALIZED_ACTIVE_EFFECTS_TYPES;
 });
 
-CONFIG.ISV14 = game.release.generation === 14;
-
 Hooks.once("init", async function () {
   const socketHandler = new Arm5eSocketHandler();
   game.arm5e = {
@@ -64,6 +62,8 @@ Hooks.once("init", async function () {
     rollItemMacro,
     migrateCompendium
   };
+
+  CONFIG.ISV14 = game.release.generation === 14;
 
   // Add system metadata
   CONFIG.ARM5E = ARM5E;

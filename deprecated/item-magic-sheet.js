@@ -1,13 +1,13 @@
 import { ArM5eItemSheet } from "./item-sheet.js";
-import { log } from "../tools/tools.js";
-import { ARM5E } from "../config.js";
-import { ARM5E_DEFAULT_ICONS } from "../constants/ui.js";
+import { log } from "../module/tools/tools.js";
+import { ARM5E } from "../module/config.js";
+import { ARM5E_DEFAULT_ICONS } from "../module/constants/ui.js";
 import {
   GetEffectAttributesLabel,
   GetEnchantmentSelectOptions,
   GetFilteredMagicalAttributes,
   PickRequisites
-} from "../helpers/magic.js";
+} from "../module/helpers/magic.js";
 /**
  * Extend the basic ArM5eItemSheet with some very simple modifications
  * @extends {ArM5eItemSheet}

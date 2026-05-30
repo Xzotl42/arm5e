@@ -1,4 +1,5 @@
 import { ArM5eItemSheetV2 } from "./item-sheet-v2.js";
+import { EnchantExtensionV2 } from "./enchant-extension-v2.js";
 import { ArM5eActorSheetV2 } from "../actor/actor-sheet-v2.js";
 import { getConfirmation } from "../../ui/dialogs.js";
 import { spellFormLabel, spellTechniqueLabel } from "../../helpers/magic.js";
@@ -63,7 +64,8 @@ export class ArM5eBookItemSheetV2 extends ArM5eItemSheetV2 {
       planCopy: ArM5eBookItemSheetV2.planCopy,
       showLabText: ArM5eBookItemSheetV2.showLabText,
       createTableOfContents: ArM5eBookItemSheetV2.createTableOfContents,
-      itemDeleteConfirm: ArM5eItemSheetV2.itemDeleteConfirm
+      itemDeleteConfirm: ArM5eItemSheetV2.itemDeleteConfirm,
+      ...EnchantExtensionV2.actions
     }
   };
 
@@ -72,6 +74,7 @@ export class ArM5eBookItemSheetV2 extends ArM5eItemSheetV2 {
     primary: {
       tabs: [
         { id: "description", label: "arm5e.sheet.description", cssClass: "item flexrow" },
+        { id: "enchantments", label: "arm5e.sheet.item.enchantments", cssClass: "item" },
         { id: "effects", label: "arm5e.sheet.effects", cssClass: "item flexrow" }
       ],
       initial: "description"
@@ -90,6 +93,9 @@ export class ArM5eBookItemSheetV2 extends ArM5eItemSheetV2 {
     description: {
       template: "systems/arm5e/templates/item/parts/item-book-description-v2.hbs"
     },
+    enchantments: {
+      template: "systems/arm5e/templates/item/parts/item-enchant-extension-v2.hbs"
+    },
     effects: {
       template: "systems/arm5e/templates/item/parts/item-effects-v2.hbs"
     },
@@ -99,9 +105,23 @@ export class ArM5eBookItemSheetV2 extends ArM5eItemSheetV2 {
   };
 
   /** @override */
+  getUserCache() {
+    const cache = super.getUserCache();
+    if (this.item.system.enchantments) {
+      EnchantExtensionV2.getUserCacheEnchantments(cache, this.item);
+    }
+    return cache;
+  }
+
+  /** @override */
   async _prepareContext(options) {
     const context = await super._prepareContext(options);
     context.tabs = this._prepareTabs("primary");
+    if (!this.item.system.enchantments) {
+      delete context.tabs.enchantments;
+    } else {
+      await EnchantExtensionV2.prepareEnchantmentContext(context, this.isEditable);
+    }
 
     context.abilityKeysList = CONFIG.ARM5E.LOCALIZED_ABILITIES;
 
@@ -143,7 +163,7 @@ export class ArM5eBookItemSheetV2 extends ArM5eItemSheetV2 {
 
   /** @override */
   async _preparePartContext(partId, context, options) {
-    if (["description", "effects"].includes(partId)) {
+    if (["description", "enchantments", "effects"].includes(partId)) {
       context.tab = context.tabs?.[partId];
     }
     return super._preparePartContext(partId, context, options);
@@ -151,7 +171,8 @@ export class ArM5eBookItemSheetV2 extends ArM5eItemSheetV2 {
 
   /** @override */
   _processFormData(event, form, formData) {
-    const prepared = super._processFormData(event, form, formData);
+    let prepared = super._processFormData(event, form, formData);
+    prepared = EnchantExtensionV2.processFormData(prepared, this.item);
     const submittedTopics = prepared.system?.topics;
     if (!submittedTopics) return prepared;
 
@@ -196,6 +217,7 @@ export class ArM5eBookItemSheetV2 extends ArM5eItemSheetV2 {
     this.element
       .querySelector(".book-type")
       ?.addEventListener("change", (e) => this._changeBookType(e));
+    EnchantExtensionV2.wireListeners.call(this);
   }
 
   _canDragStart(selector) {

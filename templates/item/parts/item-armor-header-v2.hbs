@@ -15,7 +15,31 @@
     />
     <div class="header-fields flexcol">
       <h1 class="bigname">
-        <input name="name" type="text" value="{{ item.name }}" placeholder="Name" />
+        <div class="flexrow">
+          <input name="name" type="text" value="{{ item.name }}" placeholder="Name" />
+          {{#if (and editable isOwned)}}
+          <div class="flex0 padding2">
+            <a
+              data-action="itemDeleteConfirm"
+              title="{{localize 'arm5e.hints.delete' item=item.name}}"
+              ><i class="ars-Icon_Delete_Hand_Gesture item-delete-large"></i
+            ></a>
+          </div>
+          {{/if}}
+          {{#if isGM}}
+          <div class="flex0 padding2">
+            <a
+              data-action="enchantmentToggle"
+              title="{{localize 'arm5e.lab.enchantment.item.enable'}}"
+            >
+              <img
+                src="systems/arm5e/assets/icons/Icon_Details_option1.png"
+                style="border: 0px; width: 32px; height: 32px"
+              />
+            </a>
+          </div>
+          {{/if}}
+        </div>
       </h1>
       <div class="flexrow">
         <div class="resource" style="max-width: 115px">
@@ -53,11 +77,6 @@
         {{/if}}
       </div>
     </div>
-    {{#if editable}}
-    <a data-action="itemDeleteConfirm" title="{{localize 'arm5e.hints.delete' item=item.name}}"
-      ><i class="ars-Icon_Delete_Hand_Gesture item-delete-large"></i
-    ></a>
-    {{/if}}
   </header>
   <div class="marginItemPart">{{> "systems/arm5e/templates/generic/metalic-bar.html" }}</div>
 </div>

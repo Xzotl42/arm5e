@@ -1,23 +1,29 @@
-<form class="{{cssClass}} flexcol mainItem limited-sheet" autocomplete="off"
-  style="background-image: url('systems/arm5e/assets/item/{{ui.flavor}}_background.webp')">
-  {{> "systems/arm5e/templates/item/parts/item-header.html" flavor=ui.flavor}}
-
-  {{!-- Sheet Header --}}
-  <header class="sheet-header">
-    <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" height="100" width="100" />
-    <div class="header-fields">
-      <h1 class="bigname">
-        <div class="flexrow"><input class="flex1" name="name" type="text" value="{{item.name}}" placeholder="Name" />
-        </div>
-      </h1>
-      <div class="flex-group-left padding12 backSection" style="height: 457px;">
-        <label class="smallTitle">{{localize "arm5e.sheet.description"}}</label>
-        {{> "systems/arm5e/templates/generic/ars-editor.hbs"
+<div class="{{cssClass}}  mainItem">
+  <div class="header-background">
+    <img src="systems/arm5e/assets/item/{{ ui.flavor }}_header.png" />>
+  </div>
+  <div class="flexcol  limited-sheet" autocomplete="off"
+    style="background-image: url('systems/arm5e/assets/item/{{ui.flavor}}_background.webp')">
+    {{!-- Sheet Header --}}
+    <header class="sheet-header">
+      <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" height="100" width="100" />
+      <div class="header-fields">
+        <h1 class="bigname">
+          <div class="flexrow"><input class="flex1" name="name" type="text" value="{{item.name}}" placeholder="Name" />
+          </div>
+        </h1>
+    </header>
+    <section class="sheet-body" style="min-height: 300px; flex-grow: 1; display: flex; flex-direction: column;">
+      <div class="flex-group-left padding12 backSection extendable"
+        style="flex-grow: 1; display: flex; flex-direction: column;">
+        <label class="smallTitle">{{localize "arm5e.sheet.biography"}}</label>
+        {{> "systems/arm5e/templates/generic/ars-editor-V2.hbs"
           content=enrichedDescription
           target="system.description"
+          flavor=""
           editable=editable
         }}
       </div>
-  </header>
-  {{> "systems/arm5e/templates/item/parts/item-footer.html" flavor=ui.flavor}}
-</form>
+    </section>
+  </div>
+</div>
