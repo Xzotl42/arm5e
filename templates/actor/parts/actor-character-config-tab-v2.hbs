@@ -1,0 +1,225 @@
+{{!--
+  Config tab for the unified character actor.
+  Shows the standard actor profiles section plus a Character Features section
+  that is only editable in creation mode.
+--}}
+<div class="tab {{ tab.cssClass }} config marginsides32" data-group="primary" data-tab="config">
+<div class="backSection margintop18">
+    <div class="flexrow resource">
+        <div>
+            <label class="resource">{{localize "arm5e.sheet.edition.creationMode"}}</label>
+            <input type="checkbox" name="system.states.creationMode" {{checked system.states.creationMode}}>
+        </div>
+    </div>
+</div>
+  {{!-- Character classification (role, subtype) --}}
+  <section class="character-classification backSection" style="padding: 8px; margin-bottom: 8px">
+    <h3 class="flex0 title">{{localize "arm5e.sheet.config.characterType"}}</h3>
+    <div class="grid grid-2col" style="gap: 4px 16px">
+      <div class="flexcol">
+        <label class="smallTitle">{{localize "arm5e.sheet.config.role"}}</label>
+        <select name="system.role" data-type="String" {{ui.creationMode.edit}}>
+          <option value="player" {{#if (eq system.role "player")}}selected{{/if}}>
+            {{localize "arm5e.character.role.player"}}
+          </option>
+          <option value="npc" {{#if (eq system.role "npc")}}selected{{/if}}>
+            {{localize "arm5e.character.role.npc"}}
+          </option>
+        </select>
+      </div>
+      <div class="flexcol">
+        <label class="smallTitle">{{localize "arm5e.sheet.config.subtype"}}</label>
+        <select name="system.subtype" data-type="String" {{ui.creationMode.edit}}>
+          <option value="magus"     {{#if (eq system.subtype "magus")}}selected{{/if}}>{{localize "arm5e.character.subtype.magus"}}</option>
+          {{#if isPlayerRole}}
+          <option value="companion" {{#if (eq system.subtype "companion")}}selected{{/if}}>{{localize "arm5e.character.subtype.companion"}}</option>
+          <option value="grog"      {{#if (eq system.subtype "grog")}}selected{{/if}}>{{localize "arm5e.character.subtype.grog"}}</option>
+          {{/if}}
+          <option value="entity"    {{#if (eq system.subtype "entity")}}selected{{/if}}>{{localize "arm5e.character.subtype.entity"}}</option>
+          <option value="mundane"   {{#if (eq system.subtype "mundane")}}selected{{/if}}>{{localize "arm5e.character.subtype.mundane"}}</option>
+          <option value="beast"     {{#if (eq system.subtype "beast")}}selected{{/if}}>{{localize "arm5e.character.subtype.beast"}}</option>
+        </select>
+      </div>
+    </div>
+  </section>
+
+  {{!-- Feature flags --}}
+  <section class="character-features backSection" style="padding: 8px">
+
+
+    <h3 class="flex0 title">{{localize "arm5e.sheet.config.features"}}</h3>
+
+    <div class="grid grid-2col" style="gap: 6px 16px">
+
+      {{!-- Magic system --}}
+      <div class="flexcol">
+        <div class="flexrow" style="align-items: center; gap: 6px">
+          <input
+            type="checkbox"
+            name="system.features.magicSystem"
+            id="feature-magicSystem"
+            {{#if system.features.magicSystem}}checked{{/if}}
+            {{ui.creationMode.edit}}
+          />
+          <label for="feature-magicSystem">{{localize "arm5e.sheet.config.feature.magicSystem"}}</label>
+        </div>
+        {{#if system.features.magicSystem}}
+        <div class="flexrow" style="margin-left: 20px; align-items: center; gap: 6px">
+          <select name="system.features.magicSystemType" data-type="String" {{ui.creationMode.edit}}>
+            <option value="hermetic"  {{#if (eq system.features.magicSystemType "hermetic")}}selected{{/if}}>{{localize "arm5e.character.magicSystemType.hermetic"}}</option>
+            <option value="alternate" {{#if (eq system.features.magicSystemType "alternate")}}selected{{/if}}>{{localize "arm5e.character.magicSystemType.alternate"}}</option>
+          </select>
+        </div>
+        {{/if}}
+      </div>
+
+      {{!-- Confidence / faith --}}
+      <div class="flexcol">
+        <div class="flexrow" style="align-items: center; gap: 6px">
+          <input
+            type="checkbox"
+            name="system.features.confidence"
+            id="feature-confidence"
+            {{#if system.features.confidence}}checked{{/if}}
+            {{ui.creationMode.edit}}
+          />
+          <label for="feature-confidence">{{localize "arm5e.sheet.config.feature.confidence"}}</label>
+        </div>
+        {{#if system.features.confidence}}
+        <div class="flexrow" style="margin-left: 20px; align-items: center; gap: 6px">
+          <select name="system.features.confidenceType" data-type="String" {{ui.creationMode.edit}}>
+            <option value="confidence" {{#if (eq system.features.confidenceType "confidence")}}selected{{/if}}>{{localize "arm5e.character.confidenceType.confidence"}}</option>
+            <option value="faith"      {{#if (eq system.features.confidenceType "faith")}}selected{{/if}}>{{localize "arm5e.character.confidenceType.faith"}}</option>
+          </select>
+        </div>
+        {{/if}}
+      </div>
+
+      {{!-- Fatigue --}}
+      <div class="flexrow" style="align-items: center; gap: 6px">
+        <input
+          type="checkbox"
+          name="system.features.fatigue"
+          id="feature-fatigue"
+          {{#if system.features.fatigue}}checked{{/if}}
+          {{ui.creationMode.edit}}
+        />
+        <label for="feature-fatigue">{{localize "arm5e.sheet.config.feature.fatigue"}}</label>
+      </div>
+
+      {{!-- Corporeal (wounds) --}}
+      <div class="flexrow" style="align-items: center; gap: 6px">
+        <input
+          type="checkbox"
+          name="system.features.corporeal"
+          id="feature-corporeal"
+          {{#if system.features.corporeal}}checked{{/if}}
+          {{ui.creationMode.edit}}
+        />
+        <label for="feature-corporeal">{{localize "arm5e.sheet.config.feature.corporeal"}}</label>
+      </div>
+
+      {{!-- Combat (weapons & armor) --}}
+      <div class="flexrow" style="align-items: center; gap: 6px">
+        <input
+          type="checkbox"
+          name="system.features.combat"
+          id="feature-combat"
+          {{#if system.features.combat}}checked{{/if}}
+          {{ui.creationMode.edit}}
+        />
+        <label for="feature-combat">{{localize "arm5e.sheet.config.feature.combat"}}</label>
+      </div>
+
+      {{!-- Aging --}}
+      <div class="flexrow" style="align-items: center; gap: 6px">
+        <input
+          type="checkbox"
+          name="system.features.aging"
+          id="feature-aging"
+          {{#if system.features.aging}}checked{{/if}}
+          {{ui.creationMode.edit}}
+        />
+        <label for="feature-aging">{{localize "arm5e.sheet.config.feature.aging"}}</label>
+      </div>
+
+      {{!-- Might --}}
+      <div class="flexrow" style="align-items: center; gap: 6px">
+        <input
+          type="checkbox"
+          name="system.features.might"
+          id="feature-might"
+          {{#if system.features.might}}checked{{/if}}
+          {{ui.creationMode.edit}}
+        />
+        <label for="feature-might">{{localize "arm5e.sheet.config.feature.might"}}</label>
+      </div>
+
+      {{!-- Powers --}}
+      <div class="flexrow" style="align-items: center; gap: 6px">
+        <input
+          type="checkbox"
+          name="system.features.powers"
+          id="feature-powers"
+          {{#if system.features.powers}}checked{{/if}}
+          {{ui.creationMode.edit}}
+        />
+        <label for="feature-powers">{{localize "arm5e.sheet.config.feature.powers"}}</label>
+      </div>
+
+      {{!-- Laboratory --}}
+      <div class="flexrow" style="align-items: center; gap: 6px">
+        <input
+          type="checkbox"
+          name="system.features.lab"
+          id="feature-lab"
+          {{#if system.features.lab}}checked{{/if}}
+          {{ui.creationMode.edit}}
+        />
+        <label for="feature-lab">{{localize "arm5e.sheet.config.feature.lab"}}</label>
+      </div>
+
+      {{!-- Sigil --}}
+      <div class="flexrow" style="align-items: center; gap: 6px">
+        <input
+          type="checkbox"
+          name="system.features.sigil"
+          id="feature-sigil"
+          {{#if system.features.sigil}}checked{{/if}}
+          {{ui.creationMode.edit}}
+        />
+        <label for="feature-sigil">{{localize "arm5e.sheet.config.feature.sigil"}}</label>
+      </div>
+
+      {{!-- Familiar --}}
+      <div class="flexrow" style="align-items: center; gap: 6px">
+        <input
+          type="checkbox"
+          name="system.features.familiar"
+          id="feature-familiar"
+          {{#if system.features.familiar}}checked{{/if}}
+          {{ui.creationMode.edit}}
+        />
+        <label for="feature-familiar">{{localize "arm5e.sheet.config.feature.familiar"}}</label>
+      </div>
+
+      {{!-- Apprentice --}}
+      <div class="flexrow" style="align-items: center; gap: 6px">
+        <input
+          type="checkbox"
+          name="system.features.apprentice"
+          id="feature-apprentice"
+          {{#if system.features.apprentice}}checked{{/if}}
+          {{ui.creationMode.edit}}
+        />
+        <label for="feature-apprentice">{{localize "arm5e.sheet.config.feature.apprentice"}}</label>
+      </div>
+    </div>
+    {{#unless system.states.creationMode}}
+    <p class="note" style="margin-top: 8px; font-style: italic; color: #888">
+      {{localize "arm5e.sheet.config.featuresLockedNote"}}
+    </p>
+    {{/unless}}
+  </section>
+  {{> "systems/arm5e/templates/actor/parts/actor-profiles.html" }}
+</div>

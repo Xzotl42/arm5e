@@ -132,7 +132,7 @@
     </div>
     {{/if}}
 
-    {{#if system.isCharacter}}
+    {{#if (and system.isCharacter (or (not system.features) system.features.aging))}}
     <div class="flex-group-left padding12 backSection">
       {{#unless system.states.pendingCrisis }}
       <a

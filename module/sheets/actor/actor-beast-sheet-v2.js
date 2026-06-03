@@ -1,9 +1,9 @@
-import { Arm5eCharacterActorSheetV2 } from "./character-actor-sheet-v2.js";
+import { Arm5eCommonCharacterActorSheetV2 } from "./actor-common-character-sheet.js";
 
 /**
  * AppV2 Beast actor sheet.
  */
-export class ArM5eBeastActorSheetV2 extends Arm5eCharacterActorSheetV2 {
+export class ArM5eBeastActorSheetV2 extends Arm5eCommonCharacterActorSheetV2 {
   /** @override */
   static DEFAULT_OPTIONS = {
     classes: ["arm5e", "sheet", "actor", "actor-beast"],

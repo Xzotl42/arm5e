@@ -587,6 +587,8 @@ export class ArM5eMagicSystem {
       : foundry.utils.expandObject(formData);
     const source = this.actor.toObject();
 
+    if (!expanded.system?.magicSystem) return expanded;
+
     const templates = expanded.system.magicSystem.templates;
 
     if (templates) {

@@ -1,10 +1,10 @@
 import { log } from "../../tools/tools.js";
-import { Arm5eCharacterActorSheetV2 } from "./character-actor-sheet-v2.js";
+import { Arm5eCommonCharacterActorSheetV2 } from "./actor-common-character-sheet.js";
 
 /**
  * AppV2 NPC actor sheet.
  */
-export class ArM5eNPCActorSheetV2 extends Arm5eCharacterActorSheetV2 {
+export class ArM5eNPCActorSheetV2 extends Arm5eCommonCharacterActorSheetV2 {
   /** @override */
   static DEFAULT_OPTIONS = {
     classes: ["arm5e", "sheet", "actor", "actor-npc"],
@@ -109,7 +109,7 @@ export class ArM5eNPCActorSheetV2 extends Arm5eCharacterActorSheetV2 {
       template: "systems/arm5e/templates/actor/parts/actor-pc-effects-tab-v2.hbs"
     },
     config: {
-      template: "systems/arm5e/templates/actor/parts/actor-pc-config-tab-v2.hbs"
+      template: "systems/arm5e/templates/actor/parts/actor-config-tab-v2.hbs"
     },
     footer: {
       template: "systems/arm5e/templates/actor/parts/actor-npc-footer-v2.hbs"

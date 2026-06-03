@@ -2,6 +2,7 @@
   "TYPES": {
     "Actor": {
       "beast": "Beast",
+      "character": "Character",
       "covenant": "Covenant",
       "laboratory": "Laboratory",
       "magicCodex": "Magic Codex",
@@ -380,6 +381,28 @@
       "buttons": {
         "clearAura": "Clear Aura",
         "setAura": "Configure Aura"
+      }
+    },
+    "character": {
+      "confidenceType": {
+        "confidence": "Confidence",
+        "faith": "Faith (Holy)"
+      },
+      "magicSystemType": {
+        "alternate": "Alternate magic system",
+        "hermetic": "Hermetic"
+      },
+      "role": {
+        "npc": "Non-Player Character",
+        "player": "Player Character"
+      },
+      "subtype": {
+        "beast": "Beast",
+        "companion": "Companion",
+        "entity": "Entity",
+        "grog": "Grog",
+        "magus": "Magus",
+        "mundane": "Mundane"
       }
     },
     "chat": {
@@ -1278,6 +1301,7 @@
       "calendar": "Calendar",
       "castingTotal": "Casting total",
       "castingTotals": "Casting totals",
+      "character": "Character",
       "charType": "Type",
       "characteristic": "Characteristic",
       "child": "Child",
@@ -1304,6 +1328,27 @@
       "companion": "Companion",
       "companions": "Companions",
       "confidence": "Confidence",
+      "config": {
+        "characterType": "Character Type",
+        "feature": {
+          "aging": "Aging & Decrepitude",
+          "apprentice": "Apprentice",
+          "confidence": "Confidence / Faith",
+          "combat": "Combat (weapons & armor)",
+          "corporeal": "Wounds",
+          "familiar": "Familiar",
+          "fatigue": "Fatigue levels",
+          "magicSystem": "Magic System",
+          "might": "Might Pool",
+          "powers": "Powers",
+          "sigil": "Wizard's Sigil",
+          "twilight": "Twilight"
+        },
+        "features": "Features",
+        "featuresLockedNote": "Tip: Change subtype to automatically reset the feature flags to their defaults.",
+        "role": "Role",
+        "subtype": "Subtype"
+      },
       "constructionPoints": "Build Points",
       "consumables": "Consumables",
       "consumablesSumary": "2 pounds per 10 pts Inhabitants (20% per craft)",
@@ -1363,6 +1408,7 @@
       "experienceNext": "Next level",
       "experienceShort": "Xp",
       "eyes": "Eyes",
+      "faith": "Faith (Holy)",
       "familiar": "Familiar",
       "fastCastingSpeed": {
         "label": "Fast Casting Speed"
@@ -1524,6 +1570,8 @@
       "masteryAbilities": "Mastery abilities",
       "medium": "Medium",
       "might": "Might",
+      "mightForm": "Might Form",
+      "mightPool": "Might Pool",
       "minor": "Minor",
       "modifier": "Modifier",
       "modifiersLife": "Living conditions",

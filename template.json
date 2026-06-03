@@ -1,6 +1,6 @@
 {
   "Actor": {
-    "types": ["player", "npc", "laboratory", "covenant", "magicCodex", "beast"],
+    "types": ["player", "npc", "laboratory", "covenant", "magicCodex", "beast", "character"],
     "templates": {
       "base": {
         "version": "2.0.2",
@@ -912,6 +912,9 @@
       "weapons": [],
       "powers": [],
       "intelligent": false
+    },
+    "character": {
+      "templates": []
     }
   },
 

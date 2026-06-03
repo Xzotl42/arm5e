@@ -5,6 +5,11 @@
  */
 export const ArM5ePreloadHandlebarsTemplates = async function () {
   return foundry.applications.handlebars.loadTemplates([
+    // Character Actor Sheet Partials
+    "systems/arm5e/templates/actor/parts/character/character-fatigue-partial.hbs",
+    "systems/arm5e/templates/actor/parts/character/character-wounds-partial.hbs",
+    "systems/arm5e/templates/actor/parts/character/character-might-partial.hbs",
+    "systems/arm5e/templates/actor/parts/character/character-sigil-partial.hbs",
     // Actor Sheet Partials
     "systems/arm5e/templates/actor/parts/actor-characteristics.html",
     "systems/arm5e/templates/actor/parts/actor-fatigue.html",

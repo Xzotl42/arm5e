@@ -1367,7 +1367,7 @@ body .locked-tooltip.active {
   font-family: var(--font-header);
   font-size: 14pt;
   justify-content: center;
-  height: 25px;
+  height: 36px;
 }
 /* .arm5eTabs and .arm5eSubTabs are fully defined below with complete properties */
 

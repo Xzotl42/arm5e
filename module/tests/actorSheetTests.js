@@ -182,7 +182,7 @@ const BASE_ACTIONS = [
   "openLinkedActor"
 ];
 
-/** Actions from Arm5eCharacterActorSheetV2 + base, covering PC / NPC / Beast. */
+/** Actions from Arm5eCommonCharacterActorSheetV2 + base, covering PC / NPC / Beast. */
 const CHARACTER_ACTIONS = [
   ...BASE_ACTIONS,
   "actorProfile",

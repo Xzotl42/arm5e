@@ -1,6 +1,7 @@
 import { ArM5ePCActorSheetV2 } from "./actor/actor-pc-sheet-v2.js";
 import { ArM5eBeastActorSheetV2 } from "./actor/actor-beast-sheet-v2.js";
 import { ArM5eNPCActorSheetV2 } from "./actor/actor-npc-sheet-v2.js";
+import { Arm5eCharacterActorSheetV2 } from "./actor/actor-character-sheet.js";
 import { ArM5eLaboratoryActorSheetV2 } from "./actor/actor-laboratory-sheet-v2.js";
 import { ArM5eCovenantActorSheetV2 } from "./actor/actor-covenant-sheet-v2.js";
 import { ArM5eMagicCodexSheetV2 } from "./actor/actor-magic-codex-sheet-v2.js";
@@ -40,6 +41,7 @@ export {
   ArM5ePCActorSheetV2,
   ArM5eBeastActorSheetV2,
   ArM5eNPCActorSheetV2,
+  Arm5eCharacterActorSheetV2,
   ArM5eLaboratoryActorSheetV2,
   ArM5eCovenantActorSheetV2,
   ArM5eMagicCodexSheetV2,
@@ -90,6 +92,11 @@ export const ACTOR_SHEET_REGISTRATIONS_V2 = [
     id: "arm5eBeast",
     sheetClass: ArM5eBeastActorSheetV2,
     options: { types: ["beast"], makeDefault: true, label: "arm5e.sheet.beast" }
+  },
+  {
+    id: "arm5eCharacter",
+    sheetClass: Arm5eCharacterActorSheetV2,
+    options: { types: ["character"], makeDefault: true, label: "arm5e.sheet.character" }
   },
   {
     id: "arm5eLaboratory",

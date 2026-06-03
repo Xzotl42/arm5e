@@ -72,6 +72,10 @@ export class ArM5eItemSheetV2 extends HandlebarsApplicationMixin(ItemSheetV2) {
     context.isGM = game.user.isGM;
     context.isOwned = this.item?.isOwned ?? false;
     context.flavor = ArM5eActorSheetV2.getFlavor(this.item?.actor?.type);
+    // For the unified "character" type the flavor depends on role, not actor type.
+    if (this.item?.actor?.type === "character") {
+      context.flavor = this.item.actor.system.role === "npc" ? "NPC" : "PC";
+    }
     this.#flavorClass ??= ArM5eItemSheetV2.#getFlavorClass(context.flavor);
     context.navClass = ArM5eItemSheetV2.#getTabNavClass(context.flavor);
     context.subtabNavClass = context.navClass;

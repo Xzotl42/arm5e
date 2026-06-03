@@ -1,5 +1,6 @@
 export { ArM5eActorSheetV2 } from "./actor-sheet-v2.js";
-export { Arm5eCharacterActorSheetV2 } from "./character-actor-sheet-v2.js";
+export { Arm5eCommonCharacterActorSheetV2 } from "./actor-common-character-sheet.js";
+export { Arm5eCharacterActorSheetV2 } from "./actor-character-sheet.js";
 export { ArM5ePCActorSheetV2 } from "./actor-pc-sheet-v2.js";
 export { ArM5eNPCActorSheetV2 } from "./actor-npc-sheet-v2.js";
 export { ArM5eBeastActorSheetV2 } from "./actor-beast-sheet-v2.js";

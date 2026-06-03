@@ -1,0 +1,50 @@
+{{!--
+  Description tab for the unified character actor.
+  Shows sub-tabs: description text / vitals (fatigue + combat).
+  Feature-gated sections (might, aging, twilight, sigil, confidence/faith)
+  are included only when the relevant feature flag is set.
+--}}
+<div class="tab {{ tab.cssClass }} description" data-group="primary" data-tab="description">
+  <div class="flexcol">
+    {{> "systems/arm5e/templates/generic/parts/ars-tab-navigation.hbs" tabs=subtabs}}
+    <section class="desc-body">
+      {{!-- Sub-tab: description text + biographical info --}}
+      <div
+        class="tab{{#if subtabs.desc.active}} active{{/if}} item flexcol marginsides32"
+        data-group="desc-secondary"
+        data-tab="desc"
+      >
+        {{> "systems/arm5e/templates/actor/parts/actor-description-v2.hbs" }}
+
+        {{!-- Sigil (hermetic magi) — actor-description-v2 gates this on charType.value==='magus',
+             which won't match for character type, so we add it here when features.sigil is set. --}}
+        {{#if system.features.sigil}}
+        {{> "systems/arm5e/templates/actor/parts/character/character-sigil-partial.hbs" }}
+        {{/if}}
+      </div>
+
+      {{!-- Sub-tab: vitals (fatigue, wounds, combat) --}}
+      <div
+        class="tab{{#if subtabs.wounds.active}} active{{/if}} item flexcol marginsides32"
+        data-group="desc-secondary"
+        data-tab="wounds"
+      >
+        <div class="flexcol grid grid-2col margintop18">
+          {{#if system.features.fatigue}}
+          {{> "systems/arm5e/templates/actor/parts/character/character-fatigue-partial.hbs" }}
+          {{/if}}
+          {{#if system.features.corporeal}}
+          {{> "systems/arm5e/templates/actor/parts/character/character-wounds-partial.hbs" }}
+          {{else}}
+
+          {{/if}}
+        </div>
+        {{#if system.features.combat}}
+        {{> "systems/arm5e/templates/actor/parts/actor-combat.html" }}
+        {{> "systems/arm5e/templates/actor/parts/actor-weapons.html" }}
+        {{> "systems/arm5e/templates/actor/parts/actor-armor.html" }}
+        {{/if}}
+      </div>
+    </section>
+  </div>
+</div>

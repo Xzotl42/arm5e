@@ -24,7 +24,7 @@ import { ArM5eMagicSystem } from "../../actor/subsheets/magic-system.js";
  * This class owns logic shared by PC, NPC, and Beast sheets and is the
  * intended home for future consolidation into a single character sheet.
  */
-export class Arm5eCharacterActorSheetV2 extends ArM5eActorSheetV2 {
+export class Arm5eCommonCharacterActorSheetV2 extends ArM5eActorSheetV2 {
   constructor(...args) {
     super(...args);
     this.actorProfiles = new ArM5eActorProfiles(this.actor);
@@ -33,33 +33,33 @@ export class Arm5eCharacterActorSheetV2 extends ArM5eActorSheetV2 {
   /** @override */
   static DEFAULT_OPTIONS = {
     actions: {
-      actorProfile: Arm5eCharacterActorSheetV2.actorProfile,
-      characterSchedule: Arm5eCharacterActorSheetV2.characterSchedule,
-      rollOrAgingPts: Arm5eCharacterActorSheetV2.rollOrAgingPts,
-      recoveryStart: Arm5eCharacterActorSheetV2.recoveryStart,
-      twilightEpisode: Arm5eCharacterActorSheetV2.twilightEpisode,
-      scheduleAging: Arm5eCharacterActorSheetV2.scheduleAging,
-      actorRest: Arm5eCharacterActorSheetV2.actorRest,
-      addFatigue: Arm5eCharacterActorSheetV2.addFatigue,
-      removeFatigue: Arm5eCharacterActorSheetV2.removeFatigue,
-      addWound: Arm5eCharacterActorSheetV2.addWound,
-      woundEdit: Arm5eCharacterActorSheetV2.woundEdit,
-      bookEdit: Arm5eCharacterActorSheetV2.bookEdit,
-      planReading: Arm5eCharacterActorSheetV2.planReading,
-      visStudy: Arm5eCharacterActorSheetV2.visStudy,
-      studyLabtext: Arm5eCharacterActorSheetV2.studyLabtext,
-      increaseTech: Arm5eCharacterActorSheetV2.increaseTech,
-      decreaseTech: Arm5eCharacterActorSheetV2.decreaseTech,
-      increaseForm: Arm5eCharacterActorSheetV2.increaseForm,
-      decreaseForm: Arm5eCharacterActorSheetV2.decreaseForm,
-      increaseScore: Arm5eCharacterActorSheetV2.increaseScore,
-      decreaseScore: Arm5eCharacterActorSheetV2.decreaseScore,
-      prepCreate: Arm5eCharacterActorSheetV2.prepCreate,
-      prepDelete: Arm5eCharacterActorSheetV2.prepDelete,
-      viewMedicalHistory: Arm5eCharacterActorSheetV2.viewMedicalHistory,
-      migrateActor: Arm5eCharacterActorSheetV2.migrateActor,
-      removeCreationMode: Arm5eCharacterActorSheetV2.removeCreationMode,
-      clearConfidencePrompt: Arm5eCharacterActorSheetV2.clearConfidencePrompt
+      actorProfile: Arm5eCommonCharacterActorSheetV2.actorProfile,
+      characterSchedule: Arm5eCommonCharacterActorSheetV2.characterSchedule,
+      rollOrAgingPts: Arm5eCommonCharacterActorSheetV2.rollOrAgingPts,
+      recoveryStart: Arm5eCommonCharacterActorSheetV2.recoveryStart,
+      twilightEpisode: Arm5eCommonCharacterActorSheetV2.twilightEpisode,
+      scheduleAging: Arm5eCommonCharacterActorSheetV2.scheduleAging,
+      actorRest: Arm5eCommonCharacterActorSheetV2.actorRest,
+      addFatigue: Arm5eCommonCharacterActorSheetV2.addFatigue,
+      removeFatigue: Arm5eCommonCharacterActorSheetV2.removeFatigue,
+      addWound: Arm5eCommonCharacterActorSheetV2.addWound,
+      woundEdit: Arm5eCommonCharacterActorSheetV2.woundEdit,
+      bookEdit: Arm5eCommonCharacterActorSheetV2.bookEdit,
+      planReading: Arm5eCommonCharacterActorSheetV2.planReading,
+      visStudy: Arm5eCommonCharacterActorSheetV2.visStudy,
+      studyLabtext: Arm5eCommonCharacterActorSheetV2.studyLabtext,
+      increaseTech: Arm5eCommonCharacterActorSheetV2.increaseTech,
+      decreaseTech: Arm5eCommonCharacterActorSheetV2.decreaseTech,
+      increaseForm: Arm5eCommonCharacterActorSheetV2.increaseForm,
+      decreaseForm: Arm5eCommonCharacterActorSheetV2.decreaseForm,
+      increaseScore: Arm5eCommonCharacterActorSheetV2.increaseScore,
+      decreaseScore: Arm5eCommonCharacterActorSheetV2.decreaseScore,
+      prepCreate: Arm5eCommonCharacterActorSheetV2.prepCreate,
+      prepDelete: Arm5eCommonCharacterActorSheetV2.prepDelete,
+      viewMedicalHistory: Arm5eCommonCharacterActorSheetV2.viewMedicalHistory,
+      migrateActor: Arm5eCommonCharacterActorSheetV2.migrateActor,
+      removeCreationMode: Arm5eCommonCharacterActorSheetV2.removeCreationMode,
+      clearConfidencePrompt: Arm5eCommonCharacterActorSheetV2.clearConfidencePrompt
     }
   };
 
@@ -132,10 +132,7 @@ export class Arm5eCharacterActorSheetV2 extends ArM5eActorSheetV2 {
       context.isDead = this.actor.system.wounds.dead.length > 0;
       context.system.isMagus = this.actor.isMagus();
 
-      if (
-        context.system?.charType?.value === "magusNPC" ||
-        context.system?.charType?.value === "magus"
-      ) {
+      if (context.system.isMagus) {
         context.selection.voiceStances = Object.fromEntries(
           Object.entries(context.system.stances.voice).map(([k, v]) => {
             return [k, `${game.i18n.localize(CONFIG.ARM5E.magic.mod.voice[k].mnemonic)} (${v})`];

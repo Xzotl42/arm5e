@@ -1,0 +1,88 @@
+{{!--
+  Sigil partial for the unified character actor (hermetic magus subtype).
+  Shows the same information that actor-description-v2.hbs shows when charType.value === "magus",
+  but for the new "character" type where charType.value is not set.
+--}}
+<div class="flexrow flexcol">
+  <div class="flexcol grid grid-2col">
+    <div>
+      <div class="flex-group-left backSection padding12" style="margin-bottom: 22px">
+        <label class="bold">{{localize "arm5e.sheet.playername"}} </label>
+        <span class="width2">
+          <input
+            type="text"
+            name="system.playername"
+            value="{{ system.playername }}"
+            data-dtype="String"
+          />
+        </span>
+      </div>
+      <div class="flex-group-left backSection padding12">
+        <div class="flexrow marginbot6">
+          <label
+            for="system.domusMagnus.value"
+            class="bold"
+            >{{localize "arm5e.sheet.domusMagnus"}}</label
+          >
+          <span class="width2">
+            <input
+              type="text"
+              name="system.domusMagnus.value"
+              value="{{ system.domusMagnus.value }}"
+              data-dtype="String"
+            />
+          </span>
+        </div>
+        <div class="flexrow marginbot6">
+          <label for="system.primus.value" class="bold">{{localize "arm5e.sheet.primus"}}</label>
+          <span class="width2">
+            <input
+              type="text"
+              name="system.primus.value"
+              value="{{ system.primus.value }}"
+              data-dtype="String"
+            />
+          </span>
+        </div>
+        <div class="flexrow marginbot6">
+          <label for="system.parens.value" class="bold">{{localize "arm5e.sheet.parens"}}</label>
+          <span class="width2">
+            <input
+              type="text"
+              name="system.parens.value"
+              value="{{ system.parens.value }}"
+              data-dtype="String"
+            />
+          </span>
+        </div>
+        <div class="flexrow marginbot6">
+          <label
+            for="system.apprenticeship.value"
+            class="bold"
+            >{{localize "arm5e.sheet.apprenticeship"}}</label
+          >
+          <span class="width2">
+            <input
+              type="text"
+              name="system.apprenticeship.value"
+              value="{{ system.apprenticeship.value }}"
+              data-dtype="String"
+            />
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex-group-left backSection padding12">
+      <label for="system.sigil" class="smallTitle">{{localize "arm5e.sheet.sigil"}}</label>
+      {{> "systems/arm5e/templates/generic/ars-editor-V2.hbs"
+          content=enrichedSigil
+          target="system.sigil.value"
+          prefix=""
+          sectionClass=""
+          editorClass=""
+          editable=editable
+      }}
+    </div>
+  </div>
+</div>

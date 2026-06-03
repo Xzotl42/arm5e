@@ -18,6 +18,7 @@ import { InhabitantSchema } from "./inhabitantSchema.js";
 import { WoundSchema } from "./woundSchema.js";
 import { EnchantmentEffectSchema } from "./enchantmentSchema.js";
 import { CovenantSchema } from "./covenantSchema.js";
+import { CharacterSchema } from "./characterSchema.js";
 import { SupernaturalEffectSchema } from "./supernaturalEffectSchema.js";
 import { PowerSchema } from "./powerSchemas.js";
 import { BasicChatSchema } from "./basicChatSchema.js";
@@ -63,7 +64,8 @@ export const ITEM_DATAMODEL_REGISTRATIONS = {
 export const ACTOR_DATAMODEL_REGISTRATIONS = {
   laboratory: LabSchema,
   magicCodex: CodexSchema,
-  covenant: CovenantSchema
+  covenant: CovenantSchema,
+  character: CharacterSchema
 };
 
 export const CHAT_DATAMODEL_REGISTRATIONS = {

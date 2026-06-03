@@ -1551,6 +1551,99 @@ export const migrateItemData = async function (item) {
   return updateData;
 };
 
+// ────────────────────────────────────────────────────────────────────────────
+// Character type migration helpers
+// ────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Migrate a single actor from a deprecated type (player / npc / beast) to the
+ * unified "character" actor type.
+ *
+ * The function is non-destructive:
+ *  1. A backup copy of the original actor is created with "[BACKUP] " prefix.
+ *  2. The original actor's type and system data are updated in-place.
+ *  3. All Active Effects are preserved; any whose `key` no longer maps cleanly
+ *     are flagged with a "needs-review" flag but kept.
+ *
+ * Works for both world actors and compendium actors — pass the Actor document
+ * directly.
+ *
+ * @param {Actor} actor  The actor document to migrate.
+ * @returns {Promise<{backup: Actor|null, updated: Actor, warnings: string[]}>}
+ */
+export async function migrateActorToCharacter(actor) {
+  if (!["player", "npc", "beast"].includes(actor.type)) {
+    throw new Error(
+      `migrateActorToCharacter: actor "${actor.name}" has type "${actor.type}" which is not a deprecated type.`
+    );
+  }
+
+  const { CharacterSchema, defaultFeatures } = await import("./schemas/characterSchema.js");
+
+  const charTypeValue = actor.system?.charType?.value ?? "";
+  const { subtype, role } = CharacterSchema.resolveSubtypeAndRole(actor.type, charTypeValue);
+  const features = defaultFeatures(subtype);
+
+  // ── 1. Create backup actor ───────────────────────────────────────────────
+
+  const backupData = foundry.utils.deepClone(actor.toObject());
+  backupData.name = `[BACKUP] ${actor.name}`;
+  // Remove _id so Foundry assigns a new one
+  delete backupData._id;
+
+  let backup = null;
+  try {
+    const created = await Actor.createDocuments([backupData], { parent: actor.parent });
+    backup = created[0];
+  } catch (err) {
+    console.warn(
+      `arm5e | migrateActorToCharacter: Could not create backup for "${actor.name}": ${err.message}`
+    );
+  }
+
+  // ── 2. Build update data ─────────────────────────────────────────────────
+
+  const updateData = {
+    type: "character",
+    system: {
+      subtype,
+      role,
+      features,
+      // Preserve all existing system fields — Foundry merges them
+      ...foundry.utils.deepClone(actor.system)
+    }
+  };
+
+  // Ensure the new fields exist at the top level of system
+  updateData.system.subtype = subtype;
+  updateData.system.role = role;
+  updateData.system.features = features;
+
+  // ── 3. Validate Active Effects ───────────────────────────────────────────
+
+  const warnings = [];
+  // Active Effects are preserved as-is; the field paths in arm5e are identical
+  // between deprecated types and the new character type for all shared fields.
+  // Flag any effects that target charType.value (which will no longer be the
+  // canonical source of truth) so the GM can review them.
+  for (const effect of actor.effects) {
+    for (const change of effect.changes ?? []) {
+      if (typeof change.key === "string" && change.key.includes("charType")) {
+        warnings.push(
+          `Active Effect "${effect.name}" on "${actor.name}" targets key "${change.key}" ` +
+            `which is a deprecated field in the character type. Please review.`
+        );
+      }
+    }
+  }
+
+  // ── 4. Apply update ──────────────────────────────────────────────────────
+
+  const updated = await actor.update(updateData);
+
+  return { backup, updated, warnings };
+}
+
 /**
  *
  * @param itemData

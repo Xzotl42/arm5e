@@ -50,7 +50,7 @@ export class ArM5eActor extends Actor {
     }
     // Add properties used for active effects:
 
-    if (["player", "npc"].includes(this.type)) {
+    if (["player", "npc", "character"].includes(this.type)) {
       this.system.covenant.document = game.actors.get(this.system.covenant.actorId);
       if (this.system.covenant.document) {
         this.system.covenant.value = this.system.covenant.document.name;
@@ -60,7 +60,12 @@ export class ArM5eActor extends Actor {
       }
     }
 
-    if (this.type !== "player" && this.type !== "npc" && this.type !== "beast") {
+    if (
+      this.type !== "player" &&
+      this.type !== "npc" &&
+      this.type !== "beast" &&
+      this.type !== "character"
+    ) {
       return;
     }
     const datetime = game.settings.get("arm5e", "currentDate");
@@ -316,6 +321,12 @@ export class ArM5eActor extends Actor {
       ability: 0
     };
 
+    if (this.system.features === undefined) {
+      this.system.features = {};
+    }
+
+    // features.magicSystem is a boolean on deprecated types; on 'character' type it is also
+    // a boolean (kept backward-compatible in CharacterSchema.defineSchema).
     if (this.system.features.magicSystem) {
       try {
         ArM5eMagicSystem.prepareData(this);
@@ -325,13 +336,17 @@ export class ArM5eActor extends Actor {
       }
     }
 
-    if (this.system.charType?.value === "entity") {
+    // For deprecated types: entity charType sets computed feature flags.
+    // For the new 'character' type this is handled by CharacterSchema.prepareBaseData().
+    if (this.type !== "character" && this.system.charType?.value === "entity") {
       this.system.features.powers = true;
       this.system.features.hasMight = true;
     }
 
     this.system.characCfg = foundry.utils.deepClone(CONFIG.ARM5E.character.characteristics);
-    if ((this.system.intelligent && this.type === "beast") || this.type !== "beast") {
+    const isBeastType =
+      this.type === "beast" || (this.type === "character" && this.system.subtype === "beast");
+    if ((this.system.intelligent && isBeastType) || !isBeastType) {
       delete this.system.characCfg.cun;
     } else {
       delete this.system.characCfg.int;
@@ -987,6 +1002,9 @@ export class ArM5eActor extends Actor {
 
   // To identify the type of character
   isMagus() {
+    if (this.type === "character") {
+      return this.system.features === "magicSystem";
+    }
     return (
       (this.type === "npc" && this.system.charType.value === "magusNPC") ||
       (this.type === "player" && this.system.charType.value === "magus")
@@ -1000,19 +1018,27 @@ export class ArM5eActor extends Actor {
   }
 
   hasMight() {
+    if (this.type === "character") return this.system.features?.might ?? false;
     return this.type === "npc" && this.system.charType.value === "entity";
   }
 
   isCompanion() {
+    if (this.type === "character") return this.system.subtype === "companion";
     return this.type === "player" && this.system.charType.value === "companion";
   }
 
   isGrog() {
+    if (this.type === "character") return this.system.subtype === "grog";
     return this.type === "player" && this.system.charType.value === "grog";
   }
 
   isCharacter() {
-    return this.type === "player" || this.type === "npc" || this.type === "beast";
+    return (
+      this.type === "player" ||
+      this.type === "npc" ||
+      this.type === "beast" ||
+      this.type === "character"
+    );
   }
 
   getAbilityScore(abilityKey, abilityOption = "") {
