@@ -5,6 +5,7 @@
 ### Bug fixes
 
 - Roll dialogs with lot of content were cropped at the bottom, they have now a maximum height of 800 pixels, a scrollbar will appear after that.
+- [dice-so-nice] Fixed a problem with rolls not displayed due to a previous fix
 
 ## 3.0.0.15 Stentorius
 

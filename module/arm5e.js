@@ -392,14 +392,14 @@ Hooks.on("simple-calendar-date-time-change", async (data) => {
 // });
 
 // // TODO: remove when V14 only and use the above
-// Hooks.on("diceSoNiceMessageProcessed", (messageId, interception) => {
-//   if (!game.dice3d) return;
-//   const message = game.messages.get(messageId);
-//   if (!message) return;
-//   if (message.rolls.length > 1) {
-//     interception.willTrigger3DRoll = false;
-//   }
-// });
+Hooks.on("diceSoNiceMessageProcessed", (messageId, interception) => {
+  if (!game.dice3d) return;
+  const message = game.messages.get(messageId);
+  if (!message) return;
+  if (message.rolls.length > 1) {
+    interception.willTrigger3DRoll = false;
+  }
+});
 /* -------------------------------------------- */
 /*  Hotbar Macros                               */
 /* -------------------------------------------- */
