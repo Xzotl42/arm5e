@@ -2466,6 +2466,14 @@ p,
   background-size: cover;
 }
 
+/* Prevent long roll dialogs from cropping content: scroll after 800px. */
+.arm5e-roll .window-content,
+.window-content .arm5e-roll {
+  max-height: 800px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
 .arm5e-roll .roll-options .sub {
   font-size: 14px;
 }

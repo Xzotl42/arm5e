@@ -1,3 +1,11 @@
+## 3.0.1.0 Stentorius
+
+### Compatibility
+
+### Bug fixes
+
+- Roll dialogs with lot of content were cropped at the bottom, they have now a maximum height of 800 pixels, a scrollbar will appear after that.
+
 ## 3.0.0.15 Stentorius
 
 ### Compatibility
