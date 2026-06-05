@@ -402,6 +402,10 @@ export class ArM5eItem extends Item {
     return CONFIG.ARM5E.item.resources.includes(this.type);
   }
 
+  get isOwnedByCharacter() {
+    return this.isOwned && this.actor?.isCharacter();
+  }
+
   async createResourceTrackingDiaryEntry(fromActor, toActor, quantity = 1, date = null) {
     if (!game.settings.get("arm5e", "trackResources")) return [];
     return await Promise.all(

@@ -64,6 +64,17 @@ export class ArM5eWeaponItemSheetV2 extends ArM5eItemSheetV2 {
   async _prepareContext(options) {
     const context = await super._prepareContext(options);
     context.tabs = this._prepareTabs("primary");
+
+    if (this.item.isOwnedByCharacter) {
+      context.system.abilities = this.actor.system.abilities.map((v) => {
+        return { id: v._id, name: `${v.name} (${v.system.speciality}) - ${v.system.finalScore}` };
+      });
+      context.system.abilities.unshift({
+        id: "",
+        name: "N/A"
+      });
+    }
+
     if (!this.item.system.enchantments) {
       delete context.tabs.enchantments;
     } else {
