@@ -75,7 +75,10 @@ export class ArM5eItemSheetV2 extends HandlebarsApplicationMixin(ItemSheetV2) {
     this.#flavorClass ??= ArM5eItemSheetV2.#getFlavorClass(context.flavor);
     context.navClass = ArM5eItemSheetV2.#getTabNavClass(context.flavor);
     context.subtabNavClass = context.navClass;
-
+    context.metagame = {
+      view: game.settings.get("arm5e", "metagame"),
+      edit: context.isGM ? "" : "readonly"
+    };
     context.effects = ArM5eActiveEffect.prepareActiveEffectCategories(this.item.effects);
     context.system.effectCreation = game.user.isTrusted;
 

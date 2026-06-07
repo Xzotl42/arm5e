@@ -8,6 +8,7 @@
 
 - Fixed a bug where if a book with a freshly created topic changed to an ability type and the ability not set, it would no longer display
 - Some item types couldn't change their image.
+- Metagame (sourcebook, page,...) section is back
 
 ## 3.0.1.0 Stentorius BF1
 
