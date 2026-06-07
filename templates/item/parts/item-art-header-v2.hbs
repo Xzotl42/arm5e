@@ -8,6 +8,10 @@
       src="{{ item.img }}"
       data-action="editImage"
       data-edit="img"
+      data-tooltip="<img
+      class='img-tooltip'
+      src='{{ item.img }}'/>"
+      data-tooltip-direction="CENTER"
       title="{{ item.name }}"
     />
     <div class="header-fields">
@@ -27,6 +31,7 @@
         <div class="flexrow" style="padding-top: 5px">
           <label style="max-width: 65px"
             >{{localize 'arm5e.sheet.score'
+
 
             }}<input
               type="number"
@@ -55,6 +60,7 @@
           <div class="flexrow" style="max-width: 65px">
             <label
               >{{localize 'arm5e.sheet.experienceShort'
+
 
               }}<input
                 type="number"

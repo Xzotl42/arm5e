@@ -4,10 +4,14 @@
   </div>
 
   <header class="sheet-header marginsides32">
-    <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" data-tooltip="<img
+    <img class="profile-img" src="{{actor.img}}"
+      data-action="editImage"
+      data-edit="img" title="{{actor.name}}" data-tooltip="<img
       class='img-tooltip'
       src='{{ actor.img }}'/>"
-      data-tooltip-direction="CENTER" height="100" width="100" />
+      data-tooltip-direction="CENTER" height="100" width="100" 
+      title="{{ actor.name }}"
+      />
     <div class="header-fields">
       <h1 class="bigname"><input name="name" type="text" value="{{actor.name}}" placeholder="Name" /></h1>
 

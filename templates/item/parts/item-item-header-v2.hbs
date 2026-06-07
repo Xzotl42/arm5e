@@ -4,14 +4,15 @@
   </div>
   <header class="sheet-header marginItemPart">
     <img
-      class="item-img profile-img"
+      class="item-img"
       src="{{ item.img }}"
+      data-action="editImage"
       data-edit="img"
-      title="{{ item.name }}"
       data-tooltip="<img
       class='img-tooltip'
       src='{{ item.img }}'/>"
       data-tooltip-direction="CENTER"
+      title="{{ item.name }}"
     />
     <div class="header-fields flexcol">
       <h1 class="bigname">
