@@ -382,6 +382,16 @@
         "setAura": "Configure Aura"
       }
     },
+    "character": {
+      "hints": {
+        "age": "Age in years",
+        "apparentAge": "Apparent age",
+        "confidenceScore": "Confidence score",
+        "confidencePoints": "Confidence points",
+        "mightPool": "Might pool",
+        "mightPts": "Might points"
+      }
+    },
     "chat": {
       "contestOfMagic": "Contest of magic",
       "contestOfMagicWith": "Contest of magic with {name}",
@@ -653,6 +663,13 @@
       "enchantment": {
         "effectFrequency": "Effect Frequency",
         "envTrigger": "Environmental trigger",
+        "hints": {
+          "capacityDesc": "Physical form of the object",
+          "capacityUsed": "Used capacity",
+          "capacityTotal": "Total capacity",
+          "visUsed": "Vis used in the enchantment",
+          "visTotal": "Total vis available for the enchantment"
+        },
         "item": {
           "appraisal": "Appraisal",
           "charges": "Charges",

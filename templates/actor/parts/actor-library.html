@@ -59,6 +59,7 @@
           class="fas fa-plus"></i>{{localize "arm5e.sheet.action.Create"}}</a>
     </div>
   </li>
+  {{log "filteredMundaneTopics: " system.filteredMundaneTopics}}
   {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
   {{> "systems/arm5e/templates/actor/parts/topicFilter.hbs" list="abilitiesTopics" visibility=ui.abilitiesFilterVisibility
   topics=config.LOCALIZED_ABILITIES  topic-class="ability-key"}}

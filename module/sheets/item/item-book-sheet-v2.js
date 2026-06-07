@@ -290,6 +290,8 @@ export class ArM5eBookItemSheetV2 extends ArM5eItemSheetV2 {
 
   /** Called when the topic-category select changes */
   async _changeTopicCategory(event) {
+    event.preventDefault();
+    event.stopPropagation();
     const chosenTopic = event.target.value;
     const topics = ArM5eBookItemSheetV2.#normalizedTopics(this.item.system.topics);
     const index = ArM5eBookItemSheetV2.#clampTopicIndex(
@@ -350,6 +352,8 @@ export class ArM5eBookItemSheetV2 extends ArM5eItemSheetV2 {
 
   /** Called when the book-type select changes */
   async _changeBookType(event) {
+    event.preventDefault();
+    event.stopPropagation();
     const chosenType = event.target.value;
     const topics = ArM5eBookItemSheetV2.#normalizedTopics(this.item.system.topics);
     const index = ArM5eBookItemSheetV2.#clampTopicIndex(
@@ -379,6 +383,7 @@ export class ArM5eBookItemSheetV2 extends ArM5eItemSheetV2 {
   }
 
   static async addTopic(event, target) {
+    event.preventDefault();
     const topics = ArM5eBookItemSheetV2.#normalizedTopics(this.item.system.topics);
     const index = ArM5eBookItemSheetV2.#clampTopicIndex(target.dataset.index ?? 0, topics.length);
     const currentDate = game.settings.get("arm5e", "currentDate");
@@ -401,11 +406,12 @@ export class ArM5eBookItemSheetV2 extends ArM5eItemSheetV2 {
     };
     const newIdx = topics.length;
     topics.push(newTopic);
-    await this.item.setFlag("arm5e", "currentBookTopic", newIdx);
-    await this.item.update({ "system.topics": topics });
+    // await this.item.setFlag("arm5e", "currentBookTopic", newIdx);
+    await this.item.update({ "flags.arm5e.currentBookTopic": newIdx, "system.topics": topics });
   }
 
   static async removeTopic(event, target) {
+    event.preventDefault();
     const topics = ArM5eBookItemSheetV2.#normalizedTopics(this.item.system.topics);
     const idx = ArM5eBookItemSheetV2.#clampTopicIndex(target.dataset.index ?? 0, topics.length);
     if (!topics.length) return;
@@ -462,6 +468,7 @@ export class ArM5eBookItemSheetV2 extends ArM5eItemSheetV2 {
   }
 
   static async createTableOfContents(event, target) {
+    event.preventDefault();
     let desc = this.item.system.description;
     if (event.shiftKey) {
       desc += BookSchema.getTableOfContentsVerbose(this.item.system);

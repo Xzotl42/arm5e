@@ -29,11 +29,9 @@
           {{#if system.states.creationMode}}
           <div class="flex0 padding10" style="width: 36px">
             <a class="clickable" data-action="removeCreationMode">
-              <img
-                src="systems/arm5e/assets/icons/creation-mode.svg"
-                title="{{localize "arm5e.sheet.edition.creationMode"}}"
-                style="border: 0px; height: 18px; min-height: 30px; min-width: 30px"
-              />
+              <img src="systems/arm5e/assets/icons/creation-mode.svg" title="{{localize "arm5e.sheet.edition.creationMode"
+
+              }}" style="border: 0px; height: 18px; min-height: 30px; min-width: 30px" />
             </a>
           </div>
           {{/if}}
@@ -45,7 +43,7 @@
               data-roll="crisis"
               data-year="{{ system.lastCrisis.year }}"
               data-season="{{ system.lastCrisis.season }}"
-              title="{{localize "arm5e.aging.crisis.tooltip"}}"
+              title="{{localize 'arm5e.aging.crisis.tooltip'}}"
             >
               <i class="ars-Icon_Aging_crisis"></i>
             </a>
@@ -56,7 +54,7 @@
             <a
               class="clear-confidencePrompt"
               data-action="clearConfidencePrompt"
-              title="{{localize "arm5e.sheet.states.confidencePrompt"}}"
+              title="{{localize 'arm5e.sheet.states.confidencePrompt'}}"
               style="font-size: 20pt"
             >
               <i class="fas fa-user-plus"></i>
@@ -95,7 +93,7 @@
           </div>
           {{/if}}
           {{#if devMode}}
-          <div class="flex0 padding10" style="width: 24px;font-size: 18pt">
+          <div class="flex0 padding10" style="width: 24px; font-size: 18pt">
             <a class="migrate" data-action="migrateActor" title="Migrate actor">
               <i class="fas fa-arrow-up"></i>
             </a>
@@ -114,12 +112,17 @@
         {{#if (eq system.charType.value "entity")}}
         <div class="flexrow marginsides6">
           <div class="flexcol">
-            <label for="system.might.value" class="flex0 title">{{localize "arm5e.sheet.might"}}</label>
+            <label
+              for="system.might.value"
+              class="flex0 title"
+              >{{localize "arm5e.sheet.might"}}</label
+            >
             <div>
               <input
                 type="number"
                 name="system.might.points"
                 value="{{ system.might.points }}"
+                title="{{ localize 'arm5e.character.hints.mightPts' }}"
                 data-dtype="Number"
                 style="width: 36px; text-align: center"
                 class="select-on-focus"
@@ -129,6 +132,7 @@
                 type="number"
                 name="system.might.value"
                 value="{{ system.might.value }}"
+                title="{{ localize 'arm5e.character.hints.mightPool' }}"
                 data-dtype="Number"
                 style="width: 40px; text-align: center"
                 class="select-on-focus"
@@ -180,7 +184,8 @@
             for="system.house.value"
             class="bold flex0"
             style="padding-left: 5px; padding-top: 4px; padding-right: 5px"
-          >{{localize "arm5e.sheet.house"}}</label>
+            >{{localize "arm5e.sheet.house"}}</label
+          >
           <select name="system.house.value" data-type="String" style="width: 100%">
             {{selectOptions config.character.houses selected=system.house.value labelAttr="label"}}
           </select>
@@ -195,8 +200,10 @@
             <input
               type="number"
               name="system.age.value"
+              title="{{ localize 'arm5e.character.hints.age' }}"
               value="{{formatOptionalNumber system.age.value decimals=0}}"
               data-dtype="Number"
+              title="{{ localize 'arm5e.character.hints.age' }}"
               {{ui.creationMode.edit}}
               class="select-on-focus"
             />
@@ -204,6 +211,7 @@
             <input
               type="number"
               name="system.apparent.value"
+              title="{{ localize 'arm5e.character.hints.apparentAge' }}"
               value="{{numberFormat system.apparent.value decimals=0}}"
               data-dtype="Number"
               class="select-on-focus"
@@ -212,7 +220,11 @@
           </div>
         </div>
         <div class="resource flex-group-center backSection">
-          <label for="system.vitals.siz.value" class="smallTitle">{{localize "arm5e.sheet.size"}}</label>
+          <label
+            for="system.vitals.siz.value"
+            class="smallTitle"
+            >{{localize "arm5e.sheet.size"}}</label
+          >
           <div class="resource-content flexrow flex-center flex-between margintop6">
             <input
               type="number"
@@ -223,7 +235,11 @@
           </div>
         </div>
         <div class="resource flex-group-center backSection">
-          <label for="system.vitals.soa.value" class="smallTitle">{{localize "arm5e.sheet.soak"}}</label>
+          <label
+            for="system.vitals.soa.value"
+            class="smallTitle"
+            >{{localize "arm5e.sheet.soak"}}</label
+          >
           <div class="resource-content flexrow flex-center flex-between">
             <input
               type="number"
@@ -235,12 +251,17 @@
           </div>
         </div>
         <div class="resource flex-group-center backSection">
-          <label for="system.con.score" class="smallTitle">{{localize "arm5e.sheet.confidence"}}</label>
+          <label
+            for="system.con.score"
+            class="smallTitle"
+            >{{localize "arm5e.sheet.confidence"}}</label
+          >
           <div class="resource-content flexrow flex-center flex-between margintop6">
             <input
               type="number"
               name="system.con.score"
               value="{{ system.con.score }}"
+              title="{{ localize 'arm5e.character.hints.confidenceScore' }}"
               data-dtype="Number"
               style="flex: 0.6; margin-left: 8px; margin-right: 24px"
             />
@@ -248,6 +269,7 @@
               type="number"
               name="system.con.points"
               value="{{ system.con.points }}"
+              title="{{ localize 'arm5e.character.hints.confidencePoints' }}"
               data-dtype="Number"
               style="flex: 0.6"
             />)

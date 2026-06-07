@@ -21,6 +21,7 @@ import {
   NoLabActivity,
   SpellActivity
 } from "../../seasonal-activities/labActivity.js";
+import { log } from "../../tools/tools.js";
 
 /**
  * AppV2 Laboratory actor sheet.
@@ -442,7 +443,7 @@ export class ArM5eLaboratoryActorSheetV2 extends ArM5eActorSheetV2 {
     context.planning.labTotal ??= { score: 0, label: "" };
     context.planning.duration ??= 0;
     context.planning.date ??= game.settings.get("arm5e", "currentDate");
-
+    log(false, "Final planning context", context.planning);
     return context;
   }
 

@@ -1,4 +1,15 @@
-## 3.0.1.0 Stentorius
+## 3.0.1.1 Stentorius BF2
+
+### Features & changes
+
+- Added hints on some fields to remove ambiguousness (real age vs apparent age, confidence score vs confidence points,...)
+
+### Bug fixes
+
+- Fixed a bug where if a book with a freshly created topic changed to an ability type and the ability not set, it would no longer display
+- Some item types couldn't change their image.
+
+## 3.0.1.0 Stentorius BF1
 
 ### Compatibility
 

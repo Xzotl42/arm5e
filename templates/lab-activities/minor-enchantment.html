@@ -1,9 +1,10 @@
 <div class="drop-enchant resource" data-drop="enchant">
   <div class="padding4">
     <h1 class="bigname flexrow flex01" style="font-size: 12pt;">
-      <div class="item-image" data-index="{{idx}}" style="max-width: 32px"><img class="item-img"
-          src="{{planning.data.receptacle.img}}" title="{{planning.data.receptacle.name}}"
-          data-edit="{{planning.namePrefix}}receptacle.img" style="height: 30px;width: 30px" /></div>
+      <div class="item-image" data-index="{{idx}}" style="max-width: 32px">
+        <img class="item-img" src="{{planning.data.receptacle.img}}" title="{{planning.data.receptacle.name}}"
+          data-edit="{{planning.namePrefix}}receptacle.img" style="height: 30px;width: 30px" />
+      </div>
       <input name="{{planning.namePrefix}}receptacle.name" title="{{planning.data.receptacle.name}}" type="text"
         value="{{planning.data.receptacle.name}}" placeholder="Name" />
     </h1>
@@ -14,9 +15,11 @@
     <div class="foldable-section backSection enchantment {{lookup @root.ui.sections.visibility.planning 'effect'}}"
       id="planning-effect{{index}}-{{@root.actor._id}}">
       <div class="resource flexrow">
-        <div class="item-image" data-index="{{idx}}" style="max-width: 32px"><img class="item-img"
-            src="{{planning.data.enchantment.img}}" title="{{planning.data.enchantment.name}}"
-            data-edit="{{planning.namePrefix}}enchantment.img" style="height: 30px;width: 30px" /></div>
+        {{log "planning namePrefix:" planning.namePrefix}}
+        <div class="item-image" data-index="{{idx}}" style="max-width: 32px">
+          <img class="item-img" src="{{planning.data.enchantment.img}}" title="{{planning.data.enchantment.name}}"
+            data-edit="{{planning.namePrefix}}enchantment.img" style="height: 30px;width: 30px" />
+        </div>
         <div class="padding2">
           <input type="text" name="{{planning.namePrefix}}enchantment.name" value="{{planning.data.enchantment.name}}"
             data-dtype="String" style="max-width: 300px;" title="{{planning.data.enchantment.name}}" />
@@ -70,33 +73,34 @@
         <div
           class="foldable-section backSection enchantment {{lookup @root.ui.sections.visibility.planning 'capacity'}}"
           id="planning-capacity-{{@root.actor._id}}">
-          <div class="resource flexrow">
-            <div class="padding2 flex0">
+          <div class="resource flexrow" style="flex-wrap: nowrap; align-items: center;">
+            <div class="padding2 flex0" style="flex: 0 0 130px;">
               <select name="{{planning.namePrefix}}receptacle.system.enchantments.capacities.0.materialBase"
-                style="max-width: 140px;">
+                style="width: 130px; max-width: 130px;">
                 {{selectOptions @root.selection.materialBase 
                   selected=planning.data.receptacle.system.enchantments.capacities.0.materialBase  }}
               </select>
             </div>
-            <div class="padding2 flex0">
+            <div class="padding2 flex0" style="flex: 0 0 95px;">
               <select name="{{planning.namePrefix}}receptacle.system.enchantments.capacities.0.sizeMultiplier"
-                style="max-width: 105px;">
+                style="width: 95px; max-width: 95px;">
                 {{selectOptions @root.selection.sizeMultiplier 
                   selected=planning.data.receptacle.system.enchantments.capacities.0.sizeMultiplier }}
               </select>
             </div>
-            <div class="padding2 flex0">
+            <div class="padding2 flex0" style="flex: 0 0 140px;">
               <input type="text" name="{{planning.namePrefix}}receptacle.system.enchantments.capacities.0.desc"
+                title="{{localize 'arm5e.lab.enchantment.hints.capacityDesc'}}"
                 value="{{planning.data.receptacle.system.enchantments.capacities.0.desc}}" data-dtype="String"
-                style="min-width: 160px;" />
+                style="width: 140px; min-width: 140px;" />
             </div>
             <div class="padding2 modifier">
               <input type="number" readonly value="{{planning.data.receptacle.system.enchantments.capacities.0.used}}"
-                data-dtype="Number" />
+                title="{{localize 'arm5e.lab.enchantment.hints.capacityUsed'}}" data-dtype="Number" />
             </div>
             <div class="padding2 modifier">
               <input type="number" readonly value="{{planning.data.receptacle.system.enchantments.capacities.0.total}}"
-                data-dtype="Number" />
+                title="{{localize 'arm5e.lab.enchantment.hints.capacityTotal'}}" data-dtype="Number" />
               <input type="text" name="{{planning.namePrefix}}receptacle.system.enchantments.capacities.0.id" hidden
                 value="{{planning.data.receptacle.system.enchantments.capacities.0.id}}" data-dtype="String" />
             </div>
@@ -115,17 +119,17 @@
             id="planning-aspect-{{@root.actor._id}}">
             <div class="resource flexrow">
             </div>
-            <div class="resource flexrow">
-              <div class="padding2">
+            <div class="resource flexrow" style="flex-wrap: nowrap; align-items: center;">
+              <div class="padding2 flex0" style="flex: 0 0 140px;">
                 <select name="{{planning.namePrefix}}receptacle.system.enchantments.aspects.0.aspect"
-                  style="max-width: 175px;" class="aspect-change" data-index="0">
+                  style="width: 140px; max-width: 140px;" class="aspect-change" data-index="0">
                   {{selectOptions planning.data.ASPECTS labelAttr="name"
                     selected=planning.data.receptacle.system.enchantments.aspects.0.aspect}}
                 </select>
               </div>
-              <div class="padding2">
+              <div class="padding2 flex0" style="flex: 0 0 140px;">
                 <select name="{{planning.namePrefix}}receptacle.system.enchantments.aspects.0.effect"
-                  style="max-width: 175px;width: 175px;" class="effect-change" data-index="0">
+                  style="width: 140px; max-width: 140px;" class="effect-change" data-index="0">
                   {{selectOptions planning.data.receptacle.system.enchantments.aspects.0.effects
                     selected=planning.data.receptacle.system.enchantments.aspects.0.effect labelAttr="selectLabel" }}
                 </select>
