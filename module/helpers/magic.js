@@ -308,23 +308,6 @@ export class QuickMagic extends foundry.applications.api.HandlebarsApplicationMi
     return super.close(options);
   }
 }
-/**
- *
- * @param tokenName
- * @param actor
- */
-export async function quickMagic(tokenName, actor) {
-  if (!actor.isMagus()) return;
-
-  const magic = new QuickMagic(
-    {
-      name: tokenName,
-      actor: actor
-    },
-    {}
-  );
-  const res = await magic.render(true);
-}
 
 /**
  *

@@ -1,4 +1,4 @@
-## 3.0.1.1 Stentorius BF2
+## 3.0.1.2 Stentorius BF2
 
 ### Features & changes
 
@@ -9,6 +9,7 @@
 - Fixed a bug where if a book with a freshly created topic changed to an ability type and the ability not set, it would no longer display
 - Some item types couldn't change their image.
 - Metagame (sourcebook, page,...) section is back
+- QuickUI dialogs have been moved to ArsApps, making them accessible to macros again.
 
 ## 3.0.1.0 Stentorius BF1
 

@@ -154,24 +154,6 @@ export async function computeDamage(actor) {
   await actor.sheet._onCalculateDamage({ advantage, roll: "combatDamage" });
 }
 
-/**
- *
- * @param tokenName
- * @param actor
- */
-export async function quickCombat(tokenName, actor) {
-  if (!actor.isCharacter()) return;
-
-  const combat = new QuickCombat(
-    {
-      name: tokenName,
-      actor: actor
-    },
-    {}
-  );
-  const res = await combat.render(true);
-}
-
 export class QuickVitals extends foundry.applications.api.HandlebarsApplicationMixin(
   foundry.applications.api.ApplicationV2
 ) {
@@ -254,24 +236,6 @@ export class QuickVitals extends foundry.applications.api.HandlebarsApplicationM
     }
     return super.close(options);
   }
-}
-
-/**
- *
- * @param tokenName
- * @param actor
- */
-export async function quickVitals(tokenName, actor) {
-  if (!actor.isCharacter()) return;
-
-  const vitals = new QuickVitals(
-    {
-      name: tokenName,
-      actor: actor
-    },
-    {}
-  ); // data, options
-  const res = await vitals.render(true);
 }
 
 /**
