@@ -44,7 +44,6 @@ export class Arm5eCharacterActorSheetV2 extends ArM5eActorSheetV2 {
       removeFatigue: Arm5eCharacterActorSheetV2.removeFatigue,
       addWound: Arm5eCharacterActorSheetV2.addWound,
       woundEdit: Arm5eCharacterActorSheetV2.woundEdit,
-      bookEdit: Arm5eCharacterActorSheetV2.bookEdit,
       planReading: Arm5eCharacterActorSheetV2.planReading,
       visStudy: Arm5eCharacterActorSheetV2.visStudy,
       studyLabtext: Arm5eCharacterActorSheetV2.studyLabtext,
@@ -842,18 +841,6 @@ export class Arm5eCharacterActorSheetV2 extends ArM5eActorSheetV2 {
     const itemId = target.dataset.id;
     if (!itemId) return;
     this.actor.getEmbeddedDocument("Item", itemId)?.sheet?.render(true, { focus: true });
-  }
-
-  static async bookEdit(event, target) {
-    event.preventDefault();
-    const itemEl = target.closest(".item");
-    const itemId = itemEl?.dataset?.itemId;
-    const index = Number(itemEl?.dataset?.index);
-    if (!itemId || Number.isNaN(index)) return;
-    const item = this.actor.getEmbeddedDocument("Item", itemId);
-    if (!item) return;
-    await item.setFlag("arm5e", "currentBookTopic", index);
-    item.sheet?.render(true);
   }
 
   static async planReading(event, target) {

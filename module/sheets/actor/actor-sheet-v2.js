@@ -74,7 +74,8 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
       effectCreate: ArM5eActorSheetV2.effectCreate,
       effectEdit: ArM5eActorSheetV2.effectEdit,
       effectDelete: ArM5eActorSheetV2.effectDelete,
-      effectToggle: ArM5eActorSheetV2.effectToggle
+      effectToggle: ArM5eActorSheetV2.effectToggle,
+      bookEdit: ArM5eActorSheetV2.bookEdit
     }
   };
 
@@ -690,6 +691,18 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
     const uuid = target.closest(".item")?.dataset?.uuid;
     if (!uuid) return;
     (await fromUuid(uuid))?.sheet?.render(true, { focus: true });
+  }
+
+  static async bookEdit(event, target) {
+    event.preventDefault();
+    const itemEl = target.closest(".item");
+    const itemId = itemEl?.dataset?.itemId;
+    const index = Number(itemEl?.dataset?.index);
+    if (!itemId || Number.isNaN(index)) return;
+    const item = this.actor.getEmbeddedDocument("Item", itemId);
+    if (!item) return;
+    await item.setFlag("arm5e", "currentBookTopic", index);
+    item.sheet?.render(true);
   }
 
   static async itemClone(event, target) {
