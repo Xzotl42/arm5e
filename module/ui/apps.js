@@ -5,6 +5,8 @@ import { getConfirmation } from "./dialogs.js";
 import { LabExperimentation } from "../apps/labExperimentation.js";
 import { Scriptorium, ScriptoriumObject } from "../apps/scriptorium.js";
 import { DocumentPicker } from "../apps/document-picker.js";
+import { QuickCombat, QuickVitals } from "../helpers/combat.js";
+import { QuickMagic } from "../helpers/magic.js";
 
 export class ArsApps {
   static async openAstrolab() {
@@ -39,6 +41,55 @@ export class ArsApps {
         canvas.scene.setFlag("arm5e", "aura", null);
       }
     }
+  }
+
+  static async quickCombat(tokenName, actor) {
+    if (!actor.isCharacter()) return;
+
+    const combat = new QuickCombat(
+      {
+        name: tokenName,
+        actor: actor
+      },
+      {}
+    );
+    const res = await combat.render(true);
+  }
+
+  /**
+   *
+   * @param tokenName
+   * @param actor
+   */
+  static async quickVitals(tokenName, actor) {
+    if (!actor.isCharacter()) return;
+
+    const vitals = new QuickVitals(
+      {
+        name: tokenName,
+        actor: actor
+      },
+      {}
+    ); // data, options
+    const res = await vitals.render(true);
+  }
+
+  /**
+   *
+   * @param tokenName
+   * @param actor
+   */
+  static async quickMagic(tokenName, actor) {
+    if (!actor.isMagus()) return;
+
+    const magic = new QuickMagic(
+      {
+        name: tokenName,
+        actor: actor
+      },
+      {}
+    );
+    const res = await magic.render(true);
   }
 
   /* -------------------------------------------- */

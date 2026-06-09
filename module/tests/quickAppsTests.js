@@ -1,7 +1,6 @@
 import { getCompanion, getMagus } from "./testData.js";
-import { QuickVitals, quickVitals } from "../helpers/combat.js";
-import { QuickCombat, quickCombat } from "../helpers/combat.js";
-import { QuickMagic, quickMagic } from "../helpers/magic.js";
+import { QuickVitals, QuickCombat } from "../helpers/combat.js";
+import { QuickMagic } from "../helpers/magic.js";
 
 export function registerQuickAppsIntegrationTesting(quench) {
   quench.registerBatch(

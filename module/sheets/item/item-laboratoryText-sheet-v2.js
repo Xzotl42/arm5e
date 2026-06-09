@@ -48,11 +48,6 @@ export class ArM5eLaboratoryTextItemSheetV2 extends ArM5eItemMagicSheetV2 {
     const context = await super._prepareContext(options);
     context.tabs = this._prepareTabs("primary");
 
-    context.metagame = {
-      view: game.settings.get("arm5e", "metagame"),
-      edit: context.isGM ? "" : "readonly"
-    };
-
     context.canBeRead =
       this.item.isOwned &&
       this.item.actor?.type !== "covenant" &&
