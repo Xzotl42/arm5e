@@ -1,4 +1,4 @@
-## 3.0.1.3 Stentorius BF2
+## 3.0.1.4 Stentorius BF2
 
 ### Features & changes
 
@@ -11,6 +11,7 @@
 - Metagame (sourcebook, page,...) section is back
 - QuickUI dialogs have been moved to ArsApps, making them accessible to macros again.
 - Edit icon in the library tab is working again, also it opens on the proper topic
+- Roll button for activities is displayed again.
 
 ## 3.0.1.0 Stentorius BF1
 

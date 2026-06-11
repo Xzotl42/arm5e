@@ -1,12 +1,12 @@
 {{!-- Advanced tab content for diaryEntry V2 sheet --}}
-{{!-- Source quality row --}}
-{{#if ui.showProgress}}
 <div
   class="tab {{ tab.cssClass }} marginItemPart advanced"
   data-group="primary"
   data-tab="advanced"
 >
   <div class="flexcol">
+    {{!-- Source quality row and progress sections (only for progress-based activities) --}}
+    {{#if ui.showProgress}}
     <div>
       <div style="position: absolute; right: -2300px">
         <input
@@ -555,9 +555,7 @@
       </div>
     </section>
 
-    {{!-- {{else}} --}} {{!--
-    <div style="min-height: 226px"></div>
-    --}} {{!-- {{/if}} --}}
+    {{/if}}
 
     {{!-- Action buttons (apply / partial / rollback / roll / refresh) --}}
     <div class="flexrow" style="margin-top: 4px">
@@ -618,6 +616,3 @@
     </div>
   </div>
 </div>
-{{else}}
-<div></div>
-{{/if}}
