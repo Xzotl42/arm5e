@@ -79,11 +79,86 @@ export class ArM5eActiveEffectConfig extends foundry.applications.sheets.ActiveE
 
   _getChangesData() {
     const changes = CONFIG.ISV14 ? this.document.system?.changes : this.document.changes;
-    return foundry.utils.deepClone(changes ?? []);
+    const clonedChanges = foundry.utils.deepClone(changes ?? []);
+    for (const change of clonedChanges) {
+      if (CONFIG.ISV14) {
+        if (typeof change?.type !== "string" || !change.type) {
+          const legacyMode = typeof change?.mode === "number" ? change.mode : undefined;
+          change.type = this._modeToType(legacyMode);
+        }
+      } else if (typeof change?.mode !== "number") {
+        change.mode = this._typeToMode(change?.type);
+      }
+    }
+    return clonedChanges;
   }
 
   _changesUpdateData(changesData) {
     return CONFIG.ISV14 ? { "system.changes": changesData } : { changes: changesData };
+  }
+
+  _modeToType(mode) {
+    switch (Number(mode)) {
+      case 0:
+        return "custom";
+      case 1:
+        return "multiply";
+      case 2:
+        return "add";
+      case 3:
+        return "downgrade";
+      case 4:
+        return "upgrade";
+      case 5:
+        return "override";
+      default:
+        return "add";
+    }
+  }
+
+  _typeToMode(type) {
+    if (typeof type !== "string") return 2;
+    if (type === "custom") return 0;
+    if (type === "multiply") return 1;
+    if (type === "add") return 2;
+    if (type === "downgrade") return 3;
+    if (type === "upgrade") return 4;
+    if (type === "override") return 5;
+
+    const customMode = Number(/^custom\.(-?\d+)$/.exec(type)?.[1]);
+    return Number.isInteger(customMode) ? customMode : 2;
+  }
+
+  _getEffectChangeType(effect) {
+    if (typeof effect?.type === "string" && effect.type.length > 0) {
+      return effect.type;
+    }
+    if (typeof effect?.mode === "number") {
+      return this._modeToType(effect.mode);
+    }
+    return "add";
+  }
+
+  _getEffectChangeMode(effect) {
+    if (typeof effect?.mode === "number") return effect.mode;
+    if (typeof effect?.type === "string") return this._typeToMode(effect.type);
+    return 2;
+  }
+
+  _buildEffectChangeUpdate(effect, existingChange, key, value) {
+    const changeData = {
+      ...existingChange,
+      key,
+      value
+    };
+    if (CONFIG.ISV14) {
+      changeData.type = this._getEffectChangeType(effect);
+      delete changeData.mode;
+    } else {
+      changeData.mode = this._getEffectChangeMode(effect);
+      delete changeData.type;
+    }
+    return changeData;
   }
 
   async _prepareContext(options) {
@@ -110,6 +185,7 @@ export class ArM5eActiveEffectConfig extends foundry.applications.sheets.ActiveE
 
     context.flavor = "Inputs";
     context.origin = context.document.sourceName;
+    context.isV14 = CONFIG.ISV14;
     // first effect created, add null effect type and subtype (still needed?)
     context.selectedTypes = this.document.getFlag("arm5e", "type");
     if (changesData.length > 0 && context.selectedTypes === null) {
@@ -273,11 +349,8 @@ export class ArM5eActiveEffectConfig extends foundry.applications.sheets.ActiveE
       value = true;
     }
     const changesData = this._getChangesData();
-    changesData[index] = {
-      mode: ACTIVE_EFFECTS_TYPES[arrayTypes[index]].subtypes[arraySubtypes[index]].mode,
-      key: newKey,
-      value: value
-    };
+    const existingChange = changesData[index] ?? {};
+    changesData[index] = this._buildEffectChangeUpdate(effect, existingChange, newKey, value);
     let updateFlags = this._changesUpdateData(changesData);
     await this.document.update(updateFlags);
     this.render();
@@ -292,11 +365,14 @@ export class ArM5eActiveEffectConfig extends foundry.applications.sheets.ActiveE
     let arrayOptions = this.document.getFlag("arm5e", "option");
     arrayOptions[index] = ACTIVE_EFFECTS_TYPES[value].subtypes[arraySubtypes[index]].option || null;
     const changesData = this._getChangesData();
-    changesData[index] = {
-      mode: ACTIVE_EFFECTS_TYPES[value].subtypes[arraySubtypes[index]].mode,
-      key: ACTIVE_EFFECTS_TYPES[value].subtypes[arraySubtypes[index]].key,
-      value: ACTIVE_EFFECTS_TYPES[value].subtypes[arraySubtypes[index]].default
-    };
+    const effect = ACTIVE_EFFECTS_TYPES[value].subtypes[arraySubtypes[index]];
+    const existingChange = changesData[index] ?? {};
+    changesData[index] = this._buildEffectChangeUpdate(
+      effect,
+      existingChange,
+      effect.key,
+      effect.default
+    );
     let updateFlags = {
       flags: {
         arm5e: {
@@ -323,11 +399,14 @@ export class ArM5eActiveEffectConfig extends foundry.applications.sheets.ActiveE
       computedKey = computedKey.replace("#OPTION#", arrayOptions[index]);
     }
     const changesData = this._getChangesData();
-    changesData[index] = {
-      mode: ACTIVE_EFFECTS_TYPES[arrayTypes[index]].subtypes[value].mode,
-      key: computedKey,
-      value: ACTIVE_EFFECTS_TYPES[arrayTypes[index]].subtypes[arraySubtypes[index]].default
-    };
+    const effect = ACTIVE_EFFECTS_TYPES[arrayTypes[index]].subtypes[value];
+    const existingChange = changesData[index] ?? {};
+    changesData[index] = this._buildEffectChangeUpdate(
+      effect,
+      existingChange,
+      computedKey,
+      ACTIVE_EFFECTS_TYPES[arrayTypes[index]].subtypes[arraySubtypes[index]].default
+    );
     let update = {
       flags: {
         arm5e: {
@@ -403,7 +482,11 @@ export class ArM5eActiveEffectConfig extends foundry.applications.sheets.ActiveE
 
   async _addEffectChange(updateFlags) {
     const changesData = this._getChangesData();
-    changesData.push({ key: "", mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: "" });
+    if (CONFIG.ISV14) {
+      changesData.push({ key: "", type: "add", value: "" });
+    } else {
+      changesData.push({ key: "", mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: "" });
+    }
     return await this.document.update({
       ...this._changesUpdateData(changesData),
       flags: updateFlags

@@ -4,6 +4,7 @@ const { ItemSheetV2 } = foundry.applications.sheets;
 import { getConfirmation } from "../../ui/dialogs.js";
 import { ArM5eActorSheetV2 } from "../actor/actor-sheet-v2.js";
 import ArM5eActiveEffect from "../../helpers/active-effects.js";
+import { UI } from "../../constants/ui.js";
 
 /**
  * Shared AppV2 item sheet base.
@@ -76,7 +77,7 @@ export class ArM5eItemSheetV2 extends HandlebarsApplicationMixin(ItemSheetV2) {
     context.navClass = ArM5eItemSheetV2.#getTabNavClass(context.flavor);
     context.subtabNavClass = context.navClass;
     context.metagame = {
-      view: game.settings.get("arm5e", "metagame"),
+      view: game.settings.get("arm5e", "metagame") && UI.METAGAME.includes(this.item.type),
       edit: context.isGM ? "" : "readonly"
     };
     context.effects = ArM5eActiveEffect.prepareActiveEffectCategories(this.item.effects);

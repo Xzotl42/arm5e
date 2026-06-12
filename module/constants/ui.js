@@ -1,5 +1,20 @@
 export const UI = {};
 
+UI.METAGAME = [
+  "ability",
+  "virtue",
+  "flaw",
+  "quality",
+  "inferiority",
+  "baseEffect",
+  "spell",
+  "armor",
+  "weapon",
+  "enchantment",
+  "book",
+  "power"
+];
+
 UI.STYLES = {
   FILTER_ACTIVE: 'style="text-shadow: 0 0 5px maroon"',
   STANDARD_ART: 'style="border: 0px"',
@@ -71,7 +86,7 @@ ARM5E_DEFAULT_ICONS.COLOR = {
   book: "icons/sundries/books/book-tooled-eye-gold-red.webp",
   virtue: "icons/magic/light/explosion-star-glow-silhouette.webp",
   flaw: "icons/magic/control/silhouette-hold-change-blue.webp",
-  //"flaw": "icons/magic/unholy/silhouette-evil-horned-giant.webp",
+  // "flaw": "icons/magic/unholy/silhouette-evil-horned-giant.webp",
   ability: "icons/skills/trades/woodcutting-logging-axe-stump.webp",
   abilityFamiliar: "icons/creatures/mammals/deer-antlers-glowing-blue.webp",
   diaryEntry: "icons/sundries/documents/document-sealed-signatures-red.webp",

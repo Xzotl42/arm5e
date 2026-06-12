@@ -93,12 +93,21 @@
           ></a>
         </div>
         <div style="position: absolute; top: -2300px">
+          {{#if @root.isV14}}
+          <input
+            type="hidden"
+            name="changes.{{ i }}.type"
+            value="{{ lookup change 'type' }}"
+            data-dtype="String"
+          />
+          {{else}}
           <input
             type="hidden"
             name="changes.{{ i }}.mode"
             value="{{ change.mode }}"
             data-dtype="Number"
           />
+          {{/if}}
           <input
             type="hidden"
             name="changes.{{ i }}.key"

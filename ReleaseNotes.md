@@ -1,4 +1,4 @@
-## 3.0.1.2 Stentorius BF2
+## 3.0.1.4 Stentorius BF2
 
 ### Features & changes
 
@@ -10,6 +10,10 @@
 - Some item types couldn't change their image.
 - Metagame (sourcebook, page,...) section is back
 - QuickUI dialogs have been moved to ArsApps, making them accessible to macros again.
+- Edit icon in the library tab is working again, also it opens on the proper topic
+- Roll button for activities is displayed again.
+- Removed hardcoded weight to font in text editor so bold style is visible again.
+- [V14] Fix active effect mode
 
 ## 3.0.1.0 Stentorius BF1
 
