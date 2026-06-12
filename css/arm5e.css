@@ -1411,7 +1411,7 @@ label.label-light,
 .label-medium,
 p.notes {
   font-family: var(--font-book);
-  font-weight: 100;
+  /* font-weight: 100; */
   font-size: 9pt;
 }
 
