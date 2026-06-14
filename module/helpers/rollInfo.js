@@ -946,7 +946,7 @@ export class ArM5eRollInfo {
         activeEffect.changes
           .filter((c, idx) => {
             return (
-              c.mode === CONST.ACTIVE_EFFECT_MODES.ADD &&
+              (c.type === "add" || Number(c.mode) === 2) &&
               activeEffect.getFlag("arm5e", "type")[idx] === "spellcasting"
             );
           })

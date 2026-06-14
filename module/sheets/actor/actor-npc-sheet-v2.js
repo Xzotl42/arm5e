@@ -1,4 +1,4 @@
-import { log } from "../../tools/tools.js";
+import { getDataset, log } from "../../tools/tools.js";
 import { Arm5eCharacterActorSheetV2 } from "./character-actor-sheet-v2.js";
 
 /**
@@ -206,6 +206,32 @@ export class ArM5eNPCActorSheetV2 extends Arm5eCharacterActorSheetV2 {
       }
     }
     return super._preparePartContext(partId, context, options);
+  }
+
+  /** @override */
+  _onRender(context, options) {
+    super._onRender(context, options);
+
+    this.element.querySelectorAll(".change-realm").forEach((el) => {
+      el.addEventListener("change", (event) => this._onRealmChange(event));
+    });
+  }
+
+  async _onRealmChange(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    const chosenRealm = event.currentTarget.value;
+    const currentRealm = getDataset(event).realm;
+    const updateData = {};
+
+    if (chosenRealm !== "mundane") {
+      updateData[`system.realms.${chosenRealm}.aligned`] = true;
+    }
+    if (currentRealm !== "mundane") {
+      updateData[`system.realms.${currentRealm}.aligned`] = false;
+    }
+    updateData["system.realm"] = chosenRealm;
+    await this.actor.update(updateData);
   }
 
   /** @override */

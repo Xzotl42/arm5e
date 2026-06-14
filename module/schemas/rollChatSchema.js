@@ -6,6 +6,34 @@ import { BasicChatSchema } from "./basicChatSchema.js";
 import { basicIntegerField, boolOption } from "./commonSchemas.js";
 const fields = foundry.data.fields;
 
+function mapLegacyRollMode(rollMode) {
+  const mapper = foundry?.dice?.Roll?._mapLegacyRollMode;
+  if (typeof mapper === "function") return mapper.call(foundry.dice.Roll, rollMode);
+  return rollMode;
+}
+
+function getChatRollModeValues() {
+  if (CONFIG.ChatMessage?.modes) {
+    return Object.keys(CONFIG.ChatMessage.modes);
+  }
+  return ["publicroll", "gmroll", "blindroll", "selfroll"];
+}
+
+function getPublicRollMode() {
+  const mappedMode = mapLegacyRollMode("publicroll");
+  return getChatRollModeValues().includes(mappedMode) ? mappedMode : "publicroll";
+}
+
+function getMigratedRollMode(rollMode) {
+  if (typeof rollMode !== "string" || !rollMode.length) return null;
+  const validModes = getChatRollModeValues();
+  if (validModes.includes(rollMode)) return rollMode;
+
+  const mappedMode = mapLegacyRollMode(rollMode);
+  if (validModes.includes(mappedMode)) return mappedMode;
+
+  return getPublicRollMode();
+}
 export class RollChatSchema extends BasicChatSchema {
   static defineSchema() {
     return {
@@ -19,8 +47,8 @@ export class RollChatSchema extends BasicChatSchema {
       rollMode: new fields.StringField({
         required: false,
         blank: false,
-        choices: Object.values(CONST.DICE_ROLL_MODES).map((e) => e),
-        initial: CONST.DICE_ROLL_MODES.PUBLIC
+        choices: getChatRollModeValues(),
+        initial: getPublicRollMode()
       }),
 
       roll: new fields.SchemaField({
@@ -81,13 +109,19 @@ export class RollChatSchema extends BasicChatSchema {
     };
   }
 
-  static migrateData(data) {}
+  // static migrateData(data) {}
 
   static getDefault(itemData) {}
 
   static migrate(itemData) {
     const updateData = {};
-
+    const currentRollMode = itemData.system?.rollMode;
+    if (CONFIG.ISV14 && typeof currentRollMode === "string") {
+      const migratedRollMode = getMigratedRollMode(currentRollMode);
+      if (migratedRollMode && migratedRollMode !== currentRollMode) {
+        updateData["system.rollMode"] = migratedRollMode;
+      }
+    }
     return updateData;
   }
 
@@ -185,10 +219,11 @@ export class RollChatSchema extends BasicChatSchema {
 
   showRollResults(actor, type) {
     let showRolls = game.settings.get("arm5e", "showRolls");
+    const publicRollMode = getPublicRollMode();
     return (
       game.users.get(game.userId).isGM ||
       actor?.isOwner ||
-      (this.rollMode === CONST.DICE_ROLL_MODES.PUBLIC &&
+      (this.rollMode === publicRollMode &&
         type === "player" &&
         ["ALL", "PLAYERS"].includes(showRolls)) ||
       "ALL" === showRolls
@@ -197,10 +232,11 @@ export class RollChatSchema extends BasicChatSchema {
 
   showRollFormulas(actor, type) {
     let showFormulas = game.settings.get("arm5e", "showRollFormulas");
+    const publicRollMode = getPublicRollMode();
     return (
       game.users.get(game.userId).isGM ||
       actor?.isOwner ||
-      (this.rollMode === CONST.DICE_ROLL_MODES.PUBLIC &&
+      (this.rollMode === publicRollMode &&
         ((type === "player" && ["ALL", "PLAYERS"].includes(showFormulas)) ||
           "ALL" === showFormulas))
     );

@@ -1,4 +1,8 @@
-## 3.0.1.4 Stentorius BF2
+## 3.0.1.5 Stentorius BF2
+
+### Compatibility
+
+- Verified for 14.364
 
 ### Features & changes
 
@@ -14,6 +18,12 @@
 - Roll button for activities is displayed again.
 - Removed hardcoded weight to font in text editor so bold style is visible again.
 - [V14] Fix active effect mode
+- Icons to enable enchantment were cropped for some Items
+- [V14] Chat messages are migrated to the new rollMode, removing validation errors.
+- Changing the begining date of a multi-season activity will recompute the schedule again.
+- Removed deprecation warnings for Active Effects modes
+- Area lore option is properly set, so it doesn't cause problems with diary activities
+- Add missing listener for changing realm.
 
 ## 3.0.1.0 Stentorius BF1
 

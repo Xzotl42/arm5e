@@ -9,6 +9,36 @@ const renderTemplate = foundry.applications.handlebars.renderTemplate;
 
 let iterations = 1;
 
+function mapLegacyRollMode(rollMode) {
+  const mapper = foundry?.dice?.Roll?._mapLegacyRollMode;
+  if (typeof mapper === "function") return mapper.call(foundry.dice.Roll, rollMode);
+  return rollMode;
+}
+
+function getChatRollModes() {
+  return (
+    CONFIG.ChatMessage?.modes ?? {
+      PUBLIC: "publicroll",
+      PRIVATE: "gmroll",
+      BLIND: "blindroll",
+      SELF: "selfroll"
+    }
+  );
+}
+
+function getChatRollMode(name) {
+  const modes = getChatRollModes();
+  const mode = modes[name] ?? modes[name.toLowerCase()];
+  if (mode) return mode;
+  const legacyMode = {
+    PUBLIC: "publicroll",
+    PRIVATE: "gmroll",
+    BLIND: "blindroll",
+    SELF: "selfroll"
+  }[name];
+  return mapLegacyRollMode(legacyMode);
+}
+
 /**
  * Description
  * @param {any} actor
@@ -35,9 +65,11 @@ async function simpleDie(actor, type = "OPTION", callback, specialBehavior = 0) 
   let dieRoll = await roll.roll();
 
   let rollMode = game.settings.get("core", "rollMode");
+  const blindRollMode = getChatRollMode("BLIND");
+  const privateRollMode = getChatRollMode("PRIVATE");
   // let showRolls = game.settings.get("arm5e", "showRolls");
-  if (rollProperties.MODE & ROLL_MODES.PRIVATE && rollMode !== CONST.DICE_ROLL_MODES.BLIND) {
-    rollMode = CONST.DICE_ROLL_MODES.PRIVATE;
+  if (rollProperties.MODE & ROLL_MODES.PRIVATE && rollMode !== blindRollMode) {
+    rollMode = privateRollMode;
   }
 
   let confAllowed = actor.system.con.score > 0 && (rollProperties.MODE & ROLL_MODES.NO_CONF) === 0;
@@ -205,8 +237,10 @@ async function stressDie(
   }
 
   let rollMode = game.settings.get("core", "rollMode");
-  if (rollProperties.MODE & ROLL_MODES.PRIVATE && rollMode !== CONST.DICE_ROLL_MODES.BLIND) {
-    rollMode = CONST.DICE_ROLL_MODES.PRIVATE;
+  const blindRollMode = getChatRollMode("BLIND");
+  const privateRollMode = getChatRollMode("PRIVATE");
+  if (rollProperties.MODE & ROLL_MODES.PRIVATE && rollMode !== blindRollMode) {
+    rollMode = privateRollMode;
   }
 
   const system = {
@@ -946,8 +980,10 @@ async function noRoll(actor, specialBehavior, callback) {
   let formula = `${rollInfo.formula}`;
 
   let rollMode = game.settings.get("core", "rollMode");
-  if (rollProperties.MODE & ROLL_MODES.PRIVATE && rollMode !== CONST.DICE_ROLL_MODES.BLIND) {
-    rollMode = CONST.DICE_ROLL_MODES.PRIVATE;
+  const blindRollMode = getChatRollMode("BLIND");
+  const privateRollMode = getChatRollMode("PRIVATE");
+  if (rollProperties.MODE & ROLL_MODES.PRIVATE && rollMode !== blindRollMode) {
+    rollMode = privateRollMode;
   }
 
   if (rollInfo.magic.divide > 1) {

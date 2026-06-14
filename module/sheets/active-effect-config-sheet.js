@@ -485,7 +485,7 @@ export class ArM5eActiveEffectConfig extends foundry.applications.sheets.ActiveE
     if (CONFIG.ISV14) {
       changesData.push({ key: "", type: "add", value: "" });
     } else {
-      changesData.push({ key: "", mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: "" });
+      changesData.push({ key: "", mode: 2, value: "" });
     }
     return await this.document.update({
       ...this._changesUpdateData(changesData),

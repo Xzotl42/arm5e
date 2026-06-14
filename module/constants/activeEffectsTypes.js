@@ -29,7 +29,7 @@ export function addActiveEffectsDefinitions() {
     magicResistance: {
       mnemonic: "arm5e.activeEffect.subtypes.magicResistance",
       key: "system.bonuses.arts.magicResistance",
-      mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+      mode: 2,
       default: 0
     }
   };
@@ -44,7 +44,7 @@ export function addActiveEffectsDefinitions() {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
           key: `system.bonuses.skills.${current[0]}_#OPTION#.bonus`,
-          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          mode: 2,
           default: 2,
           option: current[1].optionDefault
         };
@@ -52,7 +52,7 @@ export function addActiveEffectsDefinitions() {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
           key: `system.bonuses.skills.${current[0]}.bonus`,
-          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          mode: 2,
           default: 2
         };
       }
@@ -66,7 +66,7 @@ export function addActiveEffectsDefinitions() {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
           key: `system.bonuses.skills.${current[0]}_#OPTION#.bonus`,
-          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          mode: 2,
           default: 2,
           option: current[1].optionDefault
         };
@@ -74,7 +74,7 @@ export function addActiveEffectsDefinitions() {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
           key: `system.bonuses.skills.${current[0]}.bonus`,
-          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          mode: 2,
           default: 2
         };
       }
@@ -88,7 +88,7 @@ export function addActiveEffectsDefinitions() {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
           key: `system.bonuses.skills.${current[0]}_#OPTION#.bonus`,
-          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          mode: 2,
           default: 2,
           option: current[1].optionDefault
         };
@@ -96,7 +96,7 @@ export function addActiveEffectsDefinitions() {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
           key: `system.bonuses.skills.${current[0]}.bonus`,
-          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          mode: 2,
           default: 2
         };
       }
@@ -110,7 +110,7 @@ export function addActiveEffectsDefinitions() {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
           key: `system.bonuses.skills.${current[0]}_#OPTION#.bonus`,
-          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          mode: 2,
           default: 2,
           option: current[1].optionDefault
         };
@@ -118,7 +118,7 @@ export function addActiveEffectsDefinitions() {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
           key: `system.bonuses.skills.${current[0]}.bonus`,
-          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          mode: 2,
           default: 2
         };
       }
@@ -132,7 +132,7 @@ export function addActiveEffectsDefinitions() {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
           key: `system.bonuses.skills.${current[0]}_#OPTION#.bonus`,
-          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          mode: 2,
           default: 2,
           option: current[1].optionDefault
         };
@@ -140,7 +140,7 @@ export function addActiveEffectsDefinitions() {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
           key: `system.bonuses.skills.${current[0]}.bonus`,
-          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          mode: 2,
           default: 2
         };
       }
@@ -154,7 +154,7 @@ export function addActiveEffectsDefinitions() {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
           key: `system.bonuses.skills.${current[0]}_#OPTION#.bonus`,
-          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          mode: 2,
           default: 2,
           option: current[1].optionDefault
         };
@@ -162,7 +162,7 @@ export function addActiveEffectsDefinitions() {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
           key: `system.bonuses.skills.${current[0]}.bonus`,
-          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          mode: 2,
           default: 2
         };
       }
@@ -176,7 +176,7 @@ export function addActiveEffectsDefinitions() {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
           key: `system.bonuses.skills.${current[0]}_#OPTION#.bonus`,
-          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          mode: 2,
           default: 2,
           option: current[1].optionDefault
         };
@@ -184,7 +184,7 @@ export function addActiveEffectsDefinitions() {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
           key: `system.bonuses.skills.${current[0]}.bonus`,
-          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          mode: 2,
           default: 2
         };
       }
@@ -195,7 +195,7 @@ export function addActiveEffectsDefinitions() {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
           key: `system.bonuses.skills.${current[0]}_#OPTION#.bonus`,
-          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          mode: 2,
           default: 2,
           option: current[1].optionDefault
         };
@@ -203,7 +203,7 @@ export function addActiveEffectsDefinitions() {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
           key: `system.bonuses.skills.${current[0]}.bonus`,
-          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          mode: 2,
           default: 2
         };
       }
@@ -219,7 +219,7 @@ export function addActiveEffectsDefinitions() {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
           key: `system.bonuses.skills.${current[0]}_#OPTION#.xpCoeff`,
-          mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
+          mode: 1,
           default: 1.5,
           option: current[1].optionDefault
         };
@@ -227,7 +227,7 @@ export function addActiveEffectsDefinitions() {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
           key: `system.bonuses.skills.${current[0]}.xpCoeff`,
-          mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
+          mode: 1,
           default: 1.5
         };
       }
@@ -241,7 +241,7 @@ export function addActiveEffectsDefinitions() {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
           key: `system.bonuses.skills.${current[0]}_#OPTION#.xpCoeff`,
-          mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
+          mode: 1,
           default: 1.5,
           option: current[1].optionDefault
         };
@@ -249,7 +249,7 @@ export function addActiveEffectsDefinitions() {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
           key: `system.bonuses.skills.${current[0]}.xpCoeff`,
-          mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
+          mode: 1,
           default: 1.5
         };
       }
@@ -263,7 +263,7 @@ export function addActiveEffectsDefinitions() {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
           key: `system.bonuses.skills.${current[0]}_#OPTION#.xpCoeff`,
-          mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
+          mode: 1,
           default: 1.5,
           option: current[1].optionDefault
         };
@@ -271,7 +271,7 @@ export function addActiveEffectsDefinitions() {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
           key: `system.bonuses.skills.${current[0]}.xpCoeff`,
-          mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
+          mode: 1,
           default: 1.5
         };
       }
@@ -285,7 +285,7 @@ export function addActiveEffectsDefinitions() {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
           key: `system.bonuses.skills.${current[0]}_#OPTION#.xpCoeff`,
-          mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
+          mode: 1,
           default: 1.5,
           option: current[1].optionDefault
         };
@@ -293,7 +293,7 @@ export function addActiveEffectsDefinitions() {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
           key: `system.bonuses.skills.${current[0]}.xpCoeff`,
-          mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
+          mode: 1,
           default: 1.5
         };
       }
@@ -306,7 +306,7 @@ export function addActiveEffectsDefinitions() {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
           key: `system.bonuses.skills.${current[0]}_#OPTION#.xpCoeff`,
-          mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
+          mode: 1,
           default: 1.5,
           option: current[1].optionDefault
         };
@@ -314,7 +314,7 @@ export function addActiveEffectsDefinitions() {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
           key: `system.bonuses.skills.${current[0]}.xpCoeff`,
-          mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
+          mode: 1,
           default: 1.5
         };
       }
@@ -327,7 +327,7 @@ export function addActiveEffectsDefinitions() {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
           key: `system.bonuses.skills.${current[0]}_#OPTION#.xpCoeff`,
-          mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
+          mode: 1,
           default: 1.5,
           option: current[1].optionDefault
         };
@@ -335,7 +335,7 @@ export function addActiveEffectsDefinitions() {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
           key: `system.bonuses.skills.${current[0]}.xpCoeff`,
-          mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
+          mode: 1,
           default: 1.5
         };
       }
@@ -349,7 +349,7 @@ export function addActiveEffectsDefinitions() {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
           key: `system.bonuses.skills.${current[0]}_#OPTION#.xpCoeff`,
-          mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
+          mode: 1,
           default: 1.5,
           option: current[1].optionDefault
         };
@@ -357,7 +357,7 @@ export function addActiveEffectsDefinitions() {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
           key: `system.bonuses.skills.${current[0]}.xpCoeff`,
-          mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
+          mode: 1,
           default: 1.5
         };
       }
@@ -368,7 +368,7 @@ export function addActiveEffectsDefinitions() {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
           key: `system.bonuses.skills.${current[0]}_#OPTION#.xpCoeff`,
-          mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
+          mode: 1,
           default: 1.5,
           option: current[1].optionDefault
         };
@@ -376,7 +376,7 @@ export function addActiveEffectsDefinitions() {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
           key: `system.bonuses.skills.${current[0]}.xpCoeff`,
-          mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
+          mode: 1,
           default: 1.5
         };
       }
@@ -390,7 +390,7 @@ export function addActiveEffectsDefinitions() {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
           key: `system.bonuses.skills.${current[0]}_#OPTION#.xpMod`,
-          mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
+          mode: 1,
           default: 1.5,
           option: current[1].optionDefault
         };
@@ -398,7 +398,7 @@ export function addActiveEffectsDefinitions() {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
           key: `system.bonuses.skills.${current[0]}.xpMod`,
-          mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
+          mode: 1,
           default: 1.5
         };
       }
@@ -414,7 +414,7 @@ export function addActiveEffectsDefinitions() {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
           key: `system.bonuses.skills.${current[0]}_#OPTION#.xpMod`,
-          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          mode: 2,
           default: 5,
           option: current[1].optionDefault
         };
@@ -422,7 +422,7 @@ export function addActiveEffectsDefinitions() {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
           key: `system.bonuses.skills.${current[0]}.xpMod`,
-          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          mode: 2,
           default: 5
         };
       }
@@ -436,7 +436,7 @@ export function addActiveEffectsDefinitions() {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
           key: `system.bonuses.skills.${current[0]}_#OPTION#.xpMod`,
-          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          mode: 2,
           default: 5,
           option: current[1].optionDefault
         };
@@ -444,7 +444,7 @@ export function addActiveEffectsDefinitions() {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
           key: `system.bonuses.skills.${current[0]}.xpMod`,
-          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          mode: 2,
           default: 5
         };
       }
@@ -458,7 +458,7 @@ export function addActiveEffectsDefinitions() {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
           key: `system.bonuses.skills.${current[0]}_#OPTION#.xpMod`,
-          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          mode: 2,
           default: 5,
           option: current[1].optionDefault
         };
@@ -466,7 +466,7 @@ export function addActiveEffectsDefinitions() {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
           key: `system.bonuses.skills.${current[0]}.xpMod`,
-          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          mode: 2,
           default: 5
         };
       }
@@ -480,7 +480,7 @@ export function addActiveEffectsDefinitions() {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
           key: `system.bonuses.skills.${current[0]}_#OPTION#.xpMod`,
-          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          mode: 2,
           default: 5,
           option: current[1].optionDefault
         };
@@ -488,7 +488,7 @@ export function addActiveEffectsDefinitions() {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
           key: `system.bonuses.skills.${current[0]}.xpMod`,
-          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          mode: 2,
           default: 5
         };
       }
@@ -502,7 +502,7 @@ export function addActiveEffectsDefinitions() {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
           key: `system.bonuses.skills.${current[0]}_#OPTION#.xpMod`,
-          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          mode: 2,
           default: 5,
           option: current[1].optionDefault
         };
@@ -510,7 +510,7 @@ export function addActiveEffectsDefinitions() {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
           key: `system.bonuses.skills.${current[0]}.xpMod`,
-          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          mode: 2,
           default: 5
         };
       }
@@ -524,7 +524,7 @@ export function addActiveEffectsDefinitions() {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
           key: `system.bonuses.skills.${current[0]}_#OPTION#.xpMod`,
-          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          mode: 2,
           default: 5,
           option: current[1].optionDefault
         };
@@ -532,7 +532,7 @@ export function addActiveEffectsDefinitions() {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
           key: `system.bonuses.skills.${current[0]}.xpMod`,
-          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          mode: 2,
           default: 5
         };
       }
@@ -546,7 +546,7 @@ export function addActiveEffectsDefinitions() {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
           key: `system.bonuses.skills.${current[0]}_#OPTION#.xpMod`,
-          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          mode: 2,
           default: 5,
           option: current[1].optionDefault
         };
@@ -554,7 +554,7 @@ export function addActiveEffectsDefinitions() {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
           key: `system.bonuses.skills.${current[0]}.xpMod`,
-          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          mode: 2,
           default: 5
         };
       }
@@ -565,7 +565,7 @@ export function addActiveEffectsDefinitions() {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
           key: `system.bonuses.skills.${current[0]}_#OPTION#.xpMod`,
-          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          mode: 2,
           default: 5,
           option: current[1].optionDefault
         };
@@ -573,7 +573,7 @@ export function addActiveEffectsDefinitions() {
         a[current[0]] = {
           mnemonic: current[1].mnemonic,
           key: `system.bonuses.skills.${current[0]}.xpMod`,
-          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          mode: 2,
           default: 5
         };
       }
@@ -587,7 +587,7 @@ const puissantTechniques = () => {
     a[current[0]] = {
       mnemonic: current[1].label,
       key: `system.arts.techniques.${current[0]}.bonus`,
-      mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+      mode: 2,
       default: 3
     };
     return a;
@@ -599,7 +599,7 @@ const puissantForms = () => {
     a[current[0]] = {
       mnemonic: current[1].label,
       key: `system.arts.forms.${current[0]}.bonus`,
-      mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+      mode: 2,
       default: 3
     };
     return a;
@@ -611,7 +611,7 @@ const affinityTechniques = () => {
     a[current[0]] = {
       mnemonic: current[1].label,
       key: `system.arts.techniques.${current[0]}.xpCoeff`,
-      mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
+      mode: 1,
       default: 1.5
     };
     return a;
@@ -623,7 +623,7 @@ const affinityForms = () => {
     a[current[0]] = {
       mnemonic: current[1].label,
       key: `system.arts.forms.${current[0]}.xpCoeff`,
-      mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
+      mode: 1,
       default: 1.5
     };
     return a;
@@ -635,7 +635,7 @@ const deficientTechniques = () => {
     a[current[0]] = {
       mnemonic: current[1].label,
       key: `system.arts.techniques.${current[0]}.deficient`,
-      mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+      mode: 5,
       default: true,
       readonly: true
     };
@@ -648,7 +648,7 @@ const deficientForms = () => {
     a[current[0]] = {
       mnemonic: current[1].label,
       key: `system.arts.forms.${current[0]}.deficient`,
-      mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+      mode: 5,
       default: true,
       readonly: true
     };
@@ -661,7 +661,7 @@ const resistanceForms = () => {
     a[current[0]] = {
       mnemonic: current[1].label,
       key: `system.bonuses.resistance.${current[0]}`,
-      mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+      mode: 2,
       default: 0
     };
     return a;
@@ -673,7 +673,7 @@ const magicResistanceForms = () => {
     a[current[0]] = {
       mnemonic: current[1].label,
       key: `system.bonuses.magicResistance.${current[0]}`,
-      mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+      mode: 2,
       default: 0
     };
     return a;
@@ -690,7 +690,7 @@ export const ACTIVE_EFFECTS_TYPES = {
       none: {
         mnemonic: "arm5e.activeEffect.types.nullEffect",
         key: "",
-        mode: CONST.ACTIVE_EFFECT_MODES.CUSTOM
+        mode: 0
       }
     }
   },
@@ -703,93 +703,93 @@ export const ACTIVE_EFFECTS_TYPES = {
       voiceLoud: {
         mnemonic: "arm5e.sheet.magic.voiceType.loud",
         key: "system.stances.voice.loud",
-        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+        mode: 5,
         default: 1
       },
       voiceFirm: {
         mnemonic: "arm5e.sheet.magic.voiceType.firm",
         key: "system.stances.voice.firm",
-        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+        mode: 5,
         default: 0
       },
       voiceQuiet: {
         mnemonic: "arm5e.sheet.magic.voiceType.quiet",
         key: "system.stances.voice.quiet",
-        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+        mode: 5,
         default: 0
       },
       voiceSilent: {
         mnemonic: "arm5e.sheet.magic.voiceType.silent",
         key: "system.stances.voice.silent",
-        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+        mode: 5,
         default: -5
       },
       gesturesExaggerated: {
         mnemonic: "arm5e.sheet.magic.gesturesType.exaggerated",
         key: "system.stances.gestures.exaggerated",
-        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+        mode: 5,
         default: 1
       },
       gesturesBold: {
         mnemonic: "arm5e.sheet.magic.gesturesType.bold",
         key: "system.stances.gestures.bold",
-        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+        mode: 5,
         default: 0
       },
       gesturesSubtle: {
         mnemonic: "arm5e.sheet.magic.gesturesType.subtle",
         key: "system.stances.gestures.subtle",
-        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+        mode: 5,
         default: 0
       },
       gesturesMotionless: {
         mnemonic: "arm5e.sheet.magic.gesturesType.motionless",
         key: "system.stances.gestures.motionless",
-        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+        mode: 5,
         default: -2
       },
       warpingThreshold: {
         mnemonic: "arm5e.twilight.warpingThreshold",
         key: "system.bonuses.arts.warpingThreshold",
-        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+        mode: 5,
         default: 2
       },
       spellFatigueThreshold: {
         mnemonic: "arm5e.activeEffect.subtypes.spellFatigueThreshold",
         key: "system.bonuses.arts.spellFatigueThreshold",
-        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+        mode: 5,
         default: 10
       },
       ritualFatigueCancelled: {
         mnemonic: "arm5e.activeEffect.subtypes.ritualFatigueCancelled",
         key: "system.bonuses.arts.ritualFatigueCancelled",
-        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+        mode: 5,
         default: 0
       }
 
       // spontDivider: {
       //   mnemonic: "arm5e.activeEffect.subtypes.spontDivider",
       //   key: "system.bonuses.arts.spontDivider",
-      //   mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+      //   mode: 5,
       //   default: 2
       // },
       // spontDividerNoFatigue: {
       //   mnemonic: "arm5e.activeEffect.subtypes.spontDividerNoFatigue",
       //   key: "system.bonuses.arts.spontDividerNoFatigue",
-      //   mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+      //   mode: 5,
       //   default: 5
       // },
       // aura: {
       //   mnemonic: "arm5e.sheet.magic.aura",
       //   key: "system.bonuses.arts.spellcasting",
-      //   mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+      //   mode: 2,
       //   default: 0 //,
       //   // option: "mundane"
       // }
       // optional: {
       //   mnemonic: "arm5e.activeEffect.types.optional",
       //   key: "system.bonuses.arts.spellcasting",
-      //   mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+      //   mode: 2,
       //   default: 0,
       //   optional: true
       // }
@@ -804,61 +804,61 @@ export const ACTIVE_EFFECTS_TYPES = {
       adventuring: {
         mnemonic: "arm5e.activity.adventuring",
         key: "system.bonuses.activities.adventuring",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 3
       },
       practice: {
         mnemonic: "arm5e.activity.practice",
         key: "system.bonuses.activities.practice",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 3
       },
       training: {
         mnemonic: "arm5e.activity.training",
         key: "system.bonuses.activities.training",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 5
       },
       teaching: {
         mnemonic: "arm5e.activity.teaching",
         key: "system.bonuses.activities.teaching",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 5
       },
       teacher: {
         mnemonic: "arm5e.activity.teacher.label",
         key: "system.bonuses.activities.teacher",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 5
       },
       writing: {
         mnemonic: "arm5e.activity.writing",
         key: "system.bonuses.activities.writing",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 3
       },
       reading: {
         mnemonic: "arm5e.activity.reading",
         key: "system.bonuses.activities.reading",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 3
       },
       readingArts: {
         mnemonic: "arm5e.activity.readingArts",
         key: "system.bonuses.activities.readingArts",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 2
       },
       visStudy: {
         mnemonic: "arm5e.activity.visStudy",
         key: "system.bonuses.activities.visStudy",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 2
       }
       // divider: {
       //   mnemonic: "arm5e.activity.visStudy",
       //   key: "system.system.penalties.activityDivider",
-      //   mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+      //   mode: 5,
       //   default: 2,
       //   internal: true
       // }
@@ -873,13 +873,13 @@ export const ACTIVE_EFFECTS_TYPES = {
       xpCoeff: {
         mnemonic: "arm5e.activeEffect.subtypes.xpcoeff",
         key: "system.bonuses.arts.masteryXpCoeff",
-        mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
+        mode: 1,
         default: 2.0
       },
       xpMod: {
         mnemonic: "arm5e.activeEffect.subtypes.xpmod",
         key: "system.bonuses.arts.masteryXpMod",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 5
       }
     }
@@ -938,43 +938,43 @@ export const ACTIVE_EFFECTS_TYPES = {
       size: {
         mnemonic: "arm5e.sheet.size",
         key: "system.vitals.siz.value",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 1
       },
       soak: {
         mnemonic: "arm5e.sheet.soak",
         key: "system.bonuses.traits.soak",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 3
       },
       age: {
         mnemonic: "arm5e.sheet.age",
         key: "system.age.value",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 0
       },
       aging: {
         mnemonic: "arm5e.sheet.aging",
         key: "system.bonuses.traits.aging",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 0
       },
       agingStart: {
         mnemonic: "arm5e.sheet.agingStart",
         key: "system.bonuses.traits.agingStart",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 0
       },
       recovery: {
         mnemonic: "arm5e.activity.recovery",
         key: "system.bonuses.traits.recovery",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 0
       },
       might: {
         mnemonic: "arm5e.sheet.might",
         key: "system.might.value",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 0
       }
     }
@@ -988,55 +988,55 @@ export const ACTIVE_EFFECTS_TYPES = {
       int: {
         mnemonic: "arm5e.sheet.intelligence",
         key: "system.characteristics.int.value",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 0
       },
       per: {
         mnemonic: "arm5e.sheet.perception",
         key: "system.characteristics.per.value",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 0
       },
       str: {
         mnemonic: "arm5e.sheet.strength",
         key: "system.characteristics.str.value",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 0
       },
       sta: {
         mnemonic: "arm5e.sheet.stamina",
         key: "system.characteristics.sta.value",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 0
       },
       pre: {
         mnemonic: "arm5e.sheet.presence",
         key: "system.characteristics.pre.value",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 0
       },
       com: {
         mnemonic: "arm5e.sheet.communication",
         key: "system.characteristics.com.value",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 0
       },
       dex: {
         mnemonic: "arm5e.sheet.dexterity",
         key: "system.characteristics.dex.value",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 0
       },
       qik: {
         mnemonic: "arm5e.sheet.quickness",
         key: "system.characteristics.qik.value",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 0
       },
       cun: {
         mnemonic: "arm5e.sheet.cunning",
         key: "system.characteristics.cun.value",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 0
       }
     }
@@ -1050,55 +1050,55 @@ export const ACTIVE_EFFECTS_TYPES = {
       int: {
         mnemonic: "arm5e.sheet.intelligence",
         key: "system.characteristics.int.upgrade",
-        mode: CONST.ACTIVE_EFFECT_MODES.UPGRADE,
+        mode: 4,
         default: 0
       },
       per: {
         mnemonic: "arm5e.sheet.perception",
         key: "system.characteristics.per.upgrade",
-        mode: CONST.ACTIVE_EFFECT_MODES.UPGRADE,
+        mode: 4,
         default: 0
       },
       str: {
         mnemonic: "arm5e.sheet.strength",
         key: "system.characteristics.str.upgrade",
-        mode: CONST.ACTIVE_EFFECT_MODES.UPGRADE,
+        mode: 4,
         default: 0
       },
       sta: {
         mnemonic: "arm5e.sheet.stamina",
         key: "system.characteristics.sta.upgrade",
-        mode: CONST.ACTIVE_EFFECT_MODES.UPGRADE,
+        mode: 4,
         default: 0
       },
       pre: {
         mnemonic: "arm5e.sheet.presence",
         key: "system.characteristics.pre.upgrade",
-        mode: CONST.ACTIVE_EFFECT_MODES.UPGRADE,
+        mode: 4,
         default: 0
       },
       com: {
         mnemonic: "arm5e.sheet.communication",
         key: "system.characteristics.com.upgrade",
-        mode: CONST.ACTIVE_EFFECT_MODES.UPGRADE,
+        mode: 4,
         default: 0
       },
       dex: {
         mnemonic: "arm5e.sheet.dexterity",
         key: "system.characteristics.dex.upgrade",
-        mode: CONST.ACTIVE_EFFECT_MODES.UPGRADE,
+        mode: 4,
         default: 0
       },
       qik: {
         mnemonic: "arm5e.sheet.quickness",
         key: "system.characteristics.qik.upgrade",
-        mode: CONST.ACTIVE_EFFECT_MODES.UPGRADE,
+        mode: 4,
         default: 0
       },
       cun: {
         mnemonic: "arm5e.sheet.cunning",
         key: "system.characteristics.cun.upgrade",
-        mode: CONST.ACTIVE_EFFECT_MODES.UPGRADE,
+        mode: 4,
         default: 0
       }
     }
@@ -1112,61 +1112,61 @@ export const ACTIVE_EFFECTS_TYPES = {
       total: {
         mnemonic: "arm5e.activeEffect.subtypes.fatigueTotal",
         key: "system.bonuses.traits.fatigue",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 0
       },
       fatigueRolls: {
         mnemonic: "arm5e.activeEffect.subtypes.fatigueRolls",
         key: "system.bonuses.rolls.fatigue",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 0
       },
       winded: {
         mnemonic: "arm5e.sheet.winded",
         key: "system.fatigue.winded.number",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 0
       },
       weary: {
         mnemonic: "arm5e.sheet.weary",
         key: "system.fatigue.weary.number",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 0
       },
       tired: {
         mnemonic: "arm5e.sheet.tired",
         key: "system.fatigue.tired.number",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 0
       },
       dazed: {
         mnemonic: "arm5e.sheet.dazed",
         key: "system.fatigue.dazed.number",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 0
       },
       windedLevel: {
         mnemonic: "arm5e.sheet.windedLvl",
         key: "system.fatigue.winded.amount",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 0
       },
       wearyLevel: {
         mnemonic: "arm5e.sheet.wearyLvl",
         key: "system.fatigue.weary.amount",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 0
       },
       tiredLevel: {
         mnemonic: "arm5e.sheet.tiredLvl",
         key: "system.fatigue.tired.amount",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 0
       },
       dazedLevel: {
         mnemonic: "arm5e.sheet.dazedLvl",
         key: "system.fatigue.dazed.amount",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 0
       }
     }
@@ -1180,25 +1180,25 @@ export const ACTIVE_EFFECTS_TYPES = {
       total: {
         mnemonic: "arm5e.activeEffect.subtypes.woundsTotal",
         key: "system.bonuses.traits.wounds",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 0
       },
       light: {
         mnemonic: "arm5e.sheet.light",
         key: "system.penalties.wounds.light",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 0
       },
       medium: {
         mnemonic: "arm5e.sheet.medium",
         key: "system.penalties.wounds.medium",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 0
       },
       heavy: {
         mnemonic: "arm5e.sheet.heavy",
         key: "system.penalties.wounds.heavy",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 0
       }
     }
@@ -1212,25 +1212,25 @@ export const ACTIVE_EFFECTS_TYPES = {
       magic: {
         mnemonic: "arm5e.realm.magic",
         key: "system.realms.magic.aligned",
-        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+        mode: 5,
         default: true
       },
       faeric: {
         mnemonic: "arm5e.realm.faeric",
         key: "system.realms.faeric.aligned",
-        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+        mode: 5,
         default: true
       },
       divine: {
         mnemonic: "arm5e.realm.divine",
         key: "system.realms.divine.aligned",
-        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+        mode: 5,
         default: true
       },
       infernal: {
         mnemonic: "arm5e.realm.infernal",
         key: "system.realms.infernal.aligned",
-        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+        mode: 5,
         default: true
       }
     }
@@ -1244,25 +1244,25 @@ export const ACTIVE_EFFECTS_TYPES = {
       magic: {
         mnemonic: "arm5e.realm.magic",
         key: "system.realms.magic.susceptible",
-        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+        mode: 5,
         default: true
       },
       faeric: {
         mnemonic: "arm5e.realm.faeric",
         key: "system.realms.faeric.susceptible",
-        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+        mode: 5,
         default: true
       },
       divine: {
         mnemonic: "arm5e.realm.divine",
         key: "system.realms.divine.susceptible",
-        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+        mode: 5,
         default: true
       },
       infernal: {
         mnemonic: "arm5e.realm.infernal",
         key: "system.realms.infernal.susceptible",
-        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+        mode: 5,
         default: true
       }
     }
@@ -1276,20 +1276,20 @@ export const ACTIVE_EFFECTS_TYPES = {
       magicSystem: {
         mnemonic: "arm5e.feature.magicSystem",
         key: "system.features.magicSystem",
-        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+        mode: 5,
         default: true
       },
       // },
       // powers: {
       //   mnemonic: "arm5e.feature.powers",
       //   key: "system.features.powers",
-      //   mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+      //   mode: 5,
       //   default: true
 
       inteligentBeast: {
         mnemonic: "arm5e.feature.inteligentBeast",
         key: "system.intelligent",
-        mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+        mode: 5,
         default: true
       }
     }
@@ -1452,55 +1452,55 @@ export const ACTIVE_EFFECTS_TYPES = {
       athletics: {
         mnemonic: "arm5e.skill.general.athletics",
         key: "system.bonuses.skills.athletics.upgrade",
-        mode: CONST.ACTIVE_EFFECT_MODES.UPGRADE,
+        mode: 4,
         default: 5
       },
       awareness: {
         mnemonic: "arm5e.skill.general.awareness",
         key: "system.bonuses.skills.awareness.upgrade",
-        mode: CONST.ACTIVE_EFFECT_MODES.UPGRADE,
+        mode: 4,
         default: 5
       },
       brawl: {
         mnemonic: "arm5e.skill.general.brawl",
         key: "system.bonuses.skills.brawl.upgrade",
-        mode: CONST.ACTIVE_EFFECT_MODES.UPGRADE,
+        mode: 4,
         default: 5
       },
       hunt: {
         mnemonic: "arm5e.skill.general.hunt",
         key: "system.bonuses.skills.hunt.upgrade",
-        mode: CONST.ACTIVE_EFFECT_MODES.UPGRADE,
+        mode: 4,
         default: 5
       },
       leadership: {
         mnemonic: "arm5e.skill.general.leadership",
         key: "system.bonuses.skills.leadership.upgrade",
-        mode: CONST.ACTIVE_EFFECT_MODES.UPGRADE,
+        mode: 4,
         default: 5
       },
       music: {
         mnemonic: "arm5e.skill.general.music",
         key: "system.bonuses.skills.music.upgrade",
-        mode: CONST.ACTIVE_EFFECT_MODES.UPGRADE,
+        mode: 4,
         default: 3
       },
       stealth: {
         mnemonic: "arm5e.skill.general.stealth",
         key: "system.bonuses.skills.stealth.upgrade",
-        mode: CONST.ACTIVE_EFFECT_MODES.UPGRADE,
+        mode: 4,
         default: 5
       },
       survival: {
         mnemonic: "arm5e.skill.general.survival",
         key: "system.bonuses.skills.survival.upgrade",
-        mode: CONST.ACTIVE_EFFECT_MODES.UPGRADE,
+        mode: 4,
         default: 5
       },
       swim: {
         mnemonic: "arm5e.skill.general.swim",
         key: "system.bonuses.skills.swim.upgrade",
-        mode: CONST.ACTIVE_EFFECT_MODES.UPGRADE,
+        mode: 4,
         default: 5
       }
     }
@@ -1578,37 +1578,37 @@ export const ACTIVE_EFFECTS_TYPES = {
       learnSpell: {
         mnemonic: "arm5e.lab.activity.spellLearning",
         key: "system.bonuses.labActivities.learnSpell",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 1
       },
       inventSpell: {
         mnemonic: "arm5e.lab.activity.inventSpell",
         key: "system.bonuses.labActivities.inventSpell",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 1
       },
       longevityRitual: {
         mnemonic: "arm5e.lab.activity.longevityRitual",
         key: "system.bonuses.labActivities.longevityRitual",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 1
       },
       visExtraction: {
         mnemonic: "arm5e.lab.activity.visExtraction",
         key: "system.bonuses.labActivities.visExtraction",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 1
       },
       enchanting: {
         mnemonic: "arm5e.lab.activity.enchanting",
         key: "system.bonuses.labActivities.enchanting",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 1
       },
       investigateItem: {
         mnemonic: "arm5e.lab.activity.itemInvestigation",
         key: "system.bonuses.labActivities.itemInvestigation",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 1
       }
     }
@@ -1622,133 +1622,133 @@ export const ACTIVE_EFFECTS_TYPES = {
       texts: {
         mnemonic: "arm5e.lab.specialty.texts",
         key: "system.specialty.texts.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 1
       },
       spells: {
         mnemonic: "arm5e.lab.specialty.spells",
         key: "system.specialty.spells.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 1
       },
       experimentation: {
         mnemonic: "arm5e.lab.specialty.experimentation",
         key: "system.specialty.experimentation.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 1
       },
       familiar: {
         mnemonic: "arm5e.lab.specialty.familiar",
         key: "system.specialty.familiar.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 1
       },
       items: {
         mnemonic: "arm5e.lab.specialty.items",
         key: "system.specialty.items.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 1
       },
       longevityRituals: {
         mnemonic: "arm5e.lab.specialty.longevityRituals",
         key: "system.specialty.longevityRituals.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 1
       },
       visExtraction: {
         mnemonic: "arm5e.lab.specialty.visExtraction",
         key: "system.specialty.visExtraction.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 1
       },
       cr: {
         mnemonic: "Creo",
         key: "system.specialty.cr.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 1
       },
       in: {
         mnemonic: "Intellego",
         key: "system.specialty.in.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 1
       },
       mu: {
         mnemonic: "Muto",
         key: "system.specialty.mu.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 1
       },
       pe: {
         mnemonic: "Perdo",
         key: "system.specialty.pe.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 1
       },
       re: {
         mnemonic: "Rego",
         key: "system.specialty.re.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 1
       },
       an: {
         mnemonic: "Animal",
         key: "system.specialty.an.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 1
       },
       aq: {
         mnemonic: "Aquam",
         key: "system.specialty.aq.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 1
       },
       au: {
         mnemonic: "Auram",
         key: "system.specialty.au.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 1
       },
       co: {
         mnemonic: "Corpus",
         key: "system.specialty.co.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 1
       },
       he: {
         mnemonic: "Herbam",
         key: "system.specialty.he.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 1
       },
       ig: {
         mnemonic: "Ignem",
         key: "system.specialty.ig.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 1
       },
       im: {
         mnemonic: "Imaginem",
         key: "system.specialty.im.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 1
       },
       me: {
         mnemonic: "Mentem",
         key: "system.specialty.me.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 1
       },
       te: {
         mnemonic: "Terram",
         key: "system.specialty.te.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 1
       },
       vi: {
         mnemonic: "Vim",
         key: "system.specialty.vi.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 1
       }
     }
@@ -1762,61 +1762,61 @@ export const ACTIVE_EFFECTS_TYPES = {
       size: {
         mnemonic: "arm5e.sheet.size",
         key: "system.size.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 1
       },
       generalQuality: {
         mnemonic: "arm5e.sheet.generalQuality",
         key: "system.generalQuality.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 1
       },
       safety: {
         mnemonic: "arm5e.sheet.safety",
         key: "system.safety.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 1
       },
       health: {
         mnemonic: "arm5e.sheet.health",
         key: "system.health.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 1
       },
       refinement: {
         mnemonic: "arm5e.sheet.refinement",
         key: "system.refinement.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 1
       },
       upkeep: {
         mnemonic: "arm5e.sheet.upkeep",
         key: "system.upkeep.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 1
       },
       warping: {
         mnemonic: "arm5e.sheet.warping",
         key: "system.warping.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 1
       },
       aesthetics: {
         mnemonic: "arm5e.sheet.aesthetics",
         key: "system.aesthetics.bonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 1
       },
       aestheticsCap: {
         mnemonic: "arm5e.sheet.aestheticsMax",
         key: "system.aesthetics.max",
-        mode: CONST.ACTIVE_EFFECT_MODES.DOWNGRADE,
+        mode: 3,
         default: -1
       },
       auraMod: {
         mnemonic: "arm5e.sheet.auraMod",
         key: "system.auraBonus",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 0
       }
     }
@@ -1831,31 +1831,31 @@ export const ACTIVE_EFFECTS_TYPES = {
       spontMagic: {
         mnemonic: "arm5e.activeEffect.subtypes.spontMagicRoll",
         key: "spontMagic",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 3
       },
       formulaicMagic: {
         mnemonic: "arm5e.activeEffect.subtypes.formMagicRoll",
         key: "formulaicMagic",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 3
       },
       init: {
         mnemonic: "arm5e.activeEffect.subtypes.initRoll",
         key: "init",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 3
       },
       attack: {
         mnemonic: "arm5e.activeEffect.subtypes.attackRoll",
         key: "attack",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 3
       },
       defense: {
         mnemonic: "arm5e.activeEffect.subtypes.defRoll",
         key: "defense",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 3
       }
     }
@@ -1869,43 +1869,43 @@ export const ACTIVE_EFFECTS_TYPES = {
       library: {
         mnemonic: "arm5e.activeEffect.subtypes.library",
         key: "system.buildPoints.library.computed",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 10
       },
       labText: {
         mnemonic: "arm5e.activeEffect.subtypes.labText",
         key: "system.buildPoints.labText.computed",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 10
       },
       vis: {
         mnemonic: "arm5e.activeEffect.subtypes.vis",
         key: "system.buildPoints.vis.computed",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 10
       },
       magicItems: {
         mnemonic: "arm5e.activeEffect.subtypes.magicItems",
         key: "system.buildPoints.magicItems.computed",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 10
       },
       specialists: {
         mnemonic: "arm5e.activeEffect.subtypes.specialists",
         key: "system.buildPoints.specialists.computed",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 10
       },
       labs: {
         mnemonic: "arm5e.activeEffect.subtypes.labs",
         key: "system.buildPoints.labs.computed",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 10
       },
       money: {
         mnemonic: "arm5e.activeEffect.subtypes.money",
         key: "system.buildPoints.money.computed",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 10
       }
     }
@@ -1919,49 +1919,49 @@ export const ACTIVE_EFFECTS_TYPES = {
       inhabitant: {
         mnemonic: "arm5e.activeEffect.subtypes.inhabitantPoints",
         key: "system.finances.inhabitantsPoints",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 2
       },
       buildings: {
         mnemonic: "arm5e.activeEffect.subtypes.buildings",
         key: "system.yearlyExpenses.buildings.amount",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 2
       },
       consumables: {
         mnemonic: "arm5e.activeEffect.subtypes.consumables",
         key: "system.yearlyExpenses.consumables.amount",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 2
       },
       provisions: {
         mnemonic: "arm5e.activeEffect.subtypes.provisions",
         key: "system.yearlyExpenses.provisions.amount",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 2
       },
       wages: {
         mnemonic: "arm5e.activeEffect.subtypes.wages",
         key: "system.yearlyExpenses.wages.amount",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 2
       },
       laboratories: {
         mnemonic: "arm5e.activeEffect.subtypes.laboratories",
         key: "system.yearlyExpenses.laboratories.amount",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 2
       },
       books: {
         mnemonic: "arm5e.activeEffect.subtypes.writingMaterials",
         key: "system.yearlyExpenses.writingMaterials.amount",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 2
       },
       weapons: {
         mnemonic: "arm5e.activeEffect.subtypes.weapons",
         key: "system.yearlyExpenses.weapons.amount",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 2
       }
     }
@@ -1975,43 +1975,43 @@ export const ACTIVE_EFFECTS_TYPES = {
       buildings: {
         mnemonic: "arm5e.activeEffect.subtypes.buildings",
         key: "system.yearlyExpenses.buildings.mod",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 2
       },
       consumables: {
         mnemonic: "arm5e.activeEffect.subtypes.consumables",
         key: "system.yearlyExpenses.consumables.mod",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 2
       },
       provisions: {
         mnemonic: "arm5e.activeEffect.subtypes.provisions",
         key: "system.yearlyExpenses.provisions.mod",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 2
       },
       wages: {
         mnemonic: "arm5e.activeEffect.subtypes.wages",
         key: "system.yearlyExpenses.wages.mod",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 2
       },
       laboratories: {
         mnemonic: "arm5e.activeEffect.subtypes.laboratories",
         key: "system.yearlyExpenses.laboratories.mod",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 2
       },
       writingMaterials: {
         mnemonic: "arm5e.activeEffect.subtypes.writingMaterials",
         key: "system.yearlyExpenses.writingMaterials.mod",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 2
       },
       weapons: {
         mnemonic: "arm5e.activeEffect.subtypes.weapons",
         key: "system.yearlyExpenses.weapons.mod",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 2
       }
     }
@@ -2025,43 +2025,43 @@ export const ACTIVE_EFFECTS_TYPES = {
       buildings: {
         mnemonic: "arm5e.activeEffect.subtypes.buildings",
         key: "system.yearlyExpenses.buildings.magicMod",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 2
       },
       consumables: {
         mnemonic: "arm5e.activeEffect.subtypes.consumables",
         key: "system.yearlyExpenses.consumables.magicMod",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 2
       },
       provisions: {
         mnemonic: "arm5e.activeEffect.subtypes.provisions",
         key: "system.yearlyExpenses.provisions.magicMod",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 2
       },
       wages: {
         mnemonic: "arm5e.activeEffect.subtypes.wages",
         key: "system.yearlyExpenses.wages.magicMod",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 2
       },
       laboratories: {
         mnemonic: "arm5e.activeEffect.subtypes.laboratories",
         key: "system.yearlyExpenses.laboratories.magicMod",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 2
       },
       writingMaterials: {
         mnemonic: "arm5e.activeEffect.subtypes.writingMaterials",
         key: "system.yearlyExpenses.writingMaterials.magicMod",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 2
       },
       weapons: {
         mnemonic: "arm5e.activeEffect.subtypes.weapons",
         key: "system.yearlyExpenses.weapons.magicMod",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 2
       }
     }
@@ -2075,13 +2075,13 @@ export const ACTIVE_EFFECTS_TYPES = {
       magi: {
         mnemonic: "arm5e.activeEffect.subtypes.agingMagi",
         key: "system.modifiers.aging.magi",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 1
       },
       mundane: {
         mnemonic: "arm5e.activeEffect.subtypes.agingMundane",
         key: "system.modifiers.aging.mundane",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 2
       }
     }
@@ -2095,25 +2095,25 @@ export const ACTIVE_EFFECTS_TYPES = {
       turbula: {
         mnemonic: "arm5e.activeEffect.subtypes.turbula",
         key: "system.census.modifiers.turbula",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 2
       },
       laborers: {
         mnemonic: "arm5e.activeEffect.subtypes.laborers",
         key: "system.census.modifiers.laborers",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 2
       },
       teamsters: {
         mnemonic: "arm5e.activeEffect.subtypes.teamsters",
         key: "system.census.modifiers.teamsters",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 2
       },
       servants: {
         mnemonic: "arm5e.activeEffect.subtypes.servants",
         key: "system.census.modifiers.servants",
-        mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+        mode: 2,
         default: 2
       }
     }

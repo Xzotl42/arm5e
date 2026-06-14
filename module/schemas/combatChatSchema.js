@@ -16,15 +16,9 @@ export class CombatChatSchema extends RollChatSchema {
     };
   }
 
-  static migrateData(data) {}
+  // static migrateData(data) {}
 
   static getDefault(itemData) {}
-
-  static migrate(itemData) {
-    const updateData = {};
-
-    return updateData;
-  }
 
   failedRoll() {
     return this.roll.botches > 0 || false;
