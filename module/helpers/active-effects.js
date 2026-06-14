@@ -267,8 +267,14 @@ export default class ArM5eActiveEffect extends ActiveEffect {
         let subtype = game.i18n.localize(
           ACTIVE_EFFECTS_TYPES[effectTypes[idx]].subtypes[effectSubtypes[idx]].mnemonic
         );
-        switch (c.mode) {
-          case CONST.ACTIVE_EFFECT_MODES.MULTIPLY:
+        const changeType =
+          typeof c?.type === "string"
+            ? c.type
+            : { 0: "custom", 1: "multiply", 2: "add", 3: "downgrade", 4: "upgrade", 5: "override" }[
+                Number(c?.mode)
+              ] ?? "add";
+        switch (changeType) {
+          case "multiply":
             if (effectOption[idx]) {
               subtype = game.i18n.format(subtype, { option: effectOption[idx] });
             }
@@ -279,7 +285,7 @@ export default class ArM5eActiveEffect extends ActiveEffect {
               (c.value < 0 ? "" : "+") +
               c.value;
             break;
-          case CONST.ACTIVE_EFFECT_MODES.ADD:
+          case "add":
             if (effectOption[idx]) {
               subtype = game.i18n.format(subtype, { option: effectOption[idx] });
             }
@@ -288,10 +294,10 @@ export default class ArM5eActiveEffect extends ActiveEffect {
               value: subtype
             });
             break;
-          case CONST.ACTIVE_EFFECT_MODES.OVERRIDE:
+          case "override":
             descr += ` = ${c.value}`;
             break;
-          case CONST.ACTIVE_EFFECT_MODES.UPGRADE:
+          case "upgrade":
             descr += ` = ${c.value}`;
             break;
           default:

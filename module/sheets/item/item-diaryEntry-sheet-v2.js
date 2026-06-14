@@ -1008,9 +1008,17 @@ export class ArM5eDiaryEntryItemSheetV2 extends ArM5eItemSheetV2 {
     }
     if (data.system?.dates) {
       foundry.utils.mergeObject(source.system.dates, data.system.dates);
-      data.system.dates = source.system.dates;
-      if (data.system?.duration) {
-        data.system.dates.splice(data.system.duration);
+
+      const startYear = Number(source.system.dates?.[0]?.year);
+      const startSeason = source.system.dates?.[0]?.season;
+      const duration = Number(data.system?.duration ?? source.system.duration ?? 1);
+
+      // Keep AppV1 behavior: any start date or duration edit regenerates the whole schedule.
+      if (Number.isFinite(startYear) && startSeason) {
+        data.system.dates = DiaryEntrySchema.buildSchedule(duration, startYear, startSeason);
+      } else {
+        data.system.dates = source.system.dates;
+        data.system.dates.splice(duration);
       }
     }
 
@@ -1018,6 +1026,8 @@ export class ArM5eDiaryEntryItemSheetV2 extends ArM5eItemSheetV2 {
   }
 
   async _setStartYear(event) {
+    event.preventDefault();
+    event.stopPropagation();
     const newYear = Number(event.currentTarget.value);
     await this.item.update({
       "system.dates": DiaryEntrySchema.buildSchedule(
@@ -1030,6 +1040,8 @@ export class ArM5eDiaryEntryItemSheetV2 extends ArM5eItemSheetV2 {
   }
 
   async _setStartSeason(event) {
+    event.preventDefault();
+    event.stopPropagation();
     const newSeason = event.currentTarget.value;
     await this.item.update({
       "system.dates": DiaryEntrySchema.buildSchedule(
@@ -1042,6 +1054,8 @@ export class ArM5eDiaryEntryItemSheetV2 extends ArM5eItemSheetV2 {
   }
 
   async _setDuration(event) {
+    event.preventDefault();
+    event.stopPropagation();
     let newDuration = Number(event.currentTarget.value);
     if (!Number.isNumeric(newDuration) || newDuration < 1) newDuration = 1;
     await this.item.update({
@@ -1056,6 +1070,8 @@ export class ArM5eDiaryEntryItemSheetV2 extends ArM5eItemSheetV2 {
   }
 
   async _setActivity(event) {
+    event.preventDefault();
+    event.stopPropagation();
     const actType = event.currentTarget.value;
     const updateData = { "system.sourceQuality": 0 };
 

@@ -728,13 +728,13 @@ export function generateActiveEffectFromAbilities() {
         activeEffects.bonusGeneralAbility.subtypes[aKey] = {
           label: ability.mnemonic,
           key: computedKey,
-          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          mode: 2,
           default: 2
         };
         activeEffects.affinityGeneralAbility.subtypes[aKey] = {
           label: ability.mnemonic,
           key: afinityComputedKey,
-          mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
+          mode: 1,
           default: 1.5
         };
         break;
@@ -743,13 +743,13 @@ export function generateActiveEffectFromAbilities() {
         activeEffects.bonusAcademicAbility.subtypes[aKey] = {
           label: ability.mnemonic,
           key: computedKey,
-          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          mode: 2,
           default: 2
         };
         activeEffects.affinityAcademicAbility.subtypes[aKey] = {
           label: ability.mnemonic,
           key: afinityComputedKey,
-          mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
+          mode: 1,
           default: 1.5
         };
         break;
@@ -758,13 +758,13 @@ export function generateActiveEffectFromAbilities() {
         activeEffects.bonusArcaneAbility.subtypes[aKey] = {
           label: ability.mnemonic,
           key: computedKey,
-          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          mode: 2,
           default: 2
         };
         activeEffects.affinityArcaneAbility.subtypes[aKey] = {
           label: ability.mnemonic,
           key: afinityComputedKey,
-          mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
+          mode: 1,
           default: 1.5
         };
         break;
@@ -773,13 +773,13 @@ export function generateActiveEffectFromAbilities() {
         activeEffects.bonusMartialAbility.subtypes[aKey] = {
           label: ability.mnemonic,
           key: computedKey,
-          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          mode: 2,
           default: 2
         };
         activeEffects.affinityMartialAbility.subtypes[aKey] = {
           label: ability.mnemonic,
           key: afinityComputedKey,
-          mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
+          mode: 1,
           default: 1.5
         };
         break;
@@ -788,13 +788,13 @@ export function generateActiveEffectFromAbilities() {
         activeEffects.bonusMysteryAbility.subtypes[aKey] = {
           label: ability.mnemonic,
           key: computedKey,
-          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          mode: 2,
           default: 2
         };
         activeEffects.affinityMysteryAbility.subtypes[aKey] = {
           label: ability.mnemonic,
           key: afinityComputedKey,
-          mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
+          mode: 1,
           default: 1.5
         };
         break;
@@ -803,13 +803,13 @@ export function generateActiveEffectFromAbilities() {
         activeEffects.bonusSupernaturalAbility.subtypes[aKey] = {
           label: ability.mnemonic,
           key: computedKey,
-          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          mode: 2,
           default: 2
         };
         activeEffects.affinitySupernaturalAbility.subtypes[aKey] = {
           label: ability.mnemonic,
           key: afinityComputedKey,
-          mode: CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
+          mode: 1,
           default: 1.5
         };
         break;
