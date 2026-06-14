@@ -302,15 +302,15 @@ export class MagicChatSchema extends RollChatSchema {
     return messageFlavor;
   }
 
-  static migrateData(data) {}
+  // static migrateData(data) {}
 
   static getDefault(itemData) {
     return {};
   }
 
-  static migrate(itemData) {
-    const updateData = {};
+  // static migrate(itemData) {
+  //   const updateData = {};
 
-    return updateData;
-  }
+  //   return updateData;
+  // }
 }

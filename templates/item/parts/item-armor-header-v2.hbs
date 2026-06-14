@@ -3,17 +3,19 @@
     <img src="systems/arm5e/assets/item/{{ flavor }}_header.png" />
   </div>
   <header class="sheet-header marginItemPart">
-    <img
-      class="item-img"
-      src="{{ item.img }}"
-      data-action="editImage"
-      data-edit="img"
-      data-tooltip="<img
+    <div>
+      <img
+        class="item-img"
+        src="{{ item.img }}"
+        data-action="editImage"
+        data-edit="img"
+        data-tooltip="<img
       class='img-tooltip'
       src='{{ item.img }}'/>"
-      data-tooltip-direction="CENTER"
-      title="{{ item.name }}"
-    />
+        data-tooltip-direction="CENTER"
+        title="{{ item.name }}"
+      />
+    </div>
     <div class="header-fields flexcol">
       <h1 class="bigname">
         <div class="flexrow">
@@ -21,6 +23,7 @@
           {{#if (and editable isOwned)}}
           <div class="flex0 padding2">
             <a
+              class="flex0 padding2"
               data-action="itemDeleteConfirm"
               title="{{localize 'arm5e.hints.delete' item=item.name}}"
               ><i class="ars-Icon_Delete_Hand_Gesture item-delete-large"></i

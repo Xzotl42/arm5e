@@ -21,15 +21,15 @@ export class BasicChatSchema extends foundry.abstract.TypeDataModel {
     };
   }
 
-  static migrateData(data) {}
+  // static migrateData(data) {}
 
   static getDefault(itemData) {}
 
-  static migrate(itemData) {
-    const updateData = {};
+  // static migrate(itemData) {
+  //   const updateData = {};
 
-    return updateData;
-  }
+  //   return updateData;
+  // }
 
   addListeners(html) {
     const details = html.querySelector(".clickable");

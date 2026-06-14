@@ -165,6 +165,51 @@ export async function migration(originalVersion) {
       }
     }
 
+    // migrate chat messages
+    const chatMsgUpdates = [];
+
+    for (let m of game.messages) {
+      try {
+        const updateData = await migrateChatMessageData(m);
+        if (!foundry.utils.isEmpty(updateData)) {
+          console.log(`Migrating Chat Message ${m._id}`);
+          updateData._id = m._id;
+          chatMsgUpdates.push(foundry.utils.expandObject(updateData));
+        }
+      } catch (err) {
+        err.message = `Failed system migration for Chat Message ${m._id}: ${err.message}`;
+        console.error(err);
+      }
+    }
+
+    if (chatMsgUpdates.length > 0) {
+      await ChatMessage.updateDocuments(chatMsgUpdates, { diff: false, recursive: true });
+    }
+
+    const invalidMsgIds = Array.from(game.messages.invalidDocumentIds);
+    const invalidMessagesUpdates = [];
+    for (const invalidId of invalidMsgIds) {
+      try {
+        const rawData = foundry.utils.deepClone(
+          game.messages._source.find((d) => d._id === invalidId)
+        );
+        console.log(`Migrating invalid Chat Message document: ${rawData.name}`);
+        //
+        let invalidMsg = game.messages.getInvalid(invalidId);
+        const updateData = await migrateChatMessageData(invalidMsg);
+        updateData._id = invalidId;
+        if (!foundry.utils.isEmpty(updateData)) {
+          invalidMessagesUpdates.push({ _id: invalidId, ...updateData });
+        }
+      } catch (err) {
+        err.message = `Failed system migration for invalid Chat Message ${invalidId}: ${err.message}`;
+        console.error(err);
+      }
+    }
+    if (invalidMessagesUpdates.length > 0) {
+      await ChatMessage.updateDocuments(invalidMessagesUpdates, { diff: false });
+    }
+
     // [DEV] Uncomment below to migrate system compendiums
     // for (let p of game.packs) {
     //   if (
@@ -1550,6 +1595,21 @@ export const migrateItemData = async function (item) {
 
   return updateData;
 };
+
+async function migrateChatMessageData(message) {
+  let messageData = {};
+  let updateData = {};
+
+  if (message instanceof CONFIG.ChatMessage.documentClass) {
+    messageData = message._source;
+  } else {
+    messageData = message;
+  }
+  if (CONFIG.ChatMessage.dataModels[message.type]) {
+    updateData = CONFIG.ChatMessage.dataModels[message.type].migrate(messageData);
+  }
+  return updateData;
+}
 
 /**
  *
