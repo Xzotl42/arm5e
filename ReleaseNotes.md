@@ -23,6 +23,7 @@
 - Changing the begining date of a multi-season activity will recompute the schedule again.
 - Removed deprecation warnings for Active Effects modes
 - Area lore option is properly set, so it doesn't cause problems with diary activities
+- Add missing listener for changing realm.
 
 ## 3.0.1.0 Stentorius BF1
 
