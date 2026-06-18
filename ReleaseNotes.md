@@ -1,3 +1,15 @@
+## 3.0.1.6 Stentorius BF3
+
+### Compatibility
+
+- Verified for 14.364
+
+### Features & changes
+
+### Bug fixes
+
+- Fix target Level computation for enchantments activities
+
 ## 3.0.1.5 Stentorius BF2
 
 ### Compatibility

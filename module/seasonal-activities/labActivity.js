@@ -73,7 +73,7 @@ export class LabActivity extends Activity {
       uuid: this.labUuid,
       experimentation: planning.experimentation,
       labModifier: planning.experimentationBonus,
-      target: this.getTargetLevel(planning),
+      target: res.system.sourceQuality,
       labTotal: planning.labTotal.score
     };
     return res;
@@ -740,7 +740,7 @@ export class MinorEnchantment extends LabActivity {
   }
 
   getTargetLevel(planning) {
-    return computeLevel(planning.data.system, "enchantment");
+    return computeLevel(planning.data.enchantment.system, "enchantment");
   }
 
   getDiaryName(planning) {
@@ -961,7 +961,7 @@ export class ChargedItem extends MinorEnchantment {
   }
 
   getTargetLevel(planning) {
-    return computeLevel(planning.data.system, "enchantment");
+    return computeLevel(planning.data.enchantment.system, "enchantment");
   }
 
   get hasWaste() {
