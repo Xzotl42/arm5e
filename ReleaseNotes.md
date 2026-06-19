@@ -9,6 +9,8 @@
 ### Bug fixes
 
 - Fix target Level computation for enchantments activities
+- Beast sheet can again change it profile image.
+- Might was not taken into account during magic contests
 
 ## 3.0.1.5 Stentorius BF2
 

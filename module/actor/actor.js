@@ -1349,6 +1349,7 @@ export class ArM5eActor extends Actor {
     }
     let auraMod = 0;
     if (this.hasMight()) {
+      magicResistance += this.system?.might?.value || 0;
       let aura = Aura.fromActor(this);
       auraMod = aura.computeMaxAuraModifier(this.system.realms);
       magicResistance += parseInt(auraMod);
