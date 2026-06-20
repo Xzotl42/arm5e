@@ -1118,8 +1118,8 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
   }
 
   /** @override */
-  _onRender(context, options) {
-    super._onRender(context, options);
+  async _onRender(context, options) {
+    await super._onRender(context, options);
 
     // Ensure dynamically added parts (e.g. arts/laboratory when charType changes to magusNPC)
     // are in the correct DOM order matching the PARTS definition.

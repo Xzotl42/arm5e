@@ -258,8 +258,8 @@ export class ArM5eActiveEffectConfig extends foundry.applications.sheets.ActiveE
   }
   /** @override */
 
-  _onRender(context, options) {
-    super._onRender(context, options);
+  async _onRender(context, options) {
+    await super._onRender(context, options);
     // keep in mind that if your callback is a named function instead of an arrow function expression
     // you'll need to use `bind(this)` to maintain context
 

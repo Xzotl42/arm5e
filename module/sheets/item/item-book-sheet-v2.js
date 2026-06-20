@@ -1,4 +1,3 @@
-import { ArM5eItemSheetV2 } from "./item-sheet-v2.js";
 import { EnchantExtensionV2 } from "./enchant-extension-v2.js";
 import { ArM5eActorSheetV2 } from "../actor/actor-sheet-v2.js";
 import { getConfirmation } from "../../ui/dialogs.js";
@@ -7,20 +6,15 @@ import { getTopicDescription } from "../../helpers/book-topic.js";
 import { BookSchema } from "../../schemas/bookSchema.js";
 import { ArM5eItem } from "../../item/item.js";
 import { FLAVORS } from "../../constants/ui.js";
+import { ArM5eItemSheetV2 } from "./item-sheet-v2.js";
+import { ArM5ePhysicalItemSheetV2 } from "./item-physical-v2.js";
 
 const { DragDrop } = foundry.applications.ux;
 
 /**
  * AppV2 sheet for book items.
  */
-export class ArM5eBookItemSheetV2 extends ArM5eItemSheetV2 {
-  #dragDrop;
-
-  constructor(options = {}) {
-    super(options);
-    this.#dragDrop = this.#createDragDropHandlers();
-  }
-
+export class ArM5eBookItemSheetV2 extends ArM5ePhysicalItemSheetV2 {
   /**
    * Return a deep-cloned, dense array of topics from any source shape.
    * Foundry may store topics as a plain object keyed by index (e.g. after a partial update),
@@ -210,7 +204,6 @@ export class ArM5eBookItemSheetV2 extends ArM5eItemSheetV2 {
   /** @override */
   async _onRender(context, options) {
     await super._onRender(context, options);
-    this.#dragDrop.forEach((d) => d.bind(this.element));
     this.element
       .querySelector(".book-category")
       ?.addEventListener("change", (e) => this._changeTopicCategory(e));
@@ -218,33 +211,6 @@ export class ArM5eBookItemSheetV2 extends ArM5eItemSheetV2 {
       .querySelector(".book-type")
       ?.addEventListener("change", (e) => this._changeBookType(e));
     EnchantExtensionV2.wireListeners.call(this);
-  }
-
-  _canDragStart(selector) {
-    return this.item?.isOwner && this.isEditable;
-  }
-
-  _canDragDrop(selector) {
-    return this.item?.isOwner && this.isEditable;
-  }
-
-  _onDragStart(event) {}
-
-  _onDragOver(event) {}
-
-  #createDragDropHandlers() {
-    return this.options.dragDrop.map((d) => {
-      d.permissions = {
-        dragstart: this._canDragStart.bind(this),
-        drop: this._canDragDrop.bind(this)
-      };
-      d.callbacks = {
-        dragstart: this._onDragStart.bind(this),
-        dragover: this._onDragOver.bind(this),
-        drop: this._onDrop.bind(this)
-      };
-      return new DragDrop.implementation(d);
-    });
   }
 
   /** @override */

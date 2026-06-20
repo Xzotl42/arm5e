@@ -333,7 +333,7 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
    * @param {Object} context Rendering context
    * @param {Object} options Render options
    */
-  _onRender(context, options) {
+  async _onRender(context, options) {
     // Auto-select text in input fields when focused (for easy modification)
     const selectElements = this.element.querySelectorAll(".select-on-focus");
     selectElements.forEach((el) => {

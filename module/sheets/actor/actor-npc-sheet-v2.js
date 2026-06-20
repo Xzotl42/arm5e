@@ -209,8 +209,8 @@ export class ArM5eNPCActorSheetV2 extends Arm5eCharacterActorSheetV2 {
   }
 
   /** @override */
-  _onRender(context, options) {
-    super._onRender(context, options);
+  async _onRender(context, options) {
+    await super._onRender(context, options);
 
     this.element.querySelectorAll(".change-realm").forEach((el) => {
       el.addEventListener("change", (event) => this._onRealmChange(event));

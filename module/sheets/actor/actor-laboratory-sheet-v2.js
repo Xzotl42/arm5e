@@ -495,8 +495,8 @@ export class ArM5eLaboratoryActorSheetV2 extends ArM5eActorSheetV2 {
   }
 
   /** @override */
-  _onRender(context, options) {
-    super._onRender(context, options);
+  async _onRender(context, options) {
+    await super._onRender(context, options);
 
     this.element.querySelectorAll(".advanced-req").forEach((el) => {
       el.addEventListener("click", this._onAdvancedReqClick.bind(this));

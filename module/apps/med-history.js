@@ -96,7 +96,7 @@ export class MedicalHistory extends foundry.applications.api.HandlebarsApplicati
     return context;
   }
 
-  _onRender(context, options) {
+  async _onRender(context, options) {
     // Handle select on focus
     const selectElements = this.element.querySelectorAll(".select-on-focus");
     selectElements.forEach((el) => {

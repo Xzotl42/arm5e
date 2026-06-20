@@ -150,7 +150,7 @@ export class DocumentPicker extends HandlebarsApplicationMixin(ApplicationV2) {
   /* -------------------------------------------- */
 
   /** @override */
-  _onRender(context, options) {
+  async _onRender(context, options) {
     // Apply the tiled background to window-content so it aligns seamlessly
     // behind the header and footer image parts
     const flavor = this.options.flavor ?? "Neutral";
@@ -196,12 +196,16 @@ export class DocumentPicker extends HandlebarsApplicationMixin(ApplicationV2) {
     }
   }
 
-  /** @private Confirm the current selection and close. */
+  /**
+   * @private
+   **/
   static async #onConfirm(event, target) {
     this.#confirmAndClose();
   }
 
-  /** @private Cancel: resolve with an empty array and close. */
+  /**
+   * @private
+   */
   static async #onCancel(event, target) {
     if (!this._settled) {
       this._settled = true;
@@ -230,7 +234,9 @@ export class DocumentPicker extends HandlebarsApplicationMixin(ApplicationV2) {
 
   /* -------------------------------------------- */
 
-  /** @override Resolve with [] if the window is closed without confirming. */
+  /**
+   * @override
+   **/
   async _onClose(options = {}) {
     if (!this._settled) {
       this._settled = true;

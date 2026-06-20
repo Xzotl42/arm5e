@@ -890,8 +890,8 @@ export class ArM5eDiaryEntryItemSheetV2 extends ArM5eItemSheetV2 {
   // ─── _onRender: change event listeners ────────────────────────────────────
 
   /** @override */
-  _onRender(context, options) {
-    super._onRender(context, options);
+  async _onRender(context, options) {
+    await super._onRender(context, options);
     if (!this.isEditable) return;
 
     this.element
@@ -1076,6 +1076,7 @@ export class ArM5eDiaryEntryItemSheetV2 extends ArM5eItemSheetV2 {
     const updateData = { "system.sourceQuality": 0 };
 
     const config = getActivityDefinition(actType);
+    updateData["system.activity"] = actType;
     updateData["system.progress.abilities"] = [];
     updateData["system.progress.arts"] = [];
     updateData["system.progress.spells"] = [];

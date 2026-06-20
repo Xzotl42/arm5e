@@ -270,7 +270,7 @@ export class ArM5eMagicSystem {
     return true;
   }
 
-  _onRender(_context, _options) {
+  async _onRender(_context, _options) {
     const root = this.sheet.element;
     if (!root) return;
 

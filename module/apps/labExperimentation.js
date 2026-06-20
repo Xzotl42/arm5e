@@ -86,8 +86,8 @@ export class LabExperimentation extends HandlebarsApplicationMixin(ApplicationV2
     return context;
   }
 
-  _onRender(context, options) {
-    super._onRender(context, options);
+  async _onRender(context, options) {
+    await super._onRender(context, options);
     const html = this.element;
 
     html.querySelectorAll(".select-on-focus").forEach((el) => {

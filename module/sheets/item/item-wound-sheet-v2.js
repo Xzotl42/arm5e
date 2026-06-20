@@ -29,8 +29,8 @@ export class ArM5eWoundItemSheetV2 extends ArM5eItemSheetV2 {
   };
 
   /** @override */
-  _onRender(context, options) {
-    super._onRender(context, options);
+  async _onRender(context, options) {
+    await super._onRender(context, options);
     // Gravity select: update icon + system.gravity
     this.element.querySelectorAll("select[data-action='changeGravity']").forEach((el) => {
       el.addEventListener("change", async (event) => {

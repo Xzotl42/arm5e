@@ -81,8 +81,8 @@ export class Astrolabium extends HandlebarsApplicationMixin(ApplicationV2) {
     return data;
   }
 
-  _onRender(context, options) {
-    super._onRender(context, options);
+  async _onRender(context, options) {
+    await super._onRender(context, options);
     const html = this.element;
     html.querySelector(".trackRes").addEventListener("change", async (e) => {
       e.preventDefault();
@@ -118,6 +118,7 @@ export class Astrolabium extends HandlebarsApplicationMixin(ApplicationV2) {
   static async nextSeason(event, target) {
     await this.shiftSeason(1);
   }
+
   async displaySchedule(event) {
     event.preventDefault();
     const schedule = new GroupSchedule();
