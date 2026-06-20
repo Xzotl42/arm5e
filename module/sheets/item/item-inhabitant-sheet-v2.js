@@ -107,8 +107,8 @@ export class ArM5eInhabitantItemSheetV2 extends ArM5eItemSheetV2 {
   }
 
   /** @override */
-  _onRender(context, options) {
-    super._onRender(context, options);
+  async _onRender(context, options) {
+    await super._onRender(context, options);
     // Category change: update icon + system.category, then re-render
     this.element.querySelectorAll("select[data-action='changeCategory']").forEach((el) => {
       el.addEventListener("change", async (event) => {

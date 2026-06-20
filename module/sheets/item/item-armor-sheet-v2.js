@@ -1,10 +1,11 @@
 import { ArM5eItemSheetV2 } from "./item-sheet-v2.js";
 import { EnchantExtensionV2 } from "./enchant-extension-v2.js";
+import { ArM5ePhysicalItemSheetV2 } from "./item-physical-v2.js";
 
 /**
  * AppV2 sheet for armor items.
  */
-export class ArM5eArmorItemSheetV2 extends ArM5eItemSheetV2 {
+export class ArM5eArmorItemSheetV2 extends ArM5ePhysicalItemSheetV2 {
   /** @override */
   static DEFAULT_OPTIONS = {
     classes: ["arm5e", "sheet", "item"],
@@ -86,8 +87,8 @@ export class ArM5eArmorItemSheetV2 extends ArM5eItemSheetV2 {
   }
 
   /** @override */
-  _onRender(context, options) {
-    super._onRender(context, options);
+  async _onRender(context, options) {
+    await super._onRender(context, options);
 
     // Equipped checkbox: update actor combatPreps
     this.element.querySelectorAll("input[data-action='toggleEquipped']").forEach((el) => {

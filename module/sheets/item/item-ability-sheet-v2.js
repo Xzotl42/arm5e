@@ -84,8 +84,8 @@ export class ArM5eAbilityItemSheetV2 extends ArM5eItemSheetV2 {
   }
 
   /** @override */
-  _onRender(context, options) {
-    super._onRender(context, options);
+  async _onRender(context, options) {
+    await super._onRender(context, options);
     // Ability key change needs extra logic beyond form submitOnChange
     this.element.querySelectorAll(".change-abilitykey").forEach((el) => {
       el.addEventListener("change", async (event) => {

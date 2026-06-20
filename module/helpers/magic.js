@@ -282,7 +282,7 @@ export class QuickMagic extends foundry.applications.api.HandlebarsApplicationMi
     return context;
   }
 
-  _onRender(context, options) {
+  async _onRender(context, options) {
     this.object.actor.apps[this.options.uniqueId] = this;
 
     this.element.querySelectorAll(".voice-and-gestures").forEach((element) => {

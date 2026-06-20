@@ -217,8 +217,8 @@ export class ArM5eMagicCodexSheetV2 extends ArM5eActorSheetV2 {
   }
 
   /** @override */
-  _onRender(context, options) {
-    super._onRender(context, options);
+  async _onRender(context, options) {
+    await super._onRender(context, options);
 
     this.element.querySelectorAll(".search-aspects").forEach((el) => {
       el.addEventListener("change", (event) => {

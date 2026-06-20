@@ -2132,6 +2132,8 @@ p,
   border-bottom: 1px solid var(--border-warm);
   line-height: 24px;
   margin-bottom: 5px;
+  font-weight: normal;
+  font-size: 16pt;
   color: var(--color-text-dark-secondary);
 }
 

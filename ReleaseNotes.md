@@ -1,3 +1,23 @@
+## 3.0.1.6 Stentorius BF3
+
+### Compatibility
+
+- Verified for 14.364
+
+### Features & changes
+
+- [Technical] Physical items have now their dedicated class to handle events (eg: dropping effect on enchanted items)
+- [Technical] Improved and factorized the management of non standard drag and drop events on Items
+
+### Bug fixes
+
+- Fix target Level computation for enchantments activities
+- Beast sheet can again change it profile image.
+- Might was not taken into account during magic contests
+- Description of effects in lab activities were not displayed properly and could be corrupted if edited.
+- It is possible again to drop effects on the enchantment tab of enchanted items and the original icon is kept.
+- [technical] \_onRender function is now async everywhere
+
 ## 3.0.1.5 Stentorius BF2
 
 ### Compatibility

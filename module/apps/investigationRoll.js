@@ -119,7 +119,7 @@ export class InvestigationRoll extends foundry.applications.api.HandlebarsApplic
     return context;
   }
 
-  _onRender(context, options) {
+  async _onRender(context, options) {
     const selectElements = this.element.querySelectorAll(".select-on-focus");
     selectElements.forEach((el) => {
       el.addEventListener("focus", (ev) => {

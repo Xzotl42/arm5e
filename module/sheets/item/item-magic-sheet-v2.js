@@ -92,8 +92,8 @@ export class ArM5eItemMagicSheetV2 extends ArM5eItemSheetV2 {
   }
 
   /** @override */
-  _onRender(context, options) {
-    super._onRender(context, options);
+  async _onRender(context, options) {
+    await super._onRender(context, options);
 
     // Form select → auto-update the item icon when it is still a default icon
     this.element.querySelectorAll(".select-form").forEach((el) => {

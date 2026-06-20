@@ -184,8 +184,8 @@ export class GroupSchedule extends HandlebarsApplicationMixin(ApplicationV2) {
     return data;
   }
 
-  _onRender(context, options) {
-    super._onRender(context, options);
+  async _onRender(context, options) {
+    await super._onRender(context, options);
     const html = this.element;
     html.querySelector(".change-year").addEventListener("change", this._setYear.bind(this));
     html

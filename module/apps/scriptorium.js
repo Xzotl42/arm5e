@@ -1120,8 +1120,8 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
    * and rebind drag-drop handlers after each render.
    * @override
    */
-  _onRender(context, options) {
-    super._onRender(context, options);
+  async _onRender(context, options) {
+    await super._onRender(context, options);
     const html = this.element;
     html
       .querySelectorAll(".change-season")

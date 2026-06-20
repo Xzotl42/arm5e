@@ -98,7 +98,7 @@ export class QuickCombat extends foundry.applications.api.HandlebarsApplicationM
     return context;
   }
 
-  // _onRender(context, options) {
+  // async _onRender(context, options) {
   //   this.object.actor.apps[this.options.uniqueId] = this;
   // }
 
@@ -201,7 +201,7 @@ export class QuickVitals extends foundry.applications.api.HandlebarsApplicationM
     return context;
   }
 
-  // _onRender(context, options) {
+  // async _onRender(context, options) {
   //   this.object.actor.apps[this.options.uniqueId] = this;
   // }
 

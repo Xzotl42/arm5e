@@ -588,8 +588,8 @@ export class Arm5eCharacterActorSheetV2 extends ArM5eActorSheetV2 {
   }
 
   /** @override */
-  _onRender(context, options) {
-    super._onRender(context, options);
+  async _onRender(context, options) {
+    await super._onRender(context, options);
 
     // Non-click interaction stays in _onRender for AppV2 parity.
     this.element.querySelectorAll(".equipment").forEach((el) => {

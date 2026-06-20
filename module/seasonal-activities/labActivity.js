@@ -73,7 +73,7 @@ export class LabActivity extends Activity {
       uuid: this.labUuid,
       experimentation: planning.experimentation,
       labModifier: planning.experimentationBonus,
-      target: this.getTargetLevel(planning),
+      target: res.system.sourceQuality,
       labTotal: planning.labTotal.score
     };
     return res;
@@ -361,6 +361,21 @@ export class SpellActivity extends LabActivity {
     return "systems/arm5e/templates/lab-activities/spell.html";
   }
 
+  async prepareData(context) {
+    context = await super.prepareData(context);
+    const description = context.planning.data.system.description ?? "";
+    context.planning.data.enrichedDescription = await foundry.applications.ux.TextEditor.enrichHTML(
+      description,
+      {
+        secrets: context.isOwner,
+        rollData: context.rollData,
+        relativeTo: context.planning.data
+      }
+    );
+
+    return context;
+  }
+
   validation(input) {
     if ("inventSpell" === this.type) {
       return this._validateInvention(input);
@@ -482,6 +497,7 @@ export class LongevityRitualActivity extends LabActivity {
   }
 
   async prepareData(context) {
+    context = await super.prepareData(context);
     if (context.planning.data.subject.self) {
       context.ui.subjectName = "readonly";
       context.ui.subjectMagical = "disabled";
@@ -740,7 +756,7 @@ export class MinorEnchantment extends LabActivity {
   }
 
   getTargetLevel(planning) {
-    return computeLevel(planning.data.system, "enchantment");
+    return computeLevel(planning.data.enchantment.system, "enchantment");
   }
 
   getDiaryName(planning) {
@@ -847,6 +863,7 @@ export class MinorEnchantment extends LabActivity {
    * @returns {any}
    */
   async prepareData(context) {
+    context = await super.prepareData(context);
     const planning = context.planning;
     const receptacleEnchants = planning.data.receptacle.system.enchantments;
     if (receptacleEnchants.aspects.length === 0) {
@@ -869,6 +886,14 @@ export class MinorEnchantment extends LabActivity {
       ARM5E.lab.enchantment.materialBase[receptacleEnchants.capacities[0].materialBase].base *
       ARM5E.lab.enchantment.sizeMultiplier[receptacleEnchants.capacities[0].sizeMultiplier].mult;
     planning.enchantPrefix = `${planning.namePrefix}enchantment.`;
+
+    const description = planning.data.enchantment.system.description ?? "";
+    context.planning.data.enchantment.enrichedDescription =
+      await foundry.applications.ux.TextEditor.enrichHTML(description, {
+        secrets: context.isOwner,
+        rollData: context.rollData,
+        relativeTo: planning.data.enchantment
+      });
 
     return context;
   }
@@ -961,7 +986,7 @@ export class ChargedItem extends MinorEnchantment {
   }
 
   getTargetLevel(planning) {
-    return computeLevel(planning.data.system, "enchantment");
+    return computeLevel(planning.data.enchantment.system, "enchantment");
   }
 
   get hasWaste() {
@@ -1115,6 +1140,7 @@ export class InvestigationActivity extends LabActivity {
   }
 
   async prepareData(context) {
+    context = await super.prepareData(context);
     const planning = context.planning;
     if (planning.data.receptacle) {
       const enchantExt = planning.data.receptacle.system.enchantments;

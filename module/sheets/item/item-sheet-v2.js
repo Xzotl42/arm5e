@@ -1,6 +1,6 @@
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ItemSheetV2 } = foundry.applications.sheets;
-
+const { DragDrop } = foundry.applications.ux;
 import { getConfirmation } from "../../ui/dialogs.js";
 import { ArM5eActorSheetV2 } from "../actor/actor-sheet-v2.js";
 import ArM5eActiveEffect from "../../helpers/active-effects.js";
@@ -14,6 +14,14 @@ import { UI } from "../../constants/ui.js";
  */
 
 export class ArM5eItemSheetV2 extends HandlebarsApplicationMixin(ItemSheetV2) {
+  /** @protected */
+  _dragDropHandlers = [];
+
+  constructor(options = {}) {
+    super(options);
+    this._dragDropHandlers = this.#createDragDropHandlers();
+  }
+
   static #FLAVOR_CLASSES = [
     "item-flavor-pc",
     "item-flavor-npc",
@@ -144,8 +152,12 @@ export class ArM5eItemSheetV2 extends HandlebarsApplicationMixin(ItemSheetV2) {
   }
 
   /** @override */
-  _onRender(context, options) {
-    super._onRender(context, options);
+  async _onRender(context, options) {
+    await super._onRender(context, options);
+
+    for (const handler of this._dragDropHandlers) {
+      handler.bind(this.element);
+    }
 
     if (this.#flavorClass) {
       this.element.classList.remove(...ArM5eItemSheetV2.#FLAVOR_CLASSES);
@@ -261,6 +273,39 @@ export class ArM5eItemSheetV2 extends HandlebarsApplicationMixin(ItemSheetV2) {
       this.item.actor.sheet.render(true);
     }
   }
+
+  // DRAG and DROP
+
+  #createDragDropHandlers() {
+    const dragDropOptions = Array.isArray(this.options.dragDrop) ? this.options.dragDrop : [];
+    return dragDropOptions.map((d) => {
+      const config = {
+        ...d,
+        permissions: {
+          dragstart: this._canDragStart.bind(this),
+          drop: this._canDragDrop.bind(this)
+        },
+        callbacks: {
+          dragstart: this._onDragStart.bind(this),
+          dragover: this._onDragOver.bind(this),
+          drop: this._onDrop.bind(this)
+        }
+      };
+      return new DragDrop.implementation(config);
+    });
+  }
+
+  _canDragStart(selector) {
+    return this.item?.isOwner && this.isEditable;
+  }
+
+  _canDragDrop(selector) {
+    return this.item?.isOwner && this.isEditable;
+  }
+
+  _onDragStart(event) {}
+
+  _onDragOver(event) {}
 }
 
 Hooks.on("getHeaderControlsItemSheetV2", (app, controls) => {

@@ -1,11 +1,12 @@
-import { ArM5eItemSheetV2 } from "./item-sheet-v2.js";
 import { EnchantExtensionV2 } from "./enchant-extension-v2.js";
 import { log } from "../../tools/tools.js";
+import { ArM5ePhysicalItemSheetV2 } from "./item-physical-v2.js";
+import { ArM5eItemSheetV2 } from "./item-sheet-v2.js";
 
 /**
  * AppV2 sheet for weapon items.
  */
-export class ArM5eWeaponItemSheetV2 extends ArM5eItemSheetV2 {
+export class ArM5eWeaponItemSheetV2 extends ArM5ePhysicalItemSheetV2 {
   /** @override */
   static DEFAULT_OPTIONS = {
     classes: ["arm5e", "sheet", "item"],
@@ -99,8 +100,8 @@ export class ArM5eWeaponItemSheetV2 extends ArM5eItemSheetV2 {
   }
 
   /** @override */
-  _onRender(context, options) {
-    super._onRender(context, options);
+  async _onRender(context, options) {
+    await super._onRender(context, options);
 
     // Weapon ability select change: update ability.{id, key, option}
     this.element.querySelectorAll(".weapon-ability").forEach((el) => {
