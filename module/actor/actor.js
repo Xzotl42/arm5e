@@ -691,6 +691,21 @@ export class ArM5eActor extends Actor {
         system.combatPreps.list[key] = { name: weapon.name, ids: [weapon._id] };
       }
     }
+
+    // Clear every item equipped state, it will be recalculated in the loop below based on combat preps.
+    for (const weapon of system.weapons) {
+      weapon.system.equipped = false;
+    }
+    for (const armor of system.armor) {
+      armor.system.equipped = false;
+    }
+
+    const currentPrep = system.combatPreps.list[system.combatPreps.current];
+    const currentHasNonNaturalWeapon = (currentPrep?.ids ?? []).some((id) => {
+      const item = this.items.get(id);
+      return item?.type === "weapon" && !item.system.naturalWeapon;
+    });
+
     // console.log(`Combat preps of ${this.name}`, system.combatPreps);
     for (let [name, prep] of Object.entries(system.combatPreps.list)) {
       prep.valid = true;
@@ -710,6 +725,13 @@ export class ArM5eActor extends Actor {
             prep.valid = false;
             continue;
           }
+
+          if (item.type === "weapon" && item.system.naturalWeapon && currentHasNonNaturalWeapon) {
+            // Natural and non-natural weapons are mutually exclusive.
+            item.system.equipped = false;
+            continue;
+          }
+
           items.push(item.name);
           if (item.type === "weapon") {
             prep.load += item.system.load;

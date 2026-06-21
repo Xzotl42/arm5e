@@ -1,4 +1,4 @@
-## 3.0.1.6 Stentorius BF3
+## 3.0.1.7 Stentorius BF3
 
 ### Compatibility
 
@@ -17,6 +17,9 @@
 - Description of effects in lab activities were not displayed properly and could be corrupted if edited.
 - It is possible again to drop effects on the enchantment tab of enchanted items and the original icon is kept.
 - [technical] \_onRender function is now async everywhere
+- Diary entry sheet fixed, it is possible again to change activity type
+- Natural weapons are mutually exclusive with mundane weapons and will be "unequipped" when equipping one.
+- [technical] Missing migrate function for standard messages
 
 ## 3.0.1.5 Stentorius BF2
 
