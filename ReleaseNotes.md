@@ -1,4 +1,4 @@
-## 3.0.1.6 Stentorius BF3
+## 3.0.1.7 Stentorius BF3
 
 ### Compatibility
 
@@ -19,6 +19,7 @@
 - [technical] \_onRender function is now async everywhere
 - Diary entry sheet fixed, it is possible again to change activity type
 - Natural weapons are mutually exclusive with mundane weapons and will be "unequipped" when equipping one.
+- [technical] Missing migrate function for standard messages
 
 ## 3.0.1.5 Stentorius BF2
 
