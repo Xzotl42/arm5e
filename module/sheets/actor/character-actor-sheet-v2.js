@@ -670,6 +670,7 @@ export class Arm5eCharacterActorSheetV2 extends ArM5eActorSheetV2 {
     const updateData = {};
     let current = this.actor.system.combatPreps.current;
     const prep = this.actor.system.combatPreps.list[current];
+    const item = this.actor.items.get(itemId);
     if (current !== "custom") {
       updateData["system.combatPreps.current"] = "custom";
       current = "custom";
@@ -678,7 +679,23 @@ export class Arm5eCharacterActorSheetV2 extends ArM5eActorSheetV2 {
     const newIds = prep.ids.filter((e) => this.actor.items.get(e));
     const idx = newIds.indexOf(itemId);
     if (idx >= 0) newIds.splice(idx, 1);
-    else newIds.push(itemId);
+    else {
+      newIds.push(itemId);
+
+      // Natural and non-natural weapons cannot be equipped together.
+      if (item?.type === "weapon") {
+        const targetIsNatural = !!item.system.naturalWeapon;
+        for (let i = newIds.length - 1; i >= 0; i--) {
+          const id = newIds[i];
+          if (id === itemId) continue;
+          const other = this.actor.items.get(id);
+          if (other?.type !== "weapon") continue;
+          if (!!other.system.naturalWeapon !== targetIsNatural) {
+            newIds.splice(i, 1);
+          }
+        }
+      }
+    }
 
     updateData[`system.combatPreps.list.${current}.ids`] = newIds;
     await this.actor.update(updateData);
