@@ -671,10 +671,13 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
     const type = target.dataset.type;
     if (!type) return;
 
-    const system = {};
-    if (target.dataset.category) system.category = target.dataset.category;
+    const system = { ...target.dataset };
+    delete system.type;
+    delete system.name;
+    delete system.action;
 
     const name = target.dataset.name ?? `New ${type}`;
+    // const img = target.dataset.img ?? `icons/svg/aura.svg`;
     const [item] = await this.actor.createEmbeddedDocuments("Item", [{ name, type, system }], {});
     item?.sheet?.render(true, { focus: true });
   }
@@ -1132,7 +1135,7 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
     }
 
     if (this.magicSystem) {
-      this.magicSystem._onRender(context, options);
+      await this.magicSystem._onRender(context, options);
     }
 
     const filterBindings = [

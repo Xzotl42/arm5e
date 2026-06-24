@@ -13,6 +13,7 @@ export class ArM5eAbilityItemSheetV2 extends ArM5eItemSheetV2 {
       increaseScore: ArM5eAbilityItemSheetV2.increaseScore,
       decreaseScore: ArM5eAbilityItemSheetV2.decreaseScore,
       toggleOptionLink: ArM5eAbilityItemSheetV2.toggleOptionLink,
+      rollAbility: ArM5eAbilityItemSheetV2.rollAbility,
       itemDeleteConfirm: ArM5eItemSheetV2.itemDeleteConfirm
     }
   };
@@ -154,5 +155,16 @@ export class ArM5eAbilityItemSheetV2 extends ArM5eItemSheetV2 {
   static async toggleOptionLink(event, target) {
     event.preventDefault();
     await this.item.update({ system: { optionLinked: !this.item.system.optionLinked } }, {});
+  }
+
+  static async rollAbility(event, target) {
+    event.preventDefault();
+    if (!this.item.isOwned || !this.actor?.sheet?.roll) return;
+    const dataset = {
+      roll: "ability",
+      ability: this.item._id,
+      defaultcharacteristic: this.item.system.defaultChaAb
+    };
+    await this.actor.sheet.roll(dataset);
   }
 }

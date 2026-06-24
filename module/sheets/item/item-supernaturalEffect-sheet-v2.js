@@ -13,8 +13,6 @@ export class ArM5eSupernaturalEffectItemSheetV2 extends ArM5eItemSheetV2 {
     position: { width: 600, height: 650 },
     actions: {
       rollEffect: ArM5eSupernaturalEffectItemSheetV2.rollEffect,
-      verbChange: ArM5eSupernaturalEffectItemSheetV2.verbChange,
-      nounChange: ArM5eSupernaturalEffectItemSheetV2.nounChange,
       itemDeleteConfirm: ArM5eItemSheetV2.itemDeleteConfirm
     }
   };
@@ -238,6 +236,19 @@ export class ArM5eSupernaturalEffectItemSheetV2 extends ArM5eItemSheetV2 {
     return super._preparePartContext(partId, context, options);
   }
 
+  /** @override */
+  async _onRender(context, options) {
+    await super._onRender(context, options);
+
+    this.element.querySelectorAll(".verb-change").forEach((el) => {
+      el.addEventListener("change", (event) => this.verbChange(event, el));
+    });
+
+    this.element.querySelectorAll(".noun-change").forEach((el) => {
+      el.addEventListener("change", (event) => this.nounChange(event, el));
+    });
+  }
+
   /**
    * Roll the supernatural effect.
    */
@@ -250,7 +261,7 @@ export class ArM5eSupernaturalEffectItemSheetV2 extends ArM5eItemSheetV2 {
   /**
    * Verb selection changed — update system.verb.{key, option, specApply}.
    */
-  static async verbChange(event, target) {
+  async verbChange(event, target) {
     event.preventDefault();
     const owner = this.item.actor;
     if (!owner) return;
@@ -266,7 +277,7 @@ export class ArM5eSupernaturalEffectItemSheetV2 extends ArM5eItemSheetV2 {
   /**
    * Noun selection changed — update system.noun.{key, option, specApply}.
    */
-  static async nounChange(event, target) {
+  async nounChange(event, target) {
     event.preventDefault();
     const owner = this.item.actor;
     if (!owner) return;

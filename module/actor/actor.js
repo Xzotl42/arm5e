@@ -1432,6 +1432,9 @@ export class ArM5eActor extends Actor {
         }
       };
       toUpdate = true;
+      if (data.type === "player") {
+        data.prototypeToken = { actorLink: true };
+      }
     }
 
     if (toUpdate) {
