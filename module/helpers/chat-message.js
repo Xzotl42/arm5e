@@ -1,6 +1,7 @@
 import { log, putInFoldableLink, putInFoldableLinkWithAnimation } from "../tools/tools.js";
 import { SMSG_FIELDS } from "../tools/socket-messages.js";
 import { ArsRoll } from "./roll.js";
+import { ROLL_MODES } from "../ui/roll-window.js";
 
 export class Arm5eChatMessage extends ChatMessage {
   static async handleSocketMessages(action, payload) {
@@ -54,6 +55,35 @@ export class Arm5eChatMessage extends ChatMessage {
       }
       return rolls;
     }, []);
+  }
+
+  static getMessageOptions(rollProperties, msgOptions) {
+    let mode = CONFIG.ISV13
+      ? game.settings.get("core", "rollMode")
+      : game.settings.get("core", "messageMode");
+    const blindRollMode = Arm5eChatMessage.getChatRollModes().BLIND;
+    const privateRollMode = Arm5eChatMessage.getChatRollModes().PRIVATE;
+    // let showRolls = game.settings.get("arm5e", "showRolls");
+    if (rollProperties.MODE & ROLL_MODES.PRIVATE && mode !== blindRollMode) {
+      mode = privateRollMode;
+    }
+    if (CONFIG.ISV13) {
+      msgOptions.rollMode = mode;
+    } else {
+      msgOptions.messageMode = mode;
+    }
+    return msgOptions;
+  }
+
+  static getChatRollModes() {
+    return CONFIG.ISV13
+      ? { PUBLIC: "publicroll", PRIVATE: "gmroll", BLIND: "blindroll", SELF: "selfroll" }
+      : {
+          PUBLIC: "public",
+          PRIVATE: "gm",
+          BLIND: "blind",
+          SELF: "self"
+        };
   }
 
   get actor() {

@@ -9,36 +9,6 @@ const renderTemplate = foundry.applications.handlebars.renderTemplate;
 
 let iterations = 1;
 
-function mapLegacyRollMode(rollMode) {
-  const mapper = foundry?.dice?.Roll?._mapLegacyRollMode;
-  if (typeof mapper === "function") return mapper.call(foundry.dice.Roll, rollMode);
-  return rollMode;
-}
-
-function getChatRollModes() {
-  return (
-    CONFIG.ChatMessage?.modes ?? {
-      PUBLIC: "publicroll",
-      PRIVATE: "gmroll",
-      BLIND: "blindroll",
-      SELF: "selfroll"
-    }
-  );
-}
-
-function getChatRollMode(name) {
-  const modes = getChatRollModes();
-  const mode = modes[name] ?? modes[name.toLowerCase()];
-  if (mode) return mode;
-  const legacyMode = {
-    PUBLIC: "publicroll",
-    PRIVATE: "gmroll",
-    BLIND: "blindroll",
-    SELF: "selfroll"
-  }[name];
-  return mapLegacyRollMode(legacyMode);
-}
-
 /**
  * Description
  * @param {any} actor
@@ -49,7 +19,7 @@ function getChatRollMode(name) {
  * @param specialBehavior
  * @returns {any}
  */
-async function simpleDie(actor, type = "OPTION", callback, specialBehavior = 0) {
+async function simpleDie(actor, type = "OPTION", callback = null, specialBehavior = 0) {
   iterations = 1;
   // actor = getFormData(html, actor);
   actor = await getRollFormula(actor);
@@ -64,13 +34,8 @@ async function simpleDie(actor, type = "OPTION", callback, specialBehavior = 0) 
   const roll = new ArsRoll(formula, actor.system, { actor: actor.uuid });
   let dieRoll = await roll.roll();
 
-  let rollMode = game.settings.get("core", "rollMode");
-  const blindRollMode = getChatRollMode("BLIND");
-  const privateRollMode = getChatRollMode("PRIVATE");
-  // let showRolls = game.settings.get("arm5e", "showRolls");
-  if (rollProperties.MODE & ROLL_MODES.PRIVATE && rollMode !== blindRollMode) {
-    rollMode = privateRollMode;
-  }
+  // TODO rework that mess on V14+ only
+  const msgOptions = Arm5eChatMessage.getMessageOptions(rollProperties, { create: false });
 
   let confAllowed = actor.system.con.score > 0 && (rollProperties.MODE & ROLL_MODES.NO_CONF) === 0;
 
@@ -114,7 +79,7 @@ async function simpleDie(actor, type = "OPTION", callback, specialBehavior = 0) 
       system: system,
       type: "roll"
     },
-    { rollMode: rollMode, create: false }
+    msgOptions
   );
 
   const message = new Arm5eChatMessage(messageData);
@@ -236,12 +201,8 @@ async function stressDie(
     botchCheck = true;
   }
 
-  let rollMode = game.settings.get("core", "rollMode");
-  const blindRollMode = getChatRollMode("BLIND");
-  const privateRollMode = getChatRollMode("PRIVATE");
-  if (rollProperties.MODE & ROLL_MODES.PRIVATE && rollMode !== blindRollMode) {
-    rollMode = privateRollMode;
-  }
+  // TODO rework that mess on V14+ only
+  const msgOptions = Arm5eChatMessage.getMessageOptions(rollProperties, { create: false });
 
   const system = {
     img: actor.img,
@@ -286,7 +247,7 @@ async function stressDie(
       system: system,
       type: "roll"
     },
-    { rollMode: rollMode, create: false }
+    msgOptions
   );
 
   const message = new Arm5eChatMessage(messageData);
@@ -979,12 +940,8 @@ async function noRoll(actor, specialBehavior, callback) {
   const rollProperties = rollInfo.properties;
   let formula = `${rollInfo.formula}`;
 
-  let rollMode = game.settings.get("core", "rollMode");
-  const blindRollMode = getChatRollMode("BLIND");
-  const privateRollMode = getChatRollMode("PRIVATE");
-  if (rollProperties.MODE & ROLL_MODES.PRIVATE && rollMode !== blindRollMode) {
-    rollMode = privateRollMode;
-  }
+  // TODO rework that mess on V14+ only
+  const msgOptions = Arm5eChatMessage.getMessageOptions(rollProperties, { create: false });
 
   if (rollInfo.magic.divide > 1) {
     formula += ` / ${rollInfo.magic.divide}`;
@@ -1032,7 +989,7 @@ async function noRoll(actor, specialBehavior, callback) {
       system: system,
       type: "roll"
     },
-    { rollMode: rollMode, create: false }
+    msgOptions
   );
 
   let message = new Arm5eChatMessage(messageData);

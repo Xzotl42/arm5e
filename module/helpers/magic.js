@@ -239,7 +239,6 @@ export class QuickMagic extends foundry.applications.api.HandlebarsApplicationMi
     if (formData.object.form) {
       this.object.form = formData.object.form;
     }
-    this.render();
   }
 
   async _prepareContext() {

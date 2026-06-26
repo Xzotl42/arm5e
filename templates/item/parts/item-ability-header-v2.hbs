@@ -25,6 +25,17 @@
             placeholder="name"
             class="item-name"
           />
+          {{#if isOwned}}
+          <div class="flex0 padding2">
+            <a data-action="rollAbility" title="{{localize 'arm5e.dialog.button.roll'}}">
+              <img
+                src="systems/arm5e/assets/dice.png"
+                style="border: 0; height: 30px; min-height: 30px; min-width: 30px"
+              />
+            </a>
+          </div>
+
+          {{/if}}
         </div>
       </h1>
       {{#unless altArt}}
@@ -40,16 +51,14 @@
       {{/unless}}
       {{#if isOwned}}
       <div class="flexrow" style="padding-top: 5px">
-        <label style="max-width: 65px"
-          >{{localize 'arm5e.sheet.score'
-
-          }}<input
-            type="number"
-            name="system.finalScore"
-            value="{{ system.finalScore }}"
-            data-dtype="Number"
-            readonly
-        /></label>
+        <label style="max-width: 65px">{{localize 'arm5e.sheet.score'}}</label>
+        <input
+          type="number"
+          name="system.finalScore"
+          value="{{ system.finalScore }}"
+          data-dtype="Number"
+          readonly
+        />
         <div
           class="ressource flex0"
           style="padding-top: 8px; padding-left: 8px; padding-right: 8px"
@@ -61,16 +70,15 @@
             ><i class="fas fa-minus"></i
           ></a>
         </div>
-        <div class="flexrow" style="max-width: 65px">
-          <label
-            >{{localize 'arm5e.sheet.experienceShort'
-            }}<input
-              type="number"
-              name="system.xp"
-              value="{{ system.xp }}"
-              class="select-on-focus"
-              data-dtype="Number"
-          /></label>
+        <div class="flexrow nowrap" style="max-width: 65px">
+          <label>{{localize 'arm5e.sheet.experienceShort'}}</label>
+          <input
+            type="number"
+            name="system.xp"
+            value="{{ system.xp }}"
+            class="select-on-focus"
+            data-dtype="Number"
+          />
         </div>
       </div>
       {{/if}}
