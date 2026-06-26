@@ -599,8 +599,9 @@ export class RollWindow extends HandlebarsApplicationMixin(ApplicationV2) {
   static async onAltAction(event, target) {
     event.preventDefault();
     RollWindow.getFormData(this.element, this.data);
+    let res = null;
     if (this.data.rollInfo.properties.ALT_ACTION) {
-      const res = await this.data.rollInfo.properties.ALT_ACTION(
+      res = await this.data.rollInfo.properties.ALT_ACTION(
         this.data,
         0,
         this.data.rollInfo.properties.CALLBACK

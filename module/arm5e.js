@@ -64,6 +64,7 @@ Hooks.once("init", async function () {
   };
 
   CONFIG.ISV14 = game.release.generation === 14;
+  CONFIG.ISV13 = game.release.generation === 13;
 
   // Add system metadata
   CONFIG.ARM5E = ARM5E;

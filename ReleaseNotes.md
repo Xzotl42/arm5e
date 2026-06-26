@@ -13,6 +13,9 @@
 - Fixed Nouns and Verbs management button.
 - It is again possible to roll from an owned ability sheet
 - Supernatural effect can have their verb and noun edited again.
+- Fixed Alternate action on roll (exertion, no roll spont magic,...)
+- Fixed QuickMagic dialog
+- Tentative fix for chat messages.
 
 ## 3.0.1.7 Stentorius BF3
 
