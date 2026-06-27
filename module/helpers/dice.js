@@ -65,8 +65,7 @@ async function simpleDie(actor, type = "OPTION", callback = null, specialBehavio
       fatigueLevelsFail: 0,
       woundGravity: 0,
       applied: false
-    },
-    rollMode: rollMode
+    }
   };
 
   const messageData = await dieRoll.toMessage(
@@ -231,12 +230,9 @@ async function stressDie(
       fatigueLevelsFail: 0,
       woundGravity: 0,
       applied: false
-    },
-    rollMode: rollMode
+    }
   };
 
-  //   system.combat = { attacker: actor.uuid, defenders: [] };
-  //   system.magic = { caster: actor.uuid, targets: [], ritual: rollInfo.magic.ritual };
   const messageData = await dieRoll.toMessage(
     {
       flavor: flavorTxt,
