@@ -166,6 +166,7 @@ export async function migration(originalVersion) {
     }
 
     // migrate chat messages
+
     const chatMsgUpdates = [];
 
     for (let m of game.messages) {
@@ -206,8 +207,13 @@ export async function migration(originalVersion) {
         console.error(err);
       }
     }
-    if (invalidMessagesUpdates.length > 0) {
-      await ChatMessage.updateDocuments(invalidMessagesUpdates, { diff: false });
+    try {
+      if (invalidMessagesUpdates.length > 0) {
+        await ChatMessage.updateDocuments(invalidMessagesUpdates, { diff: false });
+      }
+    } catch (err) {
+      err.message = `Error during system migration for invalid Chat Messages, it's under investigation: ${err.message}`;
+      console.error(err);
     }
 
     // [DEV] Uncomment below to migrate system compendiums
