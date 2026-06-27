@@ -233,8 +233,6 @@ async function stressDie(
     }
   };
 
-  //   system.combat = { attacker: actor.uuid, defenders: [] };
-  //   system.magic = { caster: actor.uuid, targets: [], ritual: rollInfo.magic.ritual };
   const messageData = await dieRoll.toMessage(
     {
       flavor: flavorTxt,

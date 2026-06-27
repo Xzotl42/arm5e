@@ -1,4 +1,4 @@
-## 3.0.1.8 Stentorius BF4
+## 3.0.1.9 Stentorius BF4
 
 ### Compatibility
 
@@ -163,6 +163,49 @@
 - Added some robustness on settings migration and user cache in case of corruption.
 - [dice-so-nice] smart messages with multiple rolls (eg: damage rolls) won't display the rolling of dice twice for subsequent rolls after the first
 - [V14] Fixed the edition of Active effects (existing effects may have to be recreated if edited)
+
+## 2.4.1.17, Radislav, Cognizant Wisdom BF3
+
+[IMPORTANT] Known limitation for V12, if text seems greyed out, go in the core settings and change the Preferred Color Scheme to "Light".
+
+### V13 compatibility
+
+- Verified for version 13.351
+
+### Features & changes
+
+### Bug fixes
+
+- Damage application from the chat messages stops inflicting a wound to all protagonists.
+- Fixed combat wound description.
+- The dialog title for using a magic item effect will be the name of the effect instead of the name of the item.
+- Magic resistance description in chat message was incorrect, not accounting confidence spent for the total penetration
+- Parma magica is only counted once in the magic resistance
+- Roll mode is now taken into account for the new chat messages.
+
+## 2.4.1.15, Radislav, Cognizant Wisdom BF2
+
+[IMPORTANT] Known limitation for V12, if text seems greyed out, go in the core settings and change the Preferred Color Scheme to "Light".
+
+### V13 compatibility
+
+- Verified for version 13.351
+
+### Features & changes
+
+### Bug fixes
+
+- Encumbrance was not computed properly
+- Fixed aging rollback error.
+- It is now possible to see the details of a roll even if the Actor was deleted
+- Changing combat preparation in inititive roll dialog displays proper labels
+- Encumbrance is displayed in initiative roll dialog.
+- Pending damage notification is only displayed once, the status is cleared after.
+- Fixed a bunch of formatting oddities in the details section of chat rolls.
+- Fixed a bug during an aging crisis where the number of aging points of the characteristic impacted was wrongly computed.
+- Even if a notification was raised, rolls were still possible for dead/unconscious characters
+- Using magic items is working again
+- Using powers reduce the might points properly
 
 ## 2.4.1.14, Radislav, Cognizant Wisdom BF1
 

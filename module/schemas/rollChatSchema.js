@@ -275,7 +275,10 @@ export class RollChatSchema extends BasicChatSchema {
         }
       } else {
         rollFormula.remove();
-        roll.querySelector(".dice-tooltip").remove();
+        const tooltip = roll.querySelector(".dice-tooltip");
+        if (tooltip) {
+          roll.querySelector(".dice-tooltip").remove();
+        }
       }
     }
     const item = roll.querySelector(".dice-total");
