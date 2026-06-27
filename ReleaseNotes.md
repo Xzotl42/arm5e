@@ -1,4 +1,4 @@
-## 3.0.1.8 Stentorius BF4
+## 3.0.1.9 Stentorius BF4
 
 ### Compatibility
 
