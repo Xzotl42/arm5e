@@ -1,3 +1,15 @@
+## 3.0.1.10 Stentorius BF5
+
+### Compatibility
+
+- Verified for 14.364
+
+### Features & changes
+
+### Bug fixes
+
+- Fixed another merge bug, applying the might magic resistance twice
+
 ## 3.0.1.9 Stentorius BF4
 
 ### Compatibility
