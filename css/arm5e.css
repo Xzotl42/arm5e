@@ -586,6 +586,7 @@ h3.dice-msg {
 .arm5e input[type="password"],
 .arm5e input[type="date"],
 .arm5e input[type="time"],
+.arm5e color-picker,
 .arm5e select,
 .arm5e-prompt select,
 .arm5e-dialog select,
@@ -610,6 +611,20 @@ h3.dice-msg {
   -moz-user-select: text;
   -ms-user-select: text;
   user-select: text;
+}
+
+.arm5e color-picker {
+  line-height: 32px;
+  height: 32px;
+}
+
+.arm5e color-picker > input[type="text"] {
+  border-width: 0px;
+  background: transparent;
+}
+
+.arm5e document-tags .input-group {
+  background: transparent;
 }
 
 .arm5e select,

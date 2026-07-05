@@ -66,6 +66,8 @@ Hooks.once("init", async function () {
   CONFIG.ISV14 = game.release.generation === 14;
   CONFIG.ISV13 = game.release.generation === 13;
 
+  // CONFIG.debug.hooks = true;
+
   // Add system metadata
   CONFIG.ARM5E = ARM5E;
   CONFIG.ARM5E.ItemDataModels = CONFIG.Item.dataModels;
@@ -565,11 +567,6 @@ Hooks.on("renderDialogV2", (app, html, data, options) => {
     "wound",
     "container"
   ]; //
-  // Array.from(html.querySelectorAll('select[name="type"] option')).forEach((i) => {
-  //   if (deprecatedTypes.includes(i.value)) {
-  //     i.remove();
-  //   }
-  // });
   html.querySelectorAll('select[name="type"] option').forEach((i) => {
     if (deprecatedTypes.includes(i.value)) {
       i.remove();
