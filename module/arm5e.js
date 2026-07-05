@@ -538,8 +538,9 @@ function rollItemMacro(itemUuid, actorUuid, event = undefined) {
   }
 }
 
-Hooks.on("renderDialog", (dialog, html) => {
+Hooks.on("renderDialogV2", (app, html, data, options) => {
   let deprecatedTypes = [
+    "art",
     "magicItem",
     "personalityTrait",
     "reputation",
@@ -564,7 +565,12 @@ Hooks.on("renderDialog", (dialog, html) => {
     "wound",
     "container"
   ]; //
-  Array.from(html.find("#document-create option")).forEach((i) => {
+  // Array.from(html.querySelectorAll('select[name="type"] option')).forEach((i) => {
+  //   if (deprecatedTypes.includes(i.value)) {
+  //     i.remove();
+  //   }
+  // });
+  html.querySelectorAll('select[name="type"] option').forEach((i) => {
     if (deprecatedTypes.includes(i.value)) {
       i.remove();
     }
