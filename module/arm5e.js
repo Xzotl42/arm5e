@@ -66,6 +66,8 @@ Hooks.once("init", async function () {
   CONFIG.ISV14 = game.release.generation === 14;
   CONFIG.ISV13 = game.release.generation === 13;
 
+  // CONFIG.debug.hooks = true;
+
   // Add system metadata
   CONFIG.ARM5E = ARM5E;
   CONFIG.ARM5E.ItemDataModels = CONFIG.Item.dataModels;
@@ -538,8 +540,9 @@ function rollItemMacro(itemUuid, actorUuid, event = undefined) {
   }
 }
 
-Hooks.on("renderDialog", (dialog, html) => {
+Hooks.on("renderDialogV2", (app, html, data, options) => {
   let deprecatedTypes = [
+    "art",
     "magicItem",
     "personalityTrait",
     "reputation",
@@ -564,7 +567,7 @@ Hooks.on("renderDialog", (dialog, html) => {
     "wound",
     "container"
   ]; //
-  Array.from(html.find("#document-create option")).forEach((i) => {
+  html.querySelectorAll('select[name="type"] option').forEach((i) => {
     if (deprecatedTypes.includes(i.value)) {
       i.remove();
     }

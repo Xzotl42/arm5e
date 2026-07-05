@@ -9,6 +9,8 @@
 ### Bug fixes
 
 - Fixed another merge bug, applying the might magic resistance twice
+- Deprecated documents types are no longer listed when creating them in the sidebar (broken since AppV2)
+- [V14] First pass fixing the active effect config sheet
 
 ## 3.0.1.9 Stentorius BF4
 

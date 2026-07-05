@@ -9,7 +9,7 @@
   {{!-- {{formGroup fields.name value=source.name rootId=rootId}} --}}
 
   {{#if isActorEffect}}
-  {{formGroup fields.origin value=origin rootId=rootId disabled=true}}
+  {{formGroup fields.origin value=source.origin rootId=rootId disabled=true}}
   {{/if}}
   {{#if isItemEffect}}
   {{formGroup fields.transfer value=source.transfer rootId=rootId label=legacyTransfer.label hint=legacyTransfer.hint}}
