@@ -237,7 +237,7 @@ export class ArM5eLaboratoryActorSheetV2 extends ArM5eActorSheetV2 {
       context.planning.labSpecTotal ??= { mod: 0, label: "" };
       context.planning.labTotal ??= { score: 0, label: "" };
       context.planning.duration ??= 0;
-      context.planning.date ??= game.settings.get("arm5e", "currentDate");
+      context.planning.date ??= game.settings.get(ARM5E.SYSTEM_ID, "currentDate");
       return context;
     }
 
@@ -442,7 +442,7 @@ export class ArM5eLaboratoryActorSheetV2 extends ArM5eActorSheetV2 {
     context.planning.labSpecTotal ??= { mod: 0, label: "" };
     context.planning.labTotal ??= { score: 0, label: "" };
     context.planning.duration ??= 0;
-    context.planning.date ??= game.settings.get("arm5e", "currentDate");
+    context.planning.date ??= game.settings.get(ARM5E.SYSTEM_ID, "currentDate");
     log(false, "Final planning context", context.planning);
     return context;
   }
@@ -736,7 +736,7 @@ export class ArM5eLaboratoryActorSheetV2 extends ArM5eActorSheetV2 {
     const activity = LabActivity.LabActivityFactory(this.actor.uuid, owner.uuid, planning.type);
     planning.activity = activity;
 
-    planning.date ??= game.settings.get("arm5e", "currentDate");
+    planning.date ??= game.settings.get(ARM5E.SYSTEM_ID, "currentDate");
     const result = activity.validation(planning);
     const duration = result.duration ?? planning.duration ?? 1;
     const dates = DiaryEntrySchema.buildSchedule(

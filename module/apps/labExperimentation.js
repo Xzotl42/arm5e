@@ -1,3 +1,5 @@
+import { ARM5E } from "../config.js";
+
 import { ArsRoll } from "../helpers/roll.js";
 import { log } from "../tools/tools.js";
 import { privateMessage } from "../helpers/chat-message.js";
@@ -17,7 +19,7 @@ export class LabExperimentation extends HandlebarsApplicationMixin(ApplicationV2
   ) {
     super(options);
 
-    const currentDate = game.settings.get("arm5e", "currentDate");
+    const currentDate = game.settings.get(ARM5E.SYSTEM_ID, "currentDate");
     if (data.year === undefined) {
       data.year = currentDate.year;
     }

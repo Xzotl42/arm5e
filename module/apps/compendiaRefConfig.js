@@ -1,3 +1,5 @@
+import { ARM5E } from "../config.js";
+
 import { log } from "../tools/tools.js";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;

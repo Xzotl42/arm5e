@@ -1,3 +1,5 @@
+import { ARM5E } from "../config.js";
+
 import { stressDie } from "../helpers/dice.js";
 import { log, sleep } from "../tools/tools.js";
 import { getShiftedDate, seasonsDelta } from "../tools/time.js";
@@ -174,7 +176,7 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
    * duration of their call so that templates and internal helpers can branch on it.
    */
   _initializeData() {
-    const datetime = game.settings.get("arm5e", "currentDate");
+    const datetime = game.settings.get(ARM5E.SYSTEM_ID, "currentDate");
     this.object.seasons = CONFIG.ARM5E.seasons;
     this.object.curYear = datetime.year;
     this.object.curSeason = datetime.season;
@@ -227,7 +229,7 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
       context.canOverstrain = "disabled";
     }
     // Determine whether more seasons of treatment remain after this one.
-    const worldDate = game.settings.get("arm5e", "currentDate");
+    const worldDate = game.settings.get(ARM5E.SYSTEM_ID, "currentDate");
     context.moreSeasons =
       seasonsDelta({ season: context.curSeason, year: context.curYear }, worldDate) > 0;
     context.diaryLabel = context.moreSeasons
@@ -732,7 +734,7 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
       const newType = CONFIG.ARM5E.recovery.rankMapping[newTypeRank];
       const woundItem = actor.items.get(worstWound.wound._id ?? worstWound.wound.id);
       if (woundItem) {
-        const currentDate = game.settings.get("arm5e", "currentDate");
+        const currentDate = game.settings.get(ARM5E.SYSTEM_ID, "currentDate");
         const overstrainNote = `<p>${game.i18n.format("arm5e.sanatorium.msg.overstrainNote", {
           season: game.i18n.localize(CONFIG.ARM5E.seasons[currentDate.season].label),
           year: currentDate.year
@@ -888,7 +890,7 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
     // If this session's date is still behind the world date, reset for the next season
     // so the user can immediately continue treating wounds in subsequent seasons.
     // Otherwise close the Sanatorium — there is nothing more to do.
-    const worldDate = game.settings.get("arm5e", "currentDate");
+    const worldDate = game.settings.get(ARM5E.SYSTEM_ID, "currentDate");
     if (seasonsDelta({ season: this.object.curSeason, year: this.object.curYear }, worldDate) > 0) {
       this._resetForNextSeason();
     } else {
@@ -1532,7 +1534,7 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
   prepareWounds() {
     // Determine the appropriate starting date for this recovery session
     // Based on existing wounds and their recovery progress
-    let currentTime = game.settings.get("arm5e", "currentDate");
+    let currentTime = game.settings.get(ARM5E.SYSTEM_ID, "currentDate");
 
     // Find the latest season affected by existing wounds
     for (let [type, wounds] of Object.entries(this.patient.system.wounds)) {

@@ -947,7 +947,7 @@ export class ArM5eRollInfo {
           .filter((c, idx) => {
             return (
               (c.type === "add" || Number(c.mode) === 2) &&
-              activeEffect.getFlag("arm5e", "type")[idx] === "spellcasting"
+              activeEffect.getFlag(ARM5E.SYSTEM_ID, "type")[idx] === "spellcasting"
             );
           })
           .forEach((item) => {

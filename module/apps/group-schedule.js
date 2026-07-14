@@ -151,7 +151,7 @@ export class GroupSchedule extends HandlebarsApplicationMixin(ApplicationV2) {
 
   async _prepareContext(options = {}) {
     const data = await super._prepareContext(options);
-    let currentDate = game.settings.get("arm5e", "currentDate");
+    let currentDate = game.settings.get(ARM5E.SYSTEM_ID, "currentDate");
     data.curYear = Number(currentDate.year);
     data.curSeason = currentDate.season;
     data.selectedActors = [];

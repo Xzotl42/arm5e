@@ -1,3 +1,5 @@
+import { ARM5E } from "../../config.js";
+
 import { ArM5eActorSheetV2 } from "../../sheets/actor/actor-sheet-v2.js";
 import { getAbilityStats, getDataset, log, slugify } from "../../tools/tools.js";
 import { getConfirmation } from "../../ui/dialogs.js";
@@ -494,7 +496,7 @@ export class ArM5eMagicSystem {
         break;
       case "delete":
         let confirmed = true;
-        // if (game.settings.get("arm5e", "confirmDelete")) {
+        // if (game.settings.get(ARM5E.SYSTEM_ID, "confirmDelete")) {
         const question = game.i18n.localize("arm5e.dialog.delete-question");
         confirmed = await getConfirmation(
           dataset.name,
@@ -561,7 +563,7 @@ export class ArM5eMagicSystem {
         break;
       case "delete":
         let confirmed = true;
-        if (game.settings.get("arm5e", "confirmDelete")) {
+        if (game.settings.get(ARM5E.SYSTEM_ID, "confirmDelete")) {
           const question = game.i18n.localize("arm5e.dialog.delete-question");
           confirmed = await getConfirmation(
             "Component",

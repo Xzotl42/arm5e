@@ -169,8 +169,8 @@ export class Schedule extends HandlebarsApplicationMixin(ApplicationV2) {
   async _prepareContext(options = {}) {
     const data = await super._prepareContext(options);
     data.actor = this.actor;
-    let currentDate = game.settings.get("arm5e", "currentDate");
-    let enforceSchedule = game.settings.get("arm5e", "enforceSchedule");
+    let currentDate = game.settings.get(ARM5E.SYSTEM_ID, "currentDate");
+    let enforceSchedule = game.settings.get(ARM5E.SYSTEM_ID, "enforceSchedule");
     data.curYear = Number(currentDate.year);
     data.curSeason = currentDate.season;
 

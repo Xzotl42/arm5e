@@ -1,3 +1,5 @@
+import { ARM5E } from "../../config.js";
+
 import { ArM5eItemSheetV2 } from "./item-sheet-v2.js";
 import { ArM5eActorSheetV2 } from "../actor/actor-sheet-v2.js";
 import { getConfirmation } from "../../ui/dialogs.js";
@@ -150,7 +152,7 @@ export class ArM5eDiaryEntryItemSheetV2 extends ArM5eItemSheetV2 {
       context.rollLabel = this.item.system.activityHandler.roll.label;
     }
 
-    context.enforceSchedule = game.settings.get("arm5e", "enforceSchedule");
+    context.enforceSchedule = game.settings.get(ARM5E.SYSTEM_ID, "enforceSchedule");
     const hasTeacher = ["training", "teaching"].includes(actType);
     context.system.sourceBonus = 0;
     context.ui.showProgress = activityConfig.display.progress;

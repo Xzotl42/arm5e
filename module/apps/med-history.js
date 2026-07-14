@@ -1,3 +1,5 @@
+import { ARM5E } from "../config.js";
+
 import { getConfirmation } from "../ui/dialogs.js";
 import { compareDates, nextDate } from "../tools/time.js";
 import { ArM5eActorSheetV2 } from "../sheets/actor/actor-sheet-v2.js";
@@ -121,7 +123,7 @@ export class MedicalHistory extends foundry.applications.api.HandlebarsApplicati
     let confirmed = false;
     if (event.shiftKey) {
       confirmed = true;
-    } else if (game.settings.get("arm5e", "confirmDelete")) {
+    } else if (game.settings.get(ARM5E.SYSTEM_ID, "confirmDelete")) {
       const question = game.i18n.localize("arm5e.dialog.sure");
       confirmed = await getConfirmation(
         game.i18n.localize("arm5e.sanatorium.msg.clearHistory"),

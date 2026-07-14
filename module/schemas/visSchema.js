@@ -177,7 +177,7 @@ export class VisSchema extends foundry.abstract.TypeDataModel {
   }
 
   _createDiaryEntryToStudyVis(actor) {
-    let currentDate = game.settings.get("arm5e", "currentDate");
+    let currentDate = game.settings.get(ARM5E.SYSTEM_ID, "currentDate");
     const entryData = [
       {
         name: game.i18n.format("arm5e.activity.title.visStudy", {

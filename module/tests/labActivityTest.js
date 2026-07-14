@@ -55,10 +55,10 @@ export function registerLabActivityTesting(quench) {
             it(`Lab total ${tech} ${form}`, async function () {
               try {
                 await lab.sheet._resetPlanning("inventSpell");
-                const labData = foundry.utils.deepClone(lab.getFlag("arm5e", "planning"));
+                const labData = foundry.utils.deepClone(lab.getFlag(ARM5E.SYSTEM_ID, "planning"));
                 labData.data.system.technique.value = tech;
                 labData.data.system.form.value = form;
-                await lab.setFlag("arm5e", "planning", labData);
+                await lab.setFlag(ARM5E.SYSTEM_ID, "planning", labData);
                 const data = await lab.sheet._prepareContext({});
                 log(false, `${tech} ${form} : ${data.planning.labTotal.score}`);
                 assert.equal(

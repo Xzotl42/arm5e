@@ -1,3 +1,5 @@
+import { ARM5E } from "./config.js";
+
 import { log } from "./tools/tools.js";
 import { CompendiaRefConfig } from "./apps/compendiaRefConfig.js";
 import { SourcebookFilterConfig } from "./apps/sourcebookFilterConfig.js";
@@ -330,7 +332,7 @@ export async function migrateSettings() {
     // ensure that the time setting is setting properly
 
     if (!game.modules.get("foundryvtt-simple-calendar")?.active) {
-      let currentDate = game.settings.get("arm5e", "currentDate");
+      let currentDate = game.settings.get(ARM5E.SYSTEM_ID, "currentDate");
       let toUpdate = false;
       if (currentDate === undefined) {
         currentDate = { year: 1220, season: "spring", date: "", month: 2, day: 20 };
@@ -346,7 +348,7 @@ export async function migrateSettings() {
         }
       }
       if (toUpdate) {
-        await game.settings.set("arm5e", "currentDate", currentDate);
+        await game.settings.set(ARM5E.SYSTEM_ID, "currentDate", currentDate);
       }
     }
   } catch (err) {

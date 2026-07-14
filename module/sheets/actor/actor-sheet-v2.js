@@ -124,7 +124,7 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
     context.isGM = game.user.isGM;
     context.isOwner = this.document?.isOwner ?? false;
     context.metagame = {
-      view: game.settings.get("arm5e", "metagame"),
+      view: game.settings.get(ARM5E.SYSTEM_ID, "metagame"),
       edit: context.isGM ? "" : "readonly"
     };
 
@@ -132,7 +132,7 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
     context.system.effectCreation = game.user.isTrusted;
 
     // --- Current in-game date ---
-    context.datetime = game.settings.get("arm5e", "currentDate");
+    context.datetime = game.settings.get(ARM5E.SYSTEM_ID, "currentDate");
     context.datetime.seasonLabel = game.i18n.localize(
       CONFIG.ARM5E.seasons[context.datetime.season].label
     );
@@ -704,7 +704,7 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
     if (!itemId || Number.isNaN(index)) return;
     const item = this.actor.getEmbeddedDocument("Item", itemId);
     if (!item) return;
-    await item.setFlag("arm5e", "currentBookTopic", index);
+    await item.setFlag(ARM5E.SYSTEM_ID, "currentBookTopic", index);
     item.sheet?.render(true);
   }
 
@@ -727,7 +727,7 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
     if (!itemId) return;
 
     let confirmed = !!event.shiftKey;
-    if (!confirmed && game.settings.get("arm5e", "confirmDelete")) {
+    if (!confirmed && game.settings.get(ARM5E.SYSTEM_ID, "confirmDelete")) {
       confirmed = await getConfirmation(
         itemEl.dataset.name ?? "",
         game.i18n.localize("arm5e.dialog.delete-question"),
@@ -998,7 +998,7 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
   }
 
   async isRollPossible(dataset) {
-    if (game.settings.get("arm5e", "passConfidencePromptOnRoll")) {
+    if (game.settings.get(ARM5E.SYSTEM_ID, "passConfidencePromptOnRoll")) {
       const pendingConfMsg = game.messages.contents.filter((message) => {
         return message.speaker?.actor === this.actor.id && message.system.confPrompt;
       });

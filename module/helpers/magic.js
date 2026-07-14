@@ -1,3 +1,5 @@
+import { ARM5E } from "../config.js";
+
 import { log } from "../tools/tools.js";
 import { TWILIGHT_STAGES } from "../seasonal-activities/long-term-activities.js";
 import {

@@ -155,7 +155,7 @@ export class BookSchema extends foundry.abstract.TypeDataModel {
 
   static getDefault(itemData) {
     let res = itemData;
-    let currentDate = game.settings.get("arm5e", "currentDate");
+    let currentDate = game.settings.get(ARM5E.SYSTEM_ID, "currentDate");
     if (itemData.system) {
       // res.system.year = Number(currentDate.year);
       if (itemData.system.topics === undefined) {

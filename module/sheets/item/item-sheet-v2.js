@@ -1,3 +1,5 @@
+import { ARM5E } from "../../config.js";
+
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ItemSheetV2 } = foundry.applications.sheets;
 const { DragDrop } = foundry.applications.ux;
@@ -85,7 +87,7 @@ export class ArM5eItemSheetV2 extends HandlebarsApplicationMixin(ItemSheetV2) {
     context.navClass = ArM5eItemSheetV2.#getTabNavClass(context.flavor);
     context.subtabNavClass = context.navClass;
     context.metagame = {
-      view: game.settings.get("arm5e", "metagame") && UI.METAGAME.includes(this.item.type),
+      view: game.settings.get(ARM5E.SYSTEM_ID, "metagame") && UI.METAGAME.includes(this.item.type),
       edit: context.isGM ? "" : "readonly"
     };
     context.effects = ArM5eActiveEffect.prepareActiveEffectCategories(this.item.effects);
@@ -94,11 +96,11 @@ export class ArM5eItemSheetV2 extends HandlebarsApplicationMixin(ItemSheetV2) {
     if (this.item?.system?.cost?.amount !== undefined) {
       const quantity = Number(this.item?.system?.quantity ?? 0);
       const amount = Number(this.item?.system?.cost?.amount ?? 0);
-      const currency = game.settings.get("arm5e", "currency");
+      const currency = game.settings.get(ARM5E.SYSTEM_ID, "currency");
       context.cost = {
-        detail: game.settings.get("arm5e", "moneyManagementLevel"),
+        detail: game.settings.get(ARM5E.SYSTEM_ID, "moneyManagementLevel"),
         currency,
-        coeff: game.settings.get("arm5e", "currencyCoeff"),
+        coeff: game.settings.get(ARM5E.SYSTEM_ID, "currencyCoeff"),
         hint: `${quantity * amount} ${currency} total`
       };
     }

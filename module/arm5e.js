@@ -115,12 +115,12 @@ Hooks.once("init", async function () {
   CONFIG.JournalEntry.sidebarIcon = "ars-icon-Tool_Journals_sidebar";
 
   customizePause();
-  CONFIG.ARM5E_DEFAULT_ICONS = ARM5E_DEFAULT_ICONS[game.settings.get("arm5e", "defaultIconStyle")];
+  CONFIG.ARM5E_DEFAULT_ICONS = ARM5E_DEFAULT_ICONS[game.settings.get(ARM5E.SYSTEM_ID, "defaultIconStyle")];
   CONFIG.INHABITANTS_DEFAULT_ICONS =
-    INHABITANTS_DEFAULT_ICONS[game.settings.get("arm5e", "defaultIconStyle")];
+    INHABITANTS_DEFAULT_ICONS[game.settings.get(ARM5E.SYSTEM_ID, "defaultIconStyle")];
   CONFIG.ACTIVITIES_DEFAULT_ICONS =
-    ACTIVITIES_DEFAULT_ICONS[game.settings.get("arm5e", "defaultIconStyle")];
-  if (game.settings.get("arm5e", "winterFirst")) {
+    ACTIVITIES_DEFAULT_ICONS[game.settings.get(ARM5E.SYSTEM_ID, "defaultIconStyle")];
+  if (game.settings.get(ARM5E.SYSTEM_ID, "winterFirst")) {
     CONFIG.SEASON_ORDER = seasonOrder.winterFirst;
     CONFIG.SEASON_ORDER_INV = seasonOrderInv.winterFirst;
     CONFIG.ARM5E.seasons = CONFIG.ARM5E.seasonsLabels.winterFirst;
@@ -158,7 +158,7 @@ Hooks.once("init", async function () {
 
   document.documentElement.style.setProperty(
     "--font-header",
-    `"${game.settings.get("arm5e", "headerFont")}", serif`
+    `"${game.settings.get(ARM5E.SYSTEM_ID, "headerFont")}", serif`
   );
 
   // /////////
@@ -213,7 +213,7 @@ Hooks.once("ready", async function () {
   // astrolabium singleton
   let formData = {
     seasons: CONFIG.ARM5E.seasons,
-    ...game.settings.get("arm5e", "currentDate")
+    ...game.settings.get(ARM5E.SYSTEM_ID, "currentDate")
   };
   ui.astrolabium = new Astrolabium({ document: formData });
 
@@ -255,13 +255,13 @@ Hooks.once("ready", async function () {
   if (game.user.isGM) {
     // Determine whether a system migration is required and feasible
     // this below assumes that we stay on single digit version numbers...
-    const currentVersion = game.settings.get("arm5e", "systemMigrationVersion");
+    const currentVersion = game.settings.get(ARM5E.SYSTEM_ID, "systemMigrationVersion");
     const SYSTEM_VERSION_NEEDED = game.system.version;
     const COMPATIBLE_MIGRATION_VERSION = "1.1";
     const totalDocuments = game.actors.size + game.scenes.size + game.items.size;
 
     if (!currentVersion && totalDocuments === 0) {
-      game.settings.set("arm5e", "systemMigrationVersion", SYSTEM_VERSION_NEEDED);
+      game.settings.set(ARM5E.SYSTEM_ID, "systemMigrationVersion", SYSTEM_VERSION_NEEDED);
     } else {
       // TODO remove after a while
       const UPDATE_BUG_VERSION = "2.0.2.8";
@@ -299,9 +299,9 @@ Hooks.once("ready", async function () {
 
   // Setup session storage:
 
-  if (game.settings.get("arm5e", "clearUserCache")) {
+  if (game.settings.get(ARM5E.SYSTEM_ID, "clearUserCache")) {
     clearUserCache();
-    game.settings.set("arm5e", "clearUserCache", false);
+    game.settings.set(ARM5E.SYSTEM_ID, "clearUserCache", false);
   }
   let userData = sessionStorage.getItem(`usercache-${game.user.id}`);
   if (!userData) {
@@ -367,7 +367,7 @@ Hooks.on("quenchReady", (quench) => {
 Hooks.on("simple-calendar-date-time-change", async (data) => {
   // Ignore change of less than an hour
   if (Math.abs(data.diff) < 3600) return;
-  let current = game.settings.get("arm5e", "currentDate");
+  let current = game.settings.get(ARM5E.SYSTEM_ID, "currentDate");
   let newDatetime = {};
   if (
     current.year !== Number(data.date.year) ||
@@ -380,7 +380,7 @@ Hooks.on("simple-calendar-date-time-change", async (data) => {
       month: data.date.month,
       day: data.date.day
     };
-    await game.settings.set("arm5e", "currentDate", newDatetime);
+    await game.settings.set(ARM5E.SYSTEM_ID, "currentDate", newDatetime);
     Hooks.callAll("arm5e-date-change", newDatetime);
   }
 });
@@ -617,7 +617,7 @@ function registerSheets() {
     for (const { sheetClass, options } of ITEM_SHEET_REGISTRATIONS_V2) {
       foundry.applications.apps.DocumentSheetConfig.registerSheet(
         Item,
-        "arm5e",
+        ARM5E.SYSTEM_ID,
         sheetClass,
         options
       );
@@ -631,7 +631,7 @@ function registerSheets() {
 
     foundry.applications.apps.DocumentSheetConfig.registerSheet(
       ActiveEffect,
-      "arm5e",
+      ARM5E.SYSTEM_ID,
       ArM5eActiveEffectConfig
     );
   } catch (err) {

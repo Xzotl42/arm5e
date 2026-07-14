@@ -1,3 +1,5 @@
+import { ARM5E } from "../../config.js";
+
 import { EnchantExtensionV2 } from "./enchant-extension-v2.js";
 import { ArM5eActorSheetV2 } from "../actor/actor-sheet-v2.js";
 import { getConfirmation } from "../../ui/dialogs.js";
@@ -145,7 +147,7 @@ export class ArM5eBookItemSheetV2 extends ArM5ePhysicalItemSheetV2 {
     }
 
     context.topicIdx = ArM5eBookItemSheetV2.#clampTopicIndex(
-      this.item.getFlag("arm5e", "currentBookTopic") ?? 0,
+      this.item.getFlag(ARM5E.SYSTEM_ID, "currentBookTopic") ?? 0,
       context.system.topics.length
     );
     context.currentTopicNumber = context.topicIdx + 1;
@@ -228,7 +230,7 @@ export class ArM5eBookItemSheetV2 extends ArM5ePhysicalItemSheetV2 {
 
     const topics = ArM5eBookItemSheetV2.#normalizedTopics(this.item.system.topics);
     const index = ArM5eBookItemSheetV2.#clampTopicIndex(
-      dropTarget?.dataset?.index ?? this.item.getFlag("arm5e", "currentBookTopic") ?? 0,
+      dropTarget?.dataset?.index ?? this.item.getFlag(ARM5E.SYSTEM_ID, "currentBookTopic") ?? 0,
       topics.length
     );
 
@@ -339,20 +341,20 @@ export class ArM5eBookItemSheetV2 extends ArM5ePhysicalItemSheetV2 {
   static async previousTopic(event, target) {
     const newIndex = Number(target.dataset.index) - 1;
     if (newIndex < 0) return;
-    await this.item.setFlag("arm5e", "currentBookTopic", newIndex);
+    await this.item.setFlag(ARM5E.SYSTEM_ID, "currentBookTopic", newIndex);
   }
 
   static async nextTopic(event, target) {
     const newIndex = Number(target.dataset.index) + 1;
     if (newIndex > this.item.system.topics.length - 1) return;
-    await this.item.setFlag("arm5e", "currentBookTopic", newIndex);
+    await this.item.setFlag(ARM5E.SYSTEM_ID, "currentBookTopic", newIndex);
   }
 
   static async addTopic(event, target) {
     event.preventDefault();
     const topics = ArM5eBookItemSheetV2.#normalizedTopics(this.item.system.topics);
     const index = ArM5eBookItemSheetV2.#clampTopicIndex(target.dataset.index ?? 0, topics.length);
-    const currentDate = game.settings.get("arm5e", "currentDate");
+    const currentDate = game.settings.get(ARM5E.SYSTEM_ID, "currentDate");
     const currentTopic = topics[index];
     const newTopic = {
       author: currentTopic?.author ?? "",
@@ -372,7 +374,7 @@ export class ArM5eBookItemSheetV2 extends ArM5ePhysicalItemSheetV2 {
     };
     const newIdx = topics.length;
     topics.push(newTopic);
-    // await this.item.setFlag("arm5e", "currentBookTopic", newIdx);
+    // await this.item.setFlag(ARM5E.SYSTEM_ID, "currentBookTopic", newIdx);
     await this.item.update({ "flags.arm5e.currentBookTopic": newIdx, "system.topics": topics });
   }
 
@@ -384,7 +386,7 @@ export class ArM5eBookItemSheetV2 extends ArM5ePhysicalItemSheetV2 {
     let confirm = true;
     let flavor = FLAVORS.NEUTRAL;
     if (this.item.isOwned) flavor = ArM5eActorSheetV2.getFlavor(this.item.actor.type);
-    if (!event.shiftKey && game.settings.get("arm5e", "confirmDelete")) {
+    if (!event.shiftKey && game.settings.get(ARM5E.SYSTEM_ID, "confirmDelete")) {
       confirm = await getConfirmation(
         game.i18n.localize("arm5e.dialog.delete-topic"),
         game.i18n.localize("arm5e.dialog.delete-question"),

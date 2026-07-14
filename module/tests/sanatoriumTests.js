@@ -1,3 +1,5 @@
+import { ARM5E } from "../config.js";
+
 import { log, sleep } from "../tools/tools.js";
 import { getMagus } from "./testData.js";
 import { ArsLayer } from "../ui/ars-layer.js";
@@ -15,7 +17,7 @@ export function registerSanatoriumTesting(quench) {
       const { describe, it, assert, before, after, beforeEach, afterEach } = context;
 
       let magus;
-      const getDatetime = () => game.settings.get("arm5e", "currentDate");
+      const getDatetime = () => game.settings.get(ARM5E.SYSTEM_ID, "currentDate");
       const fakeEvent = makeEvent();
 
       // ─── helpers ─────────────────────────────────────────────────────────────
