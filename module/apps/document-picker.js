@@ -50,9 +50,9 @@ export class DocumentPicker extends HandlebarsApplicationMixin(ApplicationV2) {
       height: "auto"
     },
     actions: {
-      confirm: DocumentPicker.#onConfirm,
-      cancel: DocumentPicker.#onCancel,
-      toggleItem: DocumentPicker.#onToggleItem
+      confirm: DocumentPicker._onConfirm,
+      cancel: DocumentPicker._onCancel,
+      toggleItem: DocumentPicker._onToggleItem
     }
   };
 
@@ -157,7 +157,7 @@ export class DocumentPicker extends HandlebarsApplicationMixin(ApplicationV2) {
     const flavor = this.options.flavor ?? "Neutral";
     const windowContent = this.element.querySelector(".window-content");
     if (windowContent) {
-      windowContent.style.backgroundImage = `url(`systems/${ARM5E.SYSTEM_ID}/assets/item/Thin/${flavor}_background.webp`)`;
+      windowContent.style.backgroundImage = `url("systems/${ARM5E.SYSTEM_ID}/assets/item/Thin/${flavor}_background.webp")`;
       windowContent.style.backgroundRepeat = "repeat-y";
       windowContent.style.backgroundSize = "100%";
     }
@@ -180,13 +180,13 @@ export class DocumentPicker extends HandlebarsApplicationMixin(ApplicationV2) {
    * In single-select mode, immediately confirms the selection.
    * @private
    */
-  static async #onToggleItem(event, target) {
+  static async _onToggleItem(event, target) {
     const id = target.dataset.id;
     const { singleSelect = false } = this.options;
 
     if (singleSelect) {
       this._selectedIds = new Set([id]);
-      this.#confirmAndClose();
+      this._confirmAndClose();
     } else {
       if (this._selectedIds.has(id)) {
         this._selectedIds.delete(id);
@@ -200,14 +200,14 @@ export class DocumentPicker extends HandlebarsApplicationMixin(ApplicationV2) {
   /**
    * @private
    **/
-  static async #onConfirm(event, target) {
-    this.#confirmAndClose();
+  static async _onConfirm(event, target) {
+    this._confirmAndClose();
   }
 
   /**
    * @private
    */
-  static async #onCancel(event, target) {
+  static async _onCancel(event, target) {
     if (!this._settled) {
       this._settled = true;
       if (this._resolve) this._resolve([]);
@@ -221,7 +221,7 @@ export class DocumentPicker extends HandlebarsApplicationMixin(ApplicationV2) {
    * Resolve the promise with the currently selected documents and close.
    * @private
    */
-  #confirmAndClose() {
+  _confirmAndClose() {
     if (this._settled) return;
     const { source } = this.options;
     const selected = [];

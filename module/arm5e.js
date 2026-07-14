@@ -43,6 +43,9 @@ import {
 } from "./seasonal-activities/activity-config.js";
 import { registerActivityRollActions } from "./seasonal-activities/activity-roll-registrations.js";
 
+// Ensure system config exists before any early hooks (e.g. i18nInit) mutate CONFIG.ARM5E.
+CONFIG.ARM5E ??= ARM5E;
+
 Hooks.once("i18nInit", async function () {
   CONFIG.ARM5E ??= ARM5E;
   CONFIG.ARM5E.LOCALIZED_ABILITIES = localizeAbilities();
