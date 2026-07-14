@@ -1126,7 +1126,8 @@ ARM5E.covenant.fieldOfWork = {
   laboratories: "arm5e.sheet.laboratories",
   provisions: "arm5e.sheet.provisions",
   weapons: "arm5e.sheet.weapons",
-  writingMaterials: "arm5e.sheet.writingMaterials"
+  writingMaterials: "arm5e.sheet.writingMaterials",
+  books: "arm5e.sheet.books"
 };
 
 ARM5E.covenant.yearlyExpenses = {
@@ -1212,7 +1213,6 @@ ARM5E.covenant.specialists = {
   steward: { label: "arm5e.covenant.specialist.steward" },
   chamberlain: { label: "arm5e.covenant.specialist.chamberlain" },
   turbCaptain: { label: "arm5e.covenant.specialist.turbCaptain" },
-  books: { label: "arm5e.covenant.specialist.books" },
   other: { label: "arm5e.covenant.specialist.other" }
 };
 

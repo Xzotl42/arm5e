@@ -181,44 +181,15 @@
             {{selectOptions config.covenant.specialists selected=system.specialistType labelAttr='label' localize=true}}
           </select>
         </div>
-        {{#if (eq system.specialistType 'other')}}
-        <div class="resource flexcol">
-          <label class="bold">{{localize 'arm5e.sheet.fieldOfWork'}}</label>
-          <select name="system.fieldOfWork" data-type="String">
-            {{selectOptions config.covenant.fieldOfWork selected=system.fieldOfWork localize=true}}
-          </select>
-        </div>
-        {{/if}}
       </div>
 
-      {{!-- craftsmen: yearBorn, job, score, fieldOfWork, loyalty --}}
+      {{!-- craftsmen: job, score, fieldOfWork, quantity, isSpecialist --}}
       {{else if (eq system.category 'craftsmen')}}
-      <div class="flexrow">
-        <div class="resource flexcol">
-          <label class="bold">{{localize 'arm5e.sheet.yearBorn'}}</label>
-          <input
-            type="text"
-            name="system.yearBorn"
-            value="{{ system.yearBorn }}"
-            data-dtype="String"
-          />
-        </div>
-        <div class="resource flexcol">
-          <label class="bold">{{localize 'arm5e.sheet.loyalty'}}</label>
-          <input
-            class="select-on-focus"
-            type="number"
-            name="system.loyalty"
-            value="{{ system.loyalty }}"
-            data-dtype="Number"
-          />
-        </div>
+      <div class="resource flexcol">
+        <label class="bold">{{localize 'arm5e.sheet.job'}}</label>
+        <input type="text" name="system.job" value="{{ system.job }}" data-dtype="String" />
       </div>
       <div class="flexrow">
-        <div class="resource flexcol">
-          <label class="bold">{{localize 'arm5e.sheet.job'}}</label>
-          <input type="text" name="system.job" value="{{ system.job }}" data-dtype="String" />
-        </div>
         <div class="resource flexcol flex0">
           <label class="bold">{{localize 'arm5e.sheet.score'}}</label>
           <input
@@ -229,6 +200,16 @@
             data-dtype="Number"
           />
         </div>
+        <div class="resource flexcol">
+          <label class="bold">{{localize 'arm5e.sheet.quantity'}}</label>
+          <input
+            class="select-on-focus"
+            type="number"
+            name="system.quantity"
+            value="{{ system.quantity }}"
+            data-dtype="Number"
+          />
+        </div>
       </div>
       <div class="flexrow">
         <div class="resource flexcol">
@@ -236,6 +217,12 @@
           <select name="system.fieldOfWork" data-type="String">
             {{selectOptions config.covenant.fieldOfWork selected=system.fieldOfWork localize=true}}
           </select>
+        </div>
+        <div class="resource flexcol flex0">
+          <label class="bold">
+            <input type="checkbox" name="system.isSpecialist" {{checked system.isSpecialist}} />
+            {{localize 'arm5e.sheet.specialist'}}
+          </label>
         </div>
       </div>
 
