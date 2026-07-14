@@ -43,7 +43,7 @@
 
         <button class="arm5e rollable" data-action="roll" data-roll="init"
           data-name='{{localize "arm5e.sheet.initiative"}}'>
-          <img src="systems/arm5e/assets/dice.png" class="flex0 dice-icon">
+          <img src="{{systemPath}}assets/dice.png" class="flex0 dice-icon">
           {{localize "arm5e.sheet.initiative"}}</button>
       </div>
       <!-- quick + init - encumb + stres die -->
@@ -84,7 +84,7 @@
       <div class="flexrow">
         <button class="arm5e rollable" data-action="roll" data-roll="attack"
           data-name='{{localize "arm5e.sheet.attack"}}'>
-          <img src="systems/arm5e/assets/dice.png" class="flex0 dice-icon">
+          <img src="{{systemPath}}assets/dice.png" class="flex0 dice-icon">
           {{localize "arm5e.sheet.attack"}}</button>
       </div>
       <!-- dex + ability + weapon + stres die -->
@@ -124,7 +124,7 @@
       <div class="flexrow">
         <button class="arm5e rollable" data-action="roll" data-roll="defense"
           data-name='{{localize "arm5e.sheet.defense"}}'>
-          <img src="systems/arm5e/assets/dice.png" class="dice-icon">
+          <img src="{{systemPath}}assets/dice.png" class="dice-icon">
           {{localize "arm5e.sheet.defense"}}</button>
       </div>
       <!-- quick + ability + weapon + stres die -->
@@ -162,7 +162,7 @@
 
     <div class="flexrow flex-group-left">
       <div class="flexrow">
-        <!-- <img src="systems/arm5e/assets/icons/Icon_Hammer.png" class="flex0" style="border: 0px; height: 20px"> -->
+        <!-- <img src="{{systemPath}}assets/icons/Icon_Hammer.png" class="flex0" style="border: 0px; height: 20px"> -->
         <button class="arm5e clickable damage pl-0" data-action="calculateDamage" data-roll="combatDamage"><i
             class="ars-Icon_Soak text-12pt"></i>{{localize "arm5e.damage.label"}}</button>
 

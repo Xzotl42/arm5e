@@ -2,7 +2,7 @@
   <div class="characteristics grid grid-4col">
     <div class="flexrow flex-group-center" style="border: 0px">
       <label class="smallTitle">
-        <a class="link" href="systems/arm5e/pdf/familiar.pdf" target="_blank">{{localize "arm5e.sheet.familiar"}}</a>
+        <a class="link" href="{{systemPath}}pdf/familiar.pdf" target="_blank">{{localize "arm5e.sheet.familiar"}}</a>
       </label>
     </div>
   </div>
@@ -97,7 +97,7 @@
               data-type="abilityFamiliar"><i class="fas fa-plus"></i></a>
           </div>
         </li>
-        {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+        {{> (systemPath "templates/generic/metalic-bar.html") }}
         {{#each system.familiar.abilities as |ability key|}}
           <li class="item item-value flexrow" data-name="{{item.name}}" data-item-id="{{ability._id}}">
             <div class="flexrow flex-center">
@@ -125,7 +125,7 @@
                 class="fas fa-plus"></i></a>
           </div>
         </li>
-        {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+        {{> (systemPath "templates/generic/metalic-bar.html") }}
         {{#each system.familiar.powers as |power key|}}
           <li class="item item-value flexrow" data-name="{{item.name}}" data-item-id="{{power._id}}">
             <div class="flexrow flex-center">

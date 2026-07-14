@@ -26,7 +26,7 @@
             <a class="unlink-writer" data-action="unlinkWriter" title="Break link to writer"><i class="fas fa-link"
                 style="font-size: 12pt;"></i></a>
           </div>
-          {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+          {{> (systemPath "templates/generic/metalic-bar.html") }}
         {{/if}}
         {{#unless (eq writing.writer.id null)}}
           <div class="scriptorium resource">

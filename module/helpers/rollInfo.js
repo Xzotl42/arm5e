@@ -97,7 +97,7 @@ export class ArM5eRollInfo {
         this.combat.overload = actorSystemData.combat.overload;
         this.combat.prep.itemList = actorSystemData.combat.itemList;
 
-        this.part = `systems/arm5e/templates/roll/parts/combat-${this.type}.hbs`;
+        this.part = `systems/${ARM5E.SYSTEM_ID}/templates/roll/parts/combat-${this.type}.hbs`;
         this.listeners = addCombatListenersDialog;
         break;
       case ROLL_PROPERTIES.DAMAGE.VAL:

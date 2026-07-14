@@ -810,7 +810,7 @@ async function explodingRoll(actorData, rollOptions = {}, botchNum = -1) {
         };
       }
       const html = await renderTemplate(
-        "systems/arm5e/templates/generic/explodingRoll.html",
+        `systems/${ARM5E.SYSTEM_ID}/templates/generic/explodingRoll.html`,
         dialogData
       );
 
@@ -846,7 +846,7 @@ async function explodingRoll(actorData, rollOptions = {}, botchNum = -1) {
       return await output_roll.evaluate(rollOptions);
     }
 
-    const html = await renderTemplate("systems/arm5e/templates/roll/roll-botch.hbs");
+    const html = await renderTemplate(`systems/${ARM5E.SYSTEM_ID}/templates/roll/roll-botch.hbs`);
     let botchRoll;
     if (botchNum === -1 && rollOptions.prompt) {
       // interactive mode show dialog

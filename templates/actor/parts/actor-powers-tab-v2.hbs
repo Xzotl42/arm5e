@@ -14,7 +14,7 @@
           ></a>
         </div>
       </li>
-      {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+      {{> (systemPath "templates/generic/metalic-bar.html") }}
       {{#each system.powers as |item id|}}
       <li class="item item-value flexrow" data-name="{{ item.name }}" data-item-id="{{ item._id }}">
         <div class="item-image item-control item-edit" data-action="itemEdit">

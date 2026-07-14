@@ -19,7 +19,7 @@
           id='common-item-description-{{item._id}}'
         >
           <div class='flex-group-left book-scrollable'>
-            {{> 'systems/arm5e/templates/generic/ars-editor-V2.hbs'
+            {{> (systemPath "templates/generic/ars-editor-V2.hbs")
               content=enrichedDescription
               target='system.description'
               editable=editable
@@ -246,7 +246,7 @@
               ><i class='ars-Icon_Read'></i
             ></a>
           </div>
-          {{> 'systems/arm5e/templates/generic/ars-editor-V2.hbs'
+          {{> (systemPath "templates/generic/ars-editor-V2.hbs")
             content=currentTopic.labtext.description
             target='currentTopic.labtext.description'
             button=false
@@ -260,8 +260,8 @@
       </div>
 
       {{#if metagame.view}}
-      {{> "systems/arm5e/templates/generic/metalic-bar.html"}}
-      {{> "systems/arm5e/templates/generic/source.html"}}
+      {{> (systemPath "templates/generic/metalic-bar.html")}}
+      {{> (systemPath "templates/generic/source.html")}}
       {{/if}}
 
     </div>

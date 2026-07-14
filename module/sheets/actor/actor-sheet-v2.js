@@ -969,7 +969,7 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
     }
 
     const html = await renderTemplate(
-      "systems/arm5e/templates/actor/parts/actor-soak.html",
+      `systems/${ARM5E.SYSTEM_ID}/templates/actor/parts/actor-soak.html`,
       dialogData
     );
 

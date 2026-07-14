@@ -1,3 +1,4 @@
+import { ARM5E } from "../config.js";
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 /**
@@ -65,17 +66,17 @@ export class DocumentPicker extends HandlebarsApplicationMixin(ApplicationV2) {
 
   static PARTS = {
     header: {
-      template: "systems/arm5e/templates/generic/parts/document-picker-header.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/document-picker-header.hbs`
     },
     body: {
-      template: "systems/arm5e/templates/generic/document-picker-body.hbs",
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/document-picker-body.hbs`,
       scrollable: [".doc-picker-list"]
     },
     footer: {
-      template: "systems/arm5e/templates/generic/parts/document-picker-footer.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/document-picker-footer.hbs`
     },
     buttons: {
-      template: "systems/arm5e/templates/roll/parts/roll-buttons.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/roll/parts/roll-buttons.hbs`
     }
   };
 
@@ -156,7 +157,7 @@ export class DocumentPicker extends HandlebarsApplicationMixin(ApplicationV2) {
     const flavor = this.options.flavor ?? "Neutral";
     const windowContent = this.element.querySelector(".window-content");
     if (windowContent) {
-      windowContent.style.backgroundImage = `url('systems/arm5e/assets/item/Thin/${flavor}_background.webp')`;
+      windowContent.style.backgroundImage = `url(`systems/${ARM5E.SYSTEM_ID}/assets/item/Thin/${flavor}_background.webp`)`;
       windowContent.style.backgroundRepeat = "repeat-y";
       windowContent.style.backgroundSize = "100%";
     }

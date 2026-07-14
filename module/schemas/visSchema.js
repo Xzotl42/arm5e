@@ -125,7 +125,7 @@ export class VisSchema extends foundry.abstract.TypeDataModel {
     };
     actor.rollInfo.init(dataset, actor);
     const html = await foundry.applications.handlebars.renderTemplate(
-      "systems/arm5e/templates/generic/vis-study.html",
+      `systems/${ARM5E.SYSTEM_ID}/templates/generic/vis-study.html`,
       dialogData
     );
 

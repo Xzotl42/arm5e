@@ -1,6 +1,6 @@
 <div class="sheet-header-part">
   <div class="header-background">
-    <img src="systems/arm5e/assets/item/{{ flavor }}_header.png" />
+    <img src="{{systemPath}}assets/item/{{ flavor }}_header.png" />
   </div>
   <header class="sheet-header marginItemPart">
     <div class="flexrow">
@@ -17,7 +17,7 @@
           title="{{ item.name }}"
         />
         {{#unless system.naturalWeapon}}
-        {{> 'systems/arm5e/templates/item/parts/cost.hbs' classes='fit'}}
+        {{> (systemPath "templates/item/parts/cost.hbs") classes='fit'}}
         <div class="resource flexrow">
           <label>{{localize 'arm5e.sheet.strengthNeeded'}}</label>
           <input
@@ -52,7 +52,7 @@
                 title="{{localize 'arm5e.lab.enchantment.item.enable'}}"
               >
                 <img
-                  src="systems/arm5e/assets/icons/Icon_Details_option1.png"
+                  src="{{systemPath}}assets/icons/Icon_Details_option1.png"
                   style="border: 0px; width: 32px; height: 32px"
                 />
               </a>
@@ -159,5 +159,5 @@
       </div>
     </div>
   </header>
-  <div class="marginItemPart">{{> "systems/arm5e/templates/generic/metalic-bar.html" }}</div>
+  <div class="marginItemPart">{{> (systemPath "templates/generic/metalic-bar.html") }}</div>
 </div>

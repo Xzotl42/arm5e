@@ -20,7 +20,7 @@
             data-type="virtue"><i class="fas fa-plus"></i>{{localize "arm5e.sheet.action.Add"}}</a>
         </div>
       </li>
-      {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+      {{> (systemPath "templates/generic/metalic-bar.html") }}
 
       {{#each system.virtues as |item id|}}
         {{#if item.system.visible }}
@@ -61,7 +61,7 @@
               data-compendium="virtues"><i class="fas fa-plus"></i>{{localize "arm5e.sheet.action.Add"}}</a>
           </div>
         </li>
-        {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+        {{> (systemPath "templates/generic/metalic-bar.html") }}
 
         {{#each system.qualities as |item id|}}
           {{#if item.system.visible }}
@@ -109,7 +109,7 @@
           </a>
         </div>
       </li>
-      {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+      {{> (systemPath "templates/generic/metalic-bar.html") }}
 
       {{#each system.flaws as |item id|}}
         {{#if item.system.visible }}
@@ -154,7 +154,7 @@
             </a>
           </div>
         </li>
-        {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+        {{> (systemPath "templates/generic/metalic-bar.html") }}
 
         {{#each system.inferiorities as |item id|}}
           {{#if item.system.visible }}

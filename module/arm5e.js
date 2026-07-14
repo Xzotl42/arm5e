@@ -167,6 +167,11 @@ Hooks.once("init", async function () {
 
   Handlebars.registerHelper("magicalAttributesHelper", magicalAttributesHelper);
 
+  Handlebars.registerHelper("systemPath", function (relativePath) {
+    const rel = typeof relativePath === "string" ? relativePath.replace(/^\/+/, "") : "";
+    return rel ? `systems/${ARM5E.SYSTEM_ID}/${rel}` : `systems/${ARM5E.SYSTEM_ID}/`;
+  });
+
   Handlebars.registerHelper("concat", function () {
     let outStr = "";
     for (let arg in arguments) {

@@ -51,14 +51,14 @@
   </header>
 
   <div class="marginsides32">
-    {{> "systems/arm5e/templates/generic/metalic-bar.html"  }}
+    {{> (systemPath "templates/generic/metalic-bar.html")  }}
   </div>
   {{!-- Sheet Body --}}
 
   <section class="sheet-body marginsides32 padding10 backSection">
     <h2>{{localize "arm5e.rolltables.experimentation.report.label" }}</h2>
     <div style="height: 250px ; min-height: 250px;">
-      {{> "systems/arm5e/templates/generic/ars-editor.hbs"
+      {{> (systemPath "templates/generic/ars-editor.hbs")
         content=reportBody
         target="reportBody"
         editable=false

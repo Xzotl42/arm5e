@@ -1,13 +1,13 @@
 <section class="sheet-body-part sheet-body marginItemPart">
   <div class="tab {{ tab.cssClass }}" data-group="primary" data-tab="description">
     {{#if (eq system.type "raw")}}
-    {{> "systems/arm5e/templates/generic/ars-editor-V2.hbs"
+    {{> (systemPath "templates/generic/ars-editor-V2.hbs")
       content=enrichedDescription
       target="system.description"
       editable=editable
     }}
     {{else}}
-    {{> "systems/arm5e/templates/item/parts/spell-design-alt.html"
+    {{> (systemPath "templates/item/parts/spell-design-alt.html")
       docId=item._id
       container="book"
       prefix=""
@@ -19,7 +19,7 @@
     {{/if}}
 
     {{#if (eq system.type "enchantment")}}
-    {{> "systems/arm5e/templates/item/parts/enchantment-attributes.html"
+    {{> (systemPath "templates/item/parts/enchantment-attributes.html")
       docId=item._id
       container="book"
       prefix=""
@@ -31,8 +31,8 @@
 
     {{#if metagame.view}}
     <div>
-      {{> "systems/arm5e/templates/generic/metalic-bar.html"}}
-      {{> "systems/arm5e/templates/generic/source.html"}}
+      {{> (systemPath "templates/generic/metalic-bar.html")}}
+      {{> (systemPath "templates/generic/source.html")}}
     </div>
     {{/if}}
   </div>

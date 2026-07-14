@@ -1,6 +1,6 @@
 <div class="{{cssClass}}  mainNPC">
   <div class="header-background">
-    <img src="systems/arm5e/assets/NPC/header150.png" />
+    <img src="{{systemPath}}assets/NPC/header150.png" />
   </div>
   <div class="sheet-content flexcol limited-sheet" autocomplete="off">
     {{!-- Sheet Header --}}
@@ -23,7 +23,7 @@
       <div class="flex-group-left padding12 backSection extendable"
         style="flex-grow: 1; display: flex; flex-direction: column;">
         <label class="smallTitle">{{localize "arm5e.sheet.biography"}}</label>
-        {{> "systems/arm5e/templates/generic/ars-editor-V2.hbs"
+        {{> (systemPath "templates/generic/ars-editor-V2.hbs")
           content=enrichedBiography
           target="system.biography"
           flavor=""

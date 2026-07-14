@@ -10,6 +10,7 @@ import {
 } from "./commonSchemas.js";
 import { baseLevel, SpellSchema } from "./magicSchemas.js";
 
+import { ARM5E } from "../config.js";
 const fields = foundry.data.fields;
 
 export class SupernaturalEffectSchema extends SpellSchema {
@@ -342,13 +343,13 @@ export class SupernaturalEffectSchema extends SpellSchema {
 
   static getIcon(item, newValue = null) {
     if (newValue !== null) {
-      return `systems/arm5e/assets/magic/${newValue}.png`;
+      return `systems/${ARM5E.SYSTEM_ID}/assets/magic/${newValue}.png`;
     } else {
       let init = "an";
       if (item.system?.form?.value !== undefined) {
         init = item.system.form.value;
       }
-      return `systems/arm5e/assets/magic/${init}.png`;
+      return `systems/${ARM5E.SYSTEM_ID}/assets/magic/${init}.png`;
     }
   }
 

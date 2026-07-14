@@ -74,7 +74,7 @@
 
     <div class="flex-group-left backSection padding12">
       <label for="system.sigil" class="smallTitle">{{localize "arm5e.sheet.sigil"}}</label>
-      {{> "systems/arm5e/templates/generic/ars-editor-V2.hbs"
+      {{> (systemPath "templates/generic/ars-editor-V2.hbs")
           content=enrichedSigil
           target="system.sigil.value"
           prefix=""
@@ -99,7 +99,7 @@
       class="foldable-section-medium flex-group-left padding12 backSection"
       id="common-biography-{{ actor._id }}"
     >
-      {{> "systems/arm5e/templates/generic/ars-editor-V2.hbs"
+      {{> (systemPath "templates/generic/ars-editor-V2.hbs")
         content=enrichedBiography
         target="system.biography"
         prefix=""
@@ -121,7 +121,7 @@
       class="foldable-section-medium flex-group-left padding12 backSection"
       id="common-secrets-{{ actor._id }}"
     >
-      {{> "systems/arm5e/templates/generic/ars-editor-V2.hbs"
+      {{> (systemPath "templates/generic/ars-editor-V2.hbs")
           content=enrichedSecrets
           target="system.secrets"
           prefix=""
@@ -188,7 +188,7 @@
           >{{localize "arm5e.sheet.effects"}}</label
         >
       </div>
-      {{> "systems/arm5e/templates/generic/ars-editor-V2.hbs"
+      {{> (systemPath "templates/generic/ars-editor-V2.hbs")
           content=enrichedDecrepitude
           target="system.decrepitude.effects"
           prefix=""
@@ -242,7 +242,7 @@
           data-option1="{{ vitals.value }}"
           data-txtoption1="{{ vitals.label }}"
         >
-          <img src="systems/arm5e/assets/dice.png" style="border: 0px; height: 18px" />
+          <img src="{{systemPath}}assets/dice.png" style="border: 0px; height: 18px" />
         </span>
         {{/if}}
         <label for="system.vitals.{{ key }}.label" class="bold">{{ vitals.label }}</label>
@@ -293,7 +293,7 @@
             data-option1="{{ pers.system.score }}"
             data-txtoption1="{{ pers.name }}"
           >
-            <img src="systems/arm5e/assets/dice.png" style="border: 0px; height: 18px" />
+            <img src="{{systemPath}}assets/dice.png" style="border: 0px; height: 18px" />
           </div>
           <div class="flexrow">
             <div class="flexrow item-control item-edit" data-action="itemEdit">
@@ -399,7 +399,7 @@
             data-option1="{{ rep.system.score }}"
             data-txtoption1="{{ rep.name }}"
           >
-            <img src="systems/arm5e/assets/dice.png" style="border: 0px; height: 18px" />
+            <img src="{{systemPath}}assets/dice.png" style="border: 0px; height: 18px" />
           </span>
           <span class="flexrow">
             <div class="flexrow item-control item-edit" data-action="itemEdit">
@@ -450,7 +450,7 @@
           >
             <img
               class="twilight-icon"
-              src="systems/arm5e/assets/icons/Icon_Warping.png"
+              src="{{systemPath}}assets/icons/Icon_Warping.png"
               style="width: 25px; border: none"
             />
             {{#if system.twilight.stage}}
@@ -505,7 +505,7 @@
       <div class="flexrow">
         <label for="system.warping.effects" class="bold">{{localize "arm5e.sheet.effects"}}</label>
       </div>
-      {{> "systems/arm5e/templates/generic/ars-editor-V2.hbs"
+      {{> (systemPath "templates/generic/ars-editor-V2.hbs")
           content=enrichedWarping
           target="system.warping.effects"
           prefix=""
@@ -519,6 +519,6 @@
 </div>
 
 {{#if metagame.view }}
-{{> "systems/arm5e/templates/generic/metalic-bar.html" }}
-{{> "systems/arm5e/templates/generic/source.html" }}
+{{> (systemPath "templates/generic/metalic-bar.html") }}
+{{> (systemPath "templates/generic/source.html") }}
 {{/if}}

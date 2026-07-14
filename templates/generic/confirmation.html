@@ -1,6 +1,6 @@
 <form class="{{cssClass}} arm5eDialog" autocomplete="off"
-  style="background-image: url('systems/arm5e/assets/item/Thin/{{flavor}}_background.webp'); background-size:cover">
-  {{> "systems/arm5e/templates/item/parts/item-thin-header.html" flavor=flavor}}
+  style="background-image: url('{{systemPath}}assets/item/Thin/{{flavor}}_background.webp'); background-size:cover">
+  {{> (systemPath "templates/item/parts/item-thin-header.html") flavor=flavor}}
   <div class="padding12">
     <div class="flexcol flex-center">
       <label style="margin: 10px; font-size: 14pt;">{{question}}</label>
@@ -12,5 +12,5 @@
       {{/if}}
     </div>
   </div>
-  {{> "systems/arm5e/templates/item/parts/item-thin-footer.html" flavor=flavor}}
+  {{> (systemPath "templates/item/parts/item-thin-footer.html") flavor=flavor}}
 </form>

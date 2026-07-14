@@ -26,7 +26,7 @@
             <a class="unlink-reader" data-action="unlinkReader" title="Break link to reader"><i class="fas fa-link"
                 style="font-size: 12pt;"></i></a>
           </div>
-          {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+          {{> (systemPath "templates/generic/metalic-bar.html") }}
         {{/if}}
         {{#unless (eq reading.reader.id null)}}
           <div class="scriptorium resource">
@@ -93,7 +93,7 @@
             <a class="modifier unlink-read-book" data-action="unlinkReadBook" title="Break link to book"
               data-index="{{topicIndex}}"><i class="fas fa-link" style="font-size: 12pt;"></i></a>
           </div>
-          {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+          {{> (systemPath "templates/generic/metalic-bar.html") }}
         {{/if}}
         <div class="scriptorium item-header resource">
           <label class="">{{localize "arm5e.activity.book.title"}}</label>
@@ -131,13 +131,13 @@
           {{#unless (eq topicNum 1)}}
             <div class="flexrow" style="max-width: 180px;">
               <div class="img-container"><img class="nav-arrow previous-topic clickable" data-action="previousTopic"
-                  data-index="{{topicIndex}}" src="systems/arm5e/assets/bLeft.png" />
+                  data-index="{{topicIndex}}" src="{{systemPath}}assets/bLeft.png" />
               </div>
               <div style="align-items:center;justify-content: center;display: flex;">
                 <label>{{localize "arm5e.sheet.topics.current" current=currentTopicNumber total=topicNum}}</label>
               </div>
               <div class="img-container"><img class="nav-arrow next-topic clickable" data-action="nextTopic"
-                  data-index="{{topicIndex}}" src="systems/arm5e/assets/bRight.png" /></div>
+                  data-index="{{topicIndex}}" src="{{systemPath}}assets/bRight.png" /></div>
             </div>
           {{/unless}}
         </div>

@@ -18,7 +18,7 @@
         >
       </div>
     </li>
-    {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+    {{> (systemPath "templates/generic/metalic-bar.html") }}
     {{#each system.possessions as |item id|}}
     <li
       class="item flexrow item-value flex-center"
@@ -66,7 +66,7 @@
         >
       </div>
     </li>
-    {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+    {{> (systemPath "templates/generic/metalic-bar.html") }}
     {{#each system.labs as |item id|}}
     <li
       class="item flexrow item-value flex-center"
@@ -112,8 +112,8 @@
     {{/each}}
   </ol>
 
-  {{> "systems/arm5e/templates/actor/parts/actor-weapons.html" }}
-  {{> "systems/arm5e/templates/actor/parts/actor-armor.html" }}
+  {{> (systemPath "templates/actor/parts/actor-weapons.html") }}
+  {{> (systemPath "templates/actor/parts/actor-armor.html") }}
 
   {{!-- vis sources --}}
   <ol class="items-list backSection margintop18">
@@ -130,7 +130,7 @@
         >
       </div>
     </li>
-    {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+    {{> (systemPath "templates/generic/metalic-bar.html") }}
     {{#each system.visSources as |item id|}}
     <li
       class="item item-value flexrow flex-center"
@@ -155,7 +155,7 @@
           data-action="harvestItem"
           title="{{localize 'arm5e.sheet.visHarvest'}}"
           ><img
-            src="systems/arm5e/assets/icons/sickle.svg"
+            src="{{systemPath}}assets/icons/sickle.svg"
             style="border: 0px; height: 18px; min-height: 30px; min-width: 30px"
         /></a>
       </div>
@@ -173,6 +173,6 @@
     </li>
     {{/each}}
   </ol>
-  {{> "systems/arm5e/templates/actor/parts/actor-vis.html" }}
-  {{> "systems/arm5e/templates/actor/parts/actor-items.html" }}
+  {{> (systemPath "templates/actor/parts/actor-vis.html") }}
+  {{> (systemPath "templates/actor/parts/actor-items.html") }}
 </div>
