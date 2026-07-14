@@ -315,7 +315,7 @@
     </div>
   </li>
   <div id="inhabitants-craftsmen" class="toggle-collapse {{ui.lists.visibility.inhabitants.inhabitants-craftsmen}}">
-    {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+    {{> (systemPath "templates/generic/metalic-bar.html") }}
     {{#each system.inhabitants.craftsmen as |item id|}}
       <li class="item item-value flexrow flex-center" data-name="{{item.name}}" data-attribute="{{id}}"
         data-item-id="{{item._id}}">
