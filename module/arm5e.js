@@ -41,8 +41,10 @@ import {
   buildConflictExclusionTypes,
   buildDuplicateAllowedTypes
 } from "./seasonal-activities/activity-config.js";
+import { registerActivityRollActions } from "./seasonal-activities/activity-roll-registrations.js";
 
 Hooks.once("i18nInit", async function () {
+  CONFIG.ARM5E ??= ARM5E;
   CONFIG.ARM5E.LOCALIZED_ABILITIES = localizeAbilities();
   CONFIG.ARM5E.LOCALIZED_ABILITIESCAT = localizeCategories();
   CONFIG.ARM5E.LOCALIZED_ABILITIES_ENRICHED = enrichAbilities(CONFIG.ARM5E.LOCALIZED_ABILITIES);
@@ -69,9 +71,11 @@ Hooks.once("init", async function () {
   // CONFIG.debug.hooks = true;
 
   // Add system metadata
+  CONFIG.ARM5E ??= ARM5E;
   CONFIG.ARM5E = ARM5E;
   CONFIG.ARM5E.ItemDataModels = CONFIG.Item.dataModels;
   CONFIG.ARM5E.ActorDataModels = CONFIG.Actor.dataModels;
+  registerActivityRollActions(CONFIG.ARM5E.activities?.generic);
 
   CONFIG.SC = { SEASONS: SimpleCalendarSeasons };
 

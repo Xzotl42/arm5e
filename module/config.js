@@ -1,10 +1,3 @@
-import {
-  agingRoll,
-  visStudy,
-  investigate,
-  twilightUnderstandingRoll
-} from "./seasonal-activities/long-term-activities.js";
-
 export const ARM5E = {};
 
 /**
@@ -2638,7 +2631,7 @@ ARM5E.activities.generic = {
     maxXp: 0,
     bonusOptions: null,
     secondaryFilter: null,
-    roll: { label: "arm5e.activity.roll.aging", action: agingRoll },
+    roll: { label: "arm5e.activity.roll.aging", action: null },
     scheduling: {
       duplicate: true,
       conflict: false,
@@ -2660,7 +2653,7 @@ ARM5E.activities.generic = {
     maxXp: 0,
     bonusOptions: null,
     secondaryFilter: null,
-    roll: { label: "arm5e.twilight.episode", action: twilightUnderstandingRoll },
+    roll: { label: "arm5e.twilight.episode", action: null },
     scheduling: {
       duplicate: true,
       conflict: false,
@@ -2682,7 +2675,7 @@ ARM5E.activities.generic = {
     maxXp: 0,
     bonusOptions: null,
     secondaryFilter: null,
-    roll: { label: "arm5e.activity.roll.visStudy", action: visStudy },
+    roll: { label: "arm5e.activity.roll.visStudy", action: null },
     scheduling: {
       duplicate: false,
       conflict: true,
@@ -2789,7 +2782,7 @@ ARM5E.activities.generic = {
     maxXp: 0,
     bonusOptions: null,
     secondaryFilter: null,
-    roll: { label: "arm5e.activity.roll.investigate", action: investigate },
+    roll: { label: "arm5e.activity.roll.investigate", action: null },
     scheduling: {
       duplicate: false,
       conflict: true,
