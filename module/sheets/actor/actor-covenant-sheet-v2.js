@@ -431,7 +431,7 @@ export class ArM5eCovenantActorSheetV2 extends ArM5eActorSheetV2 {
           system: {
             category: "companions",
             actorId: actor._id,
-            companionRole: "none",
+            companionRole: "other",
             job: actor.system.description.title.value,
             points: pts,
             yearBorn: actor.system.description.born.value
