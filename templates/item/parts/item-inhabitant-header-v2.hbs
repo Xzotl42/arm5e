@@ -112,6 +112,44 @@
           <select name="system.fieldOfWork" data-type="String">
             {{selectOptions config.covenant.fieldOfWork selected=system.fieldOfWork localize=true}}
           </select>
+        </div><div class="resource flexcol flex0 flex-center">
+          <label class="bold">{{localize 'arm5e.sheet.specialist'}}</label>
+          <div class="flexrow flex-group-center">
+            <input type="checkbox" name="system.isSpecialist" {{checked system.isSpecialist}} />
+          </div>
+        </div>
+        <div class="resource flexcol">
+          <label class="bold">Linked ability</label>
+          <select name="system.syncAbilityId" data-type="String">
+            {{selectOptions craftSyncAbilities selected=system.syncAbilityId}}
+          </select>
+        </div>
+        <div class="resource flexcol flex0">
+          <label class="bold">{{localize 'arm5e.sheet.quantity'}}</label>
+          <input class="select-on-focus" type="number" name="system.quantity" value="{{ system.quantity }}"
+            data-dtype="Number" />
+        </div>
+        {{else if (eq system.companionRole 'teacher')}}
+        <div class="resource flexcol">
+          <label class="bold">{{localize companionSpecialistChar}}</label>
+          <input class="select-on-focus" type="number" name="system.specialistChar" value="{{ system.specialistChar }}"
+            data-dtype="Number" />
+        </div>
+        <div class="resource flexcol">
+          <label class="bold">{{localize companionSpecialistAbility}}</label>
+          <input class="select-on-focus" type="number" name="system.teacherScore" value="{{ system.teacherScore }}"
+            data-dtype="Number" />
+        </div>
+        {{else if (or (eq system.companionRole 'steward') (eq system.companionRole 'chamberlain') (eq
+        system.companionRole 'turbCaptain'))}}
+        <div class="resource flexcol">
+          <label class="bold">{{localize companionSpecialistChar}}</label>
+          <input class="select-on-focus" type="number" name="system.specialistChar" value="{{ system.specialistChar }}"
+            data-dtype="Number" />
+        </div>
+        <div class="resource flexcol">
+          <label class="bold">{{localize companionSpecialistAbility}}</label>
+          <input class="select-on-focus" type="number" name="system.score" value="{{ system.score }}" data-dtype="Number" />
         </div>
         {{/if}}
       </div>
@@ -252,6 +290,62 @@
           <select name="system.fieldOfWork" data-type="String">
             {{selectOptions config.covenant.fieldOfWork selected=system.fieldOfWork localize=true}}
           </select>
+        </div><div class="resource flexcol flex0 flex-center">
+          <label class="bold">{{localize 'arm5e.sheet.specialist'}}</label>
+          <div class="flexrow flex-group-center">
+            <input type="checkbox" name="system.isSpecialist" {{checked system.isSpecialist}} />
+          </div>
+        </div>
+      </div>
+      <div class="flexrow">
+        <div class="resource flexcol">
+          <label class="bold">Linked ability</label>
+          <select name="system.syncAbilityId" data-type="String">
+            {{selectOptions craftSyncAbilities selected=system.syncAbilityId}}
+          </select>
+        </div>
+        <div class="resource flexcol flex0">
+          <label class="bold">{{localize 'arm5e.sheet.quantity'}}</label>
+          <input class="select-on-focus" type="number" name="system.quantity" value="{{ system.quantity }}"
+            data-dtype="Number" />
+        </div>
+        <div class="resource flexcol flex0 flex-center">
+          <label class="bold">{{localize 'arm5e.sheet.specialist'}}</label>
+          <div class="flexrow flex-group-center">
+            <input type="checkbox" name="system.isSpecialist" {{checked system.isSpecialist}} />
+          </div>
+        </div>
+      </div>
+      <div class="flexrow">
+        <div class="resource flexcol">
+          <label class="bold">Linked ability</label>
+          <select name="system.syncAbilityId" data-type="String">
+            {{selectOptions craftSyncAbilities selected=system.syncAbilityId}}
+          </select>
+        </div>
+        <div class="resource flexcol flex0">
+          <label class="bold">{{localize 'arm5e.sheet.quantity'}}</label>
+          <input class="select-on-focus" type="number" name="system.quantity" value="{{ system.quantity }}"
+            data-dtype="Number" />
+        </div>
+      <div class="resource flexcol flex0 flex-center">
+        <label class="bold">{{localize 'arm5e.sheet.specialist'}}</label>
+        <div class="flexrow flex-group-center">
+          <input type="checkbox" name="system.isSpecialist" {{checked system.isSpecialist}} />
+        </div>
+      </div>
+      </div>
+      <div class="flexrow">
+        <div class="resource flexcol">
+          <label class="bold">Linked ability</label>
+          <select name="system.syncAbilityId" data-type="String">
+            {{selectOptions craftSyncAbilities selected=system.syncAbilityId}}
+          </select>
+        </div>
+        <div class="resource flexcol flex0">
+          <label class="bold">{{localize 'arm5e.sheet.quantity'}}</label>
+          <input class="select-on-focus" type="number" name="system.quantity" value="{{ system.quantity }}"
+            data-dtype="Number" />
         </div>
       </div>
 
