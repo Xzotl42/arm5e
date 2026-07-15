@@ -31,7 +31,7 @@ export class InhabitantSchema extends foundry.abstract.TypeDataModel {
         required: false,
         blank: false,
         initial: "other",
-        choices: Object.keys(ARM5E.covenant.companionRoles)
+        choices: ["none", ...Object.keys(ARM5E.covenant.companionRoles)]
       }),
       loyalty: new fields.NumberField({
         required: false,
@@ -135,6 +135,146 @@ export class InhabitantSchema extends foundry.abstract.TypeDataModel {
     } else {
       this.linked = false;
     }
+  }
+
+  static getLinkedSyncData(inhabitant, actor) {
+    if (!actor) return {};
+
+    const syncData = {};
+    const yearBorn = convertToNumber(actor.system?.description?.born?.value, undefined);
+    if (yearBorn !== undefined) syncData.yearBorn = yearBorn;
+
+    const loyalty = InhabitantSchema.getLinkedLoyalty(actor);
+    if (loyalty !== undefined) syncData.loyalty = loyalty;
+
+    Object.assign(syncData, InhabitantSchema.getLinkedCompanionRoleSyncData(inhabitant, actor));
+    Object.assign(syncData, InhabitantSchema.getLinkedSpecialistSyncData(inhabitant, actor));
+    Object.assign(syncData, InhabitantSchema.getLinkedCraftsmanSyncData(inhabitant, actor));
+
+    return syncData;
+  }
+
+  static getLinkedLoyalty(actor) {
+    const loyaltyTrait = actor?.items?.find((item) => {
+      if (item.type !== "personalityTrait") return false;
+      const indexKey = item.system?.indexKey ?? "";
+      const name = (item.name ?? "").trim().toLowerCase();
+      return indexKey === "loyalty" || name === "loyalty";
+    });
+
+    if (!loyaltyTrait) return undefined;
+    if (typeof loyaltyTrait.system?.score === "number") return loyaltyTrait.system.score;
+    return PersonalityTraitSchema.getScore(loyaltyTrait.system?.xp ?? 0);
+  }
+
+  static getLinkedSpecialistSyncData(inhabitant, actor) {
+    if (inhabitant.category !== "specialists") return {};
+
+    switch (inhabitant.specialistType) {
+      case "teacher": {
+        const specialistChar = convertToNumber(actor.system?.characteristics?.com?.value, undefined);
+        const teacherScore = actor.getAbility?.("teaching")
+          ? actor.getAbilityStats("teaching")?.score
+          : undefined;
+        const syncData = {};
+        if (specialistChar !== undefined) syncData.specialistChar = specialistChar;
+        if (teacherScore !== undefined) syncData.teacherScore = teacherScore;
+        return syncData;
+      }
+      case "steward":
+      case "chamberlain": {
+        const specialistChar = convertToNumber(actor.system?.characteristics?.pre?.value, undefined);
+        const professionLabels = [
+          game.i18n.localize(`arm5e.covenant.specialist.${inhabitant.specialistType}`),
+          inhabitant.job,
+          inhabitant.specialistType,
+          inhabitant.specialistType.replace(/([A-Z])/g, " $1").trim()
+        ].filter((value) => typeof value === "string" && value !== "");
+        const profession = InhabitantSchema.getLinkedAbilityStats(actor, "profession", professionLabels);
+        const syncData = {};
+        if (specialistChar !== undefined) syncData.specialistChar = specialistChar;
+        if (profession !== undefined) syncData.score = profession.score;
+        return syncData;
+      }
+      case "turbCaptain": {
+        const specialistChar = convertToNumber(actor.system?.characteristics?.pre?.value, undefined);
+        const leadership = actor.getAbility?.("leadership")
+          ? actor.getAbilityStats("leadership")?.score
+          : undefined;
+        const syncData = {};
+        if (specialistChar !== undefined) syncData.specialistChar = specialistChar;
+        if (leadership !== undefined) syncData.score = leadership;
+        return syncData;
+      }
+      default:
+        return {};
+    }
+  }
+
+  static getLinkedCompanionRoleSyncData(inhabitant, actor) {
+    if (inhabitant.category !== "companions") return {};
+
+    switch (inhabitant.companionRole) {
+      case "teacher": {
+        const companionChar = convertToNumber(actor.system?.characteristics?.com?.value, undefined);
+        const teachingScore = actor.getAbility?.("teaching")
+          ? actor.getAbilityStats("teaching")?.score
+          : undefined;
+        const syncData = {};
+        if (companionChar !== undefined) syncData.specialistChar = companionChar;
+        if (teachingScore !== undefined) syncData.teacherScore = teachingScore;
+        return syncData;
+      }
+      case "steward":
+      case "chamberlain": {
+        const companionChar = convertToNumber(actor.system?.characteristics?.pre?.value, undefined);
+        const professionLabels = [
+          game.i18n.localize(`arm5e.covenant.specialist.${inhabitant.companionRole}`),
+          inhabitant.job,
+          inhabitant.companionRole,
+          inhabitant.companionRole.replace(/([A-Z])/g, " $1").trim()
+        ].filter((value) => typeof value === "string" && value !== "");
+        const profession = InhabitantSchema.getLinkedAbilityStats(actor, "profession", professionLabels);
+        const syncData = {};
+        if (companionChar !== undefined) syncData.specialistChar = companionChar;
+        if (profession !== undefined) syncData.score = profession.score;
+        return syncData;
+      }
+      case "turbCaptain": {
+        const companionChar = convertToNumber(actor.system?.characteristics?.pre?.value, undefined);
+        const leadership = actor.getAbility?.("leadership")
+          ? actor.getAbilityStats("leadership")?.score
+          : undefined;
+        const syncData = {};
+        if (companionChar !== undefined) syncData.specialistChar = companionChar;
+        if (leadership !== undefined) syncData.score = leadership;
+        return syncData;
+      }
+      default:
+        return {};
+    }
+  }
+
+  static getLinkedCraftsmanSyncData(inhabitant, actor) {
+    if (inhabitant.category !== "craftsmen" && !(inhabitant.category === "companions" && inhabitant.companionRole === "craftsman")) {
+      return {};
+    }
+    if (!inhabitant.syncAbilityId) return {};
+
+    const ability = actor.items?.get(inhabitant.syncAbilityId);
+    if (!ability) return {};
+
+    return {
+      score: ability.system?.finalScore ?? inhabitant.score
+    };
+  }
+
+  static getLinkedAbilityStats(actor, key, options = [""]) {
+    for (const option of options) {
+      const ability = actor.getAbility?.(key, option);
+      if (ability) return actor.getAbilityStats(key, option);
+    }
+    return undefined;
   }
 
   static getIcon(item, newValue = null) {

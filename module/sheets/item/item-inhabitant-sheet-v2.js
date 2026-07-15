@@ -96,8 +96,44 @@ export class ArM5eInhabitantItemSheetV2 extends ArM5eItemSheetV2 {
       }
     }
 
+    if (sys.category === "craftsmen" || (sys.category === "companions" && sys.companionRole === "craftsman")) {
+      const linkedActor = game.actors.get(sys.actorId);
+      context.craftSyncAbilities = {
+        "": game.i18n.localize("arm5e.sheet.none")
+      };
+      if (linkedActor) {
+        for (const ability of linkedActor.items.filter((item) => item.type === "ability")) {
+          const score = ability.system?.finalScore ?? ability.system?.score ?? 0;
+          const option = ability.system?.option ? ` (${ability.system.option})` : "";
+          context.craftSyncAbilities[ability.id] = `${ability.name}${option} [${score}]`;
+        }
+      }
+    }
     if (sys.category === "companions") {
       context.companionRoles = foundry.utils.deepClone(CONFIG.ARM5E.covenant.companionRoles);
+      switch (sys.companionRole) {
+        case "teacher":
+          context.companionSpecialistChar = "arm5e.sheet.com";
+          context.companionSpecialistAbility = "arm5e.skill.general.teaching";
+          context.ui.companionTeacherDetails = true;
+          context.ui.companionDetails = true;
+          break;
+        case "steward":
+        case "chamberlain":
+          context.companionSpecialistChar = "arm5e.sheet.pre";
+          context.companionSpecialistAbility = game.i18n.format("arm5e.skill.general.profession", {
+            option: game.i18n.localize(`arm5e.covenant.specialist.${sys.companionRole}`)
+          });
+          context.ui.companionDetails = true;
+          break;
+        case "turbCaptain":
+          context.companionSpecialistChar = "arm5e.sheet.pre";
+          context.companionSpecialistAbility = "arm5e.skill.general.leadership";
+          context.ui.companionDetails = true;
+          break;
+        default:
+          break;
+      }
     }
 
     return context;
