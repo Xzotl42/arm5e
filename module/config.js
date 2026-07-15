@@ -1209,6 +1209,16 @@ ARM5E.covenant.specialists = {
   other: { label: "arm5e.covenant.specialist.other" }
 };
 
+ARM5E.covenant.companionRoles = {
+  none: { label: "arm5e.generic.none" },
+  teacher: { label: "arm5e.covenant.specialist.teacher" },
+  steward: { label: "arm5e.covenant.specialist.steward" },
+  chamberlain: { label: "arm5e.covenant.specialist.chamberlain" },
+  turbCaptain: { label: "arm5e.covenant.specialist.turbCaptain" },
+  craftsman: { label: "arm5e.sheet.craftsmen" },
+  other: { label: "arm5e.covenant.specialist.other" }
+};
+
 ARM5E.covenant.loyalty = {
   wages: {
     none: { factor: 0, label: "arm5e.covenant.wages.none", mod: -20 },

@@ -27,6 +27,12 @@ export class InhabitantSchema extends foundry.abstract.TypeDataModel {
         blank: true,
         initial: null
       }),
+      companionRole: new fields.StringField({
+        required: false,
+        blank: false,
+        initial: "none",
+        choices: Object.keys(ARM5E.covenant.companionRoles)
+      }),
       loyalty: new fields.NumberField({
         required: false,
         nullable: false,
@@ -157,27 +163,53 @@ export class InhabitantSchema extends foundry.abstract.TypeDataModel {
     if (this.category === "specialists") {
       if (this.specialistType === "teacher") {
         return (this.specialistChar ?? 0) + (this.score ?? 0) + (this.teacherScore ?? 0);
-      } else {
-        return this.score ?? 0;
       }
+      return this.score ?? 0;
+    }
+    if (this.category === "companions" && this.companionRole === "teacher") {
+      return this.companionRoleChar + (this.score ?? 0) + this.companionTeacherScore;
     }
     return 0;
   }
 
   get loyaltyGain() {
-    if (this.category === "specialists") {
-      switch (this.specialistType) {
-        case "steward":
-        case "chamberlain":
-        case "turbCaptain": {
-          return (this.specialistChar ?? 0) + (this.score ?? 0);
-        }
-        default: {
-          return 0;
-        }
-      }
+    const role = this.category === "companions" ? this.companionRole : this.specialistType;
+    if (["steward", "chamberlain", "turbCaptain"].includes(role)) {
+      return this.roleChar + (this.score ?? 0);
     }
     return 0;
+  }
+
+  get roleChar() {
+    if (["steward", "chamberlain", "turbCaptain"].includes(this.companionRole)) {
+      if (this.linked && this.document?.system?.characteristics?.pre?.value !== undefined) {
+        return this.document.system.characteristics.pre.value;
+      }
+    }
+    return this.specialistChar ?? 0;
+  }
+
+  get companionRoleChar() {
+    if (this.companionRole === "teacher") {
+      if (this.linked && this.document?.system?.characteristics?.com?.value !== undefined) {
+        return this.document.system.characteristics.com.value;
+      }
+      return this.specialistChar ?? 0;
+    }
+    return this.roleChar;
+  }
+
+  get companionTeacherScore() {
+    if (this.companionRole === "teacher" && this.linked && this.document?.getAbilityStats) {
+      return this.document.getAbilityStats("teaching")?.score ?? this.teacherScore ?? 0;
+    }
+    return this.teacherScore ?? 0;
+  }
+
+  get covenantRole() {
+    if (this.category === "companions") return this.companionRole;
+    if (this.category === "specialists") return this.specialistType;
+    return "none";
   }
 
   /* -------------------------------------------- */
@@ -252,6 +284,11 @@ export class InhabitantSchema extends foundry.abstract.TypeDataModel {
     switch (this.category) {
       case "craftsmen":
         return Math.floor(1 + this.score / 2);
+      case "companions":
+        if (["craftsman", "craftsmen"].includes(this.companionRole)) {
+          return Math.floor(1 + this.score / 2);
+        }
+        return 0;
       case "specialists":
         if (this.specialistType === "other") {
           return this.score;

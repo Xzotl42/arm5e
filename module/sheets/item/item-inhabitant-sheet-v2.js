@@ -96,6 +96,10 @@ export class ArM5eInhabitantItemSheetV2 extends ArM5eItemSheetV2 {
       }
     }
 
+    if (sys.category === "companions") {
+      context.companionRoles = foundry.utils.deepClone(CONFIG.ARM5E.covenant.companionRoles);
+    }
+
     return context;
   }
 
