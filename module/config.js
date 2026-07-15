@@ -1210,7 +1210,6 @@ ARM5E.covenant.specialists = {
 };
 
 ARM5E.covenant.companionRoles = {
-  none: { label: "arm5e.generic.none" },
   teacher: { label: "arm5e.covenant.specialist.teacher" },
   steward: { label: "arm5e.covenant.specialist.steward" },
   chamberlain: { label: "arm5e.covenant.specialist.chamberlain" },

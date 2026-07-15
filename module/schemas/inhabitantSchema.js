@@ -30,7 +30,7 @@ export class InhabitantSchema extends foundry.abstract.TypeDataModel {
       companionRole: new fields.StringField({
         required: false,
         blank: false,
-        initial: "none",
+        initial: "other",
         choices: Object.keys(ARM5E.covenant.companionRoles)
       }),
       loyalty: new fields.NumberField({
@@ -123,6 +123,9 @@ export class InhabitantSchema extends foundry.abstract.TypeDataModel {
     if (this.document) {
       this.name = this.document.name;
       this.yearBorn = this.document.system.description.born.value;
+      if (this.category === "companions" && this.companionRole === "none") {
+        this.companionRole = "other";
+      }
       this.category = this.document.isMagus()
         ? "magi"
         : this.document.isCompanion()
@@ -209,7 +212,7 @@ export class InhabitantSchema extends foundry.abstract.TypeDataModel {
   get covenantRole() {
     if (this.category === "companions") return this.companionRole;
     if (this.category === "specialists") return this.specialistType;
-    return "none";
+    return "other";
   }
 
   /* -------------------------------------------- */
@@ -375,6 +378,9 @@ export class InhabitantSchema extends foundry.abstract.TypeDataModel {
 
     if (data.system.category === "grogs") {
       updateData["system.category"] = "turbula";
+    }
+    if (data.system.category === "companions" && data.system.companionRole === "none") {
+      updateData["system.companionRole"] = "other";
     }
     if (typeof data.system.loyalty !== "number") {
       updateData["system.loyalty"] = convertToNumber(data.system.loyalty, 0);
