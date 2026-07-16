@@ -186,19 +186,6 @@
           />
         </div>
       </div>
-      <div class="flexrow">
-        <div class="resource flexcol">
-          <label class="bold">{{localize 'arm5e.sheet.quantity'}}</label>
-          <input
-            class="select-on-focus"
-            type="number"
-            name="system.quantity"
-            value="{{ system.quantity }}"
-            data-dtype="Number"
-          />
-        </div>
-      </div>
-
       {{!-- horses/livestock: job, quantity --}}
       {{else if (or (eq system.category 'horses') (eq system.category 'livestock'))}}
       <div class="resource flexcol">
