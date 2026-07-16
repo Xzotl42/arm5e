@@ -5,7 +5,7 @@
       <label class="" style="font-size: 13pt; ">{{ rollInfo.label}}</label>
     </div>
     {{#if false}}
-      {{> "systems/arm5e/templates/actor/parts/actor-voice-and-gestures.hbs" selection=rollInfo.selection id=_id}}
+      {{> (systemPath "templates/actor/parts/actor-voice-and-gestures.hbs") selection=rollInfo.selection id=_id}}
     {{/if}}
     <div class="flexrow flex-group-center">
       {{#if rollInfo.magic.technique.active}}
@@ -173,11 +173,11 @@
   </div>
 
   <div class="flexcol flex-group-center">
-    <label class=""><img src="systems/arm5e/assets/icons/Icon_Details_option1.png" title="Penetration" width="24"
+    <label class=""><img src="{{systemPath}}assets/icons/Icon_Details_option1.png" title="Penetration" width="24"
         height="24" style="border :0px" /></label>
   </div>
   {{#if false}}
-    {{> "systems/arm5e/templates/roll/parts/penetration-options.hbs" }}
+    {{> (systemPath "templates/roll/parts/penetration-options.hbs") }}
   {{/if}}
   </div>
 

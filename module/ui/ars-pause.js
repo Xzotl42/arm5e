@@ -1,10 +1,11 @@
+import { ARM5E } from "../config.js";
 export function customizePause() {
   class ArsGamePause extends foundry.applications.ui.GamePause {
     /** @override */
     async _prepareContext(_options) {
       return {
         cssClass: game.paused ? "paused" : "",
-        icon: "systems/arm5e/assets/clockwork.svg",
+        icon: `systems/${ARM5E.SYSTEM_ID}/assets/clockwork.svg`,
         text: game.i18n.localize("GAME.Paused"),
         spin: true
       };

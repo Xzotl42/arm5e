@@ -1,5 +1,6 @@
 import { log, sleep as pause } from "../tools/tools.js";
 import { getCompanion, getMagus } from "./testData.js";
+import { ARM5E } from "../config.js";
 import {
   getConfirmation,
   textInput,
@@ -293,7 +294,7 @@ export function registerDialogTesting(quench) {
             };
 
             const renderedTemplate = await renderTemplate(
-              "systems/arm5e/templates/generic/aging-dialog.html",
+              `systems/${ARM5E.SYSTEM_ID}/templates/generic/aging-dialog.html`,
               dialogData
             );
 

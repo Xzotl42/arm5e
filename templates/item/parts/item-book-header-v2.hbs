@@ -1,6 +1,6 @@
 <div class="sheet-header-part">
   <div class="header-background">
-    <img src="systems/arm5e/assets/item/{{ flavor }}_header.png" />
+    <img src="{{systemPath}}assets/item/{{ flavor }}_header.png" />
   </div>
   <header class="sheet-header marginItemPart">
     <div class="flexcol" style="max-width: 150px">
@@ -15,7 +15,7 @@
         data-tooltip-direction="CENTER"
         title="{{ item.name }}"
       />
-      {{> "systems/arm5e/templates/item/parts/cost.hbs" classes="fit"}}
+      {{> (systemPath "templates/item/parts/cost.hbs") classes="fit"}}
       <div class="flexrow">
         {{#if isGM}}
         <div class="resource">
@@ -57,7 +57,7 @@
             data-action="enchantmentToggle"
             title="{{localize 'arm5e.lab.enchantment.item.enable'}}"
             ><img
-              src="systems/arm5e/assets/icons/Icon_Details_option1.png"
+              src="{{systemPath}}assets/icons/Icon_Details_option1.png"
               style="border: 0px; width: 24px; height: 24px"
           /></a>
           {{/if}}
@@ -122,7 +122,7 @@
                 class="nav-arrow book-nav-arrow clickable"
                 data-action="previousTopic"
                 data-index="{{ topicIdx }}"
-                src="systems/arm5e/assets/bLeft.png"
+                src="{{systemPath}}assets/bLeft.png"
               />
             </div>
             <div class="book-center-nav">
@@ -135,7 +135,7 @@
                 class="nav-arrow book-nav-arrow clickable"
                 data-action="nextTopic"
                 data-index="{{ topicIdx }}"
-                src="systems/arm5e/assets/bRight.png"
+                src="{{systemPath}}assets/bRight.png"
               />
             </div>
           </div>
@@ -144,5 +144,5 @@
       </div>
     </div>
   </header>
-  <div class="marginItemPart">{{> "systems/arm5e/templates/generic/metalic-bar.html"}}</div>
+  <div class="marginItemPart">{{> (systemPath "templates/generic/metalic-bar.html")}}</div>
 </div>

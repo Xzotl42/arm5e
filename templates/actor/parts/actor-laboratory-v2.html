@@ -20,7 +20,7 @@
   </div>
 </div>
 
-{{> "systems/arm5e/templates/actor/parts/actor-magic-attributes.html" show="laboratory" }}
+{{> (systemPath "templates/actor/parts/actor-magic-attributes.html") show="laboratory" }}
 <div class="backSection margintop18">
 
   <div class="characteristics flexrow">
@@ -28,7 +28,7 @@
       <div class="flex-group-left">
         <label>{{localize "arm5e.sheet.twilightScars"}}</label>
         <div class="flexrow">
-          {{> "systems/arm5e/templates/generic/ars-editor-V2.hbs"
+          {{> (systemPath "templates/generic/ars-editor-V2.hbs")
           content=enrichedTwilightScars
           target="system.laboratory.longevityRitual.twilightScars"
           prefix=""

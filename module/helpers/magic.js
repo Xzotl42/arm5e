@@ -138,7 +138,7 @@ export async function PickRequisites(spelldata, flavor, editable, updatePath = "
   spelldata.ui = { flavor: flavor };
   log("false", spelldata);
   // Var itemData = this.item;
-  let template = "systems/arm5e/templates/item/parts/requisites.html";
+  let template = `systems/${ARM5E.SYSTEM_ID}/templates/item/parts/requisites.html`;
   let html = await renderTemplate(template, spelldata);
 
   return await customDialogAsync({
@@ -230,7 +230,7 @@ export class QuickMagic extends foundry.applications.api.HandlebarsApplicationMi
 
   static PARTS = {
     main: {
-      template: "systems/arm5e/templates/generic/quick-magic.html"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/quick-magic.html`
     }
   };
 
@@ -862,7 +862,7 @@ async function usePower(dataset, actor) {
   actor.rollInfo.init(dataset, actor);
   const rollProperties = actor.rollInfo.properties;
   // log(false, `Roll variables: ${JSON.stringify(actor.system.roll)}`);
-  // let template = "systems/arm5e/templates/roll/powerUse.html";
+  // let template = `systems/${ARM5E.SYSTEM_ID}/templates/roll/powerUse.html`;
   actor.system.roll = actor.rollInfo;
   actor.config = { magic: CONFIG.ARM5E.magic };
   const options = { window: { title: dataset.name } };

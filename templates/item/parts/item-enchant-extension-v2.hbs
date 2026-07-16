@@ -150,7 +150,7 @@
                     class="item-control"
                     data-action="enchantmentEffectShow"
                     data-index="{{ idx }}"
-                    title="{{localize 'arm5e.hints.detail' item=(localize 'arm5e.sheet.enchantment')}}"
+                    title="{{localize 'arm5e.generic.details' item=(localize 'arm5e.sheet.enchantment')}}"
                   >
                     <i class="ars-Icon_Details2"></i
                   ></a>
@@ -558,7 +558,7 @@
             class="item-control"
             data-action="createEnchanLabText"
             data-index="{{ idx }}"
-            title="{{localize 'arm5e.hints.create' item=(localize 'arm5e.sheet.labtext')}}"
+            title="{{localize 'arm5e.hints.create' item=(localize 'TYPES.Item.laboratoryText')}}"
           >
             <i class="ars-Icon_Details2"></i
           ></a>
@@ -569,7 +569,7 @@
         class="foldable-section backSection enchantment {{lookup effect.visibility 'whole'}}"
         id="enchantments-whole{{ idx }}-{{@root.item._id}}"
       >
-        {{> "systems/arm5e/templates/item/parts/spell-design-alt.html"
+        {{> (systemPath "templates/item/parts/spell-design-alt.html")
               container="enchantments"
               index=idx
               docId=@root.item._id
@@ -578,7 +578,7 @@
               visibility=effect.visibility
               edition=@root.edition
         }}
-        {{> "systems/arm5e/templates/item/parts/enchantment-attributes.html"
+        {{> (systemPath "templates/item/parts/enchantment-attributes.html")
               container="enchantments"
               index=idx
               docId=@root.item._id

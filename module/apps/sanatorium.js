@@ -133,14 +133,14 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
 
   static PARTS = {
     header: {
-      template: "systems/arm5e/templates/generic/parts/sanatorium-header.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/sanatorium-header.hbs`
     },
     form: {
-      template: "systems/arm5e/templates/generic/sanatorium.hbs",
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/sanatorium.hbs`,
       scrollable: [".prosemirror-section"]
     },
     footer: {
-      template: "systems/arm5e/templates/generic/parts/sanatorium-footer.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/sanatorium-footer.hbs`
     }
   };
 

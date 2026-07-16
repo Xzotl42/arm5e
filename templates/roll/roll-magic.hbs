@@ -12,7 +12,7 @@
         style="max-width: 100px"
       />
     </div>
-    {{> "systems/arm5e/templates/actor/parts/actor-voice-and-gestures.hbs" selection=rollInfo.selection id=_id}}
+    {{> (systemPath "templates/actor/parts/actor-voice-and-gestures.hbs") selection=rollInfo.selection id=_id}}
     <div class="flexrow flex-group-center">
       <select name="rollInfo.magic.technique.value" data-dtype="String" class="SelectedTechnique">
         {{selectOptions rollInfo.selection.techniques selected=rollInfo.magic.technique.value}}
@@ -158,13 +158,13 @@
     <div class="flexcol flex-group-center">
       <label class=""
         ><img
-          src="systems/arm5e/assets/icons/Icon_Details_option1.png"
+          src="{{systemPath}}assets/icons/Icon_Details_option1.png"
           title="Penetration"
           width="20"
           height="20"
           style="border: 0px"
       /></label>
     </div>
-    {{> "systems/arm5e/templates/roll/parts/penetration-options.hbs" }}
+    {{> (systemPath "templates/roll/parts/penetration-options.hbs") }}
   </div>
 </div>

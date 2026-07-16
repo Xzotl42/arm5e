@@ -377,44 +377,44 @@ export class RollWindow extends HandlebarsApplicationMixin(ApplicationV2) {
   };
 
   static PARTS = {
-    header: { template: "systems/arm5e/templates/roll/parts/roll-header.hbs" },
-    options: { template: "systems/arm5e/templates/roll/roll-options.hbs" },
+    header: { template: `systems/${ARM5E.SYSTEM_ID}/templates/roll/parts/roll-header.hbs` },
+    options: { template: `systems/${ARM5E.SYSTEM_ID}/templates/roll/roll-options.hbs` },
     combat: {
-      template: "systems/arm5e/templates/roll/roll-combat.hbs",
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/roll/roll-combat.hbs`,
       templates: [
-        "systems/arm5e/templates/roll/parts/combat-attack.hbs",
-        "systems/arm5e/templates/roll/parts/combat-defense.hbs",
-        "systems/arm5e/templates/roll/parts/combat-init.hbs"
+        `systems/${ARM5E.SYSTEM_ID}/templates/roll/parts/combat-attack.hbs`,
+        `systems/${ARM5E.SYSTEM_ID}/templates/roll/parts/combat-defense.hbs`,
+        `systems/${ARM5E.SYSTEM_ID}/templates/roll/parts/combat-init.hbs`
       ]
     },
-    characteristic: { template: "systems/arm5e/templates/roll/roll-characteristic.hbs" },
+    characteristic: { template: `systems/${ARM5E.SYSTEM_ID}/templates/roll/roll-characteristic.hbs` },
     magic: {
-      template: "systems/arm5e/templates/roll/roll-magic.hbs",
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/roll/roll-magic.hbs`,
       templates: [
-        "systems/arm5e/templates/roll/parts/penetration-options.hbs",
-        "systems/arm5e/templates/actor/parts/actor-voice-and-gestures.hbs"
+        `systems/${ARM5E.SYSTEM_ID}/templates/roll/parts/penetration-options.hbs`,
+        `systems/${ARM5E.SYSTEM_ID}/templates/actor/parts/actor-voice-and-gestures.hbs`
       ]
     },
     spell: {
-      template: "systems/arm5e/templates/roll/roll-spell.hbs",
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/roll/roll-spell.hbs`,
       templates: [
-        "systems/arm5e/templates/roll/parts/penetration-options.hbs",
-        "systems/arm5e/templates/actor/parts/actor-voice-and-gestures.hbs"
+        `systems/${ARM5E.SYSTEM_ID}/templates/roll/parts/penetration-options.hbs`,
+        `systems/${ARM5E.SYSTEM_ID}/templates/actor/parts/actor-voice-and-gestures.hbs`
       ]
     },
-    supernatural: { template: "systems/arm5e/templates/roll/roll-supernatural.hbs" },
-    aging: { template: "systems/arm5e/templates/roll/roll-aging.hbs" },
-    crisis: { template: "systems/arm5e/templates/roll/roll-aging-crisis.hbs" },
-    twilightControl: { template: "systems/arm5e/templates/roll/roll-twilightControl.hbs" },
-    twilightStrength: { template: "systems/arm5e/templates/roll/roll-twilightStrength.hbs" },
-    twilightComplexity: { template: "systems/arm5e/templates/roll/roll-twilightComplexity.hbs" },
+    supernatural: { template: `systems/${ARM5E.SYSTEM_ID}/templates/roll/roll-supernatural.hbs` },
+    aging: { template: `systems/${ARM5E.SYSTEM_ID}/templates/roll/roll-aging.hbs` },
+    crisis: { template: `systems/${ARM5E.SYSTEM_ID}/templates/roll/roll-aging-crisis.hbs` },
+    twilightControl: { template: `systems/${ARM5E.SYSTEM_ID}/templates/roll/roll-twilightControl.hbs` },
+    twilightStrength: { template: `systems/${ARM5E.SYSTEM_ID}/templates/roll/roll-twilightStrength.hbs` },
+    twilightComplexity: { template: `systems/${ARM5E.SYSTEM_ID}/templates/roll/roll-twilightComplexity.hbs` },
     twilightUnderstanding: {
-      template: "systems/arm5e/templates/roll/roll-twilightUnderstanding.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/roll/roll-twilightUnderstanding.hbs`
     },
-    damage: { template: "systems/arm5e/templates/roll/roll-damage.hbs" },
-    soak: { template: "systems/arm5e/templates/roll/roll-soak.hbs" },
-    footer: { template: "systems/arm5e/templates/roll/parts/roll-footer.hbs" },
-    buttons: { template: "systems/arm5e/templates/roll/parts/roll-buttons.hbs" }
+    damage: { template: `systems/${ARM5E.SYSTEM_ID}/templates/roll/roll-damage.hbs` },
+    soak: { template: `systems/${ARM5E.SYSTEM_ID}/templates/roll/roll-soak.hbs` },
+    footer: { template: `systems/${ARM5E.SYSTEM_ID}/templates/roll/parts/roll-footer.hbs` },
+    buttons: { template: `systems/${ARM5E.SYSTEM_ID}/templates/roll/parts/roll-buttons.hbs` }
   };
 
   /** @override */
@@ -894,9 +894,9 @@ export class NoRollWindow extends HandlebarsApplicationMixin(ApplicationV2) {
   };
 
   static PARTS = {
-    header: { template: "systems/arm5e/templates/roll/parts/roll-header.hbs" },
-    footer: { template: "systems/arm5e/templates/roll/parts/roll-footer.hbs" },
-    buttons: { template: "systems/arm5e/templates/roll/parts/roll-buttons.hbs" }
+    header: { template: `systems/${ARM5E.SYSTEM_ID}/templates/roll/parts/roll-header.hbs` },
+    footer: { template: `systems/${ARM5E.SYSTEM_ID}/templates/roll/parts/roll-footer.hbs` },
+    buttons: { template: `systems/${ARM5E.SYSTEM_ID}/templates/roll/parts/roll-buttons.hbs` }
   };
 
   async _onRender(context, options) {
@@ -979,8 +979,8 @@ export class UsePowerRollWindow extends NoRollWindow {
   static PARTS = {
     header: super.PARTS.header,
     body: {
-      template: "systems/arm5e/templates/roll/powerUse.hbs",
-      templates: ["systems/arm5e/templates/roll/parts/penetration-options.hbs"]
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/roll/powerUse.hbs`,
+      templates: [`systems/${ARM5E.SYSTEM_ID}/templates/roll/parts/penetration-options.hbs`]
     },
     footer: super.PARTS.footer,
     buttons: super.PARTS.buttons
@@ -1038,7 +1038,7 @@ export class UseMagicItemWindow extends NoRollWindow {
 
   static PARTS = {
     header: super.PARTS.header,
-    body: { template: "systems/arm5e/templates/roll/magic-itemUse.hbs" },
+    body: { template: `systems/${ARM5E.SYSTEM_ID}/templates/roll/magic-itemUse.hbs` },
     footer: super.PARTS.footer,
     buttons: super.PARTS.buttons
   };

@@ -117,7 +117,7 @@ export async function setAgingEffects(actor, roll, message) {
   }
 
   const renderedTemplate = await renderTemplate(
-    "systems/arm5e/templates/generic/aging-dialog.html",
+    `systems/${ARM5E.SYSTEM_ID}/templates/generic/aging-dialog.html`,
     dialogData
   );
 
@@ -257,7 +257,7 @@ export async function createAgingDiaryEntry(actor, input) {
     name: game.i18n.format("arm5e.aging.resultTitle", {
       character: actor.name
     }),
-    img: "systems/arm5e/assets/icons/Icon_Aging_and_Decrepitude.png",
+    img: `systems/${ARM5E.SYSTEM_ID}/assets/icons/Icon_Aging_and_Decrepitude.png`,
     type: "diaryEntry",
     system: {
       dates: [{ year: input.year, season: input.season, applied: false }],
@@ -360,7 +360,7 @@ export async function createTwilightDiaryEntry(actor, input) {
 function _createTwilightDiaryEntry(input) {
   return {
     name: game.i18n.localize("arm5e.twilight.episode"),
-    img: "systems/arm5e/assets/icons/Icon_Warping.png",
+    img: `systems/${ARM5E.SYSTEM_ID}/assets/icons/Icon_Warping.png`,
     type: "diaryEntry",
     system: {
       dates: [{ year: input.year, season: input.season, applied: input.applied ?? false }],
@@ -1443,7 +1443,7 @@ export async function investigate(item) {
   let formData = magicItem.toObject();
   formData.uuid = magicItem.uuid;
   formData.labTotal = item.system.externalIds[idx].data.labTotal;
-  // // const html = await renderTemplate("systems/arm5e/templates/generic/astrolab.html", dialogData);
+  // // const html = await renderTemplate(`systems/${ARM5E.SYSTEM_ID}/templates/generic/astrolab.html`, dialogData);
   const investigateItem = new InvestigationRoll(item, formData, {}); // data, options
   const res = await investigateItem.render(true);
 }

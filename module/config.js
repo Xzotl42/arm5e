@@ -1,10 +1,3 @@
-import {
-  agingRoll,
-  visStudy,
-  investigate,
-  twilightUnderstandingRoll
-} from "./seasonal-activities/long-term-activities.js";
-
 export const ARM5E = {};
 
 /**
@@ -2638,7 +2631,7 @@ ARM5E.activities.generic = {
     maxXp: 0,
     bonusOptions: null,
     secondaryFilter: null,
-    roll: { label: "arm5e.activity.roll.aging", action: agingRoll },
+    roll: { label: "arm5e.activity.roll.aging", action: null },
     scheduling: {
       duplicate: true,
       conflict: false,
@@ -2660,7 +2653,7 @@ ARM5E.activities.generic = {
     maxXp: 0,
     bonusOptions: null,
     secondaryFilter: null,
-    roll: { label: "arm5e.twilight.episode", action: twilightUnderstandingRoll },
+    roll: { label: "arm5e.twilight.episode", action: null },
     scheduling: {
       duplicate: true,
       conflict: false,
@@ -2682,7 +2675,7 @@ ARM5E.activities.generic = {
     maxXp: 0,
     bonusOptions: null,
     secondaryFilter: null,
-    roll: { label: "arm5e.activity.roll.visStudy", action: visStudy },
+    roll: { label: "arm5e.activity.roll.visStudy", action: null },
     scheduling: {
       duplicate: false,
       conflict: true,
@@ -2789,7 +2782,7 @@ ARM5E.activities.generic = {
     maxXp: 0,
     bonusOptions: null,
     secondaryFilter: null,
-    roll: { label: "arm5e.activity.roll.investigate", action: investigate },
+    roll: { label: "arm5e.activity.roll.investigate", action: null },
     scheduling: {
       duplicate: false,
       conflict: true,
@@ -3265,7 +3258,7 @@ ARM5E.recovery = {
       stability: 0,
       improvement: 0,
       interval: 7,
-      icon: "systems/arm5e/assets/icons/recovery/healed.png",
+      icon: `systems/${ARM5E.SYSTEM_ID}/assets/icons/recovery/healed.png`,
       label: "arm5e.sheet.healthy"
     },
     light: {
@@ -3274,7 +3267,7 @@ ARM5E.recovery = {
       stability: 4,
       improvement: 10,
       interval: 7,
-      icon: "systems/arm5e/assets/icons/recovery/light.svg",
+      icon: `systems/${ARM5E.SYSTEM_ID}/assets/icons/recovery/light.svg`,
       label: "arm5e.sheet.light"
     },
     medium: {
@@ -3283,7 +3276,7 @@ ARM5E.recovery = {
       stability: 6,
       improvement: 12,
       interval: 30,
-      icon: "systems/arm5e/assets/icons/recovery/medium.svg",
+      icon: `systems/${ARM5E.SYSTEM_ID}/assets/icons/recovery/medium.svg`,
       label: "arm5e.sheet.medium"
     },
     heavy: {
@@ -3292,7 +3285,7 @@ ARM5E.recovery = {
       stability: 9,
       improvement: 15,
       interval: 90,
-      icon: "systems/arm5e/assets/icons/recovery/heavy.svg",
+      icon: `systems/${ARM5E.SYSTEM_ID}/assets/icons/recovery/heavy.svg`,
       label: "arm5e.sheet.heavy"
     },
     incap: {
@@ -3301,7 +3294,7 @@ ARM5E.recovery = {
       stability: 1,
       improvement: 9,
       interval: 1, // One day per period; two rolls (sunrise/sunset) are auto-triggered per period
-      icon: "systems/arm5e/assets/icons/recovery/incap.svg",
+      icon: `systems/${ARM5E.SYSTEM_ID}/assets/icons/recovery/incap.svg`,
       label: "arm5e.sheet.incap"
     },
     dead: {
@@ -3310,7 +3303,7 @@ ARM5E.recovery = {
       stability: 999,
       improvement: 999,
       interval: 0,
-      icon: "systems/arm5e/assets/icons/skull.svg",
+      icon: `systems/${ARM5E.SYSTEM_ID}/assets/icons/skull.svg`,
       label: "arm5e.sheet.dead"
     }
   },

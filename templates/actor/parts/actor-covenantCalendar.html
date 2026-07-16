@@ -8,7 +8,7 @@
           class="fas fa-plus"></i>{{localize "arm5e.sheet.action.Create"}}</a>
     </div>
   </li>
-  {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+  {{> (systemPath "templates/generic/metalic-bar.html") }}
   {{#each system.calendar as |item id|}}
     <li class="item item-value flexrow flex-center" data-name="{{item.name}}" data-attribute="{{id}}"
       data-item-id="{{item._id}}">

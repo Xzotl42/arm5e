@@ -71,15 +71,15 @@ export class ActivitySchedule extends HandlebarsApplicationMixin(ApplicationV2) 
 
   static PARTS = {
     header: {
-      template: "systems/arm5e/templates/generic/parts/astrolab-header.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/astrolab-header.hbs`
     },
     activitySchedule: {
-      template: "systems/arm5e/templates/generic/activity-schedule.hbs",
-      templates: ["systems/arm5e/templates/generic/parts/calendar-grid.hbs"],
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/activity-schedule.hbs`,
+      templates: [`systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/calendar-grid.hbs`],
       scrollable: [".years"]
     },
     footer: {
-      template: "systems/arm5e/templates/generic/parts/astrolab-footer.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/astrolab-footer.hbs`
     }
   };
 

@@ -190,7 +190,7 @@
   </li>
 
   <div id="inhabitants-magi" class="toggle-collapse {{ui.lists.visibility.inhabitants.inhabitants-magi}}">
-    {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+    {{> (systemPath "templates/generic/metalic-bar.html") }}
     {{#each system.inhabitants.magi as |item id|}}
       <li class="item item-value flexrow flex-center" data-name="{{item.name}}" data-attribute="{{id}}"
         data-item-id="{{item._id}}">
@@ -233,7 +233,7 @@
   </li>
 
   <div id="inhabitants-companions" class="toggle-collapse {{ui.lists.visibility.inhabitants.inhabitants-companions}}">
-    {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+    {{> (systemPath "templates/generic/metalic-bar.html") }}
     {{#each system.inhabitants.companion as |item id|}}
       <li class="item item-value flexrow flex-center" data-name="{{item.name}}" data-attribute="{{id}}"
         data-item-id="{{item._id}}">
@@ -275,7 +275,7 @@
     </div>
   </li>
   <div id="inhabitants-specialists" class="toggle-collapse {{ui.lists.visibility.inhabitants.inhabitants-specialists}}">
-    {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+    {{> (systemPath "templates/generic/metalic-bar.html") }}
     {{#each system.inhabitants.specialists as |item id|}}
       <li class="item item-value flexrow flex-center" data-name="{{item.name}}" data-attribute="{{id}}"
         data-item-id="{{item._id}}">
@@ -352,7 +352,7 @@
     </div>
   </li>
   <div id="inhabitants-turbula" class="toggle-collapse {{ui.lists.visibility.inhabitants.inhabitants-turbula}}">
-    {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+    {{> (systemPath "templates/generic/metalic-bar.html") }}
     {{#each system.inhabitants.turbula as |item id|}}
       <li class="item item-value flexrow flex-center" data-name="{{item.name}}" data-attribute="{{id}}"
         data-item-id="{{item._id}}">
@@ -393,7 +393,7 @@
         </div>
     </li>
     <div id="inhabitants-habitants" class="toggle-collapse {{ui.lists.visibility.inhabitants.inhabitants-habitants}}">
-    {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+    {{> (systemPath "templates/generic/metalic-bar.html") }}
     {{#each system.inhabitants.habitants as |item id|}}
         <li class="item item-value flexrow flex-center" data-name="{{item.name}}" data-attribute="{{id}}"
             data-item-id="{{item._id}}">
@@ -431,7 +431,7 @@
         </div>
     </li>
     <div id="inhabitants-horses" class="toggle-collapse {{ui.lists.visibility.inhabitants.inhabitants-horses}}">
-    {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+    {{> (systemPath "templates/generic/metalic-bar.html") }}
     {{#each system.inhabitants.horses as |item id|}}
       <li class="item item-value flexrow flex-center" data-name="{{item.name}}" data-attribute="{{id}}"
           data-item-id="{{item._id}}" data-category="horses">
@@ -464,7 +464,7 @@
         </div>
     </li>
     <div id="inhabitants-livestock" class="toggle-collapse {{ui.lists.visibility.inhabitants.inhabitants-livestock}}">
-    {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+    {{> (systemPath "templates/generic/metalic-bar.html") }}
     {{#each system.inhabitants.livestock as |item id|}}
       <li class="item item-value flexrow flex-center" data-name="{{item.name}}" data-attribute="{{id}}"
           data-item-id="{{item._id}}">

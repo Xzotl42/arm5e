@@ -27,7 +27,7 @@ export class CompendiaRefConfig extends HandlebarsApplicationMixin(ApplicationV2
 
   static PARTS = {
     form: {
-      template: "systems/arm5e/templates/generic/compendia-ref-config.html"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/compendia-ref-config.html`
     }
   };
 

@@ -1,6 +1,6 @@
 <div class="sheet-header-part">
   <div class="header-background">
-    <img src="systems/arm5e/assets/item/{{ flavor }}_header.png" />
+    <img src="{{systemPath}}assets/item/{{ flavor }}_header.png" />
   </div>
   <header class="sheet-header marginItemPart">
     <img
@@ -29,7 +29,7 @@
           <div class="flex0 padding2">
             <a data-action="rollAbility" title="{{localize 'arm5e.dialog.button.roll'}}">
               <img
-                src="systems/arm5e/assets/dice.png"
+                src="{{systemPath}}assets/dice.png"
                 style="border: 0; height: 30px; min-height: 30px; min-width: 30px"
               />
             </a>
@@ -124,5 +124,5 @@
       </div>
     </div>
   </header>
-  <div class="marginItemPart">{{> "systems/arm5e/templates/generic/metalic-bar.html" }}</div>
+  <div class="marginItemPart">{{> (systemPath "templates/generic/metalic-bar.html") }}</div>
 </div>

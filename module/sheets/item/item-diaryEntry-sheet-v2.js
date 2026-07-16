@@ -69,20 +69,20 @@ export class ArM5eDiaryEntryItemSheetV2 extends ArM5eItemSheetV2 {
   /** @override */
   static PARTS = {
     header: {
-      template: "systems/arm5e/templates/item/parts/item-diaryEntry-header-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/item/parts/item-diaryEntry-header-v2.hbs`
     },
     tabs: {
-      template: "systems/arm5e/templates/generic/parts/ars-tab-navigation.hbs",
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/ars-tab-navigation.hbs`,
       classes: ["marginItemPart"]
     },
     description: {
-      template: "systems/arm5e/templates/item/parts/item-description-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/item/parts/item-description-v2.hbs`
     },
     advanced: {
-      template: "systems/arm5e/templates/item/parts/item-diaryEntry-advanced-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/item/parts/item-diaryEntry-advanced-v2.hbs`
     },
     footer: {
-      template: "systems/arm5e/templates/item/parts/item-footer-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/item/parts/item-footer-v2.hbs`
     }
   };
 
@@ -926,7 +926,8 @@ export class ArM5eDiaryEntryItemSheetV2 extends ArM5eItemSheetV2 {
 
   /** @override */
   async _onDrop(event) {
-    const data = foundry.applications.ux.getDragEventData(event);
+    event.preventDefault();
+    const data = foundry.applications.ux.TextEditor.getDragEventData(event);
     const dropTarget = event.currentTarget;
 
     if (data.type === "Actor" && dropTarget.classList.contains("progress-teacher")) {
@@ -936,7 +937,10 @@ export class ArM5eDiaryEntryItemSheetV2 extends ArM5eItemSheetV2 {
           return;
         }
         const actor = await Actor.implementation.fromDropData(data);
-        if (actor.isCharacter()) await this._setTeacher(actor);
+        if (actor.isCharacter()) {
+          await this._setTeacher(actor);
+          event.stopPropagation();
+        }
       }
     } else if (data.type === "Item") {
       if (dropTarget.classList.contains("progress-abilities")) {
@@ -947,6 +951,7 @@ export class ArM5eDiaryEntryItemSheetV2 extends ArM5eItemSheetV2 {
           this.item.system.activity !== "training"
         ) {
           await this.item.update(this._addAbility(item), {});
+          event.stopPropagation();
         }
       } else if (
         dropTarget.classList.contains("drop-newspell") ||
@@ -958,6 +963,7 @@ export class ArM5eDiaryEntryItemSheetV2 extends ArM5eItemSheetV2 {
         const newSpells = this.item.system.progress.newSpells;
         newSpells.push(ArM5eDiaryEntryItemSheetV2._buildNewSpellEntry(item));
         await this.item.update({ "system.progress.newSpells": newSpells });
+        event.stopPropagation();
       }
     }
 

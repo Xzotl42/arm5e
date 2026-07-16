@@ -3,6 +3,7 @@ import { GetEffectAttributesLabel, computeLevel } from "../helpers/magic.js";
 import { ROLL_MODES } from "../ui/roll-window.js";
 import { log } from "../tools/tools.js";
 
+import { ARM5E } from "../config.js";
 export class InvestigationRoll extends foundry.applications.api.HandlebarsApplicationMixin(
   foundry.applications.api.ApplicationV2
 ) {
@@ -68,14 +69,14 @@ export class InvestigationRoll extends foundry.applications.api.HandlebarsApplic
 
   static PARTS = {
     header: {
-      template: "systems/arm5e/templates/generic/parts/largeDialog-header.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/largeDialog-header.hbs`
     },
     form: {
-      template: "systems/arm5e/templates/generic/investigationRoll.html",
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/investigationRoll.html`,
       scrollable: [".years"]
     },
     footer: {
-      template: "systems/arm5e/templates/generic/parts/largeDialog-footer.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/largeDialog-footer.hbs`
     }
   };
 

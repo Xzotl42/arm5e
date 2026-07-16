@@ -1,9 +1,9 @@
 <div class="{{cssClass}}  mainItem">
   <div class="header-background">
-    <img src="systems/arm5e/assets/item/{{ ui.flavor }}_header.png" />>
+    <img src="{{systemPath}}assets/item/{{ ui.flavor }}_header.png" />>
   </div>
   <div class="flexcol  limited-sheet" autocomplete="off"
-    style="background-image: url('systems/arm5e/assets/item/{{ui.flavor}}_background.webp')">
+    style="background-image: url('{{systemPath}}assets/item/{{ui.flavor}}_background.webp')">
     {{!-- Sheet Header --}}
     <header class="sheet-header">
       <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" height="100" width="100" />
@@ -17,7 +17,7 @@
       <div class="flex-group-left padding12 backSection extendable"
         style="flex-grow: 1; display: flex; flex-direction: column;">
         <label class="smallTitle">{{localize "arm5e.sheet.biography"}}</label>
-        {{> "systems/arm5e/templates/generic/ars-editor-V2.hbs"
+        {{> (systemPath "templates/generic/ars-editor-V2.hbs")
           content=enrichedDescription
           target="system.description"
           flavor=""

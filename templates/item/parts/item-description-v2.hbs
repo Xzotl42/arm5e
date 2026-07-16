@@ -1,15 +1,15 @@
 <section class="sheet-body-part sheet-body marginItemPart">
   <div class="tab {{ tab.cssClass }}" data-group="primary" data-tab="description">
     <div class="flexcol">
-      {{> "systems/arm5e/templates/generic/ars-editor-V2.hbs"
+      {{> (systemPath "templates/generic/ars-editor-V2.hbs")
       content=enrichedDescription
       target="system.description"
       editable=editable
       }}
 
       {{#if metagame.view }}
-      {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
-      {{> "systems/arm5e/templates/generic/source.html" }}
+      {{> (systemPath "templates/generic/metalic-bar.html") }}
+      {{> (systemPath "templates/generic/source.html") }}
       {{/if}}
     </div>
   </div>

@@ -8,7 +8,7 @@
           data-action="changeYear"
           data-offset="-1"
           data-year="{{ displayYear }}"
-          src=" systems/arm5e/assets/bLeft.png"
+          src=" {{systemPath}}assets/bLeft.png"
           style="height: 20px"
         />
       </div>
@@ -28,13 +28,13 @@
           data-action="changeYear"
           data-offset="1"
           data-year="{{ displayYear }}"
-          src="systems/arm5e/assets/bRight.png"
+          src="{{systemPath}}assets/bRight.png"
           style="height: 20px"
         />
       </div>
     </div>
     <div>
-      {{> "systems/arm5e/templates/generic/parts/schedule-grid.hbs" }}
+      {{> (systemPath "templates/generic/parts/schedule-grid.hbs") }}
     </div>
   </div>
 </div>

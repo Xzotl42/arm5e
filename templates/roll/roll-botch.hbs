@@ -1,5 +1,5 @@
 <form class="{{cssClass}} arm5e-roll" autocomplete="off" style="background-size: cover">
-  {{> "systems/arm5e/templates/roll/parts/roll-header.hbs" header="Botch_rolls" }}
+  {{> (systemPath "templates/roll/parts/roll-header.hbs") header="Botch_rolls" }}
   <p style="padding-left: 32px; text-align: center">You rolled a 0. Check for Botch.</p>
   <div class="roll-options">
     <div class="flex-center" style="display: flex; width: 100%; margin-bottom: 10px; text-align: center">
@@ -11,5 +11,5 @@
       </p>
     </div>
   </div>
-  {{> "systems/arm5e/templates/roll/parts/roll-footer.hbs" footer="Botch_rolls"}}
+  {{> (systemPath "templates/roll/parts/roll-footer.hbs") footer="Botch_rolls"}}
 </form>

@@ -1,6 +1,7 @@
 import { PickRequisites } from "../helpers/magic.js";
 import { ArM5eItem } from "../item/item.js";
 import { getDataset } from "../tools/tools.js";
+import { ARM5E } from "../config.js";
 const renderTemplate = foundry.applications.handlebars.renderTemplate;
 /**
  *
@@ -28,7 +29,7 @@ export async function getConfirmation(
     info2: info2
   };
   const html = await renderTemplate(
-    "systems/arm5e/templates/generic/confirmation.html",
+    `systems/${ARM5E.SYSTEM_ID}/templates/generic/confirmation.html`,
     dialogData
   );
   const proceed = await foundry.applications.api.DialogV2.confirm({
@@ -76,7 +77,7 @@ export async function selectItemDialog(
     flavor: flavor
   };
   const html = await renderTemplate(
-    "systems/arm5e/templates/generic/itemPickerDialog.html",
+    `systems/${ARM5E.SYSTEM_ID}/templates/generic/itemPickerDialog.html`,
     dialogData
   );
   return await new Promise((resolve) => {
@@ -135,7 +136,7 @@ export async function textInput(
     value: value,
     help: help
   };
-  const html = await renderTemplate("systems/arm5e/templates/generic/textInput.html", dialogData);
+  const html = await renderTemplate(`systems/${ARM5E.SYSTEM_ID}/templates/generic/textInput.html`, dialogData);
 
   return await foundry.applications.api.DialogV2.prompt({
     window: { title: title },
@@ -200,7 +201,7 @@ export async function numberInput(
     help: help,
     constraints: constraints
   };
-  const html = await renderTemplate("systems/arm5e/templates/generic/numberInput.html", dialogData);
+  const html = await renderTemplate(`systems/${ARM5E.SYSTEM_ID}/templates/generic/numberInput.html`, dialogData);
 
   return await foundry.applications.api.DialogV2.prompt({
     window: { title: title },
