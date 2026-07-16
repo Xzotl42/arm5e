@@ -4,7 +4,7 @@
     <span> ( {{ system.enchantmentsCount }} )</span>
   </div>
 </li>
-{{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+{{> (systemPath "templates/generic/metalic-bar.html") }}
 {{#each system.filteredEnchantments as |enchantment id|}}
 <li
   class="item draggable spell-value flexrow flex-center codex"

@@ -15,7 +15,7 @@
           class="fas fa-plus"></i>{{localize "arm5e.sheet.action.Add"}}</a>
     </div>
   </li>
-  {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+  {{> (systemPath "templates/generic/metalic-bar.html") }}
   {{#each sortedAbilities as |abilitySet id|}}
     {{#if abilitySet.abilities}}
       <li class="ability-category item flexrow item-header" data-action="toggleAbilityCategory" data-category="{{id}}">

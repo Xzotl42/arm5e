@@ -4,7 +4,7 @@
     <span>( {{ system.magicEffectsCount }} )</span>
   </div>
 </li>
-{{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+{{> (systemPath "templates/generic/metalic-bar.html") }}
 {{#each system.filteredMagicEffects as |effect id|}}
 <li
   class="item draggable spell-value flexrow flex-center codex"

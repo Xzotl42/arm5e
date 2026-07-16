@@ -1,18 +1,18 @@
 <div class="{{ cssClass }} sanatorium" autocomplete="off">
   <div class="flexrow flex-between marginsides32">
-    {{>"systems/arm5e/templates/generic/parts/simpleFieldBacksection.hbs" label="arm5e.sheet.stamina" name="sta"
+    {{> (systemPath "templates/generic/parts/simpleFieldBacksection.hbs") label="arm5e.sheet.stamina" name="sta"
     attributes="readonly" value=patient.system.characteristics.sta.value type="number" dtype="Number" classes="wide"}}
-    {{>"systems/arm5e/templates/generic/parts/simpleFieldBacksection.hbs" label="arm5e.sanatorium.recoveryBonus"
+    {{> (systemPath "templates/generic/parts/simpleFieldBacksection.hbs") label="arm5e.sanatorium.recoveryBonus"
     name="recoveryBonus" attributes="readonly" value=modifiers.activeEffect type="number" dtype="Number" classes="wide"}}
-    {{>"systems/arm5e/templates/generic/parts/simpleFieldBacksection.hbs" label="arm5e.sanatorium.mundaneHelp" 
+    {{> (systemPath "templates/generic/parts/simpleFieldBacksection.hbs") label="arm5e.sanatorium.mundaneHelp" 
         name="modifiers.mundaneHelp" attributes="" value=modifiers.mundaneHelp type="number" dtype="Number" classes="wide select-on-focus change-mundane-help"}}
-    {{>"systems/arm5e/templates/generic/parts/simpleFieldBacksection.hbs" label="arm5e.sanatorium.magicalHelp" 
+    {{> (systemPath "templates/generic/parts/simpleFieldBacksection.hbs") label="arm5e.sanatorium.magicalHelp" 
         name="modifiers.magicalHelp" attributes="" value=modifiers.magicalHelp type="number" dtype="Number" classes="wide select-on-focus change-magical-help"}}
-    {{>"systems/arm5e/templates/generic/parts/simpleFieldBacksection.hbs" label="arm5e.sanatorium.labHealth" 
+    {{> (systemPath "templates/generic/parts/simpleFieldBacksection.hbs") label="arm5e.sanatorium.labHealth" 
         name="modifiers.labHealth" attributes="readonly" value=modifiers.labHealth type="number" dtype="Number" classes="wide"}}
   </div>
   <div class="marginsides32 marginbot6 margintop6">
-    {{> "systems/arm5e/templates/generic/metalic-bar.html"  }}
+    {{> (systemPath "templates/generic/metalic-bar.html")  }}
   </div>
   <div class="sheet-body backSection marginsides32">
     {{!-- tyle="min-height: 367px"> --}}
@@ -89,7 +89,7 @@
         </div>
         <div class="margintop18" style="min-height: 263px">
           <label class="smallTitle">{{localize "arm5e.sanatorium.log"}}</label>
-          {{> "systems/arm5e/templates/generic/ars-editor.hbs"
+          {{> (systemPath "templates/generic/ars-editor.hbs")
             content=log
             target="log"
             button=false

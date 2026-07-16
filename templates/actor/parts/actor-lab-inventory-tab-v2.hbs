@@ -1,6 +1,6 @@
 <div class="tab {{ tab.cssClass }} inventory" data-group="primary" data-tab="inventory">
   <div class="flexcol">
-    {{> "systems/arm5e/templates/generic/parts/ars-tab-navigation.hbs" tabs=subtabs}}
+    {{> (systemPath "templates/generic/parts/ars-tab-navigation.hbs") tabs=subtabs}}
     <section class="inventory-body">
       <div
         class="tab{{#if subtabs.inventory.active}} active{{/if}} item flexcol marginsides32"
@@ -22,7 +22,7 @@
               ></a>
             </div>
           </li>
-          {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+          {{> (systemPath "templates/generic/metalic-bar.html") }}
           {{#each system.rawVis as |item id|}}
           <li
             class="item item-value flexrow"
@@ -68,7 +68,7 @@
               ></a>
             </div>
           </li>
-          {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+          {{> (systemPath "templates/generic/metalic-bar.html") }}
           {{#each system.items as |item id|}}
           <li
             class="item item-value flexrow"
@@ -97,7 +97,7 @@
         data-tab="library"
         style="align-items: flex-start; gap: 5px"
       >
-        {{> "systems/arm5e/templates/actor/parts/actor-library.html"}}
+        {{> (systemPath "templates/actor/parts/actor-library.html")}}
       </div>
     </section>
   </div>

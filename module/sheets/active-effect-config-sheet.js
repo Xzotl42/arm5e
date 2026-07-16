@@ -44,27 +44,27 @@ export class ArM5eActiveEffectConfig extends foundry.applications.sheets.ActiveE
 
   /** @override */
   static PARTS = {
-    headerFlavor: { template: "systems/arm5e/templates/generic/parts/largeDialog-header.hbs" },
+    headerFlavor: { template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/largeDialog-header.hbs` },
     header: {
-      template: "systems/arm5e/templates/sheets/active-effect/header.hbs",
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/sheets/active-effect/header.hbs`,
       classes: ["marginsides32"]
     },
     tabs: {
-      template: "systems/arm5e/templates/generic/parts/ars-tab-navigation.hbs",
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/ars-tab-navigation.hbs`,
       classes: ["blueBar", "marginsides32"]
     },
     details: {
-      template: "systems/arm5e/templates/sheets/active-effect/details.hbs",
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/sheets/active-effect/details.hbs`,
       classes: ["flexrow"]
     },
-    // duration: { template: "systems/arm5e/templates/sheets/active-effect/duration.hbs" },
+    // duration: { template: `systems/${ARM5E.SYSTEM_ID}/templates/sheets/active-effect/duration.hbs` },
     changes: {
-      template: "systems/arm5e/templates/sheets/active-effect/changes.hbs",
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/sheets/active-effect/changes.hbs`,
       scrollable: [".changes-list"],
       classes: ["flexrow"]
     },
     // footer: { template: "templates/generic/form-footer.hbs" }
-    footer: { template: "systems/arm5e/templates/generic/parts/largeDialog-footer.hbs" }
+    footer: { template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/largeDialog-footer.hbs` }
   };
 
   // /** @inheritDoc */

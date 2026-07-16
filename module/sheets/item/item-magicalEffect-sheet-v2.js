@@ -1,6 +1,7 @@
 import { ArM5eItemSheetV2 } from "./item-sheet-v2.js";
 import { ArM5eItemMagicSheetV2 } from "./item-magic-sheet-v2.js";
 
+import { ARM5E } from "../../config.js";
 /**
  * AppV2 sheet for magicalEffect items.
  * Uses the same shared header and attributes template as spell,
@@ -34,23 +35,23 @@ export class ArM5eMagicalEffectItemSheetV2 extends ArM5eItemMagicSheetV2 {
   /** @override */
   static PARTS = {
     header: {
-      template: "systems/arm5e/templates/item/parts/item-magic-common-header-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/item/parts/item-magic-common-header-v2.hbs`
     },
     tabs: {
-      template: "systems/arm5e/templates/generic/parts/ars-tab-navigation.hbs",
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/ars-tab-navigation.hbs`,
       classes: ["marginItemPart"]
     },
     attributes: {
-      template: "systems/arm5e/templates/item/parts/item-effect-design-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/item/parts/item-effect-design-v2.hbs`
     },
     description: {
-      template: "systems/arm5e/templates/item/parts/item-description-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/item/parts/item-description-v2.hbs`
     },
     effects: {
-      template: "systems/arm5e/templates/item/parts/item-effects-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/item/parts/item-effects-v2.hbs`
     },
     footer: {
-      template: "systems/arm5e/templates/item/parts/item-footer-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/item/parts/item-footer-v2.hbs`
     }
   };
 

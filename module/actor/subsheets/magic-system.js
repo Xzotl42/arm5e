@@ -162,7 +162,7 @@ export class ArM5eMagicSystem {
         item.compIdx = idx;
         switch (item.type) {
           case "char":
-            item.partial = "systems/arm5e/templates/actor/parts/template-item-char.hbs";
+            item.partial = `systems/${ARM5E.SYSTEM_ID}/templates/actor/parts/template-item-char.hbs`;
             item.selection = Object.fromEntries(
               Object.entries(this.actor.system.characteristics).map(([k, v]) => {
                 return [
@@ -177,7 +177,7 @@ export class ArM5eMagicSystem {
             item.compIdx = idx;
             break;
           case "ability":
-            item.partial = "systems/arm5e/templates/actor/parts/template-item-ability.hbs";
+            item.partial = `systems/${ARM5E.SYSTEM_ID}/templates/actor/parts/template-item-ability.hbs`;
             if (!item.art) {
               hasBonusAbility = true;
             }
@@ -231,7 +231,7 @@ export class ArM5eMagicSystem {
               res[e.system.option] = `${e.name} (${e.system.finalScore})`;
               return res;
             }, item.selection);
-            item.partial = "systems/arm5e/templates/actor/parts/template-item-tech.hbs";
+            item.partial = `systems/${ARM5E.SYSTEM_ID}/templates/actor/parts/template-item-tech.hbs`;
             break;
           case "noun":
             item.selection = { any: "Any" };
@@ -239,14 +239,14 @@ export class ArM5eMagicSystem {
               res[e.system.option] = `${e.name} (${e.system.finalScore})`;
               return res;
             }, item.selection);
-            item.partial = "systems/arm5e/templates/actor/parts/template-item-form.hbs";
+            item.partial = `systems/${ARM5E.SYSTEM_ID}/templates/actor/parts/template-item-form.hbs`;
             break;
           case "mod":
             hasModifier = true;
-            item.partial = "systems/arm5e/templates/actor/parts/template-item-mod.hbs";
+            item.partial = `systems/${ARM5E.SYSTEM_ID}/templates/actor/parts/template-item-mod.hbs`;
             break;
           case "mult":
-            item.partial = "systems/arm5e/templates/actor/parts/template-item-mult.hbs";
+            item.partial = `systems/${ARM5E.SYSTEM_ID}/templates/actor/parts/template-item-mult.hbs`;
             break;
         }
 

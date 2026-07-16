@@ -237,26 +237,26 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
   /** @override */
   static PARTS = {
     header: {
-      template: "systems/arm5e/templates/generic/parts/scriptorium-header.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/scriptorium-header.hbs`
     },
     tabs: {
-      template: "systems/arm5e/templates/generic/parts/ars-tab-navigation.hbs",
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/ars-tab-navigation.hbs`,
       classes: ["greenBar", "marginsides32"]
     },
     reading: {
-      template: "systems/arm5e/templates/generic/parts/scriptorium-reading.html",
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/scriptorium-reading.html`,
       scrollable: ["remember"]
     },
     writing: {
-      template: "systems/arm5e/templates/generic/parts/scriptorium-writing.html",
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/scriptorium-writing.html`,
       scrollable: ["remember"]
     },
     copying: {
-      template: "systems/arm5e/templates/generic/parts/scriptorium-copying.html",
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/scriptorium-copying.html`,
       scrollable: ["remember"]
     },
     footer: {
-      template: "systems/arm5e/templates/generic/parts/scriptorium-footer.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/scriptorium-footer.hbs`
     }
   };
 

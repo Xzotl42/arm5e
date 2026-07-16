@@ -1,5 +1,5 @@
 <form class="{{cssClass}} arm5e-prompt vis-study" autocomplete="off">
-  {{> "systems/arm5e/templates/roll/parts/roll-header.hbs" header="Vis_Study" }}
+  {{> (systemPath "templates/roll/parts/roll-header.hbs") header="Vis_Study" }}
   <div style="text-align: center;">
     <label style="font-size: 16pt;">{{art }}</label>
   </div>
@@ -10,7 +10,7 @@
   </div>
   <div class="flex-group-center" style="padding-left: 50px; padding-right: 50px;">
     <div>
-      {{>"systems/arm5e/templates/generic/parts/simpleFieldBacksection.hbs" label="arm5e.sheet.aura" 
+      {{> (systemPath "templates/generic/parts/simpleFieldBacksection.hbs") label="arm5e.sheet.aura" 
         name="aura" classes="auraLevel" attributes="" value=aura type="number" dtype="Number"}}
     </div>
     <div>
@@ -19,5 +19,5 @@
   </div>
 
 
-  {{> "systems/arm5e/templates/roll/parts/roll-footer.hbs" footer="Inputs"}}
+  {{> (systemPath "templates/roll/parts/roll-footer.hbs") footer="Inputs"}}
 </form>

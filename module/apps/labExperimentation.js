@@ -62,11 +62,11 @@ export class LabExperimentation extends HandlebarsApplicationMixin(ApplicationV2
   };
 
   static PARTS = {
-    header: { template: "systems/arm5e/templates/generic/parts/experimentation-header.hbs" },
+    header: { template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/experimentation-header.hbs` },
     form: {
-      template: "systems/arm5e/templates/generic/labExperimentation.html"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/labExperimentation.html`
     },
-    footer: { template: "systems/arm5e/templates/generic/parts/scriptorium-footer.hbs" }
+    footer: { template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/scriptorium-footer.hbs` }
   };
 
   static async #onSubmitHandler(event, form, formData) {

@@ -51,14 +51,14 @@ export class Astrolabium extends HandlebarsApplicationMixin(ApplicationV2) {
 
   static PARTS = {
     header: {
-      template: "systems/arm5e/templates/generic/parts/astrolab-header.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/astrolab-header.hbs`
     },
 
     astrolabium: {
-      template: "systems/arm5e/templates/generic/astrolab.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/astrolab.hbs`
     },
     footer: {
-      template: "systems/arm5e/templates/generic/parts/astrolab-footer.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/astrolab-footer.hbs`
     }
   };
 

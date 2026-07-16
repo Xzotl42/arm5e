@@ -54,14 +54,14 @@ export class MedicalHistory extends foundry.applications.api.HandlebarsApplicati
 
   static PARTS = {
     header: {
-      template: "systems/arm5e/templates/generic/parts/medical-history-header.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/medical-history-header.hbs`
     },
     form: {
-      template: "systems/arm5e/templates/generic/medical-history.html",
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/medical-history.html`,
       scrollable: [".years"]
     },
     footer: {
-      template: "systems/arm5e/templates/generic/parts/medical-history-footer.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/medical-history-footer.hbs`
     }
   };
 

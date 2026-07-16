@@ -1,11 +1,11 @@
 <div class="backSection padding12 margintop18"
-  style="background-image: url(systems/arm5e/assets/chat/background.webp);background-size: cover;">
+  style="background-image: url({{systemPath}}assets/chat/background.webp);background-size: cover;">
   <div class="flexrow flex-group-center">{{name}}</div>
   <div class="flexcol" style="gap: 0px">
     <div class="flexrow flex-group-left ">
       <div class="flex01">
         <button class="arm5e rollable dialog-button" data-action="roll" style="min-width: 100px;" data-roll="init"
-          data-name='{{localize "arm5e.sheet.initiative"}}'><!--img src="systems/arm5e/assets/dice.png"
+          data-name='{{localize "arm5e.sheet.initiative"}}'><!--img src="{{systemPath}}assets/dice.png"
             class="flex0" style="border: 0px; height: 14px"-->
           {{localize "arm5e.sheet.initiative"}}</button>
       </div>
@@ -20,7 +20,7 @@
     <div class="flexrow flex-group-left">
       <div class="flex01">
         <button class="arm5e rollable dialog-button" data-action="roll" style="min-width: 100px;" data-roll="attack"
-          data-name='{{localize "arm5e.sheet.attack"}}'><!--img src="systems/arm5e/assets/dice.png" class="flex0"
+          data-name='{{localize "arm5e.sheet.attack"}}'><!--img src="{{systemPath}}assets/dice.png" class="flex0"
             style="border: 0px; height: 14px"-->
           {{localize "arm5e.sheet.attack"}}</button>
       </div>
@@ -35,7 +35,7 @@
     <div class="flexrow flex-group-left">
       <div class="flex01">
         <button class="arm5e rollable dialog-button" data-action="roll" style="min-width: 100px;" data-roll="defense"
-          data-name='{{localize "arm5e.sheet.defense"}}'> <!--img src="systems/arm5e/assets/dice.png"
+          data-name='{{localize "arm5e.sheet.defense"}}'> <!--img src="{{systemPath}}assets/dice.png"
             style="border: 0px; height: 14px"-->
           {{localize "arm5e.sheet.defense"}}</button>
       </div>
@@ -49,7 +49,7 @@
 
     <div class="flexrow flex-group-left">
       <div class="flex01">
-        <!-- <img src="systems/arm5e/assets/icons/Icon_Hammer.png" class="flex0" style="border: 0px; height: 20px"> -->
+        <!-- <img src="{{systemPath}}assets/icons/Icon_Hammer.png" class="flex0" style="border: 0px; height: 20px"> -->
         <button class="arm5e clickable dialog-button damage" data-action="computeDamage" data-roll="combatDamage"
           style="min-width: 100px; padding-left: 0px"><!--i class="ars-Icon_Soak"
             style="font-size: 12pt;"></i-->{{localize "arm5e.damage.label"}}</button>

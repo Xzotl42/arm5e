@@ -1,8 +1,8 @@
 <div class="tab {{ tab.cssClass }} arts" data-group="primary" data-tab="arts">
   <div class="flexcol">
-    {{> "systems/arm5e/templates/generic/parts/ars-tab-navigation.hbs" tabs=subtabs}}
+    {{> (systemPath "templates/generic/parts/ars-tab-navigation.hbs") tabs=subtabs}}
     <div class="marginsides32">
-      {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+      {{> (systemPath "templates/generic/metalic-bar.html") }}
     </div>
     <section class="arts-body">
       <div
@@ -10,14 +10,14 @@
         data-group="arts-secondary"
         data-tab="arts-subtab"
       >
-        {{> "systems/arm5e/templates/actor/parts/actor-arts.html" }}
+        {{> (systemPath "templates/actor/parts/actor-arts.html") }}
       </div>
       <div
         class="tab{{#if subtabs.[casting-total].active}} active{{/if}} item flexcol marginsides32"
         data-group="arts-secondary"
         data-tab="casting-total"
       >
-        {{> "systems/arm5e/templates/actor/parts/actor-castingTotals.html" }}
+        {{> (systemPath "templates/actor/parts/actor-castingTotals.html") }}
       </div>
     </section>
   </div>

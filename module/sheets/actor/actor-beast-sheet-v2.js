@@ -1,5 +1,6 @@
 import { Arm5eCharacterActorSheetV2 } from "./character-actor-sheet-v2.js";
 
+import { ARM5E } from "../../config.js";
 /**
  * AppV2 Beast actor sheet.
  */
@@ -40,33 +41,33 @@ export class ArM5eBeastActorSheetV2 extends Arm5eCharacterActorSheetV2 {
   /** @override */
   static PARTS = {
     header: {
-      template: "systems/arm5e/templates/actor/parts/actor-beast-header-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/actor/parts/actor-beast-header-v2.hbs`
     },
     tabs: {
-      template: "systems/arm5e/templates/generic/parts/ars-tab-navigation.hbs",
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/ars-tab-navigation.hbs`,
       classes: ["arm5eTabsNPC", "marginsides32"]
     },
     description: {
-      template: "systems/arm5e/templates/actor/parts/actor-beast-description-tab-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/actor/parts/actor-beast-description-tab-v2.hbs`
     },
     abilities: {
-      template: "systems/arm5e/templates/actor/parts/actor-beast-abilities-tab-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/actor/parts/actor-beast-abilities-tab-v2.hbs`
     },
     whereabouts: {
-      template: "systems/arm5e/templates/actor/parts/actor-beast-whereabouts-tab-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/actor/parts/actor-beast-whereabouts-tab-v2.hbs`
     },
     effects: {
-      template: "systems/arm5e/templates/actor/parts/actor-beast-effects-tab-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/actor/parts/actor-beast-effects-tab-v2.hbs`
     },
     footer: {
-      template: "systems/arm5e/templates/actor/parts/actor-beast-footer-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/actor/parts/actor-beast-footer-v2.hbs`
     }
   };
 
   /** @override */
   static LIMITED_PARTS = {
     content: {
-      template: "systems/arm5e/templates/actor/actor-limited-sheet.html"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/actor/actor-limited-sheet.html`
     }
   };
 
