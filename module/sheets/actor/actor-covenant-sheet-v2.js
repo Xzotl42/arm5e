@@ -293,6 +293,7 @@ export class ArM5eCovenantActorSheetV2 extends ArM5eActorSheetV2 {
     switch (type) {
       case "player":
       case "npc":
+      case "beast":
       case "laboratory":
         return true;
       default:
@@ -445,6 +446,34 @@ export class ArM5eCovenantActorSheetV2 extends ArM5eActorSheetV2 {
         itemData[0]._id = existing[0]._id;
         return this.actor.updateEmbeddedDocuments("Item", itemData, { render: true });
       }
+    } else if (actor.type === "beast") {
+      const itemData = [
+        {
+          name: actor.name,
+          type: "inhabitant",
+          img: actor.img,
+          system: {
+            category: "livestock",
+            actorId: actor._id,
+            job: "",
+            points: CONFIG.ARM5E.covenant.inhabitants.livestock.points,
+            quantity: 1,
+            yearBorn: actor.system.description.born.value
+          }
+        }
+      ];
+      const existing = [
+        ...targetActor.system.inhabitants.horses,
+        ...targetActor.system.inhabitants.livestock
+      ].filter((inhabitant) => inhabitant.system.actorId === actor._id);
+      if (existing.length === 0) {
+        return this.actor.createEmbeddedDocuments("Item", itemData, { render: true });
+      } else {
+        itemData[0]._id = existing[0]._id;
+        itemData[0].system.category = existing[0].system.category;
+        itemData[0].system.points = existing[0].system.points;
+        return this.actor.updateEmbeddedDocuments("Item", itemData, { render: true });
+      }
     } else if (
       actor.isGrog?.() ||
       (actor.type === "npc" && actor.system.charType?.value === "mundane")
@@ -515,6 +544,14 @@ export class ArM5eCovenantActorSheetV2 extends ArM5eActorSheetV2 {
       );
       if (hab.length) {
         return this.actor.deleteEmbeddedDocuments("Item", [hab[0]._id], { render: true });
+      }
+    } else if (actor.type === "beast") {
+      const inhabitants = [
+        ...targetActor.system.inhabitants.horses,
+        ...targetActor.system.inhabitants.livestock
+      ].filter((inhabitant) => inhabitant.system.actorId === actor._id);
+      if (inhabitants.length) {
+        return this.actor.deleteEmbeddedDocuments("Item", [inhabitants[0]._id], { render: true });
       }
     } else if (
       actor.isGrog?.() ||

@@ -54,7 +54,13 @@ export class ArM5eInhabitantItemSheetV2 extends ArM5eItemSheetV2 {
     const sys = this.item.system;
     context.inhabitantCategory = foundry.utils.deepClone(CONFIG.ARM5E.covenant.inhabitants);
     if (sys.linked) {
-      if (["magi", "companions"].includes(sys.category)) {
+      const linkedActor = game.actors.get(sys.actorId);
+      if (linkedActor?.type === "beast") {
+        context.inhabitantCategory = {
+          horses: context.inhabitantCategory.horses,
+          livestock: context.inhabitantCategory.livestock
+        };
+      } else if (["magi", "companions"].includes(sys.category)) {
         context.ui.canEdit = "readonly";
         context.ui.canSelect = "disabled";
       } else {
