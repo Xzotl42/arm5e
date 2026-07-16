@@ -1,3 +1,18 @@
+## 3.0.1.11 Stentorius BF6
+
+### Compatibility
+
+- Verified for 14.364
+
+### Features & changes
+
+### Bug fixes
+
+- Fixed missing translations in Item enchantments tab
+- Fixed lab text creation in Item enchantment tab.
+- Fixed Missing tabs for assets location when editing Actor profile image.
+- Dropping a character on the teacher tab of a seasonal activity will work again.
+
 ## 3.0.1.10 Stentorius BF5
 
 ### Compatibility

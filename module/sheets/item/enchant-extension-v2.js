@@ -22,6 +22,7 @@ import {
 } from "../../helpers/magic.js";
 import { ARM5E } from "../../config.js";
 import { ArM5eItem } from "../../item/item.js";
+import { effectToLabText } from "../../item/item-converter.js";
 
 export class EnchantExtensionV2 {
   // ──────────────────────────────────────────────────────────────────────────
@@ -427,13 +428,8 @@ export class EnchantExtensionV2 {
     event.preventDefault();
     const index = Number(target.dataset.index);
     if (!this.item.isOwned) return;
-    const { effectToLabText } = await import("../../item/item-converter.js");
     const effect = this.item.system.enchantments.effects[index];
-    const labTextData = effectToLabText({
-      ...this.item.toObject(),
-      name: effect.name,
-      system: effect.system
-    });
+    const labTextData = effectToLabText(effect);
     labTextData.system.author = this.actor.name;
     labTextData.system.draft = true;
     await this.actor.createEmbeddedDocuments("Item", [labTextData]);

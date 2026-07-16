@@ -53,7 +53,6 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
       resizable: true
     },
     actions: {
-      editImage: ArM5eActorSheetV2.onEditImage,
       toggleHidden: ArM5eActorSheetV2.toggleHidden,
       toggleBookTopic: ArM5eActorSheetV2.toggleBookTopic,
       toggleAbilityCategory: ArM5eActorSheetV2.toggleAbilityCategory,
@@ -525,19 +524,6 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
   async _onDropActor(event, actor) {
     if (!this.isActorDropAllowed(actor?.type)) return null;
     return super._onDropActor(event, actor);
-  }
-
-  static async onEditImage(event, target) {
-    const field = target.dataset.field || "img";
-    const current = foundry.utils.getProperty(this.document, field);
-
-    const fp = new foundry.applications.apps.FilePicker({
-      type: "image",
-      current: current,
-      callback: (path) => this.document.update({ [field]: path })
-    });
-
-    fp.render(true);
   }
 
   static async toggleHidden(event, target) {
