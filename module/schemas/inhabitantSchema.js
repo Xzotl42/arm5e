@@ -144,7 +144,7 @@ export class InhabitantSchema extends foundry.abstract.TypeDataModel {
     if (yearBorn !== undefined) syncData.yearBorn = yearBorn;
 
     const loyalty = InhabitantSchema.getLinkedLoyalty(actor);
-    if (loyalty !== undefined) syncData.loyalty = loyalty;
+    syncData.loyalty = loyalty ?? 0;
 
     Object.assign(syncData, InhabitantSchema.getLinkedSpecialistSyncData(inhabitant, actor));
     Object.assign(syncData, InhabitantSchema.getLinkedCraftsmanSyncData(inhabitant, actor));
@@ -176,7 +176,7 @@ export class InhabitantSchema extends foundry.abstract.TypeDataModel {
           : undefined;
         const syncData = {};
         if (specialistChar !== undefined) syncData.specialistChar = specialistChar;
-        if (teacherScore !== undefined) syncData.teacherScore = teacherScore;
+        syncData.teacherScore = teacherScore ?? 0;
         return syncData;
       }
       case "steward":
@@ -213,7 +213,7 @@ export class InhabitantSchema extends foundry.abstract.TypeDataModel {
     if (!inhabitant.syncAbilityId) return {};
 
     const ability = actor.items?.get(inhabitant.syncAbilityId);
-    if (!ability) return {};
+    if (!ability) return { score: 0 };
 
     return {
       score: ability.system?.finalScore ?? inhabitant.score
