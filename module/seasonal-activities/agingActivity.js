@@ -1,3 +1,5 @@
+import { ARM5E } from "../config.js";
+
 import { Activity } from "./activity.js";
 import { getConfirmation } from "../ui/dialogs.js";
 import { ArM5eActorSheetV2 } from "../sheets/actor/actor-sheet-v2.js";
@@ -41,7 +43,7 @@ export class AgingActivity extends Activity {
     }
 
     const sysActorUpdate = { "states.pendingCrisis": false };
-    const effects = sheet.item.getFlag("arm5e", "effect");
+    const effects = sheet.item.getFlag(ARM5E.SYSTEM_ID, "effect");
 
     if (effects?.apparent) {
       sysActorUpdate.apparent = { value: sheet.actor.system.apparent.value - 1 };

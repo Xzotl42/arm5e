@@ -1,3 +1,5 @@
+import { ARM5E } from "../config.js";
+
 import { convertToNumber, debug, log } from "../tools/tools.js";
 import { getShiftedDate } from "../tools/time.js";
 import { GroupSchedule } from "./group-schedule.js";
@@ -10,7 +12,7 @@ export class Astrolabium extends HandlebarsApplicationMixin(ApplicationV2) {
   constructor(options) {
     super(options);
     this.appData = options.document;
-    this.appData.trackRes = game.settings.get("arm5e", "trackResources");
+    this.appData.trackRes = game.settings.get(ARM5E.SYSTEM_ID, "trackResources");
 
     Hooks.on("arm5e-date-change", (date) => {
       this.appData.year = date.year;
@@ -49,14 +51,14 @@ export class Astrolabium extends HandlebarsApplicationMixin(ApplicationV2) {
 
   static PARTS = {
     header: {
-      template: "systems/arm5e/templates/generic/parts/astrolab-header.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/astrolab-header.hbs`
     },
 
     astrolabium: {
-      template: "systems/arm5e/templates/generic/astrolab.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/astrolab.hbs`
     },
     footer: {
-      template: "systems/arm5e/templates/generic/parts/astrolab-footer.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/astrolab-footer.hbs`
     }
   };
 
@@ -66,7 +68,7 @@ export class Astrolabium extends HandlebarsApplicationMixin(ApplicationV2) {
 
   async _prepareContext(options = {}) {
     const data = await super._prepareContext(options);
-    let currentDate = game.settings.get("arm5e", "currentDate");
+    let currentDate = game.settings.get(ARM5E.SYSTEM_ID, "currentDate");
     data.curYear = currentDate.year;
     data.curSeason = currentDate.season;
     data.year = this.appData.year;
@@ -76,7 +78,7 @@ export class Astrolabium extends HandlebarsApplicationMixin(ApplicationV2) {
     }
     data.seasons = this.appData.seasons;
     data.date = "1220-03-21";
-    data.trackRes = game.settings.get("arm5e", "trackResources");
+    data.trackRes = game.settings.get(ARM5E.SYSTEM_ID, "trackResources");
 
     return data;
   }
@@ -87,9 +89,9 @@ export class Astrolabium extends HandlebarsApplicationMixin(ApplicationV2) {
     html.querySelector(".trackRes").addEventListener("change", async (e) => {
       e.preventDefault();
       let value = e.target.checked;
-      let oldValue = game.settings.get("arm5e", "trackResources");
+      let oldValue = game.settings.get(ARM5E.SYSTEM_ID, "trackResources");
       log(false, `value=${value}, settting=${oldValue}`);
-      await game.settings.set("arm5e", "trackResources", !oldValue);
+      await game.settings.set(ARM5E.SYSTEM_ID, "trackResources", !oldValue);
     });
   }
 
@@ -126,7 +128,7 @@ export class Astrolabium extends HandlebarsApplicationMixin(ApplicationV2) {
   }
 
   async shiftSeason(offset) {
-    const currentDate = game.settings.get("arm5e", "currentDate");
+    const currentDate = game.settings.get(ARM5E.SYSTEM_ID, "currentDate");
     const newDate = getShiftedDate(currentDate, offset);
     ui.notifications.info(
       game.i18n.format("arm5e.notification.setDate", {
@@ -134,7 +136,7 @@ export class Astrolabium extends HandlebarsApplicationMixin(ApplicationV2) {
         season: game.i18n.localize(CONFIG.ARM5E.seasons[newDate.season].label)
       })
     );
-    await game.settings.set("arm5e", "currentDate", newDate);
+    await game.settings.set(ARM5E.SYSTEM_ID, "currentDate", newDate);
     Hooks.callAll("arm5e-date-change", newDate);
     this.render();
   }
@@ -150,7 +152,7 @@ export class Astrolabium extends HandlebarsApplicationMixin(ApplicationV2) {
         season: game.i18n.localize(CONFIG.ARM5E.seasons[season].label)
       })
     );
-    await game.settings.set("arm5e", "currentDate", {
+    await game.settings.set(ARM5E.SYSTEM_ID, "currentDate", {
       year: year,
       season: season
     });

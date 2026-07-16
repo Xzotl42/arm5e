@@ -97,7 +97,7 @@ export class ArM5eRollInfo {
         this.combat.overload = actorSystemData.combat.overload;
         this.combat.prep.itemList = actorSystemData.combat.itemList;
 
-        this.part = `systems/arm5e/templates/roll/parts/combat-${this.type}.hbs`;
+        this.part = `systems/${ARM5E.SYSTEM_ID}/templates/roll/parts/combat-${this.type}.hbs`;
         this.listeners = addCombatListenersDialog;
         break;
       case ROLL_PROPERTIES.DAMAGE.VAL:
@@ -947,7 +947,7 @@ export class ArM5eRollInfo {
           .filter((c, idx) => {
             return (
               (c.type === "add" || Number(c.mode) === 2) &&
-              activeEffect.getFlag("arm5e", "type")[idx] === "spellcasting"
+              activeEffect.getFlag(ARM5E.SYSTEM_ID, "type")[idx] === "spellcasting"
             );
           })
           .forEach((item) => {

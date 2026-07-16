@@ -1,3 +1,5 @@
+import { ARM5E } from "../config.js";
+
 export const seasonOrder = {
   standard: { spring: 0, summer: 1, autumn: 2, winter: 3 },
   winterFirst: { winter: 0, spring: 1, summer: 2, autumn: 3 }
@@ -24,7 +26,7 @@ export function nextDate(season, year) {
  * @param date
  */
 export function isInThePast(date) {
-  let datetime = game.settings.get("arm5e", "currentDate");
+  let datetime = game.settings.get(ARM5E.SYSTEM_ID, "currentDate");
   if (Number(date.year) < Number(datetime.year)) return true;
   if (
     Number(date.year) === Number(datetime.year) &&

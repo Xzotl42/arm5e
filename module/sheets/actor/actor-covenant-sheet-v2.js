@@ -4,6 +4,7 @@ import { ArM5eActor } from "../../actor/actor.js";
 import Aura from "../../helpers/aura.js";
 import { effectToLabText } from "../../item/item-converter.js";
 
+import { ARM5E } from "../../config.js";
 /**
  * AppV2 Covenant actor sheet.
  */
@@ -39,46 +40,46 @@ export class ArM5eCovenantActorSheetV2 extends ArM5eActorSheetV2 {
   /** @override */
   static PARTS = {
     header: {
-      template: "systems/arm5e/templates/actor/parts/actor-covenant-header-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/actor/parts/actor-covenant-header-v2.hbs`
     },
     tabs: {
-      template: "systems/arm5e/templates/generic/parts/ars-tab-navigation.hbs",
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/ars-tab-navigation.hbs`,
       classes: ["arm5eTabsCOV", "marginsides32"]
     },
     attributes: {
-      template: "systems/arm5e/templates/actor/parts/actor-covenant-attributes-tab-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/actor/parts/actor-covenant-attributes-tab-v2.hbs`
     },
     habitants: {
-      template: "systems/arm5e/templates/actor/parts/actor-covenant-inhabitants-tab-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/actor/parts/actor-covenant-inhabitants-tab-v2.hbs`
     },
     posessions: {
-      template: "systems/arm5e/templates/actor/parts/actor-covenant-posessions-tab-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/actor/parts/actor-covenant-posessions-tab-v2.hbs`
     },
     economics: {
-      template: "systems/arm5e/templates/actor/parts/actor-covenant-economics-tab-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/actor/parts/actor-covenant-economics-tab-v2.hbs`
     },
     library: {
-      template: "systems/arm5e/templates/actor/parts/actor-covenant-library-tab-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/actor/parts/actor-covenant-library-tab-v2.hbs`
     },
     diary: {
-      template: "systems/arm5e/templates/actor/parts/actor-covenant-diary-tab-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/actor/parts/actor-covenant-diary-tab-v2.hbs`
     },
     effects: {
-      template: "systems/arm5e/templates/actor/parts/actor-covenant-effects-tab-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/actor/parts/actor-covenant-effects-tab-v2.hbs`
     },
     footer: {
-      template: "systems/arm5e/templates/actor/parts/actor-covenant-footer-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/actor/parts/actor-covenant-footer-v2.hbs`
     }
   };
 
   /** @override */
   static LIMITED_PARTS = {
     content: {
-      template: "systems/arm5e/templates/actor/covenant-limited-sheet.html",
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/actor/covenant-limited-sheet.html`,
       classes: ["limited-sheet", "flexcol"]
     },
     footer: {
-      template: "systems/arm5e/templates/actor/parts/actor-covenant-footer-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/actor/parts/actor-covenant-footer-v2.hbs`
     }
   };
 

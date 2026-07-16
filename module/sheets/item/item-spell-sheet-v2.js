@@ -4,6 +4,7 @@ import { ArM5eActorSheetV2 } from "../actor/actor-sheet-v2.js";
 import { effectToLabText } from "../../item/item-converter.js";
 import { getConfirmation } from "../../ui/dialogs.js";
 
+import { ARM5E } from "../../config.js";
 /**
  * AppV2 sheet for spell items.
  * Adds: createLabText action, mastery context (via shared template).
@@ -38,23 +39,23 @@ export class ArM5eSpellItemSheetV2 extends ArM5eItemMagicSheetV2 {
   /** @override */
   static PARTS = {
     header: {
-      template: "systems/arm5e/templates/item/parts/item-magic-common-header-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/item/parts/item-magic-common-header-v2.hbs`
     },
     tabs: {
-      template: "systems/arm5e/templates/generic/parts/ars-tab-navigation.hbs",
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/ars-tab-navigation.hbs`,
       classes: ["marginItemPart"]
     },
     description: {
-      template: "systems/arm5e/templates/item/parts/item-description-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/item/parts/item-description-v2.hbs`
     },
     attributes: {
-      template: "systems/arm5e/templates/item/parts/item-magic-attributes-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/item/parts/item-magic-attributes-v2.hbs`
     },
     effects: {
-      template: "systems/arm5e/templates/item/parts/item-effects-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/item/parts/item-effects-v2.hbs`
     },
     footer: {
-      template: "systems/arm5e/templates/item/parts/item-footer-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/item/parts/item-footer-v2.hbs`
     }
   };
 

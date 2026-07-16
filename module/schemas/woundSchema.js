@@ -189,7 +189,7 @@ export class WoundSchema extends foundry.abstract.TypeDataModel {
    * @returns {Object} itemData with defaults merged in
    */
   static getDefault(itemData) {
-    let currentDate = game.settings.get("arm5e", "currentDate");
+    let currentDate = game.settings.get(ARM5E.SYSTEM_ID, "currentDate");
     let res = itemData;
     if (itemData.system) {
       if (itemData.system.gravity === undefined) {
@@ -239,7 +239,7 @@ export class WoundSchema extends foundry.abstract.TypeDataModel {
    * @returns {boolean} True if the wound can be rolled for this season
    */
   canBeTreatedThisSeason(season, year) {
-    let currentDate = game.settings.get("arm5e", "currentDate");
+    let currentDate = game.settings.get(ARM5E.SYSTEM_ID, "currentDate");
     // Wound was inflicted in the future — cannot treat yet
     if (seasonsDelta(currentDate, this.inflictedDate) > 0) return false;
     // Fresh wound: never treated and no recovery time accumulated yet

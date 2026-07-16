@@ -8,7 +8,7 @@
                     class="fas fa-plus"></i>{{localize "arm5e.sheet.action.Create"}}</a>
         </div>
     </li>
-    {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+    {{> (systemPath "templates/generic/metalic-bar.html") }}
     {{#each system.items as |item id|}}
         <li class="item draggable item-value flexrow" data-name="{{item.name}}" data-item-id="{{item.id}}">
             <div class="item-image item-control item-edit" data-action="itemEdit"><img src="{{item.img}}"

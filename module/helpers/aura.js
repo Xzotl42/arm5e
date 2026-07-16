@@ -27,7 +27,7 @@ export default class Aura {
     }
     // If scene doesn't specify aura data, merge with defaultAura to always have correct structure
     return foundry.utils.mergeObject(
-      this.scene?.getFlag("arm5e", "aura") || {},
+      this.scene?.getFlag(ARM5E.SYSTEM_ID, "aura") || {},
       this.constructor.defaultAura,
       {
         overwrite: false
@@ -168,10 +168,10 @@ export default class Aura {
       this.scene = game.scenes.get(this.sceneId);
     }
     let currentAura =
-      this.scene?.getFlag("arm5e", "aura") ?? foundry.utils.deepClone(Aura.defaultAura);
+      this.scene?.getFlag(ARM5E.SYSTEM_ID, "aura") ?? foundry.utils.deepClone(Aura.defaultAura);
     currentAura.values[realm] = value;
     currentAura.nightModifier[realm] = nightMod;
-    await this.scene.setFlag("arm5e", "aura", currentAura);
+    await this.scene.setFlag(ARM5E.SYSTEM_ID, "aura", currentAura);
   }
 
   // Reset all aura values to 0 (utility function for tests)
@@ -179,7 +179,7 @@ export default class Aura {
     if (!this.scene) {
       this.scene = game.scenes.get(this.sceneId);
     }
-    await this.scene.setFlag("arm5e", "aura", foundry.utils.deepClone(Aura.defaultAura));
+    await this.scene.setFlag(ARM5E.SYSTEM_ID, "aura", foundry.utils.deepClone(Aura.defaultAura));
   }
 
   // Mundane is added here to easily compute cases with no aura

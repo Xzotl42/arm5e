@@ -77,43 +77,43 @@ export class ArM5eLaboratoryActorSheetV2 extends ArM5eActorSheetV2 {
   /** @override */
   static PARTS = {
     header: {
-      template: "systems/arm5e/templates/actor/parts/actor-lab-header-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/actor/parts/actor-lab-header-v2.hbs`
     },
     tabs: {
-      template: "systems/arm5e/templates/generic/parts/ars-tab-navigation.hbs",
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/ars-tab-navigation.hbs`,
       classes: ["arm5eTabsLAB", "marginsides32"]
     },
     planning: {
-      template: "systems/arm5e/templates/actor/parts/actor-lab-planning-tab-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/actor/parts/actor-lab-planning-tab-v2.hbs`
     },
     virtues: {
-      template: "systems/arm5e/templates/actor/parts/actor-lab-virtues-tab-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/actor/parts/actor-lab-virtues-tab-v2.hbs`
     },
     attributes: {
-      template: "systems/arm5e/templates/actor/parts/actor-lab-attributes-tab-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/actor/parts/actor-lab-attributes-tab-v2.hbs`
     },
     inventory: {
-      template: "systems/arm5e/templates/actor/parts/actor-lab-inventory-tab-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/actor/parts/actor-lab-inventory-tab-v2.hbs`
     },
     diary: {
-      template: "systems/arm5e/templates/actor/parts/actor-diary-tab-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/actor/parts/actor-diary-tab-v2.hbs`
     },
     effects: {
-      template: "systems/arm5e/templates/actor/parts/actor-lab-effects-tab-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/actor/parts/actor-lab-effects-tab-v2.hbs`
     },
     footer: {
-      template: "systems/arm5e/templates/actor/parts/actor-lab-footer-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/actor/parts/actor-lab-footer-v2.hbs`
     }
   };
 
   /** @override */
   static LIMITED_PARTS = {
     content: {
-      template: "systems/arm5e/templates/actor/lab-limited-sheet.html",
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/actor/lab-limited-sheet.html`,
       classes: ["limited-sheet", "flexcol"]
     },
     footer: {
-      template: "systems/arm5e/templates/actor/parts/actor-lab-footer-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/actor/parts/actor-lab-footer-v2.hbs`
     }
   };
 
@@ -237,7 +237,7 @@ export class ArM5eLaboratoryActorSheetV2 extends ArM5eActorSheetV2 {
       context.planning.labSpecTotal ??= { mod: 0, label: "" };
       context.planning.labTotal ??= { score: 0, label: "" };
       context.planning.duration ??= 0;
-      context.planning.date ??= game.settings.get("arm5e", "currentDate");
+      context.planning.date ??= game.settings.get(ARM5E.SYSTEM_ID, "currentDate");
       return context;
     }
 
@@ -442,7 +442,7 @@ export class ArM5eLaboratoryActorSheetV2 extends ArM5eActorSheetV2 {
     context.planning.labSpecTotal ??= { mod: 0, label: "" };
     context.planning.labTotal ??= { score: 0, label: "" };
     context.planning.duration ??= 0;
-    context.planning.date ??= game.settings.get("arm5e", "currentDate");
+    context.planning.date ??= game.settings.get(ARM5E.SYSTEM_ID, "currentDate");
     log(false, "Final planning context", context.planning);
     return context;
   }
@@ -736,7 +736,7 @@ export class ArM5eLaboratoryActorSheetV2 extends ArM5eActorSheetV2 {
     const activity = LabActivity.LabActivityFactory(this.actor.uuid, owner.uuid, planning.type);
     planning.activity = activity;
 
-    planning.date ??= game.settings.get("arm5e", "currentDate");
+    planning.date ??= game.settings.get(ARM5E.SYSTEM_ID, "currentDate");
     const result = activity.validation(planning);
     const duration = result.duration ?? planning.duration ?? 1;
     const dates = DiaryEntrySchema.buildSchedule(

@@ -1,3 +1,5 @@
+import { ARM5E } from "../../config.js";
+
 import { ArM5eItemSheetV2 } from "./item-sheet-v2.js";
 import { ArM5eActorSheetV2 } from "../actor/actor-sheet-v2.js";
 import { getConfirmation } from "../../ui/dialogs.js";
@@ -67,20 +69,20 @@ export class ArM5eDiaryEntryItemSheetV2 extends ArM5eItemSheetV2 {
   /** @override */
   static PARTS = {
     header: {
-      template: "systems/arm5e/templates/item/parts/item-diaryEntry-header-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/item/parts/item-diaryEntry-header-v2.hbs`
     },
     tabs: {
-      template: "systems/arm5e/templates/generic/parts/ars-tab-navigation.hbs",
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/ars-tab-navigation.hbs`,
       classes: ["marginItemPart"]
     },
     description: {
-      template: "systems/arm5e/templates/item/parts/item-description-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/item/parts/item-description-v2.hbs`
     },
     advanced: {
-      template: "systems/arm5e/templates/item/parts/item-diaryEntry-advanced-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/item/parts/item-diaryEntry-advanced-v2.hbs`
     },
     footer: {
-      template: "systems/arm5e/templates/item/parts/item-footer-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/item/parts/item-footer-v2.hbs`
     }
   };
 
@@ -150,7 +152,7 @@ export class ArM5eDiaryEntryItemSheetV2 extends ArM5eItemSheetV2 {
       context.rollLabel = this.item.system.activityHandler.roll.label;
     }
 
-    context.enforceSchedule = game.settings.get("arm5e", "enforceSchedule");
+    context.enforceSchedule = game.settings.get(ARM5E.SYSTEM_ID, "enforceSchedule");
     const hasTeacher = ["training", "teaching"].includes(actType);
     context.system.sourceBonus = 0;
     context.ui.showProgress = activityConfig.display.progress;

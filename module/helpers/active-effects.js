@@ -1,3 +1,5 @@
+import { ARM5E } from "../config.js";
+
 import { ArM5eActor } from "../actor/actor.js";
 import { ACTIVE_EFFECTS_TYPES } from "../constants/activeEffectsTypes.js";
 import { ArM5eItem } from "../item/item.js";
@@ -21,7 +23,7 @@ export default class ArM5eActiveEffect extends ActiveEffect {
   prepareDerivedData() {
     super.prepareDerivedData();
     // In V10, if the effect is from an Item (virtue, etc) and is owned, prevent edition
-    this.noEdit = !game.user.isTrusted || this.getFlag("arm5e", "noEdit");
+    this.noEdit = !game.user.isTrusted || this.getFlag(ARM5E.SYSTEM_ID, "noEdit");
     this.noDelete =
       (this.parent?.documentName === "Item" && this.parent?.isOwned === true) ||
       (this.parent?.documentName === "Actor" && this.origin?.includes("Item"));
@@ -140,9 +142,9 @@ export default class ArM5eActiveEffect extends ActiveEffect {
 
       // TODO V11 use description field
       e.descr = e.buildActiveEffectDescription();
-      // let effectTypes = e.getFlag("arm5e", "type");
-      // let effectSubtypes = e.getFlag("arm5e", "subtype");
-      // let effectOption = e.getFlag("arm5e", "option");
+      // let effectTypes = e.getFlag(ARM5E.SYSTEM_ID, "type");
+      // let effectSubtypes = e.getFlag(ARM5E.SYSTEM_ID, "subtype");
+      // let effectOption = e.getFlag(ARM5E.SYSTEM_ID, "option");
       // log(true, `DBG:Effect types: [${effectTypes}]`);
       // log(true, `DBG:Effect subtypes: [${effectSubtypes}]`);
       // log(true, `DBG:Effect options: [${effectOption}]`);
@@ -156,7 +158,7 @@ export default class ArM5eActiveEffect extends ActiveEffect {
   static findAllActiveEffectsWithType(effects, type) {
     const activeEffects = [];
     for (let e of effects) {
-      if (!e.disabled && e?.getFlag("arm5e", "type")?.includes(type)) {
+      if (!e.disabled && e?.getFlag(ARM5E.SYSTEM_ID, "type")?.includes(type)) {
         activeEffects.push(e);
       }
     }
@@ -165,7 +167,7 @@ export default class ArM5eActiveEffect extends ActiveEffect {
 
   static findAllActiveEffectsWithTypeFiltered(effects, type) {
     const activeEffects = [];
-    let filtered = effects.filter((e) => !e.disabled && e.getFlag("arm5e", "type").includes(type));
+    let filtered = effects.filter((e) => !e.disabled && e.getFlag(ARM5E.SYSTEM_ID, "type").includes(type));
     for (let e of filtered) {
       let idx = 0;
       let filteredChanges = [];
@@ -185,8 +187,8 @@ export default class ArM5eActiveEffect extends ActiveEffect {
     const activeEffects = [];
 
     let filtered = effects.filter((e) => {
-      const typeFlag = e.getFlag("arm5e", "type");
-      const subtypeFlag = e.getFlag("arm5e", "subtype");
+      const typeFlag = e.getFlag(ARM5E.SYSTEM_ID, "type");
+      const subtypeFlag = e.getFlag(ARM5E.SYSTEM_ID, "subtype");
       return (
         !e.disabled &&
         (typeFlag ? typeFlag.includes(type) : false) &&
@@ -213,7 +215,7 @@ export default class ArM5eActiveEffect extends ActiveEffect {
   static findAllActiveEffectsWithSubtype(effects, subtype) {
     let res = [];
     for (let e of effects) {
-      if (!e.disabled && e?.getFlag("arm5e", "subtype")?.includes(subtype)) {
+      if (!e.disabled && e?.getFlag(ARM5E.SYSTEM_ID, "subtype")?.includes(subtype)) {
         res.push(e);
       }
     }
@@ -223,7 +225,7 @@ export default class ArM5eActiveEffect extends ActiveEffect {
   static findAllActiveEffectsWithSubtypeFiltered(effects, subtype) {
     let res = [];
     let filtered = effects.filter(
-      (e) => !e.disabled && e.getFlag("arm5e", "subtype").includes(subtype)
+      (e) => !e.disabled && e.getFlag(ARM5E.SYSTEM_ID, "subtype").includes(subtype)
     );
 
     for (let e of filtered) {
@@ -258,9 +260,9 @@ export default class ArM5eActiveEffect extends ActiveEffect {
 
     try {
       let idx = 0;
-      let effectTypes = this.getFlag("arm5e", "type");
-      let effectSubtypes = this.getFlag("arm5e", "subtype");
-      let effectOption = this.getFlag("arm5e", "option");
+      let effectTypes = this.getFlag(ARM5E.SYSTEM_ID, "type");
+      let effectSubtypes = this.getFlag(ARM5E.SYSTEM_ID, "subtype");
+      let effectOption = this.getFlag(ARM5E.SYSTEM_ID, "option");
       for (let c of Object.values(this.changes)) {
         // log(false, ACTIVE_EFFECTS_TYPES[effectTypes[idx]]);
         descr += `${game.i18n.localize(ACTIVE_EFFECTS_TYPES[effectTypes[idx]].mnemonic)}: `;

@@ -1,6 +1,7 @@
 import { getDataset, log } from "../../tools/tools.js";
 import { Arm5eCharacterActorSheetV2 } from "./character-actor-sheet-v2.js";
 
+import { ARM5E } from "../../config.js";
 /**
  * AppV2 NPC actor sheet.
  */
@@ -75,55 +76,55 @@ export class ArM5eNPCActorSheetV2 extends Arm5eCharacterActorSheetV2 {
   /** @override */
   static PARTS = {
     header: {
-      template: "systems/arm5e/templates/actor/parts/actor-npc-header-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/actor/parts/actor-npc-header-v2.hbs`
     },
     tabs: {
-      template: "systems/arm5e/templates/generic/parts/ars-tab-navigation.hbs",
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/ars-tab-navigation.hbs`,
       classes: ["arm5eTabsNPC", "marginsides32"]
     },
     description: {
-      template: "systems/arm5e/templates/actor/parts/actor-npc-description-tab-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/actor/parts/actor-npc-description-tab-v2.hbs`
     },
     abilities: {
-      template: "systems/arm5e/templates/actor/parts/actor-pc-abilities-tab-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/actor/parts/actor-pc-abilities-tab-v2.hbs`
     },
     powers: {
-      template: "systems/arm5e/templates/actor/parts/actor-powers-tab-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/actor/parts/actor-powers-tab-v2.hbs`
     },
     arts: {
-      template: "systems/arm5e/templates/actor/parts/actor-pc-arts-tab-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/actor/parts/actor-pc-arts-tab-v2.hbs`
     },
     laboratory: {
-      template: "systems/arm5e/templates/actor/parts/actor-laboratory-tab-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/actor/parts/actor-laboratory-tab-v2.hbs`
     },
     tradition: {
-      template: "systems/arm5e/templates/actor/parts/actor-pc-tradition-tab-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/actor/parts/actor-pc-tradition-tab-v2.hbs`
     },
     inventory: {
-      template: "systems/arm5e/templates/actor/parts/actor-pc-inventory-tab-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/actor/parts/actor-pc-inventory-tab-v2.hbs`
     },
     diary: {
-      template: "systems/arm5e/templates/actor/parts/actor-diary-tab-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/actor/parts/actor-diary-tab-v2.hbs`
     },
     effects: {
-      template: "systems/arm5e/templates/actor/parts/actor-pc-effects-tab-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/actor/parts/actor-pc-effects-tab-v2.hbs`
     },
     config: {
-      template: "systems/arm5e/templates/actor/parts/actor-pc-config-tab-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/actor/parts/actor-pc-config-tab-v2.hbs`
     },
     footer: {
-      template: "systems/arm5e/templates/actor/parts/actor-npc-footer-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/actor/parts/actor-npc-footer-v2.hbs`
     }
   };
 
   /** @override */
   static LIMITED_PARTS = {
     content: {
-      template: "systems/arm5e/templates/actor/actor-limited-sheet.html",
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/actor/actor-limited-sheet.html`,
       classes: ["limited-sheet", "flexcol"]
     },
     footer: {
-      template: "systems/arm5e/templates/actor/parts/actor-npc-footer-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/actor/parts/actor-npc-footer-v2.hbs`
     }
   };
 

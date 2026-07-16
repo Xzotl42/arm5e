@@ -47,15 +47,15 @@ export class Schedule extends HandlebarsApplicationMixin(ApplicationV2) {
 
   static PARTS = {
     header: {
-      template: "systems/arm5e/templates/generic/parts/astrolab-header.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/astrolab-header.hbs`
     },
     schedule: {
-      template: "systems/arm5e/templates/generic/character-schedule.hbs",
-      templates: ["systems/arm5e/templates/generic/parts/schedule-grid.hbs"],
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/character-schedule.hbs`,
+      templates: [`systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/schedule-grid.hbs`],
       scrollable: [".years"]
     },
     footer: {
-      template: "systems/arm5e/templates/generic/parts/astrolab-footer.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/astrolab-footer.hbs`
     }
   };
 
@@ -138,7 +138,7 @@ export class Schedule extends HandlebarsApplicationMixin(ApplicationV2) {
           yearData.seasons[s].others.push({
             id: 0,
             name: "Aging roll needed",
-            img: "systems/arm5e/assets/icons/Icon_Aging_and_Decrepitude.png"
+            img: `systems/${ARM5E.SYSTEM_ID}/assets/icons/Icon_Aging_and_Decrepitude.png`
           });
         }
         yearData.seasons[s].agingNeeded = true;
@@ -169,8 +169,8 @@ export class Schedule extends HandlebarsApplicationMixin(ApplicationV2) {
   async _prepareContext(options = {}) {
     const data = await super._prepareContext(options);
     data.actor = this.actor;
-    let currentDate = game.settings.get("arm5e", "currentDate");
-    let enforceSchedule = game.settings.get("arm5e", "enforceSchedule");
+    let currentDate = game.settings.get(ARM5E.SYSTEM_ID, "currentDate");
+    let enforceSchedule = game.settings.get(ARM5E.SYSTEM_ID, "enforceSchedule");
     data.curYear = Number(currentDate.year);
     data.curSeason = currentDate.season;
 

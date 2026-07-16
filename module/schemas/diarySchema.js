@@ -359,7 +359,7 @@ export class DiaryEntrySchema extends foundry.abstract.TypeDataModel {
   }
 
   progressPossible(actor) {
-    const currentDate = game.settings.get("arm5e", "currentDate");
+    const currentDate = game.settings.get(ARM5E.SYSTEM_ID, "currentDate");
     // Date of the first unapplied ability in the past
     return this.dates.filter(
       (e) =>
@@ -375,7 +375,7 @@ export class DiaryEntrySchema extends foundry.abstract.TypeDataModel {
       return false;
     }
 
-    const currentDate = game.settings.get("arm5e", "currentDate");
+    const currentDate = game.settings.get(ARM5E.SYSTEM_ID, "currentDate");
     // Date of the first unapplied ability in the past
     const pastDates = this.dates.filter(
       (e) =>
@@ -428,7 +428,7 @@ export class DiaryEntrySchema extends foundry.abstract.TypeDataModel {
 
   static getDefault(itemData) {
     let res = itemData;
-    let currentDate = game.settings.get("arm5e", "currentDate");
+    let currentDate = game.settings.get(ARM5E.SYSTEM_ID, "currentDate");
 
     if (itemData.system) {
       // if (itemData.system.year) {
@@ -491,7 +491,7 @@ export class DiaryEntrySchema extends foundry.abstract.TypeDataModel {
       updateData["system.teacher.score"] = 0;
     }
 
-    let currentDate = game.settings.get("arm5e", "currentDate");
+    let currentDate = game.settings.get(ARM5E.SYSTEM_ID, "currentDate");
     if (itemData.system.year !== undefined || itemData.system.season !== undefined) {
       let theYear;
       if (itemData.system.year === "" || itemData.system.year === null) {

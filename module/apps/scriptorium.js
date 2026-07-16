@@ -1,3 +1,5 @@
+import { ARM5E } from "../config.js";
+
 import { ArM5eActor } from "../actor/actor.js";
 import { FLAVORS } from "../constants/ui.js";
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
@@ -42,9 +44,9 @@ export class ScriptoriumObject {
 
   bookTypes = CONFIG.ARM5E.books.types;
 
-  year = game.settings.get("arm5e", "currentDate").year;
+  year = game.settings.get(ARM5E.SYSTEM_ID, "currentDate").year;
 
-  season = game.settings.get("arm5e", "currentDate").season;
+  season = game.settings.get(ARM5E.SYSTEM_ID, "currentDate").season;
 
   copying = {
     scribe: { id: null },
@@ -235,26 +237,26 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
   /** @override */
   static PARTS = {
     header: {
-      template: "systems/arm5e/templates/generic/parts/scriptorium-header.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/scriptorium-header.hbs`
     },
     tabs: {
-      template: "systems/arm5e/templates/generic/parts/ars-tab-navigation.hbs",
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/ars-tab-navigation.hbs`,
       classes: ["greenBar", "marginsides32"]
     },
     reading: {
-      template: "systems/arm5e/templates/generic/parts/scriptorium-reading.html",
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/scriptorium-reading.html`,
       scrollable: ["remember"]
     },
     writing: {
-      template: "systems/arm5e/templates/generic/parts/scriptorium-writing.html",
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/scriptorium-writing.html`,
       scrollable: ["remember"]
     },
     copying: {
-      template: "systems/arm5e/templates/generic/parts/scriptorium-copying.html",
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/scriptorium-copying.html`,
       scrollable: ["remember"]
     },
     footer: {
-      template: "systems/arm5e/templates/generic/parts/scriptorium-footer.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/scriptorium-footer.hbs`
     }
   };
 
@@ -484,7 +486,7 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
       copying: { warning: [], error: false, createPossible: "disabled" },
       editItem: ""
     };
-    const currentDate = game.settings.get("arm5e", "currentDate");
+    const currentDate = game.settings.get(ARM5E.SYSTEM_ID, "currentDate");
     context.curYear = currentDate.year;
     context.curSeason = currentDate.season;
     context.isGM = game.user.isGM;
@@ -2115,7 +2117,7 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
       ui.notifications.info(game.i18n.localize("arm5e.scriptorium.msg.emptyBook"));
       return;
     }
-    let index = book.getFlag("arm5e", "currentBookTopic") ?? 0;
+    let index = book.getFlag(ARM5E.SYSTEM_ID, "currentBookTopic") ?? 0;
     book.system.topicIndex = index;
 
     await this._updateData({
@@ -2180,7 +2182,7 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
       const index =
         topicIndex !== undefined && topicIndex !== null
           ? Number(topicIndex)
-          : bookToAdd.getFlag("arm5e", "currentBookTopic") ?? 0;
+          : bookToAdd.getFlag(ARM5E.SYSTEM_ID, "currentBookTopic") ?? 0;
       const topic = bookData.topics[index];
       if (topic.category === "labText") {
         topic.system = topic.labtext;
@@ -2326,7 +2328,7 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
         season: game.i18n.localize(CONFIG.ARM5E.seasons[dataset.season].label)
       })
     );
-    await game.settings.set("arm5e", "currentDate", {
+    await game.settings.set(ARM5E.SYSTEM_ID, "currentDate", {
       year: dataset.year,
       season: dataset.season
     });

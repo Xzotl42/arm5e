@@ -47,7 +47,7 @@
               class="fas fa-plus"></i>{{localize "arm5e.sheet.action.Create"}}</a>
         </div>
       </li>
-      {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+      {{> (systemPath "templates/generic/metalic-bar.html") }}
       {{#each system.magicSystem.verbs as |tech id|}}
         <li class="item item-value flexrow" data-name="{{tech.name}}" data-item-id="{{tech._id}}">
           <div class="item-image-tiny item-control item-edit"><img src="{{tech.img}}" title="{{tech.name}}" /></div>
@@ -77,7 +77,7 @@
               class="fas fa-plus"></i>{{localize "arm5e.sheet.action.Create"}}</a>
         </div>
       </li>
-      {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+      {{> (systemPath "templates/generic/metalic-bar.html") }}
       {{#each system.magicSystem.nouns as |form id|}}
         <li class="item item-value flexrow" data-name="{{form.name}}" data-item-id="{{form._id}}">
           <div class="item-image-tiny item-control item-edit "><img src="{{form.img}}" title="{{form.name}}" />
@@ -105,10 +105,10 @@
           data-action="create"><i class="fas fa-plus"></i>{{localize "arm5e.sheet.action.Create"}}</a>
       </div>
     </div>
-    {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+    {{> (systemPath "templates/generic/metalic-bar.html") }}
     {{#each system.magicSystem.templates as |template id| }}
       <div class="flexcol resource">
-        {{> "systems/arm5e/templates/actor/parts/actor-magicSystem-template.html" id=id }}
+        {{> (systemPath "templates/actor/parts/actor-magicSystem-template.html") id=id }}
       </div>
     {{/each}}
   </div>

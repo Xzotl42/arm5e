@@ -27,7 +27,7 @@
             <a class="unlink-scribe" data-action="unlinkScribe" title="Break link to scribe"><i class="fas fa-link"
                 style="font-size: 12pt;"></i></a>
           </div>
-          {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+          {{> (systemPath "templates/generic/metalic-bar.html") }}
 
           {{#unless (eq copying.scribe.id null)}}
             <div class="scriptorium resource">
@@ -96,7 +96,7 @@
           {{/if}}
         </div>
         <!-- {{/unless}} -->
-        {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+        {{> (systemPath "templates/generic/metalic-bar.html") }}
         <div class="drop-book" data-drop="copy-book">
           {{#unless (or (eq this.currentTopic.category "labText") (eq copying.topicType "labText"))}}
             {{#each copying.books}}
@@ -130,14 +130,14 @@
                     <div class="flexrow" style="max-width: 180px;">
                       <div class="img-container"><img class="nav-arrow previous-topicToCopy clickable"
                           data-action="previousTopicToCopy" data-index="{{this.system.topicIndex}}"
-                          data-book-index="{{@index}}" src="systems/arm5e/assets/bLeft.png" />
+                          data-book-index="{{@index}}" src="{{systemPath}}assets/bLeft.png" />
                       </div>
                       <div style="align-items:center;justify-content: center;display: flex;">
                         <label>{{localize "arm5e.sheet.topics.current" current=currentTopicToCopyNumber total=copyTopicNum}}</label>
                       </div>
                       <div class="img-container"><img class="nav-arrow next-topicToCopy clickable"
                           data-action="nextTopicToCopy" data-index="{{this.system.topicIndex}}"
-                          data-book-index="{{@index}}" src="systems/arm5e/assets/bRight.png" /></div>
+                          data-book-index="{{@index}}" src="{{systemPath}}assets/bRight.png" /></div>
                     </div>
                   {{/if}}
                 </div>

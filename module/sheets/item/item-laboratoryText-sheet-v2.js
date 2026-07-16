@@ -2,6 +2,7 @@ import { ArM5eItemSheetV2 } from "./item-sheet-v2.js";
 import { ArM5eItemMagicSheetV2 } from "./item-magic-sheet-v2.js";
 import { GetEnchantmentSelectOptions } from "../../helpers/magic.js";
 
+import { ARM5E } from "../../config.js";
 /**
  * AppV2 sheet for laboratoryText items.
  * Supports raw text entries plus spell/enchantment-derived lab texts.
@@ -29,17 +30,17 @@ export class ArM5eLaboratoryTextItemSheetV2 extends ArM5eItemMagicSheetV2 {
   /** @override */
   static PARTS = {
     header: {
-      template: "systems/arm5e/templates/item/parts/item-laboratoryText-header-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/item/parts/item-laboratoryText-header-v2.hbs`
     },
     tabs: {
-      template: "systems/arm5e/templates/generic/parts/ars-tab-navigation.hbs",
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/ars-tab-navigation.hbs`,
       classes: ["marginItemPart"]
     },
     description: {
-      template: "systems/arm5e/templates/item/parts/item-laboratoryText-description-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/item/parts/item-laboratoryText-description-v2.hbs`
     },
     footer: {
-      template: "systems/arm5e/templates/item/parts/item-footer-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/item/parts/item-footer-v2.hbs`
     }
   };
 

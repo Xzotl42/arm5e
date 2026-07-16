@@ -18,7 +18,7 @@
   <section class="sheet-body flexcol marginsides32" style="height: auto; min-height: 495px;">
     <div class="padding4">
       <div class="padding4 effect-list">{{localize "arm5e.lab.planning.knownEffects"}}</div>
-      {{> "systems/arm5e/templates/generic/metalic-bar.html"  }}
+      {{> (systemPath "templates/generic/metalic-bar.html")  }}
       <div class="effect-list">
         {{#each visibleEffects as |effect idx|}}
           <div style="border-bottom: 1px; border-bottom-style: double; padding-bottom: 3px;">
@@ -65,7 +65,7 @@
         {{/each}}
       </div>
       <div class="padding4">{{localize "arm5e.lab.planning.discoveredEffects"}}</div>
-      {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+      {{> (systemPath "templates/generic/metalic-bar.html") }}
       <div class="effect-list">
         {{#each discoveredEffects as |effect idx|}}
           <div style="border-bottom: 1px; border-bottom-style: double; padding-bottom: 3px;">
