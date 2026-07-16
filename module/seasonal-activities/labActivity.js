@@ -106,7 +106,7 @@ export class LabActivity extends Activity {
   }
 
   get activitySheet() {
-    return "systems/arm5e/templates/lab-activities/noparams.html";
+    return `systems/${ARM5E.SYSTEM_ID}/templates/lab-activities/noparams.html`;
   }
 
   ownerActivityModifier() {
@@ -358,7 +358,7 @@ export class SpellActivity extends LabActivity {
   }
 
   get activitySheet() {
-    return "systems/arm5e/templates/lab-activities/spell.html";
+    return `systems/${ARM5E.SYSTEM_ID}/templates/lab-activities/spell.html`;
   }
 
   async prepareData(context) {
@@ -475,7 +475,7 @@ export class LongevityRitualActivity extends LabActivity {
   }
 
   get activitySheet() {
-    return "systems/arm5e/templates/lab-activities/longevity-ritual.html";
+    return `systems/${ARM5E.SYSTEM_ID}/templates/lab-activities/longevity-ritual.html`;
   }
 
   async getDefaultData() {
@@ -853,7 +853,7 @@ export class MinorEnchantment extends LabActivity {
   }
 
   get activitySheet() {
-    return "systems/arm5e/templates/lab-activities/minor-enchantment.html";
+    return `systems/${ARM5E.SYSTEM_ID}/templates/lab-activities/minor-enchantment.html`;
   }
 
   /**
@@ -998,7 +998,7 @@ export class ChargedItem extends MinorEnchantment {
   }
 
   get activitySheet() {
-    return "systems/arm5e/templates/lab-activities/charged-item.html";
+    return `systems/${ARM5E.SYSTEM_ID}/templates/lab-activities/charged-item.html`;
   }
 
   get title() {
@@ -1107,7 +1107,7 @@ export class InvestigationActivity extends LabActivity {
   }
 
   get activitySheet() {
-    return "systems/arm5e/templates/lab-activities/investigation.html";
+    return `systems/${ARM5E.SYSTEM_ID}/templates/lab-activities/investigation.html`;
   }
 
   get title() {

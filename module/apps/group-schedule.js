@@ -42,15 +42,15 @@ export class GroupSchedule extends HandlebarsApplicationMixin(ApplicationV2) {
 
   static PARTS = {
     header: {
-      template: "systems/arm5e/templates/generic/parts/astrolab-header.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/astrolab-header.hbs`
     },
     calendar: {
-      template: "systems/arm5e/templates/generic/group-schedule.hbs",
-      templates: ["systems/arm5e/templates/generic/parts/group-schedule-grid.hbs"],
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/group-schedule.hbs`,
+      templates: [`systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/group-schedule-grid.hbs`],
       scrollable: [".years"]
     },
     footer: {
-      template: "systems/arm5e/templates/generic/parts/astrolab-footer.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/astrolab-footer.hbs`
     }
   };
 

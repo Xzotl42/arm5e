@@ -184,7 +184,7 @@ export class RollChatSchema extends BasicChatSchema {
       // TODO find cleaner way
       if (!showItem && !this.parent.type.startsWith("combat")) {
         label = game.i18n.localize("arm5e.generic.unknown");
-        img = "systems/arm5e/assets/icons/QuestionMark.webp";
+        img = `systems/${ARM5E.SYSTEM_ID}/assets/icons/QuestionMark.webp`;
       }
       icon = `<div class="moreInfo item-image" >
           <img src="${img}" data-uuid="${this.roll.itemUuid}"width="30" height="30"></div>`;

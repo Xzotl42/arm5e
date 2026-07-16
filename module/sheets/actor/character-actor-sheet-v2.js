@@ -451,7 +451,7 @@ export class Arm5eCharacterActorSheetV2 extends ArM5eActorSheetV2 {
     data.actor = this.actor;
 
     const dialog = await foundry.applications.handlebars.renderTemplate(
-      "systems/arm5e/templates/generic/combat-damage.html",
+      `systems/${ARM5E.SYSTEM_ID}/templates/generic/combat-damage.html`,
       data
     );
 

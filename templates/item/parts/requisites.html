@@ -1,6 +1,6 @@
 <form class="flexcol" autocomplete="off"
-  style="background-image: url('systems/arm5e/assets/item/{{ui.flavor}}_background.webp')">
-  {{> "systems/arm5e/templates/item/parts/item-header.html" flavor=ui.flavor}}
+  style="background-image: url('{{systemPath}}assets/item/{{ui.flavor}}_background.webp')">
+  {{> (systemPath "templates/item/parts/item-header.html") flavor=ui.flavor}}
   <div class="flexrow grid grid-3col backSection">
     <div>
       <ol style="padding: 0 0em 0 2em">
@@ -43,5 +43,5 @@
       </ol>
     </div>
   </div>
-  {{> "systems/arm5e/templates/item/parts/item-footer.html" flavor=ui.flavor}}
+  {{> (systemPath "templates/item/parts/item-footer.html") flavor=ui.flavor}}
 </form>

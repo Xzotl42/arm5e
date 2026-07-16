@@ -1,6 +1,6 @@
 <div class='sheet-header-part'>
   <div class='header-background'>
-    <img src='systems/arm5e/assets/item/{{ flavor }}_header.png' />
+    <img src='{{systemPath}}assets/item/{{ flavor }}_header.png' />
   </div>
   <header class='sheet-header marginItemPart'>
     <img
@@ -25,7 +25,7 @@
               title='{{localize 'arm5e.sheet.visHarvest'}}'
               ><img
                 class='clickable'
-                src='systems/arm5e/assets/icons/sickle.svg'
+                src='{{systemPath}}assets/icons/sickle.svg'
                 style='border: 0px; height: 18px; min-height: 30px; min-width: 30px'
             /></a>
           </div>
@@ -68,5 +68,5 @@
       </div>
     </div>
   </header>
-  <div class='marginItemPart'>{{> "systems/arm5e/templates/generic/metalic-bar.html" }}</div>
+  <div class='marginItemPart'>{{> (systemPath "templates/generic/metalic-bar.html") }}</div>
 </div>

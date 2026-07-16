@@ -1,6 +1,6 @@
 <div class="mainPlayer">
   <div class="header-background">
-    <img src="systems/arm5e/assets/PC/header150.png" />
+    <img src="{{systemPath}}assets/PC/header150.png" />
   </div>
   <header class="sheet-header marginsides32">
     <img
@@ -31,7 +31,7 @@
           <div class="flex0 padding10" style="width: 36px">
             <a class="clickable remove-creationMode" data-action="removeCreationMode">
               <img
-                src="systems/arm5e/assets/icons/creation-mode.svg"
+                src="{{systemPath}}assets/icons/creation-mode.svg"
                 title="{{localize "arm5e.sheet.edition.creationMode"}}"
                 style="border: 0px; height: 18px; min-height: 30px; min-width: 30px"
               />
@@ -77,7 +77,7 @@
               style="display: block; height: fit-content; width: fit-content"
             >
               <img
-                src="systems/arm5e/assets/icons/Icon_Warping.png"
+                src="{{systemPath}}assets/icons/Icon_Warping.png"
                 style="width: 36px; height: 36px; border: none"
               />
             </a>
@@ -223,7 +223,7 @@
         {{/if}}
       </div>
 
-      {{> "systems/arm5e/templates/actor/parts/actor-characteristics.html" charac=characList}}
+      {{> (systemPath "templates/actor/parts/actor-characteristics.html") charac=characList}}
     </div>
   </header>
 </div>

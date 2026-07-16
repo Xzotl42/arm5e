@@ -48,10 +48,10 @@ export class SourcebookFilterConfig extends HandlebarsApplicationMixin(Applicati
 
   static PARTS = {
     form: {
-      template: "systems/arm5e/templates/generic/sourcebook-filter-config.html"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/sourcebook-filter-config.html`
     },
     buttons: {
-      template: "systems/arm5e/templates/roll/parts/roll-buttons.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/roll/parts/roll-buttons.hbs`
     }
   };
 

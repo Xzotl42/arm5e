@@ -1,5 +1,5 @@
 <div class="{{cssClass}} aura-config" autocomplete="off">
-  {{> "systems/arm5e/templates/roll/parts/roll-header.hbs" header="Inputs" }}
+  {{> (systemPath "templates/roll/parts/roll-header.hbs") header="Inputs" }}
   <div class="marginsides32">
     <div class="form-group">
       <label>{{localize "arm5e.realm.visible"}} <i class="fa-regular fa-circle-question"
@@ -30,5 +30,5 @@
     </div>
   </div>
 
-  {{> "systems/arm5e/templates/roll/parts/roll-footer.hbs" footer="Inputs"}}
+  {{> (systemPath "templates/roll/parts/roll-footer.hbs") footer="Inputs"}}
 </div>

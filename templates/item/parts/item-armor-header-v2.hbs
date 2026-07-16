@@ -1,6 +1,6 @@
 <div class="sheet-header-part">
   <div class="header-background">
-    <img src="systems/arm5e/assets/item/{{ flavor }}_header.png" />
+    <img src="{{systemPath}}assets/item/{{ flavor }}_header.png" />
   </div>
   <header class="sheet-header marginItemPart">
     <div>
@@ -37,7 +37,7 @@
               title="{{localize 'arm5e.lab.enchantment.item.enable'}}"
             >
               <img
-                src="systems/arm5e/assets/icons/Icon_Details_option1.png"
+                src="{{systemPath}}assets/icons/Icon_Details_option1.png"
                 style="border: 0px; width: 32px; height: 32px"
               />
             </a>
@@ -72,7 +72,7 @@
         </div>
       </div>
       <div class="flexrow">
-        {{> 'systems/arm5e/templates/item/parts/cost.hbs' classes='fit'}}
+        {{> (systemPath "templates/item/parts/cost.hbs") classes='fit'}}
         {{#if system.canEquip}}
         <div class="resource flexrow">
           <label class="checkbox-label">{{localize 'arm5e.sheet.equipped'}}</label>
@@ -82,5 +82,5 @@
       </div>
     </div>
   </header>
-  <div class="marginItemPart">{{> "systems/arm5e/templates/generic/metalic-bar.html" }}</div>
+  <div class="marginItemPart">{{> (systemPath "templates/generic/metalic-bar.html") }}</div>
 </div>

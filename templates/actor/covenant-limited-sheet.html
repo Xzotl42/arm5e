@@ -1,6 +1,6 @@
 <div class="{{cssClass}}  mainCovenant">
   <div class="header-background">
-    <img src="systems/arm5e/assets/covenant/header150.webp" />
+    <img src="{{systemPath}}assets/covenant/header150.webp" />
   </div>
   <div class="sheet-content flexcol limited-sheet" autocomplete="off">
     {{!-- Sheet Header --}}
@@ -22,7 +22,7 @@
       <div class="flex-group-left padding12 backSection extendable"
         style="flex-grow: 1; display: flex; flex-direction: column;">
         <label class="smallTitle">{{localize "arm5e.sheet.description"}}</label>
-        {{> "systems/arm5e/templates/generic/ars-editor.hbs"
+        {{> (systemPath "templates/generic/ars-editor.hbs")
           content=enrichedDescription
           target="system.description"
           editable=editable

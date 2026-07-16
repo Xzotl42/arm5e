@@ -42,41 +42,9 @@ import {
   buildDuplicateAllowedTypes
 } from "./seasonal-activities/activity-config.js";
 import { registerActivityRollActions } from "./seasonal-activities/activity-roll-registrations.js";
-import { InhabitantSchema } from "./schemas/inhabitantSchema.js";
 
 // Ensure system config exists before any early hooks (e.g. i18nInit) mutate CONFIG.ARM5E.
 CONFIG.ARM5E ??= ARM5E;
-
-async function syncLinkedInhabitantsForActor(actor) {
-  if (!game.user.isGM || !actor) return;
-
-  const covenantActors = game.actors.contents.filter((document) => document.type === "covenant");
-  for (const covenant of covenantActors) {
-    const updates = [];
-    for (const item of covenant.items) {
-      if (item.type !== "inhabitant") continue;
-      if (item.system.actorId !== actor.id) continue;
-
-      const syncData = InhabitantSchema.getLinkedSyncData(item.system, actor);
-      const update = { _id: item.id };
-      let changed = false;
-
-      for (const [key, value] of Object.entries(syncData)) {
-        if (value === undefined) continue;
-        if (!Object.is(item.system[key], value)) {
-          update[`system.${key}`] = value;
-          changed = true;
-        }
-      }
-
-      if (changed) updates.push(update);
-    }
-
-    if (updates.length) {
-      await covenant.updateEmbeddedDocuments("Item", updates, { render: false });
-    }
-  }
-}
 
 Hooks.once("i18nInit", async function () {
   CONFIG.ARM5E.LOCALIZED_ABILITIES = localizeAbilities();
@@ -108,6 +76,7 @@ Hooks.once("init", async function () {
   CONFIG.ARM5E = ARM5E;
   CONFIG.ARM5E.ItemDataModels = CONFIG.Item.dataModels;
   CONFIG.ARM5E.ActorDataModels = CONFIG.Actor.dataModels;
+  registerActivityRollActions(CONFIG.ARM5E.activities?.generic);
 
   CONFIG.SC = { SEASONS: SimpleCalendarSeasons };
 
@@ -202,6 +171,11 @@ Hooks.once("init", async function () {
   // /////////
 
   Handlebars.registerHelper("magicalAttributesHelper", magicalAttributesHelper);
+
+  Handlebars.registerHelper("systemPath", function (relativePath) {
+    const rel = typeof relativePath === "string" ? relativePath.replace(/^\/+/, "") : "";
+    return rel ? `systems/${ARM5E.SYSTEM_ID}/${rel}` : `systems/${ARM5E.SYSTEM_ID}/`;
+  });
 
   Handlebars.registerHelper("concat", function () {
     let outStr = "";

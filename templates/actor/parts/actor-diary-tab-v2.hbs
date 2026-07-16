@@ -4,7 +4,7 @@
     <div class="flexcol" style="max-width: 200px">
       <div class="flex-group-left backSection padding12">
         <label class="smallTitle">
-          <a class="link" href="systems/arm5e/pdf/experience.pdf" target="_blank">
+          <a class="link" href="{{systemPath}}pdf/experience.pdf" target="_blank">
             {{localize "arm5e.sheet.pendingExperience"}}
           </a>
         </label>
@@ -52,8 +52,8 @@
         >
       </div>
     </li>
-    {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
-    {{> "systems/arm5e/templates/actor/parts/timeFilter.hbs" list="diaryEvents" visibility=ui.diaryFilterVisibility}}
+    {{> (systemPath "templates/generic/metalic-bar.html") }}
+    {{> (systemPath "templates/actor/parts/timeFilter.hbs") list="diaryEvents" visibility=ui.diaryFilterVisibility}}
     {{#each system.activities as |activity year|}}
     {{#each activity.seasons as |entries season|}}
 

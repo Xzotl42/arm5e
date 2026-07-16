@@ -1,6 +1,6 @@
 <div class="mainNPC">
   <div class="header-background">
-    <img src="systems/arm5e/assets/NPC/header150.png" />
+    <img src="{{systemPath}}assets/NPC/header150.png" />
   </div>
   <header class="sheet-header marginsides32">
     <img
@@ -30,7 +30,7 @@
           {{#if system.states.creationMode}}
           <div class="flex0 padding10" style="width: 36px">
             <a class="clickable" data-action="removeCreationMode">
-              <img src="systems/arm5e/assets/icons/creation-mode.svg" title="{{localize "arm5e.sheet.edition.creationMode"
+              <img src="{{systemPath}}assets/icons/creation-mode.svg" title="{{localize "arm5e.sheet.edition.creationMode"
 
 
 
@@ -77,7 +77,7 @@
               style="display: block; height: fit-content; width: fit-content"
             >
               <img
-                src="systems/arm5e/assets/icons/Icon_Warping.png"
+                src="{{systemPath}}assets/icons/Icon_Warping.png"
                 style="width: 36px; height: 36px; border: none"
               />
             </a>
@@ -281,7 +281,7 @@
         </div>
       </div>
 
-      {{> "systems/arm5e/templates/actor/parts/actor-characteristics.html" charac=characList}}
+      {{> (systemPath "templates/actor/parts/actor-characteristics.html") charac=characList}}
     </div>
   </header>
 </div>

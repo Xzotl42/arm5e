@@ -2,6 +2,7 @@ import { ArM5eItemSheetV2 } from "./item-sheet-v2.js";
 import { EnchantExtensionV2 } from "./enchant-extension-v2.js";
 import { ArM5ePhysicalItemSheetV2 } from "./item-physical-v2.js";
 
+import { ARM5E } from "../../config.js";
 /**
  * AppV2 sheet for armor items.
  */
@@ -31,23 +32,23 @@ export class ArM5eArmorItemSheetV2 extends ArM5ePhysicalItemSheetV2 {
   /** @override */
   static PARTS = {
     header: {
-      template: "systems/arm5e/templates/item/parts/item-armor-header-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/item/parts/item-armor-header-v2.hbs`
     },
     tabs: {
-      template: "systems/arm5e/templates/generic/parts/ars-tab-navigation.hbs",
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/ars-tab-navigation.hbs`,
       classes: ["marginItemPart"]
     },
     description: {
-      template: "systems/arm5e/templates/item/parts/item-description-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/item/parts/item-description-v2.hbs`
     },
     enchantments: {
-      template: "systems/arm5e/templates/item/parts/item-enchant-extension-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/item/parts/item-enchant-extension-v2.hbs`
     },
     effects: {
-      template: "systems/arm5e/templates/item/parts/item-effects-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/item/parts/item-effects-v2.hbs`
     },
     footer: {
-      template: "systems/arm5e/templates/item/parts/item-footer-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/item/parts/item-footer-v2.hbs`
     }
   };
 

@@ -5,7 +5,7 @@
 >
   <div class="flex-group-left padding12 backSection">
     <label class="smallTitle padding12 flex0">{{localize "arm5e.sheet.description"}}</label>
-    {{> "systems/arm5e/templates/generic/ars-editor-V2.hbs"
+    {{> (systemPath "templates/generic/ars-editor-V2.hbs")
     content=enrichedDescription
     target="system.description"
     prefix=""
@@ -26,7 +26,7 @@
         ></a>
       </div>
     </li>
-    {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+    {{> (systemPath "templates/generic/metalic-bar.html") }}
     {{#each system.reputations as |item id|}}
     <li
       class="item item-value flexrow flex-center"
@@ -123,9 +123,9 @@
     </div>
   </div>
 
-  {{> "systems/arm5e/templates/actor/parts/actor-virtuesFlaws.html" create=true bonusComp="boons" penaltyComp="hooks" bonuses="arm5e.sheet.boons" penalties="arm5e.sheet.hooks"}}
+  {{> (systemPath "templates/actor/parts/actor-virtuesFlaws.html") create=true bonusComp="boons" penaltyComp="hooks" bonuses="arm5e.sheet.boons" penalties="arm5e.sheet.hooks"}}
   {{#if metagame.view }}
-  {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
-  {{> "systems/arm5e/templates/generic/source.html" }}
+  {{> (systemPath "templates/generic/metalic-bar.html") }}
+  {{> (systemPath "templates/generic/source.html") }}
   {{/if}}
 </div>
