@@ -927,6 +927,7 @@ export class ArM5eDiaryEntryItemSheetV2 extends ArM5eItemSheetV2 {
   /** @override */
   async _onDrop(event) {
     event.preventDefault();
+    event.stopPropagation(); // prevent second _onDrop via root ItemSheetV2 handler
     const data = foundry.applications.ux.TextEditor.getDragEventData(event);
     const dropTarget = event.currentTarget;
 
@@ -939,7 +940,7 @@ export class ArM5eDiaryEntryItemSheetV2 extends ArM5eItemSheetV2 {
         const actor = await Actor.implementation.fromDropData(data);
         if (actor.isCharacter()) {
           await this._setTeacher(actor);
-          event.stopPropagation();
+          return;
         }
       }
     } else if (data.type === "Item") {
@@ -951,7 +952,7 @@ export class ArM5eDiaryEntryItemSheetV2 extends ArM5eItemSheetV2 {
           this.item.system.activity !== "training"
         ) {
           await this.item.update(this._addAbility(item), {});
-          event.stopPropagation();
+          return;
         }
       } else if (
         dropTarget.classList.contains("drop-newspell") ||
@@ -963,7 +964,7 @@ export class ArM5eDiaryEntryItemSheetV2 extends ArM5eItemSheetV2 {
         const newSpells = this.item.system.progress.newSpells;
         newSpells.push(ArM5eDiaryEntryItemSheetV2._buildNewSpellEntry(item));
         await this.item.update({ "system.progress.newSpells": newSpells });
-        event.stopPropagation();
+        return;
       }
     }
 
