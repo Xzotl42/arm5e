@@ -184,14 +184,13 @@ export class InhabitantSchema extends foundry.abstract.TypeDataModel {
         const specialistChar = convertToNumber(actor.system?.characteristics?.pre?.value, undefined);
         const professionLabels = [
           game.i18n.localize(`arm5e.covenant.specialist.${inhabitant.specialistType}`),
-          inhabitant.job,
           inhabitant.specialistType,
           inhabitant.specialistType.replace(/([A-Z])/g, " $1").trim()
         ].filter((value) => typeof value === "string" && value !== "");
         const profession = InhabitantSchema.getLinkedAbilityStats(actor, "profession", professionLabels);
         const syncData = {};
         if (specialistChar !== undefined) syncData.specialistChar = specialistChar;
-        if (profession !== undefined) syncData.score = profession.score;
+        syncData.score = profession?.score ?? 0;
         return syncData;
       }
       case "turbCaptain": {
@@ -201,7 +200,7 @@ export class InhabitantSchema extends foundry.abstract.TypeDataModel {
           : undefined;
         const syncData = {};
         if (specialistChar !== undefined) syncData.specialistChar = specialistChar;
-        if (leadership !== undefined) syncData.score = leadership;
+        syncData.score = leadership ?? 0;
         return syncData;
       }
       default:
