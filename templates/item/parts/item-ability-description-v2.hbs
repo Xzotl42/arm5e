@@ -40,7 +40,7 @@
         {{/if}}
       </div>
       {{/unless}}
-      {{> 'systems/arm5e/templates/generic/ars-editor-V2.hbs'
+      {{> (systemPath "templates/generic/ars-editor-V2.hbs")
       content=enrichedDescription
       target='system.description'
       editable=editable
@@ -48,7 +48,7 @@
     </div>
   </div>
   {{#if metagame.view }}
-  {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
-  {{> "systems/arm5e/templates/generic/source.html" }}
+  {{> (systemPath "templates/generic/metalic-bar.html") }}
+  {{> (systemPath "templates/generic/source.html") }}
   {{/if}}
 </section>

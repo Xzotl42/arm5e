@@ -3,6 +3,7 @@ import { compareBaseEffects, compareSpells, hermeticFilter } from "../../tools/t
 import { labTextToEffect } from "../../item/item-converter.js";
 import { HERMETIC_FILTER, updateUserCache } from "../../constants/userdata.js";
 import { getConfirmation } from "../../ui/dialogs.js";
+import { ARM5E } from "../../config.js";
 import {
   GetEffectAttributesLabel,
   GetFilteredAspects,
@@ -65,36 +66,36 @@ export class ArM5eMagicCodexSheetV2 extends ArM5eActorSheetV2 {
   /** @override */
   static PARTS = {
     header: {
-      template: "systems/arm5e/templates/actor/parts/codex-header-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/actor/parts/codex-header-v2.hbs`
     },
     tabs: {
-      template: "systems/arm5e/templates/generic/parts/ars-tab-navigation.hbs",
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/ars-tab-navigation.hbs`,
       classes: ["arm5eTabsCOD", "marginsides32"]
     },
     "base-effects": {
-      template: "systems/arm5e/templates/actor/parts/codex-base-effects-tab-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/actor/parts/codex-base-effects-tab-v2.hbs`
     },
     "magical-effect": {
-      template: "systems/arm5e/templates/actor/parts/codex-magical-effects-tab-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/actor/parts/codex-magical-effects-tab-v2.hbs`
     },
     spells: {
-      template: "systems/arm5e/templates/actor/parts/codex-spells-tab-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/actor/parts/codex-spells-tab-v2.hbs`
     },
     enchantments: {
-      template: "systems/arm5e/templates/actor/parts/codex-enchantments-tab-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/actor/parts/codex-enchantments-tab-v2.hbs`
     },
     aspects: {
-      template: "systems/arm5e/templates/actor/parts/codex-aspects-tab-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/actor/parts/codex-aspects-tab-v2.hbs`
     },
     footer: {
-      template: "systems/arm5e/templates/actor/parts/codex-footer-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/actor/parts/codex-footer-v2.hbs`
     }
   };
 
   /** @override */
   static LIMITED_PARTS = {
     content: {
-      template: "systems/arm5e/templates/actor/actor-limited-sheet.html"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/actor/actor-limited-sheet.html`
     }
   };
 

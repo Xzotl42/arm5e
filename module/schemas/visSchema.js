@@ -125,7 +125,7 @@ export class VisSchema extends foundry.abstract.TypeDataModel {
     };
     actor.rollInfo.init(dataset, actor);
     const html = await foundry.applications.handlebars.renderTemplate(
-      "systems/arm5e/templates/generic/vis-study.html",
+      `systems/${ARM5E.SYSTEM_ID}/templates/generic/vis-study.html`,
       dialogData
     );
 
@@ -177,7 +177,7 @@ export class VisSchema extends foundry.abstract.TypeDataModel {
   }
 
   _createDiaryEntryToStudyVis(actor) {
-    let currentDate = game.settings.get("arm5e", "currentDate");
+    let currentDate = game.settings.get(ARM5E.SYSTEM_ID, "currentDate");
     const entryData = [
       {
         name: game.i18n.format("arm5e.activity.title.visStudy", {

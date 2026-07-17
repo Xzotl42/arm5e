@@ -407,16 +407,16 @@ export class ArM5eItem extends Item {
   }
 
   async createResourceTrackingDiaryEntry(fromActor, toActor, quantity = 1, date = null) {
-    if (!game.settings.get("arm5e", "trackResources")) return [];
+    if (!game.settings.get(ARM5E.SYSTEM_ID, "trackResources")) return [];
     return await Promise.all(
       this._createResourceTrackingDiaryEntry(fromActor, toActor, quantity, date)
     );
   }
 
   _createResourceTrackingDiaryEntry(fromActor, toActor, quantity = 1, date = null) {
-    if (!game.settings.get("arm5e", "trackResources")) return [];
+    if (!game.settings.get(ARM5E.SYSTEM_ID, "trackResources")) return [];
 
-    let currentDate = game.settings.get("arm5e", "currentDate");
+    let currentDate = game.settings.get(ARM5E.SYSTEM_ID, "currentDate");
     if (date) {
       currentDate.year = date.year;
       currentDate.season = date.season;

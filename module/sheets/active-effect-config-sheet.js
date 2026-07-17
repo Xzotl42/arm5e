@@ -1,3 +1,5 @@
+import { ARM5E } from "../config.js";
+
 import { log, error, slugify } from "../tools/tools.js";
 
 import { ACTIVE_EFFECTS_TYPES } from "../constants/activeEffectsTypes.js";
@@ -42,27 +44,27 @@ export class ArM5eActiveEffectConfig extends foundry.applications.sheets.ActiveE
 
   /** @override */
   static PARTS = {
-    headerFlavor: { template: "systems/arm5e/templates/generic/parts/largeDialog-header.hbs" },
+    headerFlavor: { template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/largeDialog-header.hbs` },
     header: {
-      template: "systems/arm5e/templates/sheets/active-effect/header.hbs",
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/sheets/active-effect/header.hbs`,
       classes: ["marginsides32"]
     },
     tabs: {
-      template: "systems/arm5e/templates/generic/parts/ars-tab-navigation.hbs",
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/ars-tab-navigation.hbs`,
       classes: ["blueBar", "marginsides32"]
     },
     details: {
-      template: "systems/arm5e/templates/sheets/active-effect/details.hbs",
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/sheets/active-effect/details.hbs`,
       classes: ["flexrow"]
     },
-    // duration: { template: "systems/arm5e/templates/sheets/active-effect/duration.hbs" },
+    // duration: { template: `systems/${ARM5E.SYSTEM_ID}/templates/sheets/active-effect/duration.hbs` },
     changes: {
-      template: "systems/arm5e/templates/sheets/active-effect/changes.hbs",
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/sheets/active-effect/changes.hbs`,
       scrollable: [".changes-list"],
       classes: ["flexrow"]
     },
     // footer: { template: "templates/generic/form-footer.hbs" }
-    footer: { template: "systems/arm5e/templates/generic/parts/largeDialog-footer.hbs" }
+    footer: { template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/largeDialog-footer.hbs` }
   };
 
   // /** @inheritDoc */
@@ -187,11 +189,11 @@ export class ArM5eActiveEffectConfig extends foundry.applications.sheets.ActiveE
     context.origin = context.document.sourceName;
     context.isV14 = CONFIG.ISV14;
     // first effect created, add null effect type and subtype (still needed?)
-    context.selectedTypes = this.document.getFlag("arm5e", "type");
+    context.selectedTypes = this.document.getFlag(ARM5E.SYSTEM_ID, "type");
     if (changesData.length > 0 && context.selectedTypes === null) {
       context.selectedTypes = ["none"];
     }
-    context.selectedSubtypes = this.document.getFlag("arm5e", "subtype");
+    context.selectedSubtypes = this.document.getFlag(ARM5E.SYSTEM_ID, "subtype");
     if (changesData.length > 0 && context.selectedSubtypes === null) {
       context.selectedSubtypes = ["none"];
     }
@@ -200,7 +202,7 @@ export class ArM5eActiveEffectConfig extends foundry.applications.sheets.ActiveE
     // replace #OPTION# in key if it applies
     context.subtypes = [];
     context.currentProperties = [];
-    context.options = this.document.getFlag("arm5e", "option");
+    context.options = this.document.getFlag(ARM5E.SYSTEM_ID, "option");
     for (let idx = 0; idx < context.selectedTypes.length; idx++) {
       let subTypes = [];
       for (const [k, v] of Object.entries(context.types[context.selectedTypes[idx]].subtypes)) {
@@ -313,9 +315,9 @@ export class ArM5eActiveEffectConfig extends foundry.applications.sheets.ActiveE
   // }
 
   async _deleteChange(index) {
-    let arrayTypes = this.document.getFlag("arm5e", "type");
-    let arraySubtypes = this.document.getFlag("arm5e", "subtype");
-    let arrayOptions = this.document.getFlag("arm5e", "option");
+    let arrayTypes = this.document.getFlag(ARM5E.SYSTEM_ID, "type");
+    let arraySubtypes = this.document.getFlag(ARM5E.SYSTEM_ID, "subtype");
+    let arrayOptions = this.document.getFlag(ARM5E.SYSTEM_ID, "option");
     let changes = this._getChangesData();
     arrayTypes.splice(index, 1);
     arraySubtypes.splice(index, 1);
@@ -336,9 +338,9 @@ export class ArM5eActiveEffectConfig extends foundry.applications.sheets.ActiveE
   }
 
   async _setValue(value, index) {
-    let arrayTypes = this.document.getFlag("arm5e", "type");
-    let arraySubtypes = this.document.getFlag("arm5e", "subtype");
-    let arrayOptions = this.document.getFlag("arm5e", "option");
+    let arrayTypes = this.document.getFlag(ARM5E.SYSTEM_ID, "type");
+    let arraySubtypes = this.document.getFlag(ARM5E.SYSTEM_ID, "subtype");
+    let arrayOptions = this.document.getFlag(ARM5E.SYSTEM_ID, "option");
     const effect = ACTIVE_EFFECTS_TYPES[arrayTypes[index]].subtypes[arraySubtypes[index]];
     let newKey = effect.key;
     if (arrayOptions[index] !== null) {
@@ -357,12 +359,12 @@ export class ArM5eActiveEffectConfig extends foundry.applications.sheets.ActiveE
   }
 
   async _setType(value, index) {
-    let arrayTypes = this.document.getFlag("arm5e", "type");
+    let arrayTypes = this.document.getFlag(ARM5E.SYSTEM_ID, "type");
     arrayTypes[index] = value;
     // also update subtype
-    let arraySubtypes = this.document.getFlag("arm5e", "subtype");
+    let arraySubtypes = this.document.getFlag(ARM5E.SYSTEM_ID, "subtype");
     arraySubtypes[index] = Object.keys(ACTIVE_EFFECTS_TYPES[value].subtypes)[0];
-    let arrayOptions = this.document.getFlag("arm5e", "option");
+    let arrayOptions = this.document.getFlag(ARM5E.SYSTEM_ID, "option");
     arrayOptions[index] = ACTIVE_EFFECTS_TYPES[value].subtypes[arraySubtypes[index]].option || null;
     const changesData = this._getChangesData();
     const effect = ACTIVE_EFFECTS_TYPES[value].subtypes[arraySubtypes[index]];
@@ -388,9 +390,9 @@ export class ArM5eActiveEffectConfig extends foundry.applications.sheets.ActiveE
   }
 
   async _setSubtype(value, index) {
-    let arrayTypes = this.document.getFlag("arm5e", "type");
-    let arraySubtypes = this.document.getFlag("arm5e", "subtype");
-    let arrayOptions = this.document.getFlag("arm5e", "option");
+    let arrayTypes = this.document.getFlag(ARM5E.SYSTEM_ID, "type");
+    let arraySubtypes = this.document.getFlag(ARM5E.SYSTEM_ID, "subtype");
+    let arrayOptions = this.document.getFlag(ARM5E.SYSTEM_ID, "option");
     arraySubtypes[index] = value;
     arrayOptions[index] =
       ACTIVE_EFFECTS_TYPES[arrayTypes[index]].subtypes[arraySubtypes[index]].option || null;
@@ -423,9 +425,9 @@ export class ArM5eActiveEffectConfig extends foundry.applications.sheets.ActiveE
   }
 
   static async addEffect(context) {
-    let arrayTypes = this.document.getFlag("arm5e", "type");
-    let arraySubtypes = this.document.getFlag("arm5e", "subtype");
-    let arrayOptions = this.document.getFlag("arm5e", "option");
+    let arrayTypes = this.document.getFlag(ARM5E.SYSTEM_ID, "type");
+    let arraySubtypes = this.document.getFlag(ARM5E.SYSTEM_ID, "subtype");
+    let arrayOptions = this.document.getFlag(ARM5E.SYSTEM_ID, "option");
     arrayTypes.push("none");
     arraySubtypes.push("none");
     arrayOptions.push(null);
@@ -440,11 +442,11 @@ export class ArM5eActiveEffectConfig extends foundry.applications.sheets.ActiveE
   }
 
   async _setOption(index) {
-    let arrayTypes = this.document.getFlag("arm5e", "type");
+    let arrayTypes = this.document.getFlag(ARM5E.SYSTEM_ID, "type");
     const type = arrayTypes[index];
-    let arraySubtypes = this.document.getFlag("arm5e", "subtype");
+    let arraySubtypes = this.document.getFlag(ARM5E.SYSTEM_ID, "subtype");
     const subtype = arraySubtypes[index];
-    let arrayOptions = this.document.getFlag("arm5e", "option");
+    let arrayOptions = this.document.getFlag(ARM5E.SYSTEM_ID, "option");
     let chosenOption = arrayOptions[index];
     let dialogData = {
       fieldName: "arm5e.sheet.skill.abilityOption",

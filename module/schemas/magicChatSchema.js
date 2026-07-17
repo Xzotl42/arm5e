@@ -1,3 +1,5 @@
+import { ARM5E } from "../config.js";
+
 import { fatigueCost } from "../helpers/magic.js";
 import { log, putInFoldableLinkWithAnimation } from "../tools/tools.js";
 import { boolOption } from "./commonSchemas.js";
@@ -118,7 +120,7 @@ export class MagicChatSchema extends RollChatSchema {
       }
 
       const showDetails =
-        game.user.isGM || game.settings.get("arm5e", "showNPCMagicDetails") === "SHOW_ALL";
+        game.user.isGM || game.settings.get(ARM5E.SYSTEM_ID, "showNPCMagicDetails") === "SHOW_ALL";
       // penetration
       let flavorTotalSpell = "";
       let flavorTotalPenetration = "";
@@ -279,7 +281,7 @@ export class MagicChatSchema extends RollChatSchema {
   }
 
   getFailedMessage() {
-    const showDataOfNPC = game.settings.get("arm5e", "showNPCMagicDetails") === "SHOW_ALL";
+    const showDataOfNPC = game.settings.get(ARM5E.SYSTEM_ID, "showNPCMagicDetails") === "SHOW_ALL";
     let messageFlavor = "";
 
     if (showDataOfNPC || this.parent.originatorOrGM) {

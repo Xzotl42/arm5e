@@ -12,8 +12,8 @@
           class="fas fa-plus"></i>{{localize "arm5e.sheet.action.Create"}}</a>
     </div>
   </li>
-  {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
-  {{> "systems/arm5e/templates/actor/parts/topicFilter.hbs" list="artsTopics" visibility=ui.artsFilterVisibility
+  {{> (systemPath "templates/generic/metalic-bar.html") }}
+  {{> (systemPath "templates/actor/parts/topicFilter.hbs") list="artsTopics" visibility=ui.artsFilterVisibility
       topics=config.magic.arts }}
   <div id="topic-arts" class="topic toggle-collapse">
     {{#each system.filteredArtsTopics as |item id|}}
@@ -61,8 +61,8 @@
     </div>
   </li>
   {{log "filteredMundaneTopics: " system.filteredMundaneTopics}}
-  {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
-  {{> "systems/arm5e/templates/actor/parts/topicFilter.hbs" list="abilitiesTopics" visibility=ui.abilitiesFilterVisibility
+  {{> (systemPath "templates/generic/metalic-bar.html") }}
+  {{> (systemPath "templates/actor/parts/topicFilter.hbs") list="abilitiesTopics" visibility=ui.abilitiesFilterVisibility
   topics=config.LOCALIZED_ABILITIES  topic-class="ability-key"}}
   <div id="topic-abilities" class="topic toggle-collapse">
     {{#each system.filteredMundaneTopics as |item id|}}
@@ -120,8 +120,8 @@
           class="fas fa-plus"></i>{{localize "arm5e.sheet.action.Create"}}</a>
     </div>
   </li>
-  {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
-  {{> "systems/arm5e/templates/actor/parts/hermeticFilter.hbs" category="bookTopics" list="masteriesTopics" visibility=ui.masteriesFilterVisibility topic=true}}
+  {{> (systemPath "templates/generic/metalic-bar.html") }}
+  {{> (systemPath "templates/actor/parts/hermeticFilter.hbs") category="bookTopics" list="masteriesTopics" visibility=ui.masteriesFilterVisibility topic=true}}
   <div id="topic-masteries" class="topic toggle-collapse">
     {{#each system.filteredMasteriesTopics as |item id|}}
 
@@ -173,8 +173,8 @@
         data-type="laboratoryText"><i class="fas fa-plus"></i>{{localize "arm5e.sheet.action.Create"}}</a>
     </div>
   </li>
-  {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
-  {{> "systems/arm5e/templates/actor/parts/hermeticFilter.hbs" category="hermetic" list="laboratoryTexts" visibility=ui.labtTextFilterVisibility }}
+  {{> (systemPath "templates/generic/metalic-bar.html") }}
+  {{> (systemPath "templates/actor/parts/hermeticFilter.hbs") category="hermetic" list="laboratoryTexts" visibility=ui.labtTextFilterVisibility }}
   <div id="topic-labtext" class="topic toggle-collapse">
     {{#each system.filteredLaboratoryTexts as |item id|}}
 
@@ -218,7 +218,7 @@
           class="fas fa-plus"></i>{{localize "arm5e.sheet.action.Create"}}</a>
     </div>
   </li>
-  {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+  {{> (systemPath "templates/generic/metalic-bar.html") }}
   <div id="topic-physicalbooks" class="topic toggle-collapse">
     {{#each system.physicalBooks as |item id|}}
 

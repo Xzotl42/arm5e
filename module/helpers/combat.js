@@ -4,6 +4,7 @@ import { Arm5eChatMessage } from "./chat-message.js";
 import { _applyImpact, ROLL_PROPERTIES } from "../ui/roll-window.js";
 import { getWoundStr } from "../config.js";
 
+import { ARM5E } from "../config.js";
 // export function doubleAbility(actor) {
 //   actor.rollInfo.ability.score *= 2;
 // }
@@ -80,7 +81,7 @@ export class QuickCombat extends foundry.applications.api.HandlebarsApplicationM
 
   static PARTS = {
     main: {
-      template: "systems/arm5e/templates/generic/quick-combat.html"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/quick-combat.html`
     }
   };
 
@@ -186,7 +187,7 @@ export class QuickVitals extends foundry.applications.api.HandlebarsApplicationM
 
   static PARTS = {
     main: {
-      template: "systems/arm5e/templates/generic/quick-vitals.html"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/quick-vitals.html`
     }
   };
 

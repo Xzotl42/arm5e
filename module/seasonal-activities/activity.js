@@ -57,7 +57,7 @@ export class Activity {
       return;
     }
 
-    const currentDate = game.settings.get("arm5e", "currentDate");
+    const currentDate = game.settings.get(ARM5E.SYSTEM_ID, "currentDate");
     // check if it starts in the future
     if (
       context.firstSeason.year > currentDate.year ||

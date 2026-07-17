@@ -1,3 +1,5 @@
+import { ARM5E } from "../config.js";
+
 import { log, putInFoldableLink, putInFoldableLinkWithAnimation } from "../tools/tools.js";
 import { SMSG_FIELDS } from "../tools/socket-messages.js";
 import { ArsRoll } from "./roll.js";
@@ -63,7 +65,7 @@ export class Arm5eChatMessage extends ChatMessage {
       : game.settings.get("core", "messageMode");
     const blindRollMode = Arm5eChatMessage.getChatRollModes().BLIND;
     const privateRollMode = Arm5eChatMessage.getChatRollModes().PRIVATE;
-    // let showRolls = game.settings.get("arm5e", "showRolls");
+    // let showRolls = game.settings.get(ARM5E.SYSTEM_ID, "showRolls");
     if (rollProperties.MODE & ROLL_MODES.PRIVATE && mode !== blindRollMode) {
       mode = privateRollMode;
     }

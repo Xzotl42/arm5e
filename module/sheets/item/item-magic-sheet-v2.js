@@ -1,3 +1,5 @@
+import { ARM5E } from "../../config.js";
+
 import { ArM5eItemSheetV2 } from "./item-sheet-v2.js";
 import {
   GetEffectAttributesLabel,

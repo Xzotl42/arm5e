@@ -63,7 +63,7 @@ export class ArM5eActor extends Actor {
     if (this.type !== "player" && this.type !== "npc" && this.type !== "beast") {
       return;
     }
-    const datetime = game.settings.get("arm5e", "currentDate");
+    const datetime = game.settings.get(ARM5E.SYSTEM_ID, "currentDate");
 
     if (this.system.states.creationMode) {
       this.system.description.born.value =
@@ -1232,7 +1232,7 @@ export class ArM5eActor extends Actor {
       return [];
     }
     let wounds = [];
-    const datetime = game.settings.get("arm5e", "currentDate");
+    const datetime = game.settings.get(ARM5E.SYSTEM_ID, "currentDate");
     for (let ii = 0; ii < amount; ii++) {
       let woundData = {
         name: `${game.i18n.localize(`arm5e.sheet.${wtype}`)} ${game.i18n.localize(

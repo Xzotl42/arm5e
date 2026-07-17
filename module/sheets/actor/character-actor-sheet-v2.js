@@ -1,3 +1,5 @@
+import { ARM5E } from "../../config.js";
+
 import { ArM5eActorSheetV2 } from "./actor-sheet-v2.js";
 import { ArM5eActorProfiles } from "../../actor/subsheets/actor-profiles.js";
 import { Schedule } from "../../apps/schedule.js";
@@ -146,7 +148,7 @@ export class Arm5eCharacterActorSheetV2 extends ArM5eActorSheetV2 {
           })
         );
 
-        context.artsIcons = game.settings.get("arm5e", "artsIcons");
+        context.artsIcons = game.settings.get(ARM5E.SYSTEM_ID, "artsIcons");
 
         // Casting total modifiers
         if (context.system.castingtotal === undefined) {
@@ -449,7 +451,7 @@ export class Arm5eCharacterActorSheetV2 extends ArM5eActorSheetV2 {
     data.actor = this.actor;
 
     const dialog = await foundry.applications.handlebars.renderTemplate(
-      "systems/arm5e/templates/generic/combat-damage.html",
+      `systems/${ARM5E.SYSTEM_ID}/templates/generic/combat-damage.html`,
       data
     );
 

@@ -40,7 +40,7 @@ export function registerRecoveryTesting(quench) {
       let dataset;
       let event;
       let gravity = "medium";
-      const datetime = game.settings.get("arm5e", "currentDate");
+      const datetime = game.settings.get(ARM5E.SYSTEM_ID, "currentDate");
       let woundName;
       before(async function () {
         ArsLayer.clearAura(true);

@@ -1,3 +1,5 @@
+import { ARM5E } from "../config.js";
+
 import Aura from "../helpers/aura.js";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
@@ -29,12 +31,12 @@ export class AuraConfig extends HandlebarsApplicationMixin(ApplicationV2) {
 
   static PARTS = {
     form: {
-      template: "systems/arm5e/templates/generic/aura-config.html"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/aura-config.html`
     }
   };
 
   static async #onSubmitHandler(event, form, formData) {
-    await this.object.setFlag("arm5e", "aura", {
+    await this.object.setFlag(ARM5E.SYSTEM_ID, "aura", {
       values: {
         magic: formData.object.magic,
         faeric: formData.object.faeric,
@@ -56,7 +58,7 @@ export class AuraConfig extends HandlebarsApplicationMixin(ApplicationV2) {
 
     // Some scenes may have null or empty objects for their aura, so merge with the default aura data structure
     context.aura = foundry.utils.mergeObject(
-      this.object.getFlag("arm5e", "aura") || {},
+      this.object.getFlag(ARM5E.SYSTEM_ID, "aura") || {},
       Aura.defaultAura,
       {
         overwrite: false

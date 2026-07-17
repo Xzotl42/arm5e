@@ -12,10 +12,10 @@
           <span class="flex03">
 
             {{#if (eq @root.artsIcons "symbol")}}
-              <img src="systems/arm5e/assets/magic/{{key}}.png" {{{technique.ui.style}}}
+              <img src="{{systemPath}}assets/magic/{{key}}.png" {{{technique.ui.style}}}
                 title="{{technique.ui.title}}{{numberFormat technique.bonus decimals=0 sign=true}}" />
             {{else}}
-              <img src="systems/arm5e/assets/hands/{{key}}.png" {{{technique.ui.style}}}
+              <img src="{{systemPath}}assets/hands/{{key}}.png" {{{technique.ui.style}}}
                 title="{{technique.ui.title}}{{numberFormat technique.bonus decimals=0 sign=true}}" />
             {{/if}}
           </span>
@@ -56,10 +56,10 @@
         <li class="flexrow art" data-attribute="{{key}}">
           <span class="flex03">
             {{#if (eq @root.artsIcons "symbol")}}
-              <img src="systems/arm5e/assets/magic/{{key}}.png" {{{form.ui.style}}}
+              <img src="{{systemPath}}assets/magic/{{key}}.png" {{{form.ui.style}}}
                 title="{{form.ui.title}}{{numberFormat form.bonus decimals=0 sign=true}}" />
             {{else}}
-              <img src="systems/arm5e/assets/hands/{{key}}.png" {{{form.ui.style}}}
+              <img src="{{systemPath}}assets/hands/{{key}}.png" {{{form.ui.style}}}
                 title="{{form.ui.title}}{{numberFormat form.bonus decimals=0 sign=true}}" />
             {{/if}}
           </span>
@@ -100,9 +100,8 @@
   </div>
 </div>
 
-{{> "systems/arm5e/templates/actor/parts/actor-voice-and-gestures.hbs" id=_id }}
-{{>
-"systems/arm5e/templates/actor/parts/actor-magic-attributes.html" show="arts" }}
+{{> (systemPath "templates/actor/parts/actor-voice-and-gestures.hbs") id=_id }}
+{{> (systemPath "templates/actor/parts/actor-magic-attributes.html") show="arts" }}
 
 <div class="flexrow backSection margintop18">
   <ol class="items-list">
@@ -128,8 +127,8 @@
             class="fas fa-plus"></i>{{localize "arm5e.sheet.action.Add"}}</a>
       </div>
     </li>
-    {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
-    {{> "systems/arm5e/templates/actor/parts/hermeticFilter.hbs" category="hermetic" list="spells" visibility=ui.spellsFilterVisibility}}
+    {{> (systemPath "templates/generic/metalic-bar.html") }}
+    {{> (systemPath "templates/actor/parts/hermeticFilter.hbs") category="hermetic" list="spells" visibility=ui.spellsFilterVisibility}}
     {{#each system.filteredSpells as |item id|}}
       <li class="item item-value flexrow macro-ready draggable" data-name="{{item.name}}" data-item-id="{{item._id}}"
         data-attribute="{{id}}">
@@ -181,8 +180,8 @@
           data-type="magicalEffect"><i class="fas fa-plus"></i>{{localize "arm5e.sheet.action.Create"}}</a>
       </div>
     </li>
-    {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
-    {{> "systems/arm5e/templates/actor/parts/hermeticFilter.hbs" category="hermetic" list="magicalEffects" visibility=ui.magicEffectFilterVisibility}}
+    {{> (systemPath "templates/generic/metalic-bar.html") }}
+    {{> (systemPath "templates/actor/parts/hermeticFilter.hbs") category="hermetic" list="magicalEffects" visibility=ui.magicEffectFilterVisibility}}
     {{#each system.filteredMagicalEffects as |item id|}}
       <li class="item item-value flexrow macro-ready draggable" data-name="{{item.name}}" data-item-id="{{item._id}}"
         data-attribute="{{id}}">

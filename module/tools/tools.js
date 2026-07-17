@@ -826,7 +826,7 @@ export function generateActiveEffectFromAbilities() {
  */
 export function getSystemCompendium(compendiumName) {
   let pack = game.packs.filter(
-    (p) => p.metadata.packageName === "arm5e" && p.metadata.name === compendiumName
+    (p) => p.metadata.packageName === ARM5E.SYSTEM_ID && p.metadata.name === compendiumName
   );
   if (pack.length) return pack[0];
   return undefined;

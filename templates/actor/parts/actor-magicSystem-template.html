@@ -112,7 +112,7 @@
         id="hedge-templateDesc-{{id}}">
         {{log "root: " @root}}
         <div class="editor">
-          {{> "systems/arm5e/templates/generic/ars-editor-V2.hbs"
+          {{> (systemPath "templates/generic/ars-editor-V2.hbs")
             content=description
             prefix=namepath
             editorHeight="300px"

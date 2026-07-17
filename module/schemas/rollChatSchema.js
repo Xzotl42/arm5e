@@ -1,3 +1,5 @@
+import { ARM5E } from "../config.js";
+
 import { getWoundStr } from "../config.js";
 import { ROLL_PROPERTIES } from "../ui/roll-window.js";
 import { SMSG_FIELDS, SMSG_TYPES } from "../tools/socket-messages.js";
@@ -182,7 +184,7 @@ export class RollChatSchema extends BasicChatSchema {
       // TODO find cleaner way
       if (!showItem && !this.parent.type.startsWith("combat")) {
         label = game.i18n.localize("arm5e.generic.unknown");
-        img = "systems/arm5e/assets/icons/QuestionMark.webp";
+        img = `systems/${ARM5E.SYSTEM_ID}/assets/icons/QuestionMark.webp`;
       }
       icon = `<div class="moreInfo item-image" >
           <img src="${img}" data-uuid="${this.roll.itemUuid}"width="30" height="30"></div>`;
@@ -218,7 +220,7 @@ export class RollChatSchema extends BasicChatSchema {
   }
 
   showRollResults(actor, type) {
-    let showRolls = game.settings.get("arm5e", "showRolls");
+    let showRolls = game.settings.get(ARM5E.SYSTEM_ID, "showRolls");
     const publicRollMode = getPublicRollMode();
     return (
       game.users.get(game.userId).isGM ||
@@ -231,7 +233,7 @@ export class RollChatSchema extends BasicChatSchema {
   }
 
   showRollFormulas(actor, type) {
-    let showFormulas = game.settings.get("arm5e", "showRollFormulas");
+    let showFormulas = game.settings.get(ARM5E.SYSTEM_ID, "showRollFormulas");
     const publicRollMode = getPublicRollMode();
     return (
       game.users.get(game.userId).isGM ||
@@ -579,7 +581,7 @@ export class RollChatSchema extends BasicChatSchema {
   }
 
   getFailedMessage() {
-    const showDataOfNPC = game.settings.get("arm5e", "showNPCMagicDetails") === "SHOW_ALL";
+    const showDataOfNPC = game.settings.get(ARM5E.SYSTEM_ID, "showNPCMagicDetails") === "SHOW_ALL";
     let messageFlavor = "";
 
     if (showDataOfNPC || this.parent.originatorOrGM) {

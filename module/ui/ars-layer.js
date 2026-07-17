@@ -1,3 +1,5 @@
+import { ARM5E } from "../config.js";
+
 import { log } from "../tools/tools.js";
 
 import { Scriptorium, ScriptoriumObject } from "../apps/scriptorium.js";
@@ -29,14 +31,14 @@ export class ArsLayer extends foundry.canvas.layers.InteractionLayer {
 
   static async clearAura(bypassDialog = false) {
     if (bypassDialog) {
-      canvas.scene.setFlag("arm5e", "aura", null);
+      canvas.scene.setFlag(ARM5E.SYSTEM_ID, "aura", null);
     } else {
       const confirmed = await getConfirmation(
         game.i18n.localize("arm5e.canvas.buttons.clearAura"),
         game.i18n.localize("arm5e.dialog.confirmClearAura")
       );
       if (confirmed) {
-        canvas.scene.setFlag("arm5e", "aura", null);
+        canvas.scene.setFlag(ARM5E.SYSTEM_ID, "aura", null);
       }
     }
   }

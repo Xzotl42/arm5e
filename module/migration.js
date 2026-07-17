@@ -235,7 +235,7 @@ export async function migration(originalVersion) {
     }
 
     // Set the migration as complete
-    await game.settings.set("arm5e", "systemMigrationVersion", game.system.version);
+    await game.settings.set(ARM5E.SYSTEM_ID, "systemMigrationVersion", game.system.version);
     ui.notifications.info(
       `Ars Magica 5e System Migration to version ${game.system.version} completed!`,
       {
@@ -625,7 +625,7 @@ export const migrateActorData = async function (actorDoc, actorItems) {
           //   // updateData[`system.wounds.${wtype}.-=notes`] = null;
           // } else {
           if (actorDoc instanceof ArM5eActor || actor.synthetic) {
-            let datetime = game.settings.get("arm5e", "currentDate");
+            let datetime = game.settings.get(ARM5E.SYSTEM_ID, "currentDate");
             for (let ii = 0; ii < actor.system.wounds[wtype].number.value; ii++) {
               let woundData = {
                 name: `${game.i18n.localize(`arm5e.sheet.${wtype}`)} ${game.i18n.localize(

@@ -1,6 +1,6 @@
 <div class="sheet-header-part">
   <div class="header-background">
-    <img src="systems/arm5e/assets/item/{{ flavor }}_header.png" />
+    <img src="{{systemPath}}assets/item/{{ flavor }}_header.png" />
   </div>
   <header class="sheet-header marginItemPart">
     <img
@@ -47,9 +47,9 @@
             {{selectOptions config.magic.arts selected=system.art labelAttr='label'}}
           </select>
         </div>
-        {{> 'systems/arm5e/templates/item/parts/cost.hbs' classes='fit'}}
+        {{> (systemPath "templates/item/parts/cost.hbs") classes='fit'}}
       </div>
     </div>
   </header>
-  <div class="marginItemPart">{{> "systems/arm5e/templates/generic/metalic-bar.html" }}</div>
+  <div class="marginItemPart">{{> (systemPath "templates/generic/metalic-bar.html") }}</div>
 </div>

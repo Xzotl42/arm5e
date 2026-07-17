@@ -10,7 +10,7 @@
         <label for="system.governForm" class="smallTitle">{{localize "arm5e.sheet.wealth"}}</label>
       </span>
     </div>
-    {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+    {{> (systemPath "templates/generic/metalic-bar.html") }}
     <div class="grid grid-2col border-0">
       <span class="flex-group-right border-0">
         <label
@@ -148,7 +148,7 @@
         >
       </div>
     </li>
-    {{> "systems/arm5e/templates/generic/metalic-bar.html" }}
+    {{> (systemPath "templates/generic/metalic-bar.html") }}
     {{#each system.incomingSources as |item id|}}
     <li
       class="item item-value flexrow flex-center"

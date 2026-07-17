@@ -71,15 +71,15 @@ export class ActivitySchedule extends HandlebarsApplicationMixin(ApplicationV2) 
 
   static PARTS = {
     header: {
-      template: "systems/arm5e/templates/generic/parts/astrolab-header.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/astrolab-header.hbs`
     },
     activitySchedule: {
-      template: "systems/arm5e/templates/generic/activity-schedule.hbs",
-      templates: ["systems/arm5e/templates/generic/parts/calendar-grid.hbs"],
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/activity-schedule.hbs`,
+      templates: [`systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/calendar-grid.hbs`],
       scrollable: [".years"]
     },
     footer: {
-      template: "systems/arm5e/templates/generic/parts/astrolab-footer.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/astrolab-footer.hbs`
     }
   };
 
@@ -291,8 +291,8 @@ export class ActivitySchedule extends HandlebarsApplicationMixin(ApplicationV2) 
     data.activity = this.activity;
 
     // Get current game date and schedule enforcement settings
-    let currentDate = game.settings.get("arm5e", "currentDate");
-    let enforceSchedule = game.settings.get("arm5e", "enforceSchedule");
+    let currentDate = game.settings.get(ARM5E.SYSTEM_ID, "currentDate");
+    let enforceSchedule = game.settings.get(ARM5E.SYSTEM_ID, "enforceSchedule");
     data.curYear = Number(currentDate.year);
     data.curSeason = currentDate.season;
     data.duration = this.activity.system.duration;

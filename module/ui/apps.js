@@ -1,3 +1,5 @@
+import { ARM5E } from "../config.js";
+
 import { Arm5eChatMessage } from "../helpers/chat-message.js";
 import { ROLL_MODES, ROLL_PROPERTIES } from "./roll-window.js";
 import { AuraConfig } from "../apps/aura-config.js";
@@ -30,7 +32,7 @@ export class ArsApps {
 
   static async clearAura(bypassDialog = false) {
     if (bypassDialog) {
-      canvas.scene.setFlag("arm5e", "aura", null);
+      canvas.scene.setFlag(ARM5E.SYSTEM_ID, "aura", null);
     } else {
       const confirmed = await getConfirmation(
         game.i18n.localize("arm5e.canvas.buttons.clearAura"),
@@ -38,7 +40,7 @@ export class ArsApps {
       );
 
       if (confirmed) {
-        canvas.scene.setFlag("arm5e", "aura", null);
+        canvas.scene.setFlag(ARM5E.SYSTEM_ID, "aura", null);
       }
     }
   }

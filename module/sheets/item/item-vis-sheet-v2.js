@@ -1,5 +1,6 @@
 import { ArM5eItemSheetV2 } from "./item-sheet-v2.js";
 
+import { ARM5E } from "../../config.js";
 /**
  * AppV2 sheet for vis items.
  */
@@ -17,13 +18,13 @@ export class ArM5eVisItemSheetV2 extends ArM5eItemSheetV2 {
   /** @override */
   static PARTS = {
     header: {
-      template: "systems/arm5e/templates/item/parts/item-vis-header-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/item/parts/item-vis-header-v2.hbs`
     },
     description: {
-      template: "systems/arm5e/templates/item/parts/item-description-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/item/parts/item-description-v2.hbs`
     },
     footer: {
-      template: "systems/arm5e/templates/item/parts/item-footer-v2.hbs"
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/item/parts/item-footer-v2.hbs`
     }
   };
 
