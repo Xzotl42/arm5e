@@ -1093,9 +1093,9 @@ ARM5E.covenant.inhabitants = {
     advancedPts: 10
   },
   companions: { label: "arm5e.sheet.companion", points: 3, advancedPts: 5 },
-  turbula: { label: "arm5e.sheet.turbula", points: 1, advancedPts: 2 },
-  craftsmen: { label: "arm5e.sheet.craftsmen", points: 2, advancedPts: 3 },
   specialists: { label: "arm5e.sheet.specialists", points: 2, advancedPts: 3 },
+  craftsmen: { label: "arm5e.sheet.craftsmen", points: 2, advancedPts: 3 },
+  turbula: { label: "arm5e.sheet.turbula", points: 1, advancedPts: 2 },
   dependants: { label: "arm5e.sheet.dependants", points: 1, advancedPts: 2 },
   laborers: { label: "arm5e.sheet.laborers", points: 1, advancedPts: 2 },
   servants: { label: "arm5e.sheet.servants", points: 1, advancedPts: 2 },
@@ -1119,7 +1119,8 @@ ARM5E.covenant.fieldOfWork = {
   laboratories: "arm5e.sheet.laboratories",
   provisions: "arm5e.sheet.provisions",
   weapons: "arm5e.sheet.weapons",
-  writingMaterials: "arm5e.sheet.writingMaterials"
+  writingMaterials: "arm5e.sheet.writingMaterials",
+  books: "arm5e.sheet.books"
 };
 
 ARM5E.covenant.yearlyExpenses = {
@@ -1205,7 +1206,6 @@ ARM5E.covenant.specialists = {
   steward: { label: "arm5e.covenant.specialist.steward" },
   chamberlain: { label: "arm5e.covenant.specialist.chamberlain" },
   turbCaptain: { label: "arm5e.covenant.specialist.turbCaptain" },
-  books: { label: "arm5e.covenant.specialist.books" },
   other: { label: "arm5e.covenant.specialist.other" }
 };
 

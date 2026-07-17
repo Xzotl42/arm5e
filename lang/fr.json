@@ -123,7 +123,7 @@
         "xpmod": "Bonus d'Xp"
       },
       "type": {
-        "covenantModifiers": "Modificateur de l'alliance",  
+        "covenantModifiers": "Modificateur de l'alliance",
         "covenantBuildPoint": "Points de construction de l'alliance",
         "covenantInhabitants": "Les habitants de l'Alliance",
         "spellcasting": "Lancement de Sorts",
@@ -394,7 +394,7 @@
       "damage": {
         "ignored": "Jet de dés ignoré"
       },
-	  "targets": {
+      "targets": {
         "multiple": "Cibles multiples",
         "none": "Pas de cible sélectionnée",
         "single": "Une seule cible"
@@ -820,7 +820,7 @@
       "fatigueLost": "Perdre {num} niveau(x) de fatigue",
       "noConf": "Utilisation d'un point de confiance",
       "noWound": "Aucune blessure",
-      "soak": "Jet d'encaissement",	  
+      "soak": "Jet d'encaissement",
       "useConf": "Utiliser un Point de Confiance",
       "wound": {
         "dead": "Mort",
@@ -1197,7 +1197,7 @@
       "ageModifier": "Modificateur d'Âge",
       "aging": "Vieillissement",
       "agingMagi": "Vieillissement pour les mages",
-      "agingMundane": "Vieillissement pour les vulgaires",	  
+      "agingMundane": "Vieillissement pour les vulgaires",
       "agingPts": "Points de Vieillissement",
       "agingStart": "Décalage du début du vieillissement",
       "apparentAge": "Âge apparent",
@@ -1597,7 +1597,7 @@
       "salubrity": "Salubrité",
       "sanctum": "Sanctum",
       "saving": "Réductions",
-      "scene": "Scène",	  
+      "scene": "Scène",
       "score": "Score",
       "season": "Saison",
       "seasons": "Saisons",
@@ -1676,6 +1676,7 @@
         "others": "Autre"
       },
       "sourceQuality": "Qualité de la Source",
+      "specialist": "Spécialiste",
       "specialists": "Spécialistes",
       "specialistsSumary": "(Compétence) livres par saison",
       "specialities": "Spécialisations",

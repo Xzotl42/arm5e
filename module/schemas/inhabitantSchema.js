@@ -98,6 +98,11 @@ export class InhabitantSchema extends foundry.abstract.TypeDataModel {
         initial: 0,
         step: 1
       }),
+      isSpecialist: new fields.BooleanField({
+        required: false,
+        nullable: false,
+        initial: false
+      }),
       extradata: new fields.ObjectField({ required: false, nullable: true, initial: {} })
     };
   }
@@ -232,9 +237,9 @@ export class InhabitantSchema extends foundry.abstract.TypeDataModel {
     switch (this.category) {
       case "magi":
       case "companions":
-      case "craftsmen":
       case "specialists":
         return 1;
+      case "craftsmen":
       case "turbula":
       case "servants":
       case "laborers":
@@ -251,7 +256,13 @@ export class InhabitantSchema extends foundry.abstract.TypeDataModel {
   get craftSavings() {
     switch (this.category) {
       case "craftsmen":
-        return Math.floor(1 + this.score / 2);
+        if (this.isSpecialist) {
+          return this.score;
+        }
+        else {
+          return Math.floor(1 + this.score / 2);
+        }
+        return 0;
       case "specialists":
         if (this.specialistType === "other") {
           return this.score;
@@ -338,6 +349,13 @@ export class InhabitantSchema extends foundry.abstract.TypeDataModel {
 
     if (data.system.category === "grogs") {
       updateData["system.category"] = "turbula";
+    }
+
+    // Migrate "other" specialists to specialist craftspeople
+    if (data.system.category === "specialists" && data.system.specialistType === "other" && data.system.fieldOfWork !== "none") {
+      updateData["system.category"] = "craftsmen";
+      updateData["system.isSpecialist"] = true;
+      // fieldOfWork is already set, so it carries over
     }
     if (typeof data.system.loyalty !== "number") {
       updateData["system.loyalty"] = convertToNumber(data.system.loyalty, 0);

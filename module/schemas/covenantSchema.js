@@ -501,6 +501,7 @@ export class CovenantSchema extends foundry.abstract.TypeDataModel {
     this.inhabitants.magi = [];
     this.inhabitants.companion = [];
     this.inhabitants.specialists = [];
+    this.inhabitants.craftsmen = [];
     this.inhabitants.turbula = [];
     this.inhabitants.habitants = [];
     this.inhabitants.horses = [];
@@ -602,8 +603,8 @@ export class CovenantSchema extends foundry.abstract.TypeDataModel {
               this.inhabitants.specialists.push(item);
               break;
             case "craftsmen":
-              this.census.craftsmen++;
-              this.inhabitants.specialists.push(item);
+              this.census.craftsmen += item.system.number;
+              this.inhabitants.craftsmen.push(item);
               break;
             case "turbula":
               this.census.turbula += item.system.number;
@@ -751,9 +752,9 @@ export class CovenantSchema extends foundry.abstract.TypeDataModel {
 
     this.yearlyExpenses.writingMaterials.amount +=
       this.census.magi +
-      this.inhabitants.specialists.filter((e) => {
-        return e.system.category === "specialists" && e.system.specialistType === "books";
-      }).length;
+      this.inhabitants.craftsmen
+        .filter(e => e.system.fieldOfWork === "books")
+        .reduce((sum, e) => sum + e.system.number, 0);
 
     // INHABITANTS
     this.census.workers = this.census.laborers + this.census.teamsters + this.census.servants;
@@ -867,27 +868,16 @@ export class CovenantSchema extends foundry.abstract.TypeDataModel {
       this.yearlyExpenses.provisions.amount * 0.5
     );
 
-    for (let spe of this.inhabitants.specialists) {
-      if (spe.system.category === "specialists") {
-        if (spe.system.specialistType === "other" && spe.system.fieldOfWork !== "none") {
-          let craft = slugify(spe.system.job, false);
-          let saves = spe.system.craftSavings;
-          if (!craftSavings[spe.system.fieldOfWork].crafts[craft]) {
-            craftSavings[spe.system.fieldOfWork].crafts[craft] = { val: saves, type: "spec" };
-          } else {
-            craftSavings[spe.system.fieldOfWork].crafts[craft].val += saves;
-          }
-          craftSavings[spe.system.fieldOfWork].total += saves;
-        }
-      } else if (spe.system.category === "craftsmen" && spe.system.fieldOfWork !== "none") {
-        let craft = slugify(spe.system.job, false);
-        let saves = spe.system.craftSavings;
-        if (!craftSavings[spe.system.fieldOfWork].crafts[craft]) {
-          craftSavings[spe.system.fieldOfWork].crafts[craft] = { val: saves, type: "craft" };
+    for (let craft of this.inhabitants.craftsmen) {
+      if (craft.system.fieldOfWork !== "books") {
+        let craftName = slugify(craft.system.job, false);
+        let saves = craft.system.craftSavings * craft.system.number;
+        if (!craftSavings[craft.system.fieldOfWork].crafts[craftName]) {
+          craftSavings[craft.system.fieldOfWork].crafts[craftName] = { val: saves, type: "craft" };
         } else {
-          craftSavings[spe.system.fieldOfWork].crafts[craft].val += saves;
+          craftSavings[craft.system.fieldOfWork].crafts[craftName].val += saves;
         }
-        craftSavings[spe.system.fieldOfWork].total += saves;
+        craftSavings[craft.system.fieldOfWork].total += saves;
       }
     }
 
