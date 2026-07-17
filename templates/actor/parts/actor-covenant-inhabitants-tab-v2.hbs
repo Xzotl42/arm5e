@@ -200,6 +200,7 @@
           <label><span class="flexrow item-title width15">{{item.name}} </span></label>
           <label><span class="flexrow item-title width15"></span>{{item.system.job}}</label>
           <span>{{localize "arm5e.sheet.yearBorn"}}: {{item.system.yearBorn}}</span>
+          <span>{{localize "arm5e.sheet.loyalty"}}: {{item.system.loyalty}}</span>
           <span class="flexrow item-title">
             {{#with (lookup @root.config.magic.gift item.system.extradata.giftType)}}{{localize this}}
             {{/with}}</span>
@@ -240,8 +241,7 @@
         <div class="item-image item-control item-edit" data-action="itemEdit"><img src="{{item.img}}" title="{{item.name}}" /></div>
         <div class="flexrow flex-center">
           <span class="flexrow item-title width15">{{item.name}}</span>
-          <label><span class="flexrow bold width15"></span>{{item.system.job}} ({{ item.system.score
-            }})</label>
+          <label><span class="flexrow bold width15"></span>{{item.system.job}}</label>
           <span class="flexrow bold">{{localize "arm5e.sheet.yearBorn"}}:
             {{item.system.yearBorn}}
           </span>
@@ -268,9 +268,7 @@
 <ol class="items-list backSection margintop18">
   <li class="item flexrow item-header inhabitants" data-action="toggleInhabitants" data-category="inhabitants-specialists">
     <div class="item-image"></div>
-    <div class="item-name">{{localize "arm5e.sheet.specialists"}} ({{system.census.specialists}}) &
-      {{localize "arm5e.sheet.craftsmen"}} ({{system.census.craftsmen }})
-    </div>
+    <div class="item-name">{{localize "arm5e.sheet.specialists"}} ({{system.census.specialists}})</div>
     <div class="item-controls">
       <a class="item-control item-create" data-action="itemCreate" title="Add Specialist" data-type="inhabitant" data-category="specialists"><i
           class="fas fa-plus"></i>{{localize "arm5e.sheet.action.Create"}}</a>
@@ -284,7 +282,7 @@
         <div class="item-image item-control item-edit" data-action="itemEdit"><img src="{{item.img}}" title="{{item.name}}" /></div>
         <div class="flexrow flex-center">
           <span class="flexrow item-title width15">{{item.name}}</span>
-          <span class="flexrow bold width15">{{item.system.job}} ({{ item.system.score }})</span>
+          <span class="flexrow bold width15">{{item.system.job}}{{#if (eq item.system.specialistType "other")}} ({{item.system.score}}){{/if}}</span>
           <span class="flexrow bold">{{localize "arm5e.sheet.yearBorn"}}: {{item.system.yearBorn}} </span>
           <span class="flexrow bold flex05">{{localize "arm5e.sheet.loyalty"}}: {{item.system.loyalty}}
           </span>
@@ -299,6 +297,43 @@
           <a class="item-control item-edit" data-action="itemEdit" title="Edit Specialist" data-actorId="{{item.system.actorId}}"><i
               class="ars-Icon_Edit"></i></a>
           <a class="item-control actor-link-delete" data-action="removeLinkedItem" title="Delete Specialist"><i
+              class="ars-Icon_Delete_Hand_Gesture"></i></a>
+        </div>
+      </li>
+    {{/each}}
+  </div>
+</ol>
+
+{{!-- craftsmen --}}
+<ol class="items-list backSection margintop18">
+  <li class="item flexrow item-header inhabitants" data-action="toggleInhabitants" data-category="inhabitants-craftsmen">
+    <div class="item-image"></div>
+    <div class="item-name">{{localize "arm5e.sheet.craftsmen"}} ({{system.census.craftsmen}})</div>
+    <div class="item-controls">
+      <a class="item-control item-create" data-action="itemCreate" title="Add Craftsperson" data-type="inhabitant" data-category="craftsmen"><i
+          class="fas fa-plus"></i>{{localize "arm5e.sheet.action.Create"}}</a>
+    </div>
+  </li>
+  <div id="inhabitants-craftsmen" class="toggle-collapse {{ui.lists.visibility.inhabitants.inhabitants-craftsmen}}">
+    {{> (systemPath "templates/generic/metalic-bar.html") }}
+    {{#each system.inhabitants.craftsmen as |item id|}}
+      <li class="item item-value flexrow flex-center" data-name="{{item.name}}" data-attribute="{{id}}"
+        data-item-id="{{item._id}}">
+        <div class="item-image item-control item-edit" data-action="itemEdit"><img src="{{item.img}}" title="{{item.name}}" /></div>
+        <div class="flexrow flex-center">
+          <span class="flexrow item-title width15">{{item.name}}</span>
+          <span class="flexrow bold width15">{{item.system.job}} ({{item.system.score}})</span>
+          <span class="flexrow bold">{{localize "arm5e.sheet.fieldOfWork"}}: 
+            {{localize (lookup config.covenant.fieldOfWork item.system.fieldOfWork)}}
+          </span>
+          <span class="flexrow bold flex05">Qty: {{item.system.quantity}}</span>
+          <span class="flexrow bold">{{localize "arm5e.sheet.yearBorn"}}: {{item.system.yearBorn}}</span>
+          <span class="flexrow bold">{{localize "arm5e.sheet.loyalty"}}: {{item.system.loyalty}}</span>
+          {{#if item.system.isSpecialist}}<span class="flexrow badge">{{localize "arm5e.sheet.specialist"}}</span>{{/if}}
+        </div>
+        <div class="item-controls">
+          <a class="item-control item-edit" data-action="itemEdit" title="Edit Craftsperson"><i class="ars-Icon_Edit"></i></a>
+          <a class="item-control actor-link-delete" data-action="removeLinkedItem" title="Delete Craftsperson"><i
               class="ars-Icon_Delete_Hand_Gesture"></i></a>
         </div>
       </li>
@@ -367,8 +402,10 @@
             <div class="item-image item-control item-edit" data-action="itemEdit"><img src="{{item.img}}" title="{{item.name}}" /></div>
             <div class="flexrow flex-center">
                 <span class="flexrow item-title ">{{item.name}}</span>
-                <span class="flexrow bold ">{{item.system.job}} ({{ item.system.score }})</span>
+                <span class="flexrow bold ">{{item.system.job}}</span>
                 <span class="flexrow bold ">{{localize item.system.categoryLabel}} : {{item.system.quantity}}</span>
+                <span class="flexrow bold">{{localize "arm5e.sheet.yearBorn"}}: {{item.system.yearBorn}}</span>
+                <span class="flexrow bold">{{localize "arm5e.sheet.loyalty"}}: {{item.system.loyalty}}</span>
             </div>
             <div class="item-controls">
                 {{#if (eq item.system.linked true)}}
@@ -407,6 +444,7 @@
               <span class="flexrow item-title width2">{{item.name}}</span>
               <span></span>
               <span class="flexrow bold">{{localize "arm5e.sheet.yearBorn"}}: {{item.system.yearBorn}} </span>
+              <span class="flexrow bold">{{localize "arm5e.sheet.loyalty"}}: {{item.system.loyalty}} </span>
               <span class="flexrow bold">{{localize "arm5e.sheet.quantity"}}: {{item.system.quantity}} </span>
           </div>
           <div class="item-controls">
@@ -440,6 +478,7 @@
               <span class="flexrow item-title width2">{{item.name}}</span>
               <span></span>
               <span class="flexrow bold">{{localize "arm5e.sheet.yearBorn"}}: {{item.system.yearBorn}} </span>
+              <span class="flexrow bold">{{localize "arm5e.sheet.loyalty"}}: {{item.system.loyalty}} </span>
               <span class="flexrow bold">{{localize "arm5e.sheet.quantity"}}: {{item.system.quantity}} </span>
           </div>
           <div class="item-controls">

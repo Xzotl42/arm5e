@@ -167,6 +167,12 @@ export class ArM5eCovenantActorSheetV2 extends ArM5eActorSheetV2 {
       context.system.loyalty.modifiers.specialists += person.system.loyaltyGain;
     }
 
+    for (let person of context.system.inhabitants.craftsmen) {
+      if (person.system.linked) {
+        person.system.yearBorn = person.system.document.system.description.born.value;
+      }
+    }
+
     for (let person of context.system.inhabitants.habitants) {
       if (person.system.linked) {
         person.system.yearBorn = person.system.document.system.description.born.value;
