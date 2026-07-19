@@ -161,15 +161,21 @@
             {{selectOptions config.covenant.fieldOfWork selected=system.fieldOfWork localize=true}}
           </select>
         </div>
-        <div class="resource flexcol flex0">
-          <label class="bold">
+        <div class="resource flexcol flex0 flex-center">
+          <label class="bold">{{localize 'arm5e.sheet.specialist'}}</label>
+          <div class="flexrow flex-group-center">
             <input type="checkbox" name="system.isSpecialist" {{checked system.isSpecialist}} />
-            {{localize 'arm5e.sheet.specialist'}}
-          </label>
+          </div>
         </div>
       </div>
       <div class="flexrow">
         <div class="resource flexcol">
+          <label class="bold">Linked ability</label>
+          <select name="system.syncAbilityId" data-type="String">
+            {{selectOptions craftSyncAbilities selected=system.syncAbilityId}}
+          </select>
+        </div>
+        <div class="resource flexcol flex0">
           <label class="bold">{{localize 'arm5e.sheet.quantity'}}</label>
           <input
             class="select-on-focus"
@@ -180,7 +186,6 @@
           />
         </div>
       </div>
-
       {{!-- horses/livestock: job, quantity --}}
       {{else if (or (eq system.category 'horses') (eq system.category 'livestock'))}}
       <div class="resource flexcol">

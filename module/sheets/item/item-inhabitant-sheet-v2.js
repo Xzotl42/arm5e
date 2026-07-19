@@ -54,7 +54,13 @@ export class ArM5eInhabitantItemSheetV2 extends ArM5eItemSheetV2 {
     const sys = this.item.system;
     context.inhabitantCategory = foundry.utils.deepClone(CONFIG.ARM5E.covenant.inhabitants);
     if (sys.linked) {
-      if (["magi", "companions"].includes(sys.category)) {
+      const linkedActor = game.actors.get(sys.actorId);
+      if (linkedActor?.type === "beast") {
+        context.inhabitantCategory = {
+          horses: context.inhabitantCategory.horses,
+          livestock: context.inhabitantCategory.livestock
+        };
+      } else if (["magi", "companions"].includes(sys.category)) {
         context.ui.canEdit = "readonly";
         context.ui.canSelect = "disabled";
       } else {
@@ -93,6 +99,20 @@ export class ArM5eInhabitantItemSheetV2 extends ArM5eItemSheetV2 {
           break;
         default:
           break;
+      }
+    }
+
+    if (sys.category === "craftsmen" && sys.linked) {
+      const linkedActor = game.actors.get(sys.actorId);
+      context.craftSyncAbilities = {
+        "": game.i18n.localize("arm5e.sheet.none")
+      };
+      if (linkedActor) {
+        for (const ability of linkedActor.items.filter((item) => item.type === "ability")) {
+          const score = ability.system?.finalScore ?? ability.system?.score ?? 0;
+          const option = ability.system?.option ? ` (${ability.system.option})` : "";
+          context.craftSyncAbilities[ability.id] = `${ability.name}${option} [${score}]`;
+        }
       }
     }
 
