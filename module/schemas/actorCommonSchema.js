@@ -1,7 +1,7 @@
 import { ARM5E } from "../config.js";
 import { compareBaseEffects, compareMagicalEffects, compareSpells } from "../tools/tools.js";
 
-import { boolOption, SeasonField } from "./commonSchemas.js";
+import { actorLink, boolOption, SeasonField } from "./commonSchemas.js";
 
 const fields = foundry.data.fields;
 
@@ -31,6 +31,7 @@ export const actorBase = () => {
 export class CodexSchema extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     return {
+      owner: actorLink(),
       withCompendia: boolOption(true)
     };
   }
@@ -82,6 +83,14 @@ export class CodexSchema extends foundry.abstract.TypeDataModel {
             `CodexSchema: Unexpected item type ${s.type} in spells compendium : ${s.name}`
           );
         }
+      }
+
+      this.owner.document = game.actors.get(this.owner.actorId);
+      if (this.owner.document) {
+        this.owner.value = this.owner.document.name;
+        this.owner.linked = true;
+      } else {
+        this.owner.linked = false;
       }
     }
 

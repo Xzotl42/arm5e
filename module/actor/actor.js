@@ -832,6 +832,14 @@ export class ArM5eActor extends Actor {
       } else {
         this.system.sanctum.linked = false;
       }
+
+      this.system.codex.document = game.actors.get(this.system.codex.actorId);
+      if (this.system.codex.document) {
+        this.system.codex.value = this.system.codex.document.name;
+        this.system.codex.linked = true;
+      } else {
+        this.system.codex.linked = false;
+      }
     }
 
     // log(false, "PC end of prepare actor data", system);

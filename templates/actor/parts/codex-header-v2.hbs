@@ -4,7 +4,24 @@
   </div>
 
   <h1 class="codex-title" style="width: 100%; text-align: center">Codex Hermeticum</h1>
-  <br />
+  <div class="marginsides32 flexrow">
+    <input
+      class="flex04"
+      name="name"
+      type="text"
+      value="{{ actor.name }}"
+      title="{{ actor.name }}"
+      placeholder="Name"
+    />
+    <label
+      class="flex0"
+      style="padding-left: 10px; padding-right: 10px"
+      >{{localize "arm5e.sheet.owner"}}</label
+    >
+    <select class="codex-owner flex01" name="" data-type="String">
+      {{selectOptions system.characters selected=system.owner.actorId labelAttr="name" valueAttr="id" blank="" }}
+    </select>
+  </div>
   <header class="sheet-header-codex marginsides32">
     <div>{{localize "arm5e.sheet.filters"}}</div>
     <div class="header-fields">
