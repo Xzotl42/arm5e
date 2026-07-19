@@ -204,7 +204,15 @@ export class ArM5eMagicCodexSheetV2 extends ArM5eActorSheetV2 {
         context.system.aspectsCount = Object.keys(subset).length;
       }
     }
-
+    context.system.characters = [];
+    for (const actor of game.actors) {
+      if (actor.isCharacter() && actor.isOwner && actor.isMagus()) {
+        context.system.characters.push({
+          id: actor.id,
+          name: actor.name
+        });
+      }
+    }
     return context;
   }
 
@@ -222,12 +230,29 @@ export class ArM5eMagicCodexSheetV2 extends ArM5eActorSheetV2 {
 
     this.element.querySelectorAll(".search-aspects").forEach((el) => {
       el.addEventListener("change", (event) => {
+        event.preventDefault();
+        const target = event.currentTarget;
         const usercache = JSON.parse(sessionStorage.getItem(`usercache-${game.user.id}`));
-        usercache[this.actor.id].filters.aspects.searchString = event.currentTarget.value
-          .toLowerCase()
-          .trim();
+        usercache[this.actor.id].filters.aspects.searchString = target.value.toLowerCase().trim();
         sessionStorage.setItem(`usercache-${game.user.id}`, JSON.stringify(usercache));
         this.render();
+      });
+    });
+    this.element.querySelectorAll(".codex-owner").forEach((el) => {
+      el.addEventListener("change", async (event) => {
+        event.preventDefault();
+        const target = event.currentTarget.selectedOptions[0].value;
+        const owner = game.actors.get(target);
+        if (owner) {
+          await this.actor.update({
+            "system.owner.actorId": target,
+            "system.owner.value": owner.name
+          });
+          await owner.update({
+            "system.codex.actorId": this.actor.id,
+            "system.codex.value": this.actor.name
+          });
+        }
       });
     });
   }
