@@ -124,7 +124,7 @@
         </div>
       </div>
 
-      {{!-- craftsmen: job, score, fieldOfWork, quantity, isSpecialist --}}
+      {{!-- craftsmen: job, score, fieldOfWork, quantity, isRare --}}
       {{else if (eq system.category 'craftsmen')}}
       <div class="flexrow">
         <div class="resource flexcol">
@@ -150,9 +150,9 @@
           </select>
         </div>
         <div class="resource flexcol flex0 flex-center">
-          <label class="bold">{{localize 'arm5e.sheet.specialist'}}</label>
+          <label class="bold">{{localize 'arm5e.sheet.rare'}}</label>
           <div class="flexrow flex-group-center">
-            <input type="checkbox" name="system.isSpecialist" {{checked system.isSpecialist}} />
+            <input type="checkbox" name="system.isRare" {{checked system.isRare}} />
           </div>
         </div>
       </div>
