@@ -102,11 +102,11 @@ export class ArM5eInhabitantItemSheetV2 extends ArM5eItemSheetV2 {
       }
     }
 
-    if (sys.category === "craftsmen" && sys.linked) {
-      const linkedActor = game.actors.get(sys.actorId);
+    if (sys.category === "craftsmen") {
       context.craftSyncAbilities = {
         "": game.i18n.localize("arm5e.sheet.none")
       };
+      const linkedActor = sys.linked ? game.actors.get(sys.actorId) : null;
       if (linkedActor) {
         for (const ability of linkedActor.items.filter((item) => item.type === "ability")) {
           const score = ability.system?.finalScore ?? ability.system?.score ?? 0;

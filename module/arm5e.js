@@ -297,6 +297,9 @@ Hooks.once("ready", async function () {
     void syncLinkedInhabitantsForActor(item.parent);
   });
   Hooks.on("updateItem", (item) => {
+    if (item?.type === "inhabitant" && item.parent?.type === "covenant") {
+      item.parent.sheet?.render(false);
+    }
     if (!item?.parent || !["ability", "personalityTrait"].includes(item.type)) return;
     void syncLinkedInhabitantsForActor(item.parent);
   });
