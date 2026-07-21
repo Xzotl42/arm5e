@@ -1,3 +1,22 @@
+## 3.0.1.12 Stentorius BF6
+
+### Compatibility
+
+- Verified for 14.364
+
+### Features & changes
+
+- Codex can be linked to a specific character, so it will open when adding a spell.
+
+### Bug fixes
+
+- Fixed missing translations in Item enchantments tab
+- Fixed lab text creation in Item enchantment tab.
+- Fixed Missing tabs for assets location when editing Actor profile image.
+- Dropping a character on the teacher tab of a seasonal activity will work again.
+- Fixed Journal styles
+- Active effects impacting source quality of seasonal activities are working again
+
 ## 3.0.1.10 Stentorius BF5
 
 ### Compatibility

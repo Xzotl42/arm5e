@@ -588,6 +588,7 @@ h3.dice-msg {
 .arm5e input[type="time"],
 .arm5e color-picker,
 .arm5e select,
+.heading-level select,
 .arm5e-prompt select,
 .arm5e-dialog select,
 .arm5e-roll select {
@@ -1758,7 +1759,7 @@ span.player-name {
 
 .system-arm5e .journal-entry-page h3 {
   font-family: var(--font-header);
-  font-size: 14pt;
+  font-size: 15pt;
   color: var(--arm5e-c-black);
   border-bottom: 1px solid var(--color-warm-3);
 }
@@ -1768,6 +1769,23 @@ span.player-name {
   font-size: 14pt;
   color: var(--arm5e-c-black);
   border-bottom: 1px solid var(--color-warm-3);
+}
+
+.system-arm5e .journal-entry-page h5 {
+  font-family: var(--font-header);
+  font-size: 13pt;
+  color: var(--arm5e-c-black);
+  border-bottom: 1px solid var(--color-warm-3);
+}
+
+.system-arm5e .journal-entry-page h6 {
+  font-family: var(--font-header);
+  font-size: 12pt;
+  color: var(--arm5e-c-black);
+}
+
+.system-arm5e .journal-entry-page strong {
+  font-weight: bold;
 }
 
 .system-arm5e .journal-entry-page code,
@@ -1906,6 +1924,8 @@ a.content-link i.fa-book-open {
   /* background-color: rgb(169 159 134 / 50%); */
   background-color: var(--arm5e-c-tan);
 }
+
+prose-mirror menu button,
 .arm5e .editor .editor-edit,
 .arm5e .window-content button {
   font-family: var(--font-header);
@@ -2859,6 +2879,10 @@ img.tinyimg {
   font-weight: 400;
   height: 30px;
   /*letter-spacing: 1px;*/
+}
+
+.arm5e h2.covenantname input {
+  font-weight: 300;
 }
 
 .arm5e .sheet-header h2.covenantname {

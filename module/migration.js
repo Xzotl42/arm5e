@@ -454,6 +454,10 @@ export const migrateActorData = async function (actorDoc, actorItems) {
       }
     }
 
+    if (actor.system.codex === undefined) {
+      updateData["system.codex"] = { actorId: null, value: "", linked: false };
+    }
+
     if (["player", "npc", "beast"].includes(actor.type)) {
       if (actor.system.charType && actor.system.charType.value === undefined) {
         updateData["system.charType"] = { value: actor.system.charType };

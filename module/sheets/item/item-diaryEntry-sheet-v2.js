@@ -114,9 +114,11 @@ export class ArM5eDiaryEntryItemSheetV2 extends ArM5eItemSheetV2 {
     if (!Object.keys(context.selection.activities).includes(actType)) {
       context.activityState = "disabled";
     }
+
+    const activityConfig = getActivityDefinition(actType);
     // if the activity type is not usually available for selection,
     // we need to add it to the list so it can be displayed in the sheet (but still disabled for selection)
-    context.selection.activities[actType] = getActivityDefinition(actType).label;
+    context.selection.activities[actType] = activityConfig.label;
 
     // Initialize string fields used in the advanced template's action buttons section.
     // These must be set before any early return so the template never receives undefined
@@ -132,8 +134,6 @@ export class ArM5eDiaryEntryItemSheetV2 extends ArM5eItemSheetV2 {
       delete context.tabs.advanced;
       return context;
     }
-
-    const activityConfig = getActivityDefinition(actType);
 
     if (activityConfig.durationEdit === true) {
       context.ui.editDuration = "";
@@ -177,7 +177,7 @@ export class ArM5eDiaryEntryItemSheetV2 extends ArM5eItemSheetV2 {
     context.system.defaultArt = "";
     context.system.ownedArts = [];
     context.system.defaultSpellMastery = "";
-    context.system.sourceModifier = context.system.sourceModifier ?? 0;
+    context.system.sourceModifier = 0;
 
     context.system.canEdit = "";
     context.system.disabled = "";
@@ -202,10 +202,8 @@ export class ArM5eDiaryEntryItemSheetV2 extends ArM5eItemSheetV2 {
         if (teacher !== undefined && !teacher.isMagus()) {
           context.ui.showMagicProgress = false;
         }
-        if (teacher !== undefined) {
-          context.system.sourceModifier =
-            (context.system.sourceModifier ?? 0) +
-            (teacher.system.bonuses?.activities?.teacher ?? 0);
+        if (teacher !== undefined && "teaching" === actType) {
+          context.system.sourceModifier += teacher.system.bonuses.activities.teacher;
         }
       } else if (context.system.teacher.score < 2 && !context.system.done) {
         context.system.canEdit = "readonly";
@@ -277,7 +275,7 @@ export class ArM5eDiaryEntryItemSheetV2 extends ArM5eItemSheetV2 {
       context.system.applyPossible = false;
     }
 
-    context.system.sourceModifier = this.item.actor.system.bonuses?.activities[actType] ?? 0;
+    context.system.sourceModifier += this.item.actor.system.bonuses.activities[actType];
     if (activityConfig.source.readonly && !context.system.done) {
       context.ui.editSource = false;
       context.system.sourceDefault = activityConfig.source.default;
@@ -926,7 +924,9 @@ export class ArM5eDiaryEntryItemSheetV2 extends ArM5eItemSheetV2 {
 
   /** @override */
   async _onDrop(event) {
-    const data = foundry.applications.ux.getDragEventData(event);
+    event.preventDefault();
+    event.stopPropagation(); // prevent second _onDrop via root ItemSheetV2 handler
+    const data = foundry.applications.ux.TextEditor.getDragEventData(event);
     const dropTarget = event.currentTarget;
 
     if (data.type === "Actor" && dropTarget.classList.contains("progress-teacher")) {
@@ -936,7 +936,10 @@ export class ArM5eDiaryEntryItemSheetV2 extends ArM5eItemSheetV2 {
           return;
         }
         const actor = await Actor.implementation.fromDropData(data);
-        if (actor.isCharacter()) await this._setTeacher(actor);
+        if (actor.isCharacter()) {
+          await this._setTeacher(actor);
+          return;
+        }
       }
     } else if (data.type === "Item") {
       if (dropTarget.classList.contains("progress-abilities")) {
@@ -947,6 +950,7 @@ export class ArM5eDiaryEntryItemSheetV2 extends ArM5eItemSheetV2 {
           this.item.system.activity !== "training"
         ) {
           await this.item.update(this._addAbility(item), {});
+          return;
         }
       } else if (
         dropTarget.classList.contains("drop-newspell") ||
@@ -958,6 +962,7 @@ export class ArM5eDiaryEntryItemSheetV2 extends ArM5eItemSheetV2 {
         const newSpells = this.item.system.progress.newSpells;
         newSpells.push(ArM5eDiaryEntryItemSheetV2._buildNewSpellEntry(item));
         await this.item.update({ "system.progress.newSpells": newSpells });
+        return;
       }
     }
 
@@ -1176,7 +1181,7 @@ export class ArM5eDiaryEntryItemSheetV2 extends ArM5eItemSheetV2 {
   }
 
   static async progressApply(event, target) {
-    const sourceModifier = Number(target.dataset.sourceModifier ?? 0);
+    const sourceModifier = Number(target.dataset.sourcemodifier ?? 0);
     return await this._progressApply({ sourceModifier, notif: true });
   }
 

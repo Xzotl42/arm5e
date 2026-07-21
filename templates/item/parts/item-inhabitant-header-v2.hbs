@@ -39,7 +39,21 @@
         </div>
       </div>
 
-      {{!-- magi: job, yearBorn, giftType, loyalty --}}
+      {{!-- Shared: every covenant inhabitant has a birth year and loyalty --}}
+      <div class="grid grid-2col">
+        <div class="resource flexcol">
+          <label class="bold">{{localize 'arm5e.sheet.yearBorn'}}</label>
+          <input class="select-on-focus" type="number" name="system.yearBorn"
+            value="{{ system.yearBorn }}" data-dtype="Number" {{ui.canEdit}} />
+        </div>
+        <div class="resource flexcol">
+          <label class="bold">{{localize 'arm5e.sheet.loyalty'}}</label>
+          <input class="select-on-focus" type="number" name="system.loyalty"
+            value="{{ system.loyalty }}" data-dtype="Number" />
+        </div>
+      </div>
+
+      {{!-- magi: job, giftType --}}
       {{#if (eq system.category 'magi')}}
       <div class="resource flexcol">
         <label class="bold">{{localize 'arm5e.sheet.job'}}</label>
@@ -47,59 +61,17 @@
       </div>
       <div class="grid grid-2col">
         <div class="resource flexcol">
-          <label class="bold">{{localize 'arm5e.sheet.yearBorn'}}</label>
-          <input
-            class="select-on-focus"
-            type="number"
-            name="system.yearBorn"
-            value="{{ system.yearBorn }}"
-            data-dtype="String"
-            {{ui.canEdit}}
-          />
-        </div>
-        <div class="resource flexcol">
           <label class="bold">{{localize 'arm5e.sheet.giftType'}}</label>
           <select name="system.giftType" data-type="String">
             {{selectOptions config.covenant.gift selected=system.giftType labelAttr='label' localize=true}}
           </select>
         </div>
       </div>
-      <div class="resource flexrow">
-        <div class="resource flexcol">
-          <label class="bold">{{localize 'arm5e.sheet.loyalty'}}</label>
-          <input
-            class="select-on-focus"
-            type="number"
-            name="system.loyalty"
-            value="{{ system.loyalty }}"
-            data-dtype="String"
-          />
-        </div>
-      </div>
-
-      {{!-- companions: job, yearBorn, score, loyalty --}}
+      {{!-- companions: job --}}
       {{else if (eq system.category 'companions')}}
       <div class="resource flexcol">
         <label class="bold">{{localize 'arm5e.sheet.job'}}</label>
         <input type="text" name="system.job" value="{{ system.job }}" data-dtype="String" />
-      </div>
-      <div class="grid grid-2col">
-        <div class="resource flexcol">
-          <label class="bold">{{localize 'arm5e.sheet.yearBorn'}}</label>
-          <input
-            type="text"
-            name="system.yearBorn"
-            value="{{ system.yearBorn }}"
-            data-dtype="String"
-            {{ui.canEdit}}
-          />
-        </div>
-        {{#if (eq system.companionRole 'craftsman')}}
-        <div class="resource flexcol">
-          <label class="bold">{{localize 'arm5e.sheet.score'}}</label>
-          <input type="text" name="system.score" value="{{ system.score }}" data-dtype="Number" />
-        </div>
-        {{/if}}
       </div>
       <div class="flexrow">
         <div class="resource flexcol">
@@ -114,11 +86,10 @@
           <select name="system.fieldOfWork" data-type="String">
             {{selectOptions config.covenant.fieldOfWork selected=system.fieldOfWork localize=true}}
           </select>
-        </div><div class="resource flexcol flex0 flex-center">
+        </div>
+        <div class="resource flexcol flex0 flex-center">
           <label class="bold">{{localize 'arm5e.sheet.specialist'}}</label>
-          <div class="flexrow flex-group-center">
-            <input type="checkbox" name="system.isSpecialist" {{checked system.isSpecialist}} />
-          </div>
+          <input type="checkbox" name="system.isSpecialist" {{checked system.isSpecialist}} />
         </div>
         <div class="resource flexcol">
           <label class="bold">Linked ability</label>
@@ -129,54 +100,27 @@
         {{else if (eq system.companionRole 'teacher')}}
         <div class="resource flexcol">
           <label class="bold">{{localize companionSpecialistChar}}</label>
-          <input class="select-on-focus" type="number" name="system.specialistChar" value="{{ system.specialistChar }}"
-            data-dtype="Number" />
+          <input class="select-on-focus" type="number" name="system.specialistChar" value="{{ system.specialistChar }}" data-dtype="Number" />
         </div>
         <div class="resource flexcol">
           <label class="bold">{{localize companionSpecialistAbility}}</label>
-          <input class="select-on-focus" type="number" name="system.teacherScore" value="{{ system.teacherScore }}"
-            data-dtype="Number" />
+          <input class="select-on-focus" type="number" name="system.teacherScore" value="{{ system.teacherScore }}" data-dtype="Number" />
         </div>
-        {{else if (or (eq system.companionRole 'steward') (eq system.companionRole 'chamberlain') (eq
-        system.companionRole 'turbCaptain'))}}
+        {{else if (or (eq system.companionRole 'steward') (eq system.companionRole 'chamberlain') (eq system.companionRole 'turbCaptain'))}}
         <div class="resource flexcol">
           <label class="bold">{{localize companionSpecialistChar}}</label>
-          <input class="select-on-focus" type="number" name="system.specialistChar" value="{{ system.specialistChar }}"
-            data-dtype="Number" />
+          <input class="select-on-focus" type="number" name="system.specialistChar" value="{{ system.specialistChar }}" data-dtype="Number" />
         </div>
         {{/if}}
       </div>
-      <div class="resource flexrow">
-        <div class="resource flexcol">
-          <label class="bold">{{localize 'arm5e.sheet.loyalty'}}</label>
-          <input
-            type="text"
-            name="system.loyalty"
-            value="{{ system.loyalty }}"
-            data-dtype="String"
-          />
-        </div>
-      </div>
-
-      {{!-- specialists: yearBorn, job, score/specialist details, specialistType, fieldOfWork --}}
+      {{!-- specialists: job, score for the "other" type, specialist details and type --}}
       {{else if (eq system.category 'specialists')}}
-      <div class="flexrow">
-        <div class="resource flexcol">
-          <label class="bold">{{localize 'arm5e.sheet.yearBorn'}}</label>
-          <input
-            type="text"
-            name="system.yearBorn"
-            value="{{ system.yearBorn }}"
-            data-dtype="String"
-          />
-        </div>
-      </div>
       <div class="flexrow">
         <div class="resource flexcol">
           <label class="bold">{{localize 'arm5e.sheet.job'}}</label>
           <input type="text" name="system.job" value="{{ system.job }}" data-dtype="String" />
         </div>
-        {{#unless ui.details}}
+        {{#if (eq system.specialistType 'other')}}
         <div class="resource flexcol flex0">
           <label class="bold">{{localize 'arm5e.sheet.score'}}</label>
           <input
@@ -187,11 +131,11 @@
             data-dtype="Number"
           />
         </div>
-        {{/unless}}
+        {{/if}}
       </div>
       {{#if ui.details}}
       <div class="flexrow">
-        <div class="resource">
+        <div class="resource flexcol">
           <label class="bold">{{localize specialistChar}}</label>
           <input
             class="select-on-focus"
@@ -200,6 +144,8 @@
             value="{{ system.specialistChar }}"
             data-dtype="Number"
           />
+        </div>
+        <div class="resource flexcol">
           <label class="bold">{{localize specialistAbility}}</label>
           {{#if ui.teacherDetails}}
           <input
@@ -228,39 +174,10 @@
             {{selectOptions config.covenant.specialists selected=system.specialistType labelAttr='label' localize=true}}
           </select>
         </div>
-        {{#if (eq system.specialistType 'other')}}
-        <div class="resource flexcol">
-          <label class="bold">{{localize 'arm5e.sheet.fieldOfWork'}}</label>
-          <select name="system.fieldOfWork" data-type="String">
-            {{selectOptions config.covenant.fieldOfWork selected=system.fieldOfWork localize=true}}
-          </select>
-        </div>
-        {{/if}}
       </div>
 
-      {{!-- craftsmen: yearBorn, job, score, fieldOfWork, loyalty --}}
+      {{!-- craftsmen: job, score, fieldOfWork, quantity, isSpecialist --}}
       {{else if (eq system.category 'craftsmen')}}
-      <div class="flexrow">
-        <div class="resource flexcol">
-          <label class="bold">{{localize 'arm5e.sheet.yearBorn'}}</label>
-          <input
-            type="text"
-            name="system.yearBorn"
-            value="{{ system.yearBorn }}"
-            data-dtype="String"
-          />
-        </div>
-        <div class="resource flexcol">
-          <label class="bold">{{localize 'arm5e.sheet.loyalty'}}</label>
-          <input
-            class="select-on-focus"
-            type="number"
-            name="system.loyalty"
-            value="{{ system.loyalty }}"
-            data-dtype="Number"
-          />
-        </div>
-      </div>
       <div class="flexrow">
         <div class="resource flexcol">
           <label class="bold">{{localize 'arm5e.sheet.job'}}</label>
@@ -283,24 +200,6 @@
           <select name="system.fieldOfWork" data-type="String">
             {{selectOptions config.covenant.fieldOfWork selected=system.fieldOfWork localize=true}}
           </select>
-        </div><div class="resource flexcol flex0 flex-center">
-          <label class="bold">{{localize 'arm5e.sheet.specialist'}}</label>
-          <div class="flexrow flex-group-center">
-            <input type="checkbox" name="system.isSpecialist" {{checked system.isSpecialist}} />
-          </div>
-        </div>
-      </div>
-      <div class="flexrow">
-        <div class="resource flexcol">
-          <label class="bold">Linked ability</label>
-          <select name="system.syncAbilityId" data-type="String">
-            {{selectOptions craftSyncAbilities selected=system.syncAbilityId}}
-          </select>
-        </div>
-        <div class="resource flexcol flex0">
-          <label class="bold">{{localize 'arm5e.sheet.quantity'}}</label>
-          <input class="select-on-focus" type="number" name="system.quantity" value="{{ system.quantity }}"
-            data-dtype="Number" />
         </div>
         <div class="resource flexcol flex0 flex-center">
           <label class="bold">{{localize 'arm5e.sheet.specialist'}}</label>
@@ -318,31 +217,16 @@
         </div>
         <div class="resource flexcol flex0">
           <label class="bold">{{localize 'arm5e.sheet.quantity'}}</label>
-          <input class="select-on-focus" type="number" name="system.quantity" value="{{ system.quantity }}"
-            data-dtype="Number" />
-        </div>
-      <div class="resource flexcol flex0 flex-center">
-        <label class="bold">{{localize 'arm5e.sheet.specialist'}}</label>
-        <div class="flexrow flex-group-center">
-          <input type="checkbox" name="system.isSpecialist" {{checked system.isSpecialist}} />
-        </div>
-      </div>
-      </div>
-      <div class="flexrow">
-        <div class="resource flexcol">
-          <label class="bold">Linked ability</label>
-          <select name="system.syncAbilityId" data-type="String">
-            {{selectOptions craftSyncAbilities selected=system.syncAbilityId}}
-          </select>
-        </div>
-        <div class="resource flexcol flex0">
-          <label class="bold">{{localize 'arm5e.sheet.quantity'}}</label>
-          <input class="select-on-focus" type="number" name="system.quantity" value="{{ system.quantity }}"
-            data-dtype="Number" />
+          <input
+            class="select-on-focus"
+            type="number"
+            name="system.quantity"
+            value="{{ system.quantity }}"
+            data-dtype="Number"
+          />
         </div>
       </div>
-
-      {{!-- horses/livestock: job, yearBorn, quantity --}}
+      {{!-- horses/livestock: job, quantity --}}
       {{else if (or (eq system.category 'horses') (eq system.category 'livestock'))}}
       <div class="resource flexcol">
         <label class="bold">{{localize 'arm5e.sheet.job'}}</label>
@@ -350,15 +234,6 @@
       </div>
       <div class="flexrow">
         <div class="resource flexcol">
-          <label class="bold">{{localize 'arm5e.sheet.yearBorn'}}</label>
-          <input
-            type="number"
-            name="system.yearBorn"
-            value="{{ system.yearBorn }}"
-            data-dtype="String"
-          />
-        </div>
-        <div class="resource flexcol">
           <label class="bold">{{localize 'arm5e.sheet.quantity'}}</label>
           <input
             class="select-on-focus"
@@ -370,24 +245,13 @@
         </div>
       </div>
 
-      {{!-- turbula/servants/laborers/teamsters/dependants: job, yearBorn, quantity, loyalty --}}
+      {{!-- turbula/servants/laborers/teamsters/dependants: job, quantity --}}
       {{else}}
       <div class="resource flexcol">
         <label class="bold">{{localize 'arm5e.sheet.job'}}</label>
         <input type="text" name="system.job" value="{{ system.job }}" data-dtype="String" />
       </div>
       <div class="flexrow">
-        <div class="resource flexcol">
-          <label class="bold">{{localize 'arm5e.sheet.yearBorn'}}</label>
-          <input
-            class="select-on-focus"
-            type="number"
-            name="system.yearBorn"
-            value="{{ system.yearBorn }}"
-            data-dtype="String"
-            {{ui.canEdit}}
-          />
-        </div>
         <div class="resource flexcol">
           <label class="bold">{{localize 'arm5e.sheet.quantity'}}</label>
           <input
@@ -396,19 +260,6 @@
             name="system.quantity"
             value="{{ system.quantity }}"
             data-dtype="Number"
-          />
-        </div>
-      </div>
-      <div class="resource flexrow">
-        <div class="resource flexcol">
-          <label class="bold">{{localize 'arm5e.sheet.loyalty'}}</label>
-          <input
-            class="select-on-focus"
-            type="number"
-            name="system.loyalty"
-            value="{{ system.loyalty }}"
-            data-dtype="Number"
-            {{ui.canSelect}}
           />
         </div>
       </div>

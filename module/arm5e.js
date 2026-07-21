@@ -42,6 +42,33 @@ import {
   buildDuplicateAllowedTypes
 } from "./seasonal-activities/activity-config.js";
 import { registerActivityRollActions } from "./seasonal-activities/activity-roll-registrations.js";
+import { InhabitantSchema } from "./schemas/inhabitantSchema.js";
+
+async function syncLinkedInhabitantsForActor(actor) {
+  if (!actor || !["player", "npc", "beast"].includes(actor.type)) return;
+
+  const activeGM = game.users.activeGM;
+  if (activeGM && !activeGM.isSelf) return;
+
+  for (const covenant of game.actors.filter((candidate) => candidate.type === "covenant")) {
+    if (!covenant.isOwner) continue;
+
+    const updates = covenant.items
+      .filter((item) => item.type === "inhabitant" && item.system.actorId === actor.id)
+      .map((item) => {
+        const syncData = InhabitantSchema.getLinkedSyncData(item.system, actor);
+        const update = { _id: item.id, name: actor.name, img: actor.img };
+        for (const [key, value] of Object.entries(syncData)) {
+          update[`system.${key}`] = value;
+        }
+        return update;
+      });
+
+    if (updates.length) {
+      await covenant.updateEmbeddedDocuments("Item", updates, { render: true });
+    }
+  }
+}
 
 // Ensure system config exists before any early hooks (e.g. i18nInit) mutate CONFIG.ARM5E.
 CONFIG.ARM5E ??= ARM5E;
@@ -261,6 +288,22 @@ Hooks.once("ready", async function () {
 
   Hooks.on("dropActorSheetData", (actor, sheet, data) => onDropActorSheetData(actor, sheet, data));
   // Hooks.on("dropCanvasData", async (canvas, data) => onDropOnCanvas(canvas, data));
+
+  Hooks.on("updateActor", (actor) => {
+    void syncLinkedInhabitantsForActor(actor);
+  });
+  Hooks.on("createItem", (item) => {
+    if (!item?.parent || !["ability", "personalityTrait"].includes(item.type)) return;
+    void syncLinkedInhabitantsForActor(item.parent);
+  });
+  Hooks.on("updateItem", (item) => {
+    if (!item?.parent || !["ability", "personalityTrait"].includes(item.type)) return;
+    void syncLinkedInhabitantsForActor(item.parent);
+  });
+  Hooks.on("deleteItem", (item) => {
+    if (!item?.parent || !["ability", "personalityTrait"].includes(item.type)) return;
+    void syncLinkedInhabitantsForActor(item.parent);
+  });
 
   if (game.user.isGM) {
     // Determine whether a system migration is required and feasible

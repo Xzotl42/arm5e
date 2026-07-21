@@ -21,6 +21,7 @@ export function registerLabActivityTesting(quench) {
       );
 
       before(async function () {
+        this.timeout(300000); // 300 seconds for easier debugging
         magus = await getMagus("Tiberius");
 
         await applyStandardMagusEffects(magus, 2);

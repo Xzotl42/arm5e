@@ -3,6 +3,7 @@ import { ARM5E_DEFAULT_ICONS } from "../constants/ui.js";
 import { convertToNumber, log } from "../tools/tools.js";
 import { Scriptorium } from "../apps/scriptorium.js";
 import { boolOption, itemBase } from "./commonSchemas.js";
+import { PersonalityTraitSchema } from "./minorItemsSchemas.js";
 const fields = foundry.data.fields;
 export class InhabitantSchema extends foundry.abstract.TypeDataModel {
   //   "habitantMagi",
@@ -33,6 +34,7 @@ export class InhabitantSchema extends foundry.abstract.TypeDataModel {
         initial: "other",
         choices: ["none", ...Object.keys(ARM5E.covenant.companionRoles)]
       }),
+      syncAbilityId: new fields.StringField({ required: false, blank: true, initial: "" }),
       loyalty: new fields.NumberField({
         required: false,
         nullable: false,
@@ -104,6 +106,11 @@ export class InhabitantSchema extends foundry.abstract.TypeDataModel {
         initial: 0,
         step: 1
       }),
+      isSpecialist: new fields.BooleanField({
+        required: false,
+        nullable: false,
+        initial: false
+      }),
       extradata: new fields.ObjectField({ required: false, nullable: true, initial: {} })
     };
   }
@@ -121,6 +128,8 @@ export class InhabitantSchema extends foundry.abstract.TypeDataModel {
   prepareDerivedData() {
     this.document = game.actors.get(this.actorId);
     if (this.document) {
+      const syncData = InhabitantSchema.getLinkedSyncData(this, this.document);
+      Object.assign(this, syncData);
       this.name = this.document.name;
       this.yearBorn = this.document.system.description.born.value;
       if (this.category === "companions" && this.companionRole === "none") {
@@ -145,7 +154,7 @@ export class InhabitantSchema extends foundry.abstract.TypeDataModel {
     if (yearBorn !== undefined) syncData.yearBorn = yearBorn;
 
     const loyalty = InhabitantSchema.getLinkedLoyalty(actor);
-    if (loyalty !== undefined) syncData.loyalty = loyalty;
+    syncData.loyalty = loyalty ?? 0;
 
     Object.assign(syncData, InhabitantSchema.getLinkedCompanionRoleSyncData(inhabitant, actor));
     Object.assign(syncData, InhabitantSchema.getLinkedSpecialistSyncData(inhabitant, actor));
@@ -178,7 +187,7 @@ export class InhabitantSchema extends foundry.abstract.TypeDataModel {
           : undefined;
         const syncData = {};
         if (specialistChar !== undefined) syncData.specialistChar = specialistChar;
-        if (teacherScore !== undefined) syncData.teacherScore = teacherScore;
+        syncData.teacherScore = teacherScore ?? 0;
         return syncData;
       }
       case "steward":
@@ -193,7 +202,7 @@ export class InhabitantSchema extends foundry.abstract.TypeDataModel {
         const profession = InhabitantSchema.getLinkedAbilityStats(actor, "profession", professionLabels);
         const syncData = {};
         if (specialistChar !== undefined) syncData.specialistChar = specialistChar;
-        if (profession !== undefined) syncData.score = profession.score;
+        syncData.score = profession?.score ?? 0;
         return syncData;
       }
       case "turbCaptain": {
@@ -203,7 +212,7 @@ export class InhabitantSchema extends foundry.abstract.TypeDataModel {
           : undefined;
         const syncData = {};
         if (specialistChar !== undefined) syncData.specialistChar = specialistChar;
-        if (leadership !== undefined) syncData.score = leadership;
+        syncData.score = leadership ?? 0;
         return syncData;
       }
       default:
@@ -262,7 +271,7 @@ export class InhabitantSchema extends foundry.abstract.TypeDataModel {
     if (!inhabitant.syncAbilityId) return {};
 
     const ability = actor.items?.get(inhabitant.syncAbilityId);
-    if (!ability) return {};
+    if (!ability) return { score: 0 };
 
     return {
       score: ability.system?.finalScore ?? inhabitant.score
@@ -407,9 +416,9 @@ export class InhabitantSchema extends foundry.abstract.TypeDataModel {
     switch (this.category) {
       case "magi":
       case "companions":
-      case "craftsmen":
       case "specialists":
         return 1;
+      case "craftsmen":
       case "turbula":
       case "servants":
       case "laborers":
@@ -426,10 +435,15 @@ export class InhabitantSchema extends foundry.abstract.TypeDataModel {
   get craftSavings() {
     switch (this.category) {
       case "craftsmen":
-        return Math.floor(1 + this.score / 2);
+        if (this.isSpecialist) {
+          return this.score;
+        }
+        else {
+          return Math.floor(1 + this.score / 2);
+        }
       case "companions":
         if (["craftsman", "craftsmen"].includes(this.companionRole)) {
-          return Math.floor(1 + this.score / 2);
+          return this.isSpecialist ? this.score : Math.floor(1 + this.score / 2);
         }
         return 0;
       case "specialists":
@@ -521,6 +535,13 @@ export class InhabitantSchema extends foundry.abstract.TypeDataModel {
     }
     if (data.system.category === "companions" && data.system.companionRole === "none") {
       updateData["system.companionRole"] = "other";
+    }
+
+    // Migrate "other" specialists to specialist craftspeople
+    if (data.system.category === "specialists" && data.system.specialistType === "other" && data.system.fieldOfWork !== "none") {
+      updateData["system.category"] = "craftsmen";
+      updateData["system.isSpecialist"] = true;
+      // fieldOfWork is already set, so it carries over
     }
     if (typeof data.system.loyalty !== "number") {
       updateData["system.loyalty"] = convertToNumber(data.system.loyalty, 0);
