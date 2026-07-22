@@ -231,7 +231,7 @@ export class InhabitantSchema extends foundry.abstract.TypeDataModel {
           : undefined;
         const syncData = {};
         if (companionChar !== undefined) syncData.specialistChar = companionChar;
-        if (teachingScore !== undefined) syncData.teacherScore = teachingScore;
+        syncData.teacherScore = teachingScore ?? 0;
         return syncData;
       }
       case "steward":
@@ -246,7 +246,7 @@ export class InhabitantSchema extends foundry.abstract.TypeDataModel {
         const profession = InhabitantSchema.getLinkedAbilityStats(actor, "profession", professionLabels);
         const syncData = {};
         if (companionChar !== undefined) syncData.specialistChar = companionChar;
-        if (profession !== undefined) syncData.score = profession.score;
+        syncData.score = profession?.score ?? 0;
         return syncData;
       }
       case "turbCaptain": {
@@ -256,7 +256,7 @@ export class InhabitantSchema extends foundry.abstract.TypeDataModel {
           : undefined;
         const syncData = {};
         if (companionChar !== undefined) syncData.specialistChar = companionChar;
-        if (leadership !== undefined) syncData.score = leadership;
+        syncData.score = leadership ?? 0;
         return syncData;
       }
       default:
@@ -443,7 +443,7 @@ export class InhabitantSchema extends foundry.abstract.TypeDataModel {
         }
       case "companions":
         if (["craftsman", "craftsmen"].includes(this.companionRole)) {
-          return this.isSpecialist ? this.score : Math.floor(1 + this.score / 2);
+          return this.isRare ? this.score : Math.floor(1 + this.score / 2);
         }
         return 0;
       case "specialists":
