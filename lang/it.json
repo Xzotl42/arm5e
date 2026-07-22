@@ -704,6 +704,7 @@
       "covenantSite": "Congrega: Sito",
       "covenantSurroundings": "Congrega: Dintorni",
       "craftsmen": "Artigiani",
+      "craftsperson": "Artigiano",
       "craftsmenCommonSumary": "1 + (Abilità / 2) soldi per stagione",
       "craftsmenRareSumary": "Abilità soldi per stagione",
       "creator": "Creatore",
@@ -1035,6 +1036,7 @@
         "label": "Fonte"
       },
       "sourceQuality": "Qualità della fonte",
+      "rare": "Raro",
       "specialist": "Specialista",
       "specialists": "Specialisti",
       "specialities": "Specialtà",

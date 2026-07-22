@@ -1315,6 +1315,7 @@
       "covenantSite": "Concílio: Local",
       "covenantSurroundings": "Concílio: Arredores",
       "craftsmen": "Artesões",
+      "craftsperson": "Artesão",
       "craftsmenSumary": "1 + (Habilidade / 2) libras p/ ano",
       "creator": "Criador",
       "cun": "Ins",
@@ -1700,6 +1701,7 @@
         "others": "Outro"
       },
       "sourceQuality": "Qualidade",
+      "rare": "Raro",
       "specialist": "Especialista",
       "specialists": "Especialistas",
       "specialistsSumary": "Habilidade libras por ano",

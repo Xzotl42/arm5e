@@ -28,6 +28,12 @@ export class InhabitantSchema extends foundry.abstract.TypeDataModel {
         blank: true,
         initial: null
       }),
+      companionRole: new fields.StringField({
+        required: false,
+        blank: false,
+        initial: "other",
+        choices: ["none", ...Object.keys(ARM5E.covenant.companionRoles)]
+      }),
       syncAbilityId: new fields.StringField({ required: false, blank: true, initial: "" }),
       loyalty: new fields.NumberField({
         required: false,
@@ -100,7 +106,7 @@ export class InhabitantSchema extends foundry.abstract.TypeDataModel {
         initial: 0,
         step: 1
       }),
-      isSpecialist: new fields.BooleanField({
+      isRare: new fields.BooleanField({
         required: false,
         nullable: false,
         initial: false
@@ -125,6 +131,10 @@ export class InhabitantSchema extends foundry.abstract.TypeDataModel {
       const syncData = InhabitantSchema.getLinkedSyncData(this, this.document);
       Object.assign(this, syncData);
       this.name = this.document.name;
+      this.yearBorn = this.document.system.description.born.value;
+      if (this.category === "companions" && this.companionRole === "none") {
+        this.companionRole = "other";
+      }
       this.category = this.document.isMagus()
         ? "magi"
         : this.document.isCompanion()
@@ -146,6 +156,7 @@ export class InhabitantSchema extends foundry.abstract.TypeDataModel {
     const loyalty = InhabitantSchema.getLinkedLoyalty(actor);
     syncData.loyalty = loyalty ?? 0;
 
+    Object.assign(syncData, InhabitantSchema.getLinkedCompanionRoleSyncData(inhabitant, actor));
     Object.assign(syncData, InhabitantSchema.getLinkedSpecialistSyncData(inhabitant, actor));
     Object.assign(syncData, InhabitantSchema.getLinkedCraftsmanSyncData(inhabitant, actor));
 
@@ -184,6 +195,7 @@ export class InhabitantSchema extends foundry.abstract.TypeDataModel {
         const specialistChar = convertToNumber(actor.system?.characteristics?.pre?.value, undefined);
         const professionLabels = [
           game.i18n.localize(`arm5e.covenant.specialist.${inhabitant.specialistType}`),
+          inhabitant.job,
           inhabitant.specialistType,
           inhabitant.specialistType.replace(/([A-Z])/g, " $1").trim()
         ].filter((value) => typeof value === "string" && value !== "");
@@ -208,8 +220,54 @@ export class InhabitantSchema extends foundry.abstract.TypeDataModel {
     }
   }
 
+  static getLinkedCompanionRoleSyncData(inhabitant, actor) {
+    if (inhabitant.category !== "companions") return {};
+
+    switch (inhabitant.companionRole) {
+      case "teacher": {
+        const companionChar = convertToNumber(actor.system?.characteristics?.com?.value, undefined);
+        const teachingScore = actor.getAbility?.("teaching")
+          ? actor.getAbilityStats("teaching")?.score
+          : undefined;
+        const syncData = {};
+        if (companionChar !== undefined) syncData.specialistChar = companionChar;
+        syncData.teacherScore = teachingScore ?? 0;
+        return syncData;
+      }
+      case "steward":
+      case "chamberlain": {
+        const companionChar = convertToNumber(actor.system?.characteristics?.pre?.value, undefined);
+        const professionLabels = [
+          game.i18n.localize(`arm5e.covenant.specialist.${inhabitant.companionRole}`),
+          inhabitant.job,
+          inhabitant.companionRole,
+          inhabitant.companionRole.replace(/([A-Z])/g, " $1").trim()
+        ].filter((value) => typeof value === "string" && value !== "");
+        const profession = InhabitantSchema.getLinkedAbilityStats(actor, "profession", professionLabels);
+        const syncData = {};
+        if (companionChar !== undefined) syncData.specialistChar = companionChar;
+        syncData.score = profession?.score ?? 0;
+        return syncData;
+      }
+      case "turbCaptain": {
+        const companionChar = convertToNumber(actor.system?.characteristics?.pre?.value, undefined);
+        const leadership = actor.getAbility?.("leadership")
+          ? actor.getAbilityStats("leadership")?.score
+          : undefined;
+        const syncData = {};
+        if (companionChar !== undefined) syncData.specialistChar = companionChar;
+        syncData.score = leadership ?? 0;
+        return syncData;
+      }
+      default:
+        return {};
+    }
+  }
+
   static getLinkedCraftsmanSyncData(inhabitant, actor) {
-    if (inhabitant.category !== "craftsmen") return {};
+    if (inhabitant.category !== "craftsmen" && !(inhabitant.category === "companions" && inhabitant.companionRole === "craftsman")) {
+      return {};
+    }
     if (!inhabitant.syncAbilityId) return {};
 
     const ability = actor.items?.get(inhabitant.syncAbilityId);
@@ -257,27 +315,53 @@ export class InhabitantSchema extends foundry.abstract.TypeDataModel {
     if (this.category === "specialists") {
       if (this.specialistType === "teacher") {
         return (this.specialistChar ?? 0) + (this.score ?? 0) + (this.teacherScore ?? 0);
-      } else {
-        return this.score ?? 0;
       }
+      return this.score ?? 0;
+    }
+    if (this.category === "companions" && this.companionRole === "teacher") {
+      return this.companionRoleChar + (this.score ?? 0) + this.companionTeacherScore;
     }
     return 0;
   }
 
   get loyaltyGain() {
-    if (this.category === "specialists") {
-      switch (this.specialistType) {
-        case "steward":
-        case "chamberlain":
-        case "turbCaptain": {
-          return (this.specialistChar ?? 0) + (this.score ?? 0);
-        }
-        default: {
-          return 0;
-        }
-      }
+    const role = this.category === "companions" ? this.companionRole : this.specialistType;
+    if (["steward", "chamberlain", "turbCaptain"].includes(role)) {
+      return this.roleChar + (this.score ?? 0);
     }
     return 0;
+  }
+
+  get roleChar() {
+    if (["steward", "chamberlain", "turbCaptain"].includes(this.companionRole)) {
+      if (this.linked && this.document?.system?.characteristics?.pre?.value !== undefined) {
+        return this.document.system.characteristics.pre.value;
+      }
+    }
+    return this.specialistChar ?? 0;
+  }
+
+  get companionRoleChar() {
+    if (this.companionRole === "teacher") {
+      if (this.linked && this.document?.system?.characteristics?.com?.value !== undefined) {
+        return this.document.system.characteristics.com.value;
+      }
+      return this.specialistChar ?? 0;
+    }
+    return this.roleChar;
+  }
+
+  get companionTeacherScore() {
+    if (this.companionRole === "teacher" && this.linked && this.document?.getAbilityStats) {
+      return this.document.getAbilityStats("teaching")?.score ?? this.teacherScore ?? 0;
+    }
+    return this.teacherScore ?? 0;
+  }
+
+  get covenantRole() {
+    if (this.category === "companions") return this.companionRole;
+    if (this.category === "specialists") return this.specialistType;
+    return "other";
   }
 
   /* -------------------------------------------- */
@@ -351,11 +435,15 @@ export class InhabitantSchema extends foundry.abstract.TypeDataModel {
   get craftSavings() {
     switch (this.category) {
       case "craftsmen":
-        if (this.isSpecialist) {
+        if (this.isRare) {
           return this.score;
         }
         else {
           return Math.floor(1 + this.score / 2);
+        }
+      case "companions":
+        if (["craftsman", "craftsmen"].includes(this.companionRole)) {
+          return this.isRare ? this.score : Math.floor(1 + this.score / 2);
         }
         return 0;
       case "specialists":
@@ -445,12 +533,21 @@ export class InhabitantSchema extends foundry.abstract.TypeDataModel {
     if (data.system.category === "grogs") {
       updateData["system.category"] = "turbula";
     }
+    if (data.system.category === "companions" && data.system.companionRole === "none") {
+      updateData["system.companionRole"] = "other";
+    }
 
     // Migrate "other" specialists to specialist craftspeople
     if (data.system.category === "specialists" && data.system.specialistType === "other" && data.system.fieldOfWork !== "none") {
       updateData["system.category"] = "craftsmen";
-      updateData["system.isSpecialist"] = true;
+      updateData["system.isRare"] = true;
       // fieldOfWork is already set, so it carries over
+    }
+    if (typeof data.system.isSpecialist === "boolean") {
+      if (typeof data.system.isRare !== "boolean" && updateData["system.isRare"] === undefined) {
+        updateData["system.isRare"] = data.system.isSpecialist;
+      }
+      updateData["system.-=isSpecialist"] = null;
     }
     if (typeof data.system.loyalty !== "number") {
       updateData["system.loyalty"] = convertToNumber(data.system.loyalty, 0);

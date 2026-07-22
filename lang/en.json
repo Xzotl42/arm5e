@@ -1335,7 +1335,8 @@
       "covenantResources": "Covenant: Resources",
       "covenantSite": "Covenant: Site",
       "covenantSurroundings": "Covenant: Surroundings",
-      "craftsmen": "Craftsmen",
+      "craftsmen": "Craftspeople",
+      "craftsperson": "Craftsperson",
       "craftsmenSumary": "1 + (Ability / 2) pounds per year",
       "creator": "Creator",
       "cun": "Cun",
@@ -1724,6 +1725,7 @@
         "others": "Other"
       },
       "sourceQuality": "Source quality",
+      "rare": "Rare",
       "specialist": "Specialist",
       "specialists": "Specialists",
       "specialistsSumary": "Ability pounds per year",
