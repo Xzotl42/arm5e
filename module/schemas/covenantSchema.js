@@ -881,12 +881,6 @@ export class CovenantSchema extends foundry.abstract.TypeDataModel {
       }
     }
 
-
-    for (let companion of this.inhabitants.companion) {
-      if (companion.system.companionRole === "teacher") {
-        specialistPts += companion.system.buildPoints;
-      }
-    }
     for (let companion of this.inhabitants.companion) {
       if (companion.system.companionRole === "craftsman" && companion.system.fieldOfWork !== "none") {
         let craft = slugify(companion.system.job, false);
