@@ -881,6 +881,25 @@ export class CovenantSchema extends foundry.abstract.TypeDataModel {
       }
     }
 
+
+    for (let companion of this.inhabitants.companion) {
+      if (companion.system.companionRole === "teacher") {
+        specialistPts += companion.system.buildPoints;
+      }
+    }
+    for (let companion of this.inhabitants.companion) {
+      if (companion.system.companionRole === "craftsman" && companion.system.fieldOfWork !== "none") {
+        let craft = slugify(companion.system.job, false);
+        let saves = companion.system.craftSavings;
+        if (!craftSavings[companion.system.fieldOfWork].crafts[craft]) {
+          craftSavings[companion.system.fieldOfWork].crafts[craft] = { val: saves, type: "craft" };
+        } else {
+          craftSavings[companion.system.fieldOfWork].crafts[craft].val += saves;
+        }
+        craftSavings[companion.system.fieldOfWork].total += saves;
+      }
+    }
+
     const activeEffects = this.parent.appliedEffects;
     this.yearlySavings.magicItems.quantity = ArM5eActiveEffect.findAllActiveEffectsWithTypeFiltered(
       activeEffects,
