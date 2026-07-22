@@ -120,18 +120,6 @@
           <label class="bold">{{localize 'arm5e.sheet.job'}}</label>
           <input type="text" name="system.job" value="{{ system.job }}" data-dtype="String" />
         </div>
-        {{#if (eq system.specialistType 'other')}}
-        <div class="resource flexcol flex0">
-          <label class="bold">{{localize 'arm5e.sheet.score'}}</label>
-          <input
-            class="select-on-focus"
-            type="number"
-            name="system.score"
-            value="{{ system.score }}"
-            data-dtype="Number"
-          />
-        </div>
-        {{/if}}
       </div>
       {{#if ui.details}}
       <div class="flexrow">
@@ -176,7 +164,7 @@
         </div>
       </div>
 
-      {{!-- craftsmen: job, score, fieldOfWork, quantity, isSpecialist --}}
+      {{!-- craftsmen: job, score, fieldOfWork, quantity, isRare --}}
       {{else if (eq system.category 'craftsmen')}}
       <div class="flexrow">
         <div class="resource flexcol">
@@ -202,9 +190,9 @@
           </select>
         </div>
         <div class="resource flexcol flex0 flex-center">
-          <label class="bold">{{localize 'arm5e.sheet.specialist'}}</label>
+          <label class="bold">{{localize 'arm5e.sheet.rare'}}</label>
           <div class="flexrow flex-group-center">
-            <input type="checkbox" name="system.isSpecialist" {{checked system.isSpecialist}} />
+            <input type="checkbox" name="system.isRare" {{checked system.isRare}} />
           </div>
         </div>
       </div>

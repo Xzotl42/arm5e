@@ -106,7 +106,7 @@ export class InhabitantSchema extends foundry.abstract.TypeDataModel {
         initial: 0,
         step: 1
       }),
-      isSpecialist: new fields.BooleanField({
+      isRare: new fields.BooleanField({
         required: false,
         nullable: false,
         initial: false
@@ -435,7 +435,7 @@ export class InhabitantSchema extends foundry.abstract.TypeDataModel {
   get craftSavings() {
     switch (this.category) {
       case "craftsmen":
-        if (this.isSpecialist) {
+        if (this.isRare) {
           return this.score;
         }
         else {
@@ -540,8 +540,14 @@ export class InhabitantSchema extends foundry.abstract.TypeDataModel {
     // Migrate "other" specialists to specialist craftspeople
     if (data.system.category === "specialists" && data.system.specialistType === "other" && data.system.fieldOfWork !== "none") {
       updateData["system.category"] = "craftsmen";
-      updateData["system.isSpecialist"] = true;
+      updateData["system.isRare"] = true;
       // fieldOfWork is already set, so it carries over
+    }
+    if (typeof data.system.isSpecialist === "boolean") {
+      if (typeof data.system.isRare !== "boolean" && updateData["system.isRare"] === undefined) {
+        updateData["system.isRare"] = data.system.isSpecialist;
+      }
+      updateData["system.-=isSpecialist"] = null;
     }
     if (typeof data.system.loyalty !== "number") {
       updateData["system.loyalty"] = convertToNumber(data.system.loyalty, 0);
