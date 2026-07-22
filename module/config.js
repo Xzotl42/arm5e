@@ -1214,7 +1214,7 @@ ARM5E.covenant.companionRoles = {
   steward: { label: "arm5e.covenant.specialist.steward" },
   chamberlain: { label: "arm5e.covenant.specialist.chamberlain" },
   turbCaptain: { label: "arm5e.covenant.specialist.turbCaptain" },
-  craftsman: { label: "arm5e.sheet.craftsmen" },
+  craftsman: { label: "arm5e.sheet.craftsperson" },
   other: { label: "arm5e.covenant.specialist.other" }
 };
 

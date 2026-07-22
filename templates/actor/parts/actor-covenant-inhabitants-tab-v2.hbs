@@ -240,15 +240,15 @@
             title="{{item.name}}" /></div>
         <div class="flexrow flex-center">
           <span class="flexrow item-title width15">{{item.name}}</span>
-          <label><span class="flexrow bold width15"></span>{{item.system.job}}</label>
+          <span class="flexrow bold width15">{{item.system.job}}</span>
+          {{#if (eq item.system.companionRole 'craftsman')}}
+          <span class="flexrow bold">{{localize "arm5e.sheet.score"}}: {{item.system.score}}</span>
+          {{/if}}
           <span class="flexrow bold">{{localize "arm5e.sheet.yearBorn"}}:
             {{item.system.yearBorn}}
           </span>
           <span class="flexrow bold flex05">{{localize "arm5e.sheet.loyalty"}}:
             {{item.system.loyalty}}</span>
-          <span class="flexrow bold flex05">Covenant role:
-            {{localize (lookup config.covenant.companionRoles item.system.companionRole)}}
-          </span>
           {{#if (eq item.system.companionRole 'teacher')}}
           <span class="flexrow bold">{{localize "arm5e.sheet.com"}}: {{item.system.companionRoleChar}}</span>
           <span class="flexrow bold">{{localize "arm5e.skill.general.teaching"}}:
@@ -256,12 +256,14 @@
           {{else if (or (eq item.system.companionRole 'steward') (eq item.system.companionRole 'chamberlain') (eq
           item.system.companionRole 'turbCaptain'))}}
           <span class="flexrow bold">{{localize "arm5e.sheet.pre"}}: {{item.system.roleChar}}</span>
-          <span class="flexrow bold">{{localize "arm5e.sheet.score"}}: {{item.system.score}}</span>
+          {{#if (eq item.system.companionRole 'turbCaptain')}}
+          <span class="flexrow bold">{{localize "arm5e.skill.general.leadership"}}: {{item.system.score}}</span>
+          {{else}}
+          <span class="flexrow bold">{{localize "arm5e.skill.general.profession"
+            option=(localize (concat "arm5e.covenant.specialist." item.system.companionRole))}}:
+            {{item.system.score}}</span>
+          {{/if}}
           {{else if (eq item.system.companionRole 'craftsman')}}
-          <span class="flexrow bold">{{localize "arm5e.sheet.fieldOfWork"}}:
-            {{localize (lookup config.covenant.fieldOfWork item.system.fieldOfWork)}}
-          </span>
-          <span class="flexrow bold">{{localize "arm5e.sheet.score"}}: {{item.system.score}}</span>
           {{#if item.system.isRare}}<span class="flexrow badge">{{localize
             "arm5e.sheet.rare"}}</span>{{/if}}
           {{/if}}
@@ -307,6 +309,21 @@
           <span class="flexrow bold">{{localize "arm5e.sheet.yearBorn"}}: {{item.system.yearBorn}} </span>
           <span class="flexrow bold flex05">{{localize "arm5e.sheet.loyalty"}}: {{item.system.loyalty}}
           </span>
+          {{#if (eq item.system.specialistType 'teacher')}}
+          <span class="flexrow bold">{{localize "arm5e.sheet.com"}}: {{item.system.specialistChar}}</span>
+          <span class="flexrow bold">{{localize "arm5e.skill.general.teaching"}}:
+            {{item.system.teacherScore}}</span>
+          {{else if (or (eq item.system.specialistType 'steward') (eq item.system.specialistType 'chamberlain') (eq
+          item.system.specialistType 'turbCaptain'))}}
+          <span class="flexrow bold">{{localize "arm5e.sheet.pre"}}: {{item.system.specialistChar}}</span>
+          {{#if (eq item.system.specialistType 'turbCaptain')}}
+          <span class="flexrow bold">{{localize "arm5e.skill.general.leadership"}}: {{item.system.score}}</span>
+          {{else}}
+          <span class="flexrow bold">{{localize "arm5e.skill.general.profession"
+            option=(localize (concat "arm5e.covenant.specialist." item.system.specialistType))}}:
+            {{item.system.score}}</span>
+          {{/if}}
+          {{/if}}
         </div>
         <div class="item-controls">
           {{#if (eq item.system.linked true)}}
@@ -345,7 +362,8 @@
             title="{{item.name}}" /></div>
         <div class="flexrow flex-center">
           <span class="flexrow item-title width15">{{item.name}}</span>
-          <span class="flexrow bold width15">{{localize "arm5e.sheet.job"}}: {{item.system.job}}</span>
+          <span class="flexrow bold width15">{{item.system.job}}</span>
+          <span class="flexrow bold">{{localize "arm5e.sheet.score"}}: {{item.system.score}}</span>
           <span class="flexrow bold flex05">Qty: {{item.system.quantity}}</span>
           <span class="flexrow bold">{{localize "arm5e.sheet.yearBorn"}}: {{item.system.yearBorn}}</span>
           <span class="flexrow bold">{{localize "arm5e.sheet.loyalty"}}: {{item.system.loyalty}}</span>
