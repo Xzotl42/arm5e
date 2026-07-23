@@ -33,6 +33,10 @@
           "value": "Covenant Name",
           "actorId": null
         },
+        "codex": {
+          "value": "Codex Name",
+          "actorId": null
+        },
         "realms": {
           "magic": { "aligned": false, "susceptible": false },
           "faeric": { "aligned": false, "susceptible": false },

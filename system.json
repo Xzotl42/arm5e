@@ -2,7 +2,7 @@
   "id": "arm5e",
   "title": "Ars Magica 5th Edition",
   "description": "Ars Magica 5e for Foundry VTT, mandatory arm5e-compendia module at (https://github.com/Xzotl42/arm5e-compendia/releases/latest/download/module.json)",
-  "version": "3.0.1.12",
+  "version": "3.0.1.13",
   "compatibility": {
     "minimum": "13.351",
     "verified": "14.364"
@@ -32,7 +32,8 @@
     { "name": "N0Br41nZ", "contribution": "Italian version" },
     { "name": "Ramon Alves", "contribution": "Portuguese (BR) version" },
     { "name": "jaircunhavianna", "contribution": "Compendium content" },
-    { "name": "Moo Man", "contribution": "Dev" }
+    { "name": "Moo Man", "contribution": "Dev" },
+    { "name": "batman", "contribution": "Dev" }
   ],
   "esmodules": ["module/arm5e.js"],
   "styles": ["css/arm5e.css", "css/Ars-Magica-icons.css"],
