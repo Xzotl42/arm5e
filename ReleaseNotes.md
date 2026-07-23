@@ -21,6 +21,7 @@
 - Dropping a character on the teacher tab of a seasonal activity will work again.
 - Fixed Journal styles
 - Active effects impacting source quality of seasonal activities are working again
+- Clean up of system compendia of deprecated documents now in Ars Compendia
 
 ## 3.0.1.10 Stentorius BF5
 

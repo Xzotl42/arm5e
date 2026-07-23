@@ -275,7 +275,7 @@ export class ArM5eDiaryEntryItemSheetV2 extends ArM5eItemSheetV2 {
       context.system.applyPossible = false;
     }
 
-    context.system.sourceModifier += this.item.actor.system.bonuses.activities[actType];
+    context.system.sourceModifier += this.item.actor.system.bonuses.activities[actType] ?? 0;
     if (activityConfig.source.readonly && !context.system.done) {
       context.ui.editSource = false;
       context.system.sourceDefault = activityConfig.source.default;
