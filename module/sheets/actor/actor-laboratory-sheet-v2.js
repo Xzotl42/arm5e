@@ -36,7 +36,8 @@ export class ArM5eLaboratoryActorSheetV2 extends ArM5eActorSheetV2 {
       resetPlanning: ArM5eLaboratoryActorSheetV2.resetPlanning,
       schedulePlanning: ArM5eLaboratoryActorSheetV2.schedulePlanning,
       moreInfo: ArM5eLaboratoryActorSheetV2.moreInfo,
-      openLinkedActor: ArM5eLaboratoryActorSheetV2.openLinkedActor
+      openLinkedActor: ArM5eLaboratoryActorSheetV2.openLinkedActor,
+      openCodex: ArM5eLaboratoryActorSheetV2.openCodex
     }
   };
 
@@ -178,6 +179,8 @@ export class ArM5eLaboratoryActorSheetV2 extends ArM5eActorSheetV2 {
     GetEnchantmentSelectOptions(context);
 
     if (hasLinkedOwnerMagus) {
+      context.hasLinkedCodex = context.system.owner.document.system.codex.linked;
+
       context.planning = this.actor.getFlag(ARM5E.SYSTEM_ID, "planning");
       if (context.planning) {
         context.planning.activity = LabActivity.LabActivityFactory(
@@ -646,6 +649,16 @@ export class ArM5eLaboratoryActorSheetV2 extends ArM5eActorSheetV2 {
     const actorId = target.dataset.actorid;
     if (!actorId) return;
     game.actors.get(actorId)?.sheet?.render(true, { focus: true });
+  }
+
+  static async openCodex(event, target) {
+    event.preventDefault();
+    const owner = this.actor.system.owner?.document;
+    if (!owner) return;
+    const codex = owner.system.codex.document;
+    if (!codex) return;
+
+    codex.sheet.render(true, { focus: true });
   }
 
   async _useVis(event) {

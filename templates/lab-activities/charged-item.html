@@ -6,6 +6,10 @@
     </div>
     <input name="{{planning.namePrefix}}receptacle.name" title="{{planning.data.receptacle.name}}" type="text"
       value="{{planning.data.receptacle.name}}" placeholder="Name" />
+    {{#if hasLinkedCodex}}
+      <a class="item-control flex0" data-action="openCodex"
+        title=' {{localize "TYPES.Actor.magicCodex" }}'>{{localize "TYPES.Actor.magicCodex" }}</a>
+    {{/if}}
   </h1>
   <div class="padding4 flexrow flex-group-left">
     <label class="section-handle clickable" data-action="toggleSectionCollapse" data-category="planning"

@@ -1,4 +1,4 @@
-## 3.0.1.12 Stentorius BF6
+## 3.0.1.13 Stentorius BF6
 
 ### Compatibility
 
@@ -6,7 +6,12 @@
 
 ### Features & changes
 
-- Codex can be linked to a specific character, so it will open when adding a spell.
+- Codex can be linked to a specific character, so it will open when adding a spell and an icon will appear in the lab if the owner is linked to a Codex.
+- A batch of improvements to the covenant inhabitants by @batman
+  - Companions can assume the role of specialists (Turb captain, autocrat, ...) or teacher
+  - Craftmen can have their craft flagged as "Rare" (eg: book related craft)
+  - Better synchronization for inhabitants linked to real actors
+  - Possibility to add beast actors to the inhabitants
 
 ### Bug fixes
 

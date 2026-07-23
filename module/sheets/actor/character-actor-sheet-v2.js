@@ -60,7 +60,8 @@ export class Arm5eCharacterActorSheetV2 extends ArM5eActorSheetV2 {
       viewMedicalHistory: Arm5eCharacterActorSheetV2.viewMedicalHistory,
       migrateActor: Arm5eCharacterActorSheetV2.migrateActor,
       removeCreationMode: Arm5eCharacterActorSheetV2.removeCreationMode,
-      clearConfidencePrompt: Arm5eCharacterActorSheetV2.clearConfidencePrompt
+      clearConfidencePrompt: Arm5eCharacterActorSheetV2.clearConfidencePrompt,
+      itemAdd: Arm5eCharacterActorSheetV2.itemAdd
     }
   };
 
@@ -1043,6 +1044,19 @@ export class Arm5eCharacterActorSheetV2 extends ArM5eActorSheetV2 {
   static async clearConfidencePrompt(event, target) {
     event.preventDefault();
     await this.actor.clearConfidencePrompt();
+  }
+
+  static async itemAdd(event, target) {
+    event.preventDefault();
+    if (
+      this.actor.system.codex.linked &&
+      ["spells", "effects"].includes(target.dataset.compendium)
+    ) {
+      this.actor.system.codex.document.sheet?.render(true);
+      return;
+    }
+
+    super.itemAdd(event, target);
   }
 
   async _editAging(target) {
