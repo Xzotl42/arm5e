@@ -869,7 +869,7 @@ export class CovenantSchema extends foundry.abstract.TypeDataModel {
     );
 
     for (let craft of this.inhabitants.craftsmen) {
-      if (craft.system.fieldOfWork !== "books") {
+      if (craft.system.fieldOfWork !== "books" && craft.system.fieldOfWork !== "none") {
         let craftName = slugify(craft.system.job, false);
         let saves = craft.system.craftSavings * craft.system.number;
         if (!craftSavings[craft.system.fieldOfWork].crafts[craftName]) {
@@ -881,12 +881,6 @@ export class CovenantSchema extends foundry.abstract.TypeDataModel {
       }
     }
 
-
-    for (let companion of this.inhabitants.companion) {
-      if (companion.system.companionRole === "teacher") {
-        specialistPts += companion.system.buildPoints;
-      }
-    }
     for (let companion of this.inhabitants.companion) {
       if (companion.system.companionRole === "craftsman" && companion.system.fieldOfWork !== "none") {
         let craft = slugify(companion.system.job, false);
