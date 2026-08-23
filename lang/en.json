@@ -1188,6 +1188,9 @@
         "unfamiliarTopic2": "Confirm with the Storyguide that the scribe is skilled enough in a related ability.",
         "whichItem": "Couldn't match any {item} known by the reader. Pick one if applicable."
       },
+      "notification": {
+        "labTextCreated": "Laboratory text created and added in the inventory of {owner}."
+      },
       "quickCopy": "Quick copy",
       "reader": {
         "name": "Reader's name",

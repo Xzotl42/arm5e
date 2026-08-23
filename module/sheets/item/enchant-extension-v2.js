@@ -433,6 +433,10 @@ export class EnchantExtensionV2 {
     labTextData.system.author = this.actor.name;
     labTextData.system.draft = true;
     await this.actor.createEmbeddedDocuments("Item", [labTextData]);
+
+    ui.notifications.info(
+      game.i18n.format("arm5e.scriptorium.notification.labTextCreated", { owner: this.actor.name })
+    );
   }
 
   /** Open the advanced requisite picker for an enchantment effect. */

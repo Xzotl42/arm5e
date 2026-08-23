@@ -118,6 +118,8 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
     context.flags = this.actor?.flags;
     context.selection = {}; // Placeholder for child-sheet selection dropdowns
     context.ui = this.getUserCache(); // Per-user UI state (filters, visibility, etc.)
+    context.ui.styles = {};
+    context.ui.hints = {};
     context.rollData = this.actor?.getRollData?.() ?? {};
     context.config = CONFIG.ARM5E;
     context.isGM = game.user.isGM;
@@ -327,7 +329,7 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
 
     // --- Per-item UI decorations (virtues/flaws visibility, spell labels, magic hints…) ---
     this._prepareActorItems(context);
-
+    log(`Actor sheet context prepared for ${this.actor.name} (${this.actor.type})`, context);
     return context;
   }
 

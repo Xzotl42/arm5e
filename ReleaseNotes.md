@@ -1,3 +1,22 @@
+## 3.0.1.16 Stentorius BF8
+
+### Compatibility
+
+- Verified for 14.367
+- min Ars-compendia 1.2.6
+
+### Features & changes
+
+- Added information on the number of free virtues for labs.
+- Notification when creating a lab text from an enchantment effect.
+
+### Bug fixes
+
+- Effects tab content is again visible to players
+- Metagame information (source, page,...) was displayed twice on beast sheets, currupting the content
+- onDrop handler will now properly update actor links.
+- Clearing Medical history works again
+
 ## 3.0.1.15 Stentorius BF8
 
 ### Compatibility

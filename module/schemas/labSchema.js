@@ -216,7 +216,8 @@ export class LabSchema extends foundry.abstract.TypeDataModel {
       this.aesthetics.max
     );
 
-    this.freeVirtues = this.size.total + this.refinement.total;
+    this.maxVirtues = this.size.total + this.refinement.total;
+    this.freeVirtues = this.maxVirtues - this.totalVirtues + this.totalFlaws;
     this.occupiedSize = Math.max(this.totalVirtues - this.totalFlaws, 0) - this.refinement.total;
     this.baseSafety = this.refinement.total - Math.max(this.occupiedSize, 0);
     this.safety.bonus += this.baseSafety;

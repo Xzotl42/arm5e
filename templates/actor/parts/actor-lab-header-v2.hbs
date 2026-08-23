@@ -1,6 +1,6 @@
 <div class="mainLaboratory">
   <div class="header-background">
-    <img src="{{systemPath}}assets/Lab/header150.webp" />
+    <img src="{{ systemPath }}assets/Lab/header150.webp" />
   </div>
 
   <header class="sheet-header sheet-header-lab marginsides32">
@@ -28,7 +28,9 @@
         </div>
         <div class="flexrow flex-group-center">
           <label class="bold">{{localize "arm5e.sheet.freeVirtues"}}</label>
-          <span class="flex02">{{numberFormat system.freeVirtues}}</span>
+          <span class="flex02" style="white-space: nowrap"
+            >{{numberFormat system.freeVirtues}} / {{numberFormat system.maxVirtues}}</span
+          >
         </div>
         <div class="flexrow flex-group-center">
           <label class="bold">{{localize "arm5e.sheet.baseSafety"}}</label>
@@ -162,6 +164,9 @@
 
 
 
+
+
+
             }}&NonBreakingSpace;=&NonBreakingSpace;{{numberFormat
               system.size.total
               decimals=0
@@ -185,6 +190,9 @@
           />
           <span class="flex06"
             >{{numberFormat system.generalQuality.bonus decimals=0 sign=true
+
+
+
 
 
 
@@ -228,6 +236,9 @@
 
 
 
+
+
+
             }}&NonBreakingSpace;=&NonBreakingSpace;{{numberFormat
               system.safety.total
               decimals=0
@@ -251,6 +262,9 @@
           />
           <span class="flex06"
             >{{numberFormat system.health.bonus decimals=0 sign=true
+
+
+
 
 
 
@@ -294,6 +308,9 @@
 
 
 
+
+
+
             }}&NonBreakingSpace;=&NonBreakingSpace;{{numberFormat
               system.refinement.total
               decimals=0
@@ -317,6 +334,9 @@
           />
           <span class="flex06"
             >{{numberFormat system.upkeep.bonus decimals=0 sign=true
+
+
+
 
 
 
@@ -360,6 +380,9 @@
 
 
 
+
+
+
             }}&NonBreakingSpace;=&NonBreakingSpace;{{numberFormat
               system.warping.total
               decimals=0
@@ -384,6 +407,9 @@
           {{#if (eq system.aesthetics.max 999)}}
           <span class="flex06"
             >{{numberFormat system.aesthetics.bonus decimals=0 sign=true
+
+
+
 
 
 

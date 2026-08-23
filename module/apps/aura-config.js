@@ -51,6 +51,19 @@ export class AuraConfig extends HandlebarsApplicationMixin(ApplicationV2) {
         infernal: formData.object.infernalNightModifier
       }
     });
+
+    // // look for all covenants that have this scene as location
+
+    // const covenants = game.actors.filter(
+    //   (a) => a.type === "covenant" && a.system.scene.id === this.object.id
+    // );
+
+    // for (const covenant of covenants) {
+    //   for (const lab of covenant.system.labs) {
+    //     // Update each laboratory with the new aura values
+    //     await lab.sheet.render();
+    //   }
+    // }
   }
 
   async _prepareContext(options = {}) {

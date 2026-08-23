@@ -364,25 +364,35 @@ export class ArM5eCovenantActorSheetV2 extends ArM5eActorSheetV2 {
   async _onDropActor(event, actor) {
     if (!this.actor.isOwner) return false;
     if (!this.isActorDropAllowed(actor?.type)) return false;
+    const updateArray = [];
+
     // If the actor already belongs to another covenant, detach it first.
     if (actor.isCharacter?.() && actor.system.covenant?.linked) {
       const oldCov = actor.system.covenant.document;
       delete actor.apps[oldCov.sheet?.options?.uniqueId];
       delete oldCov.apps[actor.sheet?.options?.uniqueId];
-      await oldCov.sheet?._unbindActor?.(actor);
+      updateArray.push(oldCov.sheet?._unbindActor?.(actor));
     } else if (actor.type === "laboratory" && actor.system.covenant?.linked) {
       const oldCov = actor.system.covenant.document;
       delete actor.apps[oldCov.sheet?.options?.uniqueId];
       delete oldCov.apps[actor.sheet?.options?.uniqueId];
-      await oldCov.sheet?._unbindActor?.(actor);
+      updateArray.push(oldCov.sheet?._unbindActor?.(actor));
+      updateArray.push(actor.sheet?._setCovenant?.(this.actor));
     }
+
     // Bind actor on the covenant side (add to inhabitants).
-    await this._bindActor(actor);
+    updateArray.push(this._bindActor(actor));
     // Bind this covenant on the actor side (set system.covenant.value).
-    const updateData = actor.sheet?._bindActor?.(this.actor);
-    if (updateData?._id) {
-      await Actor.updateDocuments([updateData]);
-    }
+    // if (actor.type === "laboratory") {
+    // } else {
+    // }
+    // updateArray.push(actor.sheet?._bindActor?.(this.actor));
+    // const updateData = (await Promise.all(updateArray)).filter((u) => u?._id);
+    // if (updateData.length > 0) {
+    //   await Actor.updateDocuments(updateData);
+    // }
+
+    await Promise.all(updateArray);
     return true;
   }
 
@@ -525,8 +535,10 @@ export class ArM5eCovenantActorSheetV2 extends ArM5eActorSheetV2 {
       ];
       const existing = targetActor.system.labs.filter((h) => h.name === actor.name);
       if (existing.length === 0) {
+        actor.sheet?.render(false);
         return this.actor.createEmbeddedDocuments("Item", itemData, { render: true });
       } else {
+        actor.sheet?.render(false);
         itemData[0]._id = existing[0]._id;
         return this.actor.updateEmbeddedDocuments("Item", itemData, { render: true });
       }
