@@ -1045,10 +1045,11 @@ export class UsePowerRollWindow extends NoRollWindow {
     event.preventDefault();
     RollWindow.getFormData(this.element, this.data);
     if (this.data.system.features.hasMight) {
-      await noRoll(this.data, 1, changeMightCallback);
+      await noRoll(this.data, changeMightCallback);
     } else {
-      await noRoll(this.data, 1, loseFatigueLevelCallback);
+      await noRoll(this.data, loseFatigueLevelCallback);
     }
+    this.close();
   }
 }
 
@@ -1101,7 +1102,8 @@ export class UseMagicItemWindow extends NoRollWindow {
   static async onUse(event, target) {
     event.preventDefault();
     RollWindow.getFormData(this.element, this.data);
-    await noRoll(this.data, 1, useItemCharge);
+    await noRoll(this.data, useItemCharge);
+    this.close();
   }
 }
 

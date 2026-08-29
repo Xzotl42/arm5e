@@ -16,6 +16,10 @@
 - Metagame information (source, page,...) was displayed twice on beast sheets, currupting the content
 - onDrop handler will now properly update actor links.
 - Clearing Medical history works again
+- Power use fixes
+  - The button to use a power works again
+  - The dialog will close on use
+- Magic item use's frequency is displayed properly
 
 ## 3.0.1.15 Stentorius BF8
 
@@ -1378,7 +1382,7 @@ Changing an ability key to a generic ability will fill the ability option with a
 - Overhaul of the aura active effects
   - auras now impact rolls of supernatural abilities
 - Spell invention activity is now temporary allowed to have duplicates in the same season
-- It is now possible to delete a owned diary entry from its sheet.
+- It is now possible to delete an owned diary entry from its sheet.
 
 ### Bug fixes
 
