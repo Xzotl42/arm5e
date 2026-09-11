@@ -202,6 +202,7 @@
       },
       "eventType": "Type d'événement",
       "exposure": "Exposition",
+      "otherXpSource": "Autre source de PX",
       "inventSpell": "Invention de sort",
       "investigateItem": "Étude d'enchantement",
       "label": "Activités saisonnières",

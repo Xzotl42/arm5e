@@ -2327,6 +2327,28 @@ ARM5E.activities.generic = {
       partial: false
     }
   },
+  otherXpSource: {
+    label: "arm5e.activity.otherXpSource",
+    display: {
+      tab: true,
+      progress: true,
+      abilities: true,
+      arts: true,
+      masteries: true,
+      spells: false
+    },
+    source: { default: 0, readonly: false },
+    maxXp: 1000,
+    bonusOptions: null,
+    secondaryFilter: null,
+    duration: 1,
+    durationEdit: true,
+    scheduling: {
+      duplicate: true,
+      conflict: false,
+      partial: false
+    }
+  },
   practice: {
     label: "arm5e.activity.practice",
     display: {

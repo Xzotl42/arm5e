@@ -202,6 +202,7 @@
       },
       "eventType": "Tipo de evento",
       "exposure": "Exposición",
+      "otherXpSource": "Otra fuente de PX",
       "inventSpell": "Inventar hechizo",
       "investigateItem": "Investigación del artículo",
       "label": "Actividades estacionales",
