@@ -202,6 +202,7 @@
       },
       "eventType": "Tipo de Evento",
       "exposure": "Exposição",
+      "otherXpSource": "Outra fonte de XP",
       "inventSpell": "Inventar Magia",
       "investigateItem": "Investigação de encantamento",
       "label": "Atividades sazonais",

@@ -130,6 +130,7 @@
       },
       "eventType": "Tipo di evento",
       "exposure": "Esposizione",
+      "otherXpSource": "Altra fonte di PE",
       "inventSpell": "Inventare un incantesimo",
       "label": "Attività stagionali",
       "laterLife": "Vita successiva",

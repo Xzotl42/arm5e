@@ -204,6 +204,7 @@
       },
       "eventType": "Type of event",
       "exposure": "Exposure",
+      "otherXpSource": "Other XP Source",
       "inventSpell": "Invent Spell",
       "investigateItem": "Item investigation",
       "label": "Seasonal activities",
