@@ -29,7 +29,7 @@ export function registerLabActivityTesting(quench) {
         lab = await getLab("The Lair of Tiberius");
         lab.sheet.render(true);
         // link magus and lab
-        await magus.sheet._onDropActor(null, lab);
+        await magus.sheet._changeSanctum(lab);
         ArsLayer.clearAura(true);
       });
 
@@ -39,7 +39,7 @@ export function registerLabActivityTesting(quench) {
         for (let act of Object.keys(ACTIVITIES)) {
           it(`Switch to ${act}`, async function () {
             try {
-              lab.sheet._resetPlanning(act);
+              await lab.sheet.resetPlanning(act);
               assert.ok(true);
             } catch (err) {
               console.error(`Error: ${err}`);
@@ -55,7 +55,7 @@ export function registerLabActivityTesting(quench) {
           for (let form of Object.keys(ARM5E.magic.forms)) {
             it(`Lab total ${tech} ${form}`, async function () {
               try {
-                await lab.sheet._resetPlanning("inventSpell");
+                await lab.sheet.resetPlanning("inventSpell");
                 const labData = foundry.utils.deepClone(lab.getFlag(ARM5E.SYSTEM_ID, "planning"));
                 labData.data.system.technique.value = tech;
                 labData.data.system.form.value = form;

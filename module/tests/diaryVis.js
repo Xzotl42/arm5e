@@ -43,7 +43,7 @@ export function registerVisTesting(quench) {
         this.timeout(300000); // 300 seconds for easier debugging
 
         it("Extraction Nominal", async function () {
-          await lab.sheet._resetPlanning("visExtraction");
+          await lab.sheet.resetPlanning("visExtraction");
           await lab.sheet._prepareContext({});
           entry = await lab.sheet._schedule();
           let sheet = entry.sheet;
@@ -83,7 +83,7 @@ export function registerVisTesting(quench) {
       });
       describe("Vis extraction nominal", function () {
         it("Vis study", async function () {
-          await lab.sheet._resetPlanning("visStudy");
+          await lab.sheet.resetPlanning("visStudy");
           await lab.sheet._prepareContext({});
           entry = await lab.sheet._schedule();
           let sheet = entry.sheet;

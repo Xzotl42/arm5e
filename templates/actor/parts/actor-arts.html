@@ -9,7 +9,7 @@
       </li>
       {{#each system.arts.techniques as |technique key|}}
         <li class="flexrow art" data-attribute="{{key}}">
-          <span class="flex03">
+          <span class="flex03 art-icon">
 
             {{#if (eq @root.artsIcons "symbol")}}
               <img src="{{systemPath}}assets/magic/{{key}}.png" {{{technique.ui.style}}}
@@ -55,7 +55,7 @@
       </li>
       {{#each system.arts.forms as |form key|}}
         <li class="flexrow art" data-attribute="{{key}}">
-          <span class="flex03">
+          <span class="flex03 art-icon">
             {{#if (eq @root.artsIcons "symbol")}}
               <img src="{{systemPath}}assets/magic/{{key}}.png" {{{form.ui.style}}} title="{{form.ui.title}}" />
             {{else}}

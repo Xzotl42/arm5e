@@ -338,6 +338,10 @@ button.create-compendium, */
   gap: 4px;
 }
 
+.art-icon {
+  padding: 3px;
+}
+
 button.plain.icon.ars-Icon_magic-chest,
 button.create-button.create-entry.icon.ars-Icon_magic-chest {
   font-family: "Ars Magica icons";
@@ -2933,11 +2937,18 @@ img.tinyimg {
   text-decoration: overline;
 }
 
-/* .arm5e .ability-key, */
 .arm5e .spell-attribute {
   max-width: 100%;
   width: 100%;
   min-width: 0;
+  margin: 0;
+}
+
+/* .arm5e .ability-key, */
+.arm5e .covenant-link,
+.arm5e .owner-link {
+  max-width: 130px;
+  width: 100%;
   margin: 0;
 }
 .arm5e-roll .ability-key,

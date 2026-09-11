@@ -88,6 +88,16 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
    */
   static LIMITED_PARTS = {};
 
+  /** @override */
+  get title() {
+    const { constructor: cls, id, name, type } = this.document;
+    const prefix =
+      cls.hasTypeData && type !== "base"
+        ? CONFIG[cls.documentName].typeLabels[type]
+        : cls.metadata.label;
+    return `${name || id}  (${_loc(prefix)})`;
+  }
+
   /**
    * Decide whether the current user can view the full sheet.
    * @returns {boolean}

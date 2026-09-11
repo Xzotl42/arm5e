@@ -501,6 +501,10 @@
       "hint": {
         "abilityOption": "Only alphanumeric characters."
       },
+      "link": {
+        "unlinkInhabitant": "This will unlink the inhabitant from the covenant.",
+        "unlinkSanctum": "This will unlink the sanctum from the covenant and remove its owner."
+      },
       "magicItemUse": "Use magic item",
       "noDocuments": "No documents found.",
       "pickActors": "Pick Actors",
@@ -885,6 +889,9 @@
       "entityWithMultipleRealmAlignments": "This character with Might is aligned with multiple realms. Check the active effects.",
       "incapacited": "This character is gravely wounded, no action possible...",
       "itemMoved": "The item named \"{name}\" has moved and can longer be found.",
+      "linking": {
+        "sanctumToCharacter": "Use the character's sheet to link the sanctum to the character."
+      },
       "missingSpell": "Spell \"{spellName}\" doesn't exist anymore or has moved. Aborting.",
       "noChargesLeft": "No charges left in the magic item.",
       "noConfidencePointsLeft": "{name} has no confidence point left",
@@ -1164,7 +1171,7 @@
         "dropBookOrClick": "Drop a book here to fill the blanks, or click to select one of your books.",
         "dropBookTopic": "Drop a book and pick a topic type.",
         "dropCharacter": "Drop a character here.",
-        "dropLabText": "Drop a owned spell or draft laboratory text.",
+        "dropLabText": "Drop an owned spell or draft laboratory text.",
         "emptyBook": "The book is empty, you cannot learn anything from it.",
         "error": "An unexpected error occurred in the Scriptorium. Please check the browser console (F12) for details.",
         "illiterate": "The reader doesn't know how to read. (Artes Liberales 1+)",

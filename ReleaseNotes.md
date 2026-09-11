@@ -9,6 +9,8 @@
 
 - Added information on the number of free virtues for labs.
 - Notification when creating a lab text from an enchantment effect.
+- Switched name and type of document in the title bar of their sheet so the name is visible when minimized
+- Improved actor linking
 
 ### Bug fixes
 
