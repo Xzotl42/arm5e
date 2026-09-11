@@ -189,3 +189,203 @@ export function closeAllWindows(AppClass) {
     if (app instanceof AppClass) app.close();
   }
 }
+
+// ─── Actor Link Verification Helpers ──────────────────────────────────────────
+
+/**
+ * Verify that a character is linked to a specific covenant.
+ * Checks both the character's covenant field and the covenant's embedded inhabitant.
+ *
+ * @param {Actor} character        Player/NPC/Beast actor
+ * @param {Actor} expectedCovenant The covenant that should be linked
+ * @param {object} assert          Test assertion object
+ */
+export function verifyCharacterCovenantLink(character, expectedCovenant, assert) {
+  assert.equal(
+    character.system.covenant.actorId,
+    expectedCovenant.id,
+    `Character should be linked to covenant ${expectedCovenant.id}`
+  );
+  assert.equal(
+    character.system.covenant.linked,
+    true,
+    "Character covenant link should be marked as linked"
+  );
+  assert.equal(
+    character.system.covenant.value,
+    expectedCovenant.name,
+    "Character covenant value should match covenant name"
+  );
+
+  // Verify embedded inhabitant item exists in covenant
+  const inhabitant = expectedCovenant.items.find(
+    (i) => i.type === "inhabitant" && i.system.actorId === character.id
+  );
+  assert.isDefined(
+    inhabitant,
+    `Covenant should have inhabitant item for character ${character.id}`
+  );
+}
+
+/**
+ * Verify that a laboratory is linked to a specific covenant.
+ * Checks both the lab's covenant field and the covenant's embedded labCovenant.
+ *
+ * @param {Actor} laboratory       Laboratory actor
+ * @param {Actor} expectedCovenant The covenant that should be linked
+ * @param {object} assert          Test assertion object
+ */
+export function verifyLabCovenantLink(laboratory, expectedCovenant, assert) {
+  assert.equal(
+    laboratory.system.covenant.actorId,
+    expectedCovenant.id,
+    `Lab should be linked to covenant ${expectedCovenant.id}`
+  );
+  assert.equal(
+    laboratory.system.covenant.linked,
+    true,
+    "Lab covenant link should be marked as linked"
+  );
+  assert.equal(
+    laboratory.system.covenant.value,
+    expectedCovenant.name,
+    "Lab covenant value should match covenant name"
+  );
+
+  // Verify embedded labCovenant item exists in covenant
+  const labCov = expectedCovenant.items.find(
+    (i) => i.type === "labCovenant" && i.system.sanctumId === laboratory.id
+  );
+  assert.isDefined(labCov, `Covenant should have labCovenant item for lab ${laboratory.id}`);
+}
+
+/**
+ * Verify that a laboratory and character are bidirectionally linked as owner/sanctum.
+ * Checks both directions: lab.system.owner ↔ character.system.sanctum
+ *
+ * @param {Actor} laboratory       Laboratory actor
+ * @param {Actor} expectedCharacter The character that should be the owner
+ * @param {object} assert          Test assertion object
+ */
+export function verifyLabOwnerLink(laboratory, expectedCharacter, assert) {
+  // Lab → Character direction
+  assert.equal(
+    laboratory.system.owner.actorId,
+    expectedCharacter.id,
+    `Lab owner should be character ${expectedCharacter.id}`
+  );
+  assert.equal(laboratory.system.owner.linked, true, "Lab owner link should be marked as linked");
+  assert.equal(
+    laboratory.system.owner.value,
+    expectedCharacter.name,
+    "Lab owner value should match character name"
+  );
+
+  // Character → Lab direction (reverse)
+  assert.equal(
+    expectedCharacter.system.sanctum.actorId,
+    laboratory.id,
+    `Character sanctum should be lab ${laboratory.id}`
+  );
+  assert.equal(
+    expectedCharacter.system.sanctum.linked,
+    true,
+    "Character sanctum link should be marked as linked"
+  );
+  assert.equal(
+    expectedCharacter.system.sanctum.value,
+    laboratory.name,
+    "Character sanctum value should match lab name"
+  );
+}
+
+/**
+ * Verify that an actor link has been cleared (no actor linked).
+ *
+ * @param {Actor}  actor           The actor whose link should be cleared
+ * @param {string} fieldPath       Path to the link field (e.g., "system.covenant")
+ * @param {object} assert          Test assertion object
+ */
+export function verifyLinkCleared(actor, fieldPath, assert) {
+  const [root, ...rest] = fieldPath.split(".");
+  let field = actor[root];
+  for (const key of rest) {
+    field = field[key];
+  }
+
+  assert.equal(field.actorId, null, `${fieldPath}.actorId should be null after clearing link`);
+  assert.equal(field.linked, false, `${fieldPath}.linked should be false after clearing link`);
+  assert.equal(field.value, "", `${fieldPath}.value should be empty after clearing link`);
+}
+
+/**
+ * Verify that a covenant does NOT have an inhabitant for a specific character.
+ * Used to verify old inhabitants are deleted when a character changes covenants.
+ *
+ * @param {Actor}  covenant     The covenant to check
+ * @param {string} characterId  The character ID that should NOT be in inhabitants
+ * @param {object} assert       Test assertion object
+ */
+export function verifyCovenantDoesNotHaveInhabitant(covenant, characterId, assert) {
+  const inhabitant = covenant.items.find(
+    (i) => i.type === "inhabitant" && i.system.actorId === characterId
+  );
+  assert.isUndefined(
+    inhabitant,
+    `Covenant should not have inhabitant item for character ${characterId}`
+  );
+}
+
+/**
+ * Verify that a covenant does NOT have a labCovenant for a specific lab.
+ * Used to verify old labCovenants are deleted when a lab changes covenants.
+ *
+ * @param {Actor}  covenant The covenant to check
+ * @param {string} labId    The lab ID that should NOT be in labCovenants
+ * @param {object} assert   Test assertion object
+ */
+export function verifyCovenantDoesNotHaveLabCovenant(covenant, labId, assert) {
+  const labCov = covenant.items.find(
+    (i) => i.type === "labCovenant" && i.system.sanctumId === labId
+  );
+  assert.isUndefined(labCov, `Covenant should not have labCovenant item for lab ${labId}`);
+}
+
+/**
+ * Verify that a covenant HAS an inhabitant for a specific character.
+ * Optionally checks the inhabitant category.
+ *
+ * @param {Actor}  covenant       The covenant to check
+ * @param {string} characterId    The character ID that should be in inhabitants
+ * @param {string} [category]     Optional category to verify (magi/companion/mundane/beast)
+ * @param {object} assert         Test assertion object
+ */
+export function verifyCovenantHasInhabitant(covenant, characterId, category, assert) {
+  const inhabitant = covenant.items.find(
+    (i) => i.type === "inhabitant" && i.system.actorId === characterId
+  );
+  assert.isDefined(inhabitant, `Covenant should have inhabitant item for character ${characterId}`);
+
+  if (category) {
+    assert.equal(
+      inhabitant.system.category,
+      category,
+      `Inhabitant should have category ${category}`
+    );
+  }
+}
+
+/**
+ * Verify that a lab planning has been reset.
+ * Used to verify cascade effect when lab's covenant or owner changes.
+ *
+ * @param {Actor}  laboratory Laboratory actor
+ * @param {object} assert     Test assertion object
+ */
+export function verifyLabPlanningReset(laboratory, assert) {
+  assert.equal(
+    laboratory.flags?.arm5e?.planning?.type,
+    "none",
+    "Lab planning.type should be reset to 'none' after link change"
+  );
+}

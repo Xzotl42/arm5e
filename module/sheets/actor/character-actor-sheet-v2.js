@@ -104,6 +104,19 @@ export class Arm5eCharacterActorSheetV2 extends ArM5eActorSheetV2 {
       context.ui.qualities = { display: true };
     }
 
+    context.sanctums = [];
+    if (context.system.covenant?.linked) {
+      const cov = context.system.covenant.document;
+      // All real sanctums linked to this covenant which have no owner or are owned by this character
+      context.sanctums = cov.system.labs
+        .filter(
+          (lab) =>
+            lab.system.sanctumId &&
+            (lab.system.linked || lab.system.owner.actorId === this.actor.id)
+        )
+        .map((e) => ({ id: e.system.sanctumId, name: e.name }));
+    }
+
     context.system.isCharacter = this.actor.isCharacter();
     if (context.system.isCharacter) {
       if (context.system.charType?.value === "entity") {
@@ -517,33 +530,61 @@ export class Arm5eCharacterActorSheetV2 extends ArM5eActorSheetV2 {
   async _onDropActor(event, actor) {
     if (!this.actor.isOwner) return false;
     if (!this.isActorDropAllowed(actor?.type)) return false;
-
+    const updateArray = [];
+    const promiseArray = [];
     if (actor.type === "covenant") {
-      // Detach from the previous covenant if present.
-      if (this.actor.system.covenant?.linked) {
-        const oldCov = this.actor.system.covenant.document;
-        delete this.actor.apps[oldCov.sheet?.options?.uniqueId];
-        delete oldCov.apps[this.options.uniqueId];
-        await oldCov.sheet?._unbindActor?.(this.actor);
-      }
-      // Bind on the covenant side (add this character to its inhabitants).
-      await actor.sheet?._bindActor?.(this.actor);
+      return await this.linkToCovenant(actor.name, actor);
     } else if (actor.type === "laboratory") {
+      ui.notifications.info(game.i18n.localize("arm5e.notification.linking.sanctumToCharacter"));
+      return true;
+
+      // WIP TODO
+      if (!this.actor.system.covenant?.linked) {
+        ui.notifications.warn(
+          game.i18n.localize("arm5e.notification.linking.sanctumWithoutCovenant")
+        );
+        return false;
+      }
+      if (actor.system.owner.linked && actor.system.owner.actorId !== this.actor.id) {
+        ui.notifications.warn(
+          game.i18n.localize("arm5e.notification.linking.sanctumAlreadyLinked")
+        );
+        return false;
+      }
+      if (this.actor.system.sanctum.linked && this.actor.system.sanctum.actorId === actor.id) {
+        ui.notifications.warn(
+          game.i18n.localize("arm5e.notification.linking.sanctumAlreadyLinked")
+        );
+        return false;
+      }
+      if (this.actor.system.covenant.linked) {
+        const cov = this.actor.system.covenant.document;
+        //
+
+        // if (cov.system.labs.find((lab) => lab.id === actor.id &&)) {
+        //   ui.notifications.warn(game.i18n.localize("arm5e.notification.linking.sanctumAlreadyLinked"));
+        //   return false;
+        // }
+      }
+
+      // TODO: restrict to free sanctums that are linked to the same covenant as this character, if any.
       // Detach from the previous sanctum if present.
       if (this.actor.system.sanctum?.linked) {
         const oldLab = this.actor.system.sanctum.document;
         delete this.actor.apps[oldLab.sheet?.options?.uniqueId];
         delete oldLab.apps[this.options.uniqueId];
-        await oldLab.sheet?._unbindActor?.(this.actor);
+        updateArray.push(oldLab.sheet?._unbindLaboratoryData());
       }
       // Bind on the lab side.
-      await actor.sheet?.setOwner(this.actor);
+      updateArray.push(this.sheet._bindLaboratoryData(this.actor));
+      updateArray.push(actor.sheet._bindOwnerData(this.actor));
     }
 
-    // Bind on this character's side (set system.covenant.value / system.sanctum.value).
-    const updateData = this._bindActor(actor);
-    if (updateData?._id) {
-      await Actor.updateDocuments([updateData]);
+    if (updateArray.length > 0) {
+      promiseArray.push(Actor.updateDocuments(updateArray));
+    }
+    if (promiseArray.length > 0) {
+      await Promise.all(promiseArray);
     }
     return true;
   }
@@ -555,35 +596,40 @@ export class Arm5eCharacterActorSheetV2 extends ArM5eActorSheetV2 {
    * @param {Actor} actor  The dropped actor (covenant or laboratory).
    * @returns {object}  Foundry update data object, or empty object if not applicable.
    */
-  _bindActor(actor) {
-    if (!["covenant", "laboratory"].includes(actor.type)) return {};
+  _bindCovenantData(actor) {
+    if (actor?.type !== "covenant") return {};
     const updateData = { _id: this.actor._id };
-    if (actor.type === "covenant") {
-      updateData["system.covenant.value"] = actor.name;
-      updateData["system.covenant.actorId"] = actor._id;
-    } else if (actor.type === "laboratory") {
-      updateData["system.sanctum.value"] = actor.name;
-      updateData["system.sanctum.actorId"] = actor._id;
-    }
+
+    updateData["system.covenant.value"] = actor.name;
+    updateData["system.covenant.actorId"] = actor._id;
     return updateData;
   }
-
   /**
    * Build the update payload that clears this actor's link to the given
    * covenant or laboratory.  Returns a plain update object (not a Promise).
    * @param {Actor} actor  The actor being unlinked (covenant or laboratory).
    * @returns {object}  Foundry update data object, or empty object if not applicable.
    */
-  _unbindActor(actor) {
-    if (!["covenant", "laboratory"].includes(actor.type)) return {};
+
+  _unbindCovenantData() {
     const updateData = { _id: this.actor._id };
-    if (actor.type === "covenant") {
-      updateData["system.covenant.value"] = "";
-      updateData["system.covenant.actorId"] = null;
-    } else if (actor.type === "laboratory") {
-      updateData["system.sanctum.value"] = "";
-      updateData["system.sanctum.actorId"] = null;
-    }
+    updateData["system.covenant.value"] = "";
+    updateData["system.covenant.actorId"] = null;
+    return updateData;
+  }
+
+  _bindLaboratoryData(actor) {
+    if (actor?.type !== "laboratory") return {};
+    const updateData = { _id: this.actor._id };
+    updateData["system.sanctum.value"] = actor.name;
+    updateData["system.sanctum.actorId"] = actor._id;
+    return updateData;
+  }
+
+  _unbindLaboratoryData() {
+    const updateData = { _id: this.actor._id };
+    updateData["system.sanctum.value"] = "";
+    updateData["system.sanctum.actorId"] = null;
     return updateData;
   }
 
@@ -664,56 +710,109 @@ export class Arm5eCharacterActorSheetV2 extends ArM5eActorSheetV2 {
     event.preventDefault();
     const value = event.currentTarget.value;
     const covenant = game.actors.getName(value);
-    const updateArray = [];
 
+    await this.linkToCovenant(value, covenant);
+  }
+
+  async linkToCovenant(covenantName, covenant) {
+    if (
+      covenant &&
+      this.actor.system.covenant?.linked &&
+      this.actor.system.covenant.actorId === covenant.id
+    ) {
+      ui.notifications.warn("These actors are already linked.");
+      return false;
+    }
+    const confirmed = await getConfirmation(
+      "",
+      "Are you sure you want to link this covenant to the character?",
+      "PC",
+      "Any lab linked to this character will be reset."
+    );
+    if (!confirmed) return false;
+
+    const promiseArray = [];
+    const updateArray = [];
+    let characterUpdate = {};
+    // remove previous covenant binding if present
     if (this.actor.system.covenant?.linked) {
       const previousCovenant = this.actor.system.covenant.document;
       delete this.actor.apps[previousCovenant?.sheet?.appId];
       if (previousCovenant?.apps) delete previousCovenant.apps[this.options.uniqueId];
-      await previousCovenant?.sheet?._unbindActor?.(this.actor);
+      promiseArray.push(previousCovenant?.sheet?._unbindCharacter?.(this.actor));
+      // remove lab ownership
+      if (this.actor.system.sanctum?.linked) {
+        const sanctum = this.actor.system.sanctum.document;
+        delete this.actor.apps[sanctum?.sheet?.appId];
+        if (sanctum?.apps) delete sanctum.apps[this.options.uniqueId];
+        updateArray.push(sanctum.sheet._unbindOwnerData());
+        foundry.utils.mergeObject(characterUpdate, this.actor.sheet._unbindLaboratoryData());
+      }
     }
-
-    const updateData = {
-      _id: this.actor.id,
-      "system.covenant.value": value,
-      "system.covenant.actorId": covenant?._id ?? null
-    };
 
     if (covenant) {
-      await covenant.sheet?._bindActor?.(this.actor);
+      foundry.utils.mergeObject(characterUpdate, this._bindCovenantData(covenant));
+      // Bind on the covenant side (add this character to its inhabitants).
+      promiseArray.push(covenant.sheet._bindCharacter(this.actor));
+    } else {
+      characterUpdate._id = this.actor.id;
+      characterUpdate["system.covenant.value"] = covenantName;
+      characterUpdate["system.covenant.actorId"] = null;
     }
+    updateArray.push(characterUpdate);
+    promiseArray.push(Actor.updateDocuments(updateArray));
 
-    updateArray.push(updateData);
-    await Actor.updateDocuments(updateArray);
+    await Promise.all(promiseArray);
+    return true;
   }
 
   async _onSanctumLinkChange(event) {
     event.preventDefault();
+    event.stopPropagation();
     const value = event.currentTarget.value;
-    const sanctum = game.actors.getName(value);
+    const sanctum = game.actors.get(value);
+    await this._changeSanctum(sanctum);
+  }
+
+  async _changeSanctum(sanctum) {
+    if (
+      sanctum &&
+      this.actor.system.sanctum?.linked &&
+      this.actor.system.sanctum.actorId === sanctum.id
+    ) {
+      ui.notifications.warn("These actors are already linked.");
+      return false;
+    }
+
     const updateArray = [];
 
     if (this.actor.system.sanctum?.linked) {
       const previousSanctum = this.actor.system.sanctum.document;
       delete this.actor.apps[previousSanctum?.sheet?.appId];
       if (previousSanctum?.apps) delete previousSanctum.apps[this.options.uniqueId];
-      const unbind = await previousSanctum?.sheet?._unbindActor?.(this.actor);
+
+      const unbind = previousSanctum.sheet._unbindOwnerData();
       if (unbind) updateArray.push(unbind);
     }
 
-    const updateData = {
-      _id: this.actor.id,
-      "system.sanctum.value": value,
-      "system.sanctum.actorId": sanctum?._id ?? null
-    };
-
     if (sanctum) {
-      const bind = await sanctum.sheet?._bindActor?.(this.actor);
+      updateArray.push({
+        _id: this.actor.id,
+        "system.sanctum.value": sanctum.name,
+        "system.sanctum.actorId": sanctum._id
+      });
+      const bind = sanctum.sheet._bindOwnerData(this.actor);
       if (bind) updateArray.push(bind);
+    } else {
+      updateArray.push({
+        _id: this.actor.id,
+        "system.sanctum.value": "",
+        "system.sanctum.actorId": null
+      });
     }
 
-    updateArray.push(updateData);
     await Actor.updateDocuments(updateArray);
+    return true;
   }
 
   async _onEquipmentChange(event) {

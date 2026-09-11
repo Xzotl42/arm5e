@@ -18,9 +18,9 @@ const VOICE_AND_GESTURES_ICONS = {
 /**
  *
  */
-export async function GetFilteredAspects() {
+export function GetFilteredAspects() {
   const filterBooks = Object.fromEntries(
-    Object.entries(await game.settings.get(CONFIG.ARM5E.SYSTEM_ID, "sourcebookFilter")).filter(
+    Object.entries(game.settings.get(CONFIG.ARM5E.SYSTEM_ID, "sourcebookFilter")).filter(
       ([key, f]) => f.display === true
     )
   );
@@ -846,6 +846,7 @@ async function useMagicItem(dataset, item) {
     return;
   }
   item.actor.rollInfo.init(dataset, item.actor);
+  item.actor.config = CONFIG.ARM5E;
   new UseMagicItemWindow(item.actor, { window: { title: dataset.name } }).render(true);
 }
 

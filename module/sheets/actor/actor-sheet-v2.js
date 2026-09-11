@@ -88,6 +88,16 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
    */
   static LIMITED_PARTS = {};
 
+  /** @override */
+  get title() {
+    const { constructor: cls, id, name, type } = this.document;
+    const prefix =
+      cls.hasTypeData && type !== "base"
+        ? CONFIG[cls.documentName].typeLabels[type]
+        : cls.metadata.label;
+    return `${name || id}  (${_loc(prefix)})`;
+  }
+
   /**
    * Decide whether the current user can view the full sheet.
    * @returns {boolean}
@@ -118,6 +128,8 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
     context.flags = this.actor?.flags;
     context.selection = {}; // Placeholder for child-sheet selection dropdowns
     context.ui = this.getUserCache(); // Per-user UI state (filters, visibility, etc.)
+    context.ui.styles = {};
+    context.ui.hints = {};
     context.rollData = this.actor?.getRollData?.() ?? {};
     context.config = CONFIG.ARM5E;
     context.isGM = game.user.isGM;
@@ -327,7 +339,7 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
 
     // --- Per-item UI decorations (virtues/flaws visibility, spell labels, magic hints…) ---
     this._prepareActorItems(context);
-
+    log(`Actor sheet context prepared for ${this.actor.name} (${this.actor.type})`, context);
     return context;
   }
 

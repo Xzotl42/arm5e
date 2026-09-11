@@ -110,16 +110,6 @@ export class MedicalHistory extends foundry.applications.api.HandlebarsApplicati
   }
 
   static async clearHistory(event, target) {
-    await this._clearHistory();
-  }
-
-  static async displayWound(event, target) {
-    const itemId = target.dataset.itemId;
-    const item = this.object.patient.getEmbeddedDocument("Item", itemId);
-    item.sheet.render(true, { focus: true });
-  }
-
-  async _clearHistory(event) {
     let confirmed = false;
     if (event.shiftKey) {
       confirmed = true;
@@ -132,11 +122,21 @@ export class MedicalHistory extends foundry.applications.api.HandlebarsApplicati
       );
     }
     if (confirmed) {
-      const items = this.object.patient.items
-        .filter((e) => e.type === "wound" && e.system.gravity === "healthy")
-        .map((e) => e._id);
-      const cnt = await this.object.patient.deleteEmbeddedDocuments("Item", items);
+      await this._clearHistory();
     }
+  }
+
+  static async displayWound(event, target) {
+    const itemId = target.dataset.itemId;
+    const item = this.object.patient.getEmbeddedDocument("Item", itemId);
+    item.sheet.render(true, { focus: true });
+  }
+
+  async _clearHistory() {
+    const items = this.object.patient.items
+      .filter((e) => e.type === "wound" && e.system.gravity === "healthy")
+      .map((e) => e._id);
+    const cnt = await this.object.patient.deleteEmbeddedDocuments("Item", items);
   }
 
   _displayWound(event) {

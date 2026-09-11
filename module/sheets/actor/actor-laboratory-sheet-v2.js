@@ -175,6 +175,10 @@ export class ArM5eLaboratoryActorSheetV2 extends ArM5eActorSheetV2 {
     // context.ui = this.getUserCache();
     context.selection ??= {};
 
+    context.covenants = game.actors
+      .filter((a) => a.type === "covenant")
+      .map((a) => ({ id: a.id, name: a.name }));
+
     await GetFilteredMagicalAttributes(context.selection);
     GetEnchantmentSelectOptions(context);
 
@@ -189,7 +193,7 @@ export class ArM5eLaboratoryActorSheetV2 extends ArM5eActorSheetV2 {
           context.planning.type
         );
         if (!context.planning.data) {
-          context.planning.data = await context.planning.activity.getDefaultData();
+          context.planning.data = context.planning.activity.getDefaultData();
         }
       } else {
         const defaultType = "inventSpell";
@@ -198,7 +202,7 @@ export class ArM5eLaboratoryActorSheetV2 extends ArM5eActorSheetV2 {
           this.actor.system.owner.document.uuid,
           defaultType
         );
-        const defaultData = await defaultActivity.getDefaultData();
+        const defaultData = defaultActivity.getDefaultData();
         context.planning = {
           activity: defaultActivity,
           type: defaultType,
@@ -208,7 +212,7 @@ export class ArM5eLaboratoryActorSheetV2 extends ArM5eActorSheetV2 {
     } else {
       const defaultType = "none";
       const defaultActivity = new NoLabActivity(this.actor.uuid, defaultType);
-      const defaultData = await defaultActivity.getDefaultData();
+      const defaultData = defaultActivity.getDefaultData();
       context.planning = {
         activity: defaultActivity,
         type: defaultType,
@@ -510,9 +514,9 @@ export class ArM5eLaboratoryActorSheetV2 extends ArM5eActorSheetV2 {
     this.element.querySelectorAll(".vis-use").forEach((el) => {
       el.addEventListener("change", this._useVis.bind(this));
     });
-    this.element.querySelectorAll(".owner-link").forEach((el) => {
-      el.addEventListener("change", this._onOwnerLinkChange.bind(this));
-    });
+    // this.element.querySelectorAll(".owner-link").forEach((el) => {
+    //   el.addEventListener("change", this._onOwnerLinkChange.bind(this));
+    // });
     this.element.querySelectorAll(".covenant-link").forEach((el) => {
       el.addEventListener("change", this._onCovenantLinkChange.bind(this));
     });
@@ -630,7 +634,7 @@ export class ArM5eLaboratoryActorSheetV2 extends ArM5eActorSheetV2 {
   static async resetPlanning(event, target) {
     event.preventDefault();
     const planning = this.actor.getFlag(ARM5E.SYSTEM_ID, "planning");
-    await this._resetPlanning(planning?.type ?? "none");
+    await this.resetPlanning(planning?.type ?? "none");
     this.render();
   }
 
@@ -689,7 +693,7 @@ export class ArM5eLaboratoryActorSheetV2 extends ArM5eActorSheetV2 {
           case "inventSpell":
           case "learnSpell": {
             const planning = this.actor.getFlag(ARM5E.SYSTEM_ID, "planning");
-            await this._resetPlanning(chosenActivity, planning?.data);
+            await this.resetPlanning(chosenActivity, planning?.data);
             return;
           }
           default:
@@ -704,17 +708,23 @@ export class ArM5eLaboratoryActorSheetV2 extends ArM5eActorSheetV2 {
       default:
         break;
     }
-    await this._resetPlanning(chosenActivity);
+    await this.resetPlanning(chosenActivity);
   }
 
-  async _resetPlanning(activityType = "none", data = undefined, onlyData = false) {
+  async resetPlanning(activityType = "none", data = undefined) {
+    const planning = await this._resetPlanning(activityType, data);
+    await this._updatePlanning(planning);
+    return planning;
+  }
+
+  _resetPlanning(activityType = "none", data = undefined) {
     const ownerUuid = this.actor.system.owner?.document?.uuid;
     const activity = ownerUuid
       ? LabActivity.LabActivityFactory(this.actor.uuid, ownerUuid, activityType)
       : new NoLabActivity(this.actor.uuid, "none");
 
-    const newData = data ?? (await activity.getDefaultData());
-    const planning = {
+    const newData = data ?? activity.getDefaultData();
+    return {
       activity,
       type: ownerUuid ? activityType : "none",
       data: newData,
@@ -724,9 +734,6 @@ export class ArM5eLaboratoryActorSheetV2 extends ArM5eActorSheetV2 {
       magicThSpecApply: false,
       applyFocus: false
     };
-    if (onlyData) return planning;
-    await this._updatePlanning(planning);
-    return planning;
   }
 
   async _updatePlanning(planning) {
@@ -845,6 +852,15 @@ export class ArM5eLaboratoryActorSheetV2 extends ArM5eActorSheetV2 {
     event.preventDefault();
     const val = event.currentTarget.value;
     const owner = game.actors.getName(val);
+    await this.linkToOwner(val, owner);
+  }
+
+  async linkToOwner(ownerName, owner) {
+    if (owner && this.actor.system.owner?.linked && this.actor.system.owner.actorId === owner.id) {
+      ui.notifications.warn("These actors are already linked.");
+      return false;
+    }
+
     const updateArray = [];
 
     if (this.actor.system.owner?.linked) {
@@ -852,56 +868,84 @@ export class ArM5eLaboratoryActorSheetV2 extends ArM5eActorSheetV2 {
       if (previousOwner) {
         delete this.actor.apps[previousOwner.sheet?.appId];
         delete previousOwner.apps[this.options.uniqueId];
-        const unbind = await previousOwner.sheet?._unbindActor?.(this.actor);
+        const unbind = previousOwner.sheet?._unbindLaboratoryData();
         if (unbind) updateArray.push(unbind);
       }
     }
 
     const updateData = {
       _id: this.actor.id,
-      "system.owner.value": val,
+      "system.owner.value": ownerName,
       "system.owner.actorId": owner?._id ?? null
     };
 
     if (owner) {
-      const bind = await owner.sheet?._bindActor?.(this.actor);
+      const bind = owner.sheet._bindLaboratoryData(this.actor);
       if (bind) updateArray.push(bind);
     }
 
     updateArray.push(updateData);
     await Actor.updateDocuments(updateArray);
-    await this._resetPlanning("none");
+    await this.resetPlanning("none");
     this.render();
+    return true;
   }
 
   async _onCovenantLinkChange(event) {
     event.preventDefault();
     const value = event.currentTarget.value;
-    const covenant = game.actors.getName(value);
-    const updateArray = [];
+    const covenant = game.actors.get(value);
+    await this.linkToCovenant(covenant?.name ?? "", covenant);
+  }
 
+  async linkToCovenant(covenantName, covenant) {
+    if (
+      covenant &&
+      this.actor.system.covenant?.linked &&
+      this.actor.system.covenant.actorId === covenant.id
+    ) {
+      ui.notifications.warn("These actors are already linked.");
+      return false;
+    }
+    // TODO translate this confirmation message
+    const confirmed = await getConfirmation(
+      "",
+      "Are you sure you want to link this laboratory to the covenant?",
+      "Covenant",
+      "Its owner and previous covenant will be reset."
+    );
+    if (!confirmed) return false;
+    const updateArray = [];
+    const promiseArray = [];
+    let sanctumUpdate = {};
     if (this.actor.system.covenant?.linked) {
       const previousCovenant = this.actor.system.covenant.document;
-      if (previousCovenant) {
-        delete this.actor.apps[previousCovenant.sheet?.appId];
-        delete previousCovenant.apps[this.options.uniqueId];
-        await previousCovenant.sheet?._unbindActor?.(this.actor);
+      delete this.actor.apps[previousCovenant?.sheet?.appId];
+      if (previousCovenant?.apps) delete previousCovenant.apps[this.options.uniqueId];
+      promiseArray.push(previousCovenant?.sheet?._unbindLaboratory(this.actor));
+      // remove lab ownership
+      if (this.actor.system.owner?.linked) {
+        const owner = this.actor.system.owner.document;
+        delete this.actor.apps[owner?.sheet?.appId];
+        if (owner?.apps) delete owner.apps[this.options.uniqueId];
+        const unbind = owner.sheet._unbindLaboratoryData();
+        if (unbind) updateArray.push(unbind);
+        foundry.utils.mergeObject(sanctumUpdate, this.actor.sheet._unbindOwnerData());
       }
     }
 
-    const updateData = {
-      _id: this.actor.id,
-      "system.covenant.value": value,
-      "system.covenant.actorId": covenant?._id ?? null
-    };
-
     if (covenant) {
-      await covenant.sheet?._bindActor?.(this.actor);
+      promiseArray.push(covenant.sheet?._bindLaboratory?.(this.actor));
+      foundry.utils.mergeObject(sanctumUpdate, this._bindCovenantData(covenant));
+    } else {
+      sanctumUpdate._id = this.actor.id;
+      sanctumUpdate["system.covenant.value"] = covenantName;
+      sanctumUpdate["system.covenant.actorId"] = null;
     }
 
-    updateArray.push(updateData);
-    await Actor.updateDocuments(updateArray);
-    this.render();
+    updateArray.push(sanctumUpdate);
+    promiseArray.push(Actor.updateDocuments(updateArray));
+    return Promise.all(promiseArray);
   }
 
   _onClickMoreInfo(dataset) {
@@ -1041,83 +1085,87 @@ export class ArM5eLaboratoryActorSheetV2 extends ArM5eActorSheetV2 {
         if (previousOwner) {
           delete previousOwner.apps[this.options.uniqueId];
           delete this.actor.apps[previousOwner.sheet?.appId];
-          const unbind = await previousOwner.sheet?._unbindActor?.(this.actor);
+          const unbind = previousOwner.sheet?._unbindLaboratoryData();
           if (unbind) updateArray.push(unbind);
         }
       }
-      const ownerBind = await character.sheet?._bindActor?.(this.actor);
+      const ownerBind = character.sheet?._bindLaboratoryData(this.actor);
       if (ownerBind) updateArray.push(ownerBind);
-      updateArray.push(await this._bindActor(character));
+      updateArray.push([this._bindOwnerData(character)]);
     }
-    return Promise.all(updateArray);
+    return updateArray;
   }
 
   async setOwner(character) {
     const updates = await this._setOwner(character);
-    return Actor.updateDocuments(updates);
+    return await Actor.updateDocuments(updates);
   }
 
-  async _setCovenant(covenant) {
-    const updateArray = [];
-    if (covenant?.type === "covenant") {
-      if (this.actor.system.covenant?.linked) {
-        const previousCovenant = this.actor.system.covenant.document;
-        if (previousCovenant) {
-          delete previousCovenant.apps[this.options.uniqueId];
-          delete this.actor.apps[previousCovenant.sheet?.appId];
-          await previousCovenant.sheet?._unbindActor?.(this.actor);
-        }
-      }
-      await covenant.sheet?._bindActor?.(this.actor);
-      updateArray.push(await this._bindActor(covenant));
-    }
-    return Promise.all(updateArray);
-  }
+  // async _setCovenant(covenant) {
+  //   const updateArray = [];
+  //   const promiseArray = [];
+  //   if (covenant?.type === "covenant") {
+  //     if (this.actor.system.covenant?.linked) {
+  //       const previousCovenant = this.actor.system.covenant.document;
+  //       if (previousCovenant) {
+  //         delete previousCovenant.apps[this.options.uniqueId];
+  //         delete this.actor.apps[previousCovenant.sheet?.appId];
+  //         promiseArray.push(previousCovenant.sheet?._unbindLaboratory(this.actor));
+  //       }
+  //     }
+  //     promiseArray.push(covenant.sheet?._bindLaboratory(this.actor));
+  //     promiseArray.push(Actor.updateDocuments([this._bindCovenantData(covenant)]));
+  //   }
+  //   return Promise.all(promiseArray);
+  // }
 
-  async setCovenant(covenant) {
-    const updates = await this._setCovenant(covenant);
-    return Actor.updateDocuments(updates);
-  }
+  // async setCovenant(covenant) {
+  //   await this._setCovenant(covenant);
+  //   return true;
+  // }
 
   /** @override */
   async _onDropActor(event, actor) {
     if (!this.actor.isOwner) return false;
-    if (actor?.isCharacter?.()) return this.setOwner(actor);
-    if (actor?.type === "covenant") return this.setCovenant(actor);
+    if (actor?.isCharacter?.()) {
+      ui.notifications.info(game.i18n.localize("arm5e.notification.linking.sanctumToCharacter"));
+      return true;
+    }
+    if (actor?.type === "covenant") return this.linkToCovenant(actor.name, actor);
     return super._onDropActor(event, actor);
   }
 
-  async _bindActor(actor) {
-    if (!["covenant", "player", "npc", "beast"].includes(actor?.type)) return [];
+  _bindOwnerData(actor) {
+    if (!["player", "npc", "beast"].includes(actor?.type)) return [];
     const updateData = { _id: this.actor.id };
-
-    if (actor.type === "covenant") {
-      updateData["system.covenant.value"] = actor.name;
-      updateData["system.covenant.actorId"] = actor.id;
-    } else {
-      updateData["system.owner.value"] = actor.name;
-      updateData["system.owner.actorId"] = actor.id;
-      this.actor.system.owner.document = actor;
-      updateData["flags.arm5e.planning"] = await this._resetPlanning("none", undefined, true);
-    }
-
+    updateData["system.owner.value"] = actor.name;
+    updateData["system.owner.actorId"] = actor.id;
+    updateData["flags.arm5e.planning"] = this._resetPlanning("none");
     return updateData;
   }
 
-  async _unbindActor(actor) {
-    if (!["covenant", "player", "npc", "beast"].includes(actor?.type)) return [];
+  _unbindOwnerData() {
     const updateData = { _id: this.actor.id };
+    updateData["system.owner.value"] = "";
+    updateData["system.owner.actorId"] = null;
+    updateData["flags.arm5e.planning"] = this._resetPlanning("none");
+    return updateData;
+  }
 
-    if (actor.type === "covenant") {
-      updateData["system.covenant.value"] = "";
-      updateData["system.covenant.actorId"] = null;
-    } else {
-      updateData["system.owner.value"] = "";
-      updateData["system.owner.actorId"] = null;
-      this.actor.system.owner.document = actor;
-      updateData["flags.arm5e.planning"] = await this._resetPlanning("none", undefined, true);
-    }
+  _bindCovenantData(actor) {
+    if (!["covenant"].includes(actor?.type)) return [];
+    const updateData = { _id: this.actor.id };
+    updateData["system.covenant.value"] = actor.name;
+    updateData["system.covenant.actorId"] = actor.id;
+    updateData["flags.arm5e.planning"] = this._resetPlanning("none");
+    return updateData;
+  }
 
+  _unbindCovenantData() {
+    const updateData = { _id: this.actor.id };
+    updateData["system.covenant.value"] = "";
+    updateData["system.covenant.actorId"] = null;
+    updateData["flags.arm5e.planning"] = this._resetPlanning("none");
     return updateData;
   }
 }

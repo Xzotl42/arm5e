@@ -881,6 +881,10 @@
           "value": 0
         }
       },
+      "covenant": {
+        "value": "Covenant Name",
+        "actorId": null
+      },
       "realms": {
         "magic": { "aligned": false, "susceptible": false },
         "faeric": { "aligned": false, "susceptible": false },

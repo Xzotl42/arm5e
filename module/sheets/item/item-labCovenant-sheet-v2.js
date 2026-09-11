@@ -49,8 +49,8 @@ export class ArM5eLabCovenantItemSheetV2 extends ArM5eItemSheetV2 {
   async _prepareContext(options) {
     const context = await super._prepareContext(options);
     context.tabs = this._prepareTabs("primary");
-    context.noEdit = this.isEditable ? "" : "readonly";
-    context.noSelect = this.isEditable ? "" : "disabled";
+    context.noEdit = this.isEditable && !this.item.system.linked ? "" : "readonly";
+    context.noSelect = this.isEditable && !this.item.system.linked ? "" : "disabled";
     return context;
   }
 

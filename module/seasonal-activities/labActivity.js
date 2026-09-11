@@ -91,7 +91,7 @@ export class LabActivity extends Activity {
 
   activateListeners(html) {}
 
-  async getDefaultData() {
+  getDefaultData() {
     const item = new ArM5eItem(
       {
         name: this.title,
@@ -345,7 +345,7 @@ export class SpellActivity extends LabActivity {
     return res;
   }
 
-  async getDefaultData() {
+  getDefaultData() {
     const effect = new ArM5eItem(
       {
         name: this.title,
@@ -478,7 +478,7 @@ export class LongevityRitualActivity extends LabActivity {
     return `systems/${ARM5E.SYSTEM_ID}/templates/lab-activities/longevity-ritual.html`;
   }
 
-  async getDefaultData() {
+  getDefaultData() {
     const effect = new ArM5eItem(
       {
         name: this.title,
@@ -794,7 +794,7 @@ export class MinorEnchantment extends LabActivity {
     return this._computeLabTotal(lab, actor, data.enchantment, options);
   }
 
-  async getDefaultData() {
+  getDefaultData() {
     const result = {};
     let enchant = new ArM5eItem(
       {
@@ -823,7 +823,7 @@ export class MinorEnchantment extends LabActivity {
     );
     item = item.toObject();
 
-    result.ASPECTS = await GetFilteredAspects();
+    result.ASPECTS = GetFilteredAspects();
 
     const first = Object.keys(result.ASPECTS)[0];
     const firstEffect = Object.keys(result.ASPECTS[first].effects)[0];
@@ -1175,7 +1175,7 @@ export class InvestigationActivity extends LabActivity {
     return context;
   }
 
-  async getDefaultData() {
+  getDefaultData() {
     const effect = new ArM5eItem(
       {
         name: this.title,

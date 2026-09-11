@@ -5,6 +5,7 @@ import Aura from "../../helpers/aura.js";
 import { effectToLabText } from "../../item/item-converter.js";
 
 import { ARM5E } from "../../config.js";
+import { getConfirmation } from "../../ui/dialogs.js";
 /**
  * AppV2 Covenant actor sheet.
  */
@@ -364,34 +365,107 @@ export class ArM5eCovenantActorSheetV2 extends ArM5eActorSheetV2 {
   async _onDropActor(event, actor) {
     if (!this.actor.isOwner) return false;
     if (!this.isActorDropAllowed(actor?.type)) return false;
-    // If the actor already belongs to another covenant, detach it first.
-    if (actor.isCharacter?.() && actor.system.covenant?.linked) {
-      const oldCov = actor.system.covenant.document;
-      delete actor.apps[oldCov.sheet?.options?.uniqueId];
-      delete oldCov.apps[actor.sheet?.options?.uniqueId];
-      await oldCov.sheet?._unbindActor?.(actor);
-    } else if (actor.type === "laboratory" && actor.system.covenant?.linked) {
-      const oldCov = actor.system.covenant.document;
-      delete actor.apps[oldCov.sheet?.options?.uniqueId];
-      delete oldCov.apps[actor.sheet?.options?.uniqueId];
-      await oldCov.sheet?._unbindActor?.(actor);
+    if (actor.isCharacter()) {
+      if (actor.system.covenant?.linked && actor.system.covenant.actorId === this.actor.id) {
+        ui.notifications.warn("These actors are already linked.");
+        return false;
+      }
+
+      // TODO translate this confirmation message
+      const confirmed = await getConfirmation(
+        "",
+        "Are you sure you want to link this character to the covenant?",
+        "Covenant",
+        "Any lab linked to this character will be reset."
+      );
+      if (!confirmed) return false;
+      await this.addNewInhabitant(actor);
+    } else if (actor.type === "laboratory") {
+      if (actor.system.covenant?.linked && actor.system.covenant.actorId === this.actor.id) {
+        ui.notifications.warn("These actors are already linked.");
+        return false;
+      }
+      // TODO translate this confirmation message
+      const confirmed = await getConfirmation(
+        "",
+        "Are you sure you want to link this laboratory to the covenant?",
+        "Covenant",
+        "Its owner and previous covenant will be reset."
+      );
+      if (!confirmed) return false;
+      await this.addNewLaboratory(actor);
     }
-    // Bind actor on the covenant side (add to inhabitants).
-    await this._bindActor(actor);
-    // Bind this covenant on the actor side (set system.covenant.value).
-    const updateData = actor.sheet?._bindActor?.(this.actor);
-    if (updateData?._id) {
-      await Actor.updateDocuments([updateData]);
-    }
+
     return true;
   }
 
-  /**
-   * Add a character or laboratory to this covenant's inhabitants / labs list.
-   * @param {Actor} actor
-   */
-  async _bindActor(actor) {
-    if (!["laboratory", "player", "npc", "beast"].includes(actor.type)) return [];
+  async addNewInhabitant(actor) {
+    if (!["player", "npc", "beast"].includes(actor.type)) return [];
+    const updateArray = [];
+    const promiseArray = [];
+    // If the actor already belongs to another covenant, detach it first.
+    let characterUpdate = {};
+    if (actor.system.covenant?.linked) {
+      const oldCov = actor.system.covenant.document;
+      delete actor.apps[oldCov.sheet?.options?.uniqueId];
+      delete oldCov.apps[actor.sheet?.options?.uniqueId];
+      promiseArray.push(oldCov.sheet?._unbindCharacter(actor));
+
+      // if the character is linked to a lab, we need to unbind it too
+      if (actor.system.sanctum?.linked) {
+        const linkedSanctum = actor.system.sanctum.document;
+        updateArray.push(linkedSanctum.sheet._unbindOwnerData());
+        characterUpdate = actor.sheet._unbindLaboratoryData();
+      }
+    }
+
+    updateArray.push(
+      foundry.utils.mergeObject(characterUpdate, actor.sheet._bindCovenantData(this.actor))
+    );
+    promiseArray.push(this._bindCharacter(actor));
+
+    if (updateArray.length > 0) {
+      promiseArray.push(Actor.updateDocuments(updateArray));
+    }
+    if (promiseArray.length > 0) {
+      await Promise.all(promiseArray);
+    }
+  }
+
+  async addNewLaboratory(actor) {
+    if (actor.type !== "laboratory") return;
+    const updateArray = [];
+    const promiseArray = [];
+    let sanctumUpdate = {};
+    if (actor.system.covenant?.linked) {
+      const oldCov = actor.system.covenant.document;
+      delete actor.apps[oldCov.sheet?.options?.uniqueId];
+      delete oldCov.apps[actor.sheet?.options?.uniqueId];
+      promiseArray.push(oldCov.sheet?._unbindLaboratory(actor));
+
+      // if the lab is linked to a character, we need to unbind it too
+      if (actor.system.owner?.linked) {
+        const owner = actor.system.owner.document;
+        sanctumUpdate = actor.sheet._unbindOwnerData();
+        updateArray.push(owner.sheet?._unbindLaboratoryData());
+      }
+    }
+    updateArray.push(
+      foundry.utils.mergeObject(sanctumUpdate, actor.sheet._bindCovenantData(this.actor))
+    );
+    promiseArray.push(this._bindLaboratory(actor));
+
+    if (updateArray.length > 0) {
+      promiseArray.push(Actor.updateDocuments(updateArray));
+    }
+    if (promiseArray.length > 0) {
+      await Promise.all(promiseArray);
+    }
+  }
+
+  // @returns {Promise<Actor>} The updated actor
+  async _bindCharacter(actor) {
+    if (!["player", "npc", "beast"].includes(actor.type)) return [];
     const targetActor = this.actor;
     if (actor.isMagus?.()) {
       let pts = 5;
@@ -509,37 +583,12 @@ export class ArM5eCovenantActorSheetV2 extends ArM5eActorSheetV2 {
         itemData[0]._id = existing[0]._id;
         return this.actor.updateEmbeddedDocuments("Item", itemData, { render: true });
       }
-    } else if (actor.type === "laboratory") {
-      const itemData = [
-        {
-          name: actor.name,
-          type: "labCovenant",
-          img: actor.img,
-          system: {
-            owner: actor.system.owner.value,
-            sanctumId: actor._id,
-            quality: actor.system.generalQuality.total,
-            upkeep: actor.system.upkeep.total
-          }
-        }
-      ];
-      const existing = targetActor.system.labs.filter((h) => h.name === actor.name);
-      if (existing.length === 0) {
-        return this.actor.createEmbeddedDocuments("Item", itemData, { render: true });
-      } else {
-        itemData[0]._id = existing[0]._id;
-        return this.actor.updateEmbeddedDocuments("Item", itemData, { render: true });
-      }
     }
-    return [];
   }
 
-  /**
-   * Remove a character or laboratory from this covenant's inhabitants / labs list.
-   * @param {Actor} actor
-   */
-  async _unbindActor(actor) {
-    if (!["laboratory", "player", "npc", "beast"].includes(actor.type)) return [];
+  // TODO review after Character sheet
+  async _unbindCharacter(actor) {
+    if (!["player", "npc", "beast"].includes(actor.type)) return [];
     const targetActor = this.actor;
     if (actor.isMagus?.()) {
       const hab = targetActor.system.inhabitants.magi.filter((h) => h.system.actorId === actor._id);
@@ -571,13 +620,43 @@ export class ArM5eCovenantActorSheetV2 extends ArM5eActorSheetV2 {
       if (hab.length) {
         return this.actor.deleteEmbeddedDocuments("Item", [hab[0]._id], { render: true });
       }
-    } else if (actor.type === "laboratory") {
-      const lab = targetActor.system.labs.filter((l) => l.system.sanctumId === actor._id);
-      if (lab.length) {
-        return this.actor.deleteEmbeddedDocuments("Item", [lab[0]._id], { render: true });
-      }
     }
-    return [];
+  }
+
+  async _bindLaboratory(actor) {
+    if (actor.type !== "laboratory") return [];
+    const targetActor = this.actor;
+    const itemData = [
+      {
+        name: actor.name,
+        type: "labCovenant",
+        img: actor.img,
+        system: {
+          owner: actor.system.owner.value,
+          sanctumId: actor._id,
+          quality: actor.system.generalQuality.total,
+          upkeep: actor.system.upkeep.total
+        }
+      }
+    ];
+    const existing = targetActor.system.labs.filter((h) => h.name === actor.name);
+    if (existing.length === 0) {
+      actor.sheet?.render(false);
+      return this.actor.createEmbeddedDocuments("Item", itemData, { render: true });
+    } else {
+      actor.sheet?.render(false);
+      itemData[0]._id = existing[0]._id;
+      return this.actor.updateEmbeddedDocuments("Item", itemData, { render: true });
+    }
+  }
+
+  async _unbindLaboratory(actor) {
+    if (actor.type !== "laboratory") return [];
+    const targetActor = this.actor;
+    const lab = targetActor.system.labs.filter((l) => l.system.sanctumId === actor._id);
+    if (lab.length) {
+      return this.actor.deleteEmbeddedDocuments("Item", [lab[0]._id], { render: true });
+    }
   }
 
   static async removeLinkedItem(event, target) {
@@ -588,13 +667,59 @@ export class ArM5eCovenantActorSheetV2 extends ArM5eActorSheetV2 {
 
     const item = this.actor.items.get(itemId);
     if (!item) return;
+    const promiseArray = [];
+    const updateArray = [];
+    // If the item is linked to an actor, we need to unbind it first
+    if (item.system?.linked) {
+      if (item.type === "inhabitant") {
+        const confirmation = await getConfirmation(
+          game.i18n.localize("arm5e.dialog.sure"),
+          game.i18n.localize("arm5e.dialog.link.unlinkInhabitant"),
+          "covenant"
+        );
+        if (!confirmation) return;
 
-    if (item.system?.linked && item.system?.document?.sheet?._unbindActor) {
-      const update = await item.system.document.sheet._unbindActor(this.actor);
-      await item.system.document.update(update);
+        const inhabitant = item.system.document;
+        promiseArray.push(this._unbindCharacter(inhabitant));
+        let inhabitantUpdate = inhabitant.sheet?._unbindCovenantData();
+
+        // if the inhabitant is linked to a lab, we need to unbind it too
+        if (inhabitant.system?.sanctum?.linked) {
+          const linkedSanctum = inhabitant.system.sanctum.document;
+          inhabitantUpdate = foundry.utils.mergeObject(
+            inhabitantUpdate,
+            inhabitant.sheet?._unbindLaboratoryData(linkedSanctum)
+          );
+          updateArray.push(inhabitantUpdate);
+          // also unbind the inhabitant from the sanctum
+          updateArray.push(linkedSanctum.sheet?._unbindInhabitantData(inhabitant));
+        }
+
+        promiseArray.push(Actor.updateDocuments(updateArray));
+      } else if (item.type === "labCovenant") {
+        const confirmation = await getConfirmation(
+          game.i18n.localize("arm5e.dialog.sure"),
+          game.i18n.localize("arm5e.dialog.link.unlinkSanctum"),
+          "covenant"
+        );
+        if (!confirmation) return;
+        const sanctum = item.system.document;
+        promiseArray.push(this._unbindLaboratory(sanctum));
+        let sanctumUpdate = sanctum.sheet?._unbindCovenantData();
+        // if the sanctum is linked to a character, we need to unbind it too
+        if (sanctum.system?.linked) {
+          const owner = sanctum.system.document;
+          const ownerUpdate = owner.sheet?._unbindLaboratoryData(sanctum);
+          updateArray.push(
+            foundry.utils.mergeObject(sanctumUpdate, sanctum.sheet?._unbindOwnerData())
+          );
+          updateArray.push(ownerUpdate);
+        }
+        promiseArray.push(Actor.updateDocuments(updateArray));
+      }
     }
-
-    await this.actor.deleteEmbeddedDocuments("Item", [itemId], {});
+    promiseArray.push(this.actor.deleteEmbeddedDocuments("Item", [itemId], {}));
+    await Promise.all(promiseArray);
     this.render(false);
   }
 

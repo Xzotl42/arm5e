@@ -70,6 +70,16 @@ export class ArM5eItemSheetV2 extends HandlebarsApplicationMixin(ItemSheetV2) {
   static PARTS = {};
 
   /** @override */
+  get title() {
+    const { constructor: cls, id, name, type } = this.document;
+    const prefix =
+      cls.hasTypeData && type !== "base"
+        ? CONFIG[cls.documentName].typeLabels[type]
+        : cls.metadata.label;
+    return `${name || id}  (${_loc(prefix)})`;
+  }
+
+  /** @override */
   async _prepareContext(options) {
     const context = await super._prepareContext(options);
 

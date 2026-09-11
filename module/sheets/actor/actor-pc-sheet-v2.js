@@ -187,9 +187,7 @@ export class ArM5ePCActorSheetV2 extends Arm5eCharacterActorSheetV2 {
     ];
     if (tabIds.includes(partId)) {
       context.tab = context.tabs?.[partId];
-      if (partId === "effects" && !context.isGM && context.tab) {
-        context.tab.cssClass = `${context.tab.cssClass} hidden`;
-      } else if (partId === "description") {
+      if (partId === "description") {
         context.subtabs = this._prepareTabs("desc-secondary");
       } else if (partId === "abilities") {
         context.subtabs = this._prepareTabs("abilities-secondary");
