@@ -342,6 +342,7 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
   async _onDrop(event) {
     try {
       event.preventDefault();
+      event.stopPropagation();
       const dropData = foundry.applications.ux.TextEditor.getDragEventData(event);
       const dropTarget = event.currentTarget ?? event.target?.closest?.("[data-drop]");
       const dropType = dropTarget?.dataset?.drop;
@@ -362,6 +363,11 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
           const text = await Item.implementation.fromDropData(dropData);
           if (text.type === "laboratoryText") {
             await this._addLabText(text);
+          } else if (["spell", "magicalEffect"].includes(text.type)) {
+            const labText = effectToLabText(text);
+            labText.system.draft = true;
+            labText.system.author = text.parent?.name ?? "Unknown";
+            await this._addLabText(labText);
           }
         } else if (dropType === "copy-book") {
           const book = await Item.implementation.fromDropData(dropData);
@@ -374,6 +380,8 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
           const text = await Item.implementation.fromDropData(dropData);
           if (text.type === "laboratoryText") {
             await this._addLabTextToCopy(text);
+          } else if (["spell", "magicalEffect"].includes(text.type)) {
+            await this._addLabTextToCopy(effectToLabText(text));
           }
         }
       } else if (dropData.type === "Actor") {

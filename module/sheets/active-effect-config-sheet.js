@@ -44,7 +44,9 @@ export class ArM5eActiveEffectConfig extends foundry.applications.sheets.ActiveE
 
   /** @override */
   static PARTS = {
-    headerFlavor: { template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/largeDialog-header.hbs` },
+    headerFlavor: {
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/largeDialog-header.hbs`
+    },
     header: {
       template: `systems/${ARM5E.SYSTEM_ID}/templates/sheets/active-effect/header.hbs`,
       classes: ["marginsides32"]
@@ -64,7 +66,9 @@ export class ArM5eActiveEffectConfig extends foundry.applications.sheets.ActiveE
       classes: ["flexrow"]
     },
     // footer: { template: "templates/generic/form-footer.hbs" }
-    footer: { template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/largeDialog-footer.hbs` }
+    footer: {
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/largeDialog-footer.hbs`
+    }
   };
 
   // /** @inheritDoc */

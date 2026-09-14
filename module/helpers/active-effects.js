@@ -167,7 +167,9 @@ export default class ArM5eActiveEffect extends ActiveEffect {
 
   static findAllActiveEffectsWithTypeFiltered(effects, type) {
     const activeEffects = [];
-    let filtered = effects.filter((e) => !e.disabled && e.getFlag(ARM5E.SYSTEM_ID, "type").includes(type));
+    let filtered = effects.filter(
+      (e) => !e.disabled && e.getFlag(ARM5E.SYSTEM_ID, "type").includes(type)
+    );
     for (let e of filtered) {
       let idx = 0;
       let filteredChanges = [];
@@ -177,7 +179,11 @@ export default class ArM5eActiveEffect extends ActiveEffect {
           filteredChanges.push(ch);
         }
       }
-      e.changes = filteredChanges;
+      if (CONFIG.ISV14) {
+        e.system.changes = filteredChanges;
+      } else {
+        e.changes = filteredChanges;
+      }
       activeEffects.push(e);
     }
     return activeEffects;
@@ -205,7 +211,11 @@ export default class ArM5eActiveEffect extends ActiveEffect {
         idx++;
       }
       if (filteredChanges.length > 0) {
-        e.changes = filteredChanges;
+        if (CONFIG.ISV14) {
+          e.system.changes = filteredChanges;
+        } else {
+          e.changes = filteredChanges;
+        }
         activeEffects.push(e);
       }
     }

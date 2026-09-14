@@ -1,4 +1,4 @@
-## 3.0.1.16 Stentorius BF8
+## 3.0.1.18 Stentorius BF8
 
 ### Compatibility
 
@@ -11,6 +11,7 @@
 - Notification when creating a lab text from an enchantment effect.
 - Switched name and type of document in the title bar of their sheet so the name is visible when minimized
 - Improved actor linking
+- New generic activity: multi seasons, editable xp source, all types of progress (by @Batman)
 
 ### Bug fixes
 
@@ -22,6 +23,9 @@
   - The button to use a power works again
   - The dialog will close on use
 - Magic item use's frequency is displayed properly
+- It is again possible to drop spells instead of lab texts in the scriptorium
+- [V14] Some utility functions to retrieve active effect of a particular type where raising an error in V14 due to their new datamodel.
+- Fixed Arcane Experimentation sheet description field overflow
 
 ## 3.0.1.15 Stentorius BF8
 
