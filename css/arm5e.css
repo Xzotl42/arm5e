@@ -3727,6 +3727,15 @@ img.art-icon {
   width: 100%;
 }
 
+/* Keep the common backSection layout intact everywhere else, but prevent
+   sheet-body sections that also carry 32px side margins from exceeding the
+   parent width once padding is applied. */
+.arm5e .sheet-body.backSection.marginsides32 {
+  width: calc(100% - 64px);
+  max-width: calc(100% - 64px);
+  box-sizing: border-box;
+}
+
 .arm5e .smallBackSection.wide {
   min-width: 98px;
   /* max-height: 60px; */

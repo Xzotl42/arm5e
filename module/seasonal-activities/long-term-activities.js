@@ -35,7 +35,7 @@ const LAB_ACTIVITY_TYPES = new Set([
 const PROGRESS_ACTIVITY_TYPES = new Set([
   "adventuring",
   "exposure",
-  "otherXpSource",
+  "generic",
   "practice",
   "training",
   "teaching",

@@ -2327,8 +2327,8 @@ ARM5E.activities.generic = {
       partial: false
     }
   },
-  otherXpSource: {
-    label: "arm5e.activity.otherXpSource",
+  generic: {
+    label: "arm5e.activity.generic",
     display: {
       tab: true,
       progress: true,
