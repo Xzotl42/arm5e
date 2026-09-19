@@ -32,6 +32,9 @@ export class DocumentPicker extends HandlebarsApplicationMixin(ApplicationV2) {
   /** @type {boolean} Whether the promise has already been resolved */
   _settled = false;
 
+  /** @type {string} Current search query for document names */
+  _searchQuery = "";
+
   constructor(options = {}) {
     super(options);
   }
@@ -90,7 +93,8 @@ export class DocumentPicker extends HandlebarsApplicationMixin(ApplicationV2) {
       filters = [],
       fields = [],
       singleSelect = false,
-      flavor = "Neutral"
+      flavor = "Neutral",
+      search = false
     } = this.options;
 
     // Determine the active filter function
@@ -126,6 +130,10 @@ export class DocumentPicker extends HandlebarsApplicationMixin(ApplicationV2) {
     context.filters = filterOptions;
     context.hasFilters = filters.length > 1;
     context.flavor = flavor;
+    context.hasSearch = !!search;
+    context.searchQuery = this._searchQuery;
+    context.searchPlaceholder =
+      typeof search === "object" ? search.placeholder ?? "Search by name..." : "Search by name...";
 
     // Build buttons array (same format as roll-buttons.hbs expects)
     const buttons = [];
@@ -169,6 +177,37 @@ export class DocumentPicker extends HandlebarsApplicationMixin(ApplicationV2) {
       this._activeFilterIndex = Number(ev.currentTarget.value);
       this.render();
     });
+
+    const searchInput = this.element.querySelector(".doc-picker-search-input");
+    searchInput?.addEventListener("input", (ev) => {
+      this._searchQuery = ev.currentTarget.value ?? "";
+      this._applyNameSearch();
+    });
+
+    this._applyNameSearch();
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Apply current name-search query to rendered rows without re-rendering.
+   * @private
+   */
+  _applyNameSearch() {
+    const query = this._searchQuery.trim().toLocaleLowerCase();
+    const rows = this.element.querySelectorAll(".doc-picker-row");
+    const hasRows = rows.length > 0;
+    let visibleCount = 0;
+
+    for (const row of rows) {
+      const name = (row.dataset.name ?? "").toLocaleLowerCase();
+      const matches = !query || name.includes(query);
+      row.style.display = matches ? "" : "none";
+      if (matches) visibleCount += 1;
+    }
+
+    const noResults = this.element.querySelector(".doc-picker-no-results");
+    if (noResults) noResults.style.display = hasRows && visibleCount === 0 ? "" : "none";
   }
 
   /* -------------------------------------------- */

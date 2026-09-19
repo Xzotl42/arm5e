@@ -151,60 +151,60 @@ export class ArM5eMagicCodexSheetV2 extends ArM5eActorSheetV2 {
     context.system.filteredSpells = context.system.filteredSpells.sort(compareSpells);
 
     const filterBySettingAspects = await GetFilteredAspects();
-    const searchStr = context.ui.filters.aspects.searchString ?? "";
-    if (searchStr.length < 3) {
-      context.system.filteredAspects = Object.values(filterBySettingAspects).map((e) => {
-        return { ...e, source: game.i18n.localize(CONFIG.ARM5E.generic.sourcesTypes[e.src].label) };
-      });
-      context.system.aspectsCount = context.system.filteredAspects.length;
-    } else {
-      context.system.filteredAspects = {};
-      context.system.aspectsCount = 0;
-      if (CONFIG.ARM5E.lang[game.i18n.lang] && CONFIG.ARM5E.lang[game.i18n.lang].aspects) {
-        let tmp = {};
-        let subset = filterBySettingAspects;
-        for (const keyword of searchStr.split(" ")) {
-          for (const [a, params] of Object.entries(subset)) {
-            if (params.index.includes(keyword)) {
-              tmp[a] = params;
-              continue;
-            }
-            for (const e of Object.values(params.effects)) {
-              if (e.index.includes(keyword)) {
-                tmp[a] = params;
-                context.system.aspectsCount++;
-                break;
-              }
-            }
-          }
-          subset = foundry.utils.duplicate(tmp);
-          tmp = {};
-        }
-        context.system.filteredAspects = subset;
-        context.system.aspectsCount = Object.keys(subset).length;
-      } else {
-        let tmp = {};
-        let subset = filterBySettingAspects;
-        for (const keyword of searchStr.split(" ")) {
-          for (const [a, params] of Object.entries(subset)) {
-            if (a.includes(keyword)) {
-              tmp[a] = params;
-              continue;
-            }
-            for (const e of Object.keys(params.effects)) {
-              if (e.includes(keyword)) {
-                tmp[a] = params;
-                break;
-              }
-            }
-          }
-          subset = foundry.utils.duplicate(tmp);
-          tmp = {};
-        }
-        context.system.filteredAspects = subset;
-        context.system.aspectsCount = Object.keys(subset).length;
-      }
-    }
+    // const searchStr = context.ui.filters.aspects.searchString ?? "";
+    // if (searchStr.length < 3) {
+    context.system.filteredAspects = Object.values(filterBySettingAspects).map((e) => {
+      return { ...e, source: game.i18n.localize(CONFIG.ARM5E.generic.sourcesTypes[e.src].label) };
+    });
+    context.system.aspectsCount = context.system.filteredAspects.length;
+    // } else {
+    //   context.system.filteredAspects = {};
+    //   context.system.aspectsCount = 0;
+    //   if (CONFIG.ARM5E.lang[game.i18n.lang] && CONFIG.ARM5E.lang[game.i18n.lang].aspects) {
+    //     let tmp = {};
+    //     let subset = filterBySettingAspects;
+    //     for (const keyword of searchStr.split(" ")) {
+    //       for (const [a, params] of Object.entries(subset)) {
+    //         if (params.index.includes(keyword)) {
+    //           tmp[a] = params;
+    //           continue;
+    //         }
+    //         for (const e of Object.values(params.effects)) {
+    //           if (e.index.includes(keyword)) {
+    //             tmp[a] = params;
+    //             context.system.aspectsCount++;
+    //             break;
+    //           }
+    //         }
+    //       }
+    //       subset = foundry.utils.duplicate(tmp);
+    //       tmp = {};
+    //     }
+    //     context.system.filteredAspects = subset;
+    //     context.system.aspectsCount = Object.keys(subset).length;
+    //   } else {
+    //     let tmp = {};
+    //     let subset = filterBySettingAspects;
+    //     for (const keyword of searchStr.split(" ")) {
+    //       for (const [a, params] of Object.entries(subset)) {
+    //         if (a.includes(keyword)) {
+    //           tmp[a] = params;
+    //           continue;
+    //         }
+    //         for (const e of Object.keys(params.effects)) {
+    //           if (e.includes(keyword)) {
+    //             tmp[a] = params;
+    //             break;
+    //           }
+    //         }
+    //       }
+    //       subset = foundry.utils.duplicate(tmp);
+    //       tmp = {};
+    //     }
+    //     context.system.filteredAspects = subset;
+    //     context.system.aspectsCount = Object.keys(subset).length;
+    //   }
+    // }
     context.system.characters = [];
     for (const actor of game.actors) {
       if (actor.isCharacter() && actor.isOwner && actor.isMagus()) {
@@ -229,16 +229,16 @@ export class ArM5eMagicCodexSheetV2 extends ArM5eActorSheetV2 {
   async _onRender(context, options) {
     await super._onRender(context, options);
 
-    this.element.querySelectorAll(".search-aspects").forEach((el) => {
-      el.addEventListener("change", (event) => {
-        event.preventDefault();
-        const target = event.currentTarget;
-        const usercache = JSON.parse(sessionStorage.getItem(`usercache-${game.user.id}`));
-        usercache[this.actor.id].filters.aspects.searchString = target.value.toLowerCase().trim();
-        sessionStorage.setItem(`usercache-${game.user.id}`, JSON.stringify(usercache));
-        this.render();
-      });
-    });
+    // this.element.querySelectorAll(".search-aspects").forEach((el) => {
+    //   el.addEventListener("change", (event) => {
+    //     event.preventDefault();
+    //     const target = event.currentTarget;
+    //     const usercache = JSON.parse(sessionStorage.getItem(`usercache-${game.user.id}`));
+    //     usercache[this.actor.id].filters.aspects.searchString = target.value.toLowerCase().trim();
+    //     sessionStorage.setItem(`usercache-${game.user.id}`, JSON.stringify(usercache));
+    //     this.render();
+    //   });
+    // });
     this.element.querySelectorAll(".codex-owner").forEach((el) => {
       el.addEventListener("change", async (event) => {
         event.preventDefault();
@@ -256,6 +256,56 @@ export class ArM5eMagicCodexSheetV2 extends ArM5eActorSheetV2 {
         }
       });
     });
+
+    const searchInput = this.element.querySelector(".search-aspects");
+    searchInput?.addEventListener("input", (ev) => {
+      const usercache = JSON.parse(sessionStorage.getItem(`usercache-${game.user.id}`));
+      usercache[this.actor.id].filters.aspects.searchString = ev.currentTarget.value ?? "";
+      sessionStorage.setItem(`usercache-${game.user.id}`, JSON.stringify(usercache));
+      this._applyNameSearch();
+    });
+
+    this._applyNameSearch();
+  }
+
+  /* -------------------------------------------- */
+
+  /**
+   * Apply current name-search query to rendered rows without re-rendering.
+   * @private
+   */
+  _applyNameSearch() {
+    const usercache = JSON.parse(sessionStorage.getItem(`usercache-${game.user.id}`));
+    const searchString = (
+      usercache[this.actor.id].filters.aspects.searchString ?? ""
+    ).toLocaleLowerCase();
+    const rows = this.element.querySelectorAll(".aspect-value");
+    const hasRows = rows.length > 0;
+    let visibleCount = 0;
+
+    for (const row of rows) {
+      const name = (row.dataset.name ?? "").toLocaleLowerCase();
+      let matches = !searchString;
+      if (name.includes(searchString)) {
+        matches = true;
+      } else {
+        const aspectEffect = row.querySelectorAll(".aspect-effect");
+        for (const effect of aspectEffect) {
+          const effectName = (effect.dataset.effect ?? "").toLocaleLowerCase();
+          if (effectName.includes(searchString)) {
+            matches = true;
+            break;
+          }
+        }
+      }
+      row.style.display = matches ? "" : "none";
+      if (matches) visibleCount += 1;
+    }
+    const count = this.element.querySelector(".aspects-count");
+    if (count) count.textContent = ` (${visibleCount})`;
+
+    const noResults = this.element.querySelector(".no-results-aspects");
+    if (noResults) noResults.style.display = hasRows && visibleCount === 0 ? "" : "none";
   }
 
   _prepareCodexItems(codexData) {
