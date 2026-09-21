@@ -190,6 +190,9 @@ export class BookSchema extends foundry.abstract.TypeDataModel {
   }
 
   static getTableOfContentsVerbose(systemData, withTitle = true) {
+    if (!systemData.topics || systemData.topics.length === 0) {
+      return "";
+    }
     let res = `<h3>${game.i18n.localize("arm5e.book.tableContents")}</h3><ol>`;
     for (const topic of systemData.topics) {
       if (topic.category === "labText") {
@@ -215,6 +218,9 @@ export class BookSchema extends foundry.abstract.TypeDataModel {
   }
 
   static getTableOfContentsSynthetic(systemData, withTitle = true) {
+    if (!systemData.topics || systemData.topics.length === 0) {
+      return "";
+    }
     let res = withTitle ? `<h3>${game.i18n.localize("arm5e.book.tableContents")}</h3><ol>` : "<ol>";
     for (const topic of systemData.topics) {
       let about;

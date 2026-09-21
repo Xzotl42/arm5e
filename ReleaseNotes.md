@@ -1,4 +1,4 @@
-## 3.0.1.18 Stentorius BF8
+## 3.0.1.20 Stentorius BF8
 
 ### Compatibility
 
@@ -12,6 +12,9 @@
 - Switched name and type of document in the title bar of their sheet so the name is visible when minimized
 - Improved actor linking
 - New generic activity: multi seasons, editable xp source, all types of progress (by @Batman)
+- New optional search field in the document picker (used in the Scriptorium to select a book)
+- The search feature above was used in the Codex for a better and more reactive search for shapes and materials
+- Added a notification at startup indicating when the compendia indexes are ready, some features, like the Codex, may not work until then (I have seen it take up to 11 seconds on loaded systems)
 
 ### Bug fixes
 
@@ -23,9 +26,11 @@
   - The button to use a power works again
   - The dialog will close on use
 - Magic item use's frequency is displayed properly
-- It is again possible to drop spells instead of lab texts in the scriptorium
+- It is again possible to drop spells instead of lab texts in the scriptorium (if you own them)
 - [V14] Some utility functions to retrieve active effect of a particular type where raising an error in V14 due to their new datamodel.
 - Fixed Arcane Experimentation sheet description field overflow
+- Generating the table of content of an empty book doesn't raise an error anymore.
+- Fixed lab aura not updating when adding/changing it tp the covenent.
 
 ## 3.0.1.15 Stentorius BF8
 

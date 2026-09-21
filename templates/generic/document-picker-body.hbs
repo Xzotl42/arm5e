@@ -1,5 +1,19 @@
 <div class="doc-picker-body flexcol">
   <div class="marginsides32">
+  {{! Optional name search }}
+  {{#if hasSearch}}
+  <div class="flexrow backSection" style="padding: 4px 8px; align-items: center; gap: 6px; margin-bottom: 4px;">
+    <label style="white-space: nowrap;"><i class="fas fa-search"></i></label>
+    <input
+      type="search"
+      class="doc-picker-search-input"
+      value="{{searchQuery}}"
+      placeholder="{{searchPlaceholder}}"
+      style="flex: 1;"
+    />
+  </div>
+  {{/if}}
+
   {{! Filter select — only shown when filters were provided }}
   {{#if hasFilters}}
   <div class="flexrow backSection" style="padding: 4px 8px; align-items: center; gap: 6px;">
@@ -30,7 +44,8 @@
     {{#each items}}
     <label class="backSection flexrow clickable doc-picker-row {{#if selected}}doc-picker-row--selected{{/if}}"
            data-action="toggleItem"
-             data-id="{{id}}" 
+             data-id="{{id}}"
+             data-name="{{name}}"
              style="align-items: center; text-align: center; padding: 2px 8px; cursor: pointer;">
            {{#unless ../singleSelect}}
             <input type="checkbox"
@@ -51,6 +66,9 @@
       {{localize "arm5e.dialog.noDocuments"}}
     </div>
     {{/each}}
+  </div>
+  <div class="doc-picker-no-results flexrow" style="padding: 8px; justify-content: center; font-style: italic; opacity: 0.7; display: none;">
+    {{localize "arm5e.dialog.noDocuments"}}
   </div>
   </div>
 </div>

@@ -590,6 +590,7 @@ h3.dice-msg {
 .arm5e input[type="password"],
 .arm5e input[type="date"],
 .arm5e input[type="time"],
+.arm5e input[type="search"],
 .arm5e color-picker,
 .arm5e select,
 .heading-level select,
@@ -3695,6 +3696,16 @@ img.art-icon {
   width: 100%;
   box-sizing: border-box;
 }
+
+/* .actor-magic-codex .window-content > .tab {
+  display: flex;
+  flex-direction: column;
+}
+
+.actor-magic-codex .window-content > .tab > div:first-child {
+  flex: 1 1 auto;
+  width: 100%;
+} */
 
 .arm5e .link {
   color: var(--arm5e-c-black);

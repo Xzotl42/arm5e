@@ -126,7 +126,8 @@ Hooks.once("init", async function () {
   CONFIG.JournalEntry.sidebarIcon = "ars-icon-Tool_Journals_sidebar";
 
   customizePause();
-  CONFIG.ARM5E_DEFAULT_ICONS = ARM5E_DEFAULT_ICONS[game.settings.get(ARM5E.SYSTEM_ID, "defaultIconStyle")];
+  CONFIG.ARM5E_DEFAULT_ICONS =
+    ARM5E_DEFAULT_ICONS[game.settings.get(ARM5E.SYSTEM_ID, "defaultIconStyle")];
   CONFIG.INHABITANTS_DEFAULT_ICONS =
     INHABITANTS_DEFAULT_ICONS[game.settings.get(ARM5E.SYSTEM_ID, "defaultIconStyle")];
   CONFIG.ACTIVITIES_DEFAULT_ICONS =
@@ -225,6 +226,37 @@ Hooks.once("init", async function () {
   });
 });
 
+async function refreshSceneLinkedLaboratories(scene) {
+  if (!scene?.id) return;
+  const covenants = game.actors.filter(
+    (actor) => actor.type === "covenant" && actor.system.scene?.id === scene.id
+  );
+
+  for (const covenant of covenants) {
+    const labs = game.actors.filter(
+      (actor) =>
+        actor.type === "laboratory" && actor.system.covenant?.actorId === covenant.id
+    );
+
+    for (const lab of labs) {
+      lab.prepareData();
+      lab.sheet?.render(false);
+    }
+  }
+}
+
+async function refreshCovenantLinkedLaboratories(covenant) {
+  if (!covenant || covenant.type !== "covenant") return;
+  const labs = game.actors.filter(
+    (actor) => actor.type === "laboratory" && actor.system.covenant?.actorId === covenant.id
+  );
+
+  for (const lab of labs) {
+    lab.prepareData();
+    lab.sheet?.render(false);
+  }
+}
+
 Hooks.once("ready", async function () {
   // astrolabium singleton
   let formData = {
@@ -272,7 +304,16 @@ Hooks.once("ready", async function () {
     if (actor.type === "covenant") invalidateLinkedInhabitantIndex();
   });
   Hooks.on("updateActor", (actor, changes) => {
+    if (actor.type === "covenant" && foundry.utils.hasProperty(changes, "system.scene.id")) {
+      refreshCovenantLinkedLaboratories(actor);
+    }
     if (hasRelevantLinkedInhabitantActorChange(changes)) requestLinkedInhabitantSync(actor);
+  });
+  Hooks.on("updateScene", (scene, changes) => {
+    const sceneAuraChanged = Object.hasOwn(changes.flags?.[ARM5E.SYSTEM_ID] ?? {}, "aura");
+    if (sceneAuraChanged || foundry.utils.hasProperty(changes, "environment")) {
+      refreshSceneLinkedLaboratories(scene);
+    }
   });
   Hooks.on("deleteActor", (actor) => {
     if (actor.type === "covenant") invalidateLinkedInhabitantIndex();
@@ -368,32 +409,52 @@ Hooks.once("ready", async function () {
   // await createIndexKeys(`${ARM5E.REF_MODULE_ID}.equipment`);
 
   // compute indexes
-  game.packs
-    .get(`${ARM5E.REF_MODULE_ID}.abilities`)
-    .getIndex({ fields: ["system.key", "system.option", "system.indexKey"] });
-  game.packs.get(`${ARM5E.REF_MODULE_ID}.virtues`).getIndex({ fields: ["system.indexKey"] });
-  game.packs.get(`${ARM5E.REF_MODULE_ID}.flaws`).getIndex({ fields: ["system.indexKey"] });
-  game.packs.get(`${ARM5E.REF_MODULE_ID}.equipment`).getIndex({ fields: ["system.indexKey"] });
-  game.packs.get(`${ARM5E.REF_MODULE_ID}.spells`).getIndex({
-    fields: [
-      "system.indexKey",
-      "system.technique.value",
-      "system.form.value",
-      "system.baseLevel",
-      "system.level",
-      "system.technique-req",
-      "system.form-req",
-      "system.range.value",
-      "system.duration.value",
-      "system.target.value",
-      // "system.complexity",
-      // "system.targetSize",
-      // "system.enhancingRequisite",
-      "system.ritual"
-      // "system.general",
-      // "system.levelOffset"
-    ]
-  });
+
+  const indexStartTime = performance.now();
+  const indexesArray = [];
+
+  indexesArray.push(
+    game.packs
+      .get(`${ARM5E.REF_MODULE_ID}.abilities`)
+      .getIndex({ fields: ["system.key", "system.option", "system.indexKey"] })
+  );
+  indexesArray.push(
+    game.packs.get(`${ARM5E.REF_MODULE_ID}.virtues`).getIndex({ fields: ["system.indexKey"] })
+  );
+  indexesArray.push(
+    game.packs.get(`${ARM5E.REF_MODULE_ID}.flaws`).getIndex({ fields: ["system.indexKey"] })
+  );
+  indexesArray.push(
+    game.packs.get(`${ARM5E.REF_MODULE_ID}.equipment`).getIndex({ fields: ["system.indexKey"] })
+  );
+  indexesArray.push(
+    game.packs.get(`${ARM5E.REF_MODULE_ID}.spells`).getIndex({
+      fields: [
+        "system.indexKey",
+        "system.technique.value",
+        "system.form.value",
+        "system.baseLevel",
+        "system.level",
+        "system.technique-req",
+        "system.form-req",
+        "system.range.value",
+        "system.duration.value",
+        "system.target.value",
+        // "system.complexity",
+        // "system.targetSize",
+        // "system.enhancingRequisite",
+        "system.ritual"
+        // "system.general",
+        // "system.levelOffset"
+      ]
+    })
+  );
+
+  await Promise.all(indexesArray);
+  const indexDuration = performance.now() - indexStartTime;
+  ui.notifications.info(
+    `Finished computing indexes for compendia in ${indexDuration.toFixed(0)} ms...`
+  );
 
   // TESTING
 });

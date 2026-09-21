@@ -1,33 +1,36 @@
 <li class="item flexrow item-header">
   <div class="codex-name">
-    <span>{{localize "Search"}} ({{system.aspectsCount}}) </span>
-    <input class="search-aspects" type="text" style="font-family: bookAntiquaBold;" value="{{ui.filters.aspects.searchString}}">
+    <div> <span>{{localize "arm5e.generic.search"}}</span><span class="aspects-count"></span></div>
+    <input
+      class="search-aspects"
+      type="search"
+      style="font-family: bookAntiquaBold"
+      value="{{ ui.filters.aspects.searchString }}"
+    />
   </div>
 </li>
 {{> (systemPath "templates/generic/metalic-bar.html") }}
 
 {{#each system.filteredAspects as | params aspect|}}
 <div class="backSection">
-  <li class="item aspect-value flexrow" data-name="{{params.name}}">
+  <li class="item aspect-value flexrow" data-name="{{ params.name }}">
     <div class="flexrow flex-group-left">
-      <div class="flexcol" >
-        <div class="flexrow" >
-          {{params.name}} 
+      <div class="flexcol">
+        <div class="flexrow">
+          {{ params.name }}
         </div>
         {{#if @root.metagame.view }}
-        <div class="label-light">
-          {{params.source}} ({{params.page}})
-        </div>
+        <div class="label-light">{{ params.source }} ({{ params.page }})</div>
         {{/if}}
       </div>
-      <div class="flex-group-left" >
+      <div class="flex-group-left" ">
         <ul>
-        {{#each params.effects as | attr key|}}
-          <li>{{attr.name}} : {{attr.bonus}}</li>
-        {{/each}}
+          {{#each params.effects as | attr key|}}
+          <li class="aspect-effect" data-effect="{{ attr.name }}">{{ attr.name }} : {{ attr.bonus }}</li>
+          {{/each}}
         </ul>
       </div>
     </div>
   </li>
-  </div>
+</div>
 {{/each}}

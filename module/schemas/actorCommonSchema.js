@@ -66,8 +66,9 @@ export class CodexSchema extends foundry.abstract.TypeDataModel {
     }
 
     if (this.withCompendia) {
-      let spellsCompendium = game.packs.get("arm5e-compendia.spells");
-      for (let s of spellsCompendium.index) {
+      let spellsCompendium = game.packs.get(`${ARM5E.REF_MODULE_ID}.spells`);
+      const index = spellsCompendium.index;
+      for (let s of index) {
         if (s.type === "spell") this.spells.push(s);
         else if (s.type === "magicalEffect") {
           this.magicalEffects.push(s);

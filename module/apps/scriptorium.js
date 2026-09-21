@@ -1465,7 +1465,8 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
       filters,
       singleSelect,
       fields,
-      flavor
+      flavor,
+      search: true
     });
   }
 

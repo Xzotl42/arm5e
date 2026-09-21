@@ -293,14 +293,10 @@ export class ArM5eLaboratoryActorSheetV2 extends ArM5eActorSheetV2 {
       if (context.system.covenant.linked) {
         context.edition.aura = "readonly";
         context.planning.modifiers.aura = context.system.auraBonus;
-      } else {
-        context.edition.aura = "";
-        context.classes = { aura: "editable" };
-        if (context.planning.modifiers === undefined) {
-          context.planning.modifiers = { aura: context.system.auraBonus };
-        } else if (context.planning.modifiers.aura === undefined) {
-          context.planning.modifiers.aura = context.system.auraBonus;
-        }
+      } else if (context.planning.modifiers === undefined) {
+        context.planning.modifiers = { aura: context.system.auraBonus };
+      } else if (context.planning.modifiers.aura === undefined) {
+        context.planning.modifiers.aura = context.system.auraBonus;
       }
     }
 
@@ -437,7 +433,7 @@ export class ArM5eLaboratoryActorSheetV2 extends ArM5eActorSheetV2 {
     // Template safety defaults for the workbench partial until full lab-planning parity is ported.
     context.classes ??= {};
     context.tooltip ??= {};
-    context.classes.aura ??= "editable";
+    // context.classes.aura ??= "editable";
     context.tooltip.aura ??= "";
 
     context.planning.modifiers ??= {};
