@@ -95,7 +95,7 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
       cls.hasTypeData && type !== "base"
         ? CONFIG[cls.documentName].typeLabels[type]
         : cls.metadata.label;
-    return `${name || id}  (${_loc(prefix)})`;
+    return `${name || id}  (${game.i18n.localize(prefix)})`;
   }
 
   /**

@@ -234,8 +234,7 @@ async function refreshSceneLinkedLaboratories(scene) {
 
   for (const covenant of covenants) {
     const labs = game.actors.filter(
-      (actor) =>
-        actor.type === "laboratory" && actor.system.covenant?.actorId === covenant.id
+      (actor) => actor.type === "laboratory" && actor.system.covenant?.actorId === covenant.id
     );
 
     for (const lab of labs) {
