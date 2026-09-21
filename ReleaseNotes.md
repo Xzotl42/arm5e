@@ -1,4 +1,4 @@
-## 3.0.1.19 Stentorius BF8
+## 3.0.1.20 Stentorius BF8
 
 ### Compatibility
 
@@ -30,6 +30,7 @@
 - [V14] Some utility functions to retrieve active effect of a particular type where raising an error in V14 due to their new datamodel.
 - Fixed Arcane Experimentation sheet description field overflow
 - Generating the table of content of an empty book doesn't raise an error anymore.
+- Fixed lab aura not updating when adding/changing it tp the covenent.
 
 ## 3.0.1.15 Stentorius BF8
 

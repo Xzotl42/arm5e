@@ -226,6 +226,37 @@ Hooks.once("init", async function () {
   });
 });
 
+async function refreshSceneLinkedLaboratories(scene) {
+  if (!scene?.id) return;
+  const covenants = game.actors.filter(
+    (actor) => actor.type === "covenant" && actor.system.scene?.id === scene.id
+  );
+
+  for (const covenant of covenants) {
+    const labs = game.actors.filter(
+      (actor) =>
+        actor.type === "laboratory" && actor.system.covenant?.actorId === covenant.id
+    );
+
+    for (const lab of labs) {
+      lab.prepareData();
+      lab.sheet?.render(false);
+    }
+  }
+}
+
+async function refreshCovenantLinkedLaboratories(covenant) {
+  if (!covenant || covenant.type !== "covenant") return;
+  const labs = game.actors.filter(
+    (actor) => actor.type === "laboratory" && actor.system.covenant?.actorId === covenant.id
+  );
+
+  for (const lab of labs) {
+    lab.prepareData();
+    lab.sheet?.render(false);
+  }
+}
+
 Hooks.once("ready", async function () {
   // astrolabium singleton
   let formData = {
@@ -273,7 +304,16 @@ Hooks.once("ready", async function () {
     if (actor.type === "covenant") invalidateLinkedInhabitantIndex();
   });
   Hooks.on("updateActor", (actor, changes) => {
+    if (actor.type === "covenant" && foundry.utils.hasProperty(changes, "system.scene.id")) {
+      refreshCovenantLinkedLaboratories(actor);
+    }
     if (hasRelevantLinkedInhabitantActorChange(changes)) requestLinkedInhabitantSync(actor);
+  });
+  Hooks.on("updateScene", (scene, changes) => {
+    const sceneAuraChanged = Object.hasOwn(changes.flags?.[ARM5E.SYSTEM_ID] ?? {}, "aura");
+    if (sceneAuraChanged || foundry.utils.hasProperty(changes, "environment")) {
+      refreshSceneLinkedLaboratories(scene);
+    }
   });
   Hooks.on("deleteActor", (actor) => {
     if (actor.type === "covenant") invalidateLinkedInhabitantIndex();
