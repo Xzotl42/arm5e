@@ -17,7 +17,9 @@
             {{{form.ui.style}}} /><label>{{label}}</label>
         </div>
         {{#each ../system.arts.techniques as |technique k2|}}
-          <div class="arts-total flexrow flex-group-center">{{lookup ( lookup @root.system.castingTotals key) k2}}</div>
+          <div class="arts-total flexrow flex-group-center rollable" data-action="roll"
+            name="system.arts.technique.{{k2}}.label" data-roll="spont" data-technique="{{k2}}" data-form="{{key}}"
+            data-fatigue-on-use="1">{{lookup ( lookup @root.system.castingTotals key) k2}}</div>
         {{/each}}
       </li>
     {{/each}}

@@ -1,4 +1,4 @@
-## 3.0.1.20 Stentorius BF8
+## 3.0.1.21 Stentorius BF9
 
 ### Compatibility
 
@@ -15,6 +15,7 @@
 - New optional search field in the document picker (used in the Scriptorium to select a book)
 - The search feature above was used in the Codex for a better and more reactive search for shapes and materials
 - Added a notification at startup indicating when the compendia indexes are ready, some features, like the Codex, may not work until then (I have seen it take up to 11 seconds on loaded systems)
+- clicking on a casting total will trigger a spontaneous magic roll.
 
 ### Bug fixes
 
@@ -30,7 +31,7 @@
 - [V14] Some utility functions to retrieve active effect of a particular type where raising an error in V14 due to their new datamodel.
 - Fixed Arcane Experimentation sheet description field overflow
 - Generating the table of content of an empty book doesn't raise an error anymore.
-- Fixed lab aura not updating when adding/changing it tp the covenent.
+- Fixed lab aura not updating when adding to or changing it to the covenant.
 
 ## 3.0.1.15 Stentorius BF8
 
