@@ -96,35 +96,37 @@ export class ArM5eCovenantActorSheetV2 extends ArM5eActorSheetV2 {
   }
 
   getUserCache() {
-    let usercache = JSON.parse(sessionStorage.getItem(`usercache-${game.user.id}`));
-    if (usercache === null) usercache = {};
-    if (usercache[this.actor.id] === undefined) {
-      usercache[this.actor.id] = {
-        filters: {
-          hermetic: {
-            laboratoryTexts: HERMETIC_FILTER
-          },
-          bookTopics: {
-            abilitiesTopics: TOPIC_FILTER,
-            artsTopics: TOPIC_FILTER,
-            masteriesTopics: HERMETIC_FILTER
-          },
-          events: {
-            diaryEvents: TIME_FILTER,
-            calendarEvents: TIME_FILTER
-          }
-        },
-        lists: {
-          visibility: { inhabitants: {} }
-        }
-      };
+    const key = `usercache-${game.user.id}`;
+    let usercache = JSON.parse(sessionStorage.getItem(key)) ?? {};
 
-      sessionStorage.setItem(`usercache-${game.user.id}`, JSON.stringify(usercache));
-    } else if (usercache[this.actor.id].lists?.visibility === undefined) {
-      usercache[this.actor.id].lists = { visibility: { inhabitants: {} } };
-      sessionStorage.setItem(`usercache-${game.user.id}`, JSON.stringify(usercache));
+    const defaultCache = {
+      filters: {
+        hermetic: {
+          laboratoryTexts: foundry.utils.deepClone(HERMETIC_FILTER)
+        },
+        bookTopics: {
+          abilitiesTopics: foundry.utils.deepClone(TOPIC_FILTER),
+          artsTopics: foundry.utils.deepClone(TOPIC_FILTER),
+          masteriesTopics: foundry.utils.deepClone(HERMETIC_FILTER)
+        },
+        events: {
+          diaryEvents: foundry.utils.deepClone(TIME_FILTER),
+          calendarEvents: foundry.utils.deepClone(TIME_FILTER)
+        }
+      },
+      lists: {
+        visibility: { inhabitants: {}, covenant: {} }
+      }
+    };
+
+    const existing = usercache[this.actor.id];
+    if (typeof existing !== "object" || existing === null) {
+      usercache[this.actor.id] = defaultCache;
+    } else {
+      usercache[this.actor.id] = foundry.utils.mergeObject(defaultCache, existing);
     }
 
+    sessionStorage.setItem(key, JSON.stringify(usercache));
     return usercache[this.actor.id];
   }
 

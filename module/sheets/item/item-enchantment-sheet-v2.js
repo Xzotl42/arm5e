@@ -66,13 +66,13 @@ export class ArM5eEnchantmentItemSheetV2 extends ArM5eItemMagicSheetV2 {
   /** @override */
   getUserCache() {
     const cache = super.getUserCache();
-    if (!cache.sections.visibility.enchantment) {
-      cache.sections.visibility.enchantment = {};
-      const storageKey = `usercache-${game.user.id}`;
-      const usercache = JSON.parse(sessionStorage.getItem(storageKey)) ?? {};
-      usercache[this.item.id] = cache;
-      sessionStorage.setItem(storageKey, JSON.stringify(usercache));
-    }
+    const defaults = { sections: { visibility: { enchantment: {} } } };
+    foundry.utils.mergeObject(cache, defaults);
+
+    const storageKey = `usercache-${game.user.id}`;
+    const usercache = JSON.parse(sessionStorage.getItem(storageKey)) ?? {};
+    usercache[this.item.id] = cache;
+    sessionStorage.setItem(storageKey, JSON.stringify(usercache));
     return cache;
   }
 

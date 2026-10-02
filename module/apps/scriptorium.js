@@ -417,29 +417,25 @@ export class Scriptorium extends HandlebarsApplicationMixin(ApplicationV2) {
    * @returns {object} The `usercache.scriptorium` sub-object (with `sections.visibility`).
    */
   getUserCache() {
-    let usercache = JSON.parse(sessionStorage.getItem(`usercache-${game.user.id}`));
-    // Guard against a completely missing cache entry (first visit or cleared storage).
-    if (!usercache) {
-      usercache = {
-        scriptorium: {
-          sections: {
-            visibility: {
-              scriptorium: {}
-            }
-          }
+    const key = `usercache-${game.user.id}`;
+    let usercache = JSON.parse(sessionStorage.getItem(key)) ?? {};
+
+    const defaultCache = {
+      sections: {
+        visibility: {
+          scriptorium: {}
         }
-      };
-    } else if (usercache.scriptorium === undefined) {
-      usercache.scriptorium = {
-        sections: {
-          visibility: {
-            scriptorium: {}
-          }
-        }
-      };
+      }
+    };
+
+    const existing = usercache.scriptorium;
+    if (typeof existing !== "object" || existing === null) {
+      usercache.scriptorium = defaultCache;
+    } else {
+      usercache.scriptorium = foundry.utils.mergeObject(defaultCache, existing);
     }
 
-    sessionStorage.setItem(`usercache-${game.user.id}`, JSON.stringify(usercache));
+    sessionStorage.setItem(key, JSON.stringify(usercache));
     return usercache.scriptorium;
   }
 

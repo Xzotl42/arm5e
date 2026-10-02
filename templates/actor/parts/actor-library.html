@@ -12,10 +12,11 @@
           class="fas fa-plus"></i>{{localize "arm5e.sheet.action.Create"}}</a>
     </div>
   </li>
-  {{> (systemPath "templates/generic/metalic-bar.html") }}
-  {{> (systemPath "templates/actor/parts/topicFilter.hbs") list="artsTopics" visibility=ui.artsFilterVisibility
-      topics=config.magic.arts }}
   <div id="topic-arts" class="topic toggle-collapse">
+    {{> (systemPath "templates/generic/metalic-bar.html") }}
+    {{> (systemPath "templates/actor/parts/topicFilter.hbs") list="artsTopics" visibility=ui.artsFilterVisibility
+      topics=config.magic.arts }}
+
     {{#each system.filteredArtsTopics as |item id|}}
       <li class="item draggable item-value flexrow" data-name="{{item.book}}" data-index="{{item.index}}"
         data-item-id="{{item.id}}">

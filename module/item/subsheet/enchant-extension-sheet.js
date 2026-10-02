@@ -23,40 +23,11 @@ export class ArM5eItemEnchantmentSheet {
   }
 
   getUserCache() {
-    let usercache = JSON.parse(sessionStorage.getItem(`usercache-${game.user.id}`));
-    if (usercache === null) usercache = {};
-    if (usercache[this.item.id] === undefined) {
-      usercache[this.item.id] = {
-        sections: {
-          visibility: {
-            common: {},
-            enchantExt: {
-              capacity: "hide",
-              aspect: "hide",
-              info: "",
-              enchant: ""
-            }
-          }
-        }
-      };
-      let enchantments = [];
-      for (let idx = 0; idx < this.item.system.enchantments.effects.length; idx++) {
-        enchantments.push({ desc: "", attributes: "", whole: "" });
-      }
-      usercache[this.item.id].sections.visibility.enchantments = enchantments;
-    } else {
-      let enchantments = new Array(this.item.system.enchantments.effects.length);
-      for (let idx = 0; idx < this.item.system.enchantments.effects.length; idx++) {
-        const ench = usercache[this.item.id].sections.visibility.enchantments
-          ? usercache[this.item.id].sections.visibility.enchantments[idx]
-          : undefined;
-        if (ench) {
-          enchantments[idx] = ench;
-        } else {
-          enchantments[idx] = { desc: "", attributes: "", whole: "" };
-        }
-      }
-      let sections = {
+    const key = `usercache-${game.user.id}`;
+    let usercache = JSON.parse(sessionStorage.getItem(key)) ?? {};
+
+    const defaultCache = {
+      sections: {
         visibility: {
           common: {},
           enchantExt: {
@@ -64,16 +35,27 @@ export class ArM5eItemEnchantmentSheet {
             aspect: "hide",
             info: "",
             enchant: ""
-          }
+          },
+          enchantments: []
         }
-      };
+      }
+    };
 
-      foundry.utils.mergeObject(sections, usercache[this.item.id].sections);
-      sections.visibility.enchantments = enchantments;
-      usercache[this.item.id].sections = sections;
+    const existing = usercache[this.item.id];
+    if (typeof existing !== "object" || existing === null) {
+      usercache[this.item.id] = defaultCache;
+    } else {
+      usercache[this.item.id] = foundry.utils.mergeObject(defaultCache, existing);
     }
 
-    sessionStorage.setItem(`usercache-${game.user.id}`, JSON.stringify(usercache));
+    const visibility = usercache[this.item.id].sections.visibility;
+    const count = this.item.system.enchantments.effects.length;
+    const existingEnchantments = visibility.enchantments ?? [];
+    visibility.enchantments = Array.from({ length: count }, (_, idx) => {
+      return existingEnchantments[idx] ?? { desc: "", attributes: "", whole: "" };
+    });
+
+    sessionStorage.setItem(key, JSON.stringify(usercache));
     return usercache[this.item.id];
   }
 

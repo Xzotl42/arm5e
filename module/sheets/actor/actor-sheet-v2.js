@@ -468,7 +468,7 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
     const cacheKey = `usercache-${game.user.id}`;
     let usercache = JSON.parse(sessionStorage.getItem(cacheKey) ?? "{}");
 
-    usercache[this.actor.id] ??= {
+    const defaultCache = {
       filters: {
         hermetic: {
           spells: foundry.utils.deepClone(HERMETIC_FILTER),
@@ -488,14 +488,16 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
         visibility: { common: {} }
       },
       lists: {
-        visibility: { abilities: {} }
+        visibility: { abilities: {}, inventory: {}, combat: {}, magic: {} }
       }
     };
 
-    usercache[this.actor.id].sections ??= { visibility: { common: {} } };
-    usercache[this.actor.id].sections.visibility ??= { common: {} };
-    usercache[this.actor.id].lists ??= { visibility: { abilities: {} } };
-    usercache[this.actor.id].lists.visibility ??= { abilities: {} };
+    const existing = usercache[this.actor.id];
+    if (typeof existing !== "object" || existing === null) {
+      usercache[this.actor.id] = defaultCache;
+    } else {
+      usercache[this.actor.id] = foundry.utils.mergeObject(defaultCache, existing);
+    }
 
     sessionStorage.setItem(cacheKey, JSON.stringify(usercache));
     return usercache[this.actor.id];
@@ -634,6 +636,7 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
 
   static async effectEdit(event, target) {
     event.preventDefault();
+    event.stopPropagation();
     const li = target.closest("li");
     const effect = await fromUuid(li?.dataset?.effectId);
     if (!effect) return;
@@ -643,6 +646,7 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
 
   static async effectDelete(event, target) {
     event.preventDefault();
+    event.stopPropagation();
     const li = target.closest("li");
     const effect = await fromUuid(li?.dataset?.effectId);
     if (!effect) return;
@@ -651,6 +655,7 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
 
   static async effectToggle(event, target) {
     event.preventDefault();
+    event.stopPropagation();
     const li = target.closest("li");
     const effect = await fromUuid(li?.dataset?.effectId);
     if (!effect) return;
@@ -659,6 +664,7 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
 
   static async itemAdd(event, target) {
     event.preventDefault();
+    event.stopPropagation();
     const collection = await getRefCompendium(target.dataset.compendium);
     if (!collection) return this.constructor.itemCreate.call(this, event, target);
     new foundry.applications.sidebar.apps.Compendium({ collection }).render(true);
@@ -666,6 +672,7 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
 
   static async itemCreate(event, target) {
     event.preventDefault();
+    event.stopPropagation();
     const type = target.dataset.type;
     if (!type) return;
 
@@ -682,6 +689,7 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
 
   static async itemEdit(event, target) {
     event.preventDefault();
+    event.stopPropagation();
     const itemId = target.closest(".item")?.dataset?.itemId;
     if (!itemId) return;
     this.actor.getEmbeddedDocument("Item", itemId)?.sheet?.render(true, { focus: true });
@@ -689,6 +697,7 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
 
   static async itemView(event, target) {
     event.preventDefault();
+    event.stopPropagation();
     const uuid = target.closest(".item")?.dataset?.uuid;
     if (!uuid) return;
     (await fromUuid(uuid))?.sheet?.render(true, { focus: true });
@@ -696,6 +705,7 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
 
   static async bookEdit(event, target) {
     event.preventDefault();
+    event.stopPropagation();
     const itemEl = target.closest(".item");
     const itemId = itemEl?.dataset?.itemId;
     const index = Number(itemEl?.dataset?.index);
@@ -708,6 +718,7 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
 
   static async itemClone(event, target) {
     event.preventDefault();
+    event.stopPropagation();
     const uuid = target.closest(".item")?.dataset?.uuid;
     if (!uuid) return;
     const item = await fromUuid(uuid);
@@ -720,6 +731,7 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
 
   static async itemDelete(event, target) {
     event.preventDefault();
+    event.stopPropagation();
     const itemEl = target.closest(".item");
     const itemId = itemEl?.dataset?.itemId;
     if (!itemId) return;
@@ -742,6 +754,7 @@ export class ArM5eActorSheetV2 extends HandlebarsApplicationMixin(ActorSheetV2) 
 
   static async itemDeleteConfirm(event, target) {
     event.preventDefault();
+    event.stopPropagation();
     const itemEl = target.closest(".item");
     const itemId = itemEl?.dataset?.itemId;
     if (!itemId) return;

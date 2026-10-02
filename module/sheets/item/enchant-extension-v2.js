@@ -38,27 +38,46 @@ export class EnchantExtensionV2 {
    */
   static getUserCacheEnchantments(cache, item) {
     const storageKey = `usercache-${game.user.id}`;
-
-    // Ensure enchantExt section visibility defaults
-    cache.sections.visibility.enchantExt ??= {
-      capacity: "hide",
-      aspect: "hide",
-      info: "",
-      enchant: ""
+    const defaults = {
+      sections: {
+        visibility: {
+          common: {},
+          enchantExt: {
+            capacity: "hide",
+            aspect: "hide",
+            info: "",
+            enchant: ""
+          },
+          enchantments: []
+        }
+      }
     };
+
+    // Normalize the full expected shape without overwriting existing user values.
+    foundry.utils.mergeObject(cache, defaults, { overwrite: false });
 
     // Sync per-effect collapse entries with actual effects array length
     const count = item.system.enchantments?.effects?.length ?? 0;
-    const existing = cache.sections.visibility.enchantments ?? [];
+    const existing = Array.isArray(cache.sections.visibility.enchantments)
+      ? cache.sections.visibility.enchantments
+      : [];
     const enchantments = [];
     for (let i = 0; i < count; i++) {
-      enchantments[i] = existing[i] ?? { desc: "", attributes: "", whole: "" };
+      const row = existing[i];
+      enchantments[i] =
+        typeof row === "object" && row !== null ? row : { desc: "", attributes: "", whole: "" };
     }
     cache.sections.visibility.enchantments = enchantments;
 
     // Persist immediately so _prepareContext reads the updated cache
     const usercache = JSON.parse(sessionStorage.getItem(storageKey)) ?? {};
-    usercache[item.id] = cache;
+    const persisted = usercache[item.id];
+    if (typeof persisted !== "object" || persisted === null) {
+      usercache[item.id] = foundry.utils.deepClone(defaults);
+    } else {
+      usercache[item.id] = foundry.utils.mergeObject(foundry.utils.deepClone(defaults), persisted);
+    }
+    usercache[item.id] = foundry.utils.mergeObject(usercache[item.id], cache);
     sessionStorage.setItem(storageKey, JSON.stringify(usercache));
     return cache;
   }

@@ -1,3 +1,20 @@
+## 3.0.1.22 Stentorius BF10
+
+### Compatibility
+
+- Verified for 14.367
+- min Ars-compendia 1.2.6
+
+### Features & changes
+
+- [technical] Added some robustness to the user cache. Existing cache will be updated.
+- Added the foldable feature to most sections
+- New active effect for optional modifiers on abilities and characteristics rolls
+
+### Bug fixes
+
+- Fixed a missing confirmation dialog error when linking a lab to a covenant.
+
 ## 3.0.1.21 Stentorius BF9
 
 ### Compatibility

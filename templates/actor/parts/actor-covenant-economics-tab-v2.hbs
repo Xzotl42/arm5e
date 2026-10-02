@@ -5,139 +5,151 @@
 >
   {{!-- "wealth" --}}
   <div class="backSection padding12">
-    <div class="grid grid-2col border-0">
+    <div
+      class="grid grid-2col border-0"
+      data-action="toggleSectionCollapse"
+      data-section="income"
+      data-category="covenant"
+    >
       <span class="border-0">
         <label for="system.governForm" class="smallTitle">{{localize "arm5e.sheet.wealth"}}</label>
       </span>
     </div>
-    {{> (systemPath "templates/generic/metalic-bar.html") }}
-    <div class="grid grid-2col border-0">
-      <span class="flex-group-right border-0">
-        <label
-          for="system.finances.inhabitantsPoints"
-          class="label-medium"
-          >{{localize "arm5e.sheet.inhabitantsPoints"}}</label
-        >
-        <input
-          type="number"
-          name="system.finances.inhabitantsPoints"
-          value="{{ system.finances.inhabitantsPoints }}"
-          data-dtype="Number"
-          class="select-on-focus"
-        />
-      </span>
-      <span class="flex-group-right border-0">
-        <label
-          for="system.finances.totalIncome"
-          class="label-medium"
-          >{{localize "arm5e.sheet.totalIncome"}}</label
-        >
-        <input
-          type="number"
-          name="system.finances.totalIncome"
-          value="{{ system.finances.totalIncome }}"
-          data-dtype="Number"
-          class="select-on-focus"
-          readonly
-        />
-      </span>
-      <span class="flex-group-right border-0">
-        <label
-          for="system.finances.laboratoriesPoints"
-          class="label-medium"
-          >{{localize "arm5e.sheet.laboratoriesPoints"}}</label
-        >
-        <input
-          type="number"
-          name="system.finances.laboratoriesPoints"
-          value="{{ system.finances.laboratoriesPoints }}"
-          data-dtype="Number"
-          class="select-on-focus"
-          readonly
-        />
-      </span>
-      <span class="flex-group-right border-0">
-        <label
-          for="system.finances.baseExpenditure"
-          class="label-medium"
-          >{{localize "arm5e.sheet.baseExpenditure"}}</label
-        >
-        <input
-          type="number"
-          name="system.finances.baseExpenditure"
-          value="{{ system.finances.baseExpenditure }}"
-          data-dtype="Number"
-          class="select-on-focus"
-          readonly
-        />
-      </span>
-      <span class="flex-group-right border-0">
-        <label
-          for="system.finances.weaponsPoints"
-          class="label-medium"
-          >{{localize "arm5e.sheet.weaponsPoints"}}</label
-        >
-        <input
-          type="number"
-          name="system.finances.weaponsPoints"
-          value="{{ system.finances.weaponsPoints }}"
-          data-dtype="Number"
-          class="select-on-focus"
-          readonly
-        />
-      </span>
-      <span class="flex-group-right border-0">
-        <label
-          for="system.finances.costSavings"
-          class="label-medium"
-          >{{localize "arm5e.sheet.costSavings"}}</label
-        >
-        <input
-          type="number"
-          name="system.finances.costSavings"
-          value="{{ system.finances.costSavings }}"
-          data-dtype="Number"
-          class="select-on-focus"
-          readonly
-        />
-      </span>
-      <span class="flex-group-right border-0">
-        <label
-          for="system.finances.wealth"
-          class="label-medium"
-          >{{localize "arm5e.sheet.wealth"}}</label
-        >
-        <input
-          type="number"
-          name="system.finances.wealth"
-          value="{{ system.finances.wealth }}"
-          data-dtype="Number"
-          class="select-on-focus editable"
-        />
-      </span>
-      <span class="flex-group-right border-0">
-        <label
-          for="system.finances.totalExpenditure"
-          class="bold"
-          >{{localize "arm5e.sheet.totalExpenditure"}}</label
-        >
-        <input
-          type="number"
-          name="system.finances.totalExpenditure"
-          value="{{ system.finances.totalExpenditure }}"
-          data-dtype="Number"
-          class="select-on-focus summary"
-          readonly
-        />
-      </span>
+    <div class="toggle-collapse" id="covenant-income-{{ actor._id }}">
+      {{> (systemPath "templates/generic/metalic-bar.html") }}
+      <div class="grid grid-2col border-0">
+        <span class="flex-group-right border-0">
+          <label
+            for="system.finances.inhabitantsPoints"
+            class="label-medium"
+            >{{localize "arm5e.sheet.inhabitantsPoints"}}</label
+          >
+          <input
+            type="number"
+            name="system.finances.inhabitantsPoints"
+            value="{{ system.finances.inhabitantsPoints }}"
+            data-dtype="Number"
+            class="select-on-focus"
+          />
+        </span>
+        <span class="flex-group-right border-0">
+          <label
+            for="system.finances.totalIncome"
+            class="label-medium"
+            >{{localize "arm5e.sheet.totalIncome"}}</label
+          >
+          <input
+            type="number"
+            name="system.finances.totalIncome"
+            value="{{ system.finances.totalIncome }}"
+            data-dtype="Number"
+            class="select-on-focus"
+            readonly
+          />
+        </span>
+        <span class="flex-group-right border-0">
+          <label
+            for="system.finances.laboratoriesPoints"
+            class="label-medium"
+            >{{localize "arm5e.sheet.laboratoriesPoints"}}</label
+          >
+          <input
+            type="number"
+            name="system.finances.laboratoriesPoints"
+            value="{{ system.finances.laboratoriesPoints }}"
+            data-dtype="Number"
+            class="select-on-focus"
+            readonly
+          />
+        </span>
+        <span class="flex-group-right border-0">
+          <label
+            for="system.finances.baseExpenditure"
+            class="label-medium"
+            >{{localize "arm5e.sheet.baseExpenditure"}}</label
+          >
+          <input
+            type="number"
+            name="system.finances.baseExpenditure"
+            value="{{ system.finances.baseExpenditure }}"
+            data-dtype="Number"
+            class="select-on-focus"
+            readonly
+          />
+        </span>
+        <span class="flex-group-right border-0">
+          <label
+            for="system.finances.weaponsPoints"
+            class="label-medium"
+            >{{localize "arm5e.sheet.weaponsPoints"}}</label
+          >
+          <input
+            type="number"
+            name="system.finances.weaponsPoints"
+            value="{{ system.finances.weaponsPoints }}"
+            data-dtype="Number"
+            class="select-on-focus"
+            readonly
+          />
+        </span>
+        <span class="flex-group-right border-0">
+          <label
+            for="system.finances.costSavings"
+            class="label-medium"
+            >{{localize "arm5e.sheet.costSavings"}}</label
+          >
+          <input
+            type="number"
+            name="system.finances.costSavings"
+            value="{{ system.finances.costSavings }}"
+            data-dtype="Number"
+            class="select-on-focus"
+            readonly
+          />
+        </span>
+        <span class="flex-group-right border-0">
+          <label
+            for="system.finances.wealth"
+            class="label-medium clickable"
+            >{{localize "arm5e.sheet.wealth"}}</label
+          >
+          <input
+            type="number"
+            name="system.finances.wealth"
+            value="{{ system.finances.wealth }}"
+            data-dtype="Number"
+            class="select-on-focus editable"
+          />
+        </span>
+        <span class="flex-group-right border-0">
+          <label
+            for="system.finances.totalExpenditure"
+            class="bold"
+            >{{localize "arm5e.sheet.totalExpenditure"}}</label
+          >
+          <input
+            type="number"
+            name="system.finances.totalExpenditure"
+            value="{{ system.finances.totalExpenditure }}"
+            data-dtype="Number"
+            class="select-on-focus summary"
+            readonly
+          />
+        </span>
+      </div>
     </div>
   </div>
 
   {{!-- incomeSources --}}
   <ol class="items-list backSection margintop18">
-    <li class="item flexrow item-header">
+    <li
+      class="item flexrow item-header"
+      data-action="toggleSectionCollapse"
+      data-section="income"
+      data-category="covenant"
+    >
       <div class="item-image"></div>
-      <div class="item-name">{{localize "arm5e.sheet.incomingSources"}}</div>
+      <div class="item-name clickable">{{localize "arm5e.sheet.incomingSources"}}</div>
       <div class="item-controls">
         <a
           class="item-control item-create"
@@ -148,32 +160,34 @@
         >
       </div>
     </li>
-    {{> (systemPath "templates/generic/metalic-bar.html") }}
-    {{#each system.incomingSources as |item id|}}
-    <li
-      class="item item-value flexrow flex-center"
-      data-name="{{ item.name }}"
-      data-attribute="{{ id }}"
-      data-item-id="{{ item._id }}"
-    >
-      <div class="flexrow flex-center">
-        <span class="flexrow item-title width15">{{ item.name }}</span>
-        <span></span>
-        <span class="flexrow bold">{{localize "arm5e.sheet.type"}}: {{ item.system.type }} </span>
-        <span class="flexrow bold"
-          >{{localize "arm5e.sheet.incoming"}}: {{ item.system.incoming }}
-        </span>
-      </div>
-      <div class="item-controls">
-        <a class="item-control item-edit" data-action="itemEdit" title="Edit incomingSource"
-          ><i class="ars-Icon_Edit"></i
-        ></a>
-        <a class="item-control item-delete" data-action="itemDelete" title="Delete incomingSource"
-          ><i class="ars-Icon_Delete_Hand_Gesture"></i
-        ></a>
-      </div>
-    </li>
-    {{/each}}
+    <div class="toggle-collapse" id="covenant-income-{{ actor._id }}">
+      {{> (systemPath "templates/generic/metalic-bar.html") }}
+      {{#each system.incomingSources as |item id|}}
+      <li
+        class="item item-value flexrow flex-center"
+        data-name="{{ item.name }}"
+        data-attribute="{{ id }}"
+        data-item-id="{{ item._id }}"
+      >
+        <div class="flexrow flex-center">
+          <span class="flexrow item-title width15">{{ item.name }}</span>
+          <span></span>
+          <span class="flexrow bold">{{localize "arm5e.sheet.type"}}: {{ item.system.type }} </span>
+          <span class="flexrow bold"
+            >{{localize "arm5e.sheet.incoming"}}: {{ item.system.incoming }}
+          </span>
+        </div>
+        <div class="item-controls">
+          <a class="item-control item-edit" data-action="itemEdit" title="Edit incomingSource"
+            ><i class="ars-Icon_Edit"></i
+          ></a>
+          <a class="item-control item-delete" data-action="itemDelete" title="Delete incomingSource"
+            ><i class="ars-Icon_Delete_Hand_Gesture"></i
+          ></a>
+        </div>
+      </li>
+      {{/each}}
+    </div>
   </ol>
 
   {{!-- "yearlyExpenses" --}}

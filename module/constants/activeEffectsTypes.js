@@ -1894,6 +1894,12 @@ export const ACTIVE_EFFECTS_TYPES = {
         key: "defense",
         mode: 2,
         default: 3
+      },
+      ability: {
+        mnemonic: "arm5e.activeEffect.subtypes.abilityRoll",
+        key: "ability",
+        mode: 2,
+        default: 3
       }
     }
   },
