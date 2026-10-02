@@ -22,6 +22,7 @@ import {
   SpellActivity
 } from "../../seasonal-activities/labActivity.js";
 import { log } from "../../tools/tools.js";
+import { getConfirmation } from "../../ui/dialogs.js";
 
 /**
  * AppV2 Laboratory actor sheet.
@@ -130,35 +131,38 @@ export class ArM5eLaboratoryActorSheetV2 extends ArM5eActorSheetV2 {
   }
 
   getUserCache() {
-    let usercache = JSON.parse(sessionStorage.getItem(`usercache-${game.user.id}`));
-    if (usercache === null) usercache = {};
-    if (usercache[this.actor.id] === undefined) {
-      usercache[this.actor.id] = {
-        filters: {
-          hermetic: {
-            spells: HERMETIC_FILTER,
-            magicalEffects: HERMETIC_FILTER,
-            laboratoryTexts: HERMETIC_FILTER
-          },
-          bookTopics: {
-            abilitiesTopics: TOPIC_FILTER,
-            artsTopics: TOPIC_FILTER,
-            masteriesTopics: HERMETIC_TOPIC_FILTER
-          },
-          events: {
-            diaryEvents: TIME_FILTER
-          }
+    const key = `usercache-${game.user.id}`;
+    let usercache = JSON.parse(sessionStorage.getItem(key)) ?? {};
+
+    const defaultCache = {
+      filters: {
+        hermetic: {
+          spells: foundry.utils.deepClone(HERMETIC_FILTER),
+          magicalEffects: foundry.utils.deepClone(HERMETIC_FILTER),
+          laboratoryTexts: foundry.utils.deepClone(HERMETIC_FILTER)
         },
-        sections: {
-          visibility: { common: {}, planning: {} }
+        bookTopics: {
+          abilitiesTopics: foundry.utils.deepClone(TOPIC_FILTER),
+          artsTopics: foundry.utils.deepClone(TOPIC_FILTER),
+          masteriesTopics: foundry.utils.deepClone(HERMETIC_TOPIC_FILTER)
+        },
+        events: {
+          diaryEvents: foundry.utils.deepClone(TIME_FILTER)
         }
-      };
+      },
+      sections: {
+        visibility: { common: {}, planning: {} }
+      }
+    };
+
+    const existing = usercache[this.actor.id];
+    if (typeof existing !== "object" || existing === null) {
+      usercache[this.actor.id] = defaultCache;
     } else {
-      const sections = { visibility: { common: {}, planning: {} } };
-      foundry.utils.mergeObject(sections, usercache[this.actor.id].sections);
-      usercache[this.actor.id].sections = sections;
+      usercache[this.actor.id] = foundry.utils.mergeObject(defaultCache, existing);
     }
-    sessionStorage.setItem(`usercache-${game.user.id}`, JSON.stringify(usercache));
+
+    sessionStorage.setItem(key, JSON.stringify(usercache));
     return usercache[this.actor.id];
   }
 

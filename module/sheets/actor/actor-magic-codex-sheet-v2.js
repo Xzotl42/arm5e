@@ -100,23 +100,28 @@ export class ArM5eMagicCodexSheetV2 extends ArM5eActorSheetV2 {
   };
 
   getUserCache() {
-    let usercache = JSON.parse(sessionStorage.getItem(`usercache-${game.user.id}`));
-    if (usercache[this.actor.id] === undefined) {
-      usercache[this.actor.id] = {
-        filters: {
-          hermetic: {
-            filter: HERMETIC_FILTER
-          },
-          aspects: {
-            searchString: ""
-          }
+    const key = `usercache-${game.user.id}`;
+    let usercache = JSON.parse(sessionStorage.getItem(key)) ?? {};
+
+    const defaultCache = {
+      filters: {
+        hermetic: {
+          filter: foundry.utils.deepClone(HERMETIC_FILTER)
+        },
+        aspects: {
+          searchString: ""
         }
-      };
-      sessionStorage.setItem(`usercache-${game.user.id}`, JSON.stringify(usercache));
-    } else if (usercache[this.actor.id].filters.aspects === undefined) {
-      usercache[this.actor.id].filters.aspects = { searchString: "" };
-      sessionStorage.setItem(`usercache-${game.user.id}`, JSON.stringify(usercache));
+      }
+    };
+
+    const existing = usercache[this.actor.id];
+    if (typeof existing !== "object" || existing === null) {
+      usercache[this.actor.id] = defaultCache;
+    } else {
+      usercache[this.actor.id] = foundry.utils.mergeObject(defaultCache, existing);
     }
+
+    sessionStorage.setItem(key, JSON.stringify(usercache));
     return usercache[this.actor.id];
   }
 

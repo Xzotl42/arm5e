@@ -15,8 +15,9 @@
         data-tab="wounds"
       >
         {{> (systemPath "templates/actor/parts/actor-fatigue.html") }}
-        {{> (systemPath "templates/actor/parts/actor-combat.html") }}
-        {{> (systemPath "templates/actor/parts/actor-weapons.html") }}
+        {{> (systemPath "templates/actor/parts/actor-combat.html")  }}
+        {{> (systemPath "templates/actor/parts/actor-weapons.html") foldingCat="combat" }}
+        {{> (systemPath "templates/actor/parts/actor-armor.html") foldingCat="combat" }}
       </div>
     </section>
   </div>

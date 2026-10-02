@@ -132,13 +132,19 @@ export class ArM5eItemSheetV2 extends HandlebarsApplicationMixin(ItemSheetV2) {
   getUserCache() {
     const key = `usercache-${game.user.id}`;
     let usercache = JSON.parse(sessionStorage.getItem(key)) ?? {};
-    if (usercache[this.item.id] === undefined) {
-      usercache[this.item.id] = { sections: { visibility: { common: {}, book: {} } } };
-      sessionStorage.setItem(key, JSON.stringify(usercache));
-    } else if (usercache[this.item.id].sections === undefined) {
-      usercache[this.item.id].sections = { visibility: { common: {}, book: {} } };
-      sessionStorage.setItem(key, JSON.stringify(usercache));
+
+    const defaultCache = {
+      sections: { visibility: { common: {}, book: {} } }
+    };
+
+    const existing = usercache[this.item.id];
+    if (typeof existing !== "object" || existing === null) {
+      usercache[this.item.id] = defaultCache;
+    } else {
+      usercache[this.item.id] = foundry.utils.mergeObject(defaultCache, existing);
     }
+
+    sessionStorage.setItem(key, JSON.stringify(usercache));
     return usercache[this.item.id];
   }
 

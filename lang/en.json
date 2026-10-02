@@ -78,6 +78,7 @@
         "temporary": "Temporary effects"
       },
       "subtypes": {
+        "abilityRoll": "Ability rolls",
         "agingMagi": "Aging for Magi",
         "agingMundane": "Aging for Mundane",
         "attackRoll": "Attack rolls",
@@ -1660,6 +1661,7 @@
       "sagaType": "Saga Type",
       "salubrity": "Salubrity",
       "sanctum": "Sanctum",
+      "sanctums": "Sanctums",
       "saving": "Savings",
       "scene": "Scene",
       "score": "Score",
