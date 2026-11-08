@@ -286,9 +286,6 @@ async function getRollFormula(actor) {
       total += parseInt(value);
 
       let name = game.i18n.localize(ARM5E.character.characteristics[rollInfo.characteristic].label);
-      if (rollInfo.type === "char") {
-        rollInfo.label = name;
-      }
       msg += name;
       msg += ` (${value})`;
     }

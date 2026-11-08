@@ -569,6 +569,7 @@
       "base": "Base",
       "begins": "Begins",
       "cancelled": "Cancelled",
+      "chatMsg": "Chat Message",
       "clear": "Clear",
       "config": "Configuration",
       "confirm": "Confirm",
