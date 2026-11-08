@@ -222,7 +222,6 @@ export class ArM5eItemSheetV2 extends HandlebarsApplicationMixin(ItemSheetV2) {
     const effectType = li?.dataset?.effectType;
     const data = {
       origin: this.item.uuid,
-      "duration.turns": effectType === "temporary" ? 999 : undefined,
       disabled: effectType === "inactive",
       tint: "#000000",
       changes: [],
@@ -236,6 +235,14 @@ export class ArM5eItemSheetV2 extends HandlebarsApplicationMixin(ItemSheetV2) {
       name: game.i18n.localize("arm5e.activeEffect.new"),
       img: "icons/svg/aura.svg"
     };
+    if (effectType === "temporary") {
+      if (CONFIG.ISV13) {
+        data["duration.turns"] = 9999;
+      } else {
+        data["duration.value"] = 999;
+        data["duration.units"] = "years";
+      }
+    }
     return await this.item.createEmbeddedDocuments("ActiveEffect", [data]);
   }
 
