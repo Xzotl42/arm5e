@@ -16,9 +16,21 @@ export class ArM5eVisItemSheetV2 extends ArM5eItemSheetV2 {
   };
 
   /** @override */
+  static TABS = {
+    primary: {
+      tabs: [{ id: "description", label: "arm5e.sheet.description", cssClass: "item flexrow" }],
+      initial: "description"
+    }
+  };
+
+  /** @override */
   static PARTS = {
     header: {
       template: `systems/${ARM5E.SYSTEM_ID}/templates/item/parts/item-vis-header-v2.hbs`
+    },
+    tabs: {
+      template: `systems/${ARM5E.SYSTEM_ID}/templates/generic/parts/ars-tab-navigation.hbs`,
+      classes: ["marginItemPart"]
     },
     description: {
       template: `systems/${ARM5E.SYSTEM_ID}/templates/item/parts/item-description-v2.hbs`
@@ -33,6 +45,14 @@ export class ArM5eVisItemSheetV2 extends ArM5eItemSheetV2 {
     const context = await super._prepareContext(options);
     context.displayStudyIcon = this.item.isOwned && this.item.actor?.isMagus?.();
     return context;
+  }
+
+  /** @override */
+  async _preparePartContext(partId, context, options) {
+    if (partId === "description") {
+      context.tab = context.tabs?.description;
+    }
+    return super._preparePartContext(partId, context, options);
   }
 
   static async studyVis(event, target) {
