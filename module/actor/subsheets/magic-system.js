@@ -94,7 +94,6 @@ export class ArM5eMagicSystem {
                 item.option = abilityStat.option;
                 item.label = abilityStat.label;
               }
-            } else {
             }
             template.verbs.push(item);
             break;
@@ -341,8 +340,12 @@ export class ArM5eMagicSystem {
     newOption = slugify(newOption, false);
 
     const components = this.actor.system.magicSystem.templates[dataset.id].components;
-    components[dataset.index].key = dataset.key;
-    components[dataset.index].option = newOption;
+    const component = components[dataset.index];
+    component.key = dataset.key;
+    component.option = newOption;
+    component.extendedKey = component.option
+      ? `${component.key}_${component.option}`
+      : component.key;
     await this.sheet.submit({
       preventClose: true,
       updateData: {
@@ -432,17 +435,23 @@ export class ArM5eMagicSystem {
     const extendedKey = event.target.value;
     const components = this.actor.system.magicSystem.templates[dataset.id].components;
     event.stopPropagation();
+    const component = components[dataset.index];
     if (CONFIG.ARM5E.LOCALIZED_ABILITIES[extendedKey]) {
       // // check if it is a category
       if (CONFIG.ARM5E.LOCALIZED_ABILITIES[extendedKey].disabled) return;
-      components[dataset.index].key = extendedKey;
-      components[dataset.index].option = "";
-      let ability = this.actor.items.find((e) => (e.system.key = extendedKey));
+      component.key = extendedKey;
+      component.option = "";
+      component.extendedKey = component.option
+        ? `${component.key}_${component.option}`
+        : component.key;
+      let ability = this.actor.items.find((e) => e.system.key === extendedKey);
       if (ability) {
-        components[dataset.index].abilityId = ability._id;
-        components[dataset.index].score = ability.system.finalScore;
+        component.abilityId = ability._id;
+        component.score = ability.system.finalScore;
+        component.label = ability.name;
       } else {
-        components[dataset.index].abilityId = "";
+        component.abilityId = "";
+        component.label = CONFIG.ARM5E.LOCALIZED_ABILITIES[component.key]?.label ?? "";
       }
     } else {
       //
@@ -452,13 +461,18 @@ export class ArM5eMagicSystem {
         // // check if it is a category
         if (CONFIG.ARM5E.LOCALIZED_ABILITIES[matched.groups.key].disabled) return;
         let ability = this.actor.getAbility(matched.groups.key, matched.groups.option);
-        components[dataset.index].key = matched.groups.key;
-        components[dataset.index].option = matched.groups.option;
+        component.key = matched.groups.key;
+        component.option = matched.groups.option;
+        component.extendedKey = component.option
+          ? `${component.key}_${component.option}`
+          : component.key;
         if (ability) {
-          components[dataset.index].abilityId = ability._id;
-          components[dataset.index].score = ability.system.finalScore;
+          component.abilityId = ability._id;
+          component.score = ability.system.finalScore;
+          component.label = ability.name;
         } else {
-          components[dataset.index].abilityId = "";
+          component.abilityId = "";
+          component.label = CONFIG.ARM5E.LOCALIZED_ABILITIES[component.key]?.label ?? "";
         }
       }
     }
@@ -529,7 +543,8 @@ export class ArM5eMagicSystem {
               type: "ability",
               art: dataset.art,
               option: ab.option,
-              key: "animalHandling"
+              key: "animalHandling",
+              extendedKey: "animalHandling"
             });
             break;
           case "verb":

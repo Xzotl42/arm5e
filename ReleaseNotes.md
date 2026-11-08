@@ -14,7 +14,8 @@
 - Default icons style setting (Monochrome/Color) was not working properly and causing all kind of problems in a new world.
 - Vis sheets are displaying their description again.
 - [V14] temporary ActiveEffect were expiring due to a datamodel change.
-- Recovery modifiers were not taken into account in the sanatorium even if displayed properly
+- Recovery modifiers were not taken into account in the sanatorium even if displayed properly.
+- Fixing a bug when changing an ability component in the alternate magic system template.
 
 ## 3.0.1.22 Stentorius BF10
 
