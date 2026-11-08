@@ -3347,7 +3347,8 @@ ARM5E.recovery = {
   //   Total                        = 365 days
   daysInSeason: { spring: 92, summer: 92, autumn: 91, winter: 90 },
   maxDaysInSeason: 92, // longest season (spring/summer); used for interval-to-seasons conversion
-  rollMode: 40 // no chat message, no confidence
+  rollMode: 8 //  no confidence
+  // rollMode: 40 // no chat message, no confidence
 };
 
 /**

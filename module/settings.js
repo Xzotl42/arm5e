@@ -3,6 +3,7 @@ import { ARM5E } from "./config.js";
 import { log } from "./tools/tools.js";
 import { CompendiaRefConfig } from "./apps/compendiaRefConfig.js";
 import { SourcebookFilterConfig } from "./apps/sourcebookFilterConfig.js";
+import { ARM5E_DEFAULT_ICONS } from "./constants/ui.js";
 
 /**
  *
@@ -50,7 +51,7 @@ export function registerSettings() {
     },
     default: "MONO",
     onChange: (value) => {
-      CONFIG.ARM5E_DEFAULT_ICONS = CONFIG.ARM5E_DEFAULT_ICONS[value];
+      CONFIG.ARM5E_DEFAULT_ICONS = ARM5E_DEFAULT_ICONS[value];
     }
   });
 

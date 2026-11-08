@@ -196,6 +196,7 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
       wounded: 0,
       incap: 0
     };
+    this.object.chatMsg = true; // default: chat messages enabled
     this.object.hasWounds = false;
     this.object.nextRecoveryPeriod = 0;
     this.object.dateChange = "disabled"; // Locked after first roll
@@ -211,6 +212,85 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
   }
 
   /**
+   * Compute effective recovery modifiers for this session.
+   * Mundane/magical help stay user-controlled; active effects and lab health are actor-derived.
+   * @returns {{mundaneHelp:number, magicalHelp:number, activeEffect:number, labHealth:number}}
+   */
+  _computeRecoveryModifiers() {
+    const mundaneHelp = Number(this.object?.modifiers?.mundaneHelp) || 0;
+    const magicalHelp = Number(this.object?.modifiers?.magicalHelp) || 0;
+    const activeEffect = Number(this.patient?.system?.bonuses?.traits?.recovery) || 0;
+    let labHealth = 0;
+    if (this.patient?.system?.isMagus && this.patient?.system?.sanctum?.linked) {
+      labHealth = Number(this.patient.system.sanctum.document?.system?.health?.total) || 0;
+    }
+    return { mundaneHelp, magicalHelp, activeEffect, labHealth };
+  }
+
+  /**
+   * Refresh session modifiers so roll logic and UI use identical effective values.
+   * @returns {{mundaneHelp:number, magicalHelp:number, activeEffect:number, labHealth:number}}
+   */
+  _syncRecoveryModifiers() {
+    const modifiers = this._computeRecoveryModifiers();
+    this.object.modifiers = {
+      ...(this.object.modifiers ?? {}),
+      ...modifiers
+    };
+    return modifiers;
+  }
+
+  /**
+   * Build the complete modifier breakdown for one stress-die recovery roll.
+   * @param {number} woundBonus The per-wound bonus applied as option5
+   * @returns {{mundaneHelp:number, magicalHelp:number, activeEffect:number, labHealth:number, woundBonus:number, total:number}}
+   */
+  _getRollModifierBreakdown(woundBonus = 0) {
+    const mods = this._computeRecoveryModifiers();
+    const wb = Number(woundBonus) || 0;
+    return {
+      ...mods,
+      woundBonus: wb,
+      total: mods.mundaneHelp + mods.magicalHelp + mods.activeEffect + mods.labHealth + wb
+    };
+  }
+
+  /**
+   * Emit verbose diagnostics for recovery rolls to dev-mode logs.
+   * @param {string} label Context label for the roll site
+   * @param {Object} breakdown Output of _getRollModifierBreakdown
+   * @param {Roll} roll The resolved Foundry roll
+   */
+  _logRecoveryRollDetails(label, breakdown, roll) {
+    log(false, `[Sanatorium Recovery] ${label}`, {
+      modifiers: breakdown,
+      roll: {
+        total: roll?.total,
+        offset: roll?.offset
+      }
+    });
+  }
+
+  /**
+   * Render a compact modifier breakdown line for the Sanatorium recovery report.
+   * @param {Object} breakdown Output of _getRollModifierBreakdown
+   * @returns {string}
+   */
+  _formatRollModifierLine(breakdown) {
+    return `<small>${game.i18n.localize("arm5e.sanatorium.recoveryBonus")}: ${
+      breakdown.activeEffect
+    }, ${game.i18n.localize("arm5e.sanatorium.mundaneHelp")}: ${
+      breakdown.mundaneHelp
+    }, ${game.i18n.localize("arm5e.sanatorium.magicalHelp")}: ${
+      breakdown.magicalHelp
+    }, ${game.i18n.localize("arm5e.sanatorium.labHealth")}: ${
+      breakdown.labHealth
+    }, ${game.i18n.localize("arm5e.messages.die.bonus")}: ${breakdown.woundBonus}, Total mod: ${
+      breakdown.total
+    }</small><br/>`;
+  }
+
+  /**
    * Prepare the rendering context with calculated display values and state flags.
    * Determines which UI elements should be enabled/disabled based on current state.
    * @private
@@ -218,6 +298,7 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
    */
   async _prepareContext() {
     const context = foundry.utils.deepClone(this.object);
+    const effectiveModifiers = this._syncRecoveryModifiers();
     const patient = this.patient;
     context.patient = patient;
     context.canRoll = ""; // Enabled by default, disabled in terminal states
@@ -235,14 +316,11 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
     context.diaryLabel = context.moreSeasons
       ? "arm5e.astrolab.nextSeason"
       : "arm5e.sanatorium.button.endSeason";
-    context.modifiers.activeEffect = patient.system.bonuses.traits.recovery;
+    context.modifiers.activeEffect = effectiveModifiers.activeEffect;
     context.config = CONFIG;
 
     // Add sanctum/lab bonuses if patient has linked facility
-    if (patient.system.isMagus && patient.system.sanctum.linked) {
-      const lab = patient.system.sanctum.document;
-      context.modifiers.labHealth = lab.system.health.total;
-    }
+    context.modifiers.labHealth = effectiveModifiers.labHealth;
 
     // Calculate display values for progress tracking
     context.curSeasonLabel = game.i18n.localize(CONFIG.ARM5E.seasons[context.curSeason].label);
@@ -714,14 +792,17 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
       return;
     }
 
+    const rollMode = this.object.chatMsg ? 8 : 40;
+
     const dataset = {
       roll: "char",
-      name: "Overstrain",
+      name: game.i18n.localize("arm5e.sanatorium.overstrain"),
+      // name: "Overstrain",
       characteristic: "sta",
       txtoption5: game.i18n.localize("arm5e.messages.die.bonus"),
       option5: 0,
       physicalcondition: false,
-      mode: CONFIG.ARM5E.recovery.rollMode
+      mode: rollMode
     };
     actor.rollInfo.init(dataset, actor);
     const msg = await stressDie(actor, dataset.roll, 4, undefined, 1);
@@ -950,6 +1031,7 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
   async _recoveryRoll(event) {
     event.preventDefault();
     const patient = this.patient;
+    const effectiveModifiers = this._syncRecoveryModifiers();
     let recoverylog = this.object.log;
     // Lock UI after first roll to prevent date changes mid-session
     let dateChange = "disabled";
@@ -967,24 +1049,26 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
       dead: []
     };
 
+    const rollMode = this.object.chatMsg ? 8 : 40;
     // Build dataset for recovery roll - Stamina characteristic check
     let dataset = {
       roll: "char",
-      name: "Recovery",
+      name: game.i18n.localize("arm5e.activity.recovery"),
       characteristic: "sta",
       txtoption1: game.i18n.localize("arm5e.sanatorium.recoveryBonus"),
-      option1: this.object.modifiers.activeEffect,
+      option1: effectiveModifiers.activeEffect,
       txtoption2: game.i18n.localize("arm5e.sanatorium.mundaneHelp"),
-      option2: this.object.modifiers.mundaneHelp,
+      option2: effectiveModifiers.mundaneHelp,
       txtoption3: game.i18n.localize("arm5e.sanatorium.magicalHelp"),
-      option3: this.object.modifiers.magicalHelp,
+      option3: effectiveModifiers.magicalHelp,
       txtoption4: game.i18n.localize("arm5e.sanatorium.labHealth"),
-      option4: this.object.modifiers.labHealth,
+      option4: effectiveModifiers.labHealth,
       txtoption5: game.i18n.localize("arm5e.messages.die.bonus"),
       option5: 0,
       physicalcondition: false,
-      mode: CONFIG.ARM5E.recovery.rollMode
+      mode: rollMode
     };
+    log(false, "[Sanatorium Recovery] Base modifiers", effectiveModifiers);
     let tmpPeriod = 1000; // Track next recovery roll timing (in days)
     let incapacited = false; // Flag if an incapacitating wound is being actively treated this period
     // Shared log state for this roll (passed into helpers)
@@ -1061,15 +1145,19 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
           patient.rollInfo.init(dataset, patient);
           const heavyMsg = await stressDie(patient, dataset.roll, 4, undefined, 1);
           const heavyRoll = heavyMsg.rolls[0];
+          const heavyBreakdown = this._getRollModifierBreakdown(dataset.option5);
+          this._logRecoveryRollDetails(
+            `Trending incap heavy-grade roll for ${wound.name ?? wound._id ?? "unknown wound"}`,
+            heavyBreakdown,
+            heavyRoll
+          );
 
-          logState.description +=
-            `<li>${game.i18n.format("arm5e.sanatorium.msg.logWound", {
-              type: game.i18n.localize("arm5e.sheet.heavy")
-            })}` +
-            `<br/>${game.i18n.format("arm5e.sanatorium.msg.logRoll", {
-              total: heavyRoll.total,
-              mod: heavyRoll.offset
-            })} vs ${heavyCfg.improvement}<br/>`;
+          logState.description += `<li>${game.i18n.format("arm5e.sanatorium.msg.logWound", {
+            type: game.i18n.localize("arm5e.sheet.heavy")
+          })}<br/>${game.i18n.format("arm5e.sanatorium.msg.logRoll", {
+            total: heavyRoll.total,
+            mod: heavyRoll.offset
+          })} vs ${heavyCfg.improvement}<br/>${this._formatRollModifierLine(heavyBreakdown)}`;
 
           let commitRank;
           if (heavyRoll.total >= heavyCfg.improvement) {
@@ -1155,6 +1243,12 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
           patient.rollInfo.init(dataset, patient);
           const msg = await stressDie(patient, dataset.roll, 4, undefined, 1);
           const roll = msg.rolls[0];
+          const sharedBreakdown = this._getRollModifierBreakdown(dataset.option5);
+          this._logRecoveryRollDetails(
+            `${rollLabels[rollIdx]} shared incap roll (${active.length} wounds)`,
+            sharedBreakdown,
+            roll
+          );
 
           logState.description += `<b>${rollLabels[rollIdx]}:</b> `;
 
@@ -1176,14 +1270,12 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
           } else {
             // Apply shared roll result to every still-active incap wound
             for (const state of active) {
-              logState.description +=
-                `<li>${game.i18n.format("arm5e.sanatorium.msg.logWound", {
-                  type: game.i18n.localize("arm5e.sheet.incap")
-                })}` +
-                `<br/>${game.i18n.format("arm5e.sanatorium.msg.logRoll", {
-                  total: roll.total,
-                  mod: roll.offset
-                })} vs ${incapCfg.improvement}<br/>`;
+              logState.description += `<li>${game.i18n.format("arm5e.sanatorium.msg.logWound", {
+                type: game.i18n.localize("arm5e.sheet.incap")
+              })}<br/>${game.i18n.format("arm5e.sanatorium.msg.logRoll", {
+                total: roll.total,
+                mod: roll.offset
+              })} vs ${incapCfg.improvement}<br/>${this._formatRollModifierLine(sharedBreakdown)}`;
 
               if (roll.total >= incapCfg.improvement) {
                 // Improvement → wound stays in incap bucket but with trend = -1, meaning it
@@ -1350,16 +1442,22 @@ export class Sanatorium extends foundry.applications.api.HandlebarsApplicationMi
           patient.rollInfo.init(dataset, patient);
           const msg = await stressDie(patient, dataset.roll, 4, undefined, 1);
           const roll = msg.rolls[0];
+          const woundBreakdown = this._getRollModifierBreakdown(dataset.option5);
+          this._logRecoveryRollDetails(
+            `${type} wound roll for ${wound.name ?? wound._id ?? "unknown wound"}`,
+            woundBreakdown,
+            roll
+          );
 
           // Build per-wound log line header
-          logState.description +=
-            `<li>${game.i18n.format("arm5e.sanatorium.msg.logWound", {
-              type: game.i18n.localize(`arm5e.sheet.${newType}`)
-            })}` +
-            `<br/>${game.i18n.format("arm5e.sanatorium.msg.logRoll", {
-              total: roll.total,
-              mod: roll.offset
-            })} vs ${CONFIG.ARM5E.recovery.wounds[newType].improvement}<br/>`;
+          logState.description += `<li>${game.i18n.format("arm5e.sanatorium.msg.logWound", {
+            type: game.i18n.localize(`arm5e.sheet.${newType}`)
+          })}<br/>${game.i18n.format("arm5e.sanatorium.msg.logRoll", {
+            total: roll.total,
+            mod: roll.offset
+          })} vs ${
+            CONFIG.ARM5E.recovery.wounds[newType].improvement
+          }<br/>${this._formatRollModifierLine(woundBreakdown)}`;
 
           const wCfg = CONFIG.ARM5E.recovery.wounds[newType];
 

@@ -149,6 +149,11 @@ export class ArM5eRollInfo {
         break;
       case ROLL_PROPERTIES.CHAR.VAL:
         this.characteristic = dataset.characteristic;
+        if (this.label === "") {
+          this.label = game.i18n.localize(
+            ARM5E.character.characteristics[this.characteristic].label
+          );
+        }
         this.listeners = addAbilityListenersDialog;
         break;
       case ROLL_PROPERTIES.ABILITY.VAL:

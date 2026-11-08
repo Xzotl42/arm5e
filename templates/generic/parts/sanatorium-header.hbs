@@ -1,6 +1,6 @@
 <div>
   <div class="sanatorium header-background" style="width: 600px; margin: 0px">
-    <img src="{{systemPath}}assets/sanatorium/Header_Sanatorium.png" />
+    <img src="{{ systemPath }}assets/sanatorium/Header_Sanatorium.png" />
   </div>
   <div class="flexrow marginsides32">
     <img
@@ -10,5 +10,9 @@
       style="max-height: 64px; max-width: 64px"
     />
     <h1 class="sanatorium-title width: 100%;" text-align="center">Sanatorium</h1>
+    <div class="flexrow flex0">
+      <label class="flex0">{{localize "arm5e.generic.chatMsg"}}</label>
+      <input type="checkbox" class="chatMsg" name="chatMsg" {{checked chatMsg}} />
+    </div>
   </div>
 </div>
