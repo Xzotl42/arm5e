@@ -1,3 +1,21 @@
+## 3.0.1.23 Stentorius BF11
+
+- Verified for 14.370
+- min Ars-compendia 1.2.6
+
+### Features & changes
+
+- Added a notification when harvesting a vis source.
+- Added more details to the modifiers of a recovery roll.
+- Added option to display recovery roll in a chat message.
+
+### Bug fixes
+
+- Default icons style setting (Monochrome/Color) was not working properly and causing all kind of problems in a new world.
+- Vis sheets are displaying their description again.
+- [V14] temporary ActiveEffect were expiring due to a datamodel change.
+- Recovery modifiers were not taken into account in the sanatorium even if displayed properly
+
 ## 3.0.1.22 Stentorius BF10
 
 ### Compatibility

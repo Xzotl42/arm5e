@@ -143,7 +143,7 @@ export class CombatAttackChatSchema extends CombatChatSchema {
         }
       }
     } else {
-      game.ui.notifications.error(game.i18n.localize("arm5e.chat.notifications.defenderNotFound"));
+      ui.notifications.error(game.i18n.localize("arm5e.chat.notifications.defenderNotFound"));
     }
   }
 }
