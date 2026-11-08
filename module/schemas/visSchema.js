@@ -324,6 +324,16 @@ export class VisSourceSchema extends foundry.abstract.TypeDataModel {
       this.parent.actor,
       this.pawns
     );
+
+    ui.notifications.info(
+      game.i18n.localize("arm5e.activity.tracking.from.visSource", {
+        resource: this.visLabel,
+        fromActor: this.parent.name
+      }),
+      {
+        permanent: false
+      }
+    );
     // TODO check the year harvested
   }
 
